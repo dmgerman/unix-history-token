@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    handy.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    handy.h  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_if
@@ -153,7 +153,7 @@ comment|/* XXX Configure ought to have a test for a boolean type, if I can    ju
 end_comment
 
 begin_comment
-comment|/* bool is built-in for g++-2.6.3 and later, which might be used     for extensions.<_G_config.h> defines _G_HAVE_BOOL, but we can't    be sure _G_config.h will be included before this file.  _G_config.h    also defines _G_HAVE_BOOL for both gcc and g++, but only g++     actually has bool.  Hence, _G_HAVE_BOOL is pretty useless for us.    g++ can be identified by __GNUG__.    Andy Dougherty	February 2000 */
+comment|/* bool is built-in for g++-2.6.3 and later, which might be used    for extensions.<_G_config.h> defines _G_HAVE_BOOL, but we can't    be sure _G_config.h will be included before this file.  _G_config.h    also defines _G_HAVE_BOOL for both gcc and g++, but only g++    actually has bool.  Hence, _G_HAVE_BOOL is pretty useless for us.    g++ can be identified by __GNUG__.    Andy Dougherty	February 2000 */
 end_comment
 
 begin_ifdef
@@ -331,8 +331,29 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* XXX A note on the perl source internal type system.  The    original intent was that I32 be *exactly* 32 bits.     Currently, we only guarantee that I32 is *at least* 32 bits.    Specifically, if int is 64 bits, then so is I32.  (This is the case    for the Cray.)  This has the advantage of meshing nicely with    standard library calls (where we pass an I32 and the library is    expecting an int), but the disadvantage that an I32 is not 32 bits.    Andy Dougherty	August 1996     There is no guarantee that there is *any* integral type with    exactly 32 bits.  It is perfectly legal for a system to have    sizeof(short) == sizeof(int) == sizeof(long) == 8.     Similarly, there is no guarantee that I16 and U16 have exactly 16    bits.     For dealing with issues that may arise from various 32/64-bit     systems, we will ask Configure to check out      	SHORTSIZE == sizeof(short)    	INTSIZE == sizeof(int)    	LONGSIZE == sizeof(long) 	LONGLONGSIZE == sizeof(long long) (if HAS_LONG_LONG)    	PTRSIZE == sizeof(void *) 	DOUBLESIZE == sizeof(double) 	LONG_DOUBLESIZE == sizeof(long double) (if HAS_LONG_DOUBLE).  */
+comment|/* XXX A note on the perl source internal type system.  The    original intent was that I32 be *exactly* 32 bits.     Currently, we only guarantee that I32 is *at least* 32 bits.    Specifically, if int is 64 bits, then so is I32.  (This is the case    for the Cray.)  This has the advantage of meshing nicely with    standard library calls (where we pass an I32 and the library is    expecting an int), but the disadvantage that an I32 is not 32 bits.    Andy Dougherty	August 1996     There is no guarantee that there is *any* integral type with    exactly 32 bits.  It is perfectly legal for a system to have    sizeof(short) == sizeof(int) == sizeof(long) == 8.     Similarly, there is no guarantee that I16 and U16 have exactly 16    bits.     For dealing with issues that may arise from various 32/64-bit    systems, we will ask Configure to check out     	SHORTSIZE == sizeof(short)    	INTSIZE == sizeof(int)    	LONGSIZE == sizeof(long) 	LONGLONGSIZE == sizeof(long long) (if HAS_LONG_LONG)    	PTRSIZE == sizeof(void *) 	DOUBLESIZE == sizeof(double) 	LONG_DOUBLESIZE == sizeof(long double) (if HAS_LONG_DOUBLE).  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I_INTTYPES
+end_ifdef
+
+begin_comment
+comment|/* e.g. Linux has int64_t without<inttypes.h> */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -388,46 +409,6 @@ directive|ifdef
 name|HAS_QUAD
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|QUADKIND
-operator|==
-name|QUAD_IS_INT64_T
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_INTTYPES
-end_ifdef
-
-begin_comment
-comment|/* e.g. Linux has int64_t without<inttypes.h> */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|I64TYPE
@@ -455,6 +436,145 @@ end_endif
 begin_comment
 comment|/* PERL_CORE */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_QUAD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|USE_64_BIT_INT
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UINT64_C
+end_ifndef
+
+begin_comment
+comment|/* usually from<inttypes.h> */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_LONG_LONG
+argument_list|)
+operator|&&
+name|QUADKIND
+operator|==
+name|QUAD_IS_LONG_LONG
+end_if
+
+begin_define
+define|#
+directive|define
+name|INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|CAT2(c,LL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|CAT2(c,ULL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|LONGSIZE
+operator|==
+literal|8
+operator|&&
+name|QUADKIND
+operator|==
+name|QUAD_IS_LONG
+end_if
+
+begin_define
+define|#
+directive|define
+name|INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|CAT2(c,L)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|CAT2(c,UL)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|((I64TYPE)(c))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|((U64TYPE)(c))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Mention I8SIZE, U8SIZE, I16SIZE, U16SIZE, I32SIZE, U32SIZE,    I64SIZE, and U64SIZE here so that metaconfig pulls them in. */
@@ -944,7 +1064,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* =for apidoc Am|bool|isALNUM|char ch Returns a boolean indicating whether the C C<char> is an ascii alphanumeric character or digit.  =for apidoc Am|bool|isALPHA|char ch Returns a boolean indicating whether the C C<char> is an ascii alphabetic character.  =for apidoc Am|bool|isSPACE|char ch Returns a boolean indicating whether the C C<char> is whitespace.  =for apidoc Am|bool|isDIGIT|char ch Returns a boolean indicating whether the C C<char> is an ascii digit.  =for apidoc Am|bool|isUPPER|char ch Returns a boolean indicating whether the C C<char> is an uppercase character.  =for apidoc Am|bool|isLOWER|char ch Returns a boolean indicating whether the C C<char> is a lowercase character.  =for apidoc Am|char|toUPPER|char ch Converts the specified character to uppercase.  =for apidoc Am|char|toLOWER|char ch Converts the specified character to lowercase.  =cut */
+comment|/* =for apidoc Am|bool|isALNUM|char ch Returns a boolean indicating whether the C C<char> is an ASCII alphanumeric character (including underscore) or digit.  =for apidoc Am|bool|isALPHA|char ch Returns a boolean indicating whether the C C<char> is an ASCII alphabetic character.  =for apidoc Am|bool|isSPACE|char ch Returns a boolean indicating whether the C C<char> is whitespace.  =for apidoc Am|bool|isDIGIT|char ch Returns a boolean indicating whether the C C<char> is an ASCII digit.  =for apidoc Am|bool|isUPPER|char ch Returns a boolean indicating whether the C C<char> is an uppercase character.  =for apidoc Am|bool|isLOWER|char ch Returns a boolean indicating whether the C C<char> is a lowercase character.  =for apidoc Am|char|toUPPER|char ch Converts the specified character to uppercase.  =for apidoc Am|char|toLOWER|char ch Converts the specified character to lowercase.  =cut */
 end_comment
 
 begin_define
@@ -986,6 +1106,26 @@ name|c
 parameter_list|)
 define|\
 value|((c) == ' ' || (c) == '\t' || (c) == '\n' || (c) =='\r' || (c) == '\f')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isPSXSPC
+parameter_list|(
+name|c
+parameter_list|)
+value|(isSPACE(c) || (c) == '\v')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isBLANK
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ' ' || (c) == '\t')
 end_define
 
 begin_define
@@ -1720,6 +1860,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|isPSXSPC_LC
+parameter_list|(
+name|c
+parameter_list|)
+value|(isSPACE_LC(c) || (c) == '\v')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isBLANK_LC
+parameter_list|(
+name|c
+parameter_list|)
+value|isBLANK(c)
+end_define
+
+begin_comment
+comment|/* could be wrong */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|isALNUM_uni
 parameter_list|(
 name|c
@@ -1890,6 +2054,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|isPSXSPC_uni
+parameter_list|(
+name|c
+parameter_list|)
+value|(isSPACE_uni(c) ||(c) == '\f')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isBLANK_uni
+parameter_list|(
+name|c
+parameter_list|)
+value|isBLANK(c)
+end_define
+
+begin_comment
+comment|/* could be wrong */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|isALNUM_LC_uni
 parameter_list|(
 name|c
@@ -2036,6 +2224,30 @@ name|c
 parameter_list|)
 value|(c< 256 ? toLOWER_LC(c) : to_uni_lower_lc(c))
 end_define
+
+begin_define
+define|#
+directive|define
+name|isPSXSPC_LC_uni
+parameter_list|(
+name|c
+parameter_list|)
+value|(isSPACE_LC_uni(c) ||(c) == '\f')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isBLANK_LC_uni
+parameter_list|(
+name|c
+parameter_list|)
+value|isBLANK(c)
+end_define
+
+begin_comment
+comment|/* could be wrong */
+end_comment
 
 begin_define
 define|#
@@ -2210,11 +2422,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|isPSXSPC_utf8
+parameter_list|(
+name|c
+parameter_list|)
+value|(isSPACE_utf8(c) ||(c) == '\f')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isBLANK_utf8
+parameter_list|(
+name|c
+parameter_list|)
+value|isBLANK(c)
+end_define
+
+begin_comment
+comment|/* could be wrong */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|isALNUM_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isALNUM_LC_uni(utf8_to_uv(p, 0))
+value|isALNUM_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2224,7 +2460,7 @@ name|isIDFIRST_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isIDFIRST_LC_uni(utf8_to_uv(p, 0))
+value|isIDFIRST_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2234,7 +2470,7 @@ name|isALPHA_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isALPHA_LC_uni(utf8_to_uv(p, 0))
+value|isALPHA_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2244,7 +2480,7 @@ name|isSPACE_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isSPACE_LC_uni(utf8_to_uv(p, 0))
+value|isSPACE_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2254,7 +2490,7 @@ name|isDIGIT_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isDIGIT_LC_uni(utf8_to_uv(p, 0))
+value|isDIGIT_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2264,7 +2500,7 @@ name|isUPPER_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isUPPER_LC_uni(utf8_to_uv(p, 0))
+value|isUPPER_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2274,7 +2510,7 @@ name|isLOWER_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isLOWER_LC_uni(utf8_to_uv(p, 0))
+value|isLOWER_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2284,7 +2520,7 @@ name|isALNUMC_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isALNUMC_LC_uni(utf8_to_uv(p, 0))
+value|isALNUMC_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2294,7 +2530,7 @@ name|isCNTRL_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isCNTRL_LC_uni(utf8_to_uv(p, 0))
+value|isCNTRL_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2304,7 +2540,7 @@ name|isGRAPH_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isGRAPH_LC_uni(utf8_to_uv(p, 0))
+value|isGRAPH_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2314,7 +2550,7 @@ name|isPRINT_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isPRINT_LC_uni(utf8_to_uv(p, 0))
+value|isPRINT_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2324,7 +2560,7 @@ name|isPUNCT_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|isPUNCT_LC_uni(utf8_to_uv(p, 0))
+value|isPUNCT_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2334,7 +2570,7 @@ name|toUPPER_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|toUPPER_LC_uni(utf8_to_uv(p, 0))
+value|toUPPER_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2344,7 +2580,7 @@ name|toTITLE_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|toTITLE_LC_uni(utf8_to_uv(p, 0))
+value|toTITLE_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
 
 begin_define
@@ -2354,24 +2590,38 @@ name|toLOWER_LC_utf8
 parameter_list|(
 name|p
 parameter_list|)
-value|toLOWER_LC_uni(utf8_to_uv(p, 0))
+value|toLOWER_LC_uni(utf8_to_uv(p, UTF8_MAXLEN, 0, 0))
 end_define
+
+begin_define
+define|#
+directive|define
+name|isPSXSPC_LC_utf8
+parameter_list|(
+name|c
+parameter_list|)
+value|(isSPACE_LC_utf8(c) ||(c) == '\f')
+end_define
+
+begin_define
+define|#
+directive|define
+name|isBLANK_LC_utf8
+parameter_list|(
+name|c
+parameter_list|)
+value|isBLANK(c)
+end_define
+
+begin_comment
+comment|/* could be wrong */
+end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|EBCDIC
 end_ifdef
-
-begin_function_decl
-name|EXT
-name|int
-name|ebcdic_control
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -2380,7 +2630,7 @@ name|toCTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|ebcdic_control(c)
+value|Perl_ebcdic_control(c)
 end_define
 
 begin_else
@@ -2449,11 +2699,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*     XXX LEAKTEST doesn't really work in perl5.  There are direct calls to    safemalloc() in the source, so LEAKTEST won't pick them up.    (The main "offenders" are extensions.)    Further, if you try LEAKTEST, you'll also end up calling    Safefree, which might call safexfree() on some things that weren't    malloced with safexmalloc.  The correct "fix" to this, if anyone    is interested, is to ensure that all calls go through the New and    Renew macros. 	--Andy Dougherty		August 1996 */
+comment|/*    XXX LEAKTEST doesn't really work in perl5.  There are direct calls to    safemalloc() in the source, so LEAKTEST won't pick them up.    (The main "offenders" are extensions.)    Further, if you try LEAKTEST, you'll also end up calling    Safefree, which might call safexfree() on some things that weren't    malloced with safexmalloc.  The correct "fix" to this, if anyone    is interested, is to ensure that all calls go through the New and    Renew macros. 	--Andy Dougherty		August 1996 */
 end_comment
 
 begin_comment
-comment|/* =for apidoc Am|SV*|NEWSV|int id|STRLEN len Creates a new SV.  A non-zero C<len> parameter indicates the number of bytes of preallocated string space the SV should have.  An extra byte for a tailing NUL is also reserved.  (SvPOK is not set for the SV even if string space is allocated.)  The reference count for the new SV is set to 1.  C<id> is an integer id between 0 and 1299 (used to identify leaks).  =for apidoc Am|void|New|int id|void* ptr|int nitems|type The XSUB-writer's interface to the C C<malloc> function.  =for apidoc Am|void|Newc|int id|void* ptr|int nitems|type|cast The XSUB-writer's interface to the C C<malloc> function, with cast.  =for apidoc Am|void|Newz|int id|void* ptr|int nitems|type The XSUB-writer's interface to the C C<malloc> function.  The allocated memory is zeroed with C<memzero>.  =for apidoc Am|void|Renew|void* ptr|int nitems|type The XSUB-writer's interface to the C C<realloc> function.  =for apidoc Am|void|Renewc|void* ptr|int nitems|type|cast The XSUB-writer's interface to the C C<realloc> function, with cast.  =for apidoc Am|void|Safefree|void* src|void* dest|int nitems|type The XSUB-writer's interface to the C C<free> function.  =for apidoc Am|void|Move|void* src|void* dest|int nitems|type The XSUB-writer's interface to the C C<memmove> function.  The C<src> is the source, C<dest> is the destination, C<nitems> is the number of items, and C<type> is the type.  Can do overlapping moves.  See also C<Copy>.  =for apidoc Am|void|Copy|void* src|void* dest|int nitems|type The XSUB-writer's interface to the C C<memcpy> function.  The C<src> is the source, C<dest> is the destination, C<nitems> is the number of items, and C<type> is the type.  May fail on overlapping copies.  See also C<Move>.  =for apidoc Am|void|Zero|void* dest|int nitems|type  The XSUB-writer's interface to the C C<memzero> function.  The C<dest> is the destination, C<nitems> is the number of items, and C<type> is the type.  =for apidoc Am|void|StructCopy|type src|type dest|type This is an architecture-independant macro to copy one structure to another.  =cut */
+comment|/* =for apidoc Am|SV*|NEWSV|int id|STRLEN len Creates a new SV.  A non-zero C<len> parameter indicates the number of bytes of preallocated string space the SV should have.  An extra byte for a tailing NUL is also reserved.  (SvPOK is not set for the SV even if string space is allocated.)  The reference count for the new SV is set to 1. C<id> is an integer id between 0 and 1299 (used to identify leaks).  =for apidoc Am|void|New|int id|void* ptr|int nitems|type The XSUB-writer's interface to the C C<malloc> function.  =for apidoc Am|void|Newc|int id|void* ptr|int nitems|type|cast The XSUB-writer's interface to the C C<malloc> function, with cast.  =for apidoc Am|void|Newz|int id|void* ptr|int nitems|type The XSUB-writer's interface to the C C<malloc> function.  The allocated memory is zeroed with C<memzero>.  =for apidoc Am|void|Renew|void* ptr|int nitems|type The XSUB-writer's interface to the C C<realloc> function.  =for apidoc Am|void|Renewc|void* ptr|int nitems|type|cast The XSUB-writer's interface to the C C<realloc> function, with cast.  =for apidoc Am|void|Safefree|void* ptr The XSUB-writer's interface to the C C<free> function.  =for apidoc Am|void|Move|void* src|void* dest|int nitems|type The XSUB-writer's interface to the C C<memmove> function.  The C<src> is the source, C<dest> is the destination, C<nitems> is the number of items, and C<type> is the type.  Can do overlapping moves.  See also C<Copy>.  =for apidoc Am|void|Copy|void* src|void* dest|int nitems|type The XSUB-writer's interface to the C C<memcpy> function.  The C<src> is the source, C<dest> is the destination, C<nitems> is the number of items, and C<type> is the type.  May fail on overlapping copies.  See also C<Move>.  =for apidoc Am|void|Zero|void* dest|int nitems|type  The XSUB-writer's interface to the C C<memzero> function.  The C<dest> is the destination, C<nitems> is the number of items, and C<type> is the type.  =for apidoc Am|void|StructCopy|type src|type dest|type This is an architecture-independent macro to copy one structure to another.  =cut */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $RCSfile: EXTERN.h,v $$Revision: 4.1 $$Date: 92/08/07 18:29:05 $  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log:	EXTERN.h,v $  */
+comment|/* $RCSfile: EXTERN.h,v $$Revision: 4.1 $$Date: 92/08/07 18:29:05 $  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  * $Log:	EXTERN.h,v $  */
 end_comment
 
 begin_undef

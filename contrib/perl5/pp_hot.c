@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    pp_hot.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    pp_hot.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -24,23 +24,6 @@ include|#
 directive|include
 file|"perl.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_UNISTD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Hot code. */
@@ -83,7 +66,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|XPUSHs
 argument_list|(
@@ -143,7 +126,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|EXTEND
 argument_list|(
@@ -249,7 +232,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -284,11 +267,14 @@ name|SvUTF8
 argument_list|(
 name|TOPs
 argument_list|)
-operator|&&
-operator|!
-name|IN_BYTE
 condition|)
 name|SvUTF8_on
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+else|else
+name|SvUTF8_off
 argument_list|(
 name|TARG
 argument_list|)
@@ -309,7 +295,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|XPUSHs
 argument_list|(
@@ -334,7 +320,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -371,7 +357,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dPOPTOPssrl
 expr_stmt|;
@@ -441,7 +427,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -525,7 +511,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -539,27 +525,72 @@ expr_stmt|;
 block|{
 name|dPOPTOPssrl
 expr_stmt|;
-name|STRLEN
-name|len
-decl_stmt|;
-name|char
+name|SV
 modifier|*
-name|s
+name|rcopy
+init|=
+name|Nullsv
 decl_stmt|;
+if|if
+condition|(
+name|SvGMAGICAL
+argument_list|(
+name|left
+argument_list|)
+condition|)
+name|mg_get
+argument_list|(
+name|left
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TARG
+operator|==
+name|right
+operator|&&
+name|SvGMAGICAL
+argument_list|(
+name|right
+argument_list|)
+condition|)
+name|mg_get
+argument_list|(
+name|right
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TARG
+operator|==
+name|right
+operator|&&
+name|left
+operator|!=
+name|right
+condition|)
+comment|/* Clone since otherwise we cannot prepend. */
+name|rcopy
+operator|=
+name|sv_2mortal
+argument_list|(
+name|newSVsv
+argument_list|(
+name|right
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TARG
 operator|!=
 name|left
 condition|)
-block|{
-name|s
-operator|=
-name|SvPV
+name|sv_setsv
 argument_list|(
-name|left
+name|TARG
 argument_list|,
-name|len
+name|left
 argument_list|)
 expr_stmt|;
 if|if
@@ -569,51 +600,50 @@ operator|==
 name|right
 condition|)
 block|{
-name|sv_insert
-argument_list|(
-name|TARG
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|s
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|SETs
-argument_list|(
-name|TARG
-argument_list|)
-expr_stmt|;
-name|RETURN
-expr_stmt|;
-block|}
-name|sv_setpvn
-argument_list|(
-name|TARG
-argument_list|,
-name|s
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
-name|SvGMAGICAL
-argument_list|(
-name|TARG
-argument_list|)
+name|left
+operator|==
+name|right
 condition|)
-name|mg_get
+block|{
+comment|/*  $right = $right . $right; */
+name|STRLEN
+name|rlen
+decl_stmt|;
+name|char
+modifier|*
+name|rpv
+init|=
+name|SvPV
+argument_list|(
+name|right
+argument_list|,
+name|rlen
+argument_list|)
+decl_stmt|;
+name|sv_catpvn
 argument_list|(
 name|TARG
+argument_list|,
+name|rpv
+argument_list|,
+name|rlen
 argument_list|)
 expr_stmt|;
-elseif|else
+block|}
+else|else
+comment|/* $right = $left  . $right; */
+name|sv_catsv
+argument_list|(
+name|TARG
+argument_list|,
+name|rcopy
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|!
@@ -621,15 +651,8 @@ name|SvOK
 argument_list|(
 name|TARG
 argument_list|)
-operator|&&
-name|SvTYPE
-argument_list|(
-name|TARG
-argument_list|)
-operator|<=
-name|SVt_PVMG
 condition|)
-block|{
+comment|/* Avoid warning when concatenating to undef. */
 name|sv_setpv
 argument_list|(
 name|TARG
@@ -637,34 +660,16 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* Suppress warning. */
-name|s
-operator|=
-name|SvPV_force
+comment|/* $other = $left . $right; */
+comment|/* $left  = $left . $right; */
+name|sv_catsv
 argument_list|(
 name|TARG
 argument_list|,
-name|len
+name|right
 argument_list|)
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|SvPV
-argument_list|(
-name|right
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|SvOK
-argument_list|(
-name|TARG
-argument_list|)
-condition|)
-block|{
 if|#
 directive|if
 name|defined
@@ -760,74 +765,6 @@ block|}
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|DO_UTF8
-argument_list|(
-name|right
-argument_list|)
-condition|)
-name|sv_utf8_upgrade
-argument_list|(
-name|TARG
-argument_list|)
-expr_stmt|;
-name|sv_catpvn
-argument_list|(
-name|TARG
-argument_list|,
-name|s
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|IN_BYTE
-condition|)
-block|{
-if|if
-condition|(
-name|SvUTF8
-argument_list|(
-name|right
-argument_list|)
-condition|)
-name|SvUTF8_on
-argument_list|(
-name|TARG
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|SvUTF8
-argument_list|(
-name|right
-argument_list|)
-condition|)
-block|{
-name|SvUTF8_off
-argument_list|(
-name|TARG
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-name|sv_setpvn
-argument_list|(
-name|TARG
-argument_list|,
-name|s
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-comment|/* suppress warning */
 name|SETTARG
 expr_stmt|;
 name|RETURN
@@ -845,7 +782,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -1032,7 +969,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|tryAMAGICbinSET
 argument_list|(
@@ -1069,7 +1006,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -1162,7 +1099,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -1198,7 +1135,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dATARGET
 expr_stmt|;
@@ -1234,7 +1171,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|AV
 modifier|*
@@ -1328,7 +1265,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -1372,7 +1309,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1452,7 +1389,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -1519,6 +1456,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|had_magic
+label|:
 if|if
 condition|(
 name|MARK
@@ -1631,38 +1570,54 @@ condition|)
 block|{
 if|if
 condition|(
-name|ckWARN
+operator|(
+name|GvEGV
+argument_list|(
+name|gv
+argument_list|)
+operator|)
+operator|&&
+operator|(
+name|mg
+operator|=
+name|SvTIED_mg
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|GvEGV
+argument_list|(
+name|gv
+argument_list|)
+argument_list|,
+literal|'q'
+argument_list|)
+operator|)
+condition|)
+goto|goto
+name|had_magic
+goto|;
+if|if
+condition|(
+name|ckWARN2
 argument_list|(
 name|WARN_UNOPENED
+argument_list|,
+name|WARN_CLOSED
 argument_list|)
 condition|)
-block|{
-name|SV
-modifier|*
-name|sv
-init|=
-name|sv_newmortal
-argument_list|()
-decl_stmt|;
-name|gv_efullname3
+name|report_evil_fh
 argument_list|(
-name|sv
-argument_list|,
 name|gv
 argument_list|,
-name|Nullch
+name|io
+argument_list|,
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
-name|Perl_warner
-argument_list|(
-argument|aTHX_ WARN_UNOPENED
-argument_list|,
-literal|"Filehandle %s never opened"
-argument_list|,
-argument|SvPV(sv,n_a)
-argument_list|)
-empty_stmt|;
-block|}
 name|SETERRNO
 argument_list|(
 name|EBADF
@@ -1706,6 +1661,21 @@ name|io
 argument_list|)
 condition|)
 block|{
+comment|/* integrate with report_evil_fh()? */
+name|char
+modifier|*
+name|name
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|isGV
+argument_list|(
+name|gv
+argument_list|)
+condition|)
+block|{
 name|SV
 modifier|*
 name|sv
@@ -1713,42 +1683,69 @@ init|=
 name|sv_newmortal
 argument_list|()
 decl_stmt|;
-name|gv_efullname3
+name|gv_efullname4
 argument_list|(
 name|sv
 argument_list|,
 name|gv
 argument_list|,
 name|Nullch
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|SvPV_nolen
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|&&
+operator|*
+name|name
+condition|)
 name|Perl_warner
 argument_list|(
 argument|aTHX_ WARN_IO
 argument_list|,
 literal|"Filehandle %s opened only for input"
 argument_list|,
-argument|SvPV(sv,n_a)
+argument|name
+argument_list|)
+empty_stmt|;
+else|else
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_IO
+argument_list|,
+literal|"Filehandle opened only for input"
 argument_list|)
 empty_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|ckWARN
+name|ckWARN2
 argument_list|(
+name|WARN_UNOPENED
+argument_list|,
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
-literal|"print"
-argument_list|,
-literal|"filehandle"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 block|}
@@ -1959,7 +1956,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTOPss
 expr_stmt|;
@@ -2029,6 +2026,36 @@ expr_stmt|;
 name|RETURN
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return array to lvalue scalar context"
+argument_list|)
+expr_stmt|;
+name|SETs
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|av
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2071,6 +2098,37 @@ expr_stmt|;
 name|RETURN
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return array to lvalue"
+literal|" scalar context"
+argument_list|)
+expr_stmt|;
+name|SETs
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|av
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2093,7 +2151,7 @@ modifier|*
 name|sym
 decl_stmt|;
 name|STRLEN
-name|n_a
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -2183,7 +2241,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|n_a
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -2225,9 +2283,41 @@ if|if
 condition|(
 operator|!
 name|gv
+operator|&&
+operator|(
+operator|!
+name|is_gv_magical
+argument_list|(
+name|sym
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+operator|!
+operator|(
+name|gv
+operator|=
+operator|(
+name|GV
+operator|*
+operator|)
+name|gv_fetchpv
+argument_list|(
+name|sym
+argument_list|,
+name|TRUE
+argument_list|,
+name|SVt_PVAV
+argument_list|)
+operator|)
+operator|)
 condition|)
+block|{
 name|RETSETUNDEF
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2307,6 +2397,37 @@ operator|&
 name|OPf_REF
 condition|)
 block|{
+name|SETs
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|av
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return array to lvalue"
+literal|" scalar context"
+argument_list|)
+expr_stmt|;
 name|SETs
 argument_list|(
 operator|(
@@ -2468,7 +2589,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTOPss
 expr_stmt|;
@@ -2545,6 +2666,36 @@ expr_stmt|;
 name|RETURN
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return hash to lvalue scalar context"
+argument_list|)
+expr_stmt|;
+name|SETs
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|hv
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2594,6 +2745,37 @@ expr_stmt|;
 name|RETURN
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return hash to lvalue"
+literal|" scalar context"
+argument_list|)
+expr_stmt|;
+name|SETs
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|hv
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2616,7 +2798,7 @@ modifier|*
 name|sym
 decl_stmt|;
 name|STRLEN
-name|n_a
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -2704,7 +2886,7 @@ name|SvPV
 argument_list|(
 name|sv
 argument_list|,
-name|n_a
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -2746,9 +2928,41 @@ if|if
 condition|(
 operator|!
 name|gv
+operator|&&
+operator|(
+operator|!
+name|is_gv_magical
+argument_list|(
+name|sym
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+operator|!
+operator|(
+name|gv
+operator|=
+operator|(
+name|GV
+operator|*
+operator|)
+name|gv_fetchpv
+argument_list|(
+name|sym
+argument_list|,
+name|TRUE
+argument_list|,
+name|SVt_PVHV
+argument_list|)
+operator|)
+operator|)
 condition|)
+block|{
 name|RETSETUNDEF
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2828,6 +3042,37 @@ operator|&
 name|OPf_REF
 condition|)
 block|{
+name|SETs
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|hv
+argument_list|)
+expr_stmt|;
+name|RETURN
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|LVRET
+condition|)
+block|{
+if|if
+condition|(
+name|GIMME
+operator|==
+name|G_SCALAR
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't return hash to lvalue"
+literal|" scalar context"
+argument_list|)
+expr_stmt|;
 name|SETs
 argument_list|(
 operator|(
@@ -3425,7 +3670,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -4458,7 +4703,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 specifier|register
 name|PMOP
@@ -4527,7 +4772,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARG
 expr_stmt|;
@@ -4657,7 +4902,7 @@ condition|)
 name|DIE
 argument_list|(
 name|aTHX_
-literal|"panic: do_match"
+literal|"panic: pp_match"
 argument_list|)
 expr_stmt|;
 name|rxtainted
@@ -4889,10 +5134,6 @@ block|}
 if|if
 condition|(
 operator|(
-name|gimme
-operator|!=
-name|G_ARRAY
-operator|&&
 operator|!
 name|global
 operator|&&
@@ -5012,6 +5253,23 @@ operator|->
 name|reganch
 operator|&
 name|RE_USE_INTUIT
+operator|&&
+name|DO_UTF8
+argument_list|(
+name|TARG
+argument_list|)
+operator|==
+operator|(
+operator|(
+name|rx
+operator|->
+name|reganch
+operator|&
+name|ROPT_UTF8
+operator|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|s
@@ -5078,7 +5336,14 @@ name|REXEC_SCREAM
 operator|)
 operator|)
 operator|)
+operator|&&
+operator|!
+name|SvROK
+argument_list|(
+name|TARG
+argument_list|)
 condition|)
+comment|/* Cannot trust since INTUIT cannot guess ^ */
 goto|goto
 name|yup
 goto|;
@@ -6735,7 +7000,7 @@ argument_list|(
 name|io
 argument_list|)
 operator|=
-literal|'<'
+name|IoTYPE_RDONLY
 expr_stmt|;
 name|IoIFP
 argument_list|(
@@ -7017,7 +7282,7 @@ argument_list|(
 name|io
 argument_list|)
 operator|==
-literal|'>'
+name|IoTYPE_WRONLY
 operator|||
 name|fp
 operator|==
@@ -7031,6 +7296,22 @@ argument_list|()
 operator|)
 condition|)
 block|{
+comment|/* integrate with report_evil_fh()? */
+name|char
+modifier|*
+name|name
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|isGV
+argument_list|(
+name|PL_last_in_gv
+argument_list|)
+condition|)
+block|{
+comment|/* can this ever fail? */
 name|SV
 modifier|*
 name|sv
@@ -7038,22 +7319,47 @@ init|=
 name|sv_newmortal
 argument_list|()
 decl_stmt|;
-name|gv_efullname3
+name|gv_efullname4
 argument_list|(
 name|sv
 argument_list|,
 name|PL_last_in_gv
 argument_list|,
 name|Nullch
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|SvPV_nolen
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|&&
+operator|*
+name|name
+condition|)
 name|Perl_warner
 argument_list|(
 argument|aTHX_ WARN_IO
 argument_list|,
 literal|"Filehandle %s opened only for output"
 argument_list|,
-argument|SvPV_nolen(sv)
+argument|name
+argument_list|)
+empty_stmt|;
+else|else
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_IO
+argument_list|,
+literal|"Filehandle opened only for output"
 argument_list|)
 empty_stmt|;
 block|}
@@ -7073,8 +7379,10 @@ argument_list|,
 name|WARN_CLOSED
 argument_list|)
 operator|&&
+operator|(
+operator|!
 name|io
-operator|&&
+operator|||
 operator|!
 operator|(
 name|IoFLAGS
@@ -7083,6 +7391,7 @@ name|io
 argument_list|)
 operator|&
 name|IOf_START
+operator|)
 operator|)
 condition|)
 block|{
@@ -7102,15 +7411,15 @@ argument|Strerror(errno)
 argument_list|)
 empty_stmt|;
 else|else
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|PL_last_in_gv
 argument_list|,
 name|io
 argument_list|,
-literal|"readline"
-argument_list|,
-literal|"filehandle"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 block|}
@@ -7229,6 +7538,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* This should not be marked tainted if the fp is marked clean */
+define|#
+directive|define
+name|MAYBE_TAINT_LINE
+parameter_list|(
+name|io
+parameter_list|,
+name|sv
+parameter_list|)
+define|\
+value|if (!(IoFLAGS(io)& IOf_UNTAINT)) { \ 	TAINT;				\ 	SvTAINTED_on(sv);		\     }
 comment|/* delay EOF state for a snarfed empty file */
 define|#
 directive|define
@@ -7243,7 +7563,7 @@ parameter_list|,
 name|sv
 parameter_list|)
 define|\
-value|(gimme != G_SCALAR || SvCUR(sv)					\      || !RsSNARF(rs) || (IoFLAGS(io)& IOf_NOLINE)			\      || ((IoFLAGS(io) |= IOf_NOLINE), FALSE))
+value|(gimme != G_SCALAR || SvCUR(sv)					\      || (IoFLAGS(io)& IOf_NOLINE) || !RsSNARF(rs))
 for|for
 control|(
 init|;
@@ -7380,36 +7700,35 @@ expr_stmt|;
 name|PUSHTARG
 expr_stmt|;
 block|}
-name|RETURN
-expr_stmt|;
-block|}
-comment|/* This should not be marked tainted if the fp is marked clean */
-if|if
-condition|(
-operator|!
-operator|(
-name|IoFLAGS
+name|MAYBE_TAINT_LINE
 argument_list|(
 name|io
-argument_list|)
-operator|&
-name|IOf_UNTAINT
-operator|)
-condition|)
-block|{
-name|TAINT
-expr_stmt|;
-name|SvTAINTED_on
-argument_list|(
+argument_list|,
 name|sv
 argument_list|)
 expr_stmt|;
+name|RETURN
+expr_stmt|;
 block|}
+name|MAYBE_TAINT_LINE
+argument_list|(
+name|io
+argument_list|,
+name|sv
+argument_list|)
+expr_stmt|;
 name|IoLINES
 argument_list|(
 name|io
 argument_list|)
 operator|++
+expr_stmt|;
+name|IoFLAGS
+argument_list|(
+name|io
+argument_list|)
+operator||=
+name|IOf_NOLINE
 expr_stmt|;
 name|SvSETMAGIC
 argument_list|(
@@ -7700,7 +8019,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 specifier|register
 name|PERL_CONTEXT
@@ -7774,7 +8093,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|HE
 modifier|*
@@ -7809,6 +8128,8 @@ operator|->
 name|op_flags
 operator|&
 name|OPf_MOD
+operator|||
+name|LVRET
 decl_stmt|;
 name|U32
 name|defer
@@ -8146,7 +8467,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 specifier|register
 name|PERL_CONTEXT
@@ -8401,7 +8722,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 specifier|register
 name|PERL_CONTEXT
@@ -8943,7 +9264,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARG
 expr_stmt|;
@@ -8964,6 +9285,9 @@ specifier|register
 name|SV
 modifier|*
 name|dstr
+decl_stmt|,
+modifier|*
+name|rstr
 decl_stmt|;
 specifier|register
 name|char
@@ -9038,8 +9362,14 @@ name|oldsave
 init|=
 name|PL_savestack_ix
 decl_stmt|;
+name|bool
+name|do_utf8
+decl_stmt|;
+name|STRLEN
+name|slen
+decl_stmt|;
 comment|/* known replacement string? */
-name|dstr
+name|rstr
 operator|=
 operator|(
 name|pm
@@ -9079,6 +9409,30 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|do_utf8
+operator|=
+name|DO_UTF8
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SvFAKE
+argument_list|(
+name|TARG
+argument_list|)
+operator|&&
+name|SvREADONLY
+argument_list|(
+name|TARG
+argument_list|)
+condition|)
+name|sv_force_normal
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SvREADONLY
@@ -9192,7 +9546,7 @@ condition|)
 name|DIE
 argument_list|(
 name|aTHX_
-literal|"panic: do_subst"
+literal|"panic: pp_subst"
 argument_list|)
 expr_stmt|;
 name|strend
@@ -9201,19 +9555,36 @@ name|s
 operator|+
 name|len
 expr_stmt|;
+name|slen
+operator|=
+name|do_utf8
+condition|?
+name|utf8_length
+argument_list|(
+operator|(
+name|U8
+operator|*
+operator|)
+name|s
+argument_list|,
+operator|(
+name|U8
+operator|*
+operator|)
+name|strend
+argument_list|)
+else|:
+name|len
+expr_stmt|;
 name|maxiters
 operator|=
 literal|2
 operator|*
-operator|(
-name|strend
-operator|-
-name|s
-operator|)
+name|slen
 operator|+
 literal|10
 expr_stmt|;
-comment|/* We can match twice at each  					   position, once with zero-length, 					   second time with non-zero. */
+comment|/* We can match twice at each 				   position, once with zero-length, 				   second time with non-zero. */
 if|if
 condition|(
 operator|!
@@ -9350,11 +9721,11 @@ expr_stmt|;
 comment|/* known replacement string? */
 name|c
 operator|=
-name|dstr
+name|rstr
 condition|?
 name|SvPV
 argument_list|(
-name|dstr
+name|rstr
 argument_list|,
 name|clen
 argument_list|)
@@ -9382,6 +9753,13 @@ operator|&
 name|REXEC_COPY_STR
 operator|)
 operator|)
+operator|&&
+name|do_utf8
+operator|==
+name|DO_UTF8
+argument_list|(
+name|rstr
+argument_list|)
 operator|&&
 operator|!
 operator|(
@@ -9896,7 +10274,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|SvPOK_only
+name|SvPOK_only_UTF8
 argument_list|(
 name|TARG
 argument_list|)
@@ -9959,6 +10337,9 @@ argument|r_flags | REXEC_CHECKED
 argument_list|)
 condition|)
 block|{
+name|bool
+name|isutf8
+decl_stmt|;
 if|if
 condition|(
 name|force_on_match
@@ -10006,6 +10387,15 @@ argument_list|,
 name|s
 operator|-
 name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_utf8
+condition|)
+name|SvUTF8_on
+argument_list|(
+name|dstr
 argument_list|)
 expr_stmt|;
 name|PL_curpm
@@ -10152,13 +10542,11 @@ if|if
 condition|(
 name|clen
 condition|)
-name|sv_catpvn
+name|sv_catsv
 argument_list|(
 name|dstr
 argument_list|,
-name|c
-argument_list|,
-name|clen
+name|rstr
 argument_list|)
 expr_stmt|;
 if|if
@@ -10246,6 +10634,13 @@ name|dstr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|isutf8
+operator|=
+name|DO_UTF8
+argument_list|(
+name|dstr
+argument_list|)
+expr_stmt|;
 name|SvPVX
 argument_list|(
 name|dstr
@@ -10285,6 +10680,15 @@ operator|(
 name|void
 operator|)
 name|SvPOK_only
+argument_list|(
+name|TARG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isutf8
+condition|)
+name|SvUTF8_on
 argument_list|(
 name|TARG
 argument_list|)
@@ -10346,7 +10750,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -10511,7 +10915,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -10769,7 +11173,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -11477,8 +11881,6 @@ modifier|*
 name|cv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SV
 modifier|*
 name|dbsv
@@ -11586,10 +11988,10 @@ condition|)
 block|{
 comment|/* Use GV from the stack as a fallback. */
 comment|/* GV is potentially non-unique, or contain different CV. */
-name|sv_setsv
-argument_list|(
-name|dbsv
-argument_list|,
+name|SV
+modifier|*
+name|tmp
+init|=
 name|newRV
 argument_list|(
 operator|(
@@ -11598,6 +12000,17 @@ operator|*
 operator|)
 name|cv
 argument_list|)
+decl_stmt|;
+name|sv_setsv
+argument_list|(
+name|dbsv
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}
@@ -11687,7 +12100,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dPOPss
 expr_stmt|;
@@ -13733,6 +14146,14 @@ name|cx
 operator|->
 name|blk_sub
 operator|.
+name|oldcurpad
+operator|=
+name|PL_curpad
+expr_stmt|;
+name|cx
+operator|->
+name|blk_sub
+operator|.
 name|argarray
 operator|=
 name|av
@@ -14010,14 +14431,14 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
 modifier|*
 name|svp
 decl_stmt|;
-name|I32
+name|IV
 name|elem
 init|=
 name|POPi
@@ -14040,6 +14461,8 @@ operator|->
 name|op_flags
 operator|&
 name|OPf_MOD
+operator|||
+name|LVRET
 decl_stmt|;
 name|U32
 name|defer
@@ -14457,7 +14880,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -14529,7 +14952,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -14631,6 +15054,19 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sv
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't call method \"%s\" on an undefined value"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|SvGMAGICAL
 argument_list|(
 name|sv
@@ -14725,14 +15161,11 @@ name|packname
 operator|||
 operator|(
 operator|(
+name|UTF8_IS_START
+argument_list|(
 operator|*
-operator|(
-name|U8
-operator|*
-operator|)
 name|packname
-operator|>=
-literal|0xc0
+argument_list|)
 operator|&&
 name|DO_UTF8
 argument_list|(
@@ -14985,6 +15418,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|GV
+modifier|*
+name|gv
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -15103,6 +15540,27 @@ operator|-
 name|name
 expr_stmt|;
 block|}
+name|gv
+operator|=
+name|gv_fetchpv
+argument_list|(
+name|packname
+argument_list|,
+literal|0
+argument_list|,
+name|SVt_PVHV
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gv
+operator|&&
+name|isGV
+argument_list|(
+name|gv
+argument_list|)
+condition|)
+block|{
 name|Perl_croak
 argument_list|(
 name|aTHX_
@@ -15113,6 +15571,23 @@ argument_list|,
 name|packname
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't locate object method \"%s\" via package \"%s\""
+literal|" (perhaps you forgot to load \"%s\"?)"
+argument_list|,
+name|leaf
+argument_list|,
+name|packname
+argument_list|,
+name|packname
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 name|isGV
@@ -15166,14 +15641,6 @@ operator|*
 operator|)
 name|cvarg
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUGGING
-name|dTHR
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUGGING */
 name|DEBUG_S
 argument_list|(
 operator|(

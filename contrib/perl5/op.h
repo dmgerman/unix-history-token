@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    op.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    op.h  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -96,7 +96,7 @@ value|(((op)->op_flags& OPf_WANT) == OPf_WANT_VOID   ? G_VOID   : \ 	 ((op)->op_
 end_define
 
 begin_comment
-comment|/* =for apidoc Amn|U32|GIMME_V The XSUB-writer's equivalent to Perl's C<wantarray>.  Returns C<G_VOID>, C<G_SCALAR> or C<G_ARRAY> for void, scalar or array context, respectively.  =for apidoc Amn|U32|GIMME A backward-compatible version of C<GIMME_V> which can only return C<G_SCALAR> or C<G_ARRAY>; in a void context, it returns C<G_SCALAR>. Deprecated.  Use C<GIMME_V> instead.  =cut */
+comment|/* =for apidoc Amn|U32|GIMME_V The XSUB-writer's equivalent to Perl's C<wantarray>.  Returns C<G_VOID>, C<G_SCALAR> or C<G_ARRAY> for void, scalar or list context, respectively.  =for apidoc Amn|U32|GIMME A backward-compatible version of C<GIMME_V> which can only return C<G_SCALAR> or C<G_ARRAY>; in a void context, it returns C<G_SCALAR>. Deprecated.  Use C<GIMME_V> instead.  =cut */
 end_comment
 
 begin_define
@@ -281,6 +281,10 @@ comment|/*  On pushre, re is /\s+/ imp. by split " " */
 end_comment
 
 begin_comment
+comment|/*  On regcomp, "use re 'eval'" was in scope */
+end_comment
+
+begin_comment
 comment|/* old names; don't use in new code, but don't break them, either */
 end_comment
 
@@ -422,11 +426,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* When CU or UC, means straight latin-1 to utf-8 or vice versa */
-end_comment
-
-begin_comment
-comment|/* Otherwise, IDENTICAL means the right side is the same as the left */
+comment|/* right side is same as left */
 end_comment
 
 begin_define
@@ -470,21 +470,6 @@ end_define
 
 begin_comment
 comment|/* List replication. */
-end_comment
-
-begin_comment
-comment|/* Private for OP_LEAVELOOP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OPpLOOP_CONTINUE
-value|64
-end_define
-
-begin_comment
-comment|/* a continue block is present */
 end_comment
 
 begin_comment
@@ -640,7 +625,22 @@ value|16
 end_define
 
 begin_comment
-comment|/* Defer creation of array/hash elem */
+comment|/* Variable was in an our() */
+end_comment
+
+begin_comment
+comment|/* OP_RV2[AH]V, OP_PAD[AH]V, OP_[AH]ELEM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpMAYBE_LVSUB
+value|8
+end_define
+
+begin_comment
+comment|/* We might be an lvalue to return */
 end_comment
 
 begin_comment
@@ -988,9 +988,6 @@ name|OP
 modifier|*
 name|op_last
 decl_stmt|;
-name|U32
-name|op_children
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1007,9 +1004,6 @@ decl_stmt|;
 name|OP
 modifier|*
 name|op_last
-decl_stmt|;
-name|U32
-name|op_children
 decl_stmt|;
 name|OP
 modifier|*
@@ -1312,9 +1306,6 @@ decl_stmt|;
 name|OP
 modifier|*
 name|op_last
-decl_stmt|;
-name|U32
-name|op_children
 decl_stmt|;
 name|OP
 modifier|*
@@ -2091,38 +2082,6 @@ name|OP_REFCNT_TERM
 value|MUTEX_DESTROY(&PL_op_mutex)
 end_define
 
-begin_define
-define|#
-directive|define
-name|OpREFCNT_set
-parameter_list|(
-name|o
-parameter_list|,
-name|n
-parameter_list|)
-value|((o)->op_targ = (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|OpREFCNT_inc
-parameter_list|(
-name|o
-parameter_list|)
-value|((o) ? (++(o)->op_targ, (o)) : Nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OpREFCNT_dec
-parameter_list|(
-name|o
-parameter_list|)
-value|(--(o)->op_targ)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -2156,6 +2115,11 @@ name|OP_REFCNT_TERM
 value|NOOP
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2165,7 +2129,7 @@ name|o
 parameter_list|,
 name|n
 parameter_list|)
-value|NOOP
+value|((o)->op_targ = (n))
 end_define
 
 begin_define
@@ -2175,7 +2139,7 @@ name|OpREFCNT_inc
 parameter_list|(
 name|o
 parameter_list|)
-value|(o)
+value|((o) ? (++(o)->op_targ, (o)) : Nullop)
 end_define
 
 begin_define
@@ -2185,13 +2149,8 @@ name|OpREFCNT_dec
 parameter_list|(
 name|o
 parameter_list|)
-value|0
+value|(--(o)->op_targ)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* flags used by Perl_load_module() */

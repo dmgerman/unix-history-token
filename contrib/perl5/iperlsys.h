@@ -1095,6 +1095,12 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|STDIO_PTR_LVALUE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|STDIO_CNT_LVALUE
 end_ifdef
 
@@ -1111,7 +1117,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|STDIO_PTR_LVALUE
+name|STDIO_PTR_LVAL_NOCHANGE_CNT
 end_ifdef
 
 begin_define
@@ -1134,6 +1140,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* STDIO_CNT_LVALUE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1143,6 +1153,41 @@ name|f
 parameter_list|)
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* STDIO_PTR_LVALUE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDIO_PTR_LVAL_SETS_CNT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PerlIO_fast_gets
+parameter_list|(
+name|f
+parameter_list|)
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1597,7 +1642,7 @@ begin_define
 define|#
 directive|define
 name|PerlIO_stdoutf
-value|*PL_StdIO->pPrintf
+value|Perl_printf_nocontext
 end_define
 
 begin_define
@@ -2994,6 +3039,31 @@ directive|ifndef
 name|PerlIO_getpos
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_SFIO
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|PerlIO_getpos
+parameter_list|(
+name|PerlIO
+modifier|*
+parameter_list|,
+name|Off_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 specifier|extern
 name|int
@@ -3013,11 +3083,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|PerlIO_setpos
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_SFIO
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|PerlIO_setpos
+parameter_list|(
+name|PerlIO
+modifier|*
+parameter_list|,
+specifier|const
+name|Off_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_function_decl
 specifier|extern
@@ -3033,6 +3134,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3547,7 +3653,7 @@ name|PerlDir_chdir
 parameter_list|(
 name|n
 parameter_list|)
-value|chdir(((n)&& *(n)) ? (n) : "SYS$LOGIN")
+value|Chdir(((n)&& *(n)) ? (n) : "SYS$LOGIN")
 end_define
 
 begin_else

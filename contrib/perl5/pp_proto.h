@@ -188,6 +188,13 @@ end_macro
 begin_macro
 name|PERL_CKDEF
 argument_list|(
+argument|Perl_ck_return
+argument_list|)
+end_macro
+
+begin_macro
+name|PERL_CKDEF
+argument_list|(
 argument|Perl_ck_rfun
 argument_list|)
 end_macro
@@ -252,6 +259,13 @@ begin_macro
 name|PERL_CKDEF
 argument_list|(
 argument|Perl_ck_subr
+argument_list|)
+end_macro
+
+begin_macro
+name|PERL_CKDEF
+argument_list|(
+argument|Perl_ck_substr
 argument_list|)
 end_macro
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    dump.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    dump.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -103,8 +103,6 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|PerlIO_printf
 argument_list|(
 name|file
@@ -143,8 +141,6 @@ parameter_list|(
 name|pTHX
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|PerlIO_setlinebuf
 argument_list|(
 name|Perl_debug_log
@@ -177,8 +173,6 @@ modifier|*
 name|stash
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|I32
 name|i
 decl_stmt|;
@@ -1540,7 +1534,7 @@ name|sv
 argument_list|)
 condition|)
 block|{
-name|RESTORE_NUMERIC_STANDARD
+name|STORE_NUMERIC_LOCAL_SET_STANDARD
 argument_list|()
 expr_stmt|;
 name|Perl_sv_catpvf
@@ -2076,8 +2070,6 @@ modifier|*
 name|o
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|Perl_dump_indent
 argument_list|(
 argument|aTHX_ level
@@ -2640,6 +2632,12 @@ operator|->
 name|op_type
 operator|==
 name|OP_RV2SV
+operator|||
+name|o
+operator|->
+name|op_type
+operator|==
+name|OP_GVSV
 operator|||
 name|o
 operator|->
@@ -4677,14 +4675,9 @@ name|STRLEN
 name|pvlim
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 name|SV
 modifier|*
 name|d
-init|=
-name|sv_newmortal
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -4730,33 +4723,63 @@ argument_list|(
 name|sv
 argument_list|)
 expr_stmt|;
-name|Perl_sv_setpvf
+name|d
+operator|=
+name|Perl_newSVpvf
 argument_list|(
-argument|aTHX_ d
-argument_list|,
+name|aTHX_
 literal|"(0x%"
-argument|UVxf
+name|UVxf
 literal|") at 0x%"
-argument|UVxf
+name|UVxf
 literal|"\n%*s  REFCNT = %"
-argument|IVdf
+name|IVdf
 literal|"\n%*s  FLAGS = ("
 argument_list|,
-argument|PTR2UV(SvANY(sv))
+name|PTR2UV
+argument_list|(
+name|SvANY
+argument_list|(
+name|sv
+argument_list|)
+argument_list|)
 argument_list|,
-argument|PTR2UV(sv)
+name|PTR2UV
+argument_list|(
+name|sv
+argument_list|)
 argument_list|,
-argument|(int)(PL_dumpindent*level)
+call|(
+name|int
+call|)
+argument_list|(
+name|PL_dumpindent
+operator|*
+name|level
+argument_list|)
 argument_list|,
 literal|""
 argument_list|,
-argument|(IV)SvREFCNT(sv)
+operator|(
+name|IV
+operator|)
+name|SvREFCNT
+argument_list|(
+name|sv
+argument_list|)
 argument_list|,
-argument|(int)(PL_dumpindent*level)
+call|(
+name|int
+call|)
+argument_list|(
+name|PL_dumpindent
+operator|*
+name|level
+argument_list|)
 argument_list|,
 literal|""
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -5128,6 +5151,34 @@ argument_list|,
 literal|"COMPILED,"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|CvLVALUE
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|sv_catpv
+argument_list|(
+name|d
+argument_list|,
+literal|"LVALUE,"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CvMETHOD
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|sv_catpv
+argument_list|(
+name|d
+argument_list|,
+literal|"METHOD,"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SVt_PVHV
@@ -5204,6 +5255,20 @@ argument_list|(
 name|d
 argument_list|,
 literal|"ASSUMECV,"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|GvIN_PAD
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+name|sv_catpv
+argument_list|(
+name|d
+argument_list|,
+literal|"IN_PAD,"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5457,6 +5522,11 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 return|return;
 case|case
 name|SVt_IV
@@ -5670,6 +5740,11 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -5748,7 +5823,7 @@ operator|==
 name|SVt_NV
 condition|)
 block|{
-name|RESTORE_NUMERIC_STANDARD
+name|STORE_NUMERIC_LOCAL_SET_STANDARD
 argument_list|()
 expr_stmt|;
 comment|/* %Vg doesn't work? --jhi */
@@ -5842,6 +5917,11 @@ argument_list|,
 name|pvlim
 argument_list|)
 expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -5850,7 +5930,14 @@ name|type
 operator|<
 name|SVt_PV
 condition|)
+block|{
+name|SvREFCNT_dec
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|type
@@ -6711,7 +6798,9 @@ argument|aTHX_ level
 argument_list|,
 argument|file
 argument_list|,
-literal|"  hash quality = %.1f%%"
+literal|"  hash quality = %.1"
+argument|NVff
+literal|"%%"
 argument_list|,
 argument|theoret/sum*
 literal|100
@@ -7915,6 +8004,11 @@ argument_list|)
 empty_stmt|;
 break|break;
 block|}
+name|SvREFCNT_dec
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

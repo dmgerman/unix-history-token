@@ -201,7 +201,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* =for apidoc Amn|bool|PL_dowarn  The C variable which corresponds to Perl's $^W warning variable.  =cut */
+comment|/* =for apidoc mn|bool|PL_dowarn  The C variable which corresponds to Perl's $^W warning variable.  =cut */
 end_comment
 
 begin_macro
@@ -518,7 +518,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* =for apidoc Amn|GV *|PL_DBsub When Perl is run in debugging mode, with the B<-d> switch, this GV contains the SV which holds the name of the sub being debugged.  This is the C variable which corresponds to Perl's $DB::sub variable.  See C<PL_DBsingle>.  =for apidoc Amn|SV *|PL_DBsingle When Perl is run in debugging mode, with the B<-d> switch, this SV is a boolean which indicates whether subs are being single-stepped.  Single-stepping is automatically turned on after every step.  This is the C variable which corresponds to Perl's $DB::single variable.  See C<PL_DBsub>.  =for apidoc Amn|SV *|PL_DBtrace Trace variable used when Perl is run in debugging mode, with the B<-d> switch.  This is the C variable which corresponds to Perl's $DB::trace variable.  See C<PL_DBsingle>.  =cut */
+comment|/* =for apidoc mn|GV *|PL_DBsub When Perl is run in debugging mode, with the B<-d> switch, this GV contains the SV which holds the name of the sub being debugged.  This is the C variable which corresponds to Perl's $DB::sub variable.  See C<PL_DBsingle>.  =for apidoc mn|SV *|PL_DBsingle When Perl is run in debugging mode, with the B<-d> switch, this SV is a boolean which indicates whether subs are being single-stepped.  Single-stepping is automatically turned on after every step.  This is the C variable which corresponds to Perl's $DB::single variable.  See C<PL_DBsub>.  =for apidoc mn|SV *|PL_DBtrace Trace variable used when Perl is run in debugging mode, with the B<-d> switch.  This is the C variable which corresponds to Perl's $DB::trace variable.  See C<PL_DBsingle>.  =cut */
 end_comment
 
 begin_macro
@@ -1656,7 +1656,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xiv list--shared by interpreters */
+comment|/* free xiv list */
 end_comment
 
 begin_macro
@@ -1669,7 +1669,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xnv list--shared by interpreters */
+comment|/* free xnv list */
 end_comment
 
 begin_macro
@@ -1682,7 +1682,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xrv list--shared by interpreters */
+comment|/* free xrv list */
 end_comment
 
 begin_macro
@@ -1695,7 +1695,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpv list--shared by interpreters */
+comment|/* free xpv list */
 end_comment
 
 begin_macro
@@ -1708,7 +1708,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpviv list--shared by interpreters */
+comment|/* free xpviv list */
 end_comment
 
 begin_macro
@@ -1721,7 +1721,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpvnv list--shared by interpreters */
+comment|/* free xpvnv list */
 end_comment
 
 begin_macro
@@ -1734,7 +1734,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpvcv list--shared by interpreters */
+comment|/* free xpvcv list */
 end_comment
 
 begin_macro
@@ -1747,7 +1747,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpvav list--shared by interpreters */
+comment|/* free xpvav list */
 end_comment
 
 begin_macro
@@ -1760,7 +1760,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpvhv list--shared by interpreters */
+comment|/* free xpvhv list */
 end_comment
 
 begin_macro
@@ -1773,7 +1773,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpvmg list--shared by interpreters */
+comment|/* free xpvmg list */
 end_comment
 
 begin_macro
@@ -1786,7 +1786,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpvlv list--shared by interpreters */
+comment|/* free xpvlv list */
 end_comment
 
 begin_macro
@@ -1799,7 +1799,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free xpvbm list--shared by interpreters */
+comment|/* free xpvbm list */
 end_comment
 
 begin_macro
@@ -1812,7 +1812,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* free he list--shared by interpreters */
+comment|/* free he list */
 end_comment
 
 begin_macro
@@ -2639,14 +2639,14 @@ end_comment
 begin_macro
 name|PERLVAR
 argument_list|(
-argument|Inumeric_radix
+argument|Idummy1_bincompat
 argument_list|,
 argument|char
 argument_list|)
 end_macro
 
 begin_comment
-comment|/* The radix character if not '.' */
+comment|/* Used to be numeric_radix */
 end_comment
 
 begin_endif
@@ -3260,6 +3260,255 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_macro
+name|PERLVARI
+argument_list|(
+argument|Ibeginav_save
+argument_list|,
+argument|AV*
+argument_list|,
+argument|Nullav
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* save BEGIN{}s when compiling */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_THREADS
+end_ifdef
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ifdpid_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* mutex for fdpid array */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isv_lock_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* mutex for SvLOCK macro */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inullstash
+argument_list|,
+argument|HV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* illegal symbols end up here */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixnv_arenaroot
+argument_list|,
+argument|XPV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xnv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixrv_arenaroot
+argument_list|,
+argument|XPV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xrv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpv_arenaroot
+argument_list|,
+argument|XPV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpviv_arenaroot
+argument_list|,
+argument|XPVIV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpviv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvnv_arenaroot
+argument_list|,
+argument|XPVNV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpvnv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvcv_arenaroot
+argument_list|,
+argument|XPVCV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpvcv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvav_arenaroot
+argument_list|,
+argument|XPVAV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpvav areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvhv_arenaroot
+argument_list|,
+argument|XPVHV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpvhv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvmg_arenaroot
+argument_list|,
+argument|XPVMG*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpvmg areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvlv_arenaroot
+argument_list|,
+argument|XPVLV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpvlv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvbm_arenaroot
+argument_list|,
+argument|XPVBM*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xpvbm areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ihe_arenaroot
+argument_list|,
+argument|XPV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated he areas */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_LOCALE_NUMERIC
+end_ifdef
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inumeric_radix_sv
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* The radix separator if not '.' */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* New variables must be added to the very end for binary compatibility.  * XSUB.h provides wrapper functions via perlapi.h that make this  * irrelevant, but not all code may be expected to #include XSUB.h. */
+end_comment
 
 end_unit
 

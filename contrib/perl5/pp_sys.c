@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    pp_sys.c  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    pp_sys.c  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ name|I_SHADOW
 end_ifdef
 
 begin_comment
-comment|/* Shadow password support for solaris - pdo@cs.umd.edu  * Not just Solaris: at least HP-UX, IRIX, Linux.  * the API is from SysV. --jhi */
+comment|/* Shadow password support for solaris - pdo@cs.umd.edu  * Not just Solaris: at least HP-UX, IRIX, Linux.  * The API is from SysV.  *  * There are at least two more shadow interfaces,  * see the comments in pp_gpwent().  *  * --jhi */
 end_comment
 
 begin_ifdef
@@ -60,27 +60,6 @@ begin_include
 include|#
 directive|include
 file|<shadow.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* XXX If this causes problems, set i_unistd=undef in the hint file.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_UNISTD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_endif
@@ -152,106 +131,6 @@ include|#
 directive|include
 file|<sys/resource.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAS_SOCKET
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|VMS
-argument_list|)
-end_if
-
-begin_comment
-comment|/* VMS handles sockets via vmsish.h */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USE_SOCKS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|I_SOCKS
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<socks.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_NETDB
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ENOTSOCK
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_NET_ERRNO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<net/errno.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -649,12 +528,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|F_SETLK
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|F_SETLKW
+name|FCNTL_CAN_LOCK
 argument_list|)
 end_if
 
@@ -1018,14 +892,11 @@ name|HAS_EACCESS
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|I_SYS_SECURITY
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1037,10 +908,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* XXX Configure test needed for eaccess */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1596,7 +1463,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -2035,7 +1902,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -2201,7 +2068,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -2557,7 +2424,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -2572,6 +2439,8 @@ decl_stmt|;
 name|SV
 modifier|*
 name|name
+init|=
+name|Nullsv
 decl_stmt|;
 name|I32
 name|have_name
@@ -2823,7 +2692,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
@@ -2941,7 +2810,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3119,14 +2988,14 @@ argument_list|(
 name|rstio
 argument_list|)
 operator|=
-literal|'<'
+name|IoTYPE_RDONLY
 expr_stmt|;
 name|IoTYPE
 argument_list|(
 name|wstio
 argument_list|)
 operator|=
-literal|'>'
+name|IoTYPE_WRONLY
 expr_stmt|;
 if|if
 condition|(
@@ -3273,7 +3142,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -3415,7 +3284,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -3509,7 +3378,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
@@ -3690,7 +3559,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -4013,7 +3882,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -4044,14 +3913,6 @@ literal|'P'
 else|:
 literal|'q'
 decl_stmt|;
-if|if
-condition|(
-name|ckWARN
-argument_list|(
-name|WARN_UNTIE
-argument_list|)
-condition|)
-block|{
 name|MAGIC
 modifier|*
 name|mg
@@ -4070,18 +3931,131 @@ argument_list|)
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|mg
-operator|&&
-name|SvREFCNT
-argument_list|(
+name|SV
+modifier|*
+name|obj
+init|=
 name|SvRV
 argument_list|(
 name|mg
 operator|->
 name|mg_obj
 argument_list|)
+decl_stmt|;
+name|GV
+modifier|*
+name|gv
+decl_stmt|;
+name|CV
+modifier|*
+name|cv
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|gv
+operator|=
+name|gv_fetchmethod_autoload
+argument_list|(
+name|SvSTASH
+argument_list|(
+name|obj
+argument_list|)
+argument_list|,
+literal|"UNTIE"
+argument_list|,
+name|FALSE
+argument_list|)
+operator|)
+operator|&&
+name|isGV
+argument_list|(
+name|gv
+argument_list|)
+operator|&&
+operator|(
+name|cv
+operator|=
+name|GvCV
+argument_list|(
+name|gv
+argument_list|)
+operator|)
+condition|)
+block|{
+name|PUSHMARK
+argument_list|(
+name|SP
+argument_list|)
+expr_stmt|;
+name|XPUSHs
+argument_list|(
+name|SvTIED_obj
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|gv
+argument_list|,
+name|mg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|XPUSHs
+argument_list|(
+name|sv_2mortal
+argument_list|(
+name|newSViv
+argument_list|(
+name|SvREFCNT
+argument_list|(
+name|obj
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PUTBACK
+expr_stmt|;
+name|ENTER
+expr_stmt|;
+name|call_sv
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|cv
+argument_list|,
+name|G_VOID
+argument_list|)
+expr_stmt|;
+name|LEAVE
+expr_stmt|;
+name|SPAGAIN
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ckWARN
+argument_list|(
+name|WARN_UNTIE
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|mg
+operator|&&
+name|SvREFCNT
+argument_list|(
+name|obj
 argument_list|)
 operator|>
 literal|1
@@ -4094,7 +4068,7 @@ literal|"untie attempted while %"
 argument|UVuf
 literal|" inner references still exist"
 argument_list|,
-argument|(UV)SvREFCNT(SvRV(mg->mg_obj)) -
+argument|(UV)SvREFCNT(obj) -
 literal|1
 argument_list|)
 empty_stmt|;
@@ -4121,7 +4095,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|SV
 modifier|*
@@ -4218,7 +4192,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|HV
 modifier|*
@@ -4528,7 +4502,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -5311,8 +5285,6 @@ modifier|*
 name|gv
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 if|if
 condition|(
 name|gv
@@ -5350,7 +5322,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -5462,13 +5434,15 @@ operator|==
 name|egv
 condition|)
 block|{
-name|gv_efullname3
+name|gv_efullname4
 argument_list|(
 name|TARG
 argument_list|,
 name|PL_defoutgv
 argument_list|,
 name|Nullch
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|XPUSHTARG
@@ -5531,7 +5505,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -5718,8 +5692,6 @@ modifier|*
 name|retop
 parameter_list|)
 block|{
-name|dTHR
-expr_stmt|;
 specifier|register
 name|PERL_CONTEXT
 modifier|*
@@ -5815,7 +5787,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 specifier|register
 name|GV
@@ -5920,6 +5892,12 @@ operator|!
 name|cv
 condition|)
 block|{
+name|char
+modifier|*
+name|name
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 name|fgv
@@ -5932,27 +5910,40 @@ init|=
 name|sv_newmortal
 argument_list|()
 decl_stmt|;
-name|gv_efullname3
+name|gv_efullname4
 argument_list|(
 name|tmpsv
 argument_list|,
 name|fgv
 argument_list|,
 name|Nullch
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|SvPV_nolen
+argument_list|(
+name|tmpsv
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|&&
+operator|*
+name|name
+condition|)
 name|DIE
 argument_list|(
 name|aTHX_
 literal|"Undefined format \"%s\" called"
 argument_list|,
-name|SvPVX
-argument_list|(
-name|tmpsv
-argument_list|)
+name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|DIE
 argument_list|(
 name|aTHX_
@@ -6017,7 +6008,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
@@ -6476,6 +6467,13 @@ argument_list|(
 name|fgv
 argument_list|)
 expr_stmt|;
+block|{
+name|char
+modifier|*
+name|name
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -6484,31 +6482,46 @@ condition|)
 block|{
 name|SV
 modifier|*
-name|tmpsv
+name|sv
 init|=
 name|sv_newmortal
 argument_list|()
 decl_stmt|;
-name|gv_efullname3
+name|gv_efullname4
 argument_list|(
-name|tmpsv
+name|sv
 argument_list|,
 name|fgv
 argument_list|,
 name|Nullch
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|SvPV_nolen
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|&&
+operator|*
+name|name
+condition|)
 name|DIE
 argument_list|(
 name|aTHX_
 literal|"Undefined top format \"%s\" called"
 argument_list|,
-name|SvPVX
-argument_list|(
-name|tmpsv
-argument_list|)
+name|name
 argument_list|)
 expr_stmt|;
+comment|/* why no: 	    else 	        DIE(aTHX_ "Undefined top format called"); 	    ?*/
 block|}
 if|if
 condition|(
@@ -6593,6 +6606,21 @@ name|io
 argument_list|)
 condition|)
 block|{
+comment|/* integrate with report_evil_fh()? */
+name|char
+modifier|*
+name|name
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|isGV
+argument_list|(
+name|gv
+argument_list|)
+condition|)
+block|{
 name|SV
 modifier|*
 name|sv
@@ -6600,22 +6628,47 @@ init|=
 name|sv_newmortal
 argument_list|()
 decl_stmt|;
-name|gv_efullname3
+name|gv_efullname4
 argument_list|(
 name|sv
 argument_list|,
 name|gv
 argument_list|,
 name|Nullch
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|SvPV_nolen
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|&&
+operator|*
+name|name
+condition|)
 name|Perl_warner
 argument_list|(
 argument|aTHX_ WARN_IO
 argument_list|,
 literal|"Filehandle %s opened only for input"
 argument_list|,
-argument|SvPV_nolen(sv)
+argument|name
+argument_list|)
+empty_stmt|;
+else|else
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_IO
+argument_list|,
+literal|"Filehandle opened only for input"
 argument_list|)
 empty_stmt|;
 block|}
@@ -6627,15 +6680,15 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
-literal|"write"
-argument_list|,
-literal|"filehandle"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 block|}
@@ -6780,7 +6833,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -6970,31 +7023,24 @@ condition|)
 block|{
 if|if
 condition|(
-name|ckWARN
+name|ckWARN2
 argument_list|(
 name|WARN_UNOPENED
+argument_list|,
+name|WARN_CLOSED
 argument_list|)
 condition|)
-block|{
-name|gv_efullname3
+name|report_evil_fh
 argument_list|(
-name|sv
-argument_list|,
 name|gv
 argument_list|,
-name|Nullch
+name|io
+argument_list|,
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
-name|Perl_warner
-argument_list|(
-argument|aTHX_ WARN_UNOPENED
-argument_list|,
-literal|"Filehandle %s never opened"
-argument_list|,
-argument|SvPV(sv,n_a)
-argument_list|)
-empty_stmt|;
-block|}
 name|SETERRNO
 argument_list|(
 name|EBADF
@@ -7030,6 +7076,7 @@ name|WARN_IO
 argument_list|)
 condition|)
 block|{
+comment|/* integrate with report_evil_fh()? */
 if|if
 condition|(
 name|IoIFP
@@ -7038,22 +7085,61 @@ name|io
 argument_list|)
 condition|)
 block|{
-name|gv_efullname3
+name|char
+modifier|*
+name|name
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|isGV
+argument_list|(
+name|gv
+argument_list|)
+condition|)
+block|{
+name|gv_efullname4
 argument_list|(
 name|sv
 argument_list|,
 name|gv
 argument_list|,
 name|Nullch
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|SvPV_nolen
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|&&
+operator|*
+name|name
+condition|)
 name|Perl_warner
 argument_list|(
 argument|aTHX_ WARN_IO
 argument_list|,
 literal|"Filehandle %s opened only for input"
 argument_list|,
-argument|SvPV(sv,n_a)
+argument|name
+argument_list|)
+empty_stmt|;
+else|else
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_IO
+argument_list|,
+literal|"Filehandle opened only for input"
 argument_list|)
 empty_stmt|;
 block|}
@@ -7065,15 +7151,15 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
-literal|"printf"
-argument_list|,
-literal|"filehandle"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 block|}
@@ -7193,7 +7279,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
@@ -7316,7 +7402,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -7630,22 +7716,6 @@ literal|255
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|OS2
-comment|/* At least Warp3+IAK: only the first byte of bufsize set */
-if|if
-condition|(
-name|bufsize
-operator|>=
-literal|256
-condition|)
-name|bufsize
-operator|=
-literal|255
-expr_stmt|;
-endif|#
-directive|endif
 name|buffer
 operator|=
 name|SvGROW
@@ -7695,6 +7765,20 @@ literal|0
 condition|)
 name|RETPUSHUNDEF
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EPOC
+comment|/* Bogus return without padding */
+name|bufsize
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|SvCUR_set
 argument_list|(
 name|bufsv
@@ -7867,7 +7951,7 @@ argument_list|(
 name|io
 argument_list|)
 operator|==
-literal|'s'
+name|IoTYPE_SOCKET
 condition|)
 block|{
 name|length
@@ -7928,7 +8012,7 @@ argument_list|(
 name|io
 argument_list|)
 operator|==
-literal|'s'
+name|IoTYPE_SOCKET
 condition|)
 block|{
 name|char
@@ -8053,7 +8137,7 @@ argument_list|(
 name|io
 argument_list|)
 operator|==
-literal|'>'
+name|IoTYPE_WRONLY
 operator|||
 name|IoIFP
 argument_list|(
@@ -8078,6 +8162,21 @@ name|WARN_IO
 argument_list|)
 condition|)
 block|{
+comment|/* integrate with report_evil_fh()? */
+name|char
+modifier|*
+name|name
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|isGV
+argument_list|(
+name|gv
+argument_list|)
+condition|)
+block|{
 name|SV
 modifier|*
 name|sv
@@ -8085,22 +8184,47 @@ init|=
 name|sv_newmortal
 argument_list|()
 decl_stmt|;
-name|gv_efullname3
+name|gv_efullname4
 argument_list|(
 name|sv
 argument_list|,
 name|gv
 argument_list|,
 name|Nullch
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+name|name
+operator|=
+name|SvPV_nolen
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|name
+operator|&&
+operator|*
+name|name
+condition|)
 name|Perl_warner
 argument_list|(
 argument|aTHX_ WARN_IO
 argument_list|,
 literal|"Filehandle %s opened only for output"
 argument_list|,
-argument|SvPV_nolen(sv)
+argument|name
+argument_list|)
+empty_stmt|;
+else|else
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_IO
+argument_list|,
+literal|"Filehandle opened only for output"
 argument_list|)
 empty_stmt|;
 block|}
@@ -8187,7 +8311,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|int
 name|items
@@ -8256,7 +8380,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -8493,39 +8617,17 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-block|{
-if|if
-condition|(
+name|report_evil_fh
+argument_list|(
+name|gv
+argument_list|,
+name|io
+argument_list|,
 name|PL_op
 operator|->
 name|op_type
-operator|==
-name|OP_SYSWRITE
-condition|)
-name|report_closed_fh
-argument_list|(
-name|gv
-argument_list|,
-name|io
-argument_list|,
-literal|"syswrite"
-argument_list|,
-literal|"filehandle"
 argument_list|)
 expr_stmt|;
-else|else
-name|report_closed_fh
-argument_list|(
-name|gv
-argument_list|,
-name|io
-argument_list|,
-literal|"send"
-argument_list|,
-literal|"socket"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -8625,7 +8727,7 @@ argument_list|(
 name|io
 argument_list|)
 operator|==
-literal|'s'
+name|IoTYPE_SOCKET
 condition|)
 block|{
 name|retval
@@ -8836,7 +8938,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
@@ -9083,7 +9185,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -9228,7 +9330,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
@@ -9492,7 +9594,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 comment|/* There seems to be no consensus on the length type of truncate()      * and ftruncate(), both off_t and size_t have supporters. In      * general one would think that when using large files, off_t is      * at least as wide as size_t, so using an off_t should be okay. */
 comment|/* XXX Configure probe for the length type of *truncate() needed XXX */
@@ -9888,7 +9990,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -10269,7 +10371,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -10282,6 +10384,12 @@ decl_stmt|;
 name|GV
 modifier|*
 name|gv
+decl_stmt|;
+name|IO
+modifier|*
+name|io
+init|=
+name|NULL
 decl_stmt|;
 name|PerlIO
 modifier|*
@@ -10317,26 +10425,33 @@ if|if
 condition|(
 name|gv
 operator|&&
+operator|(
+name|io
+operator|=
 name|GvIO
 argument_list|(
 name|gv
 argument_list|)
+operator|)
 condition|)
 name|fp
 operator|=
 name|IoIFP
 argument_list|(
-name|GvIOp
-argument_list|(
-name|gv
-argument_list|)
+name|io
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|fp
 operator|=
 name|Nullfp
 expr_stmt|;
+name|io
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|fp
@@ -10372,6 +10487,26 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|ckWARN2
+argument_list|(
+name|WARN_UNOPENED
+argument_list|,
+name|WARN_CLOSED
+argument_list|)
+condition|)
+name|report_evil_fh
+argument_list|(
+name|gv
+argument_list|,
+name|io
+argument_list|,
+name|PL_op
+operator|->
+name|op_type
+argument_list|)
+expr_stmt|;
 name|value
 operator|=
 literal|0
@@ -10381,27 +10516,6 @@ argument_list|(
 name|EBADF
 argument_list|,
 name|RMS$_IFI
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ckWARN
-argument_list|(
-name|WARN_CLOSED
-argument_list|)
-condition|)
-name|report_closed_fh
-argument_list|(
-name|gv
-argument_list|,
-name|GvIO
-argument_list|(
-name|gv
-argument_list|)
-argument_list|,
-literal|"flock"
-argument_list|,
-literal|"filehandle"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10439,7 +10553,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -10570,7 +10684,7 @@ argument_list|(
 name|io
 argument_list|)
 operator|=
-literal|'s'
+name|IoTYPE_SOCKET
 expr_stmt|;
 if|if
 condition|(
@@ -10664,6 +10778,22 @@ expr_stmt|;
 comment|/* ensure close-on-exec */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|EPOC
+name|setbuf
+argument_list|(
+name|IoIFP
+argument_list|(
+name|io
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* EPOC gets confused about sockets */
+endif|#
+directive|endif
 name|RETPUSHYES
 expr_stmt|;
 else|#
@@ -10689,7 +10819,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -10858,7 +10988,7 @@ argument_list|(
 name|io1
 argument_list|)
 operator|=
-literal|'s'
+name|IoTYPE_SOCKET
 expr_stmt|;
 name|IoIFP
 argument_list|(
@@ -10895,7 +11025,7 @@ argument_list|(
 name|io2
 argument_list|)
 operator|=
-literal|'s'
+name|IoTYPE_SOCKET
 expr_stmt|;
 if|if
 condition|(
@@ -11105,7 +11235,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -11427,15 +11557,15 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
-literal|"bind"
-argument_list|,
-literal|"socket"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 end_if
@@ -11484,7 +11614,7 @@ operator|(
 name|pp_connect
 operator|)
 block|{
-name|djSP
+name|dSP
 block|;
 ifdef|#
 directive|ifdef
@@ -11600,15 +11730,15 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
-literal|"connect"
-argument_list|,
-literal|"socket"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 end_if
@@ -11657,7 +11787,7 @@ operator|(
 name|pp_listen
 operator|)
 block|{
-name|djSP
+name|dSP
 block|;
 ifdef|#
 directive|ifdef
@@ -11741,15 +11871,15 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
-literal|"listen"
-argument_list|,
-literal|"socket"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 end_if
@@ -11798,7 +11928,7 @@ operator|(
 name|pp_accept
 operator|)
 block|{
-name|djSP
+name|dSP
 block|;
 name|dTARGET
 block|;
@@ -12002,7 +12132,7 @@ argument_list|(
 name|nstio
 argument_list|)
 operator|=
-literal|'s'
+name|IoTYPE_SOCKET
 expr_stmt|;
 end_expr_stmt
 
@@ -12114,6 +12244,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EPOC
+end_ifdef
+
+begin_expr_stmt
+name|len
+operator|=
+sizeof|sizeof
+name|saddr
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* EPOC somehow truncates info */
+end_comment
+
+begin_expr_stmt
+name|setbuf
+argument_list|(
+name|IoIFP
+argument_list|(
+name|nstio
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* EPOC gets confused about sockets */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|PUSHp
 argument_list|(
@@ -12147,7 +12317,7 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|ggv
 argument_list|,
@@ -12160,9 +12330,9 @@ argument_list|)
 else|:
 literal|0
 argument_list|,
-literal|"accept"
-argument_list|,
-literal|"socket"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 end_if
@@ -12216,7 +12386,7 @@ operator|(
 name|pp_shutdown
 operator|)
 block|{
-name|djSP
+name|dSP
 block|;
 name|dTARGET
 block|;
@@ -12300,15 +12470,15 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
-literal|"shutdown"
-argument_list|,
-literal|"socket"
+name|PL_op
+operator|->
+name|op_type
 argument_list|)
 expr_stmt|;
 end_if
@@ -12386,7 +12556,7 @@ operator|(
 name|pp_ssockopt
 operator|)
 block|{
-name|djSP
+name|dSP
 block|;
 ifdef|#
 directive|ifdef
@@ -12725,21 +12895,13 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
 name|optype
-operator|==
-name|OP_GSOCKOPT
-condition|?
-literal|"getsockopt"
-else|:
-literal|"setsockopt"
-argument_list|,
-literal|"socket"
 argument_list|)
 expr_stmt|;
 end_if
@@ -12822,7 +12984,7 @@ operator|(
 name|pp_getpeername
 operator|)
 block|{
-name|djSP
+name|dSP
 block|;
 ifdef|#
 directive|ifdef
@@ -13168,21 +13330,13 @@ argument_list|(
 name|WARN_CLOSED
 argument_list|)
 condition|)
-name|report_closed_fh
+name|report_evil_fh
 argument_list|(
 name|gv
 argument_list|,
 name|io
 argument_list|,
 name|optype
-operator|==
-name|OP_GETSOCKNAME
-condition|?
-literal|"getsockname"
-else|:
-literal|"getpeername"
-argument_list|,
-literal|"socket"
 argument_list|)
 expr_stmt|;
 end_if
@@ -13257,11 +13411,11 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|GV
 modifier|*
-name|tmpgv
+name|gv
 decl_stmt|;
 name|I32
 name|gimme
@@ -13283,7 +13437,7 @@ operator|&
 name|OPf_REF
 condition|)
 block|{
-name|tmpgv
+name|gv
 operator|=
 name|cGVOP_gv
 expr_stmt|;
@@ -13291,7 +13445,7 @@ name|do_fstat
 label|:
 if|if
 condition|(
-name|tmpgv
+name|gv
 operator|!=
 name|PL_defgv
 condition|)
@@ -13302,7 +13456,7 @@ name|OP_STAT
 expr_stmt|;
 name|PL_statgv
 operator|=
-name|tmpgv
+name|gv
 expr_stmt|;
 name|sv_setpv
 argument_list|(
@@ -13316,14 +13470,14 @@ operator|=
 operator|(
 name|GvIO
 argument_list|(
-name|tmpgv
+name|gv
 argument_list|)
 operator|&&
 name|IoIFP
 argument_list|(
 name|GvIOp
 argument_list|(
-name|tmpgv
+name|gv
 argument_list|)
 argument_list|)
 condition|?
@@ -13335,7 +13489,7 @@ name|IoIFP
 argument_list|(
 name|GvIOn
 argument_list|(
-name|tmpgv
+name|gv
 argument_list|)
 argument_list|)
 argument_list|)
@@ -13355,10 +13509,35 @@ name|PL_laststatval
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|ckWARN2
+argument_list|(
+name|WARN_UNOPENED
+argument_list|,
+name|WARN_CLOSED
+argument_list|)
+condition|)
+name|report_evil_fh
+argument_list|(
+name|gv
+argument_list|,
+name|GvIO
+argument_list|(
+name|gv
+argument_list|)
+argument_list|,
+name|PL_op
+operator|->
+name|op_type
+argument_list|)
+expr_stmt|;
 name|max
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -13378,7 +13557,7 @@ operator|==
 name|SVt_PVGV
 condition|)
 block|{
-name|tmpgv
+name|gv
 operator|=
 operator|(
 name|GV
@@ -13409,7 +13588,7 @@ operator|==
 name|SVt_PVGV
 condition|)
 block|{
-name|tmpgv
+name|gv
 operator|=
 operator|(
 name|GV
@@ -13972,7 +14151,7 @@ block|{
 name|I32
 name|result
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -14086,7 +14265,7 @@ block|{
 name|I32
 name|result
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -14200,7 +14379,7 @@ block|{
 name|I32
 name|result
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -14314,7 +14493,7 @@ block|{
 name|I32
 name|result
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -14418,7 +14597,7 @@ block|{
 name|I32
 name|result
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -14522,7 +14701,7 @@ block|{
 name|I32
 name|result
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -14629,7 +14808,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -14675,7 +14854,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -14725,7 +14904,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -14765,7 +14944,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -14820,7 +14999,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -14865,7 +15044,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -14910,7 +15089,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -14955,7 +15134,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -14996,7 +15175,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -15037,7 +15216,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -15078,7 +15257,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -15119,7 +15298,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -15160,7 +15339,7 @@ init|=
 name|my_stat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -15201,7 +15380,7 @@ init|=
 name|my_lstat
 argument_list|()
 decl_stmt|;
-name|djSP
+name|dSP
 expr_stmt|;
 if|if
 condition|(
@@ -15236,7 +15415,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -15283,7 +15462,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -15330,7 +15509,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -15377,7 +15556,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|int
 name|fd
@@ -15594,7 +15773,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|I32
 name|i
@@ -15938,9 +16117,11 @@ else|else
 block|{
 if|if
 condition|(
-name|ckWARN
+name|ckWARN2
 argument_list|(
 name|WARN_UNOPENED
+argument_list|,
+name|WARN_CLOSED
 argument_list|)
 condition|)
 block|{
@@ -15948,15 +16129,20 @@ name|gv
 operator|=
 name|cGVOP_gv
 expr_stmt|;
-name|Perl_warner
+name|report_evil_fh
 argument_list|(
-argument|aTHX_ WARN_UNOPENED
+name|gv
 argument_list|,
-literal|"Test on unopened file<%s>"
-argument_list|,
-argument|GvENAME(gv)
+name|GvIO
+argument_list|(
+name|gv
 argument_list|)
-empty_stmt|;
+argument_list|,
+name|PL_op
+operator|->
+name|op_type
+argument_list|)
+expr_stmt|;
 block|}
 name|SETERRNO
 argument_list|(
@@ -16084,7 +16270,7 @@ name|fp
 argument_list|,
 literal|'<'
 argument_list|,
-name|TRUE
+name|O_BINARY
 argument_list|)
 expr_stmt|;
 name|len
@@ -16273,10 +16459,11 @@ directive|endif
 comment|/* utf8 characters don't count as odd */
 if|if
 condition|(
+name|UTF8_IS_START
+argument_list|(
 operator|*
 name|s
-operator|&
-literal|0x40
+argument_list|)
 condition|)
 block|{
 name|int
@@ -16315,16 +16502,14 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
+operator|!
+name|UTF8_IS_CONTINUATION
+argument_list|(
 name|s
 index|[
 name|j
 index|]
-operator|&
-literal|0xc0
-operator|)
-operator|!=
-literal|0x80
+argument_list|)
 condition|)
 goto|goto
 name|not_utf8
@@ -16451,7 +16636,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -16659,7 +16844,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -16721,7 +16906,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -16779,7 +16964,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -16827,7 +17012,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -16875,7 +17060,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -16923,7 +17108,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -17077,7 +17262,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -17146,7 +17331,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -17215,7 +17400,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -17779,7 +17964,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -17899,7 +18084,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -17964,7 +18149,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -18088,7 +18273,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -18383,7 +18568,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -18507,7 +18692,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -18613,7 +18798,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -18712,7 +18897,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -18854,7 +19039,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAS_FORK
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -18950,7 +19135,7 @@ name|defined
 argument_list|(
 name|PERL_IMPLICIT_SYS
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -18970,6 +19155,15 @@ name|childpid
 operator|=
 name|PerlProc_fork
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|childpid
+operator|==
+operator|-
+literal|1
+condition|)
+name|RETSETUNDEF
 expr_stmt|;
 name|PUSHi
 argument_list|(
@@ -19028,7 +19222,7 @@ name|defined
 argument_list|(
 name|MACOS_TRADITIONAL
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -19051,6 +19245,37 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_ITHREADS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PERL_IMPLICIT_SYS
+argument_list|)
+comment|/* 0 and -1 are both error returns (the former applies to WNOHANG case) */
+name|STATUS_NATIVE_SET
+argument_list|(
+operator|(
+name|childpid
+operator|&&
+name|childpid
+operator|!=
+operator|-
+literal|1
+operator|)
+condition|?
+name|argflags
+else|:
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|STATUS_NATIVE_SET
 argument_list|(
 operator|(
@@ -19065,6 +19290,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|XPUSHi
 argument_list|(
 name|childpid
@@ -19120,7 +19347,7 @@ name|defined
 argument_list|(
 name|MACOS_TRADITIONAL
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -19153,6 +19380,37 @@ argument_list|,
 name|optype
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_ITHREADS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|PERL_IMPLICIT_SYS
+argument_list|)
+comment|/* 0 and -1 are both error returns (the former applies to WNOHANG case) */
+name|STATUS_NATIVE_SET
+argument_list|(
+operator|(
+name|childpid
+operator|&&
+name|childpid
+operator|!=
+operator|-
+literal|1
+operator|)
+condition|?
+name|argflags
+else|:
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|STATUS_NATIVE_SET
 argument_list|(
 operator|(
@@ -19167,6 +19425,8 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|SETi
 argument_list|(
 name|childpid
@@ -19197,7 +19457,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -19298,6 +19558,12 @@ operator|!
 name|defined
 argument_list|(
 name|OS2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
 argument_list|)
 if|if
 condition|(
@@ -19754,6 +20020,14 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* ! FORK or VMS or OS/2 */
+name|PL_statusvalue
+operator|=
+literal|0
+expr_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|PL_op
@@ -19851,6 +20125,18 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|PL_statusvalue
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* hint that value must be returned as is */
+name|result
+operator|=
+literal|1
+expr_stmt|;
 name|STATUS_NATIVE_SET
 argument_list|(
 name|value
@@ -19865,6 +20151,10 @@ name|ORIGMARK
 expr_stmt|;
 name|PUSHi
 argument_list|(
+name|result
+condition|?
+name|value
+else|:
 name|STATUS_CURRENT
 argument_list|)
 expr_stmt|;
@@ -19885,7 +20175,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -20157,7 +20447,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -20222,7 +20512,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAS_GETPPID
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -20260,7 +20550,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAS_GETPGRP
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -20360,7 +20650,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAS_SETPGRP
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -20487,7 +20777,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -20543,7 +20833,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -20619,7 +20909,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -20713,7 +21003,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -20886,7 +21176,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|Time_t
 name|when
@@ -21239,7 +21529,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -21309,7 +21599,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -21454,7 +21744,7 @@ name|defined
 argument_list|(
 name|HAS_SHM
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -21564,7 +21854,7 @@ name|defined
 argument_list|(
 name|HAS_SHM
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -21634,7 +21924,7 @@ name|defined
 argument_list|(
 name|HAS_SHM
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -21708,7 +21998,7 @@ name|defined
 argument_list|(
 name|HAS_SHM
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -21786,7 +22076,7 @@ name|defined
 argument_list|(
 name|HAS_SHM
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -21880,7 +22170,7 @@ name|defined
 argument_list|(
 name|HAS_SHM
 argument_list|)
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;
@@ -21998,7 +22288,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -22571,7 +22861,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -23011,7 +23301,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -23406,7 +23696,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -23871,7 +24161,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -23906,7 +24196,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -23941,7 +24231,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -23976,7 +24266,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -24011,7 +24301,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -24051,7 +24341,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -24091,7 +24381,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -24131,7 +24421,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -24231,7 +24521,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -24248,40 +24538,25 @@ name|SV
 modifier|*
 name|sv
 decl_stmt|;
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pwent
-decl_stmt|;
-name|STRLEN
-name|n_a
-decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAS_GETSPENT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|HAS_GETSPNAM
-argument_list|)
-name|struct
-name|spwd
-modifier|*
-name|spwent
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
-if|if
+comment|/*      * We currently support only the SysV getsp* shadow password interface.      * The interface is declared in<shadow.h> and often one needs to link      * with -lsecurity or some such.      * This interface is used at least by Solaris, HP-UX, IRIX, and Linux.      * (and SCO?)      *      * AIX getpwnam() is clever enough to return the encrypted password      * only if the caller (euid?) is root.      *      * There are at least two other shadow password APIs.  Many platforms      * seem to contain more than one interface for accessing the shadow      * password databases, possibly for compatibility reasons.      * The getsp*() is by far he simplest one, the other two interfaces      * are much more complicated, but also very similar to each other.      *      *<sys/types.h>      *<sys/security.h>      *<prot.h>      * struct pr_passwd *getprpw*();      * The password is in      * char getprpw*(...).ufld.fd_encrypt[]      * Mention HAS_GETPRPWNAM here so that Configure probes for it.      *      *<sys/types.h>      *<sys/security.h>      *<prot.h>      * struct es_passwd *getespw*();      * The password is in      * char *(getespw*(...).ufld.fd_encrypt)      * Mention HAS_GETESPWNAM here so that Configure probes for it.      *      * Mention I_PROT here so that Configure probes for it.      *      * In HP-UX for getprpw*() the manual page claims that one should include      *<hpsecurity.h> instead of<sys/security.h>, but that is not needed      * if one includes<shadow.h> as that includes<hpsecurity.h>,      * and pp_sys.c already includes<shadow.h> if there is such.      *      * Note that<sys/security.h> is already probed for, but currently      * it is only included in special cases.      *      * In Digital UNIX/Tru64 if using the getespw*() (which seems to be      * be preferred interface, even though also the getprpw*() interface      * is available) one needs to link with -lsecurity -ldb -laud -lm.      * One also needs to call set_auth_parameters() in main() before      * doing anything else, whether one is using getespw*() or getprpw*().      *      * Note that accessing the shadow databases can be magnitudes      * slower than accessing the standard databases.      *      * --jhi      */
+switch|switch
 condition|(
 name|which
-operator|==
-name|OP_GPWNAM
 condition|)
+block|{
+case|case
+name|OP_GPWNAM
+case|:
 name|pwent
 operator|=
 name|getpwnam
@@ -24289,31 +24564,29 @@ argument_list|(
 name|POPpx
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|which
-operator|==
+break|break;
+case|case
 name|OP_GPWUID
-condition|)
+case|:
 name|pwent
 operator|=
 name|getpwuid
 argument_list|(
+operator|(
+name|Uid_t
+operator|)
 name|POPi
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|OP_GPWENT
+case|:
 ifdef|#
 directive|ifdef
 name|HAS_GETPWENT
 name|pwent
 operator|=
-operator|(
-expr|struct
-name|passwd
-operator|*
-operator|)
 name|getpwent
 argument_list|()
 expr_stmt|;
@@ -24328,76 +24601,8 @@ argument_list|)
 empty_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HAS_GETSPNAM
-if|if
-condition|(
-name|which
-operator|==
-name|OP_GPWNAM
-condition|)
-block|{
-if|if
-condition|(
-name|pwent
-condition|)
-name|spwent
-operator|=
-name|getspnam
-argument_list|(
-name|pwent
-operator|->
-name|pw_name
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|HAS_GETSPUID
-comment|/* AFAIK there isn't any anywhere. --jhi */
-elseif|else
-if|if
-condition|(
-name|which
-operator|==
-name|OP_GPWUID
-condition|)
-block|{
-if|if
-condition|(
-name|pwent
-condition|)
-name|spwent
-operator|=
-name|getspnam
-argument_list|(
-name|pwent
-operator|->
-name|pw_name
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|HAS_GETSPENT
-else|else
-name|spwent
-operator|=
-operator|(
-expr|struct
-name|spwd
-operator|*
-operator|)
-name|getspent
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|EXTEND
 argument_list|(
 name|SP
@@ -24514,23 +24719,49 @@ name|PL_sv_no
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SvPOK_off
+argument_list|(
+name|sv
+argument_list|)
+expr_stmt|;
+comment|/* If we have getspnam(), we try to dig up the shadow 	 * password.  If we are underprivileged, the shadow 	 * interface will set the errno to EACCES or similar, 	 * and return a null pointer.  If this happens, we will 	 * use the dummy password (usually "*" or "x") from the 	 * standard password database. 	 * 	 * In theory we could skip the shadow call completely 	 * if euid != 0 but in practice we cannot know which 	 * security measures are guarding the shadow databases 	 * on a random platform. 	 * 	 * Resist the urge to use additional shadow interfaces. 	 * Divert the urge to writing an extension instead. 	 * 	 * --jhi */
 ifdef|#
 directive|ifdef
-name|PWPASSWD
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAS_GETSPENT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|HAS_GETSPNAM
+block|{
+name|struct
+name|spwd
+modifier|*
+name|spwent
+decl_stmt|;
+name|int
+name|saverrno
+decl_stmt|;
+comment|/* Save and restore errno so that 			   * underprivileged attempts seem 			   * to have never made the unsccessful 			   * attempt to retrieve the shadow password. */
+name|saverrno
+operator|=
+name|errno
+expr_stmt|;
+name|spwent
+operator|=
+name|getspnam
+argument_list|(
+name|pwent
+operator|->
+name|pw_name
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saverrno
+expr_stmt|;
 if|if
 condition|(
 name|spwent
+operator|&&
+name|spwent
+operator|->
+name|sp_pwdp
 condition|)
 name|sv_setpv
 argument_list|(
@@ -24541,35 +24772,36 @@ operator|->
 name|sp_pwdp
 argument_list|)
 expr_stmt|;
-else|else
-name|sv_setpv
-argument_list|(
-name|sv
-argument_list|,
-name|pwent
-operator|->
-name|pw_passwd
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|sv_setpv
-argument_list|(
-name|sv
-argument_list|,
-name|pwent
-operator|->
-name|pw_passwd
-argument_list|)
-expr_stmt|;
+block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|PWPASSWD
+if|if
+condition|(
+operator|!
+name|SvPOK
+argument_list|(
+name|sv
+argument_list|)
+condition|)
+comment|/* Use the standard password, then. */
+name|sv_setpv
+argument_list|(
+name|sv
+argument_list|,
+name|pwent
+operator|->
+name|pw_passwd
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 ifndef|#
 directive|ifndef
 name|INCOMPLETE_TAINTS
-comment|/* passwd is tainted because user himself can diddle with it. */
+comment|/* passwd is tainted because user himself can diddle with it. 	 * admittedly not much and in a very limited way, but nevertheless. */
 name|SvTAINTED_on
 argument_list|(
 name|sv
@@ -24665,7 +24897,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* pw_change, pw_quota, and pw_age are mutually exclusive. */
+comment|/* pw_change, pw_quota, and pw_age are mutually exclusive-- 	 * because of the poor interface of the Perl getpw*(), 	 * not because there's some standard/convention saying so. 	 * A better interface would have been to return a hash, 	 * but we are accursed by our history, alas. --jhi.  */
 name|PUSHs
 argument_list|(
 name|sv
@@ -24729,7 +24961,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* pw_class and pw_comment are mutually exclusive. */
+comment|/* pw_class and pw_comment are mutually exclusive--. 	 * see the above note for pw_change, pw_quota, and pw_age. */
 name|PUSHs
 argument_list|(
 name|sv
@@ -24912,7 +25144,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -24928,14 +25160,6 @@ argument_list|)
 name|setpwent
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAS_SETSPENT
-name|setspent
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|RETPUSHYES
 expr_stmt|;
 else|#
@@ -24961,7 +25185,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -24977,14 +25201,6 @@ argument_list|)
 name|endpwent
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAS_ENDSPENT
-name|endspent
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|RETPUSHYES
 expr_stmt|;
 else|#
@@ -25070,7 +25286,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -25374,7 +25590,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -25415,7 +25631,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 if|#
 directive|if
@@ -25456,7 +25672,7 @@ end_macro
 
 begin_block
 block|{
-name|djSP
+name|dSP
 expr_stmt|;
 name|dTARGET
 expr_stmt|;
@@ -25528,7 +25744,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAS_SYSCALL
-name|djSP
+name|dSP
 expr_stmt|;
 name|dMARK
 expr_stmt|;

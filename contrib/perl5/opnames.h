@@ -1074,5 +1074,27 @@ name|MAXO
 value|351
 end_define
 
+begin_define
+define|#
+directive|define
+name|OP_IS_SOCKET
+parameter_list|(
+name|op
+parameter_list|)
+define|\
+value|((op) == OP_ACCEPT || \ 	 (op) == OP_BIND || \ 	 (op) == OP_CONNECT || \ 	 (op) == OP_GETPEERNAME || \ 	 (op) == OP_GETSOCKNAME || \ 	 (op) == OP_GSOCKOPT || \ 	 (op) == OP_LISTEN || \ 	 (op) == OP_RECV || \ 	 (op) == OP_SEND || \ 	 (op) == OP_SHUTDOWN || \ 	 (op) == OP_SOCKET || \ 	 (op) == OP_SOCKPAIR || \ 	 (op) == OP_SSOCKOPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_IS_FILETEST
+parameter_list|(
+name|op
+parameter_list|)
+define|\
+value|((op) == OP_FTATIME || \ 	 (op) == OP_FTBINARY || \ 	 (op) == OP_FTBLK || \ 	 (op) == OP_FTCHR || \ 	 (op) == OP_FTCTIME || \ 	 (op) == OP_FTDIR || \ 	 (op) == OP_FTEEXEC || \ 	 (op) == OP_FTEOWNED || \ 	 (op) == OP_FTEREAD || \ 	 (op) == OP_FTEWRITE || \ 	 (op) == OP_FTFILE || \ 	 (op) == OP_FTIS || \ 	 (op) == OP_FTLINK || \ 	 (op) == OP_FTMTIME || \ 	 (op) == OP_FTPIPE || \ 	 (op) == OP_FTREXEC || \ 	 (op) == OP_FTROWNED || \ 	 (op) == OP_FTRREAD || \ 	 (op) == OP_FTRWRITE || \ 	 (op) == OP_FTSGID || \ 	 (op) == OP_FTSIZE || \ 	 (op) == OP_FTSOCK || \ 	 (op) == OP_FTSUID || \ 	 (op) == OP_FTSVTX || \ 	 (op) == OP_FTTEXT || \ 	 (op) == OP_FTTTY || \ 	 (op) == OP_FTZERO)
+end_define
+
 end_unit
 

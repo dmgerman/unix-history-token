@@ -272,6 +272,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GLOB_ALPHASORT
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Alphabetic, not ASCII sort, like csh. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GLOB_NOSPACE
 value|(-1)
 end_define

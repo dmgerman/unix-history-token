@@ -438,6 +438,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|apply_attrs_string
+value|Perl_apply_attrs_string
+end_define
+
+begin_define
+define|#
+directive|define
 name|avhv_delete_ent
 value|Perl_avhv_delete_ent
 end_define
@@ -853,6 +860,13 @@ define|#
 directive|define
 name|fprintf_nocontext
 value|Perl_fprintf_nocontext
+end_define
+
+begin_define
+define|#
+directive|define
+name|printf_nocontext
+value|Perl_printf_nocontext
 end_define
 
 begin_endif
@@ -1568,6 +1582,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|gv_efullname4
+value|Perl_gv_efullname4
+end_define
+
+begin_define
+define|#
+directive|define
 name|gv_fetchfile
 value|Perl_gv_fetchfile
 end_define
@@ -1612,6 +1633,13 @@ define|#
 directive|define
 name|gv_fullname3
 value|Perl_gv_fullname3
+end_define
+
+begin_define
+define|#
+directive|define
+name|gv_fullname4
+value|Perl_gv_fullname4
 end_define
 
 begin_define
@@ -1843,6 +1871,20 @@ define|#
 directive|define
 name|invert
 value|Perl_invert
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_gv_magical
+value|Perl_is_gv_magical
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_lvalue_sub
+value|Perl_is_lvalue_sub
 end_define
 
 begin_define
@@ -2088,6 +2130,13 @@ define|#
 directive|define
 name|is_utf8_char
 value|Perl_is_utf8_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_utf8_string
+value|Perl_is_utf8_string
 end_define
 
 begin_define
@@ -2452,6 +2501,13 @@ define|#
 directive|define
 name|magic_regdatum_get
 value|Perl_magic_regdatum_get
+end_define
+
+begin_define
+define|#
+directive|define
+name|magic_regdatum_set
+value|Perl_magic_regdatum_set
 end_define
 
 begin_define
@@ -3979,6 +4035,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|save_generic_pvref
+value|Perl_save_generic_pvref
+end_define
+
+begin_define
+define|#
+directive|define
 name|save_gp
 value|Perl_save_gp
 end_define
@@ -4070,6 +4133,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|save_mortalizesv
+value|Perl_save_mortalizesv
+end_define
+
+begin_define
+define|#
+directive|define
 name|save_nogv
 value|Perl_save_nogv
 end_define
@@ -4107,6 +4177,13 @@ define|#
 directive|define
 name|save_re_context
 value|Perl_save_re_context
+end_define
+
+begin_define
+define|#
+directive|define
+name|save_padsv
+value|Perl_save_padsv
 end_define
 
 begin_define
@@ -5009,6 +5086,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|utf8_length
+value|Perl_utf8_length
+end_define
+
+begin_define
+define|#
+directive|define
 name|utf8_distance
 value|Perl_utf8_distance
 end_define
@@ -5018,6 +5102,34 @@ define|#
 directive|define
 name|utf8_hop
 value|Perl_utf8_hop
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_to_bytes
+value|Perl_utf8_to_bytes
+end_define
+
+begin_define
+define|#
+directive|define
+name|bytes_from_utf8
+value|Perl_bytes_from_utf8
+end_define
+
+begin_define
+define|#
+directive|define
+name|bytes_to_utf8
+value|Perl_bytes_to_utf8
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_to_uv_simple
+value|Perl_utf8_to_uv_simple
 end_define
 
 begin_define
@@ -5058,8 +5170,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|report_closed_fh
-value|Perl_report_closed_fh
+name|report_evil_fh
+value|Perl_report_evil_fh
 end_define
 
 begin_define
@@ -5118,38 +5230,30 @@ name|yyerror
 value|Perl_yyerror
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USE_PURE_BISON
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|yylex
-value|Perl_yylex
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|yylex
-value|Perl_yylex
+name|yylex_r
+value|Perl_yylex_r
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|yylex
+value|Perl_yylex
+end_define
 
 begin_define
 define|#
@@ -5297,6 +5401,27 @@ directive|define
 name|runops_debug
 value|Perl_runops_debug
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_THREADS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|sv_lock
+value|Perl_sv_lock
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -5602,6 +5727,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|sv_add_backref
+value|Perl_sv_add_backref
+end_define
+
+begin_define
+define|#
+directive|define
+name|sv_del_backref
+value|Perl_sv_del_backref
+end_define
+
+begin_define
+define|#
+directive|define
 name|tmps_grow
 value|Perl_tmps_grow
 end_define
@@ -5790,6 +5929,48 @@ name|ptr_table_split
 value|Perl_ptr_table_split
 end_define
 
+begin_define
+define|#
+directive|define
+name|ptr_table_clear
+value|Perl_ptr_table_clear
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptr_table_free
+value|Perl_ptr_table_free
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_INTERP_INTERN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|sys_intern_clear
+value|Perl_sys_intern_clear
+end_define
+
+begin_define
+define|#
+directive|define
+name|sys_intern_init
+value|Perl_sys_intern_init
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -5864,71 +6045,43 @@ end_if
 begin_define
 define|#
 directive|define
-name|do_trans_CC_simple
-value|S_do_trans_CC_simple
+name|do_trans_simple
+value|S_do_trans_simple
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_CC_count
-value|S_do_trans_CC_count
+name|do_trans_count
+value|S_do_trans_count
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_CC_complex
-value|S_do_trans_CC_complex
+name|do_trans_complex
+value|S_do_trans_complex
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_simple
-value|S_do_trans_UU_simple
+name|do_trans_simple_utf8
+value|S_do_trans_simple_utf8
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_count
-value|S_do_trans_UU_count
+name|do_trans_count_utf8
+value|S_do_trans_count_utf8
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_complex
-value|S_do_trans_UU_complex
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_UC_simple
-value|S_do_trans_UC_simple
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_CU_simple
-value|S_do_trans_CU_simple
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_UC_trivial
-value|S_do_trans_UC_trivial
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_CU_trivial
-value|S_do_trans_CU_trivial
+name|do_trans_complex_utf8
+value|S_do_trans_complex_utf8
 end_define
 
 begin_endif
@@ -6145,6 +6298,13 @@ define|#
 directive|define
 name|too_many_arguments
 value|S_too_many_arguments
+end_define
+
+begin_define
+define|#
+directive|define
+name|trlist_upgrade
+value|S_trlist_upgrade
 end_define
 
 begin_define
@@ -6671,13 +6831,6 @@ define|#
 directive|define
 name|dopoptosub_at
 value|S_dopoptosub_at
-end_define
-
-begin_define
-define|#
-directive|define
-name|free_closures
-value|S_free_closures
 end_define
 
 begin_define
@@ -7513,20 +7666,6 @@ name|visit
 value|S_visit
 end_define
 
-begin_define
-define|#
-directive|define
-name|sv_add_backref
-value|S_sv_add_backref
-end_define
-
-begin_define
-define|#
-directive|define
-name|sv_del_backref
-value|S_sv_del_backref
-end_define
-
 begin_if
 if|#
 directive|if
@@ -7682,6 +7821,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|swallow_bom
+value|S_swallow_bom
+end_define
+
+begin_define
+define|#
+directive|define
 name|checkcomma
 value|S_checkcomma
 end_define
@@ -7768,6 +7914,13 @@ define|#
 directive|define
 name|filter_gets
 value|S_filter_gets
+end_define
+
+begin_define
+define|#
+directive|define
+name|find_in_my_stash
+value|S_find_in_my_stash
 end_define
 
 begin_define
@@ -7909,6 +8062,13 @@ argument_list|(
 name|PERL_DECL_PROT
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|stdize_locale
+value|S_stdize_locale
+end_define
 
 begin_define
 define|#
@@ -8142,6 +8302,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ck_return
+value|Perl_ck_return
+end_define
+
+begin_define
+define|#
+directive|define
 name|ck_rfun
 value|Perl_ck_rfun
 end_define
@@ -8207,6 +8374,13 @@ define|#
 directive|define
 name|ck_subr
 value|Perl_ck_subr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ck_substr
+value|Perl_ck_substr
 end_define
 
 begin_define
@@ -10853,6 +11027,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|apply_attrs_string
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|Perl_apply_attrs_string(aTHX_ a,b,c,d)
+end_define
+
+begin_define
+define|#
+directive|define
 name|avhv_delete_ent
 parameter_list|(
 name|a
@@ -12425,6 +12615,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|gv_efullname4
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|Perl_gv_efullname4(aTHX_ a,b,c,d)
+end_define
+
+begin_define
+define|#
+directive|define
 name|gv_fetchfile
 parameter_list|(
 name|a
@@ -12512,6 +12718,22 @@ parameter_list|,
 name|c
 parameter_list|)
 value|Perl_gv_fullname3(aTHX_ a,b,c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|gv_fullname4
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|Perl_gv_fullname4(aTHX_ a,b,c,d)
 end_define
 
 begin_define
@@ -12935,6 +13157,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|is_gv_magical
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|Perl_is_gv_magical(aTHX_ a,b,c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_lvalue_sub
+parameter_list|()
+value|Perl_is_lvalue_sub(aTHX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|is_uni_alnum
 parameter_list|(
 name|a
@@ -13280,6 +13524,18 @@ parameter_list|(
 name|a
 parameter_list|)
 value|Perl_is_utf8_char(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_utf8_string
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|Perl_is_utf8_string(aTHX_ a,b)
 end_define
 
 begin_define
@@ -13840,6 +14096,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|Perl_magic_regdatum_get(aTHX_ a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|magic_regdatum_set
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|Perl_magic_regdatum_set(aTHX_ a,b)
 end_define
 
 begin_define
@@ -16215,6 +16483,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|save_generic_pvref
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_save_generic_pvref(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|save_gp
 parameter_list|(
 name|a
@@ -16351,6 +16629,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|save_mortalizesv
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_save_mortalizesv(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|save_nogv
 parameter_list|(
 name|a
@@ -16402,6 +16690,16 @@ directive|define
 name|save_re_context
 parameter_list|()
 value|Perl_save_re_context(aTHX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|save_padsv
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_save_padsv(aTHX_ a)
 end_define
 
 begin_define
@@ -16518,8 +16816,10 @@ directive|define
 name|scan_num
 parameter_list|(
 name|a
+parameter_list|,
+name|b
 parameter_list|)
-value|Perl_scan_num(aTHX_ a)
+value|Perl_scan_num(aTHX_ a,b)
 end_define
 
 begin_define
@@ -17842,8 +18142,10 @@ parameter_list|,
 name|b
 parameter_list|,
 name|c
+parameter_list|,
+name|d
 parameter_list|)
-value|Perl_utf16_to_utf8(aTHX_ a,b,c)
+value|Perl_utf16_to_utf8(aTHX_ a,b,c,d)
 end_define
 
 begin_define
@@ -17856,8 +18158,22 @@ parameter_list|,
 name|b
 parameter_list|,
 name|c
+parameter_list|,
+name|d
 parameter_list|)
-value|Perl_utf16_to_utf8_reversed(aTHX_ a,b,c)
+value|Perl_utf16_to_utf8_reversed(aTHX_ a,b,c,d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_length
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|Perl_utf8_length(aTHX_ a,b)
 end_define
 
 begin_define
@@ -17887,13 +18203,67 @@ end_define
 begin_define
 define|#
 directive|define
-name|utf8_to_uv
+name|utf8_to_bytes
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|Perl_utf8_to_uv(aTHX_ a,b)
+value|Perl_utf8_to_bytes(aTHX_ a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bytes_from_utf8
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|Perl_bytes_from_utf8(aTHX_ a,b,c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|bytes_to_utf8
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|Perl_bytes_to_utf8(aTHX_ a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_to_uv_simple
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|Perl_utf8_to_uv_simple(aTHX_ a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_to_uv
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|Perl_utf8_to_uv(aTHX_ a,b,c,d)
 end_define
 
 begin_define
@@ -17947,17 +18317,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|report_closed_fh
+name|report_evil_fh
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|,
 name|c
-parameter_list|,
-name|d
 parameter_list|)
-value|Perl_report_closed_fh(aTHX_ a,b,c,d)
+value|Perl_report_evil_fh(aTHX_ a,b,c)
 end_define
 
 begin_define
@@ -18024,31 +18392,28 @@ parameter_list|)
 value|Perl_yyerror(aTHX_ a)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USE_PURE_BISON
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|yylex
+name|yylex_r
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|Perl_yylex(aTHX_ a,b)
+value|Perl_yylex_r(aTHX_ a,b)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -18057,11 +18422,6 @@ name|yylex
 parameter_list|()
 value|Perl_yylex(aTHX)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -18226,6 +18586,30 @@ name|runops_debug
 parameter_list|()
 value|Perl_runops_debug(aTHX)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_THREADS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|sv_lock
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_sv_lock(aTHX_ a)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -18720,6 +19104,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|sv_add_backref
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|Perl_sv_add_backref(aTHX_ a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sv_del_backref
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_sv_del_backref(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|tmps_grow
 parameter_list|(
 name|a
@@ -19020,6 +19426,56 @@ parameter_list|)
 value|Perl_ptr_table_split(aTHX_ a)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ptr_table_clear
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_ptr_table_clear(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptr_table_free
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_ptr_table_free(aTHX_ a)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_INTERP_INTERN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|sys_intern_clear
+parameter_list|()
+value|Perl_sys_intern_clear(aTHX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sys_intern_init
+parameter_list|()
+value|Perl_sys_intern_init(aTHX)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -19104,101 +19560,61 @@ end_if
 begin_define
 define|#
 directive|define
-name|do_trans_CC_simple
+name|do_trans_simple
 parameter_list|(
 name|a
 parameter_list|)
-value|S_do_trans_CC_simple(aTHX_ a)
+value|S_do_trans_simple(aTHX_ a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_CC_count
+name|do_trans_count
 parameter_list|(
 name|a
 parameter_list|)
-value|S_do_trans_CC_count(aTHX_ a)
+value|S_do_trans_count(aTHX_ a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_CC_complex
+name|do_trans_complex
 parameter_list|(
 name|a
 parameter_list|)
-value|S_do_trans_CC_complex(aTHX_ a)
+value|S_do_trans_complex(aTHX_ a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_simple
+name|do_trans_simple_utf8
 parameter_list|(
 name|a
 parameter_list|)
-value|S_do_trans_UU_simple(aTHX_ a)
+value|S_do_trans_simple_utf8(aTHX_ a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_count
+name|do_trans_count_utf8
 parameter_list|(
 name|a
 parameter_list|)
-value|S_do_trans_UU_count(aTHX_ a)
+value|S_do_trans_count_utf8(aTHX_ a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_complex
+name|do_trans_complex_utf8
 parameter_list|(
 name|a
 parameter_list|)
-value|S_do_trans_UU_complex(aTHX_ a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_UC_simple
-parameter_list|(
-name|a
-parameter_list|)
-value|S_do_trans_UC_simple(aTHX_ a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_CU_simple
-parameter_list|(
-name|a
-parameter_list|)
-value|S_do_trans_CU_simple(aTHX_ a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_UC_trivial
-parameter_list|(
-name|a
-parameter_list|)
-value|S_do_trans_UC_trivial(aTHX_ a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_CU_trivial
-parameter_list|(
-name|a
-parameter_list|)
-value|S_do_trans_CU_trivial(aTHX_ a)
+value|S_do_trans_complex_utf8(aTHX_ a)
 end_define
 
 begin_endif
@@ -19509,6 +19925,18 @@ parameter_list|,
 name|b
 parameter_list|)
 value|S_too_many_arguments(aTHX_ a,b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|trlist_upgrade
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|S_trlist_upgrade(aTHX_ a,b)
 end_define
 
 begin_define
@@ -20252,14 +20680,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|S_dopoptosub_at(aTHX_ a,b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|free_closures
-parameter_list|()
-value|S_free_closures(aTHX)
 end_define
 
 begin_define
@@ -21418,28 +21838,6 @@ parameter_list|)
 value|S_visit(aTHX_ a)
 end_define
 
-begin_define
-define|#
-directive|define
-name|sv_add_backref
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|S_sv_add_backref(aTHX_ a,b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sv_del_backref
-parameter_list|(
-name|a
-parameter_list|)
-value|S_sv_del_backref(aTHX_ a)
-end_define
-
 begin_if
 if|#
 directive|if
@@ -21674,6 +22072,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|swallow_bom
+parameter_list|(
+name|a
+parameter_list|)
+value|S_swallow_bom(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|checkcomma
 parameter_list|(
 name|a
@@ -21809,6 +22217,18 @@ parameter_list|,
 name|c
 parameter_list|)
 value|S_filter_gets(aTHX_ a,b,c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|find_in_my_stash
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|S_find_in_my_stash(aTHX_ a,b)
 end_define
 
 begin_define
@@ -22003,6 +22423,16 @@ argument_list|(
 name|PERL_DECL_PROT
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|stdize_locale
+parameter_list|(
+name|a
+parameter_list|)
+value|S_stdize_locale(aTHX_ a)
+end_define
 
 begin_define
 define|#
@@ -22318,6 +22748,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|ck_return
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_ck_return(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ck_rfun
 parameter_list|(
 name|a
@@ -22413,6 +22853,16 @@ parameter_list|(
 name|a
 parameter_list|)
 value|Perl_ck_subr(aTHX_ a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ck_substr
+parameter_list|(
+name|a
+parameter_list|)
+value|Perl_ck_substr(aTHX_ a)
 end_define
 
 begin_define
@@ -25451,6 +25901,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Perl_apply_attrs_string
+value|CPerlObj::Perl_apply_attrs_string
+end_define
+
+begin_define
+define|#
+directive|define
+name|apply_attrs_string
+value|Perl_apply_attrs_string
+end_define
+
+begin_define
+define|#
+directive|define
 name|Perl_avhv_delete_ent
 value|CPerlObj::Perl_avhv_delete_ent
 end_define
@@ -26237,6 +26701,20 @@ define|#
 directive|define
 name|fprintf_nocontext
 value|Perl_fprintf_nocontext
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_printf_nocontext
+value|CPerlObj::Perl_printf_nocontext
+end_define
+
+begin_define
+define|#
+directive|define
+name|printf_nocontext
+value|Perl_printf_nocontext
 end_define
 
 begin_endif
@@ -27575,6 +28053,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Perl_gv_efullname4
+value|CPerlObj::Perl_gv_efullname4
+end_define
+
+begin_define
+define|#
+directive|define
+name|gv_efullname4
+value|Perl_gv_efullname4
+end_define
+
+begin_define
+define|#
+directive|define
 name|Perl_gv_fetchfile
 value|CPerlObj::Perl_gv_fetchfile
 end_define
@@ -27668,6 +28160,20 @@ define|#
 directive|define
 name|gv_fullname3
 value|Perl_gv_fullname3
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_gv_fullname4
+value|CPerlObj::Perl_gv_fullname4
+end_define
+
+begin_define
+define|#
+directive|define
+name|gv_fullname4
+value|Perl_gv_fullname4
 end_define
 
 begin_define
@@ -28130,6 +28636,34 @@ define|#
 directive|define
 name|invert
 value|Perl_invert
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_is_gv_magical
+value|CPerlObj::Perl_is_gv_magical
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_gv_magical
+value|Perl_is_gv_magical
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_is_lvalue_sub
+value|CPerlObj::Perl_is_lvalue_sub
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_lvalue_sub
+value|Perl_is_lvalue_sub
 end_define
 
 begin_define
@@ -28620,6 +29154,20 @@ define|#
 directive|define
 name|is_utf8_char
 value|Perl_is_utf8_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_is_utf8_string
+value|CPerlObj::Perl_is_utf8_string
+end_define
+
+begin_define
+define|#
+directive|define
+name|is_utf8_string
+value|Perl_is_utf8_string
 end_define
 
 begin_define
@@ -29334,6 +29882,20 @@ define|#
 directive|define
 name|magic_regdatum_get
 value|Perl_magic_regdatum_get
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_magic_regdatum_set
+value|CPerlObj::Perl_magic_regdatum_set
+end_define
+
+begin_define
+define|#
+directive|define
+name|magic_regdatum_set
+value|Perl_magic_regdatum_set
 end_define
 
 begin_define
@@ -32240,6 +32802,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Perl_save_generic_pvref
+value|CPerlObj::Perl_save_generic_pvref
+end_define
+
+begin_define
+define|#
+directive|define
+name|save_generic_pvref
+value|Perl_save_generic_pvref
+end_define
+
+begin_define
+define|#
+directive|define
 name|Perl_save_gp
 value|CPerlObj::Perl_save_gp
 end_define
@@ -32422,6 +32998,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Perl_save_mortalizesv
+value|CPerlObj::Perl_save_mortalizesv
+end_define
+
+begin_define
+define|#
+directive|define
+name|save_mortalizesv
+value|Perl_save_mortalizesv
+end_define
+
+begin_define
+define|#
+directive|define
 name|Perl_save_nogv
 value|CPerlObj::Perl_save_nogv
 end_define
@@ -32501,6 +33091,20 @@ define|#
 directive|define
 name|save_re_context
 value|Perl_save_re_context
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_save_padsv
+value|CPerlObj::Perl_save_padsv
+end_define
+
+begin_define
+define|#
+directive|define
+name|save_padsv
+value|Perl_save_padsv
 end_define
 
 begin_define
@@ -34243,6 +34847,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Perl_utf8_length
+value|CPerlObj::Perl_utf8_length
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_length
+value|Perl_utf8_length
+end_define
+
+begin_define
+define|#
+directive|define
 name|Perl_utf8_distance
 value|CPerlObj::Perl_utf8_distance
 end_define
@@ -34266,6 +34884,62 @@ define|#
 directive|define
 name|utf8_hop
 value|Perl_utf8_hop
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_utf8_to_bytes
+value|CPerlObj::Perl_utf8_to_bytes
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_to_bytes
+value|Perl_utf8_to_bytes
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_bytes_from_utf8
+value|CPerlObj::Perl_bytes_from_utf8
+end_define
+
+begin_define
+define|#
+directive|define
+name|bytes_from_utf8
+value|Perl_bytes_from_utf8
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_bytes_to_utf8
+value|CPerlObj::Perl_bytes_to_utf8
+end_define
+
+begin_define
+define|#
+directive|define
+name|bytes_to_utf8
+value|Perl_bytes_to_utf8
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_utf8_to_uv_simple
+value|CPerlObj::Perl_utf8_to_uv_simple
+end_define
+
+begin_define
+define|#
+directive|define
+name|utf8_to_uv_simple
+value|Perl_utf8_to_uv_simple
 end_define
 
 begin_define
@@ -34341,15 +35015,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Perl_report_closed_fh
-value|CPerlObj::Perl_report_closed_fh
+name|Perl_report_evil_fh
+value|CPerlObj::Perl_report_evil_fh
 end_define
 
 begin_define
 define|#
 directive|define
-name|report_closed_fh
-value|Perl_report_closed_fh
+name|report_evil_fh
+value|Perl_report_evil_fh
 end_define
 
 begin_define
@@ -34464,52 +35138,44 @@ name|yyerror
 value|Perl_yyerror
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|USE_PURE_BISON
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|Perl_yylex
-value|CPerlObj::Perl_yylex
+name|Perl_yylex_r
+value|CPerlObj::Perl_yylex_r
 end_define
 
 begin_define
 define|#
 directive|define
-name|yylex
-value|Perl_yylex
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|Perl_yylex
-value|CPerlObj::Perl_yylex
-end_define
-
-begin_define
-define|#
-directive|define
-name|yylex
-value|Perl_yylex
+name|yylex_r
+value|Perl_yylex_r
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|Perl_yylex
+value|CPerlObj::Perl_yylex
+end_define
+
+begin_define
+define|#
+directive|define
+name|yylex
+value|Perl_yylex
+end_define
 
 begin_define
 define|#
@@ -34762,6 +35428,34 @@ directive|define
 name|runops_debug
 value|Perl_runops_debug
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_THREADS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Perl_sv_lock
+value|CPerlObj::Perl_sv_lock
+end_define
+
+begin_define
+define|#
+directive|define
+name|sv_lock
+value|Perl_sv_lock
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -35354,6 +36048,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|Perl_sv_add_backref
+value|CPerlObj::Perl_sv_add_backref
+end_define
+
+begin_define
+define|#
+directive|define
+name|sv_add_backref
+value|Perl_sv_add_backref
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_sv_del_backref
+value|CPerlObj::Perl_sv_del_backref
+end_define
+
+begin_define
+define|#
+directive|define
+name|sv_del_backref
+value|Perl_sv_del_backref
+end_define
+
+begin_define
+define|#
+directive|define
 name|Perl_tmps_grow
 value|CPerlObj::Perl_tmps_grow
 end_define
@@ -35710,6 +36432,76 @@ name|ptr_table_split
 value|Perl_ptr_table_split
 end_define
 
+begin_define
+define|#
+directive|define
+name|Perl_ptr_table_clear
+value|CPerlObj::Perl_ptr_table_clear
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptr_table_clear
+value|Perl_ptr_table_clear
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_ptr_table_free
+value|CPerlObj::Perl_ptr_table_free
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptr_table_free
+value|Perl_ptr_table_free
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_INTERP_INTERN
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Perl_sys_intern_clear
+value|CPerlObj::Perl_sys_intern_clear
+end_define
+
+begin_define
+define|#
+directive|define
+name|sys_intern_clear
+value|Perl_sys_intern_clear
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_sys_intern_init
+value|CPerlObj::Perl_sys_intern_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|sys_intern_init
+value|Perl_sys_intern_init
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -35798,141 +36590,85 @@ end_if
 begin_define
 define|#
 directive|define
-name|S_do_trans_CC_simple
-value|CPerlObj::S_do_trans_CC_simple
+name|S_do_trans_simple
+value|CPerlObj::S_do_trans_simple
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_CC_simple
-value|S_do_trans_CC_simple
+name|do_trans_simple
+value|S_do_trans_simple
 end_define
 
 begin_define
 define|#
 directive|define
-name|S_do_trans_CC_count
-value|CPerlObj::S_do_trans_CC_count
+name|S_do_trans_count
+value|CPerlObj::S_do_trans_count
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_CC_count
-value|S_do_trans_CC_count
+name|do_trans_count
+value|S_do_trans_count
 end_define
 
 begin_define
 define|#
 directive|define
-name|S_do_trans_CC_complex
-value|CPerlObj::S_do_trans_CC_complex
+name|S_do_trans_complex
+value|CPerlObj::S_do_trans_complex
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_CC_complex
-value|S_do_trans_CC_complex
+name|do_trans_complex
+value|S_do_trans_complex
 end_define
 
 begin_define
 define|#
 directive|define
-name|S_do_trans_UU_simple
-value|CPerlObj::S_do_trans_UU_simple
+name|S_do_trans_simple_utf8
+value|CPerlObj::S_do_trans_simple_utf8
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_simple
-value|S_do_trans_UU_simple
+name|do_trans_simple_utf8
+value|S_do_trans_simple_utf8
 end_define
 
 begin_define
 define|#
 directive|define
-name|S_do_trans_UU_count
-value|CPerlObj::S_do_trans_UU_count
+name|S_do_trans_count_utf8
+value|CPerlObj::S_do_trans_count_utf8
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_count
-value|S_do_trans_UU_count
+name|do_trans_count_utf8
+value|S_do_trans_count_utf8
 end_define
 
 begin_define
 define|#
 directive|define
-name|S_do_trans_UU_complex
-value|CPerlObj::S_do_trans_UU_complex
+name|S_do_trans_complex_utf8
+value|CPerlObj::S_do_trans_complex_utf8
 end_define
 
 begin_define
 define|#
 directive|define
-name|do_trans_UU_complex
-value|S_do_trans_UU_complex
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_do_trans_UC_simple
-value|CPerlObj::S_do_trans_UC_simple
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_UC_simple
-value|S_do_trans_UC_simple
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_do_trans_CU_simple
-value|CPerlObj::S_do_trans_CU_simple
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_CU_simple
-value|S_do_trans_CU_simple
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_do_trans_UC_trivial
-value|CPerlObj::S_do_trans_UC_trivial
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_UC_trivial
-value|S_do_trans_UC_trivial
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_do_trans_CU_trivial
-value|CPerlObj::S_do_trans_CU_trivial
-end_define
-
-begin_define
-define|#
-directive|define
-name|do_trans_CU_trivial
-value|S_do_trans_CU_trivial
+name|do_trans_complex_utf8
+value|S_do_trans_complex_utf8
 end_define
 
 begin_endif
@@ -36289,6 +37025,20 @@ define|#
 directive|define
 name|too_many_arguments
 value|S_too_many_arguments
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_trlist_upgrade
+value|CPerlObj::S_trlist_upgrade
+end_define
+
+begin_define
+define|#
+directive|define
+name|trlist_upgrade
+value|S_trlist_upgrade
 end_define
 
 begin_define
@@ -37214,20 +37964,6 @@ define|#
 directive|define
 name|dopoptosub_at
 value|S_dopoptosub_at
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_free_closures
-value|CPerlObj::S_free_closures
-end_define
-
-begin_define
-define|#
-directive|define
-name|free_closures
-value|S_free_closures
 end_define
 
 begin_define
@@ -38742,34 +39478,6 @@ name|visit
 value|S_visit
 end_define
 
-begin_define
-define|#
-directive|define
-name|S_sv_add_backref
-value|CPerlObj::S_sv_add_backref
-end_define
-
-begin_define
-define|#
-directive|define
-name|sv_add_backref
-value|S_sv_add_backref
-end_define
-
-begin_define
-define|#
-directive|define
-name|S_sv_del_backref
-value|CPerlObj::S_sv_del_backref
-end_define
-
-begin_define
-define|#
-directive|define
-name|sv_del_backref
-value|S_sv_del_backref
-end_define
-
 begin_if
 if|#
 directive|if
@@ -39044,6 +39752,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|S_swallow_bom
+value|CPerlObj::S_swallow_bom
+end_define
+
+begin_define
+define|#
+directive|define
+name|swallow_bom
+value|S_swallow_bom
+end_define
+
+begin_define
+define|#
+directive|define
 name|S_checkcomma
 value|CPerlObj::S_checkcomma
 end_define
@@ -39221,6 +39943,20 @@ define|#
 directive|define
 name|filter_gets
 value|S_filter_gets
+end_define
+
+begin_define
+define|#
+directive|define
+name|S_find_in_my_stash
+value|CPerlObj::S_find_in_my_stash
+end_define
+
+begin_define
+define|#
+directive|define
+name|find_in_my_stash
+value|S_find_in_my_stash
 end_define
 
 begin_define
@@ -39425,6 +40161,20 @@ argument_list|(
 name|PERL_DECL_PROT
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|S_stdize_locale
+value|CPerlObj::S_stdize_locale
+end_define
+
+begin_define
+define|#
+directive|define
+name|stdize_locale
+value|S_stdize_locale
+end_define
 
 begin_define
 define|#
@@ -39854,6 +40604,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|Perl_ck_return
+value|CPerlObj::Perl_ck_return
+end_define
+
+begin_define
+define|#
+directive|define
+name|ck_return
+value|Perl_ck_return
+end_define
+
+begin_define
+define|#
+directive|define
 name|Perl_ck_rfun
 value|CPerlObj::Perl_ck_rfun
 end_define
@@ -39989,6 +40753,20 @@ define|#
 directive|define
 name|ck_subr
 value|Perl_ck_subr
+end_define
+
+begin_define
+define|#
+directive|define
+name|Perl_ck_substr
+value|CPerlObj::Perl_ck_substr
+end_define
+
+begin_define
+define|#
+directive|define
+name|ck_substr
+value|Perl_ck_substr
 end_define
 
 begin_define

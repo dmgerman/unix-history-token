@@ -660,7 +660,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* \w, utf8::IsWord, isALNUM() */
+comment|/* \w, PL_utf8_alnum, utf8::IsWord, ALNUM */
 end_comment
 
 begin_define
@@ -676,6 +676,10 @@ directive|define
 name|ANYOF_SPACE
 value|2
 end_define
+
+begin_comment
+comment|/* \s */
+end_comment
 
 begin_define
 define|#
@@ -706,7 +710,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* isalnum(3), utf8::IsAlnum, isALNUMC() */
+comment|/* isalnum(3), utf8::IsAlnum, ALNUMC */
 end_comment
 
 begin_define
@@ -845,8 +849,44 @@ end_define
 begin_define
 define|#
 directive|define
+name|ANYOF_PSXSPC
+value|26
+end_define
+
+begin_comment
+comment|/* POSIX space: \s plus the vertical tab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ANYOF_NPSXSPC
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANYOF_BLANK
+value|28
+end_define
+
+begin_comment
+comment|/* GNU extension: space and tab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ANYOF_NBLANK
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
 name|ANYOF_MAX
-value|31
+value|32
 end_define
 
 begin_comment
@@ -1146,30 +1186,6 @@ end_endif
 begin_comment
 comment|/* lint */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|FAIL
-parameter_list|(
-name|m
-parameter_list|)
-define|\
-value|STMT_START {							\ 	if (!SIZE_ONLY)							\ 	    SAVEDESTRUCTOR_X(clear_re,(void*)PL_regcomp_rx);		\ 	Perl_croak(aTHX_ "/%.127s/: %s",  PL_regprecomp,m);		\     } STMT_END
-end_define
-
-begin_define
-define|#
-directive|define
-name|FAIL2
-parameter_list|(
-name|pat
-parameter_list|,
-name|m
-parameter_list|)
-define|\
-value|STMT_START {							\ 	if (!SIZE_ONLY)							\ 	    SAVEDESTRUCTOR_X(clear_re,(void*)PL_regcomp_rx);		\ 	S_re_croak2(aTHX_ "/%.127s/: ",pat,PL_regprecomp,m);		\     } STMT_END
-end_define
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    pp.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    pp.h  *  *    Copyright (c) 1991-2001, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_ifdef
@@ -63,6 +63,16 @@ begin_comment
 comment|/* =for apidoc AmU||SP Stack pointer.  This is usually handled by C<xsubpp>.  See C<dSP> and C<SPAGAIN>.  =for apidoc AmU||MARK Stack marker variable for the XSUB.  See C<dMARK>.  =for apidoc Ams||PUSHMARK Opening bracket for arguments on a callback.  See C<PUTBACK> and L<perlcall>.  =for apidoc Ams||dSP Declares a local copy of perl's stack pointer for the XSUB, available via the C<SP> macro.  See C<SP>.  =for apidoc Ams||dMARK Declare a stack marker variable, C<mark>, for the XSUB.  See C<MARK> and C<dORIGMARK>.  =for apidoc Ams||dORIGMARK Saves the original stack mark for the XSUB.  See C<ORIGMARK>.  =for apidoc AmU||ORIGMARK The original stack mark for the XSUB.  See C<dORIGMARK>.  =for apidoc Ams||SPAGAIN Refetch the stack pointer.  Used after a callback.  See L<perlcall>.  =cut */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|SP
+end_undef
+
+begin_comment
+comment|/* Solaris 2.7 i386 has this in /usr/include/sys/reg.h */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -111,15 +121,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|djSP
+name|dSP
 value|register SV **sp = PL_stack_sp
 end_define
 
 begin_define
 define|#
 directive|define
-name|dSP
-value|dTHR; djSP
+name|djSP
+value|dSP
 end_define
 
 begin_define
@@ -440,7 +450,7 @@ comment|/* Go to some pains in the rare event that we must extend the stack. */
 end_comment
 
 begin_comment
-comment|/* =for apidoc Am|void|EXTEND|SP|int nitems Used to extend the argument stack for an XSUB's return values. Once used, guarrantees that there is room for at least C<nitems> to be pushed onto the stack.  =for apidoc Am|void|PUSHs|SV* sv Push an SV onto the stack.  The stack must have room for this element.  Does not handle 'set' magic.  See C<XPUSHs>.  =for apidoc Am|void|PUSHp|char* str|STRLEN len Push a string onto the stack.  The stack must have room for this element. The C<len> indicates the length of the string.  Handles 'set' magic.  See C<XPUSHp>.  =for apidoc Am|void|PUSHn|NV nv Push a double onto the stack.  The stack must have room for this element. Handles 'set' magic.  See C<XPUSHn>.  =for apidoc Am|void|PUSHi|IV iv Push an integer onto the stack.  The stack must have room for this element. Handles 'set' magic.  See C<XPUSHi>.  =for apidoc Am|void|PUSHu|UV uv Push an unsigned integer onto the stack.  The stack must have room for this element.  See C<XPUSHu>.  =for apidoc Am|void|XPUSHs|SV* sv Push an SV onto the stack, extending the stack if necessary.  Does not handle 'set' magic.  See C<PUSHs>.  =for apidoc Am|void|XPUSHp|char* str|STRLEN len Push a string onto the stack, extending the stack if necessary.  The C<len> indicates the length of the string.  Handles 'set' magic.  See C<PUSHp>.  =for apidoc Am|void|XPUSHn|NV nv Push a double onto the stack, extending the stack if necessary.  Handles 'set' magic.  See C<PUSHn>.  =for apidoc Am|void|XPUSHi|IV iv Push an integer onto the stack, extending the stack if necessary.  Handles 'set' magic. See C<PUSHi>.  =for apidoc Am|void|XPUSHu|UV uv Push an unsigned integer onto the stack, extending the stack if necessary.  See C<PUSHu>.  =cut */
+comment|/* =for apidoc Am|void|EXTEND|SP|int nitems Used to extend the argument stack for an XSUB's return values. Once used, guarantees that there is room for at least C<nitems> to be pushed onto the stack.  =for apidoc Am|void|PUSHs|SV* sv Push an SV onto the stack.  The stack must have room for this element. Does not handle 'set' magic.  See C<XPUSHs>.  =for apidoc Am|void|PUSHp|char* str|STRLEN len Push a string onto the stack.  The stack must have room for this element. The C<len> indicates the length of the string.  Handles 'set' magic.  See C<XPUSHp>.  =for apidoc Am|void|PUSHn|NV nv Push a double onto the stack.  The stack must have room for this element. Handles 'set' magic.  See C<XPUSHn>.  =for apidoc Am|void|PUSHi|IV iv Push an integer onto the stack.  The stack must have room for this element. Handles 'set' magic.  See C<XPUSHi>.  =for apidoc Am|void|PUSHu|UV uv Push an unsigned integer onto the stack.  The stack must have room for this element.  See C<XPUSHu>.  =for apidoc Am|void|XPUSHs|SV* sv Push an SV onto the stack, extending the stack if necessary.  Does not handle 'set' magic.  See C<PUSHs>.  =for apidoc Am|void|XPUSHp|char* str|STRLEN len Push a string onto the stack, extending the stack if necessary.  The C<len> indicates the length of the string.  Handles 'set' magic.  See C<PUSHp>.  =for apidoc Am|void|XPUSHn|NV nv Push a double onto the stack, extending the stack if necessary.  Handles 'set' magic.  See C<PUSHn>.  =for apidoc Am|void|XPUSHi|IV iv Push an integer onto the stack, extending the stack if necessary.  Handles 'set' magic. See C<PUSHi>.  =for apidoc Am|void|XPUSHu|UV uv Push an unsigned integer onto the stack, extending the stack if necessary. See C<PUSHu>.  =cut */
 end_comment
 
 begin_define
@@ -1128,7 +1138,7 @@ name|setAGAIN
 parameter_list|(
 name|ref
 parameter_list|)
-value|sv = arg = ref;					\   if (!SvROK(ref))							\       Perl_croak(aTHX_ "Overloaded dereference did not return a reference");	\   goto am_again;
+value|sv = ref;							\   if (!SvROK(ref))								\       Perl_croak(aTHX_ "Overloaded dereference did not return a reference");	\   if (ref != arg&& SvRV(ref) != SvRV(arg)) {					\       arg = ref;								\       goto am_again;								\   }
 end_define
 
 begin_define
@@ -1184,6 +1194,17 @@ parameter_list|(
 name|rv
 parameter_list|)
 value|STMT_START { SV* tmpRef=SvRV(rv);      \   if (SvREFCNT(tmpRef)>1) {                 \     SvREFCNT_dec(tmpRef);                   \     SvRV(rv)=AMG_CALLun(rv,copy);        \   } } STMT_END
+end_define
+
+begin_comment
+comment|/* =for apidoc mU||LVRET True if this op will be the return value of an lvalue subroutine  =cut */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LVRET
+value|((PL_op->op_private& OPpMAYBE_LVSUB)&& is_lvalue_sub())
 end_define
 
 end_unit
