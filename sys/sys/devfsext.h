@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.15 1997/02/22 09:44:59 peter Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.16 1997/09/16 14:23:35 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -22,6 +22,10 @@ define|#
 directive|define
 name|_SYS_DEVFSECT_H_
 end_define
+
+begin_comment
+comment|/*  * Make a device at a path, and get a cookie for it in return.  * Specify the type, the minor number and the devsw entry to use,  * and the initial default perms/ownerships.  */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -59,6 +63,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Make a link to a device you already made, and have the cookie for   * We get another cookie, but for now, it can be discarded, as  * at the moment there is nothing you can do with it that you couldn't do  * with the original cookie. ( XXX this might be something I should change )  */
+end_comment
+
 begin_decl_stmt
 name|void
 modifier|*
@@ -80,6 +88,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Remove all instances of a device you have made. INCLUDING LINKS.  * I.e. either the cookie from the original device or the cookie  * from a link will have the effect of removing both entries.  * Removing with BOTH an original cookie and one from a link is  * likely to cause a panic.  */
+end_comment
+
 begin_decl_stmt
 name|void
 name|devfs_remove_dev
@@ -93,6 +105,63 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Check if a device exists and is the type you need. Returns NULL or a  * cookie that can be used to try 'open' the device. XXX This is a bit  * of a duplication of devfs_lookup(). I might one day try merge them a bit.  * Used for mountroot under DEVFS. Path is relative to the base of the devfs.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|devfs_open_device
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|path
+operator|,
+name|int
+name|devtype
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|devfs_close_device
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vn
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|dev_t
+name|devfs_vntodev
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vn
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* extract dev_t from devfs vn */
+end_comment
 
 begin_define
 define|#
