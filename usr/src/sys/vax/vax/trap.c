@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	6.1	83/08/18	*/
+comment|/*	trap.c	6.2	84/06/10	*/
 end_comment
 
 begin_include
@@ -1231,14 +1231,6 @@ operator|(
 operator|)
 expr_stmt|;
 block|}
-name|locr0
-index|[
-name|PS
-index|]
-operator|&=
-operator|~
-name|PSL_C
-expr_stmt|;
 if|if
 condition|(
 name|u
@@ -1324,6 +1316,14 @@ operator|.
 name|u_r
 operator|.
 name|r_val2
+expr_stmt|;
+name|locr0
+index|[
+name|PS
+index|]
+operator|&=
+operator|~
+name|PSL_C
 expr_stmt|;
 block|}
 name|done
