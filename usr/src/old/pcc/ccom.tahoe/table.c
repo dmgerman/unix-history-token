@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.3 (Berkeley) %G%"
+literal|"@(#)table.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3652,8 +3652,25 @@ literal|0
 block|,
 name|RLEFT
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
 literal|"T"
 block|,
+else|#
+directive|else
+literal|""
+block|,
+endif|#
+directive|endif
 name|OPSIMP
 block|,
 name|INAREG
