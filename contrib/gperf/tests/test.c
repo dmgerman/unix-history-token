@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    Tests the generated perfect has function.    The -v option prints diagnostics as to whether a word is in     the set or not.  Without -v the program is useful for timing. */
+comment|/*    Tests the generated perfect hash function.    The -v option prints diagnostics as to whether a word is in     the set or not.  Without -v the program is useful for timing. */
 end_comment
 
 begin_include
@@ -16,41 +16,10 @@ name|MAX_LEN
 value|80
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
-name|int
-name|in_word_set
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|)
-else|#
-directive|else
-function|int  main
-parameter_list|(
 name|argc
 parameter_list|,
 name|argv
@@ -63,8 +32,6 @@ modifier|*
 name|argv
 index|[]
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|verbose
