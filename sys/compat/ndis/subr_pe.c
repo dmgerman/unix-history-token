@@ -1891,8 +1891,6 @@ argument_list|,
 operator|*
 name|nptr
 argument_list|)
-operator|!=
-name|NULL
 condition|)
 block|{
 name|fname
