@@ -1582,7 +1582,7 @@ name|pcpu
 operator|->
 name|pc_acpi_id
 operator|=
-literal|0xffffffff
+name|cpuid
 expr_stmt|;
 block|}
 end_function
