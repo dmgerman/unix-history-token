@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf_ioctl.c,v 1.112.2.1 2004/04/30 21:43:30 brad Exp $ */
+comment|/*	$OpenBSD: pf_ioctl.c,v 1.112.2.2 2004/07/24 18:28:12 brad Exp $ */
 end_comment
 
 begin_comment
@@ -8334,6 +8334,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|newrule
+operator|!=
+name|NULL
+condition|)
 name|pf_rm_rule
 argument_list|(
 name|NULL
