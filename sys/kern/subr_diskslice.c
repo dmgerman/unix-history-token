@@ -743,7 +743,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dscheck: negative b_blkno %ld\n"
+literal|"dscheck(%s): negative b_blkno %ld\n"
+argument_list|,
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -1040,7 +1047,15 @@ name|slicerel_secno
 condition|)
 name|printf
 argument_list|(
-literal|"should map bad sector %ld -> %ld\n"
+literal|"dscheck(%s):"
+literal|" should map bad sector %ld -> %ld\n"
+argument_list|,
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -1439,7 +1454,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"dscheck(%s): %s\n"
+argument_list|,
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|msg
 argument_list|)
@@ -1465,7 +1487,15 @@ name|bad_bcount
 label|:
 name|printf
 argument_list|(
-literal|"dscheck: b_bcount %ld is not on a sector boundary (ssize %d)\n"
+literal|"dscheck(%s):"
+literal|" b_bcount %ld is not on a sector boundary (ssize %d)\n"
+argument_list|,
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|bp
 operator|->
@@ -1489,7 +1519,15 @@ name|bad_blkno
 label|:
 name|printf
 argument_list|(
-literal|"dscheck: b_blkno %ld is not on a sector boundary (ssize %d)\n"
+literal|"dscheck(%s):"
+literal|" b_blkno %ld is not on a sector boundary (ssize %d)\n"
+argument_list|,
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 operator|(
 name|long
