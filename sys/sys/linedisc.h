@@ -58,6 +58,11 @@ directive|define
 name|SI_STASHED
 value|0x0001
 comment|/* created in stashed storage */
+define|#
+directive|define
+name|SI_WHINED
+value|0x0002
+comment|/* whined about already */
 name|udev_t
 name|si_udev
 decl_stmt|;

@@ -1075,10 +1075,6 @@ name|int
 name|b
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|whine
-decl_stmt|;
 if|if
 condition|(
 name|x
@@ -1115,21 +1111,6 @@ return|;
 case|case
 literal|1
 case|:
-if|if
-condition|(
-operator|!
-name|whine
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: run /dev/MAKEDEV before 2000-06-01 to get rid of block devices\n"
-argument_list|)
-expr_stmt|;
-name|whine
-operator|++
-expr_stmt|;
-block|}
 return|return
 name|makebdev
 argument_list|(
