@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -188,10 +188,9 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
 name|int
-name|npg
-decl_stmt|,
-name|mbx
+name|logged
 decl_stmt|;
 specifier|register
 name|caddr_t
@@ -201,9 +200,8 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|static
 name|int
-name|logged
+name|npg
 decl_stmt|;
 name|npg
 operator|=

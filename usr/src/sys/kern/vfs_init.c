@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * %sccs.include.redist.c%  *  *	@(#)vfs_init.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * %sccs.include.redist.c%  *  *	@(#)vfs_init.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -186,11 +186,6 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|k
-decl_stmt|;
-name|struct
-name|vnodeop_defn
-modifier|*
-name|defnp
 decl_stmt|;
 name|int
 function_decl|(
@@ -491,8 +486,6 @@ parameter_list|()
 block|{
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|DODEBUG
 argument_list|(

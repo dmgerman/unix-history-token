@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.2 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3270,8 +3270,6 @@ name|unp_gcing
 operator|=
 literal|1
 expr_stmt|;
-name|restart
-label|:
 name|unp_defer
 operator|=
 literal|0

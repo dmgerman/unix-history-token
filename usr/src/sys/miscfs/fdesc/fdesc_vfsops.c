@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	8.1 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.9 1993/04/06 15:28:33 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	8.2 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.9 1993/04/06 15:28:33 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -672,9 +672,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
