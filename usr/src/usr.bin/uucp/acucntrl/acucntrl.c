@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.14	(Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.15	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,6 +436,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|off_t
+name|utmploc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|off_t
+name|ttyslnbeg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|errno
@@ -448,18 +460,6 @@ name|char
 modifier|*
 name|sys_errlist
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|off_t
-name|utmploc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|off_t
-name|ttyslnbeg
 decl_stmt|;
 end_decl_stmt
 
@@ -552,6 +552,10 @@ condition|(
 name|argc
 operator|!=
 literal|3
+operator|&&
+name|argc
+operator|!=
+literal|4
 condition|)
 block|{
 name|fprintf
@@ -669,36 +673,6 @@ name|device
 operator|+
 literal|1
 expr_stmt|;
-comment|/* only recognize devices of the form ttydX */
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|device
-argument_list|,
-literal|"ttyd"
-argument_list|,
-literal|4
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad Device Name %s"
-argument_list|,
-name|device
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|opnttys
 argument_list|(
 name|device
@@ -789,6 +763,28 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"uucp"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|argc
+operator|==
+literal|4
+condition|)
+name|p
+operator|=
+name|argv
+index|[
+literal|3
+index|]
+expr_stmt|;
 comment|/*  to upper case */
 name|i
 operator|=
