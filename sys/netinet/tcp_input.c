@@ -4200,6 +4200,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 				 * Recalculate the retransmit timer / rtt. 				 * 				 * Some machines (certain windows boxes)  				 * send broken timestamp replies during the 				 * SYN+ACK phase, ignore timestamps of 0. 				 */
 if|if
 condition|(
 operator|(
@@ -4211,7 +4212,12 @@ name|TOF_TS
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|to
+operator|.
+name|to_tsecr
 condition|)
+block|{
 name|tcp_xmit_timer
 argument_list|(
 name|tp
@@ -4225,6 +4231,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4243,6 +4250,7 @@ operator|->
 name|t_rtseq
 argument_list|)
 condition|)
+block|{
 name|tcp_xmit_timer
 argument_list|(
 name|tp
@@ -4254,6 +4262,7 @@ operator|->
 name|t_rtttime
 argument_list|)
 expr_stmt|;
+block|}
 name|tcp_xmit_bandwidth_limit
 argument_list|(
 name|tp
@@ -6816,15 +6825,24 @@ literal|0
 expr_stmt|;
 comment|/* XXX probably not required */
 block|}
-comment|/* 		 * If we have a timestamp reply, update smoothed 		 * round trip time.  If no timestamp is present but 		 * transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 * Since we now have an rtt measurement, cancel the 		 * timer backoff (cf., Phil Karn's retransmit alg.). 		 * Recompute the initial retransmit timer. 		 */
+comment|/* 		 * If we have a timestamp reply, update smoothed 		 * round trip time.  If no timestamp is present but 		 * transmit timer is running and timed sequence 		 * number was acked, update smoothed round trip time. 		 * Since we now have an rtt measurement, cancel the 		 * timer backoff (cf., Phil Karn's retransmit alg.). 		 * Recompute the initial retransmit timer. 		 * 		 * Some machines (certain windows boxes) send broken 		 * timestamp replies during the SYN+ACK phase, ignore  		 * timestamps of 0. 		 */
 if|if
 condition|(
+operator|(
 name|to
 operator|.
 name|to_flags
 operator|&
 name|TOF_TS
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|to
+operator|.
+name|to_tsecr
 condition|)
+block|{
 name|tcp_xmit_timer
 argument_list|(
 name|tp
@@ -6838,6 +6856,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -6856,6 +6875,7 @@ operator|->
 name|t_rtseq
 argument_list|)
 condition|)
+block|{
 name|tcp_xmit_timer
 argument_list|(
 name|tp
@@ -6867,6 +6887,7 @@ operator|->
 name|t_rtttime
 argument_list|)
 expr_stmt|;
+block|}
 name|tcp_xmit_bandwidth_limit
 argument_list|(
 name|tp
