@@ -262,7 +262,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -278,7 +278,7 @@ name|LibAliasAddServer
 argument_list|(
 name|la
 argument_list|,
-name|_link
+name|_lnk
 argument_list|,
 name|_addr
 argument_list|,
@@ -323,7 +323,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 block|{
 return|return
@@ -331,7 +331,7 @@ name|LibAliasRedirectDynamic
 argument_list|(
 name|la
 argument_list|,
-name|_link
+name|_lnk
 argument_list|)
 return|;
 block|}
@@ -344,14 +344,14 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 block|{
 name|LibAliasRedirectDelete
 argument_list|(
 name|la
 argument_list|,
-name|_link
+name|_lnk
 argument_list|)
 expr_stmt|;
 block|}

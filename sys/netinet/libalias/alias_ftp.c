@@ -236,7 +236,7 @@ comment|/* IP packet to examine/patch */
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 comment|/* The link to go through (aliased port) */
 name|int
@@ -336,7 +336,7 @@ name|pflags
 operator|=
 name|GetProtocolFlags
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 if|if
@@ -463,7 +463,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|maxpacketsize
 argument_list|,
@@ -529,7 +529,7 @@ name|WAIT_CRLF
 expr_stmt|;
 name|SetProtocolFlags
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|pflags
 argument_list|)
@@ -2043,7 +2043,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|int
 name|maxpacketsize
@@ -2055,7 +2055,7 @@ block|{
 name|struct
 name|alias_link
 modifier|*
-name|ftp_link
+name|ftp_lnk
 decl_stmt|;
 comment|/* Security checks. */
 if|if
@@ -2083,7 +2083,7 @@ name|IPPORT_RESERVED
 condition|)
 return|return;
 comment|/* Establish link to address and port found in FTP control message. */
-name|ftp_link
+name|ftp_lnk
 operator|=
 name|FindUdpTcpOut
 argument_list|(
@@ -2095,7 +2095,7 @@ name|true_addr
 argument_list|,
 name|GetDestAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|htons
@@ -2114,7 +2114,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ftp_link
+name|ftp_lnk
 operator|!=
 name|NULL
 condition|)
@@ -2139,7 +2139,7 @@ name|NO_FW_PUNCH
 comment|/* Punch hole in firewall */
 name|PunchFWHole
 argument_list|(
-name|ftp_link
+name|ftp_lnk
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2240,7 +2240,7 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -2281,7 +2281,7 @@ name|alias_port
 operator|=
 name|GetAliasPort
 argument_list|(
-name|ftp_link
+name|ftp_lnk
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2451,7 +2451,7 @@ name|delta
 decl_stmt|;
 name|SetAckModified
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|delta
@@ -2460,14 +2460,14 @@ name|GetDeltaSeqOut
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|AddSeq
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|delta
 operator|+

@@ -95,6 +95,11 @@ name|sum
 decl_stmt|,
 name|oddbyte
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|la
+expr_stmt|;
 name|sum
 operator|=
 literal|0

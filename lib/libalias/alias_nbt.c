@@ -755,7 +755,7 @@ comment|/* IP packet to examine/patch */
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -785,6 +785,16 @@ name|char
 modifier|*
 name|pmax
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|la
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|lnk
+expr_stmt|;
 comment|/* Calculate data length of UDP packet */
 name|uh
 operator|=
@@ -1217,6 +1227,11 @@ modifier|*
 name|nbtarg
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|nbtarg
+expr_stmt|;
 while|while
 condition|(
 name|count
@@ -2156,6 +2171,11 @@ decl_stmt|;
 name|u_short
 name|bcount
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|nbtarg
+expr_stmt|;
 if|if
 condition|(
 name|q
@@ -2305,6 +2325,11 @@ decl_stmt|;
 name|u_short
 name|bcount
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|nbtarg
+expr_stmt|;
 if|if
 condition|(
 name|q
@@ -2457,6 +2482,11 @@ decl_stmt|;
 name|u_short
 name|bcount
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|nbtarg
+expr_stmt|;
 if|if
 condition|(
 name|q
@@ -2802,7 +2832,7 @@ comment|/* IP packet to examine/patch */
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -2843,6 +2873,16 @@ decl_stmt|;
 name|NBTArguments
 name|nbtarg
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|la
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|lnk
+expr_stmt|;
 comment|/* Set up Common Parameter */
 name|nbtarg
 operator|.

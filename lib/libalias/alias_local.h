@@ -808,7 +808,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -825,7 +825,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -841,7 +841,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|char
 modifier|*
@@ -858,7 +858,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|char
 modifier|*
@@ -874,7 +874,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_state
@@ -889,7 +889,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_state
@@ -904,7 +904,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -916,7 +916,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -929,7 +929,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -942,7 +942,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -955,7 +955,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -996,7 +996,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1008,7 +1008,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1021,7 +1021,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1033,7 +1033,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -1049,7 +1049,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1061,7 +1061,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|u_short
 name|_port
@@ -1076,7 +1076,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1088,7 +1088,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1105,7 +1105,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1122,7 +1122,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1139,7 +1139,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_delta
@@ -1154,7 +1154,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_expire
@@ -1181,7 +1181,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_pflags
@@ -1196,7 +1196,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1208,7 +1208,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|u_int16_t
 name|_cid
@@ -1229,7 +1229,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1283,7 +1283,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_maxpacketsize
@@ -1312,7 +1312,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_maxsize
@@ -1341,7 +1341,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|int
 name|_maxpacketsize
@@ -1370,7 +1370,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1392,7 +1392,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1452,7 +1452,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -1482,7 +1482,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|struct
 name|in_addr
@@ -1526,7 +1526,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1573,7 +1573,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1620,7 +1620,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|_link
+name|_lnk
 parameter_list|,
 name|struct
 name|ip

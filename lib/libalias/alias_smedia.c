@@ -257,7 +257,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|char
 modifier|*
@@ -360,7 +360,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|rtsp_link
+name|rtsp_lnk
 init|=
 name|NULL
 decl_stmt|;
@@ -478,6 +478,9 @@ while|while
 condition|(
 name|port_dlen
 operator|>
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|port_str
@@ -810,7 +813,7 @@ operator|++
 control|)
 block|{
 comment|/* 							 * Establish link 							 * to port found in 							 * RTSP packet 							 */
-name|rtsp_link
+name|rtsp_lnk
 operator|=
 name|FindRtspOut
 argument_list|(
@@ -818,7 +821,7 @@ name|la
 argument_list|,
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|null_addr
@@ -842,7 +845,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rtsp_link
+name|rtsp_lnk
 operator|!=
 name|NULL
 condition|)
@@ -853,7 +856,7 @@ name|NO_FW_PUNCH
 comment|/* 								 * Punch 								 * hole in 								 * firewall 								 */
 name|PunchFWHole
 argument_list|(
-name|rtsp_link
+name|rtsp_lnk
 argument_list|)
 expr_stmt|;
 endif|#
@@ -895,7 +898,7 @@ if|if
 condition|(
 name|salias
 operator|&&
-name|rtsp_link
+name|rtsp_lnk
 condition|)
 block|{
 name|pkt_updated
@@ -1062,7 +1065,7 @@ argument_list|)
 expr_stmt|;
 name|SetAckModified
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|delta
@@ -1071,14 +1074,14 @@ name|GetDeltaSeqOut
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|AddSeq
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|delta
 operator|+
@@ -1165,7 +1168,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|char
 modifier|*
@@ -1306,7 +1309,7 @@ name|ip_src
 argument_list|,
 name|GetDestAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|port
@@ -1427,7 +1430,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|int
 name|maxpacketsize
@@ -1490,6 +1493,11 @@ name|i
 decl_stmt|,
 name|parseOk
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|maxpacketsize
+expr_stmt|;
 name|tc
 operator|=
 operator|(
@@ -1584,6 +1592,9 @@ if|if
 condition|(
 name|dlen
 operator|>=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|setup
@@ -1613,7 +1624,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|data
 argument_list|,
@@ -1627,6 +1638,9 @@ if|if
 condition|(
 name|dlen
 operator|>=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|pna
@@ -1656,7 +1670,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|data
 argument_list|,
@@ -1673,6 +1687,9 @@ if|if
 condition|(
 name|dlen
 operator|>=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|str200
@@ -1693,6 +1710,9 @@ name|i
 operator|<=
 name|dlen
 operator|-
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|str200
@@ -1764,6 +1784,9 @@ operator|-
 name|i
 operator|)
 operator|>=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|okstr
@@ -1796,7 +1819,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|data
 argument_list|,

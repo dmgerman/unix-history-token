@@ -173,7 +173,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|)
 block|{
 name|struct
@@ -234,7 +234,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|cu_link
+name|cu_lnk
 decl_stmt|;
 name|cu
 operator|=
@@ -264,12 +264,12 @@ name|u_int32_t
 operator|)
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 operator|.
 name|s_addr
 expr_stmt|;
-name|cu_link
+name|cu_lnk
 operator|=
 name|FindUdpTcpOut
 argument_list|(
@@ -281,7 +281,7 @@ name|ip_src
 argument_list|,
 name|GetDestAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|ud
@@ -300,11 +300,11 @@ directive|ifndef
 name|NO_FW_PUNCH
 if|if
 condition|(
-name|cu_link
+name|cu_lnk
 condition|)
 name|PunchFWHole
 argument_list|(
-name|cu_link
+name|cu_lnk
 argument_list|)
 expr_stmt|;
 endif|#
@@ -363,6 +363,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|la
+expr_stmt|;
 name|alias_addr
 operator|.
 name|s_addr

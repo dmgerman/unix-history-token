@@ -345,14 +345,14 @@ comment|/* IP packet to examine/patch */
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|)
 block|{
 comment|/* The PPTP control link */
 name|struct
 name|alias_link
 modifier|*
-name|pptp_link
+name|pptp_lnk
 decl_stmt|;
 name|PptpCallId
 name|cptr
@@ -406,7 +406,7 @@ case|case
 name|PPTP_InCallReply
 case|:
 comment|/* 		 * Establish PPTP link for address and Call ID found in 		 * control message. 		 */
-name|pptp_link
+name|pptp_lnk
 operator|=
 name|AddPptp
 argument_list|(
@@ -414,17 +414,17 @@ name|la
 argument_list|,
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|GetDestAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|cptr
@@ -440,7 +440,7 @@ case|case
 name|PPTP_CallDiscNotify
 case|:
 comment|/* 		 * Find PPTP link for address and Call ID found in control 		 * message. 		 */
-name|pptp_link
+name|pptp_lnk
 operator|=
 name|FindPptpOutByCallId
 argument_list|(
@@ -448,12 +448,12 @@ name|la
 argument_list|,
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|GetDestAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|cptr
@@ -467,7 +467,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|pptp_link
+name|pptp_lnk
 operator|!=
 name|NULL
 condition|)
@@ -486,7 +486,7 @@ name|cid1
 operator|=
 name|GetAliasPort
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|)
 expr_stmt|;
 comment|/* Compute TCP checksum for revised packet */
@@ -561,7 +561,7 @@ condition|)
 comment|/* Connection 							 * established, */
 name|SetDestCallId
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|,
 comment|/* note the Peer's Call 								 * ID. */
 name|cptr
@@ -572,7 +572,7 @@ expr_stmt|;
 else|else
 name|SetExpire
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|,
 literal|0
 argument_list|)
@@ -585,7 +585,7 @@ case|:
 comment|/* Connection closed. */
 name|SetExpire
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|,
 literal|0
 argument_list|)
@@ -614,14 +614,14 @@ comment|/* IP packet to examine/patch */
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|)
 block|{
 comment|/* The PPTP control link */
 name|struct
 name|alias_link
 modifier|*
-name|pptp_link
+name|pptp_lnk
 decl_stmt|;
 name|PptpCallId
 name|cptr
@@ -698,7 +698,7 @@ case|case
 name|PPTP_CallDiscNotify
 case|:
 comment|/* Connection closed. */
-name|pptp_link
+name|pptp_lnk
 operator|=
 name|FindPptpInByCallId
 argument_list|(
@@ -706,12 +706,12 @@ name|la
 argument_list|,
 name|GetDestAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|cptr
@@ -721,13 +721,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pptp_link
+name|pptp_lnk
 operator|!=
 name|NULL
 condition|)
 name|SetExpire
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|,
 literal|0
 argument_list|)
@@ -737,7 +737,7 @@ default|default:
 return|return;
 block|}
 comment|/* Find PPTP link for address and Call ID found in PPTP Control Msg */
-name|pptp_link
+name|pptp_lnk
 operator|=
 name|FindPptpInByPeerCallId
 argument_list|(
@@ -745,12 +745,12 @@ name|la
 argument_list|,
 name|GetDestAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|,
 operator|*
@@ -759,7 +759,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pptp_link
+name|pptp_lnk
 operator|!=
 name|NULL
 condition|)
@@ -776,7 +776,7 @@ name|pcall_id
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|)
 expr_stmt|;
 comment|/* Compute TCP checksum for modified packet */
@@ -851,7 +851,7 @@ condition|)
 comment|/* Connection 							 * established, */
 name|SetDestCallId
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|,
 comment|/* note the Call ID. */
 name|cptr
@@ -862,7 +862,7 @@ expr_stmt|;
 else|else
 name|SetExpire
 argument_list|(
-name|pptp_link
+name|pptp_lnk
 argument_list|,
 literal|0
 argument_list|)
@@ -962,7 +962,10 @@ if|if
 condition|(
 name|dlen
 operator|<
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -974,7 +977,7 @@ argument_list|(
 expr|struct
 name|pptpCallIds
 argument_list|)
-operator|)
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -1058,6 +1061,10 @@ operator|&&
 operator|(
 name|dlen
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1074,6 +1081,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|pptpCodes
+argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -1118,7 +1126,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|gr
 operator|=
@@ -1169,7 +1177,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|link
+name|lnk
 operator|=
 name|FindPptpOutByPeerCallId
 argument_list|(
@@ -1190,7 +1198,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -1201,7 +1209,7 @@ name|alias_addr
 init|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 decl_stmt|;
 comment|/* Change source IP address. */
@@ -1260,7 +1268,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|gr
 operator|=
@@ -1311,7 +1319,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|link
+name|lnk
 operator|=
 name|FindPptpInByPeerCallId
 argument_list|(
@@ -1332,7 +1340,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -1343,7 +1351,7 @@ name|src_addr
 init|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 decl_stmt|;
 comment|/* De-alias the Peer's Call Id. */
@@ -1353,7 +1361,7 @@ name|gh_call_id
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Restore original IP address. */

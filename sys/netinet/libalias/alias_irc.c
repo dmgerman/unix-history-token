@@ -116,7 +116,7 @@ comment|/* IP packet to examine */
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 comment|/* Which link are we on? */
 name|int
@@ -209,6 +209,9 @@ if|if
 condition|(
 name|dlen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 literal|":A!a@n.n PRIVMSG A :aDCC 1 1a"
@@ -276,18 +279,20 @@ literal|65536
 index|]
 decl_stmt|;
 comment|/* Estimate of maximum packet size 					 * :) */
+name|unsigned
 name|int
 name|copyat
 init|=
 name|i
 decl_stmt|;
 comment|/* Same */
+name|unsigned
 name|int
 name|iCopy
 init|=
 literal|0
 decl_stmt|;
-comment|/* How much data have we written to 				 * copy-back string? */
+comment|/* How much data have we written to 					 * copy-back string? */
 name|unsigned
 name|long
 name|org_addr
@@ -991,7 +996,7 @@ block|{
 name|struct
 name|alias_link
 modifier|*
-name|dcc_link
+name|dcc_lnk
 decl_stmt|;
 name|struct
 name|in_addr
@@ -1046,7 +1051,7 @@ goto|goto
 name|lBAD_CTCP
 goto|;
 comment|/* 			 * Steal the FTP_DATA_PORT - it doesn't really 			 * matter, and this would probably allow it through 			 * at least _some_ firewalls. 			 */
-name|dcc_link
+name|dcc_lnk
 operator|=
 name|FindUdpTcpOut
 argument_list|(
@@ -1074,7 +1079,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dcc_link
+name|dcc_lnk
 condition|)
 block|{
 name|struct
@@ -1095,7 +1100,7 @@ name|NO_FW_PUNCH
 comment|/* Generate firewall hole as appropriate */
 name|PunchFWHole
 argument_list|(
-name|dcc_link
+name|dcc_lnk
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1104,7 +1109,7 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|n
@@ -1185,7 +1190,7 @@ name|alias_port
 operator|=
 name|GetAliasPort
 argument_list|(
-name|dcc_link
+name|dcc_lnk
 argument_list|)
 expr_stmt|;
 name|n
@@ -1392,7 +1397,7 @@ name|delta
 decl_stmt|;
 name|SetAckModified
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|delta
@@ -1401,14 +1406,14 @@ name|GetDeltaSeqOut
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|AddSeq
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|delta
 operator|+

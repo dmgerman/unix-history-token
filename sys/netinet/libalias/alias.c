@@ -237,7 +237,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|)
 block|{
 name|struct
@@ -272,7 +272,7 @@ switch|switch
 condition|(
 name|GetStateIn
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 condition|)
 block|{
@@ -289,7 +289,7 @@ name|TH_RST
 condition|)
 name|SetStateIn
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|ALIAS_TCP_STATE_DISCONNECTED
 argument_list|)
@@ -305,7 +305,7 @@ name|TH_SYN
 condition|)
 name|SetStateIn
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
@@ -328,7 +328,7 @@ operator|)
 condition|)
 name|SetStateIn
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|ALIAS_TCP_STATE_DISCONNECTED
 argument_list|)
@@ -351,7 +351,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|)
 block|{
 name|struct
@@ -386,7 +386,7 @@ switch|switch
 condition|(
 name|GetStateOut
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 condition|)
 block|{
@@ -403,7 +403,7 @@ name|TH_RST
 condition|)
 name|SetStateOut
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|ALIAS_TCP_STATE_DISCONNECTED
 argument_list|)
@@ -419,7 +419,7 @@ name|TH_SYN
 condition|)
 name|SetStateOut
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|ALIAS_TCP_STATE_CONNECTED
 argument_list|)
@@ -442,7 +442,7 @@ operator|)
 condition|)
 name|SetStateOut
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|ALIAS_TCP_STATE_DISCONNECTED
 argument_list|)
@@ -686,7 +686,7 @@ comment|/*     De-alias incoming echo and timestamp replies.     Alias incoming 
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|struct
 name|icmp
@@ -717,7 +717,7 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* Get source address from ICMP data field and restore original data */
-name|link
+name|lnk
 operator|=
 name|FindIcmpIn
 argument_list|(
@@ -740,7 +740,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -755,7 +755,7 @@ name|original_id
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust ICMP checksum */
@@ -795,7 +795,7 @@ name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|DifferentialChecksum
@@ -880,7 +880,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|ic
 operator|=
@@ -961,7 +961,7 @@ name|ip_p
 operator|==
 name|IPPROTO_UDP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpIn
 argument_list|(
@@ -997,7 +997,7 @@ name|ip_p
 operator|==
 name|IPPROTO_TCP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpIn
 argument_list|(
@@ -1048,7 +1048,7 @@ name|icmp_type
 operator|==
 name|ICMP_TSTAMP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindIcmpIn
 argument_list|(
@@ -1070,19 +1070,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|link
+name|lnk
 operator|=
 name|NULL
 expr_stmt|;
 block|}
 else|else
-name|link
+name|lnk
 operator|=
 name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -1118,14 +1118,14 @@ name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|original_port
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust ICMP checksum */
@@ -1256,14 +1256,14 @@ name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|original_id
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust ICMP checksum */
@@ -1547,7 +1547,7 @@ comment|/*     Alias outgoing echo and timestamp requests.     De-alias outgoing
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|struct
 name|icmp
@@ -1578,7 +1578,7 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* Save overwritten data for when echo packet returns */
-name|link
+name|lnk
 operator|=
 name|FindIcmpOut
 argument_list|(
@@ -1601,7 +1601,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -1616,7 +1616,7 @@ name|alias_id
 operator|=
 name|GetAliasPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Since data field is being modified, adjust ICMP checksum */
@@ -1656,7 +1656,7 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|DifferentialChecksum
@@ -1741,7 +1741,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|ic
 operator|=
@@ -1822,7 +1822,7 @@ name|ip_p
 operator|==
 name|IPPROTO_UDP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpOut
 argument_list|(
@@ -1858,7 +1858,7 @@ name|ip_p
 operator|==
 name|IPPROTO_TCP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpOut
 argument_list|(
@@ -1909,7 +1909,7 @@ name|icmp_type
 operator|==
 name|ICMP_TSTAMP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindIcmpOut
 argument_list|(
@@ -1931,19 +1931,19 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|link
+name|lnk
 operator|=
 name|NULL
 expr_stmt|;
 block|}
 else|else
-name|link
+name|lnk
 operator|=
 name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -1977,14 +1977,14 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|alias_port
 operator|=
 name|GetAliasPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust ICMP checksum */
@@ -2104,14 +2104,14 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|alias_id
 operator|=
 name|GetAliasPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust ICMP checksum */
@@ -2248,6 +2248,11 @@ name|icmp
 modifier|*
 name|ic
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|create
+expr_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
@@ -2388,7 +2393,7 @@ comment|/*   Handle incoming IP packets. The   only thing which is done in this 
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
@@ -2404,7 +2409,7 @@ operator|(
 name|PKT_ALIAS_OK
 operator|)
 return|;
-name|link
+name|lnk
 operator|=
 name|FindProtoIn
 argument_list|(
@@ -2425,7 +2430,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -2438,7 +2443,7 @@ name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Restore original IP address */
@@ -2503,8 +2508,13 @@ comment|/*   Handle outgoing IP packets. The   only thing which is done in this 
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|create
+expr_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
@@ -2519,7 +2529,7 @@ operator|(
 name|PKT_ALIAS_OK
 operator|)
 return|;
-name|link
+name|lnk
 operator|=
 name|FindProtoOut
 argument_list|(
@@ -2540,7 +2550,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -2553,7 +2563,7 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Change source address */
@@ -2619,7 +2629,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
@@ -2658,7 +2668,7 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpIn
 argument_list|(
@@ -2687,7 +2697,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -2715,14 +2725,14 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|alias_port
@@ -2737,7 +2747,7 @@ name|uh_dport
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Special processing for IP encoding protocols */
@@ -2791,7 +2801,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 operator|&
 name|original_address
@@ -2830,7 +2840,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 operator|&
 name|alias_address
@@ -2973,7 +2983,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
@@ -3012,7 +3022,7 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpOut
 argument_list|(
@@ -3041,7 +3051,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -3057,14 +3067,14 @@ name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|alias_port
 operator|=
 name|GetAliasPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Special processing for IP encoding protocols */
@@ -3085,7 +3095,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* If NETBIOS Datagram, It should be alias address in UDP Data, too */
@@ -3116,7 +3126,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 operator|&
 name|alias_address
@@ -3151,7 +3161,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 operator|&
 name|pip
@@ -3326,7 +3336,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|tc
 operator|=
@@ -3351,7 +3361,7 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpIn
 argument_list|(
@@ -3387,7 +3397,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -3440,7 +3450,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3482,28 +3492,28 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|proxy_address
 operator|=
 name|GetProxyAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|alias_port
@@ -3518,14 +3528,14 @@ name|th_dport
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|proxy_port
 operator|=
 name|GetProxyPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust TCP checksum since destination port is being unaliased */
@@ -3606,7 +3616,7 @@ if|if
 condition|(
 name|GetAckModified
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 operator|==
 literal|1
@@ -3621,7 +3631,7 @@ name|GetDeltaAckIn
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 if|if
@@ -3756,7 +3766,7 @@ name|TcpMonitorIn
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 return|return
@@ -3820,7 +3830,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|tc
 operator|=
@@ -3983,7 +3993,7 @@ name|ip_sum
 argument_list|)
 expr_stmt|;
 block|}
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpOut
 argument_list|(
@@ -4012,7 +4022,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|==
 name|NULL
 condition|)
@@ -4023,7 +4033,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -4048,14 +4058,14 @@ condition|)
 block|{
 name|SetProxyPort
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|dest_port
 argument_list|)
 expr_stmt|;
 name|SetProxyAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|dest_address
 argument_list|)
@@ -4064,7 +4074,7 @@ name|ProxyModify
 argument_list|(
 name|la
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|pip
 argument_list|,
@@ -4102,14 +4112,14 @@ name|alias_port
 operator|=
 name|GetAliasPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|alias_address
 operator|=
 name|GetAliasAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Monitor TCP connection state */
@@ -4117,7 +4127,7 @@ name|TcpMonitorOut
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Special processing for IP encoding protocols */
@@ -4147,7 +4157,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|maxpacketsize
 argument_list|)
@@ -4179,7 +4189,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|maxpacketsize
 argument_list|)
@@ -4229,7 +4239,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|maxpacketsize
 argument_list|)
@@ -4261,7 +4271,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -4303,7 +4313,7 @@ name|la
 argument_list|,
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust TCP checksum since source port is being aliased */
@@ -4349,7 +4359,7 @@ if|if
 condition|(
 name|GetAckModified
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 operator|==
 literal|1
@@ -4364,7 +4374,7 @@ name|GetDeltaSeqOut
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 if|if
@@ -4530,9 +4540,9 @@ block|{
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
-name|link
+name|lnk
 operator|=
 name|FindFragmentIn2
 argument_list|(
@@ -4553,7 +4563,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -4564,7 +4574,7 @@ name|original_address
 decl_stmt|;
 name|GetFragmentAddr
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 operator|&
 name|original_address
@@ -4695,7 +4705,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|struct
 name|ip
@@ -4711,7 +4721,7 @@ operator|*
 operator|)
 name|ptr
 expr_stmt|;
-name|link
+name|lnk
 operator|=
 name|AddFragmentPtrLink
 argument_list|(
@@ -4732,14 +4742,14 @@ name|PKT_ALIAS_ERROR
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
 block|{
 name|SetFragmentPtr
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|ptr
 argument_list|)
@@ -4775,7 +4785,7 @@ block|{
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|char
 modifier|*
@@ -4795,7 +4805,7 @@ operator|*
 operator|)
 name|ptr
 expr_stmt|;
-name|link
+name|lnk
 operator|=
 name|FindFragmentPtr
 argument_list|(
@@ -4812,14 +4822,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
 block|{
 name|GetFragmentPtr
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 operator|&
 name|fptr
@@ -4827,14 +4837,14 @@ argument_list|)
 expr_stmt|;
 name|SetFragmentPtr
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 name|SetExpire
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 literal|0
 argument_list|)
@@ -4887,6 +4897,11 @@ name|ip
 modifier|*
 name|fpip
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|la
+expr_stmt|;
 name|pip
 operator|=
 operator|(
@@ -5182,9 +5197,9 @@ block|{
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
-name|link
+name|lnk
 operator|=
 name|FindFragmentIn1
 argument_list|(
@@ -5203,7 +5218,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -5214,7 +5229,7 @@ name|PKT_ALIAS_FOUND_HEADER_FRAGMENT
 expr_stmt|;
 name|SetFragmentAddr
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|pip
 operator|->
@@ -5771,7 +5786,7 @@ decl_stmt|;
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 decl_stmt|;
 name|int
 name|iresult
@@ -5864,7 +5879,7 @@ name|ip_p
 operator|==
 name|IPPROTO_UDP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpIn
 argument_list|(
@@ -5900,7 +5915,7 @@ name|ip_p
 operator|==
 name|IPPROTO_TCP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindUdpTcpIn
 argument_list|(
@@ -5936,7 +5951,7 @@ name|ip_p
 operator|==
 name|IPPROTO_ICMP
 condition|)
-name|link
+name|lnk
 operator|=
 name|FindIcmpIn
 argument_list|(
@@ -5958,14 +5973,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|link
+name|lnk
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* Change it from an aliased packet to an unaliased packet */
 if|if
 condition|(
-name|link
+name|lnk
 operator|!=
 name|NULL
 condition|)
@@ -5999,14 +6014,14 @@ name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|original_port
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust TCP/UDP checksum */
@@ -6155,14 +6170,14 @@ name|original_address
 operator|=
 name|GetOriginalAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|original_id
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 comment|/* Adjust ICMP checksum */

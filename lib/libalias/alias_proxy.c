@@ -922,7 +922,7 @@ parameter_list|(
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|struct
 name|ip
@@ -976,7 +976,7 @@ if|if
 condition|(
 name|GetAckModified
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 condition|)
 return|return;
@@ -998,7 +998,7 @@ name|inet_ntoa
 argument_list|(
 name|GetProxyAddress
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|)
 argument_list|,
@@ -1009,7 +1009,7 @@ name|ntohs
 argument_list|(
 name|GetProxyPort
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 argument_list|)
 argument_list|)
@@ -1062,7 +1062,10 @@ block|}
 comment|/* Check for packet overflow */
 if|if
 condition|(
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|ntohs
 argument_list|(
 name|pip
@@ -1074,7 +1077,7 @@ name|strlen
 argument_list|(
 name|buffer
 argument_list|)
-operator|)
+argument_list|)
 operator|>
 name|maxpacketsize
 condition|)
@@ -1164,7 +1167,7 @@ name|delta
 decl_stmt|;
 name|SetAckModified
 argument_list|(
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|delta
@@ -1173,14 +1176,14 @@ name|GetDeltaSeqOut
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|)
 expr_stmt|;
 name|AddSeq
 argument_list|(
 name|pip
 argument_list|,
-name|link
+name|lnk
 argument_list|,
 name|delta
 operator|+
@@ -1317,6 +1320,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|(
+name|void
+operator|)
+name|maxpacketsize
+expr_stmt|;
 comment|/* Check to see that there is room to add an IP option */
 if|if
 condition|(
@@ -1874,7 +1882,7 @@ parameter_list|,
 name|struct
 name|alias_link
 modifier|*
-name|link
+name|lnk
 parameter_list|,
 name|struct
 name|ip
@@ -1888,6 +1896,11 @@ name|int
 name|proxy_type
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|la
+expr_stmt|;
 switch|switch
 condition|(
 name|proxy_type
@@ -1909,7 +1922,7 @@ name|PROXY_TYPE_ENCODE_TCPSTREAM
 case|:
 name|ProxyEncodeTcpStream
 argument_list|(
-name|link
+name|lnk
 argument_list|,
 name|pip
 argument_list|,
@@ -2048,14 +2061,17 @@ if|if
 condition|(
 name|cmd_len
 operator|>
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|buffer
 argument_list|)
 operator|-
 literal|1
-operator|)
+argument_list|)
 condition|)
 return|return
 operator|(
