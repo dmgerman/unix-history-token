@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	5.8 (Berkeley) %G%"
+literal|"@(#)pow.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,64 +66,93 @@ argument_list|)
 operator|)
 end_if
 
-begin_expr_stmt
-name|x
-operator|=
-operator|(
-name|double
-operator|)
-operator|(
-name|float
-operator|)
-name|x
-define|#
-directive|define
-name|_IEEE
-value|0
-else|#
-directive|else
-define|#
-directive|define
-name|_IEEE
-value|1
+begin_define
 define|#
 directive|define
 name|TRUNC
 parameter_list|(
 name|x
 parameter_list|)
-value|*(((int *)&x)+1)&= 0xf8000000
+value|x = (double) (float) x
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IEEE
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_IEEE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|endian
+value|(((*(int *)&one)) ? 1 : 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRUNC
+parameter_list|(
+name|x
+parameter_list|)
+value|*(((int *)&x)+endian)&= 0xf8000000
+end_define
+
+begin_define
 define|#
 directive|define
 name|infnan
 parameter_list|(
 name|x
 parameter_list|)
-value|((x == EDOM)? zero/zero : ((x< 0) ? -one/zero : one/zero))
+value|0.0
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* vax or tahoe */
+end_comment
+
+begin_decl_stmt
 specifier|const
 specifier|static
 name|double
 name|zero
-operator|=
+init|=
 literal|0.0
-operator|,
+decl_stmt|,
 name|one
-operator|=
+init|=
 literal|1.0
-operator|,
+decl_stmt|,
 name|two
-operator|=
+init|=
 literal|2.0
-operator|,
+decl_stmt|,
 name|negone
-operator|=
+init|=
 operator|-
 literal|1.0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
