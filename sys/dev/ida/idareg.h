@@ -15,70 +15,70 @@ begin_define
 define|#
 directive|define
 name|R_EISA_INT_MASK
-value|0xC89
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_LOCAL_MASK
-value|0xC8C
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_LOCAL_DOORBELL
-value|0xC8D
+value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_SYSTEM_MASK
-value|0xC8E
+value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_SYSTEM_DOORBELL
-value|0xC8F
+value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_LIST_ADDR
-value|0xC90
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_LIST_LEN
-value|0xC94
+value|0x0c
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_TAG
-value|0xC97
+value|0x0f
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_COMPLETE_ADDR
-value|0xC98
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|R_EISA_LIST_STATUS
-value|0xC9E
+value|0x16
 end_define
 
 begin_define

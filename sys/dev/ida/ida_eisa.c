@@ -257,7 +257,7 @@ name|ida
 argument_list|,
 name|R_EISA_LOCAL_DOORBELL
 argument_list|,
-name|EISA_CHANNEL_CLEAR
+name|EISA_CHANNEL_BUSY
 argument_list|)
 expr_stmt|;
 block|}
