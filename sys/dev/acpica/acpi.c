@@ -943,7 +943,7 @@ name|OID_AUTO
 argument_list|,
 name|acpi_ca_version
 argument_list|,
-name|CTLFLAG_RO
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|acpi_ca_version
