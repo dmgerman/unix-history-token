@@ -236,6 +236,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|sepstring
@@ -250,6 +251,22 @@ name|format
 index|[
 name|BUFSIZ
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -1236,9 +1253,6 @@ block|{
 operator|*
 name|y
 operator|=
-operator|(
-name|double
-operator|)
 name|arc4random
 argument_list|()
 operator|/
@@ -1591,11 +1605,11 @@ begin_function
 name|int
 name|getprec
 parameter_list|(
-name|s
+name|str
 parameter_list|)
 name|char
 modifier|*
-name|s
+name|str
 decl_stmt|;
 block|{
 name|char
@@ -1610,7 +1624,7 @@ for|for
 control|(
 name|p
 operator|=
-name|s
+name|str
 init|;
 operator|*
 name|p
@@ -1678,6 +1692,9 @@ block|{
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|p2
 decl_stmt|;
 name|int
 name|dot
@@ -1694,10 +1711,6 @@ literal|0
 decl_stmt|;
 name|size_t
 name|sz
-decl_stmt|;
-name|char
-modifier|*
-name|s
 decl_stmt|;
 if|if
 condition|(
@@ -1858,7 +1871,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Allow conversion format specifiers of the form 		 * %[#][ ][{+,-}][0-9]*[.[0-9]*]? where ? must be one of 		 * [l]{d,i,o,u,x} or {f,e,g,E,G,d,o,x,D,O,U,X,c,u} 		 */
-name|s
+name|p2
 operator|=
 name|p
 operator|++
@@ -2179,7 +2192,7 @@ literal|1
 argument_list|,
 literal|"illegal or unsupported format '%s'"
 argument_list|,
-name|s
+name|p2
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
