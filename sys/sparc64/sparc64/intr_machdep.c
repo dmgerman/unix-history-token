@@ -4,8 +4,22 @@ comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	form: src/sys/i386/isa/intr_machdep.c,v 1.57 2001/07/20  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	form: src/sys/i386/isa/intr_machdep.c,v 1.57 2001/07/20  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -109,7 +123,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int16_t
+name|uint16_t
 name|pil_countp
 index|[
 name|PIL_MAX
@@ -128,6 +142,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|uint16_t
+name|intr_countp
+index|[
+name|IV_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|u_long
 name|intr_stray_count
 index|[
@@ -137,15 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int16_t
-name|intr_countp
-index|[
-name|IV_MAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|pil_names
@@ -213,7 +229,6 @@ parameter_list|(
 name|struct
 name|trapframe
 modifier|*
-name|tf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -225,7 +240,22 @@ name|intr_stray_vector
 parameter_list|(
 name|void
 modifier|*
-name|cookie
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|update_intrname
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -930,13 +960,13 @@ modifier|*
 name|ithd
 decl_stmt|;
 comment|/* descriptor for the IRQ */
-name|int
-name|errcode
-init|=
-literal|0
+name|struct
+name|ithd
+modifier|*
+name|orphan
 decl_stmt|;
 name|int
-name|created_ithd
+name|errcode
 init|=
 literal|0
 decl_stmt|;
@@ -1024,9 +1054,6 @@ name|iv_ithd
 operator|=
 name|ithd
 expr_stmt|;
-name|created_ithd
-operator|++
-expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1036,11 +1063,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|struct
-name|ithd
-modifier|*
-name|orphan
-decl_stmt|;
 name|orphan
 operator|=
 name|ithd
@@ -1226,7 +1248,6 @@ name|iv_ithd
 operator|==
 name|NULL
 condition|)
-block|{
 name|intr_setup
 argument_list|(
 name|PIL_ITHREAD
@@ -1240,9 +1261,7 @@ argument_list|,
 name|iv
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|intr_setup
 argument_list|(
 name|PIL_LOW
@@ -1256,7 +1275,6 @@ argument_list|,
 name|iv
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
