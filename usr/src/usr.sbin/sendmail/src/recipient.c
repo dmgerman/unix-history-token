@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.7 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1231,6 +1231,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QBADADDR
+expr_stmt|;
 name|usrerr
 argument_list|(
 literal|"550 Cannot open %s: %s"
@@ -1244,12 +1250,6 @@ argument_list|(
 name|ret
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|a
-operator|->
-name|q_flags
-operator||=
-name|QBADADDR
 expr_stmt|;
 block|}
 block|}
@@ -1916,8 +1916,6 @@ condition|(
 name|bitset
 argument_list|(
 name|QDONTSEND
-operator||
-name|QBADADDR
 argument_list|,
 name|a
 operator|->
