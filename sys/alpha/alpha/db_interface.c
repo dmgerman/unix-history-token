@@ -2447,7 +2447,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"Newest entry at clock %ld.%06ld\n"
+literal|"Newest entry at clock %d.%06ld\n"
 argument_list|,
 name|kp
 operator|->
@@ -2477,7 +2477,7 @@ name|lastt
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%4ld.%06ld: "
+literal|"%4d.%06ld: "
 argument_list|,
 name|ts
 operator|.
