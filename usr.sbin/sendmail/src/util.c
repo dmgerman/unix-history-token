@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.113 (Berkeley) 11/24/96"
+literal|"@(#)util.c	8.115 (Berkeley) 1/5/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -878,7 +878,14 @@ literal|0377
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|*
+name|s
+operator|!=
+literal|'\0'
+condition|)
 name|printf
 argument_list|(
 literal|"%c"
@@ -2338,6 +2345,21 @@ return|return
 name|EPERM
 return|;
 block|}
+if|if
+condition|(
+name|uid
+operator|==
+literal|0
+operator|&&
+name|bitset
+argument_list|(
+name|SFF_OPENASROOT
+argument_list|,
+name|flags
+argument_list|)
+condition|)
+empty_stmt|;
+elseif|else
 if|if
 condition|(
 name|uid

@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.156 (Berkeley) 12/1/96 (with daemon mode)"
+literal|"@(#)daemon.c	8.159 (Berkeley) 1/14/97 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.156 (Berkeley) 12/1/96 (without daemon mode)"
+literal|"@(#)daemon.c	8.159 (Berkeley) 1/14/97 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -422,11 +422,25 @@ expr_stmt|;
 comment|/* write the pid to the log file for posterity */
 name|pidf
 operator|=
-name|fopen
+name|safefopen
 argument_list|(
 name|PidFile
 argument_list|,
-literal|"w"
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
+argument_list|,
+literal|0644
+argument_list|,
+name|SFF_NOSLINK
+operator||
+name|SFF_ROOTOK
+operator||
+name|SFF_REGONLY
+operator||
+name|SFF_CREAT
 argument_list|)
 expr_stmt|;
 if|if
@@ -982,10 +996,15 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|extern
-name|void
+name|SIGFUNC_DECL
 name|intsig
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 name|FILE
 modifier|*
 name|inchannel

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.16 (Berkeley) 11/27/96"
+literal|"@(#)clock.c	8.18 (Berkeley) 12/31/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|void
+name|SIGFUNC_DECL
 name|tick
 name|__P
 argument_list|(
@@ -433,7 +433,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|SIGFUNC_DECL
 name|tick
 parameter_list|(
 name|arg
@@ -462,14 +462,6 @@ name|olderrno
 init|=
 name|errno
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SIG_UNBLOCK
-name|sigset_t
-name|ss
-decl_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -753,6 +745,9 @@ name|errno
 operator|=
 name|olderrno
 expr_stmt|;
+return|return
+name|SIGFUNC_RETURN
+return|;
 block|}
 end_function
 

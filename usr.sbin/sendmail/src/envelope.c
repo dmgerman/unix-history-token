@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.99 (Berkeley) 12/1/96"
+literal|"@(#)envelope.c	8.101 (Berkeley) 12/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1240,10 +1240,6 @@ operator|!
 name|failure_return
 condition|)
 block|{
-name|failure_return
-operator|=
-name|TRUE
-expr_stmt|;
 for|for
 control|(
 name|q
@@ -1274,13 +1270,28 @@ name|q
 operator|->
 name|q_flags
 argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|QPINGONFAILURE
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
 condition|)
+block|{
+name|failure_return
+operator|=
+name|TRUE
+expr_stmt|;
 name|q
 operator|->
 name|q_flags
 operator||=
 name|QBADADDR
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	**  Send back return receipts as requested. 	*/
@@ -2602,7 +2613,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETSENDER -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is in an approved list (typically **	    from a network server). **	3.  The address the user is trying to claim has a **	    "!" character in it (since #2 doesn't do it for **	    us if we are dialing out for UUCP). **	A better check to replace #3 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person we would like to believe this message **			is from, as specified on the command line. **		e -- the envelope in which we would like the sender set. **		delimptr -- if non-NULL, set to the location of the **			trailing delimiter. **		internal -- set if this address is coming from an internal **			source such as an owner alias. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
+comment|/* **  SETSENDER -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is in an approved list (typically **	    from a network server). **	3.  The address the user is trying to claim has a **	    "!" character in it (since #2 doesn't do it for **	    us if we are dialing out for UUCP). **	A better check to replace #3 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person we would like to believe this message **			is from, as specified on the command line. **		e -- the envelope in which we would like the sender set. **		delimptr -- if non-NULL, set to the location of the **			trailing delimiter. **		delimchar -- the character that will delimit the sender **			address. **		internal -- set if this address is coming from an internal **			source such as an owner alias. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
 end_comment
 
 begin_function
@@ -2614,6 +2625,8 @@ parameter_list|,
 name|e
 parameter_list|,
 name|delimptr
+parameter_list|,
+name|delimchar
 parameter_list|,
 name|internal
 parameter_list|)
@@ -2630,6 +2643,9 @@ name|char
 modifier|*
 modifier|*
 name|delimptr
+decl_stmt|;
+name|int
+name|delimchar
 decl_stmt|;
 name|bool
 name|internal
@@ -2652,9 +2668,6 @@ name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|;
-name|char
-name|delimchar
 decl_stmt|;
 name|char
 modifier|*
@@ -2756,14 +2769,6 @@ condition|)
 name|SuprErrs
 operator|=
 name|TRUE
-expr_stmt|;
-name|delimchar
-operator|=
-name|internal
-condition|?
-literal|'\0'
-else|:
-literal|' '
 expr_stmt|;
 name|e
 operator|->
