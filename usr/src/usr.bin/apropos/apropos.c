@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINELEN
-value|500
+value|1000
 end_define
 
 begin_comment
@@ -399,6 +399,10 @@ expr_stmt|;
 block|}
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|found
 argument_list|,
 name|argc
