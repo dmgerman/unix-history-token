@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.20 %G%"
+literal|"@(#)call.c 1.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -951,7 +951,9 @@ name|p1
 operator|->
 name|type
 argument_list|,
-name|P2INT
+name|nl
+operator|+
+name|T4INT
 argument_list|)
 expr_stmt|;
 break|break;
