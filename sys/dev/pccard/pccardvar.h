@@ -950,5 +950,59 @@ define|\
 value|(pccard_chip_mem_unmap((pf)->sc->pct, (pf)->sc->pch, (window)))
 end_define
 
+begin_comment
+comment|/* ivar interface */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|PCCARD_IVAR_ETHADDR
+block|,
+comment|/* read ethernet address from CIS tupple */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* read ethernet address from CIS tupple */
+end_comment
+
+begin_function
+name|__inline
+specifier|static
+name|int
+name|pccard_get_ether
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_char
+modifier|*
+name|enaddr
+parameter_list|)
+block|{
+return|return
+name|BUS_READ_IVAR
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|PCCARD_IVAR_ETHADDR
+argument_list|,
+operator|(
+name|uintptr_t
+operator|*
+operator|)
+name|enaddr
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 
