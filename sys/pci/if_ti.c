@@ -6566,6 +6566,8 @@ operator|->
 name|ti_max_len
 operator|=
 name|MHLEN
+operator|-
+name|ETHER_ALIGN
 expr_stmt|;
 if|if
 condition|(
