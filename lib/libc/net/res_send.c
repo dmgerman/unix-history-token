@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.5 1995/08/20 20:03:06 peter Exp $"
+literal|"$Id: res_send.c,v 1.6 1995/08/21 09:15:40 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2732,6 +2732,41 @@ goto|;
 block|}
 block|}
 comment|/*if vc/dg*/
+name|Dprint
+argument_list|(
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+operator|)
+operator|||
+operator|(
+operator|(
+name|_res
+operator|.
+name|pfcode
+operator|&
+name|RES_PRF_REPLY
+operator|)
+operator|&&
+operator|(
+name|_res
+operator|.
+name|pfcode
+operator|&
+name|RES_PRF_HEAD1
+operator|)
+operator|)
+argument_list|,
+operator|(
+name|stdout
+operator|,
+literal|";; got answer:\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|DprintQ
 argument_list|(
 operator|(
@@ -2753,7 +2788,7 @@ argument_list|,
 operator|(
 name|stdout
 operator|,
-literal|";; got answer:\n"
+literal|""
 operator|)
 argument_list|,
 name|ans

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 1.5 1995/08/20 20:03:00 peter Exp $"
+literal|"$Id: res_query.c,v 1.6 1995/08/21 09:15:39 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 1.5 1995/08/20 20:02:56 peter Exp $"
+literal|"$Id: res_mkquery.c,v 1.6 1995/08/21 09:15:37 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<resolv.h>
 end_include
 
@@ -81,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
