@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.35.2.10 1998/05/15 23:58:29 brian Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.36 1998/05/21 21:48:33 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1200,6 +1200,11 @@ name|struct
 name|prompt
 modifier|*
 name|prompt
+parameter_list|,
+name|struct
+name|datalink
+modifier|*
+name|cx
 parameter_list|)
 block|{
 name|FILE
@@ -1424,6 +1429,8 @@ argument_list|,
 name|doexec
 argument_list|,
 name|prompt
+argument_list|,
+name|cx
 argument_list|)
 expr_stmt|;
 name|log_Printf
@@ -1646,6 +1653,8 @@ argument_list|,
 name|prompt
 argument_list|,
 name|name
+argument_list|,
+name|cx
 argument_list|)
 expr_stmt|;
 block|}
@@ -1730,6 +1739,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|prompt
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1749,6 +1760,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|prompt
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1782,6 +1795,11 @@ name|struct
 name|prompt
 modifier|*
 name|prompt
+parameter_list|,
+name|struct
+name|datalink
+modifier|*
+name|cx
 parameter_list|)
 block|{
 name|userok
@@ -1806,6 +1824,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|prompt
+argument_list|,
+name|cx
 argument_list|)
 return|;
 block|}

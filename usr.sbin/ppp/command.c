@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.141 1998/06/12 20:12:25 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.142 1998/06/15 19:05:12 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -630,7 +630,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/06/12 20:12:25 $"
+literal|"$Date: 1998/06/15 19:05:12 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1688,6 +1688,10 @@ argument_list|,
 name|arg
 operator|->
 name|prompt
+argument_list|,
+name|arg
+operator|->
+name|cx
 argument_list|)
 operator|<
 literal|0
@@ -2915,6 +2919,8 @@ block|,
 name|LoadCommand
 block|,
 name|LOCAL_AUTH
+operator||
+name|LOCAL_CX_OPT
 block|,
 literal|"Load settings"
 block|,
@@ -4792,6 +4798,11 @@ specifier|const
 name|char
 modifier|*
 name|label
+parameter_list|,
+name|struct
+name|datalink
+modifier|*
+name|cx
 parameter_list|)
 block|{
 if|if
@@ -4982,7 +4993,7 @@ name|argv
 argument_list|,
 name|prompt
 argument_list|,
-name|NULL
+name|cx
 argument_list|)
 expr_stmt|;
 block|}
@@ -5055,6 +5066,8 @@ argument_list|,
 name|prompt
 argument_list|,
 name|label
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
