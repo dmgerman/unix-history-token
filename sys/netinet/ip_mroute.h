@@ -16,7 +16,7 @@ name|_NETINET_IP_MROUTE_H_
 end_define
 
 begin_comment
-comment|/*  * Definitions for IP multicast forwarding.  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Ajit Thyagarajan, PARC, August 1993.  * Modified by Ajit Thyagarajan, PARC, August 1994.  *  * MROUTING Revision: 3.3.1.3  */
+comment|/*  * Definitions for IP multicast forwarding.  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Ajit Thyagarajan, PARC, August 1993.  * Modified by Ajit Thyagarajan, PARC, August 1994.  * Modified by Ahmed Helmy, SGI, June 1996.  * Modified by Pavlin Radoslavov, ICSI, October 2002.  *  * MROUTING Revision: 3.3.1.3  * and PIM-SMv2 and PIM-DM support, advanced API support,  * bandwidth metering and signaling.  */
 end_comment
 
 begin_comment
@@ -108,7 +108,62 @@ value|107
 end_define
 
 begin_comment
-comment|/* enable PIM assert processing */
+comment|/* enable assert processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_PIM
+value|MRT_ASSERT
+end_define
+
+begin_comment
+comment|/* enable PIM processing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_API_SUPPORT
+value|109
+end_define
+
+begin_comment
+comment|/* supported MRT API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_API_CONFIG
+value|110
+end_define
+
+begin_comment
+comment|/* config MRT API */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_ADD_BW_UPCALL
+value|111
+end_define
+
+begin_comment
+comment|/* create bandwidth monitor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_DEL_BW_UPCALL
+value|112
+end_define
+
+begin_comment
+comment|/* delete bandwidth monitor */
 end_comment
 
 begin_define
@@ -287,8 +342,19 @@ begin_comment
 comment|/* tunnel uses IP source routing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VIFF_REGISTER
+value|0x4
+end_define
+
 begin_comment
-comment|/*  * Argument structure for MRT_ADD_MFC and MRT_DEL_MFC  * (mfcc_tos to be added at a future point)  */
+comment|/* used for PIM Register encap/decap */
+end_comment
+
+begin_comment
+comment|/*  * Argument structure for MRT_ADD_MFC and MRT_DEL_MFC  * XXX if you change this, make sure to change struct mfcctl2 as well.  */
 end_comment
 
 begin_struct
@@ -319,6 +385,223 @@ comment|/* forwarding ttls on vifs   */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * The new argument structure for MRT_ADD_MFC and MRT_DEL_MFC overlays  * and extends the old struct mfcctl.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mfcctl2
+block|{
+comment|/* the mfcctl fields */
+name|struct
+name|in_addr
+name|mfcc_origin
+decl_stmt|;
+comment|/* ip origin of mcasts	     */
+name|struct
+name|in_addr
+name|mfcc_mcastgrp
+decl_stmt|;
+comment|/* multicast group associated*/
+name|vifi_t
+name|mfcc_parent
+decl_stmt|;
+comment|/* incoming vif		     */
+name|u_char
+name|mfcc_ttls
+index|[
+name|MAXVIFS
+index|]
+decl_stmt|;
+comment|/* forwarding ttls on vifs   */
+comment|/* extension fields */
+name|uint8_t
+name|mfcc_flags
+index|[
+name|MAXVIFS
+index|]
+decl_stmt|;
+comment|/* the MRT_MFC_FLAGS_* flags */
+name|struct
+name|in_addr
+name|mfcc_rp
+decl_stmt|;
+comment|/* the RP address            */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The advanced-API flags.  *  * The MRT_MFC_FLAGS_XXX API flags are also used as flags  * for the mfcc_flags field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_MFC_FLAGS_DISABLE_WRONGVIF
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* disable WRONGVIF signals */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_MFC_FLAGS_BORDER_VIF
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* border vif		     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_MFC_RP
+value|(1<< 8)
+end_define
+
+begin_comment
+comment|/* enable RP address	     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_MFC_BW_UPCALL
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* enable bw upcalls	     */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_MFC_FLAGS_ALL
+value|(MRT_MFC_FLAGS_DISABLE_WRONGVIF |    \ 					 MRT_MFC_FLAGS_BORDER_VIF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MRT_API_FLAGS_ALL
+value|(MRT_MFC_FLAGS_ALL |		     \ 					 MRT_MFC_RP |			     \ 					 MRT_MFC_BW_UPCALL)
+end_define
+
+begin_comment
+comment|/*  * Structure for installing or delivering an upcall if the  * measured bandwidth is above or below a threshold.  *  * User programs (e.g. daemons) may have a need to know when the  * bandwidth used by some data flow is above or below some threshold.  * This interface allows the userland to specify the threshold (in  * bytes and/or packets) and the measurement interval. Flows are  * all packet with the same source and destination IP address.  * At the moment the code is only used for multicast destinations  * but there is nothing that prevents its use for unicast.  *  * The measurement interval cannot be shorter than some Tmin (currently, 3s).  * The threshold is set in packets and/or bytes per_interval.  *  * Measurement works as follows:  *  * For>= measurements:   * The first packet marks the start of a measurement interval.  * During an interval we count packets and bytes, and when we  * pass the threshold we deliver an upcall and we are done.  * The first packet after the end of the interval resets the  * count and restarts the measurement.  *  * For<= measurement:  * We start a timer to fire at the end of the interval, and  * then for each incoming packet we count packets and bytes.  * When the timer fires, we compare the value with the threshold,  * schedule an upcall if we are below, and restart the measurement  * (reschedule timer and zero counters).  */
+end_comment
+
+begin_struct
+struct|struct
+name|bw_data
+block|{
+name|struct
+name|timeval
+name|b_time
+decl_stmt|;
+name|uint64_t
+name|b_packets
+decl_stmt|;
+name|uint64_t
+name|b_bytes
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bw_upcall
+block|{
+name|struct
+name|in_addr
+name|bu_src
+decl_stmt|;
+comment|/* source address            */
+name|struct
+name|in_addr
+name|bu_dst
+decl_stmt|;
+comment|/* destination address       */
+name|uint32_t
+name|bu_flags
+decl_stmt|;
+comment|/* misc flags (see below)    */
+define|#
+directive|define
+name|BW_UPCALL_UNIT_PACKETS
+value|(1<< 0)
+comment|/* threshold (in packets)    */
+define|#
+directive|define
+name|BW_UPCALL_UNIT_BYTES
+value|(1<< 1)
+comment|/* threshold (in bytes)      */
+define|#
+directive|define
+name|BW_UPCALL_GEQ
+value|(1<< 2)
+comment|/* upcall if bw>= threshold */
+define|#
+directive|define
+name|BW_UPCALL_LEQ
+value|(1<< 3)
+comment|/* upcall if bw<= threshold */
+define|#
+directive|define
+name|BW_UPCALL_DELETE_ALL
+value|(1<< 4)
+comment|/* delete all upcalls for s,d*/
+name|struct
+name|bw_data
+name|bu_threshold
+decl_stmt|;
+comment|/* the bw threshold	     */
+name|struct
+name|bw_data
+name|bu_measured
+decl_stmt|;
+comment|/* the measured bw	     */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* max. number of upcalls to deliver together */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BW_UPCALLS_MAX
+value|128
+end_define
+
+begin_comment
+comment|/* min. threshold time interval for bandwidth measurement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BW_UPCALL_THRESHOLD_INTERVAL_MIN_SEC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|BW_UPCALL_THRESHOLD_INTERVAL_MIN_USEC
+value|0
+end_define
 
 begin_comment
 comment|/*  * The kernel's multicast routing statistics.  */
@@ -534,7 +817,7 @@ name|struct
 name|in_addr
 name|mfc_origin
 decl_stmt|;
-comment|/* IP origin of mcasts   */
+comment|/* IP origin of mcasts	     */
 name|struct
 name|in_addr
 name|mfc_mcastgrp
@@ -584,6 +867,24 @@ modifier|*
 name|mfc_next
 decl_stmt|;
 comment|/* next mfc entry            */
+name|uint8_t
+name|mfc_flags
+index|[
+name|MAXVIFS
+index|]
+decl_stmt|;
+comment|/* the MRT_MFC_FLAGS_* flags */
+name|struct
+name|in_addr
+name|mfc_rp
+decl_stmt|;
+comment|/* the RP address	     */
+name|struct
+name|bw_meter
+modifier|*
+name|mfc_bw_meter
+decl_stmt|;
+comment|/* list of bandwidth meters  */
 block|}
 struct|;
 end_struct
@@ -610,10 +911,22 @@ define|#
 directive|define
 name|IGMPMSG_NOCACHE
 value|1
+comment|/* no MFC in the kernel		    */
 define|#
 directive|define
 name|IGMPMSG_WRONGVIF
 value|2
+comment|/* packet came from wrong interface */
+define|#
+directive|define
+name|IGMPMSG_WHOLEPKT
+value|3
+comment|/* PIM pkt for user level encap.    */
+define|#
+directive|define
+name|IGMPMSG_BW_UPCALL
+value|4
+comment|/* BW monitoring upcall		    */
 name|u_char
 name|im_mbz
 decl_stmt|;
@@ -800,6 +1113,88 @@ modifier|*
 name|tbf_t
 decl_stmt|;
 comment|/* tail-insertion pointer	*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure for measuring the bandwidth and sending an upcall if the  * measured bandwidth is above or below a threshold.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bw_meter
+block|{
+name|struct
+name|bw_meter
+modifier|*
+name|bm_mfc_next
+decl_stmt|;
+comment|/* next bw meter (same mfc)  */
+name|struct
+name|bw_meter
+modifier|*
+name|bm_time_next
+decl_stmt|;
+comment|/* next bw meter (same time) */
+name|uint32_t
+name|bm_time_hash
+decl_stmt|;
+comment|/* the time hash value       */
+name|struct
+name|mfc
+modifier|*
+name|bm_mfc
+decl_stmt|;
+comment|/* the corresponding mfc     */
+name|uint32_t
+name|bm_flags
+decl_stmt|;
+comment|/* misc flags (see below)    */
+define|#
+directive|define
+name|BW_METER_UNIT_PACKETS
+value|(1<< 0)
+comment|/* threshold (in packets)    */
+define|#
+directive|define
+name|BW_METER_UNIT_BYTES
+value|(1<< 1)
+comment|/* threshold (in bytes)      */
+define|#
+directive|define
+name|BW_METER_GEQ
+value|(1<< 2)
+comment|/* upcall if bw>= threshold */
+define|#
+directive|define
+name|BW_METER_LEQ
+value|(1<< 3)
+comment|/* upcall if bw<= threshold */
+define|#
+directive|define
+name|BW_METER_USER_FLAGS
+value|(BW_METER_UNIT_PACKETS |		\ 				 BW_METER_UNIT_BYTES |			\ 				 BW_METER_GEQ |				\ 				 BW_METER_LEQ)
+define|#
+directive|define
+name|BW_METER_UPCALL_DELIVERED
+value|(1<< 24)
+comment|/* upcall was delivered      */
+name|struct
+name|bw_data
+name|bm_threshold
+decl_stmt|;
+comment|/* the upcall threshold	     */
+name|struct
+name|bw_data
+name|bm_measured
+decl_stmt|;
+comment|/* the measured bw	     */
+name|struct
+name|timeval
+name|bm_start_time
+decl_stmt|;
+comment|/* abs. time		     */
 block|}
 struct|;
 end_struct
