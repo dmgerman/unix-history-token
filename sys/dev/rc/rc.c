@@ -442,7 +442,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|rc_break
 parameter_list|(
 name|struct
@@ -7366,7 +7366,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rc_break
 parameter_list|(
 name|struct
@@ -7409,11 +7409,6 @@ name|rc_pendcmd
 operator|=
 name|CD180_C_EBRK
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
