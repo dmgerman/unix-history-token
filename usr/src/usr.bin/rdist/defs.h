@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.7	83/11/01	*/
+comment|/*	defs.h	4.8	83/11/29	*/
 end_comment
 
 begin_include
@@ -132,36 +132,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|INSTALL
+name|STRING
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTIFY
+name|INSTALL
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXCEPT
+name|NOTIFY
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTION
+name|EXCEPT
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|VAR
+name|SPECIAL
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR
+value|14
 end_define
 
 begin_comment
@@ -266,6 +280,38 @@ define|#
 directive|define
 name|REMOVE
 value|0x10
+end_define
+
+begin_comment
+comment|/* expand type definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_VARS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_SHELL
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_TILDE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_ALL
+value|0x7
 end_define
 
 begin_define
@@ -547,6 +593,14 @@ name|struct
 name|block
 modifier|*
 name|expand
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|exptilde
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.8 (Berkeley) 83/11/01"
+literal|"@(#)main.c	4.9 (Berkeley) 83/11/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|char
 name|tmpfile
 index|[]
 init|=
-literal|"/tmp/rdistAXXXXXX"
+literal|"/tmp/rdistXXXXXX"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,19 +57,6 @@ operator|&
 name|tmpfile
 index|[
 literal|5
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|tmpinc
-init|=
-operator|&
-name|tmpfile
-index|[
-literal|10
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -501,6 +488,24 @@ break|break;
 case|case
 literal|'n'
 case|:
+if|if
+condition|(
+name|options
+operator|&
+name|VERIFY
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rdist: -n overrides -v\n"
+argument_list|)
+expr_stmt|;
+name|options
+operator|&=
+operator|~
+name|VERIFY
+expr_stmt|;
+block|}
 name|nflag
 operator|++
 expr_stmt|;
@@ -521,7 +526,7 @@ name|COMPARE
 expr_stmt|;
 break|break;
 case|case
-literal|'r'
+literal|'R'
 case|:
 name|options
 operator||=
@@ -531,6 +536,18 @@ break|break;
 case|case
 literal|'v'
 case|:
+if|if
+condition|(
+name|nflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rdist: -n overrides -v\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|options
 operator||=
 name|VERIFY
@@ -933,7 +950,7 @@ name|expand
 argument_list|(
 name|hosts
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1036,8 +1053,6 @@ end_macro
 
 begin_block
 block|{
-do|do
-block|{
 operator|(
 name|void
 operator|)
@@ -1046,21 +1061,6 @@ argument_list|(
 name|tmpfile
 argument_list|)
 expr_stmt|;
-operator|(
-operator|*
-name|tmpinc
-operator|)
-operator|--
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|*
-name|tmpinc
-operator|>=
-literal|'A'
-condition|)
-do|;
 name|exit
 argument_list|(
 literal|1
