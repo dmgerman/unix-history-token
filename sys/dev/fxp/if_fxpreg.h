@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxpreg.h,v 1.13 1998/06/08 09:47:46 bde Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxpreg.h,v 1.14 1999/02/11 21:47:10 julian Exp $  */
 end_comment
 
 begin_define
@@ -1454,7 +1454,7 @@ value|11
 end_define
 
 begin_comment
-comment|/*  * PHY BMCR Basic Mode Control Register  * Should probably be in i82555.h.  * (Called "Management Data Interface Control Reg" in some Intel data books).  * (*) indicates bit ignored in auto negotiation mode.  */
+comment|/*  * PHY BMCR Basic Mode Control Register  * Should probably be in i82555.h or dp83840.h (Intel/National names).  * (Called "Management Data Interface Control Reg" in some Intel data books).  * (*) indicates bit ignored in auto negotiation mode.  */
 end_comment
 
 begin_define
@@ -1463,6 +1463,17 @@ directive|define
 name|FXP_PHY_BMCR
 value|0x0
 end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_PHY_BMCR_COLTEST
+value|0x0080
+end_define
+
+begin_comment
+comment|/* not on Intel parts */
+end_comment
 
 begin_define
 define|#
@@ -1484,6 +1495,17 @@ end_define
 
 begin_comment
 comment|/* ==> 1 to restart autoneg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_PHY_BMCR_ISOLATE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* not on Intel parts */
 end_comment
 
 begin_define
@@ -1542,7 +1564,7 @@ comment|/* ==> 1 sets to defaults */
 end_comment
 
 begin_comment
-comment|/*  * Management Data Interface Status reg.  */
+comment|/*  * Basic Mode Status Register (National name)  * Management Data Interface Status reg. (Intel name)  * in both Intel and National parts.  */
 end_comment
 
 begin_define
@@ -1633,7 +1655,7 @@ begin_define
 define|#
 directive|define
 name|FXP_PHY_STS_10HDX_OK
-value|0x1000
+value|0x0800
 end_define
 
 begin_comment
@@ -1644,7 +1666,7 @@ begin_define
 define|#
 directive|define
 name|FXP_PHY_STS_10FDX_OK
-value|0x2000
+value|0x1000
 end_define
 
 begin_comment
@@ -1655,7 +1677,7 @@ begin_define
 define|#
 directive|define
 name|FXP_PHY_STS_100HDX_OK
-value|0x4000
+value|0x2000
 end_define
 
 begin_comment
@@ -1666,11 +1688,22 @@ begin_define
 define|#
 directive|define
 name|FXP_PHY_STS_100FDX_OK
-value|0x8000
+value|0x4000
 end_define
 
 begin_comment
 comment|/* can do 100Mb FDX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_PHY_STS_100T4_OK
+value|0x8000
+end_define
+
+begin_comment
+comment|/* can do 100bT4 -not Intel */
 end_comment
 
 begin_comment
@@ -1769,7 +1802,7 @@ comment|/* can do 100Mb FDX */
 end_comment
 
 begin_comment
-comment|/*  * Phy Unit Status and Control Register (another one)  */
+comment|/*  * Phy Unit Status and Control Register (another one)  * This is not in the National part!  */
 end_comment
 
 begin_define
@@ -1868,7 +1901,7 @@ comment|/* PHY FC mode in use */
 end_comment
 
 begin_comment
-comment|/*  * DP84830 PHY, PCS Configuration Register  */
+comment|/*  * DP83830 PHY, PCS Configuration Register  * NOT compatible with Intel parts,  * (where it is the 100BTX premature eof counter).  */
 end_comment
 
 begin_define
@@ -1886,7 +1919,7 @@ value|0x0002
 end_define
 
 begin_comment
-comment|/* 1 = LED4 always indicates full duplex */
+comment|/* 1 = LED4 always = FDX */
 end_comment
 
 begin_define
@@ -1897,7 +1930,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* 1 = force link disconnect function bypass */
+comment|/* 1 = link disconnect bypass */
 end_comment
 
 begin_define
@@ -1913,6 +1946,42 @@ directive|define
 name|FXP_DP83840_PCR_BIT10
 value|0x0400
 end_define
+
+begin_comment
+comment|/*  * DP83830 PHY, Address/status Register  * NOT compatible with Intel parts,  * (where it is the 10BT jabber detect counter).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_DP83840_PAR
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_DP83840_PAR_PHYADDR
+value|0x1F
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_DP83840_PAR_CON_STATUS
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_DP83840_PAR_SPEED_10
+value|0x40
+end_define
+
+begin_comment
+comment|/* 1 == running at 10 Mb/Sec */
+end_comment
 
 end_unit
 
