@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|KPASSWD
-value|"/usr/local/kpasswd"
+value|"/usr/athena/kpasswd"
 end_define
 
 begin_decl_stmt
@@ -216,25 +216,6 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-if|if
-condition|(
-name|geteuid
-argument_list|()
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"must run set-uid root to access keyfile\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|signal
 argument_list|(
 name|SIGPIPE
@@ -302,7 +283,7 @@ condition|(
 operator|(
 name|rval
 operator|=
-name|get_krbrlm
+name|krb_get_lrealm
 argument_list|(
 name|realm
 argument_list|,
@@ -336,7 +317,7 @@ condition|(
 operator|(
 name|rval
 operator|=
-name|get_krbhst
+name|krb_get_krbhst
 argument_list|(
 name|krbhst
 argument_list|,
@@ -685,6 +666,74 @@ index|]
 decl_stmt|;
 name|cc
 operator|=
+name|read
+argument_list|(
+name|sock
+argument_list|,
+name|msgbuf
+argument_list|,
+name|BUFSIZ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cc
+operator|<=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"protocol error during key verification\n"
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|msgbuf
+argument_list|,
+literal|"GOTKEY"
+argument_list|,
+literal|6
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|krbhst
+argument_list|,
+name|msgbuf
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|cc
+operator|=
 name|des_read
 argument_list|(
 name|sock
@@ -841,6 +890,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|seteuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|pname
@@ -930,6 +984,27 @@ argument_list|(
 literal|"Kerberos password (may be the same):"
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|pas
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"<NULL> password not allowed\n"
+argument_list|)
+expr_stmt|;
+name|pas
+operator|=
+name|getpass
+argument_list|(
+literal|"Kerberos password (may be the same):"
+argument_list|)
+expr_stmt|;
+block|}
 name|strcpy
 argument_list|(
 name|password
@@ -1167,7 +1242,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"as your login password for all machines in the %s realm.\n"
+literal|"as your Kerberos password for all machines in the %s realm.\n"
 argument_list|,
 name|realm
 argument_list|)
