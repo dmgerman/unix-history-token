@@ -749,16 +749,7 @@ argument_list|,
 name|DMA_DATA_OUT
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|out
-goto|;
 block|}
-name|out
-label|:
 name|drv
 operator|->
 name|controller
