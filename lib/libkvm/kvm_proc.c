@@ -1302,11 +1302,12 @@ index|[
 literal|4
 index|]
 decl_stmt|,
-name|size
-decl_stmt|,
 name|st
 decl_stmt|,
 name|nprocs
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 if|if
 condition|(
