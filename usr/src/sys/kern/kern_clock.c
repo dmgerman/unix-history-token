@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.21	kern_clock.c	*/
+comment|/*	%H%	3.22	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -97,6 +97,18 @@ begin_include
 include|#
 directive|include
 file|"../h/clock.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../conf/dh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../conf/dz.h"
 end_include
 
 begin_define
@@ -378,12 +390,26 @@ operator|>=
 name|rintvl
 condition|)
 block|{
+if|#
+directive|if
+name|NDH11
+operator|>
+literal|0
 name|dhtimer
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NDZ11
+operator|>
+literal|0
 name|dztimer
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|rcnt
 operator|=
 literal|0
