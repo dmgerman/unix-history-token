@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/firewire/fwmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/firewire/iec13213.h>
 end_include
 
@@ -480,6 +486,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|fw_bmr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|firewire_comm
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|device_method_t
 name|firewire_methods
 index|[]
@@ -658,14 +679,94 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * To lookup node id. from EUI64.  */
+comment|/*  * Lookup fwdev by node id.  */
 end_comment
 
 begin_function
 name|struct
 name|fw_device
 modifier|*
-name|fw_noderesolve
+name|fw_noderesolve_nodeid
+parameter_list|(
+name|struct
+name|firewire_comm
+modifier|*
+name|fc
+parameter_list|,
+name|int
+name|dst
+parameter_list|)
+block|{
+name|struct
+name|fw_device
+modifier|*
+name|fwdev
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splfw
+argument_list|()
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|fwdev
+argument_list|,
+argument|&fc->devices
+argument_list|,
+argument|link
+argument_list|)
+if|if
+condition|(
+name|fwdev
+operator|->
+name|dst
+operator|==
+name|dst
+condition|)
+break|break;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fwdev
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+name|fwdev
+operator|->
+name|status
+operator|==
+name|FWDEVINVAL
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|fwdev
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Lookup fwdev by EUI64.  */
+end_comment
+
+begin_function
+name|struct
+name|fw_device
+modifier|*
+name|fw_noderesolve_eui64
 parameter_list|(
 name|struct
 name|firewire_comm
@@ -682,32 +783,22 @@ name|fw_device
 modifier|*
 name|fwdev
 decl_stmt|;
-for|for
-control|(
-name|fwdev
+name|int
+name|s
+decl_stmt|;
+name|s
 operator|=
-name|TAILQ_FIRST
+name|splfw
+argument_list|()
+expr_stmt|;
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|fc
-operator|->
-name|devices
-argument_list|)
-init|;
-name|fwdev
-operator|!=
-name|NULL
-condition|;
-name|fwdev
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|fwdev
+argument|fwdev
 argument_list|,
-name|link
+argument|&fc->devices
+argument_list|,
+argument|link
 argument_list|)
-control|)
-block|{
 if|if
 condition|(
 name|fwdev
@@ -730,10 +821,12 @@ name|eui
 operator|.
 name|lo
 condition|)
-block|{
 break|break;
-block|}
-block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fwdev
@@ -4553,14 +4646,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Callback for PHY configuration.   */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|fw_phy_config_callback
+name|fw_asy_callback_free
 parameter_list|(
 name|struct
 name|fw_xfer
@@ -4571,7 +4660,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|printf("phy_config done state=%d resp=%d\n", 				xfer->state, xfer->resp);
+block|printf("asyreq done state=%d resp=%d\n", 				xfer->state, xfer->resp);
 endif|#
 directive|endif
 name|fw_xfer_free
@@ -4579,8 +4668,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-comment|/* XXX need bus reset ?? */
-comment|/* sc->fc->ibr(xfer->fc);  LOOP */
 block|}
 end_function
 
@@ -4666,7 +4753,7 @@ name|act
 operator|.
 name|hand
 operator|=
-name|fw_phy_config_callback
+name|fw_asy_callback_free
 expr_stmt|;
 name|xfer
 operator|->
@@ -5732,7 +5819,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/* Optimize gap_count, if I am BMGR */
 if|if
 condition|(
 name|fc
@@ -5755,19 +5841,10 @@ literal|0x3f
 operator|)
 condition|)
 block|{
-name|fw_phy_config
+comment|/* I am BMGR */
+name|fw_bmr
 argument_list|(
 name|fc
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-name|gap_cnt
-index|[
-name|fc
-operator|->
-name|max_hop
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -9480,11 +9557,7 @@ argument|); 	device_printf(fc->bdev,
 literal|"new bus manager %d "
 argument|, 		CSRARC(fc, BUS_MGR_ID)); 	if(bmr == fc->nodeid){ 		printf(
 literal|"(me)\n"
-argument|);
-comment|/* If I am bus manager, optimize gapcount */
-argument|if(fc->max_hop<= MAX_GAPHOP ){ 			fw_phy_config(fc, -
-literal|1
-argument|, gap_cnt[fc->max_hop]); 		} 	}else{ 		printf(
+argument|); 		fw_bmr(fc); 	}else{ 		printf(
 literal|"\n"
 argument|); 	} error: 	fw_xfer_free(xfer); }
 comment|/*  * To candidate Bus Manager election process.  */
@@ -9621,7 +9694,42 @@ argument|) ^ ( sum<<
 literal|5
 argument|) ^ sum; 		} 		crc&=
 literal|0xffff
-argument|; 	} 	return((u_int16_t) crc); }  DRIVER_MODULE(firewire,fwohci,firewire_driver,firewire_devclass,
+argument|; 	} 	return((u_int16_t) crc); }  int fw_bmr(struct firewire_comm *fc) { 	struct fw_device fwdev; 	int cmstr;
+comment|/* XXX Assume that the current root node is cycle master capable */
+argument|cmstr = fc->max_node;
+comment|/* If I am the bus manager, optimize gapcount */
+argument|if(fc->max_hop<= MAX_GAPHOP ){ 		fw_phy_config(fc, (fc->max_node>
+literal|0
+argument|)?cmstr:-
+literal|1
+argument|, 						gap_cnt[fc->max_hop]); 	}
+comment|/* If we are the cycle master, nothing to do */
+argument|if (cmstr == fc->nodeid) 		return
+literal|0
+argument|;
+comment|/* Bus probe has not finished, make dummy fwdev for cmstr */
+argument|bzero(&fwdev, sizeof(fwdev)); 	fwdev.fc = fc; 	fwdev.dst = cmstr; 	fwdev.speed =
+literal|0
+argument|; 	fwdev.maxrec =
+literal|8
+argument|;
+comment|/* 512 */
+argument|fwdev.status = FWDEVINIT;
+comment|/* Set cmstr bit on the cycle master */
+argument|fwmem_write_quad(&fwdev, NULL,
+literal|0
+comment|/*spd*/
+argument|,
+literal|0xffff
+argument|,
+literal|0xf0000000
+argument|| STATE_SET,
+literal|1
+argument|<<
+literal|16
+argument|, 		fw_asy_callback_free);  	return
+literal|0
+argument|; }  DRIVER_MODULE(firewire,fwohci,firewire_driver,firewire_devclass,
 literal|0
 argument|,
 literal|0

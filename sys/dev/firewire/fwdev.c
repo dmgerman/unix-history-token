@@ -4828,7 +4828,7 @@ name|FWASREQEUI
 case|:
 name|fwdev
 operator|=
-name|fw_noderesolve
+name|fw_noderesolve_eui64
 argument_list|(
 name|sc
 operator|->

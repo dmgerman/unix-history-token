@@ -694,7 +694,7 @@ name|wreqq
 operator|.
 name|tcode
 operator|=
-name|FWTCODE_RREQQ
+name|FWTCODE_WREQQ
 expr_stmt|;
 name|fp
 operator|->
@@ -1138,7 +1138,7 @@ argument_list|)
 expr_stmt|;
 name|fwdev
 operator|=
-name|fw_noderesolve
+name|fw_noderesolve_eui64
 argument_list|(
 name|sc
 operator|->
