@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1988 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,19 +83,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/syslog.h>
 end_include
 
 begin_decl_stmt
@@ -152,6 +152,9 @@ name|hup
 argument_list|()
 decl_stmt|,
 name|rtdeleteall
+argument_list|()
+decl_stmt|,
+name|sigtrace
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -350,9 +353,25 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|tracehistory
+operator|==
+literal|0
+condition|)
+name|tracehistory
+operator|++
+expr_stmt|;
+else|else
+block|{
+name|tracehistory
+operator|=
+literal|0
+expr_stmt|;
 name|tracepackets
 operator|++
 expr_stmt|;
+block|}
 name|setlogmask
 argument_list|(
 name|LOG_DEBUG
@@ -694,6 +713,20 @@ argument_list|,
 name|rtdeleteall
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|sigtrace
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGUSR2
+argument_list|,
+name|sigtrace
+argument_list|)
+expr_stmt|;
 name|timer
 argument_list|()
 expr_stmt|;
@@ -790,6 +823,9 @@ name|cc
 decl_stmt|,
 name|omask
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 name|cc
 operator|=
 name|recvfrom
@@ -847,6 +883,32 @@ name|sockaddr_in
 argument_list|)
 condition|)
 return|return;
+if|if
+condition|(
+name|traceactions
+operator|&&
+operator|!
+name|tracepackets
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|curtime
+operator|=
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+block|}
 name|omask
 operator|=
 name|sigblock
