@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.21		%G%"
+literal|"@(#)sendmail.h	5.22		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,6 +462,17 @@ end_define
 
 begin_comment
 comment|/* has been successfully delivered */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QNOTREMOTE
+value|000100
+end_define
+
+begin_comment
+comment|/* not an address for remote forwarding */
 end_comment
 
 begin_define
@@ -2985,6 +2996,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of hops until we give an error */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|ConfigLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* config file level -- what does .cf expect? */
 end_comment
 
 begin_escape
