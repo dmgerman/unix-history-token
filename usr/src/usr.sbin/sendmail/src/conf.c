@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.67 (Berkeley) %G%"
+literal|"@(#)conf.c	8.68 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6792,7 +6792,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|__hpux__
+name|__hpux
 name|char
 modifier|*
 name|s
