@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	4.4	%G%	*/
+comment|/*	systm.h	4.5	%G%	*/
 end_comment
 
 begin_comment
@@ -349,6 +349,13 @@ end_function_decl
 begin_function_decl
 name|daddr_t
 name|bmap
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|caddr_t
+name|calloc
 parameter_list|()
 function_decl|;
 end_function_decl
