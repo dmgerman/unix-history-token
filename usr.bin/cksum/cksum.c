@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cksum.c,v 1.5 1997/07/06 03:18:13 bde Exp $"
+literal|"$Id: cksum.c,v 1.6 1997/09/26 08:02:17 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,6 @@ name|pfncn
 operator|=
 name|pcrc
 expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(
@@ -387,6 +386,7 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+block|}
 name|fd
 operator|=
 name|STDIN_FILENO
