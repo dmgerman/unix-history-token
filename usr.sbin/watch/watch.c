@@ -36,6 +36,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -61,18 +73,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl_compat.h>
 end_include
 
 begin_include
@@ -398,6 +398,12 @@ operator|&=
 operator|~
 name|ECHO
 expr_stmt|;
+name|ospeed
+operator|=
+name|sgo
+operator|.
+name|sg_ospeed
+expr_stmt|;
 name|ioctl
 argument_list|(
 name|std_in
@@ -651,10 +657,10 @@ name|clear_ok
 operator|=
 literal|1
 expr_stmt|;
-name|clear
+name|set_tty
 argument_list|()
 expr_stmt|;
-name|set_tty
+name|clear
 argument_list|()
 expr_stmt|;
 block|}
