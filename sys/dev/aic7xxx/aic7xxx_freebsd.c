@@ -7458,7 +7458,7 @@ name|ahc
 argument_list|,
 name|MSG_OUT
 argument_list|,
-name|MSG_BUS_DEV_RESET
+name|HOST_MSG
 argument_list|)
 expr_stmt|;
 name|ahc_outb
@@ -7648,7 +7648,7 @@ argument_list|,
 name|scb
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Simply set the MK_MESSAGE control bit. 				 */
+comment|/* 				 * Actually re-queue this SCB in an attempt 				 * to select the device before it reconnects. 				 * In either case (selection or reselection), 				 * we will now issue a target reset to the 				 * timed-out device. 				 * 				 * Set the MK_MESSAGE control bit indicating 				 * that we desire to send a message.  We 				 * also set the disconnected flag since 				 * in the paging case there is no guarantee 				 * that our SCB control byte matches the 				 * version on the card.  We don't want the 				 * sequencer to abort the command thinking 				 * an unsolicited reselection occurred. 				 */
 name|scb
 operator|->
 name|hscb
@@ -7656,16 +7656,16 @@ operator|->
 name|control
 operator||=
 name|MK_MESSAGE
+operator||
+name|DISCONNECTED
 expr_stmt|;
 name|scb
 operator|->
 name|flags
 operator||=
-name|SCB_QUEUED_MSG
-operator||
 name|SCB_DEVICE_RESET
 expr_stmt|;
-comment|/* 				 * Actually re-queue this SCB in an attempt 				 * to select the device before it reconnects. 				 * In either case (selection or reselection), 				 * we will now issue a target reset to the 				 * timed-out device. 				 * 				 * Remove any cached copy of this SCB in the 				 * disconnected list in preparation for the 				 * queuing of our abort SCB.  We use the 				 * same element in the SCB, SCB_NEXT, for 				 * both the qinfifo and the disconnected list. 				 */
+comment|/* 				 * Remove any cached copy of this SCB in the 				 * disconnected list in preparation for the 				 * queuing of our abort SCB.  We use the 				 * same element in the SCB, SCB_NEXT, for 				 * both the qinfifo and the disconnected list. 				 */
 name|ahc_search_disc_list
 argument_list|(
 name|ahc
@@ -7689,9 +7689,53 @@ comment|/*remove*/
 name|TRUE
 argument_list|,
 comment|/*save_state*/
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* 				 * In the non-paging case, the sequencer will 				 * never re-reference the in-core SCB. 				 * To make sure we are notified during 				 * reslection, set the MK_MESSAGE flag in 				 * the card's copy of the SCB. 				 */
+if|if
+condition|(
+operator|(
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_PAGESCBS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|SCBPTR
+argument_list|,
+name|scb
+operator|->
+name|hscb
+operator|->
+name|tag
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|SCB_CONTROL
+argument_list|,
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|SCB_CONTROL
+argument_list|)
+operator||
+name|MK_MESSAGE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 				 * Clear out any entries in the QINFIFO first 				 * so we are the next SCB for this target 				 * to run. 				 */
 name|ahc_search_qinfifo
 argument_list|(
@@ -7779,6 +7823,15 @@ argument_list|,
 name|prev_scb
 argument_list|,
 name|scb
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|SCBPTR
+argument_list|,
+name|active_scb_index
 argument_list|)
 expr_stmt|;
 name|scb

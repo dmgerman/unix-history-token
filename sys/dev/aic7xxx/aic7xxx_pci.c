@@ -6646,6 +6646,8 @@ operator|->
 name|bugs
 operator||=
 name|AHC_CACHETHEN_BUG
+operator||
+name|AHC_PCI_MWI_BUG
 expr_stmt|;
 block|}
 return|return

@@ -1095,10 +1095,6 @@ name|SCB_ABORT
 init|=
 literal|0x1000
 block|,
-name|SCB_QUEUED_MSG
-init|=
-literal|0x2000
-block|,
 name|SCB_ACTIVE
 init|=
 literal|0x4000
