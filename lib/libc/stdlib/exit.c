@@ -143,6 +143,14 @@ argument_list|(
 name|status
 argument_list|)
 expr_stmt|;
+comment|/* We'll never get here; this just surpresses a warning. */
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+empty_stmt|;
+block|}
 block|}
 end_function
 

@@ -398,6 +398,10 @@ name|endptr
 operator|=
 name|any
 condition|?
+operator|(
+name|char
+operator|*
+operator|)
 name|s
 operator|-
 literal|1

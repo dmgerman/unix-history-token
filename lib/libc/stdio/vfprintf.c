@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: vfprintf.c,v 1.9 1993/11/04 02:26:10 jtc Exp $"
+literal|"$Id: vfprintf.c,v 1.4 1993/11/04 19:38:22 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1901,6 +1901,31 @@ literal|'p'
 case|:
 comment|/* 			 * ``The argument shall be a pointer to void.  The 			 * value of the pointer is converted to a sequence 			 * of printable characters, in an implementation- 			 * defined manner.'' 			 *	-- ANSI X3J11 			 */
 comment|/* NOSTRICT */
+comment|/* no easy way to tell in cpp how big a type is */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386
+argument_list|)
+name|_uquad
+operator|=
+operator|(
+name|u_quad_t
+operator|)
+operator|(
+name|u_long
+operator|)
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|void
+operator|*
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|_uquad
 operator|=
 operator|(
@@ -1914,6 +1939,8 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|base
 operator|=
 name|HEX
