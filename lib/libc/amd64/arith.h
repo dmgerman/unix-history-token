@@ -16,5 +16,31 @@ name|Arith_Kind_ASL
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|Long
+value|int
+end_define
+
+begin_define
+define|#
+directive|define
+name|Intcast
+value|(int)(long)
+end_define
+
+begin_define
+define|#
+directive|define
+name|Double_Align
+end_define
+
+begin_define
+define|#
+directive|define
+name|X64_bit_pointers
+end_define
+
 end_unit
 
