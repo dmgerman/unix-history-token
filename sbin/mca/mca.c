@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -336,6 +342,89 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|show_value
+parameter_list|(
+name|int
+name|indent
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|var
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|len
+operator|=
+name|indent
+expr_stmt|;
+while|while
+condition|(
+name|indent
+operator|--
+condition|)
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|len
+operator|+=
+name|printf
+argument_list|(
+literal|"<%s>"
+argument_list|,
+name|var
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|len
+operator|+=
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|len
+operator|+=
+name|printf
+argument_list|(
+literal|"</%s>\n"
+argument_list|,
+name|var
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|len
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|size_t
 name|show_header
 parameter_list|(
@@ -350,9 +439,13 @@ argument_list|(
 literal|"<header>\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    seqnr=%lld\n"
+literal|4
+argument_list|,
+literal|"seqnr"
+argument_list|,
+literal|"%lld"
 argument_list|,
 operator|(
 name|long
@@ -363,9 +456,13 @@ operator|->
 name|rh_seqnr
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    revision=%d.%d\n"
+literal|4
+argument_list|,
+literal|"revision"
+argument_list|,
+literal|"%d.%d"
 argument_list|,
 name|BCD
 argument_list|(
@@ -382,9 +479,13 @@ name|rh_minor
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    severity=%s\n"
+literal|4
+argument_list|,
+literal|"severity"
+argument_list|,
+literal|"%s"
 argument_list|,
 name|severity
 argument_list|(
@@ -394,9 +495,13 @@ name|rh_error
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    length=%lld\n"
+literal|4
+argument_list|,
+literal|"length"
+argument_list|,
+literal|"%lld"
 argument_list|,
 operator|(
 name|long
@@ -407,9 +512,13 @@ operator|->
 name|rh_length
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    date=%d%02d/%02d/%02d\n"
+literal|4
+argument_list|,
+literal|"date"
+argument_list|,
+literal|"%d%02d/%02d/%02d"
 argument_list|,
 name|BCD
 argument_list|(
@@ -452,9 +561,13 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    time=%02d:%02d:%02d\n"
+literal|4
+argument_list|,
+literal|"time"
+argument_list|,
+literal|"%02d:%02d:%02d"
 argument_list|,
 name|BCD
 argument_list|(
@@ -495,9 +608,13 @@ name|rh_flags
 operator|&
 name|MCA_RH_FLAGS_PLATFORM_ID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"    platform=%s\n"
+literal|4
+argument_list|,
+literal|"platform"
+argument_list|,
+literal|"%s"
 argument_list|,
 name|uuid
 argument_list|(
@@ -559,9 +676,13 @@ name|cpu_mod_flags
 operator|&
 name|MCA_CPU_MOD_FLAGS_INFO
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        info=0x%016llx\n"
+literal|8
+argument_list|,
+literal|"info"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -580,9 +701,13 @@ name|cpu_mod_flags
 operator|&
 name|MCA_CPU_MOD_FLAGS_REQID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        requester=0x%016llx\n"
+literal|8
+argument_list|,
+literal|"requester"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -601,9 +726,13 @@ name|cpu_mod_flags
 operator|&
 name|MCA_CPU_MOD_FLAGS_RSPID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        responder=0x%016llx\n"
+literal|8
+argument_list|,
+literal|"responder"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -622,9 +751,13 @@ name|cpu_mod_flags
 operator|&
 name|MCA_CPU_MOD_FLAGS_TGTID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        target=0x%016llx\n"
+literal|8
+argument_list|,
+literal|"target"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -643,9 +776,13 @@ name|cpu_mod_flags
 operator|&
 name|MCA_CPU_MOD_FLAGS_IP
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        ip=0x%016llx\n"
+literal|8
+argument_list|,
+literal|"ip"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -679,6 +816,12 @@ modifier|*
 name|cpu
 parameter_list|)
 block|{
+name|char
+name|var
+index|[
+literal|16
+index|]
+decl_stmt|;
 name|struct
 name|mca_cpu_mod
 modifier|*
@@ -712,9 +855,13 @@ name|cpu_flags
 operator|&
 name|MCA_CPU_FLAGS_ERRMAP
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      errmap=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"errmap"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -733,9 +880,13 @@ name|cpu_flags
 operator|&
 name|MCA_CPU_FLAGS_STATE
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      state=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"state"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -754,9 +905,13 @@ name|cpu_flags
 operator|&
 name|MCA_CPU_FLAGS_CR_LID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      cr_lid=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"cr_lid"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -962,11 +1117,23 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+block|{
+name|sprintf
 argument_list|(
-literal|"      cpuid%d=0x%016llx\n"
+name|var
+argument_list|,
+literal|"cpuid-%d"
 argument_list|,
 name|i
+argument_list|)
+expr_stmt|;
+name|show_value
+argument_list|(
+literal|6
+argument_list|,
+name|var
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -980,6 +1147,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|psi
 operator|=
 operator|(
@@ -1026,9 +1194,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_STATUS
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      status=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"status"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1047,9 +1219,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_ADDR
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      address=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"address"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1068,9 +1244,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_ADDRMASK
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      mask=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"mask"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1089,9 +1269,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_NODE
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      node=0x%04x\n"
+literal|6
+argument_list|,
+literal|"node"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1106,9 +1290,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_CARD
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      card=0x%04x\n"
+literal|6
+argument_list|,
+literal|"card"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1123,9 +1311,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_MODULE
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      module=0x%04x\n"
+literal|6
+argument_list|,
+literal|"module"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1140,9 +1332,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_BANK
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      bank=0x%04x\n"
+literal|6
+argument_list|,
+literal|"bank"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1157,9 +1353,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_DEVICE
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      device=0x%04x\n"
+literal|6
+argument_list|,
+literal|"device"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1174,9 +1374,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_ROW
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      row=0x%04x\n"
+literal|6
+argument_list|,
+literal|"row"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1191,9 +1395,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_COLUMN
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      column=0x%04x\n"
+literal|6
+argument_list|,
+literal|"column"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1208,9 +1416,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_BITPOS
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      bit=0x%04x\n"
+literal|6
+argument_list|,
+literal|"bit"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|mem
 operator|->
@@ -1225,9 +1437,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_REQID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        requester=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"requester"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1246,9 +1462,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_RSPID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        responder=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"responder"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1267,9 +1487,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_TGTID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        target=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"target"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1288,9 +1512,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_BUSDATA
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      status=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"status"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1309,9 +1537,13 @@ name|mem_flags
 operator|&
 name|MCA_MEM_FLAGS_OEM_ID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      oem=%s\n"
+literal|6
+argument_list|,
+literal|"oem"
+argument_list|,
+literal|"%s"
 argument_list|,
 name|uuid
 argument_list|(
@@ -1371,9 +1603,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_STATUS
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      status=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"status"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1392,9 +1628,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_ERROR
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      error=0x%04x\n"
+literal|6
+argument_list|,
+literal|"error"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|pcibus
 operator|->
@@ -1409,9 +1649,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_BUS
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      bus=0x%04x\n"
+literal|6
+argument_list|,
+literal|"bus"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|pcibus
 operator|->
@@ -1426,9 +1670,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_ADDR
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      address=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"address"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1447,9 +1695,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_DATA
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      data=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"data"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1468,9 +1720,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_CMD
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      cmd=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"cmd"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1489,9 +1745,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_REQID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        requester=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"requester"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1510,9 +1770,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_RSPID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        responder=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"responder"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1531,9 +1795,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_TGTID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"        target=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"target"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1552,9 +1820,13 @@ name|pcibus_flags
 operator|&
 name|MCA_PCIBUS_FLAGS_OEM_ID
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      oem=%s\n"
+literal|6
+argument_list|,
+literal|"oem"
+argument_list|,
+literal|"%s"
 argument_list|,
 name|uuid
 argument_list|(
@@ -1614,9 +1886,13 @@ name|pcidev_flags
 operator|&
 name|MCA_PCIDEV_FLAGS_STATUS
 condition|)
-name|printf
+name|show_value
 argument_list|(
-literal|"      status=0x%016llx\n"
+literal|6
+argument_list|,
+literal|"status"
+argument_list|,
+literal|"0x%016llx"
 argument_list|,
 operator|(
 name|long
@@ -1636,9 +1912,13 @@ operator|&
 name|MCA_PCIDEV_FLAGS_INFO
 condition|)
 block|{
-name|printf
+name|show_value
 argument_list|(
-literal|"      vendor=0x%04x\n"
+literal|6
+argument_list|,
+literal|"vendor"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|pcidev
 operator|->
@@ -1647,9 +1927,13 @@ operator|.
 name|info_vendor
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"      device=0x%04x\n"
+literal|6
+argument_list|,
+literal|"device"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|pcidev
 operator|->
@@ -1658,9 +1942,13 @@ operator|.
 name|info_device
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"      class=0x%06x\n"
+literal|6
+argument_list|,
+literal|"class"
+argument_list|,
+literal|"0x%06x"
 argument_list|,
 name|MCA_PCIDEV_INFO_CLASS
 argument_list|(
@@ -1672,9 +1960,13 @@ name|info_ccfn
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"      function=0x%02x\n"
+literal|6
+argument_list|,
+literal|"function"
+argument_list|,
+literal|"0x%02x"
 argument_list|,
 name|MCA_PCIDEV_INFO_FUNCTION
 argument_list|(
@@ -1686,9 +1978,13 @@ name|info_ccfn
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"      slot=0x%02x\n"
+literal|6
+argument_list|,
+literal|"slot"
+argument_list|,
+literal|"0x%02x"
 argument_list|,
 name|pcidev
 operator|->
@@ -1697,9 +1993,13 @@ operator|.
 name|info_slot
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"      bus=0x%04x\n"
+literal|6
+argument_list|,
+literal|"bus"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|pcidev
 operator|->
@@ -1708,9 +2008,13 @@ operator|.
 name|info_bus
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"      segment=0x%04x\n"
+literal|6
+argument_list|,
+literal|"segment"
+argument_list|,
+literal|"0x%04x"
 argument_list|,
 name|pcidev
 operator|->
@@ -1811,9 +2115,13 @@ argument_list|(
 literal|"<section>\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    uuid=%s\n"
+literal|4
+argument_list|,
+literal|"uuid"
+argument_list|,
+literal|"%s"
 argument_list|,
 name|uuid
 argument_list|(
@@ -1824,9 +2132,13 @@ name|sh_uuid
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|show_value
 argument_list|(
-literal|"    revision=%d.%d\n"
+literal|4
+argument_list|,
+literal|"revision"
+argument_list|,
+literal|"%d.%d"
 argument_list|,
 name|BCD
 argument_list|(
