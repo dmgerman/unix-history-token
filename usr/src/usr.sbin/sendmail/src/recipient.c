@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.49 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2319,6 +2319,9 @@ name|fuzzyp
 operator|=
 name|FALSE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HESIOD
 comment|/* DEC Hesiod getpwnam accepts numeric strings -- short circuit it */
 for|for
 control|(
@@ -2377,6 +2380,8 @@ return|return
 name|NULL
 return|;
 block|}
+endif|#
+directive|endif
 comment|/* look up this login name using fast path */
 if|if
 condition|(
