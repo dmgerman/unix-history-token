@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: user.c,v 1.5 1997/02/22 16:04:47 peter Exp $"
+literal|"$Id: user.c,v 1.6 1997/09/15 06:39:07 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,14 @@ include|#
 directive|include
 file|"cron.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|User_name
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -102,6 +110,33 @@ block|}
 name|free
 argument_list|(
 name|u
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|log_error
+parameter_list|(
+name|msg
+parameter_list|)
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+block|{
+name|log_it
+argument_list|(
+name|User_name
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+literal|"PARSE"
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 block|}
@@ -328,13 +363,20 @@ goto|;
 case|case
 name|FALSE
 case|:
+name|User_name
+operator|=
+name|u
+operator|->
+name|name
+expr_stmt|;
+comment|/* for log_error */
 name|e
 operator|=
 name|load_entry
 argument_list|(
 name|file
 argument_list|,
-name|NULL
+name|log_error
 argument_list|,
 name|pw
 argument_list|,
