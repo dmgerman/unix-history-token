@@ -584,6 +584,8 @@ decl_stmt|,
 name|dvdiff
 decl_stmt|,
 name|dvsync
+decl_stmt|,
+name|dvoffset
 decl_stmt|;
 name|struct
 name|fw_dvbuf
