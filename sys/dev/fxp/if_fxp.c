@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"vlan.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -166,6 +172,31 @@ begin_comment
 comment|/* for DELAY */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_vlan_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -227,6 +258,54 @@ include|#
 directive|include
 file|"miibus_if.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLD_MODULE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NMIIBUS
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"miibus.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|NMIIBUS
+operator|<
+literal|1
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"You need to add 'device miibus' to your kernel config!"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/*  * NOTE!  On the Alpha, we have an alignment constraint.  The  * card DMAs the packet immediately following the RFA.  However,  * the first thing in the packet is a 14-byte Ethernet header.  * This means that the packet is misaligned.  To compensate,  * we actually offset the RFA 2 bytes into the cluster.  This  * alignes the packet after the Ethernet header at a 32-bit  * boundary.  HOWEVER!  This means that the RFA is misaligned!  */
@@ -1161,7 +1240,35 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"SCB timeout\n"
+literal|"SCB timeout: 0x%x, 0x%x, 0x%x 0x%x\n"
+argument_list|,
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_COMMAND
+argument_list|)
+argument_list|,
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_STATACK
+argument_list|)
+argument_list|,
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_RUSCUS
+argument_list|)
+argument_list|,
+name|CSR_READ_2
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_FLOWCONTROL
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2152,6 +2259,20 @@ name|flags
 operator||=
 name|FXP_FLAG_EXT_TXCB
 expr_stmt|;
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+comment|/* enable reception of long frames for VLAN */
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_LONG_PKT_EN
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Read MAC address. 	 */
 name|fxp_read_eeprom
@@ -2228,6 +2349,17 @@ name|pci_get_subdevice
 argument_list|(
 name|dev
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Chip Type: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|chip
 argument_list|)
 expr_stmt|;
 block|}
@@ -2403,6 +2535,26 @@ argument_list|,
 name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Let the system queue as many packets as we have available 	 * TX descriptors. 	 */
 name|ifp
 operator|->
@@ -4302,6 +4454,32 @@ goto|goto
 name|rcvloop
 goto|;
 block|}
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+comment|/* 					 * Drop the packet if it has CRC 					 * errors.  This test is only needed 					 * when doing 802.1q VLAN on the 82557 					 * chip. 					 */
+if|if
+condition|(
+name|rfa
+operator|->
+name|rfa_status
+operator|&
+name|FXP_RFA_STATUS_CRC
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+goto|goto
+name|rcvloop
+goto|;
+block|}
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -5377,6 +5555,27 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* don't pass overrun frames to host */
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+name|cbp
+operator|->
+name|save_bf
+operator|=
+name|sc
+operator|->
+name|chip
+operator|==
+name|FXP_CHIP_82557
+condition|?
+literal|1
+else|:
+name|prm
+expr_stmt|;
+else|#
+directive|else
 name|cbp
 operator|->
 name|save_bf
@@ -5384,6 +5583,8 @@ operator|=
 name|prm
 expr_stmt|;
 comment|/* save bad frames */
+endif|#
+directive|endif
 name|cbp
 operator|->
 name|disc_short_rx
@@ -6150,6 +6351,16 @@ name|if_flags
 operator|&=
 operator|~
 name|IFF_OACTIVE
+expr_stmt|;
+comment|/* 	 * Enable interrupts. 	 */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_INTRCNTL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -7588,6 +7799,15 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NMIIBUS> 0 */
+end_comment
 
 end_unit
 
