@@ -386,7 +386,7 @@ begin_decl_stmt
 name|int
 name|vmiodirenable
 init|=
-name|FALSE
+name|TRUE
 decl_stmt|;
 end_decl_stmt
 
