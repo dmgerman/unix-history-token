@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)foldit.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)foldit.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,25 +41,26 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_macro
-name|foldit
-argument_list|(
-argument|chunk
-argument_list|,
-argument|col
-argument_list|,
-argument|max
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
-begin_decl_stmt
+begin_function
+name|int
+name|foldit
+parameter_list|(
+name|chunk
+parameter_list|,
+name|col
+parameter_list|,
+name|max
+parameter_list|)
 name|char
 modifier|*
 name|chunk
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -149,7 +163,7 @@ name|col
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
