@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.41
+literal|3.42
 operator|%
 name|G
 operator|%
@@ -157,14 +157,51 @@ begin_comment
 comment|/* pid of mailer */
 end_comment
 
+begin_comment
+comment|/* following represents the state of the SMTP connection */
+end_comment
+
 begin_decl_stmt
-name|bool
-name|SmtpClosing
+name|int
+name|SmtpState
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set on a forced close */
+comment|/* connection state, see below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMTP_CLOSED
+value|0
+end_define
+
+begin_comment
+comment|/* connection is closed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMTP_OPEN
+value|1
+end_define
+
+begin_comment
+comment|/* connection is open for business */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMTP_SSD
+value|2
+end_define
+
+begin_comment
+comment|/* service shutting down */
 end_comment
 
 begin_escape
@@ -212,15 +249,32 @@ name|MAXNAME
 index|]
 decl_stmt|;
 comment|/* 	**  Open the connection to the mailer. 	*/
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|SmtpState
+operator|==
+name|SMTP_OPEN
+condition|)
+name|syserr
+argument_list|(
+literal|"smtpinit: already open"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 name|SmtpIn
 operator|=
 name|SmtpOut
 operator|=
 name|NULL
 expr_stmt|;
-name|SmtpClosing
+name|SmtpState
 operator|=
-name|FALSE
+name|SMTP_CLOSED
 expr_stmt|;
 name|SmtpPid
 operator|=
@@ -287,6 +341,10 @@ name|ExitStat
 operator|)
 return|;
 block|}
+name|SmtpState
+operator|=
+name|SMTP_OPEN
+expr_stmt|;
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously. 	*/
 name|r
 operator|=
@@ -986,8 +1044,13 @@ return|return;
 comment|/* send the quit message if not a forced quit */
 if|if
 condition|(
-operator|!
-name|SmtpClosing
+name|SmtpState
+operator|==
+name|SMTP_OPEN
+operator|||
+name|SmtpState
+operator|==
+name|SMTP_SSD
 condition|)
 block|{
 name|smtpmessage
@@ -1007,7 +1070,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SmtpClosing
+name|SmtpState
+operator|==
+name|SMTP_CLOSED
 condition|)
 return|return;
 block|}
@@ -1033,6 +1098,10 @@ operator|=
 name|SmtpOut
 operator|=
 name|NULL
+expr_stmt|;
+name|SmtpState
+operator|=
+name|SMTP_CLOSED
 expr_stmt|;
 comment|/* and pick up the zombie */
 name|i
@@ -1146,7 +1215,9 @@ comment|/* for debugging */
 comment|/* if we are in the process of closing just give the code */
 if|if
 condition|(
-name|SmtpClosing
+name|SmtpState
+operator|==
+name|SMTP_CLOSED
 condition|)
 return|return
 operator|(
@@ -1230,9 +1301,9 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
-name|SmtpClosing
+name|SmtpState
 operator|=
-name|TRUE
+name|SMTP_CLOSED
 expr_stmt|;
 name|smtpquit
 argument_list|(
@@ -1334,19 +1405,23 @@ condition|(
 name|r
 operator|==
 name|SMTPCLOSING
+operator|&&
+name|SmtpState
+operator|!=
+name|SMTP_SSD
 condition|)
 block|{
 comment|/* send the quit protocol */
+name|SmtpState
+operator|=
+name|SMTP_SSD
+expr_stmt|;
 name|smtpquit
 argument_list|(
 literal|"SMTP Shutdown"
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
-name|SmtpClosing
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 return|return
@@ -1469,8 +1544,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|SmtpClosing
+name|SmtpOut
+operator|!=
+name|NULL
 condition|)
 name|fprintf
 argument_list|(

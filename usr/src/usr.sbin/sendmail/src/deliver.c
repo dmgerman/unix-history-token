@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.148
+literal|3.149
 operator|%
 name|G
 operator|%
@@ -2227,7 +2227,44 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	**  Deal with the special case of mail handled through an IPC 	**  connection. 	**	In this case we don't actually fork.  We must be 	**	running SMTP for this to work.  We will return a 	**	zero pid to indicate that we are running IPC. 	*/
+comment|/* 	**  Deal with the special case of mail handled through an IPC 	**  connection. 	**	In this case we don't actually fork.  We must be 	**	running SMTP for this to work.  We will return a 	**	zero pid to indicate that we are running IPC. 	**  We also handle a debug version that just talks to stdin/out. 	*/
+ifdef|#
+directive|ifdef
+name|DEBUG
+comment|/* check for Local Person Communication -- not for mortals!!! */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|m
+operator|->
+name|m_mailer
+argument_list|,
+literal|"[LPC]"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|pmfile
+operator|=
+name|stdout
+expr_stmt|;
+operator|*
+name|prfile
+operator|=
+name|stdin
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+endif|DEBUG
 if|if
 condition|(
 name|strcmp
