@@ -3236,7 +3236,8 @@ name|ae_stat
 operator|.
 name|st_mode
 operator|&=
-literal|0077
+operator|~
+literal|0700
 expr_stmt|;
 name|entry
 operator|->
@@ -3266,7 +3267,8 @@ name|ae_stat
 operator|.
 name|st_mode
 operator|&=
-literal|0707
+operator|~
+literal|0070
 expr_stmt|;
 name|entry
 operator|->
@@ -3296,7 +3298,8 @@ name|ae_stat
 operator|.
 name|st_mode
 operator|&=
-literal|0770
+operator|~
+literal|0007
 expr_stmt|;
 name|entry
 operator|->
