@@ -678,11 +678,6 @@ name|sc_dev
 decl_stmt|;
 comment|/* device backpointer */
 name|struct
-name|mtx
-name|sc_mtx
-decl_stmt|;
-comment|/* per-driver lock */
-name|struct
 name|resource
 modifier|*
 name|sc_irq
@@ -826,26 +821,6 @@ comment|/* free list */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|UBSEC_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UBSEC_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sc_mtx)
-end_define
 
 begin_define
 define|#

@@ -17,6 +17,12 @@ directive|define
 name|UBSEC_DEBUG
 end_define
 
+begin_define
+define|#
+directive|define
+name|UBSEC_NO_RNG
+end_define
+
 begin_comment
 comment|/*  * uBsec 5[56]01, 58xx hardware crypto accelerator  */
 end_comment
@@ -61,24 +67,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stdint.h>
 end_include
 
 begin_include
@@ -599,16 +587,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|ubsec_rng
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*static	void ubsec_rng(void *);*/
+end_comment
 
 begin_function_decl
 specifier|static
@@ -1299,23 +1280,6 @@ operator|->
 name|sc_dev
 operator|=
 name|dev
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"crypto driver"
-argument_list|,
-name|MTX_DEF
-argument_list|)
 expr_stmt|;
 name|SIMPLEQ_INIT
 argument_list|(
@@ -2365,15 +2329,12 @@ name|sc_rnghz
 operator|=
 literal|1
 expr_stmt|;
-comment|/* NB: 1 means the callout runs w/o Giant locked */
 name|callout_init
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_rngto
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -2443,14 +2404,6 @@ operator|)
 return|;
 name|bad
 label|:
-name|mtx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -2482,6 +2435,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|sc
@@ -2493,10 +2449,10 @@ literal|"ubsec_detach: null software carrier"
 operator|)
 argument_list|)
 expr_stmt|;
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|callout_stop
 argument_list|(
@@ -2564,17 +2520,9 @@ operator|->
 name|sc_sr
 argument_list|)
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -2760,11 +2708,6 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|stat
 operator|=
 name|READ_REG
@@ -2787,11 +2730,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|UBSEC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|WRITE_REG
@@ -3239,11 +3177,6 @@ name|wakeup
 argument_list|)
 expr_stmt|;
 block|}
-name|UBSEC_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -5088,6 +5021,8 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
+name|s
+decl_stmt|,
 name|nicealign
 decl_stmt|;
 name|struct
@@ -5205,10 +5140,10 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5232,9 +5167,9 @@ name|sc_needwakeup
 operator||=
 name|CRYPTO_SYMQ
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -5265,9 +5200,9 @@ argument_list|,
 name|q_next
 argument_list|)
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 name|dmap
@@ -8044,10 +7979,10 @@ name|ubsec_pktctx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|SIMPLEQ_INSERT_TAIL
 argument_list|(
@@ -8102,9 +8037,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -8220,10 +8155,10 @@ name|q_src_map
 argument_list|)
 expr_stmt|;
 block|}
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|SIMPLEQ_INSERT_TAIL
 argument_list|(
@@ -8237,9 +8172,9 @@ argument_list|,
 name|q_next
 argument_list|)
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -9783,10 +9718,13 @@ name|ubsec_ctx_rngbypass
 modifier|*
 name|ctx
 decl_stmt|;
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -9795,9 +9733,9 @@ operator|->
 name|rng_used
 condition|)
 block|{
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10031,9 +9969,9 @@ operator|.
 name|hst_rng
 operator|++
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -10045,9 +9983,9 @@ operator|->
 name|sc_nqueue2
 operator|--
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -11371,6 +11309,8 @@ modifier|*
 name|epb
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
 name|err
 init|=
 literal|0
@@ -12338,10 +12278,10 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* Enqueue and we're done... */
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|SIMPLEQ_INSERT_TAIL
 argument_list|(
@@ -12368,9 +12308,9 @@ operator|.
 name|hst_modexp
 operator|++
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -12658,6 +12598,8 @@ modifier|*
 name|epb
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
 name|err
 init|=
 literal|0
@@ -13656,10 +13598,10 @@ name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
 comment|/* Enqueue and we're done... */
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|SIMPLEQ_INSERT_TAIL
 argument_list|(
@@ -13681,9 +13623,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -13964,6 +13906,8 @@ modifier|*
 name|ctx
 decl_stmt|;
 name|int
+name|s
+decl_stmt|,
 name|err
 init|=
 literal|0
@@ -14852,7 +14796,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"%s: rsapriv: invalid msgin %x(0x%jx)"
+literal|"%s: rsapriv: invalid msgin %x(0x%x)"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -14867,9 +14811,6 @@ name|rpr_msgin
 operator|.
 name|dma_paddr
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|rp
 operator|->
 name|rpr_msgin
@@ -14899,7 +14840,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"%s: rsapriv: invalid msgout %x(0x%jx)"
+literal|"%s: rsapriv: invalid msgout %x(0x%x)"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -14914,9 +14855,6 @@ name|rpr_msgout
 operator|.
 name|dma_paddr
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|rp
 operator|->
 name|rpr_msgout
@@ -15009,10 +14947,10 @@ name|BUS_DMASYNC_PREREAD
 argument_list|)
 expr_stmt|;
 comment|/* Enqueue and we're done... */
-name|UBSEC_LOCK
-argument_list|(
-name|sc
-argument_list|)
+name|s
+operator|=
+name|splimp
+argument_list|()
 expr_stmt|;
 name|SIMPLEQ_INSERT_TAIL
 argument_list|(
@@ -15039,9 +14977,9 @@ operator|.
 name|hst_modexpcrt
 operator|++
 expr_stmt|;
-name|UBSEC_UNLOCK
+name|splx
 argument_list|(
-name|sc
+name|s
 argument_list|)
 expr_stmt|;
 return|return
