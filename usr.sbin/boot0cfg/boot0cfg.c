@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: boot0cfg.c,v 1.3 1999/02/26 14:57:17 rnordier Exp $"
+literal|"$Id: boot0cfg.c,v 1.3.2.1 1999/04/25 11:35:58 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,6 +270,18 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
+name|int
+name|boot0bs
+parameter_list|(
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|stropt
 parameter_list|(
@@ -327,6 +339,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Boot manager installation/configuration utility.  */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -377,6 +393,8 @@ decl_stmt|;
 name|int
 name|d_arg
 decl_stmt|,
+name|m_arg
+decl_stmt|,
 name|t_arg
 decl_stmt|;
 name|int
@@ -413,6 +431,8 @@ literal|0
 expr_stmt|;
 name|d_arg
 operator|=
+name|m_arg
+operator|=
 name|t_arg
 operator|=
 operator|-
@@ -437,7 +457,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Bvb:d:f:o:t:"
+literal|"Bvb:d:f:m:o:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -496,6 +516,23 @@ case|:
 name|fpath
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|m_arg
+operator|=
+name|argtoi
+argument_list|(
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+literal|0xf
+argument_list|,
+literal|'m'
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -569,6 +606,11 @@ operator|=
 name|B_flag
 operator|||
 name|d_arg
+operator|!=
+operator|-
+literal|1
+operator|||
+name|m_arg
 operator|!=
 operator|-
 literal|1
@@ -667,6 +709,26 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"%s: bad magic"
+argument_list|,
+name|disk
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|B_flag
+operator|&&
+operator|!
+name|boot0bs
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: unknown or incompatible boot code"
 argument_list|,
 name|disk
 argument_list|)
@@ -826,20 +888,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cv2
+operator|!
+name|boot0bs
 argument_list|(
 name|buf
-operator|+
-name|OFF_MAGIC
 argument_list|)
-operator|!=
-literal|0xaa55
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: bad magic"
+literal|"%s: unknown or incompatible boot code"
 argument_list|,
 name|bpath
 argument_list|)
@@ -873,6 +932,29 @@ index|]
 operator|=
 name|d_arg
 expr_stmt|;
+if|if
+condition|(
+name|m_arg
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|buf
+index|[
+name|OFF_FLAGS
+index|]
+operator|&=
+literal|0xf0
+expr_stmt|;
+name|buf
+index|[
+name|OFF_FLAGS
+index|]
+operator||=
+name|m_arg
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|o_flag
@@ -1128,12 +1210,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"drive=0x%x  options="
+literal|"drive=0x%x  mask=0x%x  options="
 argument_list|,
 name|buf
 index|[
 name|OFF_DRIVE
 index|]
+argument_list|,
+name|buf
+index|[
+name|OFF_FLAGS
+index|]
+operator|&
+literal|0xf
 argument_list|)
 expr_stmt|;
 for|for
@@ -1220,6 +1309,174 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Decide if we have valid boot0 boot code by looking for  * characteristic byte sequences at fixed offsets.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|boot0bs
+parameter_list|(
+specifier|const
+name|u_int8_t
+modifier|*
+name|bs
+parameter_list|)
+block|{
+specifier|static
+name|u_int8_t
+name|id0
+index|[]
+init|=
+block|{
+literal|0xfe
+block|,
+literal|0x45
+block|,
+literal|0xf2
+block|,
+literal|0xe9
+block|,
+literal|0x00
+block|,
+literal|0x8a
+block|}
+decl_stmt|;
+specifier|static
+name|u_int8_t
+name|id1
+index|[]
+init|=
+block|{
+literal|'D'
+block|,
+literal|'r'
+block|,
+literal|'i'
+block|,
+literal|'v'
+block|,
+literal|'e'
+block|,
+literal|' '
+block|}
+decl_stmt|;
+specifier|static
+struct|struct
+block|{
+name|unsigned
+name|off
+decl_stmt|;
+name|unsigned
+name|len
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|key
+decl_stmt|;
+block|}
+name|ident
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
+literal|0x1c
+block|,
+sizeof|sizeof
+argument_list|(
+name|id0
+argument_list|)
+block|,
+name|id0
+block|}
+block|,
+block|{
+literal|0x1b2
+block|,
+sizeof|sizeof
+argument_list|(
+name|id1
+argument_list|)
+block|,
+name|id1
+block|}
+block|}
+struct|;
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|ident
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|ident
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|memcmp
+argument_list|(
+name|bs
+operator|+
+name|ident
+index|[
+name|i
+index|]
+operator|.
+name|off
+argument_list|,
+name|ident
+index|[
+name|i
+index|]
+operator|.
+name|key
+argument_list|,
+name|ident
+index|[
+name|i
+index|]
+operator|.
+name|len
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/*  * Adjust "and" and "or" masks for a -o option argument.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1412,6 +1669,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Produce a device path for a "canonical" name, where appropriate.  */
+end_comment
+
 begin_function
 specifier|static
 name|char
@@ -1525,6 +1786,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convert and check an option argument.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1604,6 +1869,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Display usage information.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1618,9 +1887,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: boot0cfg [-Bv] [-b boot0] [-d drive] [-f file] [-o options]"
+literal|"usage: boot0cfg [-Bv] [-b boot0] [-d drive] [-f file] [-m mask]"
 argument_list|,
-literal|"                [-t ticks] disk"
+literal|"                [-o options] [-t ticks] disk"
 argument_list|)
 expr_stmt|;
 name|exit
