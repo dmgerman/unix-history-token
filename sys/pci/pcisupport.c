@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.44 1997/03/25 19:03:04 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.45 1997/03/28 18:40:24 phk Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -44,17 +44,6 @@ include|#
 directive|include
 file|<pci/pcireg.h>
 end_include
-
-begin_function_decl
-specifier|static
-name|void
-name|config_orion
-parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*--------------------------------------------------------- ** **	Intel chipsets for 486 / Pentium processor ** **--------------------------------------------------------- */
@@ -154,17 +143,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* make sure formats expand to at least as many chars !!! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPB_DESCR
-value|"generic PCI bridge (vendor=%04x device=%04x subclass=%1.2d)"
-end_define
 
 begin_function
 specifier|static
@@ -582,6 +560,23 @@ return|;
 case|case
 literal|0x84c48086
 case|:
+name|tag
+operator|->
+name|secondarybus
+operator|=
+name|tag
+operator|->
+name|subordinatebus
+operator|=
+name|pci_cfgread
+argument_list|(
+name|tag
+argument_list|,
+literal|0x4a
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|"Intel 82450KX (Orion) PCI memory controller"
@@ -4878,52 +4873,6 @@ begin_comment
 comment|/* PCI_QUIET */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|pciroots
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|config_orion
-parameter_list|(
-name|pcici_t
-name|tag
-parameter_list|)
-block|{
-name|unsigned
-name|busno
-init|=
-operator|(
-name|pci_conf_read
-argument_list|(
-name|tag
-argument_list|,
-literal|0x48
-argument_list|)
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xff
-decl_stmt|;
-if|if
-condition|(
-name|busno
-operator|>
-literal|0
-condition|)
-block|{
-name|pciroots
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_function
 specifier|static
 name|void
@@ -4936,27 +4885,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-switch|switch
-condition|(
-name|pci_conf_read
-argument_list|(
-name|config_id
-argument_list|,
-name|PCI_ID_REG
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0x84c48086
-case|:
-comment|/* Intel Orion */
-name|config_orion
-argument_list|(
-name|config_id
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 ifndef|#
 directive|ifndef
 name|PCI_QUIET
