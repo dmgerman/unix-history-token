@@ -401,6 +401,21 @@ literal|0
 return|;
 break|break;
 case|case
+name|ATA_ITE_ID
+case|:
+if|if
+condition|(
+operator|!
+name|ata_ite_ident
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+break|break;
+case|case
 name|ATA_NATIONAL_ID
 case|:
 if|if
@@ -506,7 +521,7 @@ literal|0
 return|;
 break|break;
 case|case
-literal|0x16ca
+name|ATA_CENATEK_ID
 case|:
 if|if
 condition|(
@@ -515,7 +530,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0x000116ca
+name|ATA_CENATEK_ROCKET
 condition|)
 block|{
 name|ata_generic_ident
@@ -536,7 +551,7 @@ return|;
 block|}
 break|break;
 case|case
-literal|0x1042
+name|ATA_MICRON_ID
 case|:
 if|if
 condition|(
@@ -545,14 +560,14 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0x10001042
+name|ATA_MICRON_RZ1000
 operator|||
 name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0x10011042
+name|ATA_MICRON_RZ1001
 condition|)
 block|{
 name|ata_generic_ident
@@ -564,7 +579,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"RZ 100? ATA controller !WARNING! buggy HW data loss possible"
+literal|"RZ 100? ATA controller !WARNING! data loss/corruption risk"
 argument_list|)
 expr_stmt|;
 return|return
