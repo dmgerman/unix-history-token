@@ -5446,9 +5446,10 @@ operator|)
 condition|)
 return|return
 operator|(
-literal|5
+literal|14
 operator|)
 return|;
+comment|/* XXX: It should be 5 unless NAT */
 comment|/* Loopback addresses have link-local scope. */
 if|if
 condition|(
