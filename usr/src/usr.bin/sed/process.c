@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.1 (Berkeley) %G%"
+literal|"@(#)process.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -621,16 +621,9 @@ condition|)
 goto|goto
 name|new
 goto|;
-name|psl
+name|pd
 operator|=
-literal|0
-expr_stmt|;
-name|ps
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
+literal|1
 expr_stmt|;
 goto|goto
 name|new
@@ -660,19 +653,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|psl
+name|pd
 operator|=
-literal|0
+literal|1
 expr_stmt|;
-name|ps
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 else|else
 block|{
 name|psl
