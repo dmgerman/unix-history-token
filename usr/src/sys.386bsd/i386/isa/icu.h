@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)icu.h	5.6 (Berkeley) 5/9/91  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)icu.h	5.6 (Berkeley) 5/9/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00158  * --------------------         -----   ----------------------  *  * 25 Apr 93	Bruce Evans		New fast interrupt code (intr-0.1)  */
 end_comment
 
 begin_comment
@@ -32,7 +32,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|unsigned
-name|short
 name|imen
 decl_stmt|;
 end_decl_stmt
@@ -44,7 +43,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|unsigned
-name|short
 name|cpl
 decl_stmt|;
 end_decl_stmt
@@ -56,7 +54,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|unsigned
-name|short
 name|highmask
 decl_stmt|;
 end_decl_stmt
@@ -68,7 +65,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|unsigned
-name|short
 name|ttymask
 decl_stmt|;
 end_decl_stmt
@@ -80,7 +76,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|unsigned
-name|short
 name|biomask
 decl_stmt|;
 end_decl_stmt
@@ -92,7 +87,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|unsigned
-name|short
 name|netmask
 decl_stmt|;
 end_decl_stmt
@@ -108,7 +102,7 @@ name|INTREN
 parameter_list|(
 name|s
 parameter_list|)
-value|imen&= ~(s)
+value|(imen&= ~(s), SET_ICUS())
 end_define
 
 begin_define
@@ -118,7 +112,7 @@ name|INTRDIS
 parameter_list|(
 name|s
 parameter_list|)
-value|imen |= (s)
+value|(imen |= (s), SET_ICUS())
 end_define
 
 begin_define
@@ -130,7 +124,21 @@ name|msk
 parameter_list|,
 name|s
 parameter_list|)
-value|msk |= (s)
+value|(msk |= (s))
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|SET_ICUS
+parameter_list|()
+value|(outb(IO_ICU1 + 1, imen), outb(IU_ICU2 + 1, imen>> 8))
 end_define
 
 begin_else
@@ -139,140 +147,21 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * Macro's for interrupt level priority masks (used in interrupt vector entry)  */
-end_comment
-
-begin_comment
-comment|/* Mask a group of interrupts atomically */
+comment|/*  * XXX - IO_ICU* are defined in isa.h, not icu.h, and nothing much bothers to  * include isa.h, while too many things include icu.h.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTR
-parameter_list|(
-name|unit
-parameter_list|,
-name|mask
-parameter_list|,
-name|offst
-parameter_list|)
-define|\
-value|pushl	$0 ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	nop ; \ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$0x20, %al ;
-comment|/* next, as soon as possible send EOI ... */
-value|\ 	outb	%al, $ IO_ICU1 ;
-comment|/* ... so in service bit may be cleared ...*/
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$0x20, %al ;
-comment|/* likewise, the other one as well */
-value|\ 	outb	%al,$ IO_ICU2 ; \ 	inb	$0x84,%al ; \ 	pushl	%ds ;
-comment|/* save our data and extra segments ... */
-value|\ 	pushl	%es ; \ 	movw	$0x10, %ax ;
-comment|/* ... and reload with kernel's own */
-value|\ 	movw	%ax, %ds ; \ 	movw	%ax, %es ; \ 	incl	_cnt+V_INTR ;
-comment|/* tally interrupts */
-value|\ 	incl	_isa_intr + offst * 4 ; \ 	inb	$0x84,%al ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ unit ; \ 	orw	mask ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	inb	$0x84,%al ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	inb	$0x84,%al ; \ 	sti
+name|SET_ICUS
+parameter_list|()
+value|(outb(0x21, imen), outb(0xa1, imen>> 8))
 end_define
 
-begin_comment
-comment|/* Mask a group of interrupts atomically */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTRSTRAY
-parameter_list|(
-name|unit
-parameter_list|,
-name|mask
-parameter_list|,
-name|offst
-parameter_list|)
-define|\
-value|pushl	$0 ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	nop ; \ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$3, %al ;
-comment|/* look at ISR ... */
-value|\ 	outb	%al, $ IO_ICU1 ;
-comment|/* ... ...*/
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$3, %al ;
-comment|/* look at ISR ... */
-value|\ 	outb	%al, $ IO_ICU2 ;
-comment|/* ... ...*/
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	inb	$ IO_ICU1, %al ;
-comment|/* grab ISR */
-value|\ 	movb	%al, %dl ;
-comment|/* grab ISR */
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$2, %al ;
-comment|/* back to look at IRR ... */
-value|\ 	outb	%al, $ IO_ICU1 ;
-comment|/* ... ...*/
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$2, %al ;
-comment|/* back to look at IRR ... */
-value|\ 	outb	%al, $ IO_ICU2 ;
-comment|/* ... ...*/
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	inb	$ IO_ICU2, %al ;
-comment|/* grab ISR */
-value|\ 	movb	%al, %dh ;
-comment|/* grab ISR */
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$0x20, %al ;
-comment|/* next, as soon as possible send EOI ... */
-value|\ 	outb	%al, $ IO_ICU1 ;
-comment|/* ... so in service bit may be cleared ...*/
-value|\ 	inb	$0x84, %al ;
-comment|/* ... ASAP */
-value|\ 	movb	$0x20, %al ;
-comment|/* likewise, the other one as well */
-value|\ 	outb	%al,$ IO_ICU2 ; \ 	inb	$0x84,%al ; \ 	pushl	%ds ;
-comment|/* save our data and extra segments ... */
-value|\ 	pushl	%es ; \ 	movw	$0x10, %ax ;
-comment|/* ... and reload with kernel's own */
-value|\ 	movw	%ax, %ds ; \ 	movw	%ax, %es ; \ 	inb	$0x84,%al ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	movzwl	%dx,%eax ; \ 	shll	$8,%eax ; \ 	movb	$ unit , %al ; \ 	pushl	%eax ; \ 	orw	mask ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	inb	$0x84,%al ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	inb	$0x84,%al ; \ 	sti
-end_define
-
-begin_comment
-comment|/* Interrupt vector exit macros */
-end_comment
-
-begin_comment
-comment|/* First eight interrupts (ICU1) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTREXIT1
-define|\
-value|jmp	doreti
-end_define
-
-begin_comment
-comment|/* Second eight interrupts (ICU2) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTREXIT2
-define|\
-value|jmp	doreti
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

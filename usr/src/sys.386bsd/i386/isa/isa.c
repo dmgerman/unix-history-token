@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)isa.c	7.2 (Berkeley) 5/13/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00117  * --------------------         -----   ----------------------  *  * 18 Aug 92	Frank Maclachlan	*See comments below  * 25 Mar 93	Rodney W. Grimes	Added counter for stray interrupt,  *					turned on logging of stray interrupts,  *					Now prints maddr, msize, and flags  *					after finding a device.  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)isa.c	7.2 (Berkeley) 5/13/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         3       00158  * --------------------         -----   ----------------------  *  * 18 Aug 92	Frank Maclachlan	*See comments below  * 25 Mar 93	Rodney W. Grimes	Added counter for stray interrupt,  *					turned on logging of stray interrupts,  *					Now prints maddr, msize, and flags  *					after finding a device.  * 26 Apr 93	Bruce Evans		New intr-0.1 code  *		Rodney W. Grimes	Only print io address if id_alive != -1  * 17 May 93	Rodney W. Grimes	renamed stray interrupt counters to  *					work with new intr-0.1 code.  *					Enabled printf for interrupt masks to  *					aid in bug reports.  */
 end_comment
 
 begin_decl_stmt
@@ -215,19 +215,22 @@ begin_comment
 comment|/* clear first/last FF */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|config_isadev
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|isa_device
-modifier|*
-parameter_list|,
-name|u_short
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|,
+name|u_int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -357,7 +360,11 @@ name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
-literal|0
+operator|(
+name|u_int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 include|#
@@ -407,7 +414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_short
+name|u_int
 modifier|*
 name|mp
 decl_stmt|;
@@ -728,6 +735,9 @@ name|isa_driver
 modifier|*
 name|dp
 decl_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
 name|splhigh
 argument_list|()
 expr_stmt|;
@@ -800,7 +810,11 @@ name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
-literal|0
+operator|(
+name|u_int
+operator|*
+operator|)
+name|NULL
 argument_list|)
 condition|;
 name|dvp
@@ -826,7 +840,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* biomask |= ttymask ;  can some tty devices use buffers? */
-comment|/* printf("biomask %x ttymask %x netmask %x\n", biomask, ttymask, netmask); */
+name|printf
+argument_list|(
+literal|"biomask %x ttymask %x netmask %x\n"
+argument_list|,
+name|biomask
+argument_list|,
+name|ttymask
+argument_list|,
+name|netmask
+argument_list|)
+expr_stmt|;
 name|splnone
 argument_list|()
 expr_stmt|;
@@ -855,7 +879,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_short
+name|u_int
 modifier|*
 name|mp
 decl_stmt|;
@@ -894,6 +918,7 @@ name|id_maddr
 operator|-=
 literal|0xa0000
 expr_stmt|;
+comment|/* XXX should be a define */
 name|isdp
 operator|->
 name|id_maddr
@@ -946,6 +971,17 @@ argument_list|(
 name|isdp
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Only print the I/O address range if id_alive != -1 			 * Right now this is a temporary fix just for the new 			 * NPX code so that if it finds a 486 that can use trap 			 * 16 it will not report I/O addresses. 			 * Rod Grimes 04/26/94 			 */
+if|if
+condition|(
+name|isdp
+operator|->
+name|id_alive
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|" at 0x%x"
@@ -988,11 +1024,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|" "
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|isdp
@@ -1001,7 +1033,7 @@ name|id_irq
 condition|)
 name|printf
 argument_list|(
-literal|"irq %d "
+literal|" irq %d"
 argument_list|,
 name|ffs
 argument_list|(
@@ -1024,7 +1056,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"drq %d "
+literal|" drq %d"
 argument_list|,
 name|isdp
 operator|->
@@ -1041,7 +1073,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"maddr 0x%x "
+literal|" maddr 0x%x"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -1061,7 +1093,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"msize %d "
+literal|" msize %d"
 argument_list|,
 name|isdp
 operator|->
@@ -1078,7 +1110,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"flags 0x%x "
+literal|" flags 0x%x"
 argument_list|,
 name|isdp
 operator|->
@@ -1087,7 +1119,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"on isa\n"
+literal|" on isa\n"
 argument_list|)
 expr_stmt|;
 comment|/* This is the place the attach should be done! */
@@ -1112,11 +1144,19 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|INTREN
+name|setidt
 argument_list|(
+name|ICU_OFFSET
+operator|+
+name|intrno
+argument_list|,
 name|isdp
 operator|->
-name|id_irq
+name|id_intr
+argument_list|,
+name|SDT_SYS386IGT
+argument_list|,
+name|SEL_KPL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1133,19 +1173,11 @@ operator|->
 name|id_irq
 argument_list|)
 expr_stmt|;
-name|setidt
+name|INTREN
 argument_list|(
-name|ICU_OFFSET
-operator|+
-name|intrno
-argument_list|,
 name|isdp
 operator|->
-name|id_intr
-argument_list|,
-name|SDT_SYS386IGT
-argument_list|,
-name|SEL_KPL
+name|id_irq
 argument_list|)
 expr_stmt|;
 block|}
@@ -1469,14 +1501,6 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
-comment|/* clear npx intr latch */
-name|outb
-argument_list|(
-literal|0xf1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* initialize 8259's */
 name|outb
 argument_list|(
@@ -1508,6 +1532,23 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* slave on line 2 */
+ifdef|#
+directive|ifdef
+name|AUTO_EOI_1
+name|outb
+argument_list|(
+name|IO_ICU1
+operator|+
+literal|1
+argument_list|,
+literal|2
+operator||
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* auto EOI, 8086 mode */
+else|#
+directive|else
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -1518,6 +1559,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 8086 mode */
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -1532,10 +1575,24 @@ name|outb
 argument_list|(
 name|IO_ICU1
 argument_list|,
-literal|2
+literal|0x0a
 argument_list|)
 expr_stmt|;
-comment|/* default to ISR on read */
+comment|/* default to IRR on read */
+name|outb
+argument_list|(
+name|IO_ICU1
+argument_list|,
+literal|0xc0
+operator||
+operator|(
+literal|3
+operator|-
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* pri order 3-7, 0-2 (com2 first) */
 name|outb
 argument_list|(
 name|IO_ICU2
@@ -1566,6 +1623,23 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* my slave id is 2 */
+ifdef|#
+directive|ifdef
+name|AUTO_EOI_2
+name|outb
+argument_list|(
+name|IO_ICU2
+operator|+
+literal|1
+argument_list|,
+literal|2
+operator||
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* auto EOI, 8086 mode */
+else|#
+directive|else
 name|outb
 argument_list|(
 name|IO_ICU2
@@ -1576,6 +1650,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 8086 mode */
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|IO_ICU2
@@ -1590,10 +1666,10 @@ name|outb
 argument_list|(
 name|IO_ICU2
 argument_list|,
-literal|2
+literal|0x0a
 argument_list|)
 expr_stmt|;
-comment|/* default to ISR on read */
+comment|/* default to IRR on read */
 block|}
 end_block
 
@@ -2612,14 +2688,14 @@ comment|/* for some reason, we get bursts of intr #7, even if not enabled! */
 comment|/* 	 * Well the reason you got bursts of intr #7 is because someone 	 * raised an interrupt line and dropped it before the 8259 could 	 * prioritize it.  This is documented in the intel data book.  This 	 * means you have BAD hardware!  I have changed this so that only 	 * the first 5 get logged, then it quits logging them, and puts 	 * out a special message. rgrimes 3/25/1993 	 */
 specifier|extern
 name|u_long
-name|isa_stray_intrcnt
+name|intrcnt_stray
 decl_stmt|;
-name|isa_stray_intrcnt
+name|intrcnt_stray
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|isa_stray_intrcnt
+name|intrcnt_stray
 operator|<=
 literal|5
 condition|)
@@ -2634,7 +2710,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isa_stray_intrcnt
+name|intrcnt_stray
 operator|==
 literal|5
 condition|)
@@ -2649,51 +2725,213 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Wait "n" microseconds. Relies on timer 0 to have 1Mhz clock, regardless  * of processor board speed. Note: timer had better have been programmed  * before this is first used!  */
+comment|/*  * Wait "n" microseconds.  * Relies on timer 1 counting down from (TIMER_FREQ / hz) at  * (2 * TIMER_FREQ) Hz.  * Note: timer had better have been programmed before this is first used!  * (The standard programming causes the timer to generate a square wave and  * the counter is decremented twice every cycle.)  */
 end_comment
 
-begin_macro
-name|DELAY
-argument_list|(
-argument|n
-argument_list|)
-end_macro
+begin_define
+define|#
+directive|define
+name|CF
+value|(2 * TIMER_FREQ)
+end_define
 
-begin_block
+begin_define
+define|#
+directive|define
+name|TIMER_FREQ
+value|1193182
+end_define
+
+begin_comment
+comment|/* XXX - should be elsewhere */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX - should be elsewhere */
+end_comment
+
+begin_function
+name|int
+name|DELAY
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 name|int
+name|counter_limit
+decl_stmt|;
+name|int
+name|prev_tick
+decl_stmt|;
+name|int
 name|tick
+decl_stmt|;
+name|int
+name|ticks_left
+decl_stmt|;
+name|int
+name|sec
+decl_stmt|;
+name|int
+name|usec
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DELAYDEBUG
+name|int
+name|getit_calls
 init|=
-name|getit
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-operator|&
 literal|1
 decl_stmt|;
-while|while
+name|int
+name|n1
+decl_stmt|;
+specifier|static
+name|int
+name|state
+init|=
+literal|0
+decl_stmt|;
+if|if
 condition|(
-name|n
-operator|--
+name|state
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* wait approximately 1 micro second */
-while|while
+name|state
+operator|=
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|n1
+operator|=
+literal|1
+init|;
+name|n1
+operator|<=
+literal|10000000
+condition|;
+name|n1
+operator|*=
+literal|10
+control|)
+name|DELAY
+argument_list|(
+name|n1
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+literal|2
+expr_stmt|;
+block|}
+if|if
 condition|(
-name|tick
+name|state
 operator|==
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"DELAY(%d)..."
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * Read the counter first, so that the rest of the setup overhead is 	 * counted.  Guess the initial overhead is 20 usec (on most systems it 	 * takes about 1.5 usec for each of the i/o's in getit().  The loop 	 * takes about 6 usec on a 486/33 and 13 usec on a 386/20.  The 	 * multiplications and divisions to scale the count take a while). 	 */
+name|prev_tick
+operator|=
 name|getit
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|&
-literal|1
+expr_stmt|;
+name|n
+operator|-=
+literal|20
+expr_stmt|;
+comment|/* 	 * Calculate (n * (CF / 1e6)) without using floating point and without 	 * any avoidable overflows. 	 */
+name|sec
+operator|=
+name|n
+operator|/
+literal|1000000
+expr_stmt|;
+name|usec
+operator|=
+name|n
+operator|-
+name|sec
+operator|*
+literal|1000000
+expr_stmt|;
+name|ticks_left
+operator|=
+name|sec
+operator|*
+name|CF
+operator|+
+name|usec
+operator|*
+operator|(
+name|CF
+operator|/
+literal|1000000
+operator|)
+operator|+
+name|usec
+operator|*
+operator|(
+operator|(
+name|CF
+operator|%
+literal|1000000
+operator|)
+operator|/
+literal|1000
+operator|)
+operator|/
+literal|1000
+operator|+
+name|usec
+operator|*
+operator|(
+name|CF
+operator|%
+literal|1000
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
+name|counter_limit
+operator|=
+name|TIMER_FREQ
+operator|/
+name|hz
+expr_stmt|;
+while|while
+condition|(
+name|ticks_left
+operator|>
+literal|0
 condition|)
-empty_stmt|;
+block|{
 name|tick
 operator|=
 name|getit
@@ -2702,12 +2940,71 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|&
-literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DELAYDEBUG
+operator|++
+name|getit_calls
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|tick
+operator|>
+name|prev_tick
+condition|)
+name|ticks_left
+operator|-=
+name|prev_tick
+operator|-
+operator|(
+name|tick
+operator|-
+name|counter_limit
+operator|)
+expr_stmt|;
+else|else
+name|ticks_left
+operator|-=
+name|prev_tick
+operator|-
+name|tick
+expr_stmt|;
+name|prev_tick
+operator|=
+name|tick
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DELAYDEBUG
+if|if
+condition|(
+name|state
+operator|==
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|" %d calls to getit() at %d usec each\n"
+argument_list|,
+name|getit_calls
+argument_list|,
+operator|(
+name|n
+operator|+
+literal|5
+operator|)
+operator|/
+name|getit_calls
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
-end_block
+end_function
 
 begin_macro
 name|getit
@@ -2721,54 +3018,62 @@ end_macro
 begin_block
 block|{
 name|int
-name|port
-init|=
-operator|(
-name|unit
-condition|?
-name|IO_TIMER2
-else|:
-name|IO_TIMER1
-operator|)
-operator|+
-name|timer
-decl_stmt|,
-name|val
+name|high
 decl_stmt|;
-name|val
-operator|=
-name|inb
+name|int
+name|low
+decl_stmt|;
+comment|/* 	 * XXX - isa.h defines bogus timers.  There's no such timer as 	 * IO_TIMER_2 = 0x48.  There's a timer in the CMOS RAM chip but 	 * its interface is quite different.  Neither timer is an 8252. 	 * We actually only call this with unit = 0 and timer = 0.  It 	 * could be static... 	 */
+comment|/* 	 * Protect ourself against interrupts. 	 * XXX - sysbeep() and sysbeepstop() need protection. 	 */
+name|disable_intr
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Latch the count for 'timer' (cc00xxxx, c = counter, x = any). 	 */
+name|outb
 argument_list|(
-name|port
+name|IO_TIMER1
+operator|+
+literal|3
+argument_list|,
+name|timer
+operator|<<
+literal|6
 argument_list|)
 expr_stmt|;
-name|val
+name|low
 operator|=
-operator|(
 name|inb
 argument_list|(
-name|port
-argument_list|)
-operator|<<
-literal|8
-operator|)
+name|IO_TIMER1
 operator|+
-name|val
+name|timer
+argument_list|)
+expr_stmt|;
+name|high
+operator|=
+name|inb
+argument_list|(
+name|IO_TIMER1
+operator|+
+name|timer
+argument_list|)
+expr_stmt|;
+name|enable_intr
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|val
+operator|(
+name|high
+operator|<<
+literal|8
+operator|)
+operator||
+name|low
 operator|)
 return|;
 block|}
 end_block
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 specifier|static
@@ -2841,6 +3146,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|/* enable counter 2 */
+comment|/* 	 * XXX - move timer stuff to clock.c. 	 * Program counter 2: 	 * ccaammmb, c counter, a = access, m = mode, b = BCD 	 * 1011x110, 11 for aa = LSB then MSB, x11 for mmm = square wave. 	 */
 name|outb
 argument_list|(
 literal|0x43
@@ -2940,6 +3246,69 @@ name|inb
 argument_list|(
 name|KBDATAP
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return nonzero if a (masked) irq is pending for a given device.  */
+end_comment
+
+begin_function
+name|int
+name|isa_irq_pending
+parameter_list|(
+name|dvp
+parameter_list|)
+name|struct
+name|isa_device
+modifier|*
+name|dvp
+decl_stmt|;
+block|{
+name|unsigned
+name|id_irq
+decl_stmt|;
+name|id_irq
+operator|=
+operator|(
+name|unsigned
+name|short
+operator|)
+name|dvp
+operator|->
+name|id_irq
+expr_stmt|;
+comment|/* XXX silly type in struct */
+if|if
+condition|(
+name|id_irq
+operator|&
+literal|0xff
+condition|)
+return|return
+operator|(
+name|inb
+argument_list|(
+name|IO_ICU1
+argument_list|)
+operator|&
+name|id_irq
+operator|)
+return|;
+return|return
+operator|(
+name|inb
+argument_list|(
+name|IO_ICU2
+argument_list|)
+operator|&
+operator|(
+name|id_irq
+operator|>>
+literal|8
+operator|)
 operator|)
 return|;
 block|}

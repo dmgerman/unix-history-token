@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)machdep.c	7.4 (Berkeley) 6/3/91  *  * PATCHES MAGIC		LEVEL	PATCH THAT GOT US HERE  * --------------------		-----	----------------------  * CURRENT PATCH LEVEL:		4	00154  * --------------------		-----	----------------------  *  * 15 Aug 92	William Jolitz		Large memory bug  * 15 Aug 92	Terry Lambert		Fixed CMOS RAM size bug  * 25 Mar 93	Sean Eric Fagan		Added #ifdef HZ around microtime for  *					the new microtime.s routine  * 08 Apr 93	Andrew Herbert		Fixes for kmem_alloc panics  * 20 Apr 93	Bruce Evans		New npx-0.5 code  */
+comment|/*-  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)machdep.c	7.4 (Berkeley) 6/3/91  *  * PATCHES MAGIC		LEVEL	PATCH THAT GOT US HERE  * --------------------		-----	----------------------  * CURRENT PATCH LEVEL:		5	00158  * --------------------		-----	----------------------  *  * 15 Aug 92	William Jolitz		Large memory bug  * 15 Aug 92	Terry Lambert		Fixed CMOS RAM size bug  * 25 Mar 93	Sean Eric Fagan		Added #ifdef HZ around microtime for  *					the new microtime.s routine  * 08 Apr 93	Andrew Herbert		Fixes for kmem_alloc panics  * 20 Apr 93	Bruce Evans		New npx-0.5 code  * 25 Apr 93	Bruce Evans		New intr-0.1 code  */
 end_comment
 
 begin_decl_stmt
@@ -12,6 +12,12 @@ init|=
 literal|"$Header: /usr/src/sys.386bsd/i386/i386/RCS/machdep.c,v 1.2 92/01/21 14:22:09 william Exp Locker: root $"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
 
 begin_include
 include|#
@@ -1585,6 +1591,13 @@ name|p
 operator|->
 name|p_regs
 decl_stmt|;
+comment|/* 	 * (XXX old comment) regs[sESP] points to the return address. 	 * The user scp pointer is above that. 	 * The return address is faked in the signal trampoline code 	 * for consistency. 	 */
+name|scp
+operator|=
+name|uap
+operator|->
+name|sigcntxp
+expr_stmt|;
 name|fp
 operator|=
 operator|(
@@ -1592,10 +1605,20 @@ expr|struct
 name|sigframe
 operator|*
 operator|)
-name|regs
-index|[
-name|sESP
-index|]
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|scp
+operator|-
+name|offsetof
+argument_list|(
+expr|struct
+name|sigframe
+argument_list|,
+name|sf_sc
+argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1649,12 +1672,6 @@ operator|=
 name|fp
 operator|->
 name|sf_ecx
-expr_stmt|;
-name|scp
-operator|=
-name|fp
-operator|->
-name|sf_scp
 expr_stmt|;
 if|if
 condition|(
