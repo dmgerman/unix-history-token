@@ -1927,7 +1927,7 @@ name|win
 argument_list|,
 name|mvwinch
 argument_list|(
-name|curscr
+name|newscr
 argument_list|,
 name|sy
 operator|+
@@ -2018,7 +2018,7 @@ name|win
 argument_list|,
 name|mvwinch
 argument_list|(
-name|curscr
+name|newscr
 argument_list|,
 name|sy
 operator|+
@@ -2040,7 +2040,7 @@ name|win
 argument_list|,
 name|mvwinch
 argument_list|(
-name|curscr
+name|newscr
 argument_list|,
 name|sy
 operator|+
