@@ -4253,6 +4253,18 @@ literal|0
 operator|)
 condition|)
 block|{
+name|AcpiEnableEvent
+argument_list|(
+name|ACPI_EVENT_POWER_BUTTON
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AcpiClearEvent
+argument_list|(
+name|ACPI_EVENT_POWER_BUTTON
+argument_list|)
+expr_stmt|;
 name|AcpiInstallFixedEventHandler
 argument_list|(
 name|ACPI_EVENT_POWER_BUTTON
@@ -4297,6 +4309,18 @@ literal|0
 operator|)
 condition|)
 block|{
+name|AcpiEnableEvent
+argument_list|(
+name|ACPI_EVENT_SLEEP_BUTTON
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|AcpiClearEvent
+argument_list|(
+name|ACPI_EVENT_SLEEP_BUTTON
+argument_list|)
+expr_stmt|;
 name|AcpiInstallFixedEventHandler
 argument_list|(
 name|ACPI_EVENT_SLEEP_BUTTON
@@ -6166,8 +6190,14 @@ expr_stmt|;
 comment|/* AcpiEnterSleepState() maybe incompleted, unlock here if locked. */
 if|if
 condition|(
-literal|1
-comment|/*AcpiGbl_AcpiMutexInfo[ACPI_MTX_HARDWARE].OwnerId != ACPI_MUTEX_NOT_ACQUIRED*/
+name|AcpiGbl_MutexInfo
+index|[
+name|ACPI_MTX_HARDWARE
+index|]
+operator|.
+name|OwnerId
+operator|!=
+name|ACPI_MUTEX_NOT_ACQUIRED
 condition|)
 block|{
 name|AcpiUtReleaseMutex
