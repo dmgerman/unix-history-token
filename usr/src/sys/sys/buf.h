@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -19,32 +19,6 @@ begin_comment
 comment|/*  * The header for buffers in the buffer pool and otherwise used  * to describe a block i/o request is given here.  *  * Each buffer in the pool is usually doubly linked into 2 lists:  * hashed into a chain by<dev,blkno> so it can be located in the cache,  * and (usually) on (one of several) queues.  These lists are circular and  * doubly linked for easy removal.  *  * There are currently three queues for buffers:  *	one for buffers which must be kept permanently (super blocks)  * 	one for buffers containing ``useful'' information (the cache)  *	one for buffers containing ``non-useful'' information  *		(and empty buffers, pushed onto the front)  * The latter two queues contain the buffers which are available for  * reallocation, are kept in lru order.  When not on one of these queues,  * the buffers are ``checked out'' to drivers which use the available list  * pointers to keep track of them in their i/o active queues.  */
 end_comment
 
-begin_comment
-comment|/*  * Bufhd structures used at the head of the hashed buffer queues.  * We only need three words for these, so this abbreviated  * definition saves some space.  */
-end_comment
-
-begin_struct
-struct|struct
-name|bufhd
-block|{
-specifier|volatile
-name|long
-name|b_flags
-decl_stmt|;
-comment|/* see defines below */
-name|struct
-name|buf
-modifier|*
-name|b_forw
-decl_stmt|,
-modifier|*
-name|b_back
-decl_stmt|;
-comment|/* fwd/bkwd pointer in chain */
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|buf
@@ -60,18 +34,10 @@ modifier|*
 name|b_forw
 decl_stmt|,
 modifier|*
+modifier|*
 name|b_back
 decl_stmt|;
 comment|/* hash chain (2 way street) */
-name|struct
-name|buf
-modifier|*
-name|av_forw
-decl_stmt|,
-modifier|*
-name|av_back
-decl_stmt|;
-comment|/* position on free list if not BUSY */
 name|struct
 name|buf
 modifier|*
@@ -82,16 +48,16 @@ modifier|*
 name|b_blockb
 decl_stmt|;
 comment|/* associated vnode */
-define|#
-directive|define
+name|struct
+name|buf
+modifier|*
 name|b_actf
-value|av_forw
-comment|/* alternate names for driver queue */
-define|#
-directive|define
-name|b_actl
-value|av_back
-comment|/*    head - isn't history wonderful */
+decl_stmt|,
+modifier|*
+modifier|*
+name|b_actb
+decl_stmt|;
+comment|/* position on free list if not BUSY */
 name|long
 name|b_bcount
 decl_stmt|;
@@ -249,173 +215,11 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|BQUEUES
-value|4
-end_define
-
-begin_comment
-comment|/* number of free buffer queues */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_LOCKED
-value|0
-end_define
-
-begin_comment
-comment|/* super-blocks&c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_LRU
-value|1
-end_define
-
-begin_comment
-comment|/* lru, useful buffers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_AGE
-value|2
-end_define
-
-begin_comment
-comment|/* rubbish */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BQ_EMPTY
-value|3
-end_define
-
-begin_comment
-comment|/* buffer headers with no memory */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SECSIZE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BUFHSZ
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINSECSIZE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|RND
-value|(MAXBSIZE/MINSECSIZE)
-end_define
-
-begin_else
-else|#
-directive|else
-else|SECSIZE
-end_else
-
-begin_define
-define|#
-directive|define
-name|BUFHSZ
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
-name|RND
-value|(MAXBSIZE/DEV_BSIZE)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|SECSIZE
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-operator|(
-name|BUFHSZ
-operator|&
-operator|(
-name|BUFHSZ
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|BUFHASH
-parameter_list|(
-name|dvp
-parameter_list|,
-name|dblkno
-parameter_list|)
-define|\
-value|((struct buf *)&bufhash[((int)(dvp)+(((int)(dblkno))/RND))&(BUFHSZ-1)])
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BUFHASH
-parameter_list|(
-name|dvp
-parameter_list|,
-name|dblkno
-parameter_list|)
-define|\
-value|((struct buf *)&bufhash[((int)(dvp)+(((int)(dblkno))/RND)) % BUFHSZ])
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -473,34 +277,6 @@ name|int
 name|nswbuf
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|bufhd
-name|bufhash
-index|[
-name|BUFHSZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* heads of hash lists */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|buf
-name|bfreelist
-index|[
-name|BQUEUES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* heads of available lists */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -1066,70 +842,6 @@ end_define
 begin_comment
 comment|/* do not cache block after use */
 end_comment
-
-begin_comment
-comment|/*  * Insq/Remq for the buffer hash lists.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bremhash
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \ 	(bp)->b_back->b_forw = (bp)->b_forw; \ 	(bp)->b_forw->b_back = (bp)->b_back; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|binshash
-parameter_list|(
-name|bp
-parameter_list|,
-name|dp
-parameter_list|)
-value|{ \ 	(bp)->b_forw = (dp)->b_forw; \ 	(bp)->b_back = (dp); \ 	(dp)->b_forw->b_back = (bp); \ 	(dp)->b_forw = (bp); \ }
-end_define
-
-begin_comment
-comment|/*  * Insq/Remq for the buffer free lists.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bremfree
-parameter_list|(
-name|bp
-parameter_list|)
-value|{ \ 	(bp)->av_back->av_forw = (bp)->av_forw; \ 	(bp)->av_forw->av_back = (bp)->av_back; \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|binsheadfree
-parameter_list|(
-name|bp
-parameter_list|,
-name|dp
-parameter_list|)
-value|{ \ 	(dp)->av_forw->av_back = (bp); \ 	(bp)->av_forw = (dp)->av_forw; \ 	(dp)->av_forw = (bp); \ 	(bp)->av_back = (dp); \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|binstailfree
-parameter_list|(
-name|bp
-parameter_list|,
-name|dp
-parameter_list|)
-value|{ \ 	(dp)->av_back->av_forw = (bp); \ 	(bp)->av_back = (dp)->av_back; \ 	(dp)->av_back = (bp); \ 	(bp)->av_forw = (dp); \ }
-end_define
 
 begin_define
 define|#
