@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.16 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,6 +626,45 @@ block|}
 end_block
 
 begin_macro
+name|dirdump
+argument_list|(
+argument|ip
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|dinode
+modifier|*
+name|ip
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* watchout for dir inodes deleted and maybe reallocated */
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|!=
+name|IFDIR
+condition|)
+return|return;
+name|dump
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|dump
 argument_list|(
 argument|ip
@@ -700,6 +739,14 @@ name|di_mode
 operator|&
 name|IFMT
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+comment|/* free inode */
+return|return;
 if|if
 condition|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dump.h	1.12	83/07/01	*/
+comment|/*	dump.h	1.13	84/10/05	*/
 end_comment
 
 begin_define
@@ -486,6 +486,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|add
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|dirdump
 parameter_list|()
 function_decl|;
 end_function_decl

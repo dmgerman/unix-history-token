@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.16 (Berkeley) %G%"
+literal|"@(#)main.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1205,7 +1205,7 @@ argument_list|)
 expr_stmt|;
 name|pass
 argument_list|(
-name|dump
+name|dirdump
 argument_list|,
 name|dirmap
 argument_list|)
