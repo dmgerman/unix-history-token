@@ -617,18 +617,11 @@ argument_list|)
 operator|!=
 name|SECTSIZ
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"hp: can't read disk label\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|EIO
+name|ERDLAB
 operator|)
 return|;
-block|}
 name|dlp
 operator|=
 operator|(
@@ -656,6 +649,9 @@ name|d_magic2
 operator|!=
 name|DISKMAGIC
 condition|)
+ifdef|#
+directive|ifdef
+name|COMPAT_42
 block|{
 name|printf
 argument_list|(
@@ -664,13 +660,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPAT_42
-argument_list|)
-comment|/*&& !defined(SMALL) */
 name|hpmaptype
 argument_list|(
 name|hpaddr
@@ -686,16 +675,16 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 return|return
 operator|(
-name|ENXIO
+name|EUNLAB
 operator|)
 return|;
 endif|#
 directive|endif
-block|}
 else|else
 operator|*
 name|lp
