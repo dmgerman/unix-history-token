@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.58 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.59 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.58 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.59 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1402,6 +1402,8 @@ operator|->
 name|e_flags
 operator||=
 name|EF_LOGSENDER
+operator||
+name|EF_CLRQUEUE
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -2109,6 +2111,14 @@ condition|)
 goto|goto
 name|abortmessage
 goto|;
+comment|/* make sure we actually do delivery */
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_CLRQUEUE
+expr_stmt|;
 comment|/* from now on, we have to operate silently */
 name|HoldErrs
 operator|=
