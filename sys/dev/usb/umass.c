@@ -816,6 +816,9 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|,
+name|u_int
+name|timeout
+parameter_list|,
 name|transfer_cb_f
 name|cb
 parameter_list|,
@@ -1769,6 +1772,10 @@ name|scsi_sense
 name|cam_scsi_test_unit_ready
 decl_stmt|;
 name|int
+name|timeout
+decl_stmt|;
+comment|/* in msecs */
+name|int
 name|maxlun
 decl_stmt|;
 comment|/* maximum LUN number */
@@ -2085,6 +2092,9 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|,
+name|u_int
+name|timeout
+parameter_list|,
 name|transfer_cb_f
 name|cb
 parameter_list|,
@@ -2197,6 +2207,9 @@ name|datalen
 parameter_list|,
 name|int
 name|dir
+parameter_list|,
+name|u_int
+name|timeout
 parameter_list|,
 name|transfer_cb_f
 name|cb
@@ -4791,7 +4804,9 @@ name|buflen
 argument_list|,
 name|flags
 argument_list|,
-name|UMASS_TIMEOUT
+name|sc
+operator|->
+name|timeout
 argument_list|,
 name|sc
 operator|->
@@ -4899,7 +4914,9 @@ operator|*
 operator|)
 name|sc
 argument_list|,
-name|UMASS_TIMEOUT
+name|sc
+operator|->
+name|timeout
 argument_list|,
 name|req
 argument_list|,
@@ -5340,6 +5357,9 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|,
+name|u_int
+name|timeout
+parameter_list|,
 name|transfer_cb_f
 name|cb
 parameter_list|,
@@ -5371,6 +5391,15 @@ operator|->
 name|proto
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* Be a little generous. */
+name|sc
+operator|->
+name|timeout
+operator|=
+name|timeout
+operator|+
+name|UMASS_TIMEOUT
 expr_stmt|;
 comment|/* 	 * Do a Bulk-Only transfer with cmdlen bytes from cmd, possibly 	 * a data phase of datalen bytes from/to the device and finally a 	 * csw read phase. 	 * If the data direction was inbound a maximum of datalen bytes 	 * is stored in the buffer pointed to by data. 	 * 	 * umass_bbb_transfer initialises the transfer and lets the state 	 * machine in umass_bbb_state handle the completion. It uses the 	 * following states: 	 * TSTATE_BBB_COMMAND 	 *   -> TSTATE_BBB_DATA 	 *   -> TSTATE_BBB_STATUS 	 *   -> TSTATE_BBB_STATUS2 	 *   -> TSTATE_BBB_IDLE 	 * 	 * An error in any of those states will invoke 	 * umass_bbb_reset. 	 */
 comment|/* check the given arguments */
@@ -7459,6 +7488,9 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|,
+name|u_int
+name|timeout
+parameter_list|,
 name|transfer_cb_f
 name|cb
 parameter_list|,
@@ -7494,6 +7526,15 @@ operator|->
 name|proto
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* Be a little generous. */
+name|sc
+operator|->
+name|timeout
+operator|=
+name|timeout
+operator|+
+name|UMASS_TIMEOUT
 expr_stmt|;
 comment|/* 	 * Do a CBI transfer with cmdlen bytes from cmd, possibly 	 * a data phase of datalen bytes from/to the device and finally a 	 * csw read phase. 	 * If the data direction was inbound a maximum of datalen bytes 	 * is stored in the buffer pointed to by data. 	 * 	 * umass_cbi_transfer initialises the transfer and lets the state 	 * machine in umass_cbi_state handle the completion. It uses the 	 * following states: 	 * TSTATE_CBI_COMMAND 	 *   -> XXX fill in 	 * 	 * An error in any of those states will invoke 	 * umass_cbi_reset. 	 */
 comment|/* check the given arguments */
@@ -10173,6 +10214,12 @@ name|dxfer_len
 argument_list|,
 name|dir
 argument_list|,
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+argument_list|,
 name|umass_cam_cb
 argument_list|,
 operator|(
@@ -11072,6 +11119,12 @@ name|sense_len
 argument_list|,
 name|DIR_IN
 argument_list|,
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
+argument_list|,
 name|umass_cam_sense_cb
 argument_list|,
 operator|(
@@ -11457,6 +11510,12 @@ argument_list|,
 literal|0
 argument_list|,
 name|DIR_NONE
+argument_list|,
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|timeout
 argument_list|,
 name|umass_cam_quirk_cb
 argument_list|,
