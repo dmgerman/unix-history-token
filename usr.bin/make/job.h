@@ -319,6 +319,16 @@ name|Shell
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * If REMOTE is defined then these things need exposed, otherwise they are  * static to job.c!  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REMOTE
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -397,6 +407,11 @@ end_decl_stmt
 begin_comment
 comment|/* Non-zero if no more jobs should/will start*/
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
