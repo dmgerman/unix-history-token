@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.11.2.1 1997/08/29 05:15:38 imp Exp $"
+literal|"$Id: main.c,v 1.11.2.2 1997/10/09 07:07:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -532,14 +532,16 @@ condition|(
 operator|!
 name|ch
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"missing package name(s)"
 argument_list|)
-operator|,
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -551,13 +553,25 @@ name|AddMode
 operator|==
 name|MASTER
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"only one package name may be specified with master mode"
 argument_list|)
-operator|,
+expr_stmt|;
 name|usage
 argument_list|()
+expr_stmt|;
+block|}
+comment|/* Make sure the sub-execs we invoke get found */
+name|setenv
+argument_list|(
+literal|"PATH"
+argument_list|,
+literal|"/sbin:/usr/sbin:/bin:/usr/bin"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
