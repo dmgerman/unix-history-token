@@ -15,6 +15,35 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"portability.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"options.h"
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|panic
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -37,7 +66,7 @@ name|char
 name|RCSid
 index|[]
 init|=
-literal|"$Id: storage.c,v 1.2 1994/09/22 20:45:09 pst Exp $"
+literal|"$Id: storage.c,v 1.3 1995/05/30 03:49:05 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,15 +190,12 @@ operator|)
 literal|0
 condition|)
 block|{
-name|syslog
+name|panic
 argument_list|(
-name|LOG_ERR
+name|errno
 argument_list|,
 literal|"rt_malloc: malloc failure"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -360,27 +386,14 @@ name|ip
 operator|!=
 name|MDB_MAGIC
 condition|)
-block|{
-name|syslog
+name|panic
 argument_list|(
-name|LOG_ERR
+operator|-
+literal|1
 argument_list|,
-literal|"ERROR rt_free(x%x, %s) corrupted! x%x!=x%x\n"
-argument_list|,
-name|ptr
-argument_list|,
-literal|"???"
-argument_list|,
-operator|*
-name|ip
-argument_list|,
-name|MDB_MAGIC
+literal|"rt_free: corrupt magic"
 argument_list|)
 expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 name|mp
 operator|->
@@ -393,23 +406,16 @@ goto|goto
 name|ok
 goto|;
 block|}
-name|syslog
+name|panic
 argument_list|(
-name|LOG_ERR
+operator|-
+literal|1
 argument_list|,
-literal|"ERROR rt_free(x%x, %s) bad pointer!\n"
-argument_list|,
-name|ptr
-argument_list|,
-literal|"???"
+literal|"rt_free: bad pointer"
 argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
 expr_stmt|;
 name|ok
 label|:
-empty_stmt|;
 operator|*
 operator|(
 operator|(

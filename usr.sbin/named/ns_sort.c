@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_sort.c,v 1.1.1.1 1994/09/22 19:46:13 pst Exp $"
+literal|"$Id: ns_sort.c,v 1.2 1995/05/30 03:48:59 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,8 +433,11 @@ name|fprintf
 argument_list|(
 name|ddt
 argument_list|,
-literal|"sort_rr(x%x, %d, [%s])\n"
+literal|"sort_rr(%#lx, %d, [%s])\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|cp
 argument_list|,
 name|count

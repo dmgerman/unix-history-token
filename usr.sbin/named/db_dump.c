@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 1.2 1994/09/22 20:45:00 pst Exp $"
+literal|"$Id: db_dump.c,v 1.3 1995/05/30 03:48:35 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,9 +287,8 @@ name|fp
 argument_list|,
 literal|"; Dumped at %s"
 argument_list|,
-name|ctime
+name|ctimel
 argument_list|(
-operator|&
 name|tt
 operator|.
 name|tv_sec
@@ -346,7 +345,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"%d root hints... (too low)"
 argument_list|,
@@ -428,17 +427,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|fsync
-argument_list|(
-name|fileno
-argument_list|(
-name|fp
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|my_fclose
@@ -527,8 +515,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"scan_root(0x%x)\n"
+literal|"scan_root(0x%lx)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|htp
 operator|)
 argument_list|)
@@ -913,6 +904,13 @@ literal|"doadump()\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"dumping nameserver data\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -941,9 +939,8 @@ name|fp
 argument_list|,
 literal|"; Dumped at %s"
 argument_list|,
-name|ctime
+name|ctimel
 argument_list|(
-operator|&
 name|tt
 operator|.
 name|tv_sec
@@ -1035,6 +1032,13 @@ operator|)
 name|my_fclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"finished dumping nameserver data\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1411,6 +1415,9 @@ name|zp
 operator|->
 name|z_flags
 argument_list|,
+operator|(
+name|int
+operator|)
 name|zp
 operator|->
 name|z_xferpid
@@ -1484,6 +1491,63 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+if|if
+condition|(
+name|zp
+operator|->
+name|z_notifylist
+condition|)
+block|{
+specifier|register
+name|struct
+name|notify
+modifier|*
+name|ap
+decl_stmt|;
+for|for
+control|(
+name|ap
+operator|=
+name|zp
+operator|->
+name|z_notifylist
+init|;
+name|ap
+condition|;
+name|ap
+operator|=
+name|ap
+operator|->
+name|next
+control|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|";\tNotify [%s] %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ap
+operator|->
+name|addr
+argument_list|)
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|ap
+operator|->
+name|last
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 name|fprintf
 argument_list|(
@@ -1492,6 +1556,11 @@ argument_list|,
 literal|";; --zone table--\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1852,6 +1921,9 @@ operator|->
 name|n_dname
 argument_list|)
 operator|<
+operator|(
+name|size_t
+operator|)
 literal|8
 condition|)
 name|tab
@@ -2140,12 +2212,8 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fputs
 argument_list|(
-name|fp
-argument_list|,
-literal|"%s"
-argument_list|,
 name|inet_ntoa
 argument_list|(
 operator|*
@@ -2157,6 +2225,8 @@ operator|)
 operator|&
 name|n
 argument_list|)
+argument_list|,
+name|fp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2413,6 +2483,9 @@ name|fp
 argument_list|,
 literal|"\t\t%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -2429,6 +2502,9 @@ name|fp
 argument_list|,
 literal|" %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -2445,6 +2521,9 @@ name|fp
 argument_list|,
 literal|" %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -2461,6 +2540,9 @@ name|fp
 argument_list|,
 literal|" %lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -2477,6 +2559,9 @@ name|fp
 argument_list|,
 literal|" %lu )"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -2537,8 +2622,65 @@ name|fp
 argument_list|,
 literal|"%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|n
 argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %s."
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|T_PX
+case|:
+name|GETSHORT
+argument_list|(
+name|n
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%lu"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|n
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %s."
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+name|cp
+operator|+=
+name|strlen
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|cp
+argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -2735,6 +2877,33 @@ name|fp
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|LOC_RR
+case|case
+name|T_LOC
+case|:
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+name|loc_ntoa
+argument_list|(
+name|dp
+operator|->
+name|d_data
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* LOC_RR */
 case|case
 name|T_UINFO
 case|:
@@ -2807,12 +2976,8 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|fputs
 argument_list|(
-name|fp
-argument_list|,
-literal|"%s "
-argument_list|,
 name|inet_ntoa
 argument_list|(
 operator|*
@@ -2824,6 +2989,8 @@ operator|)
 operator|&
 name|addr
 argument_list|)
+argument_list|,
+name|fp
 argument_list|)
 expr_stmt|;
 name|proto
@@ -2992,24 +3159,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-name|ddt
-operator|,
-literal|"Dump T_UNSPEC: bad malloc\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Dump T_UNSPEC: malloc: %m"
-argument_list|)
-expr_stmt|;
 name|TmpBuf
 operator|=
 literal|"BAD_MALLOC"
@@ -3033,24 +3182,6 @@ operator|==
 name|CONV_OVERFLOW
 condition|)
 block|{
-name|dprintf
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-name|ddt
-operator|,
-literal|"Dump T_UNSPEC: Output buffer overflow\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Dump T_UNSPEC: Output buffer overflow\n"
-argument_list|)
-expr_stmt|;
 name|TmpBuf
 operator|=
 literal|"OVERFLOW"

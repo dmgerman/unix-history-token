@@ -791,18 +791,28 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"ncache succeeded: d:%s, t:%d, c:%d rcode:%d ttl:%d\n"
+literal|"ncache succeeded: [%s %s %s] rcode:%d ttl:%l\n"
 operator|,
 name|dname
 operator|,
+name|p_type
+argument_list|(
 name|type
+argument_list|)
 operator|,
+name|p_class
+argument_list|(
 name|class
+argument_list|)
 operator|,
 name|dp
 operator|->
 name|d_rcode
 operator|,
+call|(
+name|long
+call|)
+argument_list|(
 name|dp
 operator|->
 name|d_ttl
@@ -810,6 +820,7 @@ operator|-
 name|tt
 operator|.
 name|tv_sec
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

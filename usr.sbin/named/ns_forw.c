@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_forw.c,v 1.1.1.1 1994/09/22 19:46:11 pst Exp $"
+literal|"$Id: ns_forw.c,v 1.2 1995/05/30 03:48:49 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,7 +227,7 @@ for|for
 control|(
 name|qp
 operator|=
-name|qhead
+name|nsqhead
 init|;
 name|qp
 operator|!=
@@ -537,11 +537,8 @@ name|q_nsid
 operator|=
 name|htons
 argument_list|(
-operator|(
-name|u_int16_t
-operator|)
-operator|++
-name|nsid
+name|nsid_next
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|hp
@@ -587,9 +584,9 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"forw: %m"
+literal|"forw: malloc: %m"
 argument_list|)
 expr_stmt|;
 name|qfree
@@ -760,6 +757,10 @@ else|:
 operator|-
 literal|1
 operator|,
+call|(
+name|int
+call|)
+argument_list|(
 name|qp
 operator|->
 name|q_time
@@ -767,6 +768,7 @@ operator|-
 name|tt
 operator|.
 name|tv_sec
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -779,9 +781,11 @@ name|debug
 operator|>=
 literal|10
 condition|)
-name|fp_query
+name|fp_nquery
 argument_list|(
 name|msg
+argument_list|,
+name|msglen
 argument_list|,
 name|ddt
 argument_list|)
@@ -794,6 +798,10 @@ name|sendto
 argument_list|(
 name|ds
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|msg
 argument_list|,
 name|msglen
@@ -837,7 +845,7 @@ argument_list|)
 condition|)
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 literal|"ns_forw: sendto([%s].%d): %m"
 argument_list|,
@@ -982,6 +990,7 @@ name|tag1
 parameter_list|,
 name|tag2
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|tag1
@@ -996,6 +1005,7 @@ block|{
 struct|struct
 name|complaint
 block|{
+specifier|const
 name|char
 modifier|*
 name|tag1
@@ -1220,6 +1230,7 @@ name|dname
 parameter_list|,
 name|a_rr
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|sysloginfo
@@ -1236,7 +1247,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
+specifier|const
 name|struct
 name|databuf
 modifier|*
@@ -1279,7 +1290,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|512
+literal|999
 index|]
 decl_stmt|;
 comment|/* syslog only takes 5 params */
@@ -1299,15 +1310,12 @@ name|dname
 argument_list|,
 name|inet_ntoa
 argument_list|(
-operator|*
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
+name|data_inaddr
+argument_list|(
 name|a_rr
 operator|->
 name|d_data
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1323,7 +1331,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * nslookup(nsp, qp, syslogdname, sysloginfo)  *	Lookup the address for each nameserver in `nsp' and add it to  * 	the list saved in the qinfo structure pointed to by `qp'.  *	Omits information about nameservers that we shouldn't ask.  *	Detects the following dangerous operations:  *		One of the A records for one of the nameservers in nsp  *		refers to the address of one of our own interfaces;  *		One of the A records refers to the nameserver port on  *		the host that asked us this question.  * returns: the number of addresses added, or -1 if a dangerous operation  *	is detected.  * side effects:  *	if a dangerous situation is detected and (syslogdname&& sysloginfo),  *	calls syslog.  */
+comment|/*  * nslookup(nsp, qp, syslogdname, sysloginfo)  *	Lookup the address for each nameserver in `nsp' and add it to  * 	the list saved in the qinfo structure pointed to by `qp'.  *	Omits information about nameservers that we shouldn't ask.  *	Detects the following dangerous operations:  *		One of the A records for one of the nameservers in nsp  *		refers to the address of one of our own interfaces;  *		One of the A records refers to the nameserver port on  *		the host that asked us this question.  * returns: the number of addresses added, or -1 if a dangerous operation  *	is detected.  * side effects:  *	if a dangerous situation is detected and (syslogdname&& sysloginfo),  *		calls syslog.  */
 end_comment
 
 begin_function
@@ -1350,10 +1358,12 @@ name|qinfo
 modifier|*
 name|qp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|syslogdname
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sysloginfo
@@ -1397,7 +1407,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|dname
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|fname
 decl_stmt|;
@@ -1420,10 +1432,16 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"nslookup(nsp=0x%x, qp=0x%x, \"%s\")\n"
+literal|"nslookup(nsp=0x%lx, qp=0x%lx, \"%s\")\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|nsp
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|,
 name|syslogdname
@@ -1483,7 +1501,7 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"nslookup: NS \"%s\" c=%d t=%d (0x%x)\n"
+literal|"nslookup: NS \"%s\" c=%d t=%d (%#lx)\n"
 operator|,
 name|dname
 operator|,
@@ -1493,6 +1511,9 @@ name|nsdp
 operator|->
 name|d_type
 operator|,
+operator|(
+name|u_long
+operator|)
 name|nsdp
 operator|->
 name|d_flags
@@ -1597,12 +1618,15 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"%s: not found %s %x\n"
+literal|"%s: not found %s %lx\n"
 operator|,
 name|dname
 operator|,
 name|fname
 operator|,
+operator|(
+name|u_long
+operator|)
 name|np
 operator|)
 argument_list|)
@@ -1641,6 +1665,18 @@ name|struct
 name|in_addr
 name|nsa
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NCACHE
+if|if
+condition|(
+name|dp
+operator|->
+name|d_rcode
+condition|)
+continue|continue;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dp
@@ -1673,18 +1709,31 @@ operator|!=
 name|class
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|NCACHE
 if|if
 condition|(
+name|data_inaddr
+argument_list|(
 name|dp
 operator|->
-name|d_rcode
+name|d_data
+argument_list|)
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"Bogus (0.0.0.0) A RR for %s"
+argument_list|,
+name|dname
+argument_list|)
+expr_stmt|;
 continue|continue;
-endif|#
-directive|endif
+block|}
 comment|/* 			 * Don't use records that may become invalid to 			 * reference later when we do the rtt computation. 			 * Never delete our safety-belt information! 			 */
 if|if
 condition|(
@@ -1696,6 +1745,19 @@ operator|==
 literal|0
 operator|)
 operator|&&
+ifdef|#
+directive|ifdef
+name|DATUMREFCNT
+operator|(
+name|dp
+operator|->
+name|d_ttl
+operator|<
+name|curtime
+operator|)
+operator|&&
+else|#
+directive|else
 operator|(
 name|dp
 operator|->
@@ -1708,6 +1770,8 @@ literal|900
 operator|)
 operator|)
 operator|&&
+endif|#
+directive|endif
 operator|!
 operator|(
 name|dp
@@ -1734,6 +1798,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Cache invalidate the NS RR's */
+ifndef|#
+directive|ifndef
+name|DATUMREFCNT
 if|if
 condition|(
 name|dp
@@ -1742,6 +1809,9 @@ name|d_ttl
 operator|<
 name|curtime
 condition|)
+endif|#
+directive|endif
+block|{
 name|delete_all
 argument_list|(
 name|np
@@ -1755,7 +1825,14 @@ name|n
 operator|=
 name|oldn
 expr_stmt|;
-break|break;
+name|found_arr
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|need_sysquery
+goto|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -1765,14 +1842,12 @@ name|store_name_addr
 argument_list|(
 name|dname
 argument_list|,
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
+name|data_inaddr
+argument_list|(
 name|dp
 operator|->
 name|d_data
+argument_list|)
 argument_list|,
 name|syslogdname
 argument_list|,
@@ -1787,15 +1862,12 @@ operator|++
 expr_stmt|;
 name|nsa
 operator|=
-operator|*
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
+name|data_inaddr
+argument_list|(
 name|dp
 operator|->
 name|d_data
+argument_list|)
 expr_stmt|;
 comment|/* don't put in duplicates */
 name|qs
@@ -1976,6 +2048,9 @@ literal|1
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|BOGUSNS
 comment|/* 			 * Don't forward queries to bogus servers.  Note 			 * that this is unlike the previous tests, which 			 * are fatal to the query.  Here we just skip the 			 * server, which is only fatal if it's the last 			 * server.  Note also that we antialias here -- all 			 * A RR's of a server are considered the same server, 			 * and if any of them is bogus we skip the whole 			 * server.  Those of you using multiple A RR's to 			 * load-balance your servers will (rightfully) lose 			 * here.  But (unfortunately) only if they are bogus. 			 */
 if|if
 condition|(
@@ -1989,6 +2064,8 @@ condition|)
 goto|goto
 name|skipserver
 goto|;
+endif|#
+directive|endif
 name|n
 operator|++
 expr_stmt|;
@@ -2003,7 +2080,8 @@ name|out
 goto|;
 name|skipaddr
 label|:
-empty_stmt|;
+name|NULL
+expr_stmt|;
 block|}
 name|dprintf
 argument_list|(
@@ -2018,6 +2096,8 @@ name|n
 operator|)
 argument_list|)
 expr_stmt|;
+name|need_sysquery
+label|:
 if|if
 condition|(
 name|found_arr
@@ -2047,11 +2127,14 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|QUERY
 argument_list|)
 expr_stmt|;
 name|skipserver
 label|:
-empty_stmt|;
+name|NULL
+expr_stmt|;
 block|}
 name|out
 label|:
@@ -2489,8 +2572,11 @@ name|fprintf
 argument_list|(
 name|ddt
 argument_list|,
-literal|"schedretry(0x%x, %ld sec)\n"
+literal|"schedretry(0x%lx, %ld sec)\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|qp
 argument_list|,
 operator|(
@@ -2509,12 +2595,21 @@ name|fprintf
 argument_list|(
 name|ddt
 argument_list|,
-literal|"WARNING: schedretry(%#x, %d) q_time already %d\n"
+literal|"WARNING: schedretry(%#lx, %ld) q_time already %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|qp
 argument_list|,
+operator|(
+name|long
+operator|)
 name|t
 argument_list|,
+operator|(
+name|long
+operator|)
 name|qp
 operator|->
 name|q_time
@@ -2648,8 +2743,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"unsched(%#x, %d )\n"
+literal|"unsched(%#lx, %d)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|,
 name|ntohs
@@ -2771,8 +2869,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"retry(x%x) id=%d\n"
+literal|"retry(x%lx) id=%d\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|,
 name|ntohs
@@ -2825,14 +2926,24 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"retry(x%x): expired @ %d (%d secs before now (%d))\n"
+literal|"retry(x%lx): expired @ %lu (%d secs before now (%lu))\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|->
 name|q_expire
 operator|,
+call|(
+name|int
+call|)
+argument_list|(
 name|tt
 operator|.
 name|tv_sec
@@ -2840,7 +2951,11 @@ operator|-
 name|qp
 operator|->
 name|q_expire
+argument_list|)
 operator|,
+operator|(
+name|u_long
+operator|)
 name|tt
 operator|.
 name|tv_sec
@@ -3115,7 +3230,11 @@ name|hp
 operator|->
 name|ra
 operator|=
-literal|1
+operator|(
+name|NoRecurse
+operator|==
+literal|0
+operator|)
 expr_stmt|;
 name|hp
 operator|->
@@ -3138,11 +3257,13 @@ name|debug
 operator|>=
 literal|10
 condition|)
-name|fp_query
+name|fp_nquery
 argument_list|(
 name|qp
 operator|->
 name|q_msg
+argument_list|,
+name|n
 argument_list|,
 name|ddt
 argument_list|)
@@ -3172,8 +3293,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"gave up retry(x%x) nsid=%d id=%d\n"
+literal|"gave up retry(x%lx) nsid=%d id=%d\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|,
 name|ntohs
@@ -3381,11 +3505,15 @@ name|debug
 operator|>=
 literal|10
 condition|)
-name|fp_query
+name|fp_nquery
 argument_list|(
 name|qp
 operator|->
 name|q_msg
+argument_list|,
+name|qp
+operator|->
+name|q_msglen
 argument_list|,
 name|ddt
 argument_list|)
@@ -3399,6 +3527,10 @@ name|sendto
 argument_list|(
 name|ds
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|qp
 operator|->
 name|q_msg
@@ -3668,14 +3800,14 @@ parameter_list|()
 block|{
 while|while
 condition|(
-name|qhead
+name|nsqhead
 condition|)
 name|qremove
 argument_list|(
-name|qhead
+name|nsqhead
 argument_list|)
 expr_stmt|;
-name|qhead
+name|nsqhead
 operator|=
 name|QINFO_NULL
 expr_stmt|;
@@ -3702,8 +3834,11 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"qremove(x%x)\n"
+literal|"qremove(x%lx)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|)
 argument_list|)
@@ -3807,7 +3942,7 @@ for|for
 control|(
 name|qp
 operator|=
-name|qhead
+name|nsqhead
 init|;
 name|qp
 operator|!=
@@ -3886,9 +4021,6 @@ name|qinfo
 modifier|*
 name|qp
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|qp
 operator|=
 operator|(
@@ -3905,12 +4037,6 @@ name|file
 argument_list|,
 name|line
 argument_list|,
-else|#
-directive|else
-name|calloc
-argument_list|(
-endif|#
-directive|endif
 literal|1
 argument_list|,
 sizeof|sizeof
@@ -3919,10 +4045,28 @@ expr|struct
 name|qinfo
 argument_list|)
 argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|calloc
+argument_list|(
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|qinfo
 argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|qp
 operator|==
 name|NULL
-operator|)
+condition|)
 block|{
 name|dprintf
 argument_list|(
@@ -3955,19 +4099,33 @@ argument_list|,
 operator|(
 name|ddt
 operator|,
-literal|"qnew(x%x)\n"
+literal|"qnew(x%lx)\n"
 operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+name|qp
+operator|->
+name|q_notifyzone
+operator|=
+name|DB_Z_CACHE
+expr_stmt|;
+endif|#
+directive|endif
 name|qp
 operator|->
 name|q_link
 operator|=
-name|qhead
+name|nsqhead
 expr_stmt|;
-name|qhead
+name|nsqhead
 operator|=
 name|qp
 expr_stmt|;
@@ -4011,43 +4169,44 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>
-literal|3
-condition|)
-name|fprintf
+name|dprintf
 argument_list|(
+literal|3
+argument_list|,
+operator|(
 name|ddt
-argument_list|,
-literal|"Qfree( x%x )\n"
-argument_list|,
+operator|,
+literal|"Qfree(x%lx)\n"
+operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
-operator|&&
 name|qp
 operator|->
 name|q_next
 condition|)
-name|fprintf
+name|dprintf
 argument_list|(
+literal|1
+argument_list|,
+operator|(
 name|ddt
-argument_list|,
-literal|"WARNING:  qfree of linked ptr x%x\n"
-argument_list|,
+operator|,
+literal|"WARNING: qfree of linked ptr x%lx\n"
+operator|,
+operator|(
+name|u_long
+operator|)
 name|qp
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|qp
@@ -4269,12 +4428,12 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|qhead
+name|nsqhead
 operator|==
 name|qp
 condition|)
 block|{
-name|qhead
+name|nsqhead
 operator|=
 name|qp
 operator|->
@@ -4287,7 +4446,7 @@ for|for
 control|(
 name|np
 operator|=
-name|qhead
+name|nsqhead
 init|;
 name|np
 operator|->
