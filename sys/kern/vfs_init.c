@@ -102,6 +102,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * A Zen vnode attribute structure.  *  * Initialized when the first filesystem registers by vfs_register().  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vattr
+name|va_null
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * vfs_init.c  *  * Allocate and fill in operations vectors.  *  * An undocumented feature of this approach to defining operations is that  * there can be multiple entries in vfs_opv_descs for the same operations  * vector. This allows third parties to extend the set of operations  * supported by another layer in a binary compatibile way. For example,  * assume that NFS needed to be modified to support Ficus. NFS has an entry  * (probably nfs_vnopdeop_decls) declaring all the operations NFS supports by  * default. Ficus could add another entry (ficus_nfs_vnodeop_decl_entensions)  * listing those new operations Ficus adds to NFS, all without modifying the  * NFS code. (Of couse, the OTW NFS protocol still needs to be munged, but  * that is a(whole)nother story.) This is a feature.  */
 end_comment
 
@@ -1542,13 +1553,6 @@ begin_comment
 comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|vattr
-name|va_null
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|struct
 name|vfsconf
@@ -1600,48 +1604,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize the vnode structures and initialize each filesystem type.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|vfsinit
-parameter_list|(
-name|void
-modifier|*
-name|dummy
-parameter_list|)
-block|{
-name|vattr_null
-argument_list|(
-operator|&
-name|va_null
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|vfs
-argument_list|,
-argument|SI_SUB_VFS
-argument_list|,
-argument|SI_ORDER_FIRST
-argument_list|,
-argument|vfsinit
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
-begin_comment
 comment|/* Register a new filesystem type in the global table */
 end_comment
 
@@ -1665,6 +1627,27 @@ name|vfsops
 modifier|*
 name|vfsops
 decl_stmt|;
+specifier|static
+name|int
+name|once
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|once
+condition|)
+block|{
+name|vattr_null
+argument_list|(
+operator|&
+name|va_null
+argument_list|)
+expr_stmt|;
+name|once
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|vfc
