@@ -2059,7 +2059,7 @@ literal|"%15s%8s %7s%8s%8s%8s %7s%8s%8s\n"
 argument_list|,
 literal|"Filesystem"
 argument_list|,
-literal|"blocks"
+literal|"usage"
 argument_list|,
 literal|"quota"
 argument_list|,
