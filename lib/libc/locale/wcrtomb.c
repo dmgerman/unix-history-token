@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rune.h>
 end_include
 
@@ -64,6 +70,22 @@ name|char
 modifier|*
 name|e
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|MB_LEN_MAX
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|s
+operator|=
+name|buf
+expr_stmt|;
 name|sputrune
 argument_list|(
 name|wc
