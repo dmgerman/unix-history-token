@@ -107,6 +107,10 @@ name|M_PRINT
 block|,
 name|M_NEXT
 block|,
+name|M_LOCK
+block|,
+name|M_UNLOCK
+block|,
 name|M_NUM
 block|}
 enum|;

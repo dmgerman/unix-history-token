@@ -577,9 +577,6 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-if|if
-condition|(
-operator|(
 name|l
 operator|=
 name|fileupdate
@@ -599,8 +596,11 @@ name|l
 argument_list|,
 name|mode
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|==
 literal|0
 condition|)
 name|l
@@ -609,8 +609,6 @@ name|grdb
 argument_list|(
 name|NULL
 argument_list|)
-operator|==
-literal|0
 expr_stmt|;
 block|}
 if|if

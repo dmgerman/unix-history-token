@@ -59,6 +59,28 @@ directive|include
 file|"pw.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_PATH_YP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_PATH_YP
+value|"/var/yp/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -118,6 +140,10 @@ literal|"usershow"
 block|,
 literal|"usernext"
 block|,
+literal|"lock"
+block|,
+literal|"unlock"
+block|,
 literal|"groupadd"
 block|,
 literal|"groupdel"
@@ -151,6 +177,10 @@ block|,
 literal|"showuser"
 block|,
 literal|"nextuser"
+block|,
+literal|"lock"
+block|,
+literal|"unlock"
 block|,
 literal|"addgroup"
 block|,
@@ -341,6 +371,10 @@ block|,
 literal|"V:C:qn:u:FPa7"
 block|,
 literal|"V:C:q"
+block|,
+literal|"V:C:q"
+block|,
+literal|"V:C:q"
 block|}
 block|,
 block|{
@@ -504,6 +538,11 @@ block|}
 elseif|else
 if|if
 condition|(
+name|mode
+operator|==
+operator|-
+literal|1
+operator|&&
 operator|(
 name|tmp
 operator|=
@@ -528,6 +567,11 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|which
+operator|==
+operator|-
+literal|1
+operator|&&
 operator|(
 name|tmp
 operator|=
@@ -552,6 +596,19 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|mode
+operator|==
+operator|-
+literal|1
+operator|&&
+name|which
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
 operator|(
 name|tmp
 operator|=
@@ -585,6 +642,7 @@ operator|)
 operator|!=
 operator|-
 literal|1
+operator|)
 condition|)
 block|{
 name|which
@@ -614,6 +672,13 @@ literal|"help"
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|argv
+index|[
+literal|2
+index|]
+operator|==
+name|NULL
 condition|)
 name|cmdhelp
 argument_list|(
@@ -743,7 +808,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-name|NULL
+literal|"unknown switch"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1212,7 +1277,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pw [user|group] [add|del|mod|show|next] [ help | switches/values ]\n"
+literal|"usage:\n  pw [user|group|lock|unlock] [add|del|mod|show|next] [help|switches/values]\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1227,7 +1292,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pw %s [add|del|mod|show|next] [ help | switches/values ]\n"
+literal|"usage:\n  pw %s [add|del|mod|show|next] [help|switches/values]\n"
 argument_list|,
 name|Which
 index|[
