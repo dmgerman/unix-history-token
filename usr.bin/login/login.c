@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.30 1997/10/19 09:34:06 joerg Exp $"
+literal|"$Id: login.c,v 1.31 1998/02/05 18:37:02 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2026,6 +2026,25 @@ condition|(
 name|pwd
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|p
+index|[
+literal|0
+index|]
+operator|&&
+name|pwd
+operator|->
+name|pw_passwd
+index|[
+literal|0
+index|]
+condition|)
+name|ep
+operator|=
+literal|":"
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
