@@ -1508,7 +1508,8 @@ literal|0
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
