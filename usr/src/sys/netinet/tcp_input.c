@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -146,32 +146,6 @@ name|int
 name|tcprexmtthresh
 init|=
 literal|3
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tcppredack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX debugging: times hdr predict ok for acks */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tcppreddat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX # times header prediction ok for data packets */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tcppcbcachemiss
 decl_stmt|;
 end_decl_stmt
 
@@ -1424,7 +1398,9 @@ operator|=
 name|inp
 expr_stmt|;
 operator|++
-name|tcppcbcachemiss
+name|tcpstat
+operator|.
+name|tcps_pcbcachemiss
 expr_stmt|;
 block|}
 comment|/* 	 * If the state is CLOSED (i.e., TCB does not exist) then 	 * all data in the incoming segment is discarded. 	 * If the TCB exists but is in CLOSED state, it is embryonic, 	 * but should either do a listen or a connect soon. 	 */
@@ -1847,7 +1823,9 @@ condition|)
 block|{
 comment|/* 				 * this is a pure ack for outstanding data. 				 */
 operator|++
-name|tcppredack
+name|tcpstat
+operator|.
+name|tcps_predack
 expr_stmt|;
 if|if
 condition|(
@@ -2049,7 +2027,9 @@ condition|)
 block|{
 comment|/* 			 * this is a pure, in-sequence data packet 			 * with nothing on the reassembly queue and 			 * we have enough buffer space to take it. 			 */
 operator|++
-name|tcppreddat
+name|tcpstat
+operator|.
+name|tcps_preddat
 expr_stmt|;
 name|tp
 operator|->
