@@ -496,13 +496,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|haddr
-operator|=
 operator|(
 expr|struct
-name|sockaddr_in
+name|sockaddr
 operator|*
 operator|)
+name|haddr
+operator|=
 name|res
 operator|->
 name|ai_addr
