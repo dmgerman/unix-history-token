@@ -187,6 +187,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASI_LSU_CTL_REG
+value|0x45
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASI_INTR_DISPATCH_STATUS
 value|0x48
 end_define
