@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * random.c -- A strong random number generator  *  * $Id: random.c,v 1.2 1995/11/04 16:00:50 markm Exp $  *  * Version 0.92, last modified 21-Sep-95  *   * Copyright Theodore Ts'o, 1994, 1995.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * random.c -- A strong random number generator  *  * $Id: random.c,v 1.3 1995/11/20 12:12:02 phk Exp $  *  * Version 0.92, last modified 21-Sep-95  *   * Copyright Theodore Ts'o, 1994, 1995.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2310,6 +2310,11 @@ decl_stmt|;
 name|int
 name|nbits
 decl_stmt|;
+name|u_int8_t
+name|timer_high
+decl_stmt|,
+name|timer_low
+decl_stmt|;
 comment|/* 	 * Calculate number of bits of randomness we probably 	 * added.  We take into account the first and second order 	 * delta's in order to make our estimate. 	 */
 name|delta
 operator|=
@@ -2408,31 +2413,41 @@ argument_list|,
 name|delay
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 comment|/* 	 * On a 386, read the high resolution timer.  We assume that 	 * this gives us 2 bits of randomness.  XXX This needs 	 * investigation. 	 */
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|outb
 argument_list|(
-name|TIMER_LATCH
-operator||
-name|TIMER_SEL0
-argument_list|,
 name|TIMER_MODE
+argument_list|,
+name|TIMER_SEL0
+operator||
+name|TIMER_LATCH
 argument_list|)
 expr_stmt|;
-comment|/* latch the count ASAP */
-name|add_entropy_byte
-argument_list|(
-name|r
-argument_list|,
+name|timer_low
+operator|=
 name|inb
 argument_list|(
 name|TIMER_CNTR0
 argument_list|)
+expr_stmt|;
+name|timer_high
+operator|=
+name|inb
+argument_list|(
+name|TIMER_CNTR0
+argument_list|)
+expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
+name|add_entropy_byte
+argument_list|(
+name|r
+argument_list|,
+name|timer_low
 argument_list|,
 literal|1
 argument_list|)
@@ -2441,10 +2456,7 @@ name|add_entropy_byte
 argument_list|(
 name|r
 argument_list|,
-name|inb
-argument_list|(
-name|TIMER_CNTR0
-argument_list|)
+name|timer_high
 argument_list|,
 literal|1
 argument_list|)
@@ -2473,8 +2485,6 @@ name|r
 operator|->
 name|bit_length
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
