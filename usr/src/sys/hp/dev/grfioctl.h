@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grfioctl.h 1.15 92/01/22$  *  *	@(#)grfioctl.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grfioctl.h 1.17 93/08/13$  *  *	@(#)grfioctl.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -135,6 +135,63 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|grf_fbinfo
+block|{
+name|int
+name|id
+decl_stmt|;
+name|int
+name|mapsize
+decl_stmt|;
+name|int
+name|dwidth
+decl_stmt|,
+name|dlength
+decl_stmt|;
+name|int
+name|width
+decl_stmt|,
+name|length
+decl_stmt|;
+name|int
+name|xlen
+decl_stmt|;
+name|int
+name|bpp
+decl_stmt|,
+name|bppu
+decl_stmt|;
+name|int
+name|npl
+decl_stmt|,
+name|nplbytes
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|int
+name|attr
+decl_stmt|;
+name|caddr_t
+name|fbbase
+decl_stmt|,
+name|regbase
+decl_stmt|;
+name|caddr_t
+name|regions
+index|[
+literal|6
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -253,6 +310,13 @@ define|#
 directive|define
 name|GCSLOT
 value|_IOWR('G', 13, struct grf_slot)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCDESCRIBE
+value|_IOR('G', 21, struct grf_fbinfo)
 end_define
 
 begin_comment
