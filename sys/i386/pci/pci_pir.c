@@ -3596,7 +3596,15 @@ name|int
 name|maxdev
 parameter_list|)
 block|{
-name|u_char
+name|uint32_t
+name|id
+decl_stmt|,
+name|class
+decl_stmt|;
+name|uint8_t
+name|header
+decl_stmt|;
+name|uint8_t
 name|device
 decl_stmt|;
 if|if
@@ -3622,13 +3630,6 @@ name|device
 operator|++
 control|)
 block|{
-name|unsigned
-name|id
-decl_stmt|,
-name|class
-decl_stmt|,
-name|header
-decl_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -3666,8 +3667,7 @@ literal|0
 operator|||
 name|id
 operator|==
-operator|-
-literal|1
+literal|0xffffffff
 condition|)
 continue|continue;
 name|class
@@ -3804,14 +3804,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|uint32_t
 name|mode1res
 decl_stmt|,
 name|oldval1
 decl_stmt|;
-name|unsigned
-name|char
+name|uint8_t
 name|mode2res
 decl_stmt|,
 name|oldval2
@@ -3830,7 +3828,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pci_open(1):\tmode 1 addr port (0x0cf8) is 0x%08lx\n"
+literal|"pci_open(1):\tmode 1 addr port (0x0cf8) is 0x%08x\n"
 argument_list|,
 name|oldval1
 argument_list|)
@@ -3891,7 +3889,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pci_open(1a):\tmode1res=0x%08lx (0x%08lx)\n"
+literal|"pci_open(1a):\tmode1res=0x%08x (0x%08lx)\n"
 argument_list|,
 name|mode1res
 argument_list|,
@@ -3943,7 +3941,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pci_open(1b):\tmode1res=0x%08lx (0x%08lx)\n"
+literal|"pci_open(1b):\tmode1res=0x%08x (0x%08lx)\n"
 argument_list|,
 name|mode1res
 argument_list|,
