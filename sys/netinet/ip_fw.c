@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.89 1998/06/12 20:03:26 julian Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.90 1998/06/21 14:53:30 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2089,7 +2089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  * #ifdef IPFW_DIVERT_OLDRESTART  *	*ignport	Ignore all divert/tee rules to this port (if non-zero)  * #else  *	*cookie Skip up to the first rule past this rule number;  * #endif  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
+comment|/*  * Parameters:  *  *	ip	Pointer to packet header (struct ip *)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *	*m	The packet; we set to NULL when/if we nuke it.  *  * Return value:  *  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port.  */
 end_comment
 
 begin_function
@@ -2173,59 +2173,18 @@ name|src_port
 decl_stmt|,
 name|dst_port
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
-name|u_int16_t
-name|ignport
-init|=
-operator|*
-name|cookie
-decl_stmt|;
-else|#
-directive|else
 name|u_int16_t
 name|skipto
 init|=
 operator|*
 name|cookie
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_OLDRESTART */
 operator|*
 name|cookie
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Go down the chain, looking for enlightment 	 * #ifndef IPFW_DIVERT_OLDRESTART 	 * If we've been asked to start at a given rule immediatly, do so. 	 * #endif 	 */
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
-for|for
-control|(
-name|chain
-operator|=
-name|LIST_FIRST
-argument_list|(
-operator|&
-name|ip_fw_chain
-argument_list|)
-init|;
-name|chain
-condition|;
-name|chain
-operator|=
-name|LIST_NEXT
-argument_list|(
-name|chain
-argument_list|,
-name|chain
-argument_list|)
-control|)
-block|{
-else|#
-directive|else
+comment|/* 	 * Go down the chain, looking for enlightment 	 * If we've been asked to start at a given rule immediatly, do so. 	 */
 name|chain
 operator|=
 name|LIST_FIRST
@@ -2297,9 +2256,6 @@ name|chain
 argument_list|)
 control|)
 block|{
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_OLDRESTART */
 specifier|register
 name|struct
 name|ip_fw
@@ -2958,40 +2914,6 @@ goto|;
 block|}
 name|got_match
 label|:
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
-comment|/* Ignore divert/tee rule if socket port is "ignport" */
-switch|switch
-condition|(
-name|f
-operator|->
-name|fw_flg
-operator|&
-name|IP_FW_F_COMMAND
-condition|)
-block|{
-case|case
-name|IP_FW_F_DIVERT
-case|:
-case|case
-name|IP_FW_F_TEE
-case|:
-if|if
-condition|(
-name|f
-operator|->
-name|fw_divert_port
-operator|==
-name|ignport
-condition|)
-continue|continue;
-comment|/* ignore this rule */
-break|break;
-block|}
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_OLDRESTART */
 comment|/* Update statistics */
 name|f
 operator|->
@@ -3062,18 +2984,6 @@ continue|continue;
 case|case
 name|IP_FW_F_DIVERT
 case|:
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
-operator|*
-name|cookie
-operator|=
-name|f
-operator|->
-name|fw_divert_port
-expr_stmt|;
-else|#
-directive|else
 operator|*
 name|cookie
 operator|=
@@ -3081,9 +2991,6 @@ name|f
 operator|->
 name|fw_number
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_OLDRESTART */
 return|return
 operator|(
 name|f
@@ -3509,6 +3416,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|add_entry
@@ -3924,6 +3834,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|del_entry
@@ -4067,6 +3980,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|zero_entry
@@ -4339,6 +4255,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|struct
 name|ip_fw
@@ -4406,6 +4325,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|struct
 name|ip_fw
@@ -5010,6 +4932,9 @@ return|return
 name|frwl
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|ip_fw_ctl
@@ -5632,6 +5557,9 @@ name|EINVAL
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ip_fw_init
 parameter_list|(
@@ -5746,28 +5674,52 @@ directive|else
 literal|"divert disabled, "
 block|)
 function|;
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_DEFAULT_TO_ACCEPT
+end_ifdef
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"default to accept, "
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|IPFIREWALL_VERBOSE
+end_ifndef
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"logging disabled\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|if
 condition|(
 name|fw_verbose_limit
@@ -5787,12 +5739,15 @@ argument_list|,
 name|fw_verbose_limit
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
-block|}
-end_function
+end_endif
 
 begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_MODULE
@@ -5817,10 +5772,10 @@ file|<sys/lkm.h>
 end_include
 
 begin_expr_stmt
-name|MOD_MISC
-argument_list|(
+unit|MOD_MISC
+operator|(
 name|ipfw
-argument_list|)
+operator|)
 expr_stmt|;
 end_expr_stmt
 

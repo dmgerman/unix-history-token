@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ip_divert.c,v 1.30 1998/06/12 01:54:29 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ip_divert.c,v 1.31 1998/06/12 02:48:47 julian Exp $  */
 end_comment
 
 begin_include
@@ -177,7 +177,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * #ifdef IPFW_DIVERT_OLDRESTART  * We set this value to a non-zero port number when we want the call to  * ip_fw_chk() in ip_input() or ip_output() to ignore ``divert<port>''  * chain entries. This is stored in host order.  * #else  * A 16 bit cookie is passed to the user process.  * The user process can send it back to help the caller know something  * about where the packet came from.  *  * If IPFW is the caller then the cookie is the rule that sent  * us here. On reinjection is is the rule after which processing  * should continue. Leaving it the same will make processing start  * at the rule number after that which sent it here. Setting it to  * 0 will restart processing at the beginning.   * #endif   */
+comment|/*  * A 16 bit cookie is passed to the user process.  * The user process can send it back to help the caller know something  * about where the packet came from.  *  * If IPFW is the caller then the cookie is the rule that sent  * us here. On reinjection is is the rule after which processing  * should continue. Leaving it the same will make processing start  * at the rule number after that which sent it here. Setting it to  * 0 will restart processing at the beginning.   */
 end_comment
 
 begin_decl_stmt
@@ -455,29 +455,12 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* Record divert port */
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
-name|divsrc
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|ip_divert_cookie
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|divsrc
 operator|.
 name|sin_port
 operator|=
 name|ip_divert_cookie
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_OLDRESTART */
 name|ip_divert_cookie
 operator|=
 literal|0
@@ -895,29 +878,12 @@ name|sin
 operator|->
 name|sin_zero
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPFW_DIVERT_OLDRESTART
-name|ip_divert_cookie
-operator|=
-name|ntohs
-argument_list|(
-name|sin
-operator|->
-name|sin_port
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|ip_divert_cookie
 operator|=
 name|sin
 operator|->
 name|sin_port
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_OLDRESTART */
 comment|/* 		 * Find receive interface with the given name or IP address. 		 * The name is user supplied data so don't trust it's size or  		 * that it is zero terminated. The name has priority. 		 * We are presently assuming that the sockaddr_in  		 * has not been replaced by a sockaddr_div, so we limit it 		 * to 16 bytes in total. the name is stuffed (if it exists) 		 * in the sin_zero[] field. 		 */
 while|while
 condition|(
