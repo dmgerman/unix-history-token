@@ -214,12 +214,6 @@ name|int
 name|si_iosize_max
 decl_stmt|;
 comment|/* maximum I/O size (for physio&al) */
-name|u_int
-name|si_stripesize
-decl_stmt|;
-name|u_int
-name|si_stripeoffset
-decl_stmt|;
 name|uid_t
 name|si_uid
 decl_stmt|;
