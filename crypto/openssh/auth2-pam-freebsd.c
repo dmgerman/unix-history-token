@@ -1089,6 +1089,16 @@ modifier|*
 name|user
 parameter_list|)
 block|{
+name|struct
+name|pam_conv
+name|no_conv
+init|=
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+decl_stmt|;
 specifier|extern
 name|ServerOptions
 name|options
@@ -1185,7 +1195,8 @@ literal|"sshd"
 argument_list|,
 name|user
 argument_list|,
-name|NULL
+operator|&
+name|no_conv
 argument_list|,
 operator|&
 name|pam_handle
