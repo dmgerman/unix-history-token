@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * @(#)refresh.c	1.9 (Berkeley) %G%  */
+comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * @(#)refresh.c	1.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1409,12 +1409,46 @@ name|win
 operator|->
 name|_begx
 expr_stmt|;
+if|if
+condition|(
+name|lx
+operator|>=
+name|COLS
+operator|&&
+name|AM
+condition|)
+block|{
+name|lx
+operator|=
+literal|0
+expr_stmt|;
+name|ly
+operator|++
+expr_stmt|;
+comment|/* 				 * xn glitch: chomps a newline after auto-wrap. 				 * we just feed it now and forget about it. 				 */
+if|if
+condition|(
+name|XN
+condition|)
+block|{
+name|_putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|_putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 elseif|else
 if|if
 condition|(
 name|wx
-operator|<
+operator|<=
 name|lch
 condition|)
 while|while
@@ -1426,7 +1460,7 @@ operator|*
 name|csp
 operator|&&
 name|wx
-operator|<
+operator|<=
 name|lch
 condition|)
 block|{
