@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.23.1.1 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,7 @@ name|use_kerberos
 init|=
 literal|1
 decl_stmt|,
-name|encrypt
+name|doencrypt
 decl_stmt|;
 end_decl_stmt
 
@@ -669,7 +669,7 @@ operator|=
 name|getservbyname
 argument_list|(
 operator|(
-name|encrypt
+name|doencrypt
 condition|?
 literal|"ekshell"
 else|:
@@ -694,7 +694,7 @@ name|warning
 argument_list|(
 literal|"can't get entry for %s/tcp service"
 argument_list|,
-name|encrypt
+name|doencrypt
 condition|?
 literal|"ekshell"
 else|:
@@ -869,7 +869,7 @@ else|else
 block|{
 if|if
 condition|(
-name|encrypt
+name|doencrypt
 condition|)
 block|{
 operator|(
