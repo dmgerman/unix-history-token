@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.36 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.37 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.36 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.37 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -519,6 +519,8 @@ expr_stmt|;
 name|message
 argument_list|(
 literal|"220"
+argument_list|,
+literal|"%s"
 argument_list|,
 name|inp
 argument_list|)

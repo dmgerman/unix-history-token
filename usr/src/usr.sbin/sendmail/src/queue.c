@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.45 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.46 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.45 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.46 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -825,7 +825,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* output list of recipient addresses */
+comment|/* output list of error recipients */
 end_comment
 
 begin_expr_stmt
@@ -834,6 +834,104 @@ operator|=
 name|NULL
 expr_stmt|;
 end_expr_stmt
+
+begin_for
+for|for
+control|(
+name|q
+operator|=
+name|e
+operator|->
+name|e_errorqueue
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QDONTSEND
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
+name|ADDRESS
+modifier|*
+name|ctladdr
+decl_stmt|;
+name|ctladdr
+operator|=
+name|getctladdr
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctladdr
+operator|==
+name|NULL
+operator|&&
+name|q
+operator|->
+name|q_alias
+operator|!=
+name|NULL
+condition|)
+name|ctladdr
+operator|=
+name|nullctladdr
+expr_stmt|;
+if|if
+condition|(
+name|ctladdr
+operator|!=
+name|lastctladdr
+condition|)
+block|{
+name|printctladdr
+argument_list|(
+name|ctladdr
+argument_list|,
+name|tfp
+argument_list|)
+expr_stmt|;
+name|lastctladdr
+operator|=
+name|ctladdr
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"E%s\n"
+argument_list|,
+name|q
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_for
+
+begin_comment
+comment|/* output list of recipient addresses */
+end_comment
 
 begin_for
 for|for
@@ -1001,104 +1099,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-end_for
-
-begin_comment
-comment|/* output list of error recipients */
-end_comment
-
-begin_for
-for|for
-control|(
-name|q
-operator|=
-name|e
-operator|->
-name|e_errorqueue
-init|;
-name|q
-operator|!=
-name|NULL
-condition|;
-name|q
-operator|=
-name|q
-operator|->
-name|q_next
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|QDONTSEND
-argument_list|,
-name|q
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
-name|ADDRESS
-modifier|*
-name|ctladdr
-decl_stmt|;
-name|ctladdr
-operator|=
-name|getctladdr
-argument_list|(
-name|q
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ctladdr
-operator|==
-name|NULL
-operator|&&
-name|q
-operator|->
-name|q_alias
-operator|!=
-name|NULL
-condition|)
-name|ctladdr
-operator|=
-name|nullctladdr
-expr_stmt|;
-if|if
-condition|(
-name|ctladdr
-operator|!=
-name|lastctladdr
-condition|)
-block|{
-name|printctladdr
-argument_list|(
-name|ctladdr
-argument_list|,
-name|tfp
-argument_list|)
-expr_stmt|;
-name|lastctladdr
-operator|=
-name|ctladdr
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|tfp
-argument_list|,
-literal|"E%s\n"
-argument_list|,
-name|q
-operator|->
-name|q_paddr
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_for
@@ -1664,12 +1664,20 @@ begin_comment
 comment|/* **  RUNQUEUE -- run the jobs in the queue. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		forkflag -- TRUE if the queue scanning should be done in **			a child process.  We double-fork so it is not our **			child and we don't have to clean up after it. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
 
+begin_decl_stmt
+name|ENVELOPE
+name|QueueEnvelope
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the queue run envelope */
+end_comment
+
 begin_macro
 name|runqueue
 argument_list|(
 argument|forkflag
-argument_list|,
-argument|e
 argument_list|)
 end_macro
 
@@ -1679,19 +1687,26 @@ name|forkflag
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|register
-name|ENVELOPE
-modifier|*
-name|e
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
 specifier|extern
 name|bool
 name|shouldqueue
+parameter_list|()
+function_decl|;
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+specifier|extern
+name|ENVELOPE
+name|BlankEnvelope
+decl_stmt|;
+specifier|extern
+name|ENVELOPE
+modifier|*
+name|newenvelope
 parameter_list|()
 function_decl|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
@@ -1719,14 +1734,7 @@ argument_list|(
 literal|"Skipping queue run -- load average too high\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|forkflag
-condition|)
 return|return;
-name|finis
-argument_list|()
-expr_stmt|;
 block|}
 comment|/* 	**  See if we want to go off and do other useful work. 	*/
 if|if
@@ -1855,12 +1863,14 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"runqueue %s, pid=%d"
+literal|"runqueue %s, pid=%d, forkflag=%d"
 argument_list|,
 name|QueueDir
 argument_list|,
 name|getpid
 argument_list|()
+argument_list|,
+name|forkflag
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1876,6 +1886,28 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DAEMON
+comment|/* 	**  Create ourselves an envelope 	*/
+name|CurEnv
+operator|=
+operator|&
+name|QueueEnvelope
+expr_stmt|;
+name|e
+operator|=
+name|newenvelope
+argument_list|(
+operator|&
+name|QueueEnvelope
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator|=
+name|BlankEnvelope
+operator|.
+name|e_flags
+expr_stmt|;
 comment|/* 	**  Make sure the alias database is open. 	*/
 name|initaliases
 argument_list|(
@@ -2920,7 +2952,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>
-literal|11
+literal|12
 condition|)
 name|syslog
 argument_list|(
