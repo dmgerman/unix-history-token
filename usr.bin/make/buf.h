@@ -197,6 +197,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|Buf_Peel
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|Buf_Append
 parameter_list|(

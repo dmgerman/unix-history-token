@@ -337,6 +337,54 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * Get the contents of a buffer and destroy the buffer. If the buffer  * is NULL, return NULL.  *  * Returns:  *	the pointer to the data.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|Buf_Peel
+parameter_list|(
+name|Buffer
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|ret
+decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|ret
+operator|=
+name|bp
+operator|->
+name|buf
+expr_stmt|;
+name|free
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * Initialize a buffer. If no initial size is given, a reasonable  * default is used.  *  * Returns:  *	A buffer object to be given to other functions in this library.  *  * Side Effects:  *	Space is allocated for the Buffer object and a internal buffer.  */
 end_comment
 
