@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 160 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 161 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1399,6 +1399,13 @@ define|#
 directive|define
 name|METHOD_NAME__PRS
 value|"_PRS"
+end_define
+
+begin_define
+define|#
+directive|define
+name|METHOD_NAME__PRW
+value|"_PRW"
 end_define
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 194 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 198 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -656,31 +656,34 @@ block|,
 comment|/* 21 Alias            */
 name|ACPI_NS_NORMAL
 block|,
-comment|/* 22 Notify           */
+comment|/* 22 MethodAlias      */
 name|ACPI_NS_NORMAL
 block|,
-comment|/* 23 Address Handler  */
+comment|/* 23 Notify           */
+name|ACPI_NS_NORMAL
+block|,
+comment|/* 24 Address Handler  */
 name|ACPI_NS_NEWSCOPE
 operator||
 name|ACPI_NS_LOCAL
 block|,
-comment|/* 24 Resource Desc    */
+comment|/* 25 Resource Desc    */
 name|ACPI_NS_NEWSCOPE
 operator||
 name|ACPI_NS_LOCAL
 block|,
-comment|/* 25 Resource Field   */
+comment|/* 26 Resource Field   */
 name|ACPI_NS_NEWSCOPE
 block|,
-comment|/* 26 Scope            */
+comment|/* 27 Scope            */
 name|ACPI_NS_NORMAL
 block|,
-comment|/* 27 Extra            */
+comment|/* 28 Extra            */
 name|ACPI_NS_NORMAL
 block|,
-comment|/* 28 Data             */
+comment|/* 29 Data             */
 name|ACPI_NS_NORMAL
-comment|/* 29 Invalid          */
+comment|/* 30 Invalid          */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1478,27 +1481,30 @@ comment|/* 21 */
 literal|"Alias"
 block|,
 comment|/* 22 */
-literal|"Notify"
+literal|"MethodAlias"
 block|,
 comment|/* 23 */
-literal|"AddrHandler"
+literal|"Notify"
 block|,
 comment|/* 24 */
-literal|"ResourceDesc"
+literal|"AddrHandler"
 block|,
 comment|/* 25 */
-literal|"ResourceFld"
+literal|"ResourceDesc"
 block|,
 comment|/* 26 */
-literal|"Scope"
+literal|"ResourceFld"
 block|,
 comment|/* 27 */
-literal|"Extra"
+literal|"Scope"
 block|,
 comment|/* 28 */
+literal|"Extra"
+block|,
+comment|/* 29 */
 literal|"Data"
 block|,
-comment|/* 39 */
+comment|/* 30 */
 literal|"Invalid"
 block|}
 decl_stmt|;
@@ -1598,7 +1604,14 @@ block|{
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
+init|=
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
+name|Object
 decl_stmt|;
+comment|/* Must return a string of exactly 4 characters == ACPI_NAME_SIZE */
 if|if
 condition|(
 operator|!
@@ -1607,18 +1620,33 @@ condition|)
 block|{
 return|return
 operator|(
-literal|"NULL NODE"
+literal|"NULL"
 operator|)
 return|;
 block|}
-name|Node
-operator|=
+comment|/* Check for Root node */
+if|if
+condition|(
 operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
 name|Object
-expr_stmt|;
+operator|==
+name|ACPI_ROOT_OBJECT
+operator|)
+operator|||
+operator|(
+name|Object
+operator|==
+name|AcpiGbl_RootNode
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+literal|"\"\\\" "
+operator|)
+return|;
+block|}
+comment|/* Descriptor must be a namespace node */
 if|if
 condition|(
 name|Node
@@ -1630,10 +1658,11 @@ condition|)
 block|{
 return|return
 operator|(
-literal|"****"
+literal|"####"
 operator|)
 return|;
 block|}
+comment|/* Name must be a valid ACPI name */
 if|if
 condition|(
 operator|!
@@ -1654,10 +1683,11 @@ condition|)
 block|{
 return|return
 operator|(
-literal|"----"
+literal|"????"
 operator|)
 return|;
 block|}
+comment|/* Return the name */
 return|return
 operator|(
 name|Node
@@ -2025,15 +2055,6 @@ name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"UtInitGlobals"
 argument_list|)
-expr_stmt|;
-comment|/* Runtime configuration */
-name|AcpiGbl_CreateOsiMethod
-operator|=
-name|TRUE
-expr_stmt|;
-name|AcpiGbl_AllMethodsSerialized
-operator|=
-name|FALSE
 expr_stmt|;
 comment|/* Memory allocation and cache lists */
 name|ACPI_MEMSET
