@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: spl.h,v 1.13 1996/02/07 21:52:57 wollman Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: spl.h,v 1.14 1996/05/18 03:36:42 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -134,6 +134,10 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_comment
+comment|/*  * cpl is preserved by interrupt handlers so it is effectively nonvolatile.  * ipending and idelayed are changed by interrupt handlers so they are  * volatile.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -214,7 +218,7 @@ comment|/* group of interrupts masked with spltty() */
 end_comment
 
 begin_comment
-comment|/*  * ipending has to be volatile so that it is read every time it is accessed  * in splx() and spl0(), but we don't want it to be read nonatomically when  * it is changed.  Pretending that ipending is a plain int happens to give  * suitable atomic code for "ipending |= constant;".  */
+comment|/*  * The volatile bitmap variables must be set atomically.  This normally  * involves using a machine-dependent bit-set or `or' instruction.  */
 end_comment
 
 begin_define
@@ -222,7 +226,7 @@ define|#
 directive|define
 name|setdelayed
 parameter_list|()
-value|(*(unsigned *)&ipending |= loadandclear(&idelayed))
+value|setbits(&ipending, loadandclear(&idelayed))
 end_define
 
 begin_define
@@ -230,7 +234,7 @@ define|#
 directive|define
 name|setsoftast
 parameter_list|()
-value|(*(unsigned *)&ipending |= SWI_AST_PENDING)
+value|setbits(&ipending, SWI_AST_PENDING)
 end_define
 
 begin_define
@@ -238,7 +242,7 @@ define|#
 directive|define
 name|setsoftclock
 parameter_list|()
-value|(*(unsigned *)&ipending |= SWI_CLOCK_PENDING)
+value|setbits(&ipending, SWI_CLOCK_PENDING)
 end_define
 
 begin_define
@@ -246,7 +250,7 @@ define|#
 directive|define
 name|setsoftnet
 parameter_list|()
-value|(*(unsigned *)&ipending |= SWI_NET_PENDING)
+value|setbits(&ipending, SWI_NET_PENDING)
 end_define
 
 begin_define
@@ -254,7 +258,7 @@ define|#
 directive|define
 name|setsofttty
 parameter_list|()
-value|(*(unsigned *)&ipending |= SWI_TTY_PENDING)
+value|setbits(&ipending, SWI_TTY_PENDING)
 end_define
 
 begin_define
@@ -262,7 +266,7 @@ define|#
 directive|define
 name|schedsofttty
 parameter_list|()
-value|(*(unsigned *)&idelayed |= SWI_TTY_PENDING)
+value|setbits(&idelayed, SWI_TTY_PENDING)
 end_define
 
 begin_define
@@ -270,7 +274,7 @@ define|#
 directive|define
 name|schedsoftnet
 parameter_list|()
-value|(*(unsigned *)&idelayed |= SWI_NET_PENDING)
+value|setbits(&idelayed, SWI_NET_PENDING)
 end_define
 
 begin_define
