@@ -92,7 +92,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ifnet
+name|mbuf
 operator|*
 operator|)
 argument_list|)
