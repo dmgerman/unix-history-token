@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.21	(Berkeley)	83/08/11"
+literal|"@(#)tape.c	3.22	(Berkeley)	83/12/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,8 @@ begin_decl_stmt
 specifier|static
 name|long
 name|fssize
+init|=
+name|MAXBSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -665,6 +667,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|stbuf
+operator|.
+name|st_blksize
+operator|>
+literal|0
+operator|&&
+name|stbuf
+operator|.
+name|st_blksize
+operator|<=
+name|MAXBSIZE
+condition|)
 name|fssize
 operator|=
 name|stbuf
@@ -673,10 +689,6 @@ name|st_blksize
 expr_stmt|;
 if|if
 condition|(
-name|fssize
-operator|<=
-literal|0
-operator|||
 operator|(
 operator|(
 name|fssize
@@ -1845,61 +1857,22 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|GOOD
+operator|)
+return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|symlink
+return|return
+operator|(
+name|linkit
 argument_list|(
 name|lnkbuf
 argument_list|,
 name|name
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|name
+name|SYMLINK
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"cannot create symbolic link"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FAIL
-operator|)
-return|;
-block|}
-else|else
-name|vprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"extract symbolic link %s\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|GOOD
 operator|)
 return|;
 case|case
