@@ -1013,7 +1013,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * HID      Model  * -------------------------------------  * TOS6200  Libretto L Series  *          Dynabook Satellite 2455  *          Dynabook SS 3500  * TOS6207  Dynabook SS2110 Series  */
+comment|/*  * HID      Model  * -------------------------------------  * TOS6200  Libretto L Series  *          Dynabook Satellite 2455  *          Dynabook SS 3500  * TOS6207  Dynabook SS2110 Series  * TOS6208  SPA40  */
 end_comment
 
 begin_function
@@ -1035,6 +1035,8 @@ block|{
 literal|"TOS6200"
 block|,
 literal|"TOS6207"
+block|,
+literal|"TOS6208"
 block|,
 name|NULL
 block|}
