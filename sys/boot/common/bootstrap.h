@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.1.1.1 1998/08/21 03:17:41 msmith Exp $  */
 end_comment
 
 begin_include
@@ -302,31 +302,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Module loader.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MF_FORMATMASK
-value|0xf
-end_define
-
-begin_define
-define|#
-directive|define
-name|MF_AOUT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MF_ELF
-value|1
-end_define
-
-begin_comment
 comment|/*  * Module metadata header.  *  * Metadata are allocated on our heap, and copied into kernel space  * before executing the kernel.  */
 end_comment
 
@@ -357,7 +332,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Loaded module information.  *  * At least one module (the kernel) must be loaded in order to boot.  * The kernel is always loaded first.  */
+comment|/*  * Loaded module information.  *  * At least one module (the kernel) must be loaded in order to boot.  * The kernel is always loaded first.  *  * String fields (m_name, m_type) should be dynamically allocated.  */
 end_comment
 
 begin_struct
@@ -373,21 +348,22 @@ name|char
 modifier|*
 name|m_type
 decl_stmt|;
-comment|/* module type, eg 'kernel', 'pnptable', etc. */
+comment|/* verbose module type, eg 'ELF kernel', 'pnptable', etc. */
 name|char
 modifier|*
 name|m_args
 decl_stmt|;
 comment|/* arguments for the module */
-name|void
+name|struct
+name|module_metadata
 modifier|*
 name|m_metadata
 decl_stmt|;
 comment|/* metadata that will be placed in the module directory */
 name|int
-name|m_flags
+name|m_loader
 decl_stmt|;
-comment|/* 0xffff reserved for arch-specific use */
+comment|/* index of the loader that read the file */
 name|vm_offset_t
 name|m_addr
 decl_stmt|;
@@ -410,9 +386,6 @@ begin_struct
 struct|struct
 name|module_format
 block|{
-name|int
-name|l_format
-decl_stmt|;
 comment|/* Load function must return EFTYPE if it can't handle the module supplied */
 name|int
 function_decl|(
@@ -434,6 +407,7 @@ modifier|*
 name|result
 parameter_list|)
 function_decl|;
+comment|/* Only a loader that will load a kernel (first module) should have an exec handler */
 name|int
 function_decl|(
 modifier|*
@@ -511,6 +485,51 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|mod_addmetadata
+parameter_list|(
+name|struct
+name|loaded_module
+modifier|*
+name|mp
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|size_t
+name|size
+parameter_list|,
+name|void
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|module_metadata
+modifier|*
+name|mod_findmetadata
+parameter_list|(
+name|struct
+name|loaded_module
+modifier|*
+name|mp
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Module information subtypes  */
+end_comment
+
 begin_comment
 comment|/* XXX these belong in<machine/bootinfo.h> */
 end_comment
@@ -549,6 +568,57 @@ directive|define
 name|MODINFO_METADATA
 value|0x8000
 end_define
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_AOUTEXEC
+value|0x0001
+end_define
+
+begin_comment
+comment|/* a.out exec header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODINFOMD_ELFHDR
+value|0x0002
+end_define
+
+begin_comment
+comment|/* ELF header */
+end_comment
+
+begin_comment
+comment|/* MI module loaders */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|aout_loadmodule
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|vm_offset_t
+name|dest
+parameter_list|,
+name|struct
+name|loaded_module
+modifier|*
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* extern int	elf_loadmodule(char *filename, vm_offset_t dest, struct loaded_module **result); */
+end_comment
 
 begin_if
 if|#
@@ -802,7 +872,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * functions called down from the generic code  */
+comment|/*   * The intention of the architecture switch is to provide a convenient  * encapsulation of the interface between the bootstrap MI and MD code.  * MD code may selectively populate the switch at runtime based on the  * actual configuration of the target system.  */
 end_comment
 
 begin_struct
@@ -816,16 +886,6 @@ modifier|*
 name|arch_autoload
 function_decl|)
 parameter_list|()
-function_decl|;
-comment|/* Boot the loaded kernel (first loaded module) */
-name|int
-function_decl|(
-modifier|*
-name|arch_boot
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
 function_decl|;
 comment|/* Locate the device for (name), return pointer to tail in (*path) */
 name|int
@@ -847,6 +907,41 @@ name|char
 modifier|*
 modifier|*
 name|path
+parameter_list|)
+function_decl|;
+comment|/* Copy from local address space to module address space, similar to bcopy() */
+name|int
+function_decl|(
+modifier|*
+name|arch_copyin
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|vm_offset_t
+name|dest
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+comment|/* Read from file to module address space, same semantics as read() */
+name|int
+function_decl|(
+modifier|*
+name|arch_readin
+function_decl|)
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|vm_offset_t
+name|dest
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
 block|}

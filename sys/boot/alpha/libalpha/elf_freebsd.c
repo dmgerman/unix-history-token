@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: elf_freebsd.c,v 1.1.1.1 1998/08/21 03:17:42 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -69,27 +69,6 @@ directive|define
 name|_KERNEL
 end_define
 
-begin_struct
-struct|struct
-name|elf_kernel_module
-block|{
-name|struct
-name|loaded_module
-name|m
-decl_stmt|;
-name|vm_offset_t
-name|m_entry
-decl_stmt|;
-comment|/* module entrypoint */
-name|struct
-name|bootinfo_v1
-name|m_bi
-decl_stmt|;
-comment|/* legacy bootinfo */
-block|}
-struct|;
-end_struct
-
 begin_function_decl
 specifier|static
 name|int
@@ -148,8 +127,6 @@ name|module_format
 name|alpha_elf
 init|=
 block|{
-name|MF_ELF
-block|,
 name|elf_loadmodule
 block|,
 name|elf_exec
@@ -193,7 +170,7 @@ name|result
 parameter_list|)
 block|{
 name|struct
-name|elf_kernel_module
+name|loaded_module
 modifier|*
 name|mp
 decl_stmt|;
@@ -355,14 +332,12 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|elf_kernel_module
+name|loaded_module
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|m
-operator|.
 name|m_name
 operator|=
 name|strdup
@@ -373,17 +348,16 @@ expr_stmt|;
 comment|/* XXX should we prune the name? */
 name|mp
 operator|->
-name|m
-operator|.
 name|m_type
 operator|=
+name|strdup
+argument_list|(
 literal|"elf kernel"
+argument_list|)
 expr_stmt|;
 comment|/* XXX only if that's what we really are */
 name|mp
 operator|->
-name|m
-operator|.
 name|m_args
 operator|=
 name|NULL
@@ -391,27 +365,10 @@ expr_stmt|;
 comment|/* XXX should we put the bootstrap args here and parse later? */
 name|mp
 operator|->
-name|m
-operator|.
-name|m_flags
+name|m_metadata
 operator|=
-name|MF_ELF
+name|NULL
 expr_stmt|;
-comment|/* we're an elf kernel */
-name|mp
-operator|->
-name|m_entry
-operator|=
-name|hdr
-operator|.
-name|e_entry
-expr_stmt|;
-if|if
-condition|(
-name|dest
-operator|==
-literal|0
-condition|)
 name|dest
 operator|=
 operator|(
@@ -421,17 +378,19 @@ name|hdr
 operator|.
 name|e_entry
 expr_stmt|;
+name|mp
+operator|->
+name|m_addr
+operator|=
+name|dest
+expr_stmt|;
 if|if
 condition|(
 name|mod_findmodule
 argument_list|(
 name|NULL
 argument_list|,
-name|mp
-operator|->
-name|m
-operator|.
-name|m_type
+name|NULL
 argument_list|)
 operator|!=
 name|NULL
@@ -463,6 +422,22 @@ operator|(
 name|vm_offset_t
 operator|)
 name|dest
+argument_list|)
+expr_stmt|;
+comment|/* save ELF header as metadata */
+name|mod_addmetadata
+argument_list|(
+name|mp
+argument_list|,
+name|MODINFOMD_ELFHDR
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Elf_Ehdr
+argument_list|)
+argument_list|,
+operator|&
+name|hdr
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1344,26 +1319,57 @@ parameter_list|(
 name|struct
 name|loaded_module
 modifier|*
-name|amp
+name|mp
 parameter_list|)
 block|{
-name|struct
-name|elf_kernel_module
-modifier|*
-name|mp
-init|=
-operator|(
-expr|struct
-name|elf_kernel_module
-operator|*
-operator|)
-name|amp
-decl_stmt|;
 specifier|static
 name|struct
 name|bootinfo_v1
 name|bootinfo_v1
 decl_stmt|;
+name|struct
+name|module_metadata
+modifier|*
+name|md
+decl_stmt|;
+name|Elf_Ehdr
+modifier|*
+name|hdr
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|md
+operator|=
+name|mod_findmetadata
+argument_list|(
+name|mp
+argument_list|,
+name|MODINFOMD_ELFHDR
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EFTYPE
+operator|)
+return|;
+comment|/* XXX actually EFUCKUP */
+name|hdr
+operator|=
+operator|(
+name|Elf_Ehdr
+operator|*
+operator|)
+operator|&
+operator|(
+name|md
+operator|->
+name|md_data
+operator|)
+expr_stmt|;
 comment|/*      * Fill in the bootinfo for the kernel.      */
 name|bzero
 argument_list|(
@@ -1396,8 +1402,6 @@ name|booted_kernel
 argument_list|,
 name|mp
 operator|->
-name|m
-operator|.
 name|m_name
 argument_list|,
 sizeof|sizeof
@@ -1473,13 +1477,11 @@ literal|"Entering %s at 0x%lx...\n"
 argument_list|,
 name|mp
 operator|->
-name|m
-operator|.
 name|m_name
 argument_list|,
-name|mp
+name|hdr
 operator|->
-name|m_entry
+name|e_entry
 argument_list|)
 expr_stmt|;
 name|closeall
@@ -1497,9 +1499,9 @@ operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|mp
+name|hdr
 operator|->
-name|m_entry
+name|e_entry
 operator|)
 operator|(
 name|ffp_save

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: libalpha.h,v 1.1.1.1 1998/08/21 03:17:42 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -185,141 +185,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * alpha module loader  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MF_FORMATMASK
-value|0xf
-end_define
-
-begin_define
-define|#
-directive|define
-name|MF_AOUT
-value|0
-end_define
-
-begin_comment
-comment|/* not supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MF_ELF
-value|1
-end_define
-
-begin_struct
-struct|struct
-name|alpha_module
-block|{
-name|char
-modifier|*
-name|m_name
-decl_stmt|;
-comment|/* module name */
-name|char
-modifier|*
-name|m_type
-decl_stmt|;
-comment|/* module type, eg 'kernel', 'pnptable', etc. */
-name|char
-modifier|*
-name|m_args
-decl_stmt|;
-comment|/* arguments for the module */
+begin_function_decl
+specifier|extern
 name|int
-name|m_flags
-decl_stmt|;
-comment|/* 0xffff reserved for arch-specific use */
-name|struct
-name|alpha_module
-modifier|*
-name|m_next
-decl_stmt|;
-comment|/* next module */
-name|physaddr_t
-name|m_addr
-decl_stmt|;
-comment|/* load address */
-name|size_t
-name|m_size
-decl_stmt|;
-comment|/* module size */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|alpha_format
-block|{
-name|int
-name|l_format
-decl_stmt|;
-comment|/* Load function must return EFTYPE if it can't handle the module supplied */
-name|int
-function_decl|(
-modifier|*
-name|l_load
-function_decl|)
+name|alpha_copyin
 parameter_list|(
-name|char
+name|void
 modifier|*
-name|filename
+name|src
 parameter_list|,
-name|physaddr_t
+name|vm_offset_t
 name|dest
 parameter_list|,
-name|struct
-name|alpha_module
-modifier|*
-modifier|*
-name|result
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
-function_decl|(
-modifier|*
-name|l_exec
-function_decl|)
+name|alpha_readin
 parameter_list|(
-name|struct
-name|alpha_module
-modifier|*
-name|amp
+name|int
+name|fd
+parameter_list|,
+name|vm_offset_t
+name|dest
+parameter_list|,
+name|size_t
+name|len
 parameter_list|)
 function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|alpha_format
-modifier|*
-name|formats
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* supplied by consumer */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|alpha_format
-name|alpha_elf
-decl_stmt|;
-end_decl_stmt
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -337,24 +236,6 @@ name|int
 name|alpha_autoload
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|alpha_module
-modifier|*
-name|alpha_findmodule
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|char
-modifier|*
-name|type
 parameter_list|)
 function_decl|;
 end_function_decl
