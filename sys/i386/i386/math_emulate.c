@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj] */
-end_comment
-
-begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id$  */
 end_comment
 
 begin_comment
@@ -12,7 +8,7 @@ comment|/*  * Limited emulation 27.12.91 - mostly loads/stores, which gcc wants 
 end_comment
 
 begin_comment
-comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00060  * --------------------         -----   ----------------------  *  * 19 Sep 92	Ishii Masahiro		Fix 0x1fd instruction  *		kym@bingsuns.cc.binghamton.edu		Fix fscale  * 28 Nov 92	Poul-Henning Kamp	Reduce kernel size if you have  *					a 387 or 486 chip  */
+comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  *  */
 end_comment
 
 begin_include
