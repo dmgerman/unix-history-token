@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.32 2003/04/28 02:54:43 grog Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *	Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.33 2003/05/23 01:09:23 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -201,21 +201,21 @@ name|VINUM_VOL
 parameter_list|(
 name|v
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR, \ 				 VINUMMINOR (v, VINUM_VOLUME_TYPE))
+value|makedev (VINUM_CDEV_MAJOR, \ 					 VINUMMINOR (v, VINUM_VOLUME_TYPE))
 define|#
 directive|define
 name|VINUM_PLEX
 parameter_list|(
 name|p
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR, \ 				 VINUMMINOR (p, VINUM_PLEX_TYPE))
+value|makedev (VINUM_CDEV_MAJOR, \ 					 VINUMMINOR (p, VINUM_PLEX_TYPE))
 define|#
 directive|define
 name|VINUM_SD
 parameter_list|(
 name|s
 parameter_list|)
-value|makedev (VINUM_CDEV_MAJOR, \ 				 VINUMMINOR (s, VINUM_SD_TYPE))
+value|makedev (VINUM_CDEV_MAJOR, \ 					 VINUMMINOR (s, VINUM_SD_TYPE))
 comment|/* extract device type */
 define|#
 directive|define
@@ -234,7 +234,7 @@ directive|define
 name|VINUM_DAEMON_DEV_NAME
 value|VINUM_DIR"/controld"
 comment|/* super device for daemon only */
-comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
+comment|/*      * the number of object entries to cater for initially, and also the      * value by which they are incremented.  It doesn't take long      * to extend them, so theoretically we could start with 1 of each, but      * it's untidy to allocate such small areas.  These values are      * probably too small.      */
 name|INITIAL_DRIVES
 init|=
 literal|4
@@ -276,6 +276,10 @@ init|=
 literal|256
 block|,
 comment|/* number of locks to allocate to a plex */
+name|PLEXMUTEXES
+init|=
+literal|32
+block|,
 name|MAX_REVIVE_BLOCKSIZE
 init|=
 name|MAXPHYS
@@ -590,6 +594,12 @@ begin_comment
 comment|/*  * Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -604,8 +614,35 @@ parameter_list|,
 name|increment
 parameter_list|)
 define|\
-value|{							    \   expand_table ((void **)&table,			    \ 		oldcount * sizeof (element),		    \ 		(oldcount + increment) * sizeof (element) ); \   oldcount += increment;				    \   }
+value|{							    \   expand_table ((void **)&table,			    \ 		oldcount * sizeof (element),		    \ 		(oldcount + increment) * sizeof (element),  \ 		__FILE__,				    \ 		__LINE__ );				    \   oldcount += increment;				    \   }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXPAND
+parameter_list|(
+name|table
+parameter_list|,
+name|element
+parameter_list|,
+name|oldcount
+parameter_list|,
+name|increment
+parameter_list|)
+define|\
+value|{							    \   expand_table ((void **)&table,			    \ 		oldcount * sizeof (element),		    \ 		(oldcount + increment) * sizeof (element)); \   oldcount += increment;				    \   }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Information on vinum's memory usage */
