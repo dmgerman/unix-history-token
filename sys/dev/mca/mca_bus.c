@@ -121,6 +121,11 @@ begin_struct
 struct|struct
 name|mca_device
 block|{
+name|struct
+name|resource_list
+name|rl
+decl_stmt|;
+comment|/* Resources */
 name|mca_id_t
 name|id
 decl_stmt|;
@@ -137,11 +142,6 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* Programable Option Select Regs. */
-name|struct
-name|resource_list
-name|rl
-decl_stmt|;
-comment|/* Resources */
 block|}
 struct|;
 end_struct

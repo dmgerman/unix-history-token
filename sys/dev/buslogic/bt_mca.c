@@ -359,6 +359,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|BT_MCA_PROBE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BT_MCA_ATTACH
+value|1
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -366,6 +380,9 @@ name|bt_mca_alloc_resources
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|mode
 parameter_list|)
 block|{
 name|struct
@@ -423,11 +440,25 @@ name|io
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bt_mca_alloc_resources() failed to allocate IOPORT\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|mode
+operator|==
+name|BT_MCA_ATTACH
+condition|)
+block|{
 name|rid
 operator|=
 literal|0
@@ -459,9 +490,16 @@ name|irq
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bt_mca_alloc_resources() failed to allocate IRQ\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|rid
 operator|=
 literal|0
@@ -493,9 +531,17 @@ name|drq
 operator|==
 name|NULL
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bt_mca_alloc_resources() failed to allocate DRQ\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
+block|}
 name|bt_init_softc
 argument_list|(
 name|dev
@@ -690,6 +736,8 @@ comment|/* And allocate them */
 name|bt_mca_alloc_resources
 argument_list|(
 name|dev
+argument_list|,
+name|BT_MCA_PROBE
 argument_list|)
 expr_stmt|;
 if|if
@@ -790,6 +838,8 @@ operator|=
 name|bt_mca_alloc_resources
 argument_list|(
 name|dev
+argument_list|,
+name|BT_MCA_ATTACH
 argument_list|)
 operator|)
 condition|)
