@@ -2340,7 +2340,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|size
+name|ddmat
+operator|->
+name|dt_maxsize
 operator|<=
 name|PAGE_SIZE
 operator|)

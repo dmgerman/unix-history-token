@@ -2516,7 +2516,7 @@ name|flags
 parameter_list|,
 name|bus_dmamap_t
 modifier|*
-name|mappe
+name|mapp
 parameter_list|)
 block|{
 name|int
