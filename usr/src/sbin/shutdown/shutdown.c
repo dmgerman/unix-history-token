@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.10 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -747,7 +747,7 @@ name|offset
 condition|)
 name|printf
 argument_list|(
-literal|"Shutdown at %.24s."
+literal|"Shutdown at %.24s.\n"
 argument_list|,
 name|ctime
 argument_list|(
