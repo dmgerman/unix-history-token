@@ -4296,15 +4296,12 @@ block|}
 name|DBG
 argument_list|(
 name|DBX
-literal|"wds%d: request 0x%x done\n"
+literal|"wds%d: request %p done\n"
 argument_list|,
 name|wp
 operator|->
 name|unit
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|r
 argument_list|)
 expr_stmt|;
@@ -4624,7 +4621,7 @@ block|{
 name|DBG
 argument_list|(
 name|DBX
-literal|"wds%d: enqueued status cmd 0x%x, r=0x%x\n"
+literal|"wds%d: enqueued status cmd 0x%x, r=%p\n"
 argument_list|,
 name|wp
 operator|->
@@ -4641,9 +4638,6 @@ index|]
 operator|&
 literal|0xFF
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|r
 argument_list|)
 expr_stmt|;
@@ -5900,7 +5894,7 @@ block|}
 name|DBG
 argument_list|(
 name|DBX
-literal|"wds%d: enqueued cmd 0x%x, r=0x%x\n"
+literal|"wds%d: enqueued cmd 0x%x, r=%p\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -5915,9 +5909,6 @@ index|]
 operator|&
 literal|0xFF
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|r
 argument_list|)
 expr_stmt|;
@@ -7004,6 +6995,9 @@ name|WDSTOVIRT
 argument_list|(
 name|wp
 argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|phys
 argument_list|)
 expr_stmt|;
