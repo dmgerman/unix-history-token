@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -66,11 +72,13 @@ modifier|*
 name|result
 decl_stmt|;
 comment|/* 8-byte result */
+specifier|const
 name|char
 modifier|*
 name|seed
 decl_stmt|;
 comment|/* Seed, any length */
+specifier|const
 name|char
 modifier|*
 name|passwd
@@ -377,9 +385,16 @@ operator|&
 name|saved_ttymode
 argument_list|)
 expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"interrupted by signal %s"
+argument_list|,
+name|sys_siglist
+index|[
+name|sig
+index|]
 argument_list|)
 expr_stmt|;
 block|}

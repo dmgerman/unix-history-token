@@ -4544,8 +4544,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|p
-decl_stmt|,
 name|v
 decl_stmt|,
 name|l
@@ -4553,6 +4551,10 @@ decl_stmt|,
 name|low
 decl_stmt|,
 name|high
+decl_stmt|;
+name|unsigned
+name|int
+name|p
 decl_stmt|;
 name|char
 name|b

@@ -1074,10 +1074,10 @@ name|char
 modifier|*
 name|tok
 decl_stmt|;
-name|long
+name|u_int32_t
 name|pattern
 decl_stmt|;
-name|long
+name|u_int32_t
 name|mask
 decl_stmt|;
 name|struct
@@ -1166,8 +1166,7 @@ name|addrp
 operator|->
 name|s_addr
 operator|!=
-operator|-
-literal|1
+name|INADDR_NONE
 operator|&&
 operator|(
 name|addrp
