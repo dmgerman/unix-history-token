@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.68 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1470,17 +1470,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|mode
-operator|!=
-name|SM_VERIFY
-condition|)
-name|openxscript
-argument_list|(
-name|ee
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -2201,11 +2190,15 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\n--deliver, mailer=%d, host=`%s', first user=`%s'\n"
+literal|"\n--deliver, id=%s, mailer=%s, host=`%s', first user=`%s'\n"
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 name|m
 operator|->
-name|m_mno
+name|m_name
 argument_list|,
 name|host
 argument_list|,
