@@ -1168,22 +1168,51 @@ begin_comment
 comment|/*  * Report the type of the specified arm processor. This uses the generic and  * arm specific information in the cpu structure to identify the processor.  * The remaining fields in the cpu structure are filled in appropriately.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static const char * const wtnames[] = { 	"write-through", 	"write-back", 	"write-back", 	"**unknown 3**", 	"**unknown 4**", 	"write-back-locking",
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|wtnames
+index|[]
+init|=
+block|{
+literal|"write-through"
+block|,
+literal|"write-back"
+block|,
+literal|"write-back"
+block|,
+literal|"**unknown 3**"
+block|,
+literal|"**unknown 4**"
+block|,
+literal|"write-back-locking"
+block|,
 comment|/* XXX XScale-specific? */
-end_comment
-
-begin_endif
-unit|"write-back-locking-A", 	"write-back-locking-B", 	"**unknown 8**", 	"**unknown 9**", 	"**unknown 10**", 	"**unknown 11**", 	"**unknown 12**", 	"**unknown 13**", 	"**unknown 14**", 	"**unknown 15**", };
-endif|#
-directive|endif
-end_endif
+literal|"write-back-locking-A"
+block|,
+literal|"write-back-locking-B"
+block|,
+literal|"**unknown 8**"
+block|,
+literal|"**unknown 9**"
+block|,
+literal|"**unknown 10**"
+block|,
+literal|"**unknown 11**"
+block|,
+literal|"**unknown 12**"
+block|,
+literal|"**unknown 13**"
+block|,
+literal|"**unknown 14**"
+block|,
+literal|"**unknown 15**"
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1470,6 +1499,76 @@ argument_list|(
 literal|" branch prediction enabled"
 argument_list|)
 expr_stmt|;
+comment|/* Print cache info. */
+if|if
+condition|(
+name|arm_picache_line_size
+operator|==
+literal|0
+operator|&&
+name|arm_pdcache_line_size
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|arm_pcache_unified
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%dKB/%dB %d-way %s unified cache\n"
+argument_list|,
+name|arm_pdcache_size
+operator|/
+literal|1024
+argument_list|,
+name|arm_pdcache_line_size
+argument_list|,
+name|arm_pdcache_ways
+argument_list|,
+name|wtnames
+index|[
+name|arm_pcache_type
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%dKB/%dB %d-way Instruction cache\n"
+argument_list|,
+name|arm_picache_size
+operator|/
+literal|1024
+argument_list|,
+name|arm_picache_line_size
+argument_list|,
+name|arm_picache_ways
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%dKB/%dB %d-way %s Data cache\n"
+argument_list|,
+name|arm_pdcache_size
+operator|/
+literal|1024
+argument_list|,
+name|arm_pdcache_line_size
+argument_list|,
+name|arm_pdcache_ways
+argument_list|,
+name|wtnames
+index|[
+name|arm_pcache_type
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
