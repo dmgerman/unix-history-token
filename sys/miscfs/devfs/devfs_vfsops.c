@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.3 1995/05/30 08:06:52 rgrimes Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.4 1995/09/03 05:43:42 julian Exp $  *  *  */
 end_comment
 
 begin_include
@@ -193,6 +193,11 @@ name|mp
 operator|->
 name|mnt_data
 expr_stmt|;
+if|if
+condition|(
+name|devfs_up_and_going
+condition|)
+block|{
 name|copyinstr
 argument_list|(
 name|path
@@ -243,6 +248,26 @@ operator|-
 name|size
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|bcopy
+argument_list|(
+literal|"dummy_mount"
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 name|mp
@@ -595,11 +620,6 @@ name|vpp
 parameter_list|)
 comment|/*proto*/
 block|{
-name|struct
-name|denode
-modifier|*
-name|ndep
-decl_stmt|;
 name|struct
 name|devfsmount
 modifier|*

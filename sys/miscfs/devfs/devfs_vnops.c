@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.7 1995/09/02 07:09:01 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.8 1995/09/04 00:20:30 dyson Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -594,7 +594,7 @@ literal|'\0'
 expr_stmt|;
 name|new_node
 operator|=
-name|dev_findfront
+name|dev_findname
 argument_list|(
 name|dir_node
 argument_list|,

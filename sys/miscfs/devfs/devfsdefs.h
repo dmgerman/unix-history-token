@@ -1,4 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_define
+define|#
+directive|define
+name|DEVFS_DEBUG
+value|1
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -35,12 +42,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.3 1995/05/03 23:06:31 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.4 1995/05/30 08:06:55 rgrimes Exp $  */
 end_comment
 
 begin_comment
 comment|/* first a couple of defines for compatibility with inodes */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|M_DEVFSNAME
+value|M_DEVFSBACK
+end_define
 
 begin_define
 define|#
@@ -600,10 +614,6 @@ name|devnm_p
 name|aliases
 decl_stmt|;
 comment|/* aliase chain (kill with us)*/
-name|int
-name|alias_count
-decl_stmt|;
-comment|/* # 'alias' nodes for us. */
 block|}
 name|back
 struct|;
@@ -613,10 +623,6 @@ name|devnm_p
 name|realthing
 decl_stmt|;
 comment|/* ptr to the backing node */
-name|devnm_p
-name|file_node
-decl_stmt|;
-comment|/* our file node */
 block|}
 name|front
 struct|;
@@ -633,10 +639,6 @@ modifier|*
 name|prev_frontp
 decl_stmt|;
 comment|/* the end of the front node chain */
-name|int
-name|frontcount
-decl_stmt|;
-comment|/* number of front nodes that reference us*/
 block|}
 struct|;
 end_struct
@@ -648,6 +650,13 @@ name|dev_name
 name|devnm_t
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|devfs_up_and_going
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

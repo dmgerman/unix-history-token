@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_front.c,v 1.5 1995/09/03 08:39:26 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.1 1995/09/06 08:26:51 julian Exp $  */
 end_comment
 
 begin_include
@@ -167,6 +167,20 @@ operator|&
 name|dev_root
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PARANOID
+if|if
+condition|(
+name|retval
+condition|)
+name|panic
+argument_list|(
+literal|"devfs_sinit: dev_add_node failed "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|devfs_hidden_mount
 operator|=
 operator|(
@@ -197,7 +211,7 @@ name|devfs_hidden_mount
 condition|)
 name|panic
 argument_list|(
-literal|"devfs-main-mount: malloc failed"
+literal|"devfs_sinit: malloc failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -659,11 +673,6 @@ operator|(
 name|EEXIST
 operator|)
 return|;
-name|dnp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/*just want the return code..*/
 block|}
 comment|/* 	 * make sure the name is legal 	 * slightly misleading in the case of NULL 	 */
 if|if
@@ -1108,6 +1117,18 @@ name|dirnode
 operator|->
 name|dvm
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dnp
+operator|->
+name|dvm
+condition|)
+name|printf
+argument_list|(
+literal|"parent had null dvm "
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1117,6 +1138,18 @@ operator|=
 name|back
 operator|->
 name|dnp
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dnp
+operator|->
+name|dvm
+condition|)
+name|printf
+argument_list|(
+literal|"node has null dvm "
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Link the two together 	 * include the implicit link in the count of links to the devnode.. 	 * this stops it from being accidentally freed later. 	 */

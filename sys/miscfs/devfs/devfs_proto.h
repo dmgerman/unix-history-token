@@ -44,6 +44,9 @@ parameter_list|,
 name|dn_p
 name|dirnode
 parameter_list|,
+name|devnm_p
+name|back
+parameter_list|,
 name|int
 name|entrytype
 parameter_list|,
@@ -65,7 +68,7 @@ name|int
 name|dev_remove
 parameter_list|(
 name|devnm_p
-name|devbp
+name|devnmp
 parameter_list|)
 comment|/*proto*/
 function_decl|;
@@ -132,7 +135,7 @@ end_function_decl
 
 begin_function_decl
 name|dn_p
-name|dev_findfront
+name|dev_findname
 parameter_list|(
 name|dn_p
 name|dir
@@ -157,7 +160,7 @@ name|back
 parameter_list|,
 name|devnm_p
 modifier|*
-name|devnm_pp
+name|dnm_pp
 parameter_list|,
 name|struct
 name|devfsmount
@@ -199,7 +202,7 @@ name|void
 name|devfs_remove_fronts
 parameter_list|(
 name|devnm_p
-name|devbp
+name|devnmp
 parameter_list|)
 comment|/*proto*/
 function_decl|;
@@ -207,10 +210,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|dev_free_front
+name|dev_free_name
 parameter_list|(
 name|devnm_p
-name|devfp
+name|devnmp
 parameter_list|)
 comment|/*proto*/
 function_decl|;
