@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.29 1996/02/06 22:49:11 jdp Exp $"
+literal|"$Id: perform.c,v 1.30 1996/03/20 19:05:59 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslimits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -837,10 +843,6 @@ name|p
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
-name|max
-decl_stmt|,
-name|len
 decl_stmt|;
 name|char
 modifier|*

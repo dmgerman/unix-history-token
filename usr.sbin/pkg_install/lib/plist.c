@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.14 1995/07/28 01:50:35 ache Exp $"
+literal|"$Id: plist.c,v 1.15 1995/11/12 04:55:40 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1685,7 +1685,7 @@ operator|==
 name|PLIST_FILE
 condition|)
 block|{
-name|warn
+name|whinge
 argument_list|(
 literal|"Attempting to delete directory `%s' as a file\n"
 literal|"This packing list is incorrect - ignoring delete request.\n"

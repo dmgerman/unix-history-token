@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: show.c,v 1.6 1995/05/30 03:50:02 rgrimes Exp $"
+literal|"$Id: show.c,v 1.7 1995/07/30 01:08:34 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,7 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 name|fread
@@ -114,6 +115,9 @@ literal|1024
 argument_list|,
 name|fp
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 name|fwrite
 argument_list|(
@@ -165,11 +169,6 @@ name|MAXINDEXSIZE
 operator|+
 literal|2
 index|]
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|n
 decl_stmt|;
 if|if
 condition|(

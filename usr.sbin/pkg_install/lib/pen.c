@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.20 1996/02/09 12:05:26 jkh Exp $"
+literal|"$Id: pen.c,v 1.21 1996/06/08 00:46:33 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,10 +356,6 @@ name|size_t
 name|sz
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|tmp
-decl_stmt|;
 if|if
 condition|(
 operator|!

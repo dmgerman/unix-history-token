@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.19 1995/10/25 15:38:34 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.20 1996/06/08 00:46:32 alex Exp $ */
 end_comment
 
 begin_comment
@@ -588,6 +588,28 @@ end_function_decl
 
 begin_function_decl
 name|Boolean
+name|isemptydir
+parameter_list|(
+name|char
+modifier|*
+name|fname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
+name|isemptyfile
+parameter_list|(
+name|char
+modifier|*
+name|fname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Boolean
 name|isfile
 parameter_list|(
 name|char
@@ -974,6 +996,27 @@ name|plist_t
 parameter_list|,
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|delete_plist
+parameter_list|(
+name|Package
+modifier|*
+name|pkg
+parameter_list|,
+name|Boolean
+name|all
+parameter_list|,
+name|plist_t
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

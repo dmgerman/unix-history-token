@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.7.4.1 1995/11/10 06:44:47 jkh Exp $"
+literal|"$Id: perform.c,v 1.8 1995/11/12 04:55:30 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,7 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-name|warn
+name|whinge
 argument_list|(
 literal|"Couldn't entirely delete package (perhaps the packing list is\n"
 literal|"incorrectly specified?)\n"
@@ -1034,7 +1034,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|warn
+name|whinge
 argument_list|(
 literal|"Error renaming `%s' to `%s'"
 argument_list|,
