@@ -29,13 +29,6 @@ directive|ifdef
 name|KERBEROS
 end_ifdef
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"@(#)auth_kerb.h	1.10	94/04/25 SMI"
-end_pragma
-
 begin_include
 include|#
 directive|include
