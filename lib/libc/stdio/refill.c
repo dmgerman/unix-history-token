@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: refill.c,v 1.6 1997/02/22 15:02:22 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,12 @@ block|{
 name|errno
 operator|=
 name|EBADF
+expr_stmt|;
+name|fp
+operator|->
+name|_flags
+operator||=
+name|__SERR
 expr_stmt|;
 return|return
 operator|(
