@@ -6415,9 +6415,13 @@ name|pcic_handle
 modifier|*
 name|h
 init|=
-name|NULL
+name|pcic_get_handle
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|)
 decl_stmt|;
-comment|/* XXXIMPXXX */
 name|DPRINTF
 argument_list|(
 operator|(

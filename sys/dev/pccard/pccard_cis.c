@@ -352,12 +352,9 @@ if|if
 condition|(
 name|pccard_scan_cis
 argument_list|(
-operator|(
-expr|struct
-name|device
-operator|*
-operator|)
 name|sc
+operator|->
+name|dev
 argument_list|,
 name|pccard_parse_cis_tuple
 argument_list|,
