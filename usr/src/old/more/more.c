@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.8 (Berkeley) %G%"
+literal|"@(#)more.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1574,7 +1574,7 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"::::::::::::::\n"
-argument_list|,)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
