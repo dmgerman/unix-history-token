@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.132
+literal|3.133
 operator|%
 name|G
 operator|%
@@ -1527,6 +1527,17 @@ argument_list|(
 operator|&
 name|MainEnvelope
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MainEnvelope
+operator|.
+name|e_oldstyle
+operator|=
+name|BlankEnvelope
+operator|.
+name|e_oldstyle
 expr_stmt|;
 end_expr_stmt
 
