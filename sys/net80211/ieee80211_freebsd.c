@@ -574,6 +574,31 @@ argument_list|,
 literal|"station initial state timeout (sec)"
 argument_list|)
 expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|oid
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"driver_caps"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_caps
+argument_list|,
+literal|0
+argument_list|,
+literal|"driver capabilities"
+argument_list|)
+expr_stmt|;
 name|ic
 operator|->
 name|ic_sysctl
@@ -1210,7 +1235,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] %s replay detected<rsc %ju, csc %ju>\n"
+literal|"[%s] %s replay detected<rsc %ju, csc %ju, keyix %u>\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -1236,6 +1261,10 @@ operator|)
 name|k
 operator|->
 name|wk_keyrsc
+argument_list|,
+name|k
+operator|->
+name|wk_keyix
 argument_list|)
 expr_stmt|;
 if|if
@@ -1357,7 +1386,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] Michael MIC verification failed<keyidx %d>\n"
+literal|"[%s] michael MIC verification failed<keyix %u>\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
