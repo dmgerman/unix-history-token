@@ -614,7 +614,7 @@ argument_list|)
 expr_stmt|;
 name|ExFreePool
 argument_list|(
-name|c
+name|e
 argument_list|)
 expr_stmt|;
 name|e
