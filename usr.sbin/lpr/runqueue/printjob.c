@@ -8303,6 +8303,11 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -8590,6 +8595,11 @@ name|getport
 argument_list|(
 name|RM
 argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|alarm
+argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
