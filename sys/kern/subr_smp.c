@@ -130,6 +130,18 @@ name|mp_ncpus
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* export this for libkvm consumers. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mp_maxcpus
+init|=
+name|MAXCPU
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|volatile
 name|int
@@ -163,6 +175,27 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|"Kernel SMP"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_smp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|maxcpus
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|mp_maxcpus
+argument_list|,
+literal|0
+argument_list|,
+literal|"Max number of CPUs that the system was compiled for."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
