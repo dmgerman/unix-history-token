@@ -4433,6 +4433,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|dropit
+goto|;
+if|if
+condition|(
 name|bdg_ifp
 operator|!=
 name|BDG_LOCAL
@@ -4448,10 +4457,19 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-goto|goto
-name|getit
-goto|;
+name|eh
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ether_header
+operator|*
+argument_list|)
+expr_stmt|;
 block|}
+elseif|else
 endif|#
 directive|endif
 comment|/* 					 * Only pass this packet up 					 * if it is for us. 					 */
@@ -4502,8 +4520,6 @@ goto|goto
 name|rcvloop
 goto|;
 block|}
-name|getit
-label|:
 name|m
 operator|->
 name|m_data
