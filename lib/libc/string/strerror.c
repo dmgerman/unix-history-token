@@ -298,7 +298,7 @@ operator|-
 literal|1
 init|;
 name|t
-operator|>=
+operator|>
 name|tmp
 condition|;
 control|)
