@@ -1322,6 +1322,15 @@ end_function_decl
 
 begin_function_decl
 name|double
+name|exp2
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
 name|expm1
 parameter_list|(
 name|double
@@ -1931,6 +1940,15 @@ end_function_decl
 begin_function_decl
 name|float
 name|tanhf
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|exp2f
 parameter_list|(
 name|float
 parameter_list|)
