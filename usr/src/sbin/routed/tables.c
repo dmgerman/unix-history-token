@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.12 (Berkeley) %G%"
+literal|"@(#)tables.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1620,7 +1620,7 @@ argument_list|,
 operator|&
 name|inet_default
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|RTS_CHANGED
 operator||

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.12 (Berkeley) %G%"
+literal|"@(#)startup.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -958,8 +958,6 @@ name|dst
 decl_stmt|;
 name|int
 name|state
-decl_stmt|,
-name|metric
 decl_stmt|;
 specifier|register
 name|struct
@@ -1475,7 +1473,7 @@ argument_list|,
 operator|&
 name|loopaddr
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|state
 argument_list|)
@@ -1694,6 +1692,17 @@ name|gate
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|metric
+operator|==
+literal|0
+condition|)
+comment|/* XXX */
+name|metric
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
