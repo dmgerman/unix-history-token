@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.6 %G%"
+literal|"@(#)csh.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,8 @@ block|{
 literal|"history"
 block|,
 literal|"-h"
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -2251,6 +2253,19 @@ operator|!
 name|fast
 condition|)
 block|{
+if|if
+condition|(
+name|value
+argument_list|(
+literal|"savehist"
+argument_list|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return;
 name|strcpy
 argument_list|(
 name|buf
@@ -2280,11 +2295,11 @@ expr_stmt|;
 if|if
 condition|(
 name|fp
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
-block|{
+return|return;
 name|oldidfds
 operator|=
 name|didfds
@@ -2300,6 +2315,23 @@ expr_stmt|;
 name|SHOUT
 operator|=
 name|fp
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|value
+argument_list|(
+literal|"savehist"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dumphist
+index|[
+literal|2
+index|]
+operator|=
+name|buf
 expr_stmt|;
 name|dohist
 argument_list|(
@@ -2319,7 +2351,6 @@ name|didfds
 operator|=
 name|oldidfds
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
