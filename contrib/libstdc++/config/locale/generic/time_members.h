@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Backward-compat support -*- C++ -*-
+comment|// std::time_get, std::time_put implementation, generic version -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -96,100 +96,137 @@ comment|// the GNU General Public License.
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1996-1997  * Silicon Graphics Computer Systems, Inc.  *  * Permission to use, copy, modify, distribute and sell this software  * and its documentation for any purpose is hereby granted without fee,  * provided that the above copyright notice appear in all copies and  * that both that copyright notice and this permission notice appear  * in supporting documentation.  Silicon Graphics makes no  * representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied warranty.  */
+comment|//
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_CPP_BACKWARD_ALLOC_H
-end_ifndef
+begin_comment
+comment|// ISO C++ 14882: 22.2.5.1.2 - time_get functions
+end_comment
 
-begin_define
-define|#
-directive|define
-name|_CPP_BACKWARD_ALLOC_H
-value|1
-end_define
+begin_comment
+comment|// ISO C++ 14882: 22.2.5.3.2 - time_put functions
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"backward_warning.h"
-end_include
+begin_comment
+comment|//
+end_comment
 
-begin_include
-include|#
-directive|include
-file|<bits/c++config.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<bits/stl_alloc.h>
-end_include
+begin_comment
+comment|// Written by Benjamin Kosnik<bkoz@redhat.com>
+end_comment
 
 begin_expr_stmt
-name|using
-name|std
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|__timepunct
+operator|<
+name|_CharT
+operator|>
 operator|::
-name|__malloc_alloc_template
+name|__timepunct
+argument_list|(
+argument|size_t __refs
+argument_list|)
+operator|:
+name|locale
+operator|::
+name|facet
+argument_list|(
+argument|__refs
+argument_list|)
+block|{
+name|_M_name_timepunct
+operator|=
+name|_S_c_name
+block|;
+name|_M_initialize_timepunct
+argument_list|()
+block|;      }
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|__timepunct
+operator|<
+name|_CharT
+operator|>
+operator|::
+name|__timepunct
+argument_list|(
+argument|__c_locale __cloc
+argument_list|,
+argument|const char* __s
+argument_list|,
+argument|size_t __refs
+argument_list|)
+operator|:
+name|locale
+operator|::
+name|facet
+argument_list|(
+argument|__refs
+argument_list|)
+block|{
+name|_M_name_timepunct
+operator|=
+name|new
+name|char
+index|[
+name|strlen
+argument_list|(
+name|__s
+argument_list|)
+operator|+
+literal|1
+index|]
+block|;
+name|strcpy
+argument_list|(
+name|_M_name_timepunct
+argument_list|,
+name|__s
+argument_list|)
+block|;
+name|_M_initialize_timepunct
+argument_list|(
+name|__cloc
+argument_list|)
+block|;      }
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|__timepunct
+operator|<
+name|_CharT
+operator|>
+operator|::
+operator|~
+name|__timepunct
+argument_list|()
+block|{
+if|if
+condition|(
+name|_S_c_name
+operator|!=
+name|_M_name_timepunct
+condition|)
+name|delete
+index|[]
+name|_M_name_timepunct
+decl_stmt|;
+name|_S_destroy_c_locale
+argument_list|(
+name|_M_c_locale_timepunct
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__simple_alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__debug_alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__single_client_alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|allocator
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__default_alloc_template
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
+unit|}
 end_unit
 

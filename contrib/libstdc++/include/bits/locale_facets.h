@@ -5327,102 +5327,62 @@ name|public
 label|:
 end_label
 
-begin_macro
-name|explicit
-end_macro
-
-begin_macro
-name|__timepunct
-argument_list|(
-argument|size_t __refs =
-literal|0
-argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
-name|locale
-operator|::
-name|facet
-argument_list|(
-argument|__refs
-argument_list|)
-block|{
-name|_M_name_timepunct
-operator|=
-name|new
-name|char
-index|[
-literal|2
-index|]
-block|;
-name|strcpy
-argument_list|(
-name|_M_name_timepunct
-argument_list|,
-literal|"C"
-argument_list|)
-block|;
-name|_M_initialize_timepunct
-argument_list|()
-block|;        }
+begin_function_decl
 name|explicit
 name|__timepunct
-argument_list|(
-argument|__c_locale __cloc
-argument_list|,
-argument|const char* __s
-argument_list|,
-argument|size_t __refs =
+parameter_list|(
+name|size_t
+name|__refs
+init|=
 literal|0
-argument_list|)
-operator|:
-name|locale
-operator|::
-name|facet
-argument_list|(
-argument|__refs
-argument_list|)
-block|{
-name|_M_name_timepunct
-operator|=
-name|new
-name|char
-index|[
-name|strlen
-argument_list|(
-name|__s
-argument_list|)
-operator|+
-literal|1
-index|]
-block|;
-name|strcpy
-argument_list|(
-name|_M_name_timepunct
-argument_list|,
-name|__s
-argument_list|)
-block|;
-name|_M_initialize_timepunct
-argument_list|(
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|explicit
+name|__timepunct
+parameter_list|(
+name|__c_locale
 name|__cloc
-argument_list|)
-block|;        }
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__s
+parameter_list|,
+name|size_t
+name|__refs
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|void
 name|_M_put
 argument_list|(
-argument|_CharT* __s
+name|_CharT
+operator|*
+name|__s
 argument_list|,
-argument|size_t __maxlen
+name|size_t
+name|__maxlen
 argument_list|,
-argument|const _CharT* __format
-argument_list|,
-argument|const tm* __tm
-argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|_CharT
+operator|*
+name|__format
+argument_list|,
+specifier|const
+name|tm
+operator|*
+name|__tm
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -5879,24 +5839,24 @@ name|virtual
 operator|~
 name|__timepunct
 argument_list|()
-block|{
-name|delete
-index|[]
-name|_M_name_timepunct
-block|;
-name|_S_destroy_c_locale
-argument_list|(
-name|_M_c_locale_timepunct
-argument_list|)
-block|;        }
-comment|// For use at construction time only.
-name|void
-name|_M_initialize_timepunct
-argument_list|(
-argument|__c_locale __cloc = NULL
-argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// For use at construction time only.
+end_comment
+
+begin_function_decl
+name|void
+name|_M_initialize_timepunct
+parameter_list|(
+name|__c_locale
+name|__cloc
+init|=
+name|NULL
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 unit|};
@@ -6076,6 +6036,16 @@ literal|14
 index|]
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// Include host and configuration specific timepunct functions.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<bits/time_members.h>
+end_include
 
 begin_expr_stmt
 name|template
@@ -8461,27 +8431,12 @@ name|_M_c_locale_messages
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|// Only needed if glibc< 2.3
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
 name|_M_name_messages
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_label
 name|public
@@ -8497,100 +8452,60 @@ name|id
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_function_decl
 name|explicit
-end_macro
-
-begin_macro
 name|messages
-argument_list|(
-argument|size_t __refs =
+parameter_list|(
+name|size_t
+name|__refs
+init|=
 literal|0
-argument_list|)
-end_macro
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_expr_stmt
-unit|:
-name|locale
-operator|::
-name|facet
-argument_list|(
-argument|__refs
-argument_list|)
-block|{
-name|_M_name_messages
-operator|=
-name|new
-name|char
-index|[
-literal|2
-index|]
-block|;
-name|strcpy
-argument_list|(
-name|_M_name_messages
-argument_list|,
-literal|"C"
-argument_list|)
-block|;
-name|_M_c_locale_messages
-operator|=
-name|_S_c_locale
-block|;        }
+begin_comment
 comment|// Non-standard.
+end_comment
+
+begin_function_decl
 name|explicit
 name|messages
-argument_list|(
-argument|__c_locale __cloc
-argument_list|,
-argument|const char* __s
-argument_list|,
-argument|size_t __refs =
-literal|0
-argument_list|)
-operator|:
-name|locale
-operator|::
-name|facet
-argument_list|(
-argument|__refs
-argument_list|)
-block|{
-name|_M_name_messages
-operator|=
-name|new
-name|char
-index|[
-name|strlen
-argument_list|(
-name|__s
-argument_list|)
-operator|+
-literal|1
-index|]
-block|;
-name|strcpy
-argument_list|(
-name|_M_name_messages
-argument_list|,
-name|__s
-argument_list|)
-block|;
-name|_M_c_locale_messages
-operator|=
-name|_S_clone_c_locale
-argument_list|(
+parameter_list|(
+name|__c_locale
 name|__cloc
-argument_list|)
-block|;        }
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__s
+parameter_list|,
+name|size_t
+name|__refs
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|catalog
 name|open
 argument_list|(
-argument|const basic_string<char>& __s
-argument_list|,
-argument|const locale& __loc
-argument_list|)
 specifier|const
+name|basic_string
+operator|<
+name|char
+operator|>
+operator|&
+name|__s
+argument_list|,
+specifier|const
+name|locale
+operator|&
+name|__loc
+argument_list|)
+decl|const
 block|{
 return|return
 name|this
@@ -8603,7 +8518,7 @@ name|__loc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|// Non-standard and unorthodox, yet effective.
@@ -8699,27 +8614,28 @@ name|virtual
 operator|~
 name|messages
 argument_list|()
-block|{
-name|delete
-index|[]
-name|_M_name_messages
-block|;
-name|_S_destroy_c_locale
-argument_list|(
-name|_M_c_locale_messages
-argument_list|)
-block|;         }
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|virtual
 name|catalog
 name|do_open
 argument_list|(
-argument|const basic_string<char>&
-argument_list|,
-argument|const locale&
-argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|basic_string
+operator|<
+name|char
+operator|>
+operator|&
+argument_list|,
+specifier|const
+name|locale
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|virtual
@@ -8938,16 +8854,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|// Include host and configuration specific messages virtual functions.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<bits/messages_members.h>
-end_include
-
 begin_expr_stmt
 name|template
 operator|<
@@ -8981,68 +8887,29 @@ name|string_type
 expr_stmt|;
 end_typedef
 
-begin_macro
+begin_function_decl
 name|explicit
-end_macro
-
-begin_macro
 name|messages_byname
-argument_list|(
-argument|const char* __s
-argument_list|,
-argument|size_t __refs =
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__s
+parameter_list|,
+name|size_t
+name|__refs
+init|=
 literal|0
-argument_list|)
-end_macro
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_label
+name|protected
+label|:
+end_label
 
 begin_expr_stmt
-unit|:
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|(
-name|__refs
-operator|)
-block|{
-name|delete
-index|[]
-name|_M_name_messages
-block|;
-name|_M_name_messages
-operator|=
-name|new
-name|char
-index|[
-name|strlen
-argument_list|(
-name|__s
-argument_list|)
-operator|+
-literal|1
-index|]
-block|;
-name|strcpy
-argument_list|(
-name|_M_name_messages
-argument_list|,
-name|__s
-argument_list|)
-block|;
-name|_S_destroy_c_locale
-argument_list|(
-name|_M_c_locale_messages
-argument_list|)
-block|;
-name|_S_create_c_locale
-argument_list|(
-name|_M_c_locale_messages
-argument_list|,
-name|__s
-argument_list|)
-block|;        }
-name|protected
-operator|:
 name|virtual
 operator|~
 name|messages_byname
@@ -9052,6 +8919,16 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|// Include host and configuration specific messages functions.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<bits/messages_members.h>
+end_include
+
+begin_comment
 comment|// Subclause convenience interfaces, inlines.
 end_comment
 

@@ -116,7 +116,7 @@ name|__GLIBCPP_INTERNAL_ALLOC_H
 end_define
 
 begin_comment
-comment|/**  *  @defgroup Allocators Memory Allocators  *  @if maint  *  stl_alloc.h implements some node allocators.  These are NOT the same as  *  allocators in the C++ standard, nor in the original H-P STL.  They do not  *  encapsulate different pointer types; we assume that there is only one  *  pointer type.  The C++ standard allocators are intended to allocate  *  individual objects, not pools or arenas.  *  *  In this file allocators are of two different styles:  "standard" and  *  "SGI" (quotes included).  "Standard" allocators conform to 20.4.  "SGI"  *  allocators differ in AT LEAST the following ways (add to this list as you  *  discover them):  *  *   - "Standard" allocate() takes two parameters (n_count,hint=0) but "SGI"  *     allocate() takes one paramter (n_size).  *   - Likewise, "standard" deallocate()'s argument is a count, but in "SGI"  *     is a byte size.  *   - max_size(), construct(), and destroy() are missing in "SGI" allocators.  *   - reallocate(p,oldsz,newsz) is added in "SGI", and behaves as  *     if p=realloc(p,newsz).  *  *  "SGI" allocators may be wrapped in __allocator to convert the interface  *  into a "standard" one.  *  @endif  *  *  The canonical description of these classes is in docs/html/ext/howto.html  *  or online at http://gcc.gnu.org/onlinedocs/libstdc++/ext/howto.html#3 */
+comment|/**  *  @defgroup Allocators Memory Allocators  *  @if maint  *  stl_alloc.h implements some node allocators.  These are NOT the same as  *  allocators in the C++ standard, nor in the original H-P STL.  They do not  *  encapsulate different pointer types; we assume that there is only one  *  pointer type.  The C++ standard allocators are intended to allocate  *  individual objects, not pools or arenas.  *  *  In this file allocators are of two different styles:  "standard" and  *  "SGI" (quotes included).  "Standard" allocators conform to 20.4.  "SGI"  *  allocators differ in AT LEAST the following ways (add to this list as you  *  discover them):  *  *   - "Standard" allocate() takes two parameters (n_count,hint=0) but "SGI"  *     allocate() takes one paramter (n_size).  *   - Likewise, "standard" deallocate()'s argument is a count, but in "SGI"  *     is a byte size.  *   - max_size(), construct(), and destroy() are missing in "SGI" allocators.  *   - reallocate(p,oldsz,newsz) is added in "SGI", and behaves as  *     if p=realloc(p,newsz).  *  *  "SGI" allocators may be wrapped in __allocator to convert the interface  *  into a "standard" one.  *  @endif  *  *  @note The @c reallocate member functions have been deprecated for 3.2  *        and will be removed in 3.4.  You must define @c _GLIBCPP_DEPRECATED  *        to make this visible in 3.2; see c++config.h.  *  *  The canonical description of these classes is in docs/html/ext/howto.html  *  or online at http://gcc.gnu.org/onlinedocs/libstdc++/ext/howto.html#3 */
 end_comment
 
 begin_include
@@ -159,11 +159,17 @@ directive|include
 file|<bits/stl_threads.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|std
 block|{
-comment|/**    *  @if maint    *  A new-based allocator, as required by the standard.  Allocation and    *  deallocation forward to global new and delete.  "SGI" style, minus    *  reallocate().    *  @endif    *  (See @link Allocators allocators info @endlink for more.)   */
+comment|/**    *  @if maint    *  A new-based allocator, as required by the standard.  Allocation and    *  deallocation forward to global new and delete.  "SGI" style, minus    *  reallocate().    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 name|class
 name|__new_alloc
 block|{
@@ -208,7 +214,7 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-comment|/**    *  @if maint    *  A malloc-based allocator.  Typically slower than the    *  __default_alloc_template (below).  Typically thread-safe and more    *  storage efficient.  The template argument is unused and is only present    *  to permit multiple instantiations (but see __default_alloc_template    *  for caveats).  "SGI" style, plus __set_malloc_handler for OOM conditions.    *  @endif    *  (See @link Allocators allocators info @endlink for more.)   */
+comment|/**    *  @if maint    *  A malloc-based allocator.  Typically slower than the    *  __default_alloc_template (below).  Typically thread-safe and more    *  storage efficient.  The template argument is unused and is only present    *  to permit multiple instantiations (but see __default_alloc_template    *  for caveats).  "SGI" style, plus __set_malloc_handler for OOM conditions.    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 name|template
 operator|<
 name|int
@@ -227,6 +233,7 @@ argument_list|(
 name|size_t
 argument_list|)
 block|;
+comment|// _GLIBCPP_DEPRECATED
 specifier|static
 name|void
 operator|*
@@ -267,9 +274,14 @@ argument_list|)
 block|;
 if|if
 condition|(
-literal|0
-operator|==
+name|__builtin_expect
+argument_list|(
 name|__result
+operator|==
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 name|__result
 operator|=
@@ -300,6 +312,7 @@ name|__p
 argument_list|)
 expr_stmt|;
 block|}
+comment|// _GLIBCPP_DEPRECATED
 specifier|static
 name|void
 modifier|*
@@ -329,9 +342,14 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
+name|__builtin_expect
+argument_list|(
 name|__result
+operator|==
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 name|__result
 operator|=
@@ -368,9 +386,7 @@ operator|=
 name|__f
 block|;
 return|return
-operator|(
 name|__old
-operator|)
 return|;
 block|}
 block|}
@@ -447,12 +463,15 @@ name|__malloc_alloc_oom_handler
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
+name|__builtin_expect
+argument_list|(
 name|__my_malloc_handler
+operator|==
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 condition|)
-name|std
-operator|::
 name|__throw_bad_alloc
 argument_list|()
 expr_stmt|;
@@ -474,15 +493,18 @@ condition|(
 name|__result
 condition|)
 return|return
-operator|(
 name|__result
-operator|)
 return|;
 block|}
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|// _GLIBCPP_DEPRECATED
+end_comment
+
 begin_expr_stmt
-unit|}      template
+unit|template
 operator|<
 name|int
 name|__inst
@@ -524,12 +546,15 @@ name|__malloc_alloc_oom_handler
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
+name|__builtin_expect
+argument_list|(
 name|__my_malloc_handler
+operator|==
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 condition|)
-name|std
-operator|::
 name|__throw_bad_alloc
 argument_list|()
 expr_stmt|;
@@ -553,62 +578,34 @@ condition|(
 name|__result
 condition|)
 return|return
-operator|(
 name|__result
-operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
 unit|}
-comment|// Determines the underlying allocator choice for the node allocator.
+comment|// Should not be referenced within the library anymore.
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__USE_MALLOC
-end_ifdef
-
-begin_expr_stmt
+begin_decl_stmt
 unit|typedef
-name|__malloc_alloc_template
-operator|<
-literal|0
-operator|>
-name|__mem_interface
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
 name|__new_alloc
 name|__mem_interface
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/**    *  @if maint    *  This is used primarily (only?) in _Alloc_traits and other places to    *  help provide the _Alloc_type typedef.    *    *  This is neither "standard"-conforming nor "SGI".  The _Alloc parameter    *  must be "SGI" style.    *  @endif    *  (See @link Allocators allocators info @endlink for more.)   */
+comment|/**    *  @if maint    *  This is used primarily (only?) in _Alloc_traits and other places to    *  help provide the _Alloc_type typedef.  All it does is forward the    *  requests after some minimal checking.    *    *  This is neither "standard"-conforming nor "SGI".  The _Alloc parameter    *  must be "SGI" style.    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 end_comment
 
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 name|class
@@ -624,17 +621,24 @@ argument_list|(
 argument|size_t __n
 argument_list|)
 block|{
-return|return
-literal|0
-operator|==
-name|__n
-operator|?
-literal|0
-operator|:
-operator|(
 name|_Tp
 operator|*
-operator|)
+name|__ret
+operator|=
+literal|0
+block|;
+if|if
+condition|(
+name|__n
+condition|)
+name|__ret
+operator|=
+name|static_cast
+operator|<
+name|_Tp
+operator|*
+operator|>
+operator|(
 name|_Alloc
 operator|::
 name|allocate
@@ -646,13 +650,20 @@ argument_list|(
 name|_Tp
 argument_list|)
 argument_list|)
+operator|)
+expr_stmt|;
+return|return
+name|__ret
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|_Tp
-operator|*
+modifier|*
 name|allocate
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -670,7 +681,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_function
 specifier|static
@@ -735,13 +746,13 @@ end_function
 
 begin_comment
 unit|};
-comment|/**    *  @if maint    *  An adaptor for an underlying allocator (_Alloc) to check the size    *  arguments for debugging.  Errors are reported using assert; these    *  checks can be disabled via NDEBUG, but the space penalty is still    *  paid, therefore it is far better to just use the underlying allocator    *  by itelf when no checking is desired.    *    *  "There is some evidence that this can confuse Purify." - SGI comment    *    *  This adaptor is "SGI" style.  The _Alloc parameter must also be "SGI".    *  @endif    *  (See @link Allocators allocators info @endlink for more.)   */
+comment|/**    *  @if maint    *  An adaptor for an underlying allocator (_Alloc) to check the size    *  arguments for debugging.  Errors are reported using assert; these    *  checks can be disabled via NDEBUG, but the space penalty is still    *  paid, therefore it is far better to just use the underlying allocator    *  by itelf when no checking is desired.    *    *  "There is some evidence that this can confuse Purify." - SGI comment    *    *  This adaptor is "SGI" style.  The _Alloc parameter must also be "SGI".    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 end_comment
 
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Alloc
 operator|>
 name|class
@@ -749,6 +760,8 @@ name|__debug_alloc
 block|{
 name|private
 operator|:
+comment|// Size of space used to store size.  Note that this must be
+comment|// large enough to preserve alignment.
 expr|enum
 block|{
 name|_S_extra
@@ -756,8 +769,6 @@ operator|=
 literal|8
 block|}
 block|;
-comment|// Size of space used to store size.  Note that this
-comment|// must be large enough to preserve alignment.
 name|public
 operator|:
 specifier|static
@@ -855,7 +866,8 @@ name|int
 operator|)
 name|_S_extra
 argument_list|)
-block|;     }
+block|;       }
+comment|// _GLIBCPP_DEPRECATED
 specifier|static
 name|void
 operator|*
@@ -944,34 +956,9 @@ return|;
 block|}
 end_expr_stmt
 
-begin_ifdef
-unit|};
-ifdef|#
-directive|ifdef
-name|__USE_MALLOC
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|__mem_interface
-name|__alloc
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__mem_interface
-name|__single_client_alloc
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/**  *  @if maint  *  Default node allocator.  "SGI" style.  Uses __mem_interface for its  *  underlying requests (and makes as few requests as possible).  *  **** Currently __mem_interface is always __new_alloc, never __malloc*.  *   *  Important implementation properties:  *  1. If the clients request an object of size> _MAX_BYTES, the resulting  *     object will be obtained directly from the underlying __mem_interface.  *  2. In all other cases, we allocate an object of size exactly  *     _S_round_up(requested_size).  Thus the client has enough size  *     information that we can return the object to the proper free list  *     without permanently losing part of the object.  *   *  The first template parameter specifies whether more than one thread may  *  use this allocator.  It is safe to allocate an object from one instance  *  of a default_alloc and deallocate it with another one.  This effectively  *  transfers its ownership to the second one.  This may have undesirable  *  effects on reference locality.  *  *  The second parameter is unused and serves only to allow the creation of  *  multiple default_alloc instances.  Note that containers built on different  *  allocator instances have different types, limiting the utility of this  *  approach.  If you do not wish to share the free lists with the main  *  default_alloc instance, instantiate this with a non-zero __inst.  *  *  @endif  *  (See @link Allocators allocators info @endlink for more.) */
+unit|};
+comment|/**    *  @if maint    *  Default node allocator.  "SGI" style.  Uses various allocators to    *  fulfill underlying requests (and makes as few requests as possible    *  when in default high-speed pool mode).    *    *  Important implementation properties:    *  0. If globally mandated, then allocate objects from __new_alloc    *  1. If the clients request an object of size> _MAX_BYTES, the resulting    *     object will be obtained directly from __new_alloc    *  2. In all other cases, we allocate an object of size exactly    *     _S_round_up(requested_size).  Thus the client has enough size    *     information that we can return the object to the proper free list    *     without permanently losing part of the object.    *    *  The first template parameter specifies whether more than one thread may    *  use this allocator.  It is safe to allocate an object from one instance    *  of a default_alloc and deallocate it with another one.  This effectively    *  transfers its ownership to the second one.  This may have undesirable    *  effects on reference locality.    *    *  The second parameter is unused and serves only to allow the creation of    *  multiple default_alloc instances.  Note that containers built on different    *  allocator instances have different types, limiting the utility of this    *  approach.  If you do not wish to share the free lists with the main    *  default_alloc instance, instantiate this with a non-zero __inst.    *    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 end_comment
 
 begin_expr_stmt
@@ -994,13 +981,13 @@ name|_ALIGN
 operator|=
 literal|8
 block|}
-block|;     enum
+block|;       enum
 block|{
 name|_MAX_BYTES
 operator|=
 literal|128
 block|}
-block|;     enum
+block|;       enum
 block|{
 name|_NFREELISTS
 operator|=
@@ -1173,12 +1160,10 @@ begin_comment
 comment|// test whether threads are in use.
 end_comment
 
-begin_decl_stmt
-name|class
+begin_struct
+struct|struct
 name|_Lock
 block|{
-name|public
-label|:
 name|_Lock
 argument_list|()
 block|{
@@ -1207,22 +1192,29 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|__attribute__
 argument_list|(
 operator|(
 name|__unused__
 operator|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
+
+begin_macro
+name|friend
+end_macro
+
+begin_struct_decl
+struct_decl|struct
+name|_Lock
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
-name|friend
-name|class
-name|_Lock
+specifier|static
+name|_Atomic_word
+name|_S_force_new
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,18 +1243,70 @@ name|__ret
 init|=
 literal|0
 decl_stmt|;
+comment|// If there is a race through here, assume answer from getenv
+comment|// will resolve in same direction.  Inspired by techniques
+comment|// to efficiently support threading found in basic_string.h.
 if|if
 condition|(
+name|_S_force_new
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"GLIBCPP_FORCE_NEW"
+argument_list|)
+condition|)
+name|__atomic_add
+argument_list|(
+operator|&
+name|_S_force_new
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|__atomic_add
+argument_list|(
+operator|&
+name|_S_force_new
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// Trust but verify...
+name|assert
+argument_list|(
+name|_S_force_new
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
 name|__n
 operator|>
 operator|(
 name|size_t
 operator|)
 name|_MAX_BYTES
+operator|)
+operator|||
+operator|(
+name|_S_force_new
+operator|>
+literal|0
+operator|)
 condition|)
 name|__ret
 operator|=
-name|__mem_interface
+name|__new_alloc
 operator|::
 name|allocate
 argument_list|(
@@ -1300,9 +1344,14 @@ name|__my_free_list
 decl_stmt|;
 if|if
 condition|(
+name|__builtin_expect
+argument_list|(
 name|__result
 operator|==
 literal|0
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 name|__ret
 operator|=
@@ -1328,16 +1377,26 @@ operator|=
 name|__result
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|__builtin_expect
+argument_list|(
+name|__ret
+operator|==
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|__throw_bad_alloc
+argument_list|()
+expr_stmt|;
 block|}
 return|return
 name|__ret
 return|;
 block|}
 end_function
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|// __p may not be 0
@@ -1358,14 +1417,22 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|__n
 operator|>
 operator|(
 name|size_t
 operator|)
 name|_MAX_BYTES
+operator|)
+operator|||
+operator|(
+name|_S_force_new
+operator|>
+literal|0
+operator|)
 condition|)
-name|__mem_interface
+name|__new_alloc
 operator|::
 name|deallocate
 argument_list|(
@@ -1399,8 +1466,9 @@ operator|*
 operator|)
 name|__p
 decl_stmt|;
-comment|// Acquire the lock here with a constructor call.  This ensures that
-comment|// it is released in exit or during stack unwinding.
+comment|// Acquire the lock here with a constructor call.  This
+comment|// ensures that it is released in exit or during stack
+comment|// unwinding.
 name|_Lock
 name|__lock_instance
 decl_stmt|;
@@ -1419,6 +1487,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|// _GLIBCPP_DEPRECATED
+end_comment
 
 begin_function_decl
 specifier|static
@@ -1441,6 +1513,29 @@ end_function_decl
 
 begin_expr_stmt
 unit|};
+name|template
+operator|<
+name|bool
+name|__threads
+operator|,
+name|int
+name|__inst
+operator|>
+name|_Atomic_word
+name|__default_alloc_template
+operator|<
+name|__threads
+operator|,
+name|__inst
+operator|>
+operator|::
+name|_S_force_new
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|bool
@@ -1523,11 +1618,11 @@ comment|// We allocate memory in large chunks in order to avoid fragmenting the
 end_comment
 
 begin_comment
-comment|// malloc heap (or whatever __mem_interface is using) too much.  We assume
+comment|// heap too much.  We assume that __size is properly aligned.  We hold
 end_comment
 
 begin_comment
-comment|// that __size is properly aligned.  We hold the allocation lock.
+comment|// the allocation lock.
 end_comment
 
 begin_expr_stmt
@@ -1589,9 +1684,7 @@ operator|+=
 name|__total_bytes
 expr_stmt|;
 return|return
-operator|(
 name|__result
-operator|)
 return|;
 block|}
 end_expr_stmt
@@ -1631,9 +1724,7 @@ operator|+=
 name|__total_bytes
 expr_stmt|;
 return|return
-operator|(
 name|__result
-operator|)
 return|;
 block|}
 end_elseif
@@ -1705,7 +1796,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__mem_interface
+name|__new_alloc
 operator|::
 name|allocate
 argument_list|(
@@ -1714,9 +1805,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 name|_S_start_free
+operator|==
+literal|0
 condition|)
 block|{
 name|size_t
@@ -1773,9 +1864,9 @@ name|__my_free_list
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|!=
 name|__p
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -1800,14 +1891,12 @@ operator|+
 name|__i
 expr_stmt|;
 return|return
-operator|(
 name|_S_chunk_alloc
 argument_list|(
 name|__size
 argument_list|,
 name|__nobjs
 argument_list|)
-operator|)
 return|;
 comment|// Any leftover piece will eventually make it to the
 comment|// right free list.
@@ -1824,7 +1913,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__mem_interface
+name|__new_alloc
 operator|::
 name|allocate
 argument_list|(
@@ -1845,14 +1934,12 @@ operator|+
 name|__bytes_to_get
 expr_stmt|;
 return|return
-operator|(
 name|_S_chunk_alloc
 argument_list|(
 name|__size
 argument_list|,
 name|__nobjs
 argument_list|)
-operator|)
 return|;
 block|}
 end_else
@@ -1937,9 +2024,7 @@ operator|==
 name|__nobjs
 condition|)
 return|return
-operator|(
 name|__chunk
-operator|)
 return|;
 name|__my_free_list
 operator|=
@@ -1953,7 +2038,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Build free list in chunk */
+comment|// Build free list in chunk.
 end_comment
 
 begin_expr_stmt
@@ -2035,7 +2120,6 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-block|{
 name|__current_obj
 operator|->
 name|_M_free_list_link
@@ -2043,19 +2127,21 @@ operator|=
 name|__next_obj
 expr_stmt|;
 block|}
-block|}
 end_for
 
 begin_return
 return|return
-operator|(
 name|__result
-operator|)
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|// _GLIBCPP_DEPRECATED
+end_comment
+
 begin_expr_stmt
-unit|}     template
+unit|template
 operator|<
 name|bool
 name|threads
@@ -2104,7 +2190,6 @@ name|size_t
 operator|)
 name|_MAX_BYTES
 condition|)
-block|{
 return|return
 operator|(
 name|realloc
@@ -2115,7 +2200,6 @@ name|__new_sz
 argument_list|)
 operator|)
 return|;
-block|}
 end_expr_stmt
 
 begin_if
@@ -2185,14 +2269,12 @@ end_expr_stmt
 
 begin_return
 return|return
-operator|(
 name|__result
-operator|)
 return|;
 end_return
 
 begin_expr_stmt
-unit|}      template
+unit|}    template
 operator|<
 name|bool
 name|__threads
@@ -2342,23 +2424,14 @@ name|__single_client_alloc
 expr_stmt|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* ! __USE_MALLOC */
-end_comment
-
-begin_comment
-comment|/**  *  This is a "standard" allocator, as per [20.4].  The private _Alloc is  *  "SGI" style.  (See comments at the top of stl_alloc.h.)  *  *  The underlying allocator behaves as follows.  *  - if __USE_MALLOC then  *    - thread safety depends on malloc and is entirely out of our hands  *    - __malloc_alloc_template is used for memory requests  *  - else (the default)  *    - __default_alloc_template is used via two typedefs  *    - "__single_client_alloc" typedef does no locking for threads  *    - "__alloc" typedef is threadsafe via the locks  *    - __new_alloc is used for memory requests  *  *  (See @link Allocators allocators info @endlink for more.) */
+comment|/**    *  @brief  The "standard" allocator, as per [20.4].    *    *  The private _Alloc is "SGI" style.  (See comments at the top    *  of stl_alloc.h.)    *    *  The underlying allocator behaves as follows.    *    - __default_alloc_template is used via two typedefs    *    - "__single_client_alloc" typedef does no locking for threads    *    - "__alloc" typedef is threadsafe via the locks    *    - __new_alloc is used for memory requests    *    *  (See @link Allocators allocators info @endlink for more.)    */
 end_comment
 
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|>
 name|class
@@ -2431,7 +2504,7 @@ end_typedef
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp1
 operator|>
 expr|struct
@@ -2484,7 +2557,7 @@ end_block
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp1
 operator|>
 name|allocator
@@ -2531,11 +2604,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// __n is permitted to be 0.  The C++ standard says nothing about what
+comment|// NB: __n is permitted to be 0.  The C++ standard says nothing
 end_comment
 
 begin_comment
-comment|// the return value is when __n == 0.
+comment|// about what the return value is when __n == 0.
 end_comment
 
 begin_function
@@ -2553,11 +2626,28 @@ init|=
 literal|0
 parameter_list|)
 block|{
-return|return
-name|__n
-operator|!=
+name|_Tp
+modifier|*
+name|__ret
+init|=
 literal|0
-condition|?
+decl_stmt|;
+if|if
+condition|(
+name|__n
+condition|)
+block|{
+if|if
+condition|(
+name|__n
+operator|<=
+name|this
+operator|->
+name|max_size
+argument_list|()
+condition|)
+name|__ret
+operator|=
 name|static_cast
 operator|<
 name|_Tp
@@ -2576,8 +2666,14 @@ name|_Tp
 argument_list|)
 argument_list|)
 operator|)
-else|:
-literal|0
+expr_stmt|;
+else|else
+name|__throw_bad_alloc
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|__ret
 return|;
 block|}
 end_function
@@ -2732,7 +2828,7 @@ end_typedef
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp1
 operator|>
 expr|struct
@@ -2756,10 +2852,10 @@ begin_expr_stmt
 unit|};
 name|template
 operator|<
-name|class
+name|typename
 name|_T1
 operator|,
-name|class
+name|typename
 name|_T2
 operator|>
 specifier|inline
@@ -2791,10 +2887,10 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_T1
 operator|,
-name|class
+name|typename
 name|_T2
 operator|>
 specifier|inline
@@ -2824,16 +2920,16 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**  *  @if maint  *  Allocator adaptor to turn an "SGI" style allocator (e.g., __alloc,  *  __malloc_alloc_template) into a "standard" conforming allocator.  Note  *  that this adaptor does *not* assume that all objects of the underlying  *  alloc class are identical, nor does it assume that all of the underlying  *  alloc's member functions are static member functions.  Note, also, that  *  __allocator<_Tp, __alloc> is essentially the same thing as allocator<_Tp>.  *  @endif  *  (See @link Allocators allocators info @endlink for more.) */
+comment|/**    *  @if maint    *  Allocator adaptor to turn an "SGI" style allocator (e.g.,    *  __alloc, __malloc_alloc_template) into a "standard" conforming    *  allocator.  Note that this adaptor does *not* assume that all    *  objects of the underlying alloc class are identical, nor does it    *  assume that all of the underlying alloc's member functions are    *  static member functions.  Note, also, that __allocator<_Tp,    *  __alloc> is essentially the same thing as allocator<_Tp>.    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 end_comment
 
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 expr|struct
@@ -2899,7 +2995,7 @@ end_typedef
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp1
 operator|>
 expr|struct
@@ -2953,7 +3049,7 @@ argument_list|)
 block|{}
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp1
 operator|>
 name|__allocator
@@ -3007,7 +3103,11 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// __n is permitted to be 0.
+comment|// NB: __n is permitted to be 0.  The C++ standard says nothing
+end_comment
+
+begin_comment
+comment|// about what the return value is when __n == 0.
 end_comment
 
 begin_function
@@ -3025,19 +3125,26 @@ init|=
 literal|0
 parameter_list|)
 block|{
-return|return
-name|__n
-operator|!=
+name|_Tp
+modifier|*
+name|__ret
+init|=
 literal|0
-condition|?
+decl_stmt|;
+if|if
+condition|(
+name|__n
+condition|)
+name|__ret
+operator|=
 name|static_cast
 operator|<
 name|_Tp
 operator|*
 operator|>
 operator|(
-name|__underlying_alloc
-operator|.
+name|_Alloc
+operator|::
 name|allocate
 argument_list|(
 name|__n
@@ -3048,8 +3155,9 @@ name|_Tp
 argument_list|)
 argument_list|)
 operator|)
-else|:
-literal|0
+expr_stmt|;
+return|return
+name|__ret
 return|;
 block|}
 end_function
@@ -3155,10 +3263,10 @@ begin_expr_stmt
 unit|};
 name|template
 operator|<
-name|class
+name|typename
 name|_Alloc
 operator|>
-name|class
+expr|struct
 name|__allocator
 operator|<
 name|void
@@ -3206,7 +3314,7 @@ end_typedef
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp1
 operator|>
 expr|struct
@@ -3232,10 +3340,10 @@ begin_expr_stmt
 unit|};
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -3279,10 +3387,10 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -3328,7 +3436,7 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/** Comparison operators for all of the predifined SGI-style allocators.  *  This ensures that __allocator<malloc_alloc> (for example) will work  *  correctly.  As required, all allocators compare equal. */
+comment|/** Comparison operators for all of the predifined SGI-style allocators.    *  This ensures that __allocator<malloc_alloc> (for example) will work    *  correctly.  As required, all allocators compare equal.    */
 end_comment
 
 begin_expr_stmt
@@ -3398,7 +3506,7 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -3430,7 +3538,7 @@ end_expr_stmt
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -3464,7 +3572,7 @@ comment|//@}
 end_comment
 
 begin_comment
-comment|/**  *  @if maint  *  Another allocator adaptor:  _Alloc_traits.  This serves two purposes.  *  First, make it possible to write containers that can use either "SGI"  *  style allocators or "standard" allocators.  Second, provide a mechanism  *  so that containers can query whether or not the allocator has distinct  *  instances.  If not, the container can avoid wasting a word of memory to  *  store an empty object.  For examples of use, see stl_vector.h, etc, or  *  any of the other classes derived from this one.  *  *  This adaptor uses partial specialization.  The general case of  *  _Alloc_traits<_Tp, _Alloc> assumes that _Alloc is a  *  standard-conforming allocator, possibly with non-equal instances and  *  non-static members.  (It still behaves correctly even if _Alloc has  *  static member and if all instances are equal.  Refinements affect  *  performance, not correctness.)  *  *  There are always two members:  allocator_type, which is a standard-  *  conforming allocator type for allocating objects of type _Tp, and  *  _S_instanceless, a static const member of type bool.  If  *  _S_instanceless is true, this means that there is no difference  *  between any two instances of type allocator_type.  Furthermore, if  *  _S_instanceless is true, then _Alloc_traits has one additional  *  member:  _Alloc_type.  This type encapsulates allocation and  *  deallocation of objects of type _Tp through a static interface; it  *  has two member functions, whose signatures are  *  *  -  static _Tp* allocate(size_t)  *  -  static void deallocate(_Tp*, size_t)  *  *  The size_t parameters are "standard" style (see top of stl_alloc.h) in  *  that they take counts, not sizes.  *  *  @endif  *  (See @link Allocators allocators info @endlink for more.) */
+comment|/**    *  @if maint    *  Another allocator adaptor:  _Alloc_traits.  This serves two purposes.    *  First, make it possible to write containers that can use either "SGI"    *  style allocators or "standard" allocators.  Second, provide a mechanism    *  so that containers can query whether or not the allocator has distinct    *  instances.  If not, the container can avoid wasting a word of memory to    *  store an empty object.  For examples of use, see stl_vector.h, etc, or    *  any of the other classes derived from this one.    *    *  This adaptor uses partial specialization.  The general case of    *  _Alloc_traits<_Tp, _Alloc> assumes that _Alloc is a    *  standard-conforming allocator, possibly with non-equal instances and    *  non-static members.  (It still behaves correctly even if _Alloc has    *  static member and if all instances are equal.  Refinements affect    *  performance, not correctness.)    *    *  There are always two members:  allocator_type, which is a standard-    *  conforming allocator type for allocating objects of type _Tp, and    *  _S_instanceless, a static const member of type bool.  If    *  _S_instanceless is true, this means that there is no difference    *  between any two instances of type allocator_type.  Furthermore, if    *  _S_instanceless is true, then _Alloc_traits has one additional    *  member:  _Alloc_type.  This type encapsulates allocation and    *  deallocation of objects of type _Tp through a static interface; it    *  has two member functions, whose signatures are    *    *  -  static _Tp* allocate(size_t)    *  -  static void deallocate(_Tp*, size_t)    *    *  The size_t parameters are "standard" style (see top of stl_alloc.h) in    *  that they take counts, not sizes.    *    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 end_comment
 
 begin_comment
@@ -3478,10 +3586,10 @@ end_comment
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Allocator
 operator|>
 expr|struct
@@ -3517,10 +3625,10 @@ end_empty_stmt
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Allocator
 operator|>
 specifier|const
@@ -3543,10 +3651,10 @@ end_comment
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Tp1
 operator|>
 expr|struct
@@ -3604,7 +3712,7 @@ end_comment
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
 name|int
@@ -3657,17 +3765,11 @@ name|allocator_type
 expr_stmt|;
 end_typedef
 
-begin_ifndef
-unit|};
-ifndef|#
-directive|ifndef
-name|__USE_MALLOC
-end_ifndef
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
 name|bool
@@ -3729,19 +3831,14 @@ name|allocator_type
 expr_stmt|;
 end_typedef
 
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 expr|struct
@@ -3801,16 +3898,20 @@ comment|//@{
 end_comment
 
 begin_comment
-comment|/// Versions for the __allocator adaptor used with the predefined "SGI" style allocators.
+comment|/// Versions for the __allocator adaptor used with the predefined
+end_comment
+
+begin_comment
+comment|/// "SGI" style allocators.
 end_comment
 
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Tp1
 operator|,
 name|int
@@ -3868,20 +3969,14 @@ name|allocator_type
 expr_stmt|;
 end_typedef
 
-begin_ifndef
-unit|};
-ifndef|#
-directive|ifndef
-name|__USE_MALLOC
-end_ifndef
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Tp1
 operator|,
 name|bool
@@ -3948,22 +4043,17 @@ name|allocator_type
 expr_stmt|;
 end_typedef
 
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
+unit|};
 name|template
 operator|<
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Tp1
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 expr|struct
@@ -4043,31 +4133,11 @@ begin_extern
 extern|extern template class allocator<wchar_t>;
 end_extern
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__USE_MALLOC
-end_ifdef
-
-begin_extern
-extern|extern template class __malloc_alloc_template<0>;
-end_extern
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_extern
 extern|extern template class __default_alloc_template<true
 operator|,
 extern|0>;
 end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 unit|}
@@ -4078,22 +4148,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __GLIBCPP_INTERNAL_ALLOC_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
-end_comment
 
 end_unit
 

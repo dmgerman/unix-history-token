@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// std::messages implementation details, GNU version -*- C++ -*-
+comment|// std::time_get, std::time_put implementation, GNU version -*- C++ -*-
 end_comment
 
 begin_comment
@@ -100,7 +100,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ISO C++ 14882: 22.2.7.1.2  messages functions
+comment|// ISO C++ 14882: 22.2.5.1.2 - time_get functions
+end_comment
+
+begin_comment
+comment|// ISO C++ 14882: 22.2.5.3.2 - time_put functions
 end_comment
 
 begin_comment
@@ -111,22 +115,18 @@ begin_comment
 comment|// Written by Benjamin Kosnik<bkoz@redhat.com>
 end_comment
 
-begin_comment
-comment|// Non-virtual member functions.
-end_comment
-
 begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|_CharT
 operator|>
-name|messages
+name|__timepunct
 operator|<
 name|_CharT
 operator|>
 operator|::
-name|messages
+name|__timepunct
 argument_list|(
 argument|size_t __refs
 argument_list|)
@@ -156,27 +156,26 @@ operator|>
 literal|2
 operator|)
 operator|)
-name|_M_name_messages
+name|_M_name_timepunct
 operator|=
 name|_S_c_name
 block|;
 endif|#
 directive|endif
-name|_M_c_locale_messages
-operator|=
-name|_S_c_locale
-block|;       }
+name|_M_initialize_timepunct
+argument_list|()
+block|;      }
 name|template
 operator|<
 name|typename
 name|_CharT
 operator|>
-name|messages
+name|__timepunct
 operator|<
 name|_CharT
 operator|>
 operator|::
-name|messages
+name|__timepunct
 argument_list|(
 argument|__c_locale __cloc
 argument_list|,
@@ -210,7 +209,7 @@ operator|>
 literal|2
 operator|)
 operator|)
-name|_M_name_messages
+name|_M_name_timepunct
 operator|=
 name|new
 name|char
@@ -225,87 +224,30 @@ index|]
 block|;
 name|strcpy
 argument_list|(
-name|_M_name_messages
+name|_M_name_timepunct
 argument_list|,
 name|__s
 argument_list|)
 block|;
 endif|#
 directive|endif
-name|_M_c_locale_messages
-operator|=
-name|_S_clone_c_locale
+name|_M_initialize_timepunct
 argument_list|(
 name|__cloc
 argument_list|)
-block|;       }
+block|;      }
 name|template
 operator|<
 name|typename
 name|_CharT
 operator|>
-name|typename
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|catalog
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|open
-argument_list|(
-argument|const basic_string<char>& __s
-argument_list|,
-argument|const locale& __loc
-argument_list|,
-argument|const char* __dir
-argument_list|)
-specifier|const
-block|{
-name|bindtextdomain
-argument_list|(
-name|__s
-operator|.
-name|c_str
-argument_list|()
-argument_list|,
-name|__dir
-argument_list|)
-block|;
-return|return
-name|this
-operator|->
-name|do_open
-argument_list|(
-name|__s
-argument_list|,
-name|__loc
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|// Virtual member functions.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|>
-name|messages
+name|__timepunct
 operator|<
 name|_CharT
 operator|>
 operator|::
 operator|~
-name|messages
+name|__timepunct
 argument_list|()
 block|{
 if|#
@@ -330,179 +272,17 @@ if|if
 condition|(
 name|_S_c_name
 operator|!=
-name|_M_name_messages
+name|_M_name_timepunct
 condition|)
 name|delete
 index|[]
-name|_M_name_messages
+name|_M_name_timepunct
 decl_stmt|;
 endif|#
 directive|endif
 name|_S_destroy_c_locale
 argument_list|(
-name|_M_c_locale_messages
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}    template
-operator|<
-name|typename
-name|_CharT
-operator|>
-name|typename
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|catalog
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|do_open
-argument_list|(
-argument|const basic_string<char>& __s
-argument_list|,
-argument|const locale&
-argument_list|)
-specifier|const
-block|{
-comment|// No error checking is done, assume the catalog exists and can
-comment|// be used.
-name|textdomain
-argument_list|(
-name|__s
-operator|.
-name|c_str
-argument_list|()
-argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|>
-name|void
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|do_close
-argument_list|(
-argument|catalog
-argument_list|)
-specifier|const
-block|{ }
-comment|// messages_byname
-name|template
-operator|<
-name|typename
-name|_CharT
-operator|>
-name|messages_byname
-operator|<
-name|_CharT
-operator|>
-operator|::
-name|messages_byname
-argument_list|(
-argument|const char* __s
-argument_list|,
-argument|size_t __refs
-argument_list|)
-operator|:
-name|messages
-operator|<
-name|_CharT
-operator|>
-operator|(
-name|__refs
-operator|)
-block|{
-if|#
-directive|if
-operator|!
-operator|(
-name|__GLIBC__
-operator|>
-literal|2
-operator|||
-operator|(
-name|__GLIBC__
-operator|==
-literal|2
-operator|&&
-name|__GLIBC_MINOR__
-operator|>
-literal|2
-operator|)
-operator|)
-if|if
-condition|(
-name|_S_c_name
-operator|!=
-name|_M_name_messages
-condition|)
-name|delete
-index|[]
-name|_M_name_messages
-decl_stmt|;
-name|_M_name_messages
-operator|=
-name|new
-name|char
-index|[
-name|strlen
-argument_list|(
-name|__s
-argument_list|)
-operator|+
-literal|1
-index|]
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|strcpy
-argument_list|(
-name|_M_name_messages
-argument_list|,
-name|__s
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_expr_stmt
-name|_S_destroy_c_locale
-argument_list|(
-name|_M_c_locale_messages
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|_S_create_c_locale
-argument_list|(
-name|_M_c_locale_messages
-argument_list|,
-name|__s
+name|_M_c_locale_timepunct
 argument_list|)
 expr_stmt|;
 end_expr_stmt
