@@ -806,12 +806,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|strrchr
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
