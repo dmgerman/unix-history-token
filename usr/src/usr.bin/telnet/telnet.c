@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.15 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|crmod
 init|=
 literal|0
@@ -431,6 +439,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|dhelp
+index|[]
+init|=
+literal|"toggle debugging"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|ehelp
 index|[]
 init|=
@@ -543,6 +560,14 @@ block|,
 name|rhelp
 block|,
 name|setcrmod
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|dhelp
+block|,
+name|setdebug
 block|}
 block|,
 block|{
@@ -1105,6 +1130,32 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|net
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"telnet: setsockopt"
+argument_list|)
+expr_stmt|;
 name|sigset
 argument_list|(
 name|SIGINT
@@ -3420,6 +3471,41 @@ argument_list|(
 literal|"%s map carriage return on output.\n"
 argument_list|,
 name|crmod
+condition|?
+literal|"Will"
+else|:
+literal|"Wont"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*VARARGS*/
+end_comment
+
+begin_macro
+name|setdebug
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|debug
+operator|=
+operator|!
+name|debug
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s turn on socket level debugging.\n"
+argument_list|,
+name|debug
 condition|?
 literal|"Will"
 else|:
