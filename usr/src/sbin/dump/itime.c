@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)itime.c	5.11 (Berkeley) %G%"
+literal|"@(#)itime.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1084,7 +1084,10 @@ name|fgets
 argument_list|(
 name|tbuf
 argument_list|,
-name|BUFSIZ
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 name|df
 argument_list|)
