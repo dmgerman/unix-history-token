@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.8 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2032,7 +2032,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Hash mark printing: %s; Use of PORT cmds: %s; Linger: %s\n"
+literal|"Hash mark printing: %s; Use of PORT cmds: %s\n"
 argument_list|,
 name|onoff
 argument_list|(
@@ -2042,11 +2042,6 @@ argument_list|,
 name|onoff
 argument_list|(
 name|sendport
-argument_list|)
-argument_list|,
-name|onoff
-argument_list|(
-name|linger
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2401,88 +2396,6 @@ name|debug
 argument_list|)
 argument_list|,
 name|debug
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Set linger on data connections on/off.  */
-end_comment
-
-begin_comment
-comment|/*VARARGS*/
-end_comment
-
-begin_macro
-name|setlinger
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|argv
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|argc
-operator|==
-literal|1
-condition|)
-name|linger
-operator|=
-operator|!
-name|linger
-expr_stmt|;
-else|else
-name|linger
-operator|=
-name|atoi
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|==
-literal|1
-operator|||
-name|linger
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Linger on data connection close %s.\n"
-argument_list|,
-name|onoff
-argument_list|(
-name|linger
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|printf
-argument_list|(
-literal|"Will linger for %d seconds on close of data connections.\n"
-argument_list|,
-name|linger
 argument_list|)
 expr_stmt|;
 block|}

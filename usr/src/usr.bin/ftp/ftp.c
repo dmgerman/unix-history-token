@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.10 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3180,35 +3180,6 @@ expr_stmt|;
 name|data
 operator|=
 name|s
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|mode
-operator|==
-literal|'w'
-operator|&&
-name|linger
-condition|)
-operator|(
-name|void
-operator|)
-name|setsockopt
-argument_list|(
-name|s
-argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_LINGER
-argument_list|,
-operator|&
-name|linger
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|linger
-argument_list|)
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
