@@ -1289,7 +1289,6 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* sx_destroy(&so->so_sxlock); */
 name|uma_zfree
 argument_list|(
 name|socket_zone
