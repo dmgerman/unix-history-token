@@ -69,6 +69,13 @@ literal|1
 index|]
 operator|!=
 literal|'\0'
+operator|||
+name|r
+operator|!=
+name|strlen
+argument_list|(
+name|TEST_STRING
+argument_list|)
 condition|)
 block|{
 name|fprintf

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: sm_gethost.c,v 8.7.8.10 2001/05/09 20:57:12 gshapiro Exp $"
+literal|"@(#)$Id: sm_gethost.c,v 8.7.8.11 2001/07/21 00:10:23 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,13 +81,13 @@ end_if
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AI_V4MAPPED
+name|AI_ADDRCONFIG
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AI_V4MAPPED
+name|AI_ADDRCONFIG
 value|0
 end_define
 
@@ -101,7 +101,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ! AI_V4MAPPED */
+comment|/* ! AI_ADDRCONFIG */
 end_comment
 
 begin_ifndef
@@ -128,6 +128,32 @@ end_endif
 
 begin_comment
 comment|/* ! AI_ALL */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AI_DEFAULT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AI_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* dummy */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! AI_DEFAULT */
 end_comment
 
 begin_function
@@ -410,6 +436,13 @@ if|#
 directive|if
 name|NETINET6
 name|int
+name|flags
+init|=
+name|AI_DEFAULT
+operator||
+name|AI_ALL
+decl_stmt|;
+name|int
 name|err
 decl_stmt|;
 endif|#
@@ -418,6 +451,17 @@ comment|/* NETINET6 */
 if|#
 directive|if
 name|NETINET6
+if|#
+directive|if
+name|ADDRCONFIG_IS_BROKEN
+name|flags
+operator|&=
+operator|~
+name|AI_ADDRCONFIG
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ADDRCONFIG_IS_BROKEN */
 name|h
 operator|=
 name|getipnodebyname
@@ -426,9 +470,7 @@ name|name
 argument_list|,
 name|family
 argument_list|,
-name|AI_V4MAPPED
-operator||
-name|AI_ALL
+name|flags
 argument_list|,
 operator|&
 name|err

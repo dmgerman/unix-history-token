@@ -44,7 +44,7 @@ name|char
 name|SmailId
 index|[]
 init|=
-literal|"@(#)$Id: sendmail.h,v 8.517.4.64 2001/05/23 17:49:13 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.517.4.69 2001/07/20 18:46:01 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7803,8 +7803,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SMFTO_NUM_TO
+name|SMFTO_CONNECT
 value|3
+end_define
+
+begin_comment
+comment|/* Timeout for connect() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMFTO_NUM_TO
+value|4
 end_define
 
 begin_comment
@@ -9194,7 +9205,7 @@ parameter_list|(
 name|sig
 parameter_list|)
 define|\
-value|{									\ 	if (InCriticalSection> 0&& (sig) != 0)			\ 	{								\ 		pend_signal((sig));					\ 		return SIGFUNC_RETURN;					\ 	}								\ }
+value|do									\ {									\ 	if (InCriticalSection> 0&& (sig) != 0)			\ 	{								\ 		pend_signal((sig));					\ 		return SIGFUNC_RETURN;					\ 	}								\ } while (0)
 end_define
 
 begin_comment
@@ -14523,6 +14534,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|FILE
+modifier|*
+name|safefopen
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|savemail
 name|__P
@@ -14929,6 +14961,19 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|SIGFUNC_DECL
+name|sm_signal_noop
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

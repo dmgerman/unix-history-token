@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: conf.c,v 8.646.2.2.2.86 2001/05/17 18:18:40 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.646.2.2.2.87 2001/07/20 23:56:52 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -17056,9 +17056,7 @@ name|hbuf
 argument_list|,
 name|family
 argument_list|,
-name|AI_V4MAPPED
-operator||
-name|AI_ALL
+name|flags
 argument_list|,
 operator|&
 name|err

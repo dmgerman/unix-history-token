@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: collect.c,v 8.136.4.21 2001/05/17 18:10:14 gshapiro Exp $"
+literal|"@(#)$Id: collect.c,v 8.136.4.22 2001/06/07 21:01:02 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1375,6 +1375,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|headeronly
+operator|&&
 name|MaxHeadersLength
 operator|>
 literal|0

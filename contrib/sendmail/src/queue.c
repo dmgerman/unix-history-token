@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.55 2001/05/03 23:37:11 gshapiro Exp $ (with queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.62 2001/07/20 00:53:01 gshapiro Exp $ (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.55 2001/05/03 23:37:11 gshapiro Exp $ (without queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.62 2001/07/20 00:53:01 gshapiro Exp $ (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,6 +387,10 @@ name|workcmpf4
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* **  Current qf file field assignments: ** **	A	AUTH= parameter **	B	body type **	C	controlling user **	D	data file name **	E	error recipient **	F	flag bits **	G	queue delay algorithm **	H	header **	I	data file's inode number **	K	time of last delivery attempt **	L	Solaris Content-Length: header (obsolete) **	M	message (obsolete) **	N	number of delivery attempts **	P	message priority **	Q	original recipient (ORCPT=) **	R	recipient **	S	sender **	T	init time **	V	queue file version **	X	character set (_FFR_SAVE_CHARSET) **	Y	current delay **	Z	original envelope id from ESMTP **	$	define macro **	.	terminate file */
+end_comment
 
 begin_escape
 end_escape
@@ -11658,12 +11662,46 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
+name|char
+modifier|*
+name|o
+decl_stmt|;
 name|a
 operator|->
 name|q_flags
 operator||=
 name|QGOODUID
 expr_stmt|;
+comment|/* if there is another ':': restore it */
+if|if
+condition|(
+operator|(
+name|o
+operator|=
+name|strtok
+argument_list|(
+name|NULL
+argument_list|,
+literal|":"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|o
+operator|>
+name|p
+condition|)
+name|o
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+literal|':'
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -12232,7 +12270,7 @@ block|}
 if|if
 condition|(
 name|NumQueues
-operator|==
+operator|<=
 literal|1
 condition|)
 name|idx

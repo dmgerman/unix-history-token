@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: daemon.c,v 8.401.4.61 2001/05/27 22:14:40 gshapiro Exp $ (with daemon mode)"
+literal|"@(#)$Id: daemon.c,v 8.401.4.68 2001/07/20 18:45:58 gshapiro Exp $ (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: daemon.c,v 8.401.4.61 2001/05/27 22:14:40 gshapiro Exp $ (without daemon mode)"
+literal|"@(#)$Id: daemon.c,v 8.401.4.68 2001/07/20 18:45:58 gshapiro Exp $ (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2892,6 +2892,16 @@ index|]
 operator|.
 name|d_socket
 argument_list|)
+expr_stmt|;
+name|Daemons
+index|[
+name|idx
+index|]
+operator|.
+name|d_socket
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 name|clrcontrol
@@ -10154,6 +10164,23 @@ begin_comment
 comment|/* **  RESTART_DAEMON -- Performs a clean restart of the daemon ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		restarts the daemon or exits if restart fails. */
 end_comment
 
+begin_comment
+comment|/* Make a non-DFL/IGN signal a noop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_NOOP_SIGNAL
+parameter_list|(
+name|sig
+parameter_list|,
+name|old
+parameter_list|)
+define|\
+value|do								\ {								\ 	(old) = setsignal((sig), sm_signal_noop);		\ 	if ((old) == SIG_IGN || (old) == SIG_DFL)		\ 		(void) setsignal((sig), (old));			\ } while (0)
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -10171,17 +10198,9 @@ modifier|*
 name|reason
 decl_stmt|;
 name|sigfunc_t
+name|ignore
+decl_stmt|,
 name|oalrm
-decl_stmt|,
-name|ochld
-decl_stmt|,
-name|ohup
-decl_stmt|,
-name|oint
-decl_stmt|,
-name|opipe
-decl_stmt|,
-name|oterm
 decl_stmt|,
 name|ousr1
 decl_stmt|;
@@ -10189,6 +10208,10 @@ specifier|extern
 name|int
 name|DtableSize
 decl_stmt|;
+comment|/* clear the events to turn off SIGALRMs */
+name|clear_events
+argument_list|()
+expr_stmt|;
 name|allsignals
 argument_list|(
 name|TRUE
@@ -10364,70 +10387,62 @@ name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* need to allow signals before execve() so make them harmless */
-name|oalrm
-operator|=
-name|setsignal
+comment|/* 	**  Need to allow signals before execve() to make them "harmless". 	**  However, the default action can be "terminate", so it isn't 	**  really harmless.  Setting signals to IGN will cause them to be 	**  ignored in the new process to, so that isn't a good alternative. 	*/
+name|SM_NOOP_SIGNAL
 argument_list|(
 name|SIGALRM
 argument_list|,
-name|SIG_DFL
+name|oalrm
 argument_list|)
 expr_stmt|;
-name|ochld
-operator|=
-name|setsignal
+name|SM_NOOP_SIGNAL
 argument_list|(
 name|SIGCHLD
 argument_list|,
-name|SIG_DFL
+name|ignore
 argument_list|)
 expr_stmt|;
-name|ohup
-operator|=
-name|setsignal
+name|SM_NOOP_SIGNAL
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|SIG_DFL
+name|ignore
 argument_list|)
 expr_stmt|;
-name|oint
-operator|=
-name|setsignal
+name|SM_NOOP_SIGNAL
 argument_list|(
 name|SIGINT
 argument_list|,
-name|SIG_DFL
+name|ignore
 argument_list|)
 expr_stmt|;
-name|opipe
-operator|=
-name|setsignal
+name|SM_NOOP_SIGNAL
 argument_list|(
 name|SIGPIPE
 argument_list|,
-name|SIG_DFL
+name|ignore
 argument_list|)
 expr_stmt|;
-name|oterm
-operator|=
-name|setsignal
+name|SM_NOOP_SIGNAL
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|SIG_DFL
+name|ignore
 argument_list|)
 expr_stmt|;
-name|ousr1
-operator|=
-name|setsignal
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+name|SM_NOOP_SIGNAL
 argument_list|(
 name|SIGUSR1
 argument_list|,
-name|SIG_DFL
+name|ousr1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* SIGUSR1 */
 name|allsignals
 argument_list|(
 name|FALSE
@@ -10458,12 +10473,13 @@ name|save_errno
 operator|=
 name|errno
 expr_stmt|;
-comment|/* restore signals */
+comment|/* block signals again and restore needed signals */
 name|allsignals
 argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
+comment|/* For finis() events */
 operator|(
 name|void
 operator|)
@@ -10474,56 +10490,10 @@ argument_list|,
 name|oalrm
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|ochld
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|ohup
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|oint
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|opipe
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|oterm
-argument_list|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+comment|/* For debugging finis() */
 operator|(
 name|void
 operator|)
@@ -10534,6 +10504,9 @@ argument_list|,
 name|ousr1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* SIGUSR1 */
 name|errno
 operator|=
 name|save_errno
@@ -10638,6 +10611,36 @@ argument_list|,
 name|InetMode
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NETINET
+operator|&&
+name|NETINET6
+if|if
+condition|(
+name|hp
+operator|==
+name|NULL
+operator|&&
+name|InetMode
+operator|==
+name|AF_INET6
+condition|)
+block|{
+comment|/* 		**  It's possible that this IPv6 enabled machine doesn't 		**  actually have any IPv6 interfaces and, therefore, no 		**  IPv6 addresses.  Fall back to AF_INET. 		*/
+name|hp
+operator|=
+name|sm_gethostbyname
+argument_list|(
+name|hostbuf
+argument_list|,
+name|AF_INET
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* NETINET&& NETINET6 */
 if|if
 condition|(
 name|hp
@@ -11411,6 +11414,46 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|family
+decl_stmt|;
+name|family
+operator|=
+name|RealHostAddr
+operator|.
+name|sa
+operator|.
+name|sa_family
+expr_stmt|;
+if|#
+directive|if
+name|NETINET6
+operator|&&
+name|NEEDSGETIPNODE
+comment|/* 		**  If RealHostAddr is an IPv6 connection with an 		**  IPv4-mapped address, we need RealHostName's IPv4 		**  address(es) for addrcmp() to compare against 		**  RealHostAddr. 		** 		**  Actually, we only need to do this for systems 		**  which NEEDSGETIPNODE since the real getipnodebyname() 		**  already does V4MAPPED address via the AI_V4MAPPEDCFG 		**  flag.  A better fix to this problem is to add this 		**  functionality to our stub getipnodebyname(). 		*/
+if|if
+condition|(
+name|family
+operator|==
+name|AF_INET6
+operator|&&
+name|IN6_IS_ADDR_V4MAPPED
+argument_list|(
+operator|&
+name|RealHostAddr
+operator|.
+name|sin6
+operator|.
+name|sin6_addr
+argument_list|)
+condition|)
+name|family
+operator|=
+name|AF_INET
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6&& NEEDSGETIPNODE */
 comment|/* try to match the reverse against the forward lookup */
 name|hp
 operator|=
@@ -11418,11 +11461,7 @@ name|sm_gethostbyname
 argument_list|(
 name|RealHostName
 argument_list|,
-name|RealHostAddr
-operator|.
-name|sa
-operator|.
-name|sa_family
+name|family
 argument_list|)
 expr_stmt|;
 if|if
