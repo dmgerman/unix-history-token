@@ -1325,16 +1325,13 @@ operator|->
 name|fs_outputfile
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s"
 argument_list|,
 name|s
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
 argument_list|)
 expr_stmt|;
 name|bytestart
@@ -1373,16 +1370,20 @@ name|size
 operator|>
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\r%s: 100%%"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\r%s: %qd Kbytes"
 argument_list|,
 name|s
@@ -1422,8 +1423,10 @@ name|tv_usec
 operator|/
 literal|1.e6
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n%qd bytes transfered in %.1f seconds"
 argument_list|,
 operator|(
@@ -1446,8 +1449,10 @@ name|d
 operator|<
 literal|1000
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  (%.0f bytes/s)\n"
 argument_list|,
 name|d
@@ -1459,8 +1464,10 @@ name|d
 operator|/=
 literal|1024
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"  (%.2f kB/s)\n"
 argument_list|,
 name|d
@@ -1530,8 +1537,10 @@ name|size
 operator|>
 literal|1000000
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\r%s: %2qd%%"
 argument_list|,
 name|s
@@ -1555,8 +1564,10 @@ name|size
 operator|>
 literal|0
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\r%s: %2qd%%"
 argument_list|,
 name|s
@@ -1572,8 +1583,10 @@ name|size
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\r%s: %qd kB"
 argument_list|,
 name|s
@@ -1587,11 +1600,6 @@ literal|1024
 argument_list|)
 expr_stmt|;
 block|}
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
