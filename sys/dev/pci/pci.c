@@ -5850,6 +5850,10 @@ condition|)
 return|return
 name|ENOENT
 return|;
+if|if
+condition|(
+name|startp
+condition|)
 operator|*
 name|startp
 operator|=
@@ -5857,6 +5861,10 @@ name|rle
 operator|->
 name|start
 expr_stmt|;
+if|if
+condition|(
+name|countp
+condition|)
 operator|*
 name|countp
 operator|=
