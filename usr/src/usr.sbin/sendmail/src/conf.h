@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.61 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.62 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -857,7 +857,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* SunOS 4.1.x */
+comment|/* SunOS 4.0.3 or 4.1.x */
 end_comment
 
 begin_define
@@ -887,6 +887,90 @@ include|#
 directive|include
 file|<vfork.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SUNOS403
+end_ifdef
+
+begin_comment
+comment|/* special tweaking for SunOS 4.0.3 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAITUNION
+value|1
+end_define
+
+begin_comment
+comment|/* use "union wait" as wait argument type */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HASUNAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2399,6 +2483,24 @@ define|#
 directive|define
 name|_PATH_SENDMAILPID
 value|"/usr/ucblib/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSLOG_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|128
 end_define
 
 begin_endif
