@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      if_css.c     4.3     82/10/10     */
+comment|/*      if_css.c     4.4     82/10/23     */
 end_comment
 
 begin_include
@@ -460,6 +460,8 @@ operator|)
 name|impattach
 argument_list|(
 name|ui
+argument_list|,
+name|cssreset
 argument_list|)
 operator|)
 operator|==

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.26	82/10/22	*/
+comment|/*	if_acc.c	4.27	82/10/23	*/
 end_comment
 
 begin_include
@@ -471,6 +471,8 @@ operator|)
 name|impattach
 argument_list|(
 name|ui
+argument_list|,
+name|acreset
 argument_list|)
 operator|)
 operator|==
@@ -514,14 +516,6 @@ operator|->
 name|ic_start
 operator|=
 name|accstart
-expr_stmt|;
-name|sc
-operator|->
-name|acc_ifuba
-operator|.
-name|ifu_ubareset
-operator|=
-name|accreset
 expr_stmt|;
 name|sc
 operator|->
