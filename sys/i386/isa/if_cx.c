@@ -475,16 +475,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|void
+name|timeout_t
 name|cxtimeout
-parameter_list|(
-name|caddr_t
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1589,9 +1585,6 @@ literal|0
 condition|)
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|cxtimeout
 argument_list|,
 literal|0
