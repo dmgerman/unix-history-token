@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)assyms.c 4.5 %G%"
+literal|"@(#)assyms.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2283,6 +2283,9 @@ operator|)
 return|;
 block|}
 comment|/*end of lookup*/
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
 name|char
 modifier|*
 name|savestr
@@ -2389,6 +2392,9 @@ name|res
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
+endif|FLEXNAMES
 comment|/*  *	The relocation information is saved internally in an array of  *	lists of relocation buffers.  The relocation buffers are  *	exactly the same size as a token buffer; if we use VM for the  *	temporary file we reclaim this storage, otherwise we create  *	them by mallocing.  */
 define|#
 directive|define

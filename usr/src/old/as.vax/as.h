@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)as.h 4.7 %G%" */
+comment|/* "@(#)as.h 4.8 %G%" */
 end_comment
 
 begin_ifdef
@@ -69,10 +69,16 @@ directive|else
 else|not FLEXNAMES
 end_else
 
+begin_define
+define|#
+directive|define
+name|ONLIST
+end_define
+
 begin_include
 include|#
 directive|include
-file|<olda.out.h>
+file|"a.out.h"
 end_include
 
 begin_include
@@ -1240,12 +1246,19 @@ comment|/* instruction name, type (opcode) */
 name|u_char
 name|s_tag
 decl_stmt|;
+name|char
+name|s_pad
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* round to 20 bytes */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  *	The fields nm.n_desc and nm.n_value total 6 bytes; this is  *	just enough for the 6 bytes describing the argument types.  *	We use a macro to define access to these 6 bytes, assuming that  *	they are allocated adjacently.  *	IF THE FORMAT OF STRUCT nlist CHANGES, THESE MAY HAVE TO BE CHANGED.  *  *	Instab is cleverly declared to look very much the combination of  *	a struct symtab and a struct nlist.  */
+comment|/*  *	The fields nm.n_desc and nm.n_value total 6 bytes; this is  *	just enough for the 6 bytes describing the argument types.  *	We use a macro to define access to these 6 bytes, assuming that  *	they are allocated adjacently.  *	IF THE FORMAT OF STRUCT nlist CHANGES, THESE MAY HAVE TO BE CHANGED.  *  *	Instab is cleverly declared to look very much like the combination of  *	a struct symtab and a struct nlist.  */
 end_comment
 
 begin_struct
@@ -1285,6 +1298,13 @@ decl_stmt|;
 name|u_char
 name|I_s_tag
 decl_stmt|;
+name|char
+name|I_pad
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* round to 20 bytes */
 block|}
 struct|;
 end_struct
