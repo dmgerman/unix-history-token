@@ -750,6 +750,7 @@ name|chiptype
 operator|=
 name|CHIP_I810
 expr_stmt|;
+break|break;
 case|case
 literal|0x35778086
 case|:
@@ -762,6 +763,7 @@ name|chiptype
 operator|=
 name|CHIP_I830
 expr_stmt|;
+break|break;
 block|}
 empty_stmt|;
 comment|/* Same for i810 and i830 */
