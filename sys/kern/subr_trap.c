@@ -228,7 +228,9 @@ operator|==
 literal|0
 operator|||
 operator|(
-name|ke
+name|td
+operator|->
+name|td_kse
 operator|->
 name|ke_flags
 operator|&
@@ -490,12 +492,6 @@ name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
-name|ke
-operator|=
-name|td
-operator|->
-name|td_kse
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_SYSC
@@ -570,6 +566,12 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
+expr_stmt|;
+name|ke
+operator|=
+name|td
+operator|->
+name|td_kse
 expr_stmt|;
 name|sticks
 operator|=
