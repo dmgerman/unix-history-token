@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: date.c,v 1.26 1998/10/03 16:29:59 alex Exp $"
+literal|"$Id: date.c,v 1.27 1999/03/09 09:38:54 brian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,8 +148,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|retval
-decl_stmt|,
-name|nflag
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +165,10 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -252,6 +254,11 @@ name|ch
 decl_stmt|,
 name|rflag
 decl_stmt|;
+name|int
+name|jflag
+decl_stmt|,
+name|nflag
+decl_stmt|;
 name|char
 modifier|*
 name|format
@@ -318,6 +325,12 @@ name|rflag
 operator|=
 literal|0
 expr_stmt|;
+name|jflag
+operator|=
+name|nflag
+operator|=
+literal|0
+expr_stmt|;
 name|set_timezone
 operator|=
 literal|0
@@ -333,7 +346,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:f:nr:t:uv:"
+literal|"d:f:jnr:t:uv:"
 argument_list|)
 operator|)
 operator|!=
@@ -396,6 +409,15 @@ name|fmt
 operator|=
 name|optarg
 expr_stmt|;
+break|break;
+case|case
+literal|'j'
+case|:
+name|jflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* don't set time */
 break|break;
 case|case
 literal|'n'
@@ -589,6 +611,10 @@ name|fmt
 argument_list|,
 operator|*
 name|argv
+argument_list|,
+name|jflag
+argument_list|,
+name|nflag
 argument_list|)
 expr_stmt|;
 operator|++
@@ -725,6 +751,10 @@ parameter_list|(
 name|fmt
 parameter_list|,
 name|p
+parameter_list|,
+name|jflag
+parameter_list|,
+name|nflag
 parameter_list|)
 specifier|const
 name|char
@@ -736,6 +766,11 @@ specifier|const
 name|char
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|jflag
+decl_stmt|,
+name|nflag
 decl_stmt|;
 block|{
 specifier|register
@@ -1132,6 +1167,12 @@ argument_list|,
 literal|"nonexistent time"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|jflag
+condition|)
+block|{
 comment|/* set the time */
 if|if
 condition|(
@@ -1222,6 +1263,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
