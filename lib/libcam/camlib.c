@@ -2652,11 +2652,15 @@ name|device
 operator|->
 name|pd_type
 operator|=
+name|SID_TYPE
+argument_list|(
+operator|&
 name|ccb
 operator|.
 name|cgd
 operator|.
-name|pd_type
+name|inq_data
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
