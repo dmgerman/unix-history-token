@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_alloc.c	2.20	82/12/17	*/
+comment|/*	lfs_alloc.c	2.21	83/01/14	*/
 end_comment
 
 begin_include
@@ -1895,7 +1895,7 @@ name|result
 operator|)
 return|;
 block|}
-comment|/* 	 * 3: brute force search 	 */
+comment|/* 	 * 3: brute force search 	 * Note that we start at i == 3, since 0 was checked initially, 	 * and 1 and 2 are always checked in the quadratic rehash. 	 */
 name|cg
 operator|=
 name|icg
@@ -1904,7 +1904,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|3
 init|;
 name|i
 operator|<
@@ -2124,7 +2124,7 @@ name|int
 operator|)
 name|fs
 operator|->
-name|fs_bsize
+name|fs_cgsize
 argument_list|)
 expr_stmt|;
 name|cgp
@@ -2477,7 +2477,7 @@ name|int
 operator|)
 name|fs
 operator|->
-name|fs_bsize
+name|fs_cgsize
 argument_list|)
 expr_stmt|;
 name|cgp
@@ -2514,6 +2514,27 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|cgp
+operator|->
+name|cg_cs
+operator|.
+name|cs_nbfree
+operator|==
+literal|0
+operator|&&
+name|size
+operator|==
+name|fs
+operator|->
+name|fs_bsize
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|cgp
 operator|->
 name|cg_time
@@ -3502,7 +3523,7 @@ name|int
 operator|)
 name|fs
 operator|->
-name|fs_bsize
+name|fs_cgsize
 argument_list|)
 expr_stmt|;
 name|cgp
@@ -3539,6 +3560,21 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|cgp
+operator|->
+name|cg_cs
+operator|.
+name|cs_nifree
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|cgp
 operator|->
 name|cg_time
@@ -3918,7 +3954,7 @@ name|int
 operator|)
 name|fs
 operator|->
-name|fs_bsize
+name|fs_cgsize
 argument_list|)
 expr_stmt|;
 name|cgp
@@ -4525,7 +4561,7 @@ name|int
 operator|)
 name|fs
 operator|->
-name|fs_bsize
+name|fs_cgsize
 argument_list|)
 expr_stmt|;
 name|cgp
