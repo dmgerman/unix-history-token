@@ -954,8 +954,6 @@ expr|*
 name|data
 operator|+
 name|plen
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -984,12 +982,6 @@ name|data
 argument_list|,
 name|provider
 argument_list|)
-expr_stmt|;
-name|data
-operator|->
-name|data_len
-operator|=
-name|plen
 expr_stmt|;
 name|spath
 operator|=
@@ -1483,8 +1475,6 @@ expr|*
 name|data
 operator|+
 name|slen
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -1513,12 +1503,6 @@ name|data
 argument_list|,
 name|acname
 argument_list|)
-expr_stmt|;
-name|data
-operator|->
-name|data_len
-operator|=
-name|slen
 expr_stmt|;
 name|path
 operator|=
