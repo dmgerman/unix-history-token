@@ -6314,6 +6314,9 @@ expr|struct
 name|kevent
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|job
 operator|->
 name|aio_lio_opcode
@@ -10745,7 +10748,7 @@ operator|->
 name|aiocbp
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|cb
 operator|->
@@ -10877,7 +10880,7 @@ operator|->
 name|aiocbp
 argument_list|,
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|cb
 operator|->
