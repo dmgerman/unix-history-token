@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * log-client.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Mar 20 21:13:40 1995 ylo  *   * Client-side versions of debug(), log(), etc.  These print to stderr.  * This is a stripped down version of log-server.c.  *   */
+comment|/*  *  * log-client.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Mon Mar 20 21:13:40 1995 ylo  *  * Client-side versions of debug(), log(), etc.  These print to stderr.  * This is a stripped down version of log-server.c.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: log-client.c,v 1.7 2000/02/27 18:50:09 deraadt Exp $"
+literal|"$Id: log-client.c,v 1.8 2000/04/14 10:30:31 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

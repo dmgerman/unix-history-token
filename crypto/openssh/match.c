@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * match.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Thu Jun 22 01:17:50 1995 ylo  *   * Simple pattern matching, with '*' and '?' as wildcards.  *   */
+comment|/*  *  * match.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Thu Jun 22 01:17:50 1995 ylo  *  * Simple pattern matching, with '*' and '?' as wildcards.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: match.c,v 1.5 2000/03/23 22:15:33 markus Exp $"
+literal|"$Id: match.c,v 1.6 2000/04/14 10:30:31 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

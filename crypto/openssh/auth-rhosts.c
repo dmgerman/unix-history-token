@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * auth-rhosts.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 05:12:18 1995 ylo  *   * Rhosts authentication.  This file contains code to check whether to admit  * the login based on rhosts authentication.  This file also processes  * /etc/hosts.equiv.  *   */
+comment|/*  *  * auth-rhosts.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar 17 05:12:18 1995 ylo  *  * Rhosts authentication.  This file contains code to check whether to admit  * the login based on rhosts authentication.  This file also processes  * /etc/hosts.equiv.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-rhosts.c,v 1.12 1999/12/27 10:46:11 markus Exp $"
+literal|"$Id: auth-rhosts.c,v 1.13 2000/04/14 10:30:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

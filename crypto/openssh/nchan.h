@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999 Markus Friedl.  All rights reserved.  *  * Redi
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: nchan.h,v 1.5 1999/11/24 16:15:25 markus Exp $"); */
+comment|/* RCSID("$Id: nchan.h,v 1.7 2000/04/03 07:07:15 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -105,79 +105,99 @@ name|CHAN_OUTPUT_CLOSED
 value|0x80
 end_define
 
+begin_define
+define|#
+directive|define
+name|CHAN_CLOSE_SENT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_CLOSE_RCVD
+value|0x02
+end_define
+
 begin_comment
-comment|/* EVENTS for the input state */
+comment|/* Channel EVENTS */
 end_comment
 
-begin_function_decl
+begin_typedef
+typedef|typedef
 name|void
+name|chan_event_fn
+parameter_list|(
+name|Channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* for the input state */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|chan_event_fn
+modifier|*
 name|chan_rcvd_oclose
-parameter_list|(
-name|Channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
+begin_decl_stmt
+specifier|extern
+name|chan_event_fn
+modifier|*
 name|chan_read_failed
-parameter_list|(
-name|Channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
-name|chan_ibuf_empty
-parameter_list|(
-name|Channel
+begin_decl_stmt
+specifier|extern
+name|chan_event_fn
 modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
+name|chan_ibuf_empty
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* EVENTS for the output state */
+comment|/* for the output state */
 end_comment
 
-begin_function_decl
-name|void
+begin_decl_stmt
+specifier|extern
+name|chan_event_fn
+modifier|*
 name|chan_rcvd_ieof
-parameter_list|(
-name|Channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
+begin_decl_stmt
+specifier|extern
+name|chan_event_fn
+modifier|*
 name|chan_write_failed
-parameter_list|(
-name|Channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|void
-name|chan_obuf_empty
-parameter_list|(
-name|Channel
+begin_decl_stmt
+specifier|extern
+name|chan_event_fn
 modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
+name|chan_obuf_empty
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|chan_event_fn
+modifier|*
+name|chan_delete_if_full_closed
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -186,6 +206,15 @@ parameter_list|(
 name|Channel
 modifier|*
 name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|chan_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

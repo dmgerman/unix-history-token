@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * pty.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 05:03:28 1995 ylo  *   * Functions for allocating a pseudo-terminal and making it the controlling  * tty.  */
+comment|/*  *  * pty.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Fri Mar 17 05:03:28 1995 ylo  *  * Functions for allocating a pseudo-terminal and making it the controlling  * tty.  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: pty.h,v 1.5 2000/02/15 16:52:58 markus Exp $"); */
+comment|/* RCSID("$Id: pty.h,v 1.6 2000/04/14 10:30:32 markus Exp $"); */
 end_comment
 
 begin_ifndef
