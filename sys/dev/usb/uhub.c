@@ -158,6 +158,8 @@ end_define
 begin_decl_stmt
 name|int
 name|uhubdebug
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
