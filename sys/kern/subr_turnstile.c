@@ -3924,6 +3924,10 @@ modifier|*
 name|m
 parameter_list|)
 block|{
+comment|/*  * XXX: When kernacc() does not require Giant we can reenable this check  */
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/*  * XXX - When kernacc() is fixed on the alpha to handle K0_SEG memory properly  * we can re-enable the kernacc() checks.  */
 ifndef|#
 directive|ifndef
@@ -3961,6 +3965,8 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
