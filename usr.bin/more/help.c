@@ -46,6 +46,13 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|top_scroll
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|help
 argument_list|()
@@ -61,9 +68,6 @@ operator|+
 literal|20
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|snprintf
 argument_list|(
 name|cmd
@@ -73,7 +77,13 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"-more -e %s"
+literal|"-more -e%c %s"
+argument_list|,
+name|top_scroll
+condition|?
+literal|'c'
+else|:
+literal|' '
 argument_list|,
 name|_PATH_HELPFILE
 argument_list|)
