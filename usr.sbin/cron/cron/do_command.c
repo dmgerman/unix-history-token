@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: do_command.c,v 1.5 1995/05/30 03:47:00 rgrimes Exp $"
+literal|"$Id: do_command.c,v 1.6 1995/09/10 13:02:56 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -652,16 +652,11 @@ name|u
 argument_list|)
 expr_stmt|;
 comment|/* set our directory, uid and gid.  Set gid first, since once 		 * we set uid, we've lost root privledges. 		 */
-name|chdir
+name|setgid
 argument_list|(
-name|env_get
-argument_list|(
-literal|"HOME"
-argument_list|,
 name|e
 operator|->
-name|envp
-argument_list|)
+name|gid
 argument_list|)
 expr_stmt|;
 if|#
@@ -688,11 +683,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|setgid
+name|setlogin
 argument_list|(
-name|e
-operator|->
-name|gid
+name|usernm
 argument_list|)
 expr_stmt|;
 name|setuid
@@ -703,6 +696,18 @@ name|uid
 argument_list|)
 expr_stmt|;
 comment|/* we aren't root after this... */
+name|chdir
+argument_list|(
+name|env_get
+argument_list|(
+literal|"HOME"
+argument_list|,
+name|e
+operator|->
+name|envp
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* exec the command. 		 */
 block|{
 name|char
@@ -1155,9 +1160,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|mailcmd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mailcmd
+argument_list|)
 argument_list|,
 name|MAILARGS
 argument_list|,
@@ -1358,9 +1368,14 @@ index|[
 name|MAX_TEMPSTR
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"mailed %d byte%s of output but got status 0x%04x\n"
 argument_list|,

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: popen.c,v 1.5 1994/01/15 20:43:43 vixie Exp $"
+literal|"$Id: popen.c,v 1.1.1.1 1995/10/18 08:47:31 deraadt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,13 @@ include|#
 directive|include
 file|<sys/signal.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|MAX_ARGS
+value|100
+end_define
 
 begin_define
 define|#
@@ -124,7 +131,9 @@ name|char
 modifier|*
 name|argv
 index|[
-literal|100
+name|MAX_ARGS
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|#
@@ -282,6 +291,9 @@ name|cp
 operator|=
 name|program
 init|;
+name|argc
+operator|<
+name|MAX_ARGS
 condition|;
 name|cp
 operator|=
