@@ -833,7 +833,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given process (p), find the vnode from which  * its text segment is being executed.  *  * It would be nice to grab this information from  * the VM system, however, there is no sure-fire  * way of doing that.  Instead, fork(), exec() and  * wait() all maintain the p_textvp field in the  * process proc structure which contains a held  * reference to the exec'ed vnode.  */
+comment|/*  * Given process (p), find the vnode from which  * its text segment is being executed.  *  * It would be nice to grab this information from  * the VM system, however, there is no sure-fire  * way of doing that.  Instead, fork(), exec() and  * wait() all maintain the p_textvp field in the  * process proc structure which contains a held  * reference to the exec'ed vnode.  *  * XXX - Currently, this is not not used, as the  * /proc/pid/file object exposes an information leak  * that shouldn't happen.  Using a mount option would  * make it configurable on a per-system (or, at least,  * per-mount) basis; however, that's not really best.  * The best way to do it, I think, would be as an  * ioctl; this would restrict it to the uid running  * program, or root, which seems a reasonable compromise.  * However, the number of applications for this is  * minimal, if it can't be seen in the filesytem space,  * and doint it as an ioctl makes it somewhat less  * useful due to the, well, inelegance.  *  */
 end_comment
 
 begin_function
