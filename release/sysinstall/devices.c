@@ -533,6 +533,24 @@ literal|'c'
 block|}
 block|,
 block|{
+name|DEVICE_TYPE_DISK
+block|,
+literal|"twed%d"
+block|,
+literal|"3ware ATA RAID array"
+block|,
+literal|147
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|4
+block|,
+literal|'c'
+block|}
+block|,
+block|{
 name|DEVICE_TYPE_FLOPPY
 block|,
 literal|"fd%d"
