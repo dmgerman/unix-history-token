@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1999 Michael Smith  * All rights reserved.  * Copyright (c) 1999 Poul-Henning Kamp  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Copyright (c) 1999 Michael Smith  * All rights reserved.  * Copyright (c) 1999 Poul-Henning Kamp  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -185,6 +185,13 @@ name|ROOTNAME
 value|"root_device"
 end_define
 
+begin_define
+define|#
+directive|define
+name|VFS_MOUNTARG_SIZE_MAX
+value|(1024 * 64)
+end_define
+
 begin_function_decl
 specifier|static
 name|void
@@ -205,19 +212,88 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|gets
+parameter_list|(
+name|char
+modifier|*
+name|cp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
-name|vfs_nmount
+name|vfs_domount
 parameter_list|(
 name|struct
 name|thread
 modifier|*
 name|td
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fstype
+parameter_list|,
+name|char
+modifier|*
+name|fspath
+parameter_list|,
 name|int
+name|fsflags
+parameter_list|,
+name|void
+modifier|*
+name|fsdata
+parameter_list|,
+name|int
+name|compat
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|vfs_mount_alloc
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|dvp
 parameter_list|,
 name|struct
-name|uio
+name|vfsconf
 modifier|*
+name|vfsp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fspath
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+modifier|*
+name|mpp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|vfs_mountroot_ask
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -237,79 +313,20 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|vfs_mountroot_ask
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|vfs_mount_alloc
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
-name|struct
-name|vfsconf
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|mount
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|vfs_domount
+name|vfs_nmount
 parameter_list|(
 name|struct
 name|thread
 modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
+name|td
 parameter_list|,
 name|int
 name|fsflags
 parameter_list|,
-name|void
+name|struct
+name|uio
 modifier|*
-name|fsdata
-parameter_list|,
-name|int
-name|compat
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|gets
-parameter_list|(
-name|char
-modifier|*
-name|cp
+name|fsopts
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -404,7 +421,7 @@ comment|/*  * The root filesystem is detailed in the kernel environment variable
 end_comment
 
 begin_comment
-comment|/*   * The root specifiers we will try if RB_CDROM is specified.  */
+comment|/*  * The root specifiers we will try if RB_CDROM is specified.  */
 end_comment
 
 begin_decl_stmt
@@ -898,13 +915,6 @@ begin_comment
 comment|/*  * Build a linked list of mount options from a struct uio.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VFS_MOUNTARG_SIZE_MAX
-value|(1024*64)
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -932,6 +942,9 @@ name|vfsopt
 modifier|*
 name|opt
 decl_stmt|;
+name|size_t
+name|memused
+decl_stmt|;
 name|unsigned
 name|int
 name|i
@@ -945,17 +958,6 @@ name|namelen
 decl_stmt|,
 name|optlen
 decl_stmt|;
-name|size_t
-name|memused
-init|=
-literal|0
-decl_stmt|;
-name|iovcnt
-operator|=
-name|auio
-operator|->
-name|uio_iovcnt
-expr_stmt|;
 name|opts
 operator|=
 name|malloc
@@ -975,6 +977,16 @@ name|TAILQ_INIT
 argument_list|(
 name|opts
 argument_list|)
+expr_stmt|;
+name|memused
+operator|=
+literal|0
+expr_stmt|;
+name|iovcnt
+operator|=
+name|auio
+operator|->
+name|uio_iovcnt
 expr_stmt|;
 for|for
 control|(
@@ -1055,7 +1067,7 @@ name|len
 operator|=
 name|optlen
 expr_stmt|;
-comment|/* 		 * Do this early, so jumps to "bad" will free the current 		 * option 		 */
+comment|/* 		 * Do this early, so jumps to "bad" will free the current 		 * option. 		 */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 name|opts
@@ -1077,7 +1089,7 @@ name|optlen
 operator|+
 name|namelen
 expr_stmt|;
-comment|/* 		 * Avoid consuming too much memory, and attempts to overflow 		 * memused 		 */
+comment|/* 		 * Avoid consuming too much memory, and attempts to overflow 		 * memused. 		 */
 if|if
 condition|(
 name|memused
@@ -1159,7 +1171,7 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* Ensure names are null-terminated strings */
+comment|/* Ensure names are null-terminated strings. */
 if|if
 condition|(
 name|opt
@@ -2416,6 +2428,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Destroy the mount struct previously allocated by vfs_mount_alloc().  */
+end_comment
+
 begin_function
 name|void
 name|vfs_mount_destroy
@@ -2566,12 +2582,11 @@ modifier|*
 name|fspath
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fstypelen
 decl_stmt|,
 name|fspathlen
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 name|error
 operator|=
@@ -3000,24 +3015,30 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
+comment|/* Flags common to all filesystems. */
 specifier|const
 name|char
 modifier|*
 name|fstype
 parameter_list|,
+comment|/* Filesystem type. */
 name|char
 modifier|*
 name|fspath
 parameter_list|,
+comment|/* Mount path. */
 name|int
 name|fsflags
 parameter_list|,
+comment|/* Flags common to all filesystems. */
 name|void
 modifier|*
 name|fsdata
 parameter_list|,
+comment|/* Options local to the filesystem. */
 name|int
 name|compat
+comment|/* Invocation from compat syscall. */
 parameter_list|)
 block|{
 name|linker_file_t
@@ -4076,7 +4097,7 @@ operator|->
 name|mnt_optnew
 expr_stmt|;
 block|}
-comment|/* 	 * Prevent external consumers of mount 	 * options to read mnt_optnew. 	 */
+comment|/* 	 * Prevent external consumers of mount options from reading 	 * mnt_optnew. 	*/
 name|mp
 operator|->
 name|mnt_optnew
@@ -5694,9 +5715,9 @@ modifier|*
 name|cp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
+decl_stmt|,
+name|i
 decl_stmt|;
 name|g_waitidle
 argument_list|()
