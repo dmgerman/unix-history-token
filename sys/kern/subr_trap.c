@@ -123,6 +123,12 @@ block|{
 name|int
 name|sig
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -144,6 +150,12 @@ condition|)
 name|postsig
 argument_list|(
 name|sig
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
