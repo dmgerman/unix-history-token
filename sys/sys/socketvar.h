@@ -28,6 +28,30 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/selinfo.h>
 end_include
 
@@ -57,6 +81,10 @@ struct_decl|struct
 name|accept_filter
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/*  * List of locks:  * (c)	const, inited in either socreate() or sonewconn()  * (m)	sb_mtx mutex  * (mr)	so_rcv.sb_mtx mutex  * (sg)	sigio_lock sx  * (sh)	sohead_lock sx  *  * Lock of so_rcv.sb_mtx can duplicate, provided that sohead_lock  * is exclusively locked.  *  * Brackets mean that this data is not protected yet.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -147,7 +175,7 @@ name|sigio
 modifier|*
 name|so_sigio
 decl_stmt|;
-comment|/* information for async I/O or 					   out of band data (SIGURG) */
+comment|/* [sg]	information for async I/O or 					   out of band data (SIGURG) */
 name|u_long
 name|so_oobmark
 decl_stmt|;
@@ -742,11 +770,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|sorwakeup_locked
+parameter_list|(
+name|so
+parameter_list|)
+value|do {						\ 					SIGIO_ASSERT(SX_SLOCKED);
+comment|/* XXX */
+value|\ 					if (sb_notify(&(so)->so_rcv))		\ 						sowakeup((so),&(so)->so_rcv);	\ 				} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do { \ 			  if (sb_notify(&(so)->so_rcv)) \ 			    sowakeup((so),&(so)->so_rcv); \ 			} while (0)
+value|do {						\ 					SIGIO_SLOCK();				\ 					sorwakeup_locked(so);			\ 					SIGIO_SUNLOCK();			\ 				} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sowwakeup_locked
+parameter_list|(
+name|so
+parameter_list|)
+value|do {						\ 					SIGIO_ASSERT(SX_SLOCKED);
+comment|/* XXX */
+value|\ 					if (sb_notify(&(so)->so_snd))		\ 						sowakeup((so),&(so)->so_snd);	\ 				} while (0)
 end_define
 
 begin_define
@@ -756,7 +808,7 @@ name|sowwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do { \ 			  if (sb_notify(&(so)->so_snd)) \ 			    sowakeup((so),&(so)->so_snd); \ 			} while (0)
+value|do {						\ 					SIGIO_SLOCK();				\ 					sowwakeup_locked(so);			\ 					SIGIO_SUNLOCK();			\ 				} while (0)
 end_define
 
 begin_ifdef
@@ -1766,6 +1818,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|soisconnected_locked
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|soisconnecting
 parameter_list|(
 name|struct
@@ -1779,6 +1843,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|soisdisconnected
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|soisdisconnected_locked
 parameter_list|(
 name|struct
 name|socket

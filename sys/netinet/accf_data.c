@@ -123,6 +123,9 @@ name|int
 name|waitflag
 parameter_list|)
 block|{
+name|SIGIO_SLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -132,6 +135,9 @@ name|so
 argument_list|)
 condition|)
 block|{
+name|SIGIO_SUNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 name|so
@@ -149,10 +155,13 @@ operator|&=
 operator|~
 name|SB_UPCALL
 expr_stmt|;
-name|soisconnected
+name|soisconnected_locked
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|SIGIO_SUNLOCK
+argument_list|()
 expr_stmt|;
 return|return;
 block|}

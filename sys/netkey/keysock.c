@@ -1799,7 +1799,10 @@ operator|=
 operator|&
 name|key_dst
 expr_stmt|;
-name|soisconnected
+name|SIGIO_SLOCK
+argument_list|()
+expr_stmt|;
+name|soisconnected_locked
 argument_list|(
 name|so
 argument_list|)
@@ -1809,6 +1812,9 @@ operator|->
 name|so_options
 operator||=
 name|SO_USELOOPBACK
+expr_stmt|;
+name|SIGIO_SUNLOCK
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(

@@ -18,13 +18,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_lock.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/_mutex.h>
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
 end_include
 
 begin_include
@@ -307,6 +313,14 @@ name|FILEDESC_LOCK_DESC
 value|"filedesc structure"
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|sigio_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Lock a file descriptor table. */
 end_comment
@@ -351,6 +365,52 @@ parameter_list|,
 name|type
 parameter_list|)
 value|mtx_assert(&(fd)->fd_mtx, (type))
+end_define
+
+begin_comment
+comment|/*  * Lock the pointers for a sigio object in the underlying objects of  * a file descriptor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGIO_SLOCK
+parameter_list|()
+value|sx_slock(&sigio_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGIO_XLOCK
+parameter_list|()
+value|sx_xlock(&sigio_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGIO_SUNLOCK
+parameter_list|()
+value|sx_sunlock(&sigio_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGIO_XUNLOCK
+parameter_list|()
+value|sx_xunlock(&sigio_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGIO_ASSERT
+parameter_list|(
+name|what
+parameter_list|)
+value|sx_assert(&sigio_lock, what)
 end_define
 
 begin_function_decl

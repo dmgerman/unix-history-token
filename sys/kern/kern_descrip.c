@@ -478,6 +478,17 @@ begin_comment
 comment|/* sx to protect filelist */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|sx
+name|sigio_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sx to protect pointers to sigio */
+end_comment
+
 begin_comment
 comment|/*  * System calls on descriptors.  */
 end_comment
@@ -9952,6 +9963,14 @@ operator|&
 name|filelist_lock
 argument_list|,
 literal|"filelist lock"
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|sigio_lock
+argument_list|,
+literal|"sigio lock"
 argument_list|)
 expr_stmt|;
 block|}
