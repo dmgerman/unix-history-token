@@ -45,9 +45,9 @@ literal|4
 block|,
 literal|8
 block|,
-literal|30
+literal|5
 block|,
-literal|30
+literal|5
 block|,
 literal|2
 block|,
@@ -59,7 +59,7 @@ literal|50
 block|,
 literal|2
 block|,
-literal|"Uknown"
+literal|"000"
 block|,
 name|F_EDIT
 block|,
@@ -381,9 +381,9 @@ literal|4
 block|,
 literal|47
 block|,
-literal|30
+literal|5
 block|,
-literal|30
+literal|5
 block|,
 literal|14
 block|,
@@ -395,7 +395,7 @@ literal|12
 block|,
 literal|14
 block|,
-literal|"Uknown"
+literal|"000"
 block|,
 name|F_EDIT
 block|,
@@ -717,9 +717,9 @@ literal|14
 block|,
 literal|8
 block|,
-literal|30
+literal|5
 block|,
-literal|30
+literal|5
 block|,
 literal|26
 block|,
@@ -731,7 +731,7 @@ literal|24
 block|,
 literal|26
 block|,
-literal|"Uknown"
+literal|"000"
 block|,
 name|F_EDIT
 block|,
@@ -1053,9 +1053,9 @@ literal|14
 block|,
 literal|47
 block|,
-literal|30
+literal|5
 block|,
-literal|30
+literal|5
 block|,
 literal|38
 block|,
@@ -1067,7 +1067,7 @@ literal|36
 block|,
 literal|38
 block|,
-literal|"Uknown"
+literal|"000"
 block|,
 name|F_EDIT
 block|,

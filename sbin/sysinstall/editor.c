@@ -459,7 +459,7 @@ name|field
 operator|.
 name|field
 argument_list|,
-literal|"%"
+literal|"%s"
 argument_list|,
 name|field
 operator|.
