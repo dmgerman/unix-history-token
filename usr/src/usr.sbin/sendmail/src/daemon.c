@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -75,7 +75,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
