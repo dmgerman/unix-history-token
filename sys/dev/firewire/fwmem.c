@@ -135,7 +135,7 @@ name|CTLFLAG_RD
 argument_list|,
 literal|0
 argument_list|,
-literal|"Firewire Memory Access"
+literal|"FireWire Memory Access"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

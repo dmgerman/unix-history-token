@@ -1093,7 +1093,7 @@ name|device_printf
 argument_list|(
 name|self
 argument_list|,
-literal|"Firewire init failed\n"
+literal|"FireWire init failed\n"
 argument_list|)
 expr_stmt|;
 name|fwohci_pci_detach

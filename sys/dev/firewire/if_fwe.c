@@ -272,7 +272,7 @@ name|M_FWE
 argument_list|,
 literal|"if_fwe"
 argument_list|,
-literal|"Ethernet over Firewire interface"
+literal|"Ethernet over FireWire interface"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -577,7 +577,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Ethernet over Firewire"
+literal|"Ethernet over FireWire"
 argument_list|)
 expr_stmt|;
 return|return

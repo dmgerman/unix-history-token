@@ -1058,26 +1058,6 @@ begin_comment
 comment|/*  * OHCI info structure.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-unit|struct fwohci_softc { 	struct fw_softc fc; 	volatile struct ohci_registers *base; 	int		init;
-define|#
-directive|define
-name|SIDPHASE
-value|1
-end_define
-
-begin_endif
-unit|u_int32_t	flags; 	struct 		fwohcidb_tr *db_tr[OHCI_MAX_DMA_CH]; 	struct 		fwohcidb_tr *db_first[OHCI_MAX_DMA_CH]; 	struct 		fwohcidb_tr *db_last[OHCI_MAX_DMA_CH];         struct { 		int		tail; 		struct fwohcidb_tr *db_tr; 		struct fwohcidb *db;         }dbdvtx[MAX_DVFRAME], dbdvrx[MAX_DVFRAME]; 	int		ndb[OHCI_MAX_DMA_CH];         u_int32_t	isohdr[OHCI_MAX_DMA_CH];         int		queued[OHCI_MAX_DMA_CH];         int		dma_ch[OHCI_MAX_DMA_CH]; };
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|fwohci_txpkthdr
@@ -1335,6 +1315,13 @@ define|#
 directive|define
 name|OHCI_INT_PHY_BUS_R
 value|(0x1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_INT_REG_FAIL
+value|(0x1<< 18)
 end_define
 
 begin_define
