@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_delete.c	5.2 (Berkeley) %G%"
+literal|"@(#)rec_delete.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,12 +263,6 @@ name|status
 operator|==
 name|RET_SUCCESS
 condition|)
-block|{
-operator|--
-name|t
-operator|->
-name|bt_nrecs
-expr_stmt|;
 name|SET
 argument_list|(
 name|t
@@ -276,7 +270,6 @@ argument_list|,
 name|BTF_MODIFIED
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|status
@@ -661,6 +654,11 @@ sizeof|sizeof
 argument_list|(
 name|index_t
 argument_list|)
+expr_stmt|;
+operator|--
+name|t
+operator|->
+name|bt_nrecs
 expr_stmt|;
 return|return
 operator|(
