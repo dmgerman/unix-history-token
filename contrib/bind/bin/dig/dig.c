@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dig.c,v 8.36 1999/11/05 05:05:14 vixie Exp $"
+literal|"$Id: dig.c,v 8.41 2000/04/20 07:36:04 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,14 +193,14 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|82
+value|83
 end_define
 
 begin_define
 define|#
 directive|define
 name|VSTRING
-value|"8.2"
+value|"8.3"
 end_define
 
 begin_define
@@ -740,7 +740,7 @@ decl_stmt|;
 name|char
 name|cmd
 index|[
-literal|256
+literal|512
 index|]
 decl_stmt|;
 name|char
@@ -788,7 +788,7 @@ comment|/* batch -vs- interactive control */
 name|char
 name|fileq
 index|[
-literal|100
+literal|384
 index|]
 decl_stmt|;
 name|int
@@ -1240,8 +1240,18 @@ name|fileq
 operator|==
 literal|';'
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|fileq
+argument_list|)
+expr_stmt|;
+comment|/* echo but otherwise ignore */
 continue|continue;
-comment|/* ignore blank lines& comments */
+comment|/* blank lines and comments  */
+block|}
 comment|/*  * "Sticky" requests that before current parsing args  * return to current "working" environment (X******).  */
 if|if
 condition|(
@@ -2001,6 +2011,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+break|break;
 case|case
 literal|'k'
 case|:
@@ -4002,7 +4013,7 @@ name|fputs
 argument_list|(
 literal|"\ notes:	defname and search don't work; use fully-qualified names.\n\ 	this is DiG version "
 name|VSTRING
-literal|"\n\ 	$Id: dig.c,v 8.36 1999/11/05 05:05:14 vixie Exp $\n\ "
+literal|"\n\ 	$Id: dig.c,v 8.41 2000/04/20 07:36:04 vixie Exp $\n\ "
 argument_list|,
 name|stderr
 argument_list|)
@@ -5499,6 +5510,19 @@ name|res
 operator|.
 name|ndots
 decl_stmt|;
+name|int
+name|retrans
+init|=
+name|res
+operator|.
+name|retrans
+decl_stmt|,
+name|retry
+init|=
+name|res
+operator|.
+name|retry
+decl_stmt|;
 name|char
 modifier|*
 name|buf
@@ -5566,6 +5590,18 @@ operator|.
 name|ndots
 operator|=
 name|ndots
+expr_stmt|;
+name|res
+operator|.
+name|retrans
+operator|=
+name|retrans
+expr_stmt|;
+name|res
+operator|.
+name|retry
+operator|=
+name|retry
 expr_stmt|;
 block|}
 end_function
@@ -5920,6 +5956,10 @@ name|tsig_state
 decl_stmt|;
 name|int
 name|tsig_ret
+decl_stmt|,
+name|tsig_required
+decl_stmt|,
+name|tsig_present
 decl_stmt|;
 switch|switch
 condition|(
@@ -6933,45 +6973,6 @@ name|ERR_READING_MSG
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Verify the TSIG 		 */
-if|if
-condition|(
-name|key
-condition|)
-block|{
-name|tsig_ret
-operator|=
-name|ns_verify_tcp
-argument_list|(
-name|answer
-argument_list|,
-operator|&
-name|len
-argument_list|,
-operator|&
-name|tsig_state
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tsig_ret
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"; TSIG ok\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"; TSIG invalid\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|result
 operator|=
 name|print_axfr
@@ -7274,6 +7275,92 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+block|}
+comment|/* 		 * Verify the TSIG 		 */
+if|if
+condition|(
+name|key
+condition|)
+block|{
+if|if
+condition|(
+name|ns_find_tsig
+argument_list|(
+name|answer
+argument_list|,
+name|answer
+operator|+
+name|len
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|tsig_present
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|tsig_present
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|numAnswers
+operator|==
+literal|1
+operator|||
+name|soacnt
+operator|>
+literal|1
+condition|)
+name|tsig_required
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|tsig_required
+operator|=
+literal|0
+expr_stmt|;
+name|tsig_ret
+operator|=
+name|ns_verify_tcp
+argument_list|(
+name|answer
+argument_list|,
+operator|&
+name|len
+argument_list|,
+operator|&
+name|tsig_state
+argument_list|,
+name|tsig_required
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tsig_ret
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tsig_present
+condition|)
+name|printf
+argument_list|(
+literal|"; TSIG ok\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"; TSIG invalid\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|printf
@@ -7696,20 +7783,56 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"."
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|strcpy
+argument_list|(
+name|origin
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
 literal|"$ORIGIN %s.\n"
 argument_list|,
-name|name
+name|origin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|strcpy
 argument_list|(
 name|origin
 argument_list|,
 name|name
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|name_ctx
+argument_list|,
+literal|"@"
 argument_list|)
 expr_stmt|;
 block|}

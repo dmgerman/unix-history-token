@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -25,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -303,6 +315,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|log_set_file_owner
+value|__log_set_file_owner
+end_define
+
+begin_define
+define|#
+directive|define
 name|log_new_null_channel
 value|__log_new_null_channel
 end_define
@@ -548,6 +567,19 @@ name|int
 parameter_list|,
 name|unsigned
 name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|log_set_file_owner
+parameter_list|(
+name|log_channel
+parameter_list|,
+name|uid_t
+parameter_list|,
+name|gid_t
 parameter_list|)
 function_decl|;
 end_function_decl

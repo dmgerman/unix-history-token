@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 8.36 1999/10/15 19:49:08 vixie Exp $  */
+comment|/*  *	$Id: nameser.h,v 8.37 2000/03/30 21:16:49 vixie Exp $  */
 end_comment
 
 begin_ifndef
@@ -2108,6 +2108,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ns_name_rollback
+value|__ns_name_rollback
+end_define
+
+begin_define
+define|#
+directive|define
 name|ns_sign
 value|__ns_sign
 end_define
@@ -2613,6 +2620,30 @@ operator|*
 operator|,
 specifier|const
 name|u_char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ns_name_rollback
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|u_char
+operator|*
 operator|*
 operator|)
 argument_list|)

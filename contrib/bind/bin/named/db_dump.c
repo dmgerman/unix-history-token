@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_dump.c,v 8.40 1999/10/13 16:39:01 vixie Exp $"
+literal|"$Id: db_dump.c,v 8.43 2000/04/21 06:54:01 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ comment|/*  * Portions Copyright (c) 1995 by International Business Machines, In
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -261,6 +261,21 @@ operator|!=
 literal|0
 condition|)
 name|zt_dump
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fwddata
+operator|!=
+name|NULL
+operator|&&
+name|fwddata_count
+operator|!=
+literal|0
+condition|)
+name|fwd_dump
 argument_list|(
 name|fp
 argument_list|)
@@ -633,6 +648,83 @@ argument_list|(
 name|fp
 argument_list|,
 literal|";; --zone table--\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|fwd_dump
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|";; ++forwarders table++\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|fwddata_count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"; %s rtt=%d\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|fwddata
+index|[
+name|i
+index|]
+operator|->
+name|fwdaddr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|,
+name|fwddata
+index|[
+name|i
+index|]
+operator|->
+name|nsdata
+operator|->
+name|d_nstime
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|";; --forwarders table--\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1115,11 +1207,8 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\t"
+literal|"%u\t"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|dp
 operator|->
 name|d_ttl
@@ -1130,7 +1219,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d\t"
+literal|"%u\t"
 argument_list|,
 name|zones
 index|[

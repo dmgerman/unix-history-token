@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsupdate.c,v 8.21 1999/10/19 22:22:59 cyarnell Exp $"
+literal|"$Id: nsupdate.c,v 8.23 2000/02/04 07:51:04 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -967,6 +967,11 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|INIT_LIST
+argument_list|(
+name|listuprec
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|keyfile
@@ -2047,6 +2052,15 @@ name|dnbuf
 expr_stmt|;
 name|r_ttl
 operator|=
+operator|(
+name|r_opcode
+operator|==
+name|ADD
+operator|)
+condition|?
+operator|-
+literal|1
+else|:
 literal|0
 expr_stmt|;
 name|r_type
@@ -2528,7 +2542,8 @@ if|if
 condition|(
 name|r_ttl
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|fprintf

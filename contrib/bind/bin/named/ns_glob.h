@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.51 1999/10/15 21:53:32 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.54 2000/04/21 06:54:07 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -379,6 +379,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* data about all forwarders */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|struct
+name|fwddata
+modifier|*
+modifier|*
+name|fwddata
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* how many forwarders are there in fwddata? */
+end_comment
+
+begin_decl_stmt
+name|DECL
+name|int
+name|fwddata_count
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* number of names in addinfo */
 end_comment
 
@@ -401,32 +426,6 @@ modifier|*
 name|cache_file
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SLAVE_FORWARD
-end_ifdef
-
-begin_comment
-comment|/* retry time when a slave */
-end_comment
-
-begin_decl_stmt
-name|DECL
-name|int
-name|slave_retry
-name|INIT
-argument_list|(
-literal|4
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_lookup.c,v 8.24 1999/10/15 19:48:58 vixie Exp $"
+literal|"$Id: db_lookup.c,v 8.26 2000/04/21 06:54:03 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -1107,17 +1107,62 @@ name|dp1_lower
 decl_stmt|,
 name|dp2_lower
 decl_stmt|;
+name|int
+name|type1
+decl_stmt|,
+name|type2
+decl_stmt|;
 if|if
 condition|(
 name|dp1
 operator|->
 name|d_type
-operator|!=
-name|ns_t_nxt
-operator|||
+operator|==
+name|ns_t_sig
+condition|)
+name|type1
+operator|=
+name|SIG_COVERS
+argument_list|(
+name|dp1
+argument_list|)
+expr_stmt|;
+else|else
+name|type1
+operator|=
+name|dp1
+operator|->
+name|d_type
+expr_stmt|;
+if|if
+condition|(
 name|dp2
 operator|->
 name|d_type
+operator|==
+name|ns_t_sig
+condition|)
+name|type2
+operator|=
+name|SIG_COVERS
+argument_list|(
+name|dp2
+argument_list|)
+expr_stmt|;
+else|else
+name|type2
+operator|=
+name|dp2
+operator|->
+name|d_type
+expr_stmt|;
+if|if
+condition|(
+name|type1
+operator|!=
+name|ns_t_nxt
+operator|||
+name|type2
 operator|!=
 name|ns_t_nxt
 condition|)

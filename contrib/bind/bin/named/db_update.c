@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_update.c,v 8.39 1999/10/15 19:48:59 vixie Exp $"
+literal|"$Id: db_update.c,v 8.42 2000/04/21 06:54:04 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ comment|/*  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  
 end_comment
 
 begin_comment
-comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+comment|/*  * Portions Copyright (c) 1996-2000 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
 end_comment
 
 begin_include
@@ -444,16 +444,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|ISVALIDGLUE
-parameter_list|(
-name|xdp
-parameter_list|)
-value|((xdp)->d_type == T_NS || (xdp)->d_type == T_A \ 			 || (xdp)->d_type == T_AAAA)
-end_define
 
 begin_comment
 comment|/* int  * db_update(name, odp, newdp, savedpp, flags, htp, from)  *	update data base node at `name'.  `flags' controls the action.  * side effects:  *	inverse query tables modified, if we're using them.  * return value:  *	OK - success  *	NONAME - name doesn't exist  *	AUTH - you can't do that  *	DATAEXISTS - there's something there and DB_NODATA was specified  *	NODATA - there's no data, and (DB_DELETE or DB_MEXIST) was spec'd  *  *	Policy: How to add data if one more RR is -ve data  *  *	NEND	NOERROR_NODATA  *	NXD	NXDOMAIN  *  *				match  *				old  *			Data	NEND	NXD  *		Data	Merge	Data	Data  *	new	NEND	NEND	NEND	NEND  *		NXD	NXD	NXD	NXD  *  *			     no match  *				old  *			Data	NEND	NXD  *		Data	Merge	Merge	Data  *	new	NEND	Merge	Merge	NEND  *		NXD	NXD	NXD	NXD  *  */
@@ -2013,7 +2003,7 @@ operator|==
 name|Z_PRIMARY
 condition|)
 block|{
-name|ns_info
+name|ns_warning
 argument_list|(
 name|ns_log_db
 argument_list|,

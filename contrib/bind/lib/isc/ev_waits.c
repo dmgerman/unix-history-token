@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_waits.c,v 8.9 1999/10/13 17:11:20 vixie Exp $"
+literal|"$Id: ev_waits.c,v 8.10 2000/02/04 07:25:50 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1063,6 +1063,22 @@ operator|=
 name|ctx
 operator|->
 name|waitLists
+expr_stmt|;
+if|if
+condition|(
+name|new
+operator|->
+name|next
+operator|!=
+name|NULL
+condition|)
+name|new
+operator|->
+name|next
+operator|->
+name|prev
+operator|=
+name|new
 expr_stmt|;
 name|ctx
 operator|->
