@@ -757,7 +757,7 @@ name|count
 parameter_list|,
 name|message
 parameter_list|)
-value|{\ 	register u_long cnt = count; char *msg = message;\ 	while (cnt--&& ! (condition)) continue;\ 	if (cnt == -1&& msg)\ 		printf ("nca: %s timeout\n", msg); }
+value|{\ 	register u_long cnt = count; char *_msg = message;\ 	while (cnt--&& ! (condition)) continue;\ 	if (cnt == -1&& _msg)\ 		printf ("nca: %s timeout\n", _msg); }
 end_define
 
 begin_function_decl
