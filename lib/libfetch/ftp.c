@@ -209,6 +209,13 @@ name|FTP_SYNTAX_ERROR
 value|500
 end_define
 
+begin_define
+define|#
+directive|define
+name|FTP_PROTOCOL_ERROR
+value|999
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -513,7 +520,7 @@ condition|)
 block|{
 name|_ftp_seterr
 argument_list|(
-literal|999
+name|FTP_PROTOCOL_ERROR
 argument_list|)
 expr_stmt|;
 return|return
@@ -1146,7 +1153,7 @@ break|break;
 default|default:
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 comment|/* XXX: error code should be prepared */
 goto|goto
@@ -1201,7 +1208,7 @@ condition|)
 block|{
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 goto|goto
 name|ouch
@@ -1262,7 +1269,7 @@ condition|)
 block|{
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 goto|goto
 name|ouch
@@ -1302,7 +1309,7 @@ condition|)
 block|{
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 goto|goto
 name|ouch
@@ -1382,7 +1389,7 @@ condition|)
 block|{
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 goto|goto
 name|ouch
@@ -1607,7 +1614,7 @@ break|break;
 default|default:
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 comment|/* XXX: error code should be prepared */
 break|break;
@@ -2265,7 +2272,7 @@ break|break;
 default|default:
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 comment|/* XXX: error code should be prepared */
 goto|goto
@@ -3809,7 +3816,7 @@ condition|)
 block|{
 name|_ftp_seterr
 argument_list|(
-literal|999
+name|FTP_PROTOCOL_ERROR
 argument_list|)
 expr_stmt|;
 return|return
@@ -3875,7 +3882,7 @@ comment|/* nothing */
 empty_stmt|;
 name|e
 operator|=
-literal|999
+name|FTP_PROTOCOL_ERROR
 expr_stmt|;
 switch|switch
 condition|(
