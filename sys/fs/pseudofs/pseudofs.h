@@ -326,6 +326,42 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Ioctl callback  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFS_IOCTL_ARGS
+define|\
+value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	unsigned long cmd, caddr_t data
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_IOCTL_PROTO
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|int name(PFS_IOCTL_ARGS);
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pfs_ioctl_t
+function_decl|)
+parameter_list|(
+name|PFS_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * pfs_info: describes a pseudofs instance  */
 end_comment
 
@@ -407,7 +443,9 @@ define|#
 directive|define
 name|pn_nodes
 value|u1._pn_nodes
-comment|/*pfs_ioctl_t		 pn_ioctl;*/
+name|pfs_ioctl_t
+name|pn_ioctl
+decl_stmt|;
 name|pfs_attr_t
 name|pn_attr
 decl_stmt|;
