@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reverse.c	5.7 (Berkeley) %G%"
+literal|"@(#)reverse.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,6 +284,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|start
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -322,7 +326,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|p
+name|start
 operator|=
 name|mmap
 argument_list|(
@@ -373,7 +377,9 @@ expr_stmt|;
 return|return;
 block|}
 name|p
-operator|+=
+operator|=
+name|start
+operator|+
 name|size
 operator|-
 literal|1
@@ -453,6 +459,34 @@ argument_list|(
 name|p
 argument_list|,
 name|llen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|munmap
+argument_list|(
+name|start
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|sbp
+operator|->
+name|st_size
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|fname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
