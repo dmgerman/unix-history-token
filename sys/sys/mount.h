@@ -148,6 +148,12 @@ begin_comment
 comment|/* length of fs type name, including null */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -158,6 +164,33 @@ end_define
 begin_comment
 comment|/* length of buffer for returned name */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MNAMELEN
+value|72
+end_define
+
+begin_comment
+comment|/* length of buffer for returned name */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
