@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timer.c	5.1 (Berkeley) %G%"
+literal|"@(#)timer.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,10 @@ init|=
 literal|1
 decl_stmt|,
 name|timetobroadcast
+decl_stmt|;
+specifier|extern
+name|int
+name|externalinterfaces
 decl_stmt|;
 name|timeval
 operator|+=
@@ -170,7 +174,9 @@ name|RTS_PASSIVE
 operator|)
 operator|&&
 operator|(
-name|supplier
+name|externalinterfaces
+operator|>
+literal|1
 operator|||
 operator|!
 operator|(
