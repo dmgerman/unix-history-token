@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -2732,17 +2738,17 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", writes: sync %ld async %ld"
+literal|", writes: sync %ju async %ju"
 argument_list|,
 operator|(
-name|long
+name|uintmax_t
 operator|)
 name|sfp
 operator|->
 name|f_syncwrites
 argument_list|,
 operator|(
-name|long
+name|uintmax_t
 operator|)
 name|sfp
 operator|->
@@ -2768,17 +2774,17 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|", reads: sync %ld async %ld"
+literal|", reads: sync %ju async %ju"
 argument_list|,
 operator|(
-name|long
+name|uintmax_t
 operator|)
 name|sfp
 operator|->
 name|f_syncreads
 argument_list|,
 operator|(
-name|long
+name|uintmax_t
 operator|)
 name|sfp
 operator|->
