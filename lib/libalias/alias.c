@@ -4950,8 +4950,10 @@ name|PKT_ALIAS_REVERSE
 expr_stmt|;
 name|iresult
 operator|=
-name|PacketAliasOut
+name|LibAliasOut
 argument_list|(
+name|la
+argument_list|,
 name|ptr
 argument_list|,
 name|maxpacketsize
@@ -5365,8 +5367,10 @@ name|PKT_ALIAS_REVERSE
 expr_stmt|;
 name|iresult
 operator|=
-name|PacketAliasIn
+name|LibAliasIn
 argument_list|(
+name|la
+argument_list|,
 name|ptr
 argument_list|,
 name|maxpacketsize
