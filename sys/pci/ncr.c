@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.7 1994/10/12 02:33:19 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.8 1994/10/12 04:17:24 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@dentaro.gun.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -22,32 +22,6 @@ end_escape
 
 begin_comment
 comment|/*========================================================== ** **	Configuration and Debugging ** **	May be overwritten in<i386/conf/XXXXX> ** **========================================================== */
-end_comment
-
-begin_comment
-comment|/* **    Enable/Disable debug messages. **    Can be changed at runtime too. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SCSI_NCR_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SCSI_NCR_DEBUG
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SCSI_NCR_DEBUG */
 end_comment
 
 begin_comment
@@ -364,6 +338,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __NetBSD */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -388,12 +366,6 @@ end_escape
 begin_comment
 comment|/*========================================================== ** **	Debugging tags ** **========================================================== */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
-end_ifdef
 
 begin_define
 define|#
@@ -486,13 +458,22 @@ name|DEBUG_RESTART
 value|(0x1000)
 end_define
 
-begin_decl_stmt
-name|int
-name|ncr_debug
-init|=
-name|SCSI_NCR_DEBUG
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* **    Enable/Disable debug messages. **    Can be changed at runtime too. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCSI_DEBUG_FLAGS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEBUG_FLAGS
+value|ncr_debug;
+end_define
 
 begin_else
 else|#
@@ -500,16 +481,22 @@ directive|else
 end_else
 
 begin_comment
-comment|/* SCSI_NCR_DEBUG */
+comment|/* SCSI_DEBUG_FLAGS */
 end_comment
 
-begin_decl_stmt
-name|int
-name|ncr_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|SCSI_DEBUG_FLAGS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEBUG_FLAGS
+value|0
+end_define
 
 begin_endif
 endif|#
@@ -517,7 +504,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SCSI_NCR_DEBUG */
+comment|/* SCSI_DEBUG_FLAGS */
 end_comment
 
 begin_comment
@@ -2022,11 +2009,13 @@ name|sc_ih
 decl_stmt|;
 else|#
 directive|else
+comment|/* !__NetBSD__ */
 name|int
 name|unit
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* __NetBSD__ */
 comment|/*----------------------------------------------- 	**	Scripts .. 	**----------------------------------------------- 	** 	**	During reselection the ncr jumps to this point. 	**	The SFBR register is loaded with the encoded target id. 	** 	**	Jump to the first target. 	** 	**	JUMP 	**	@(next tcb) 	*/
 name|struct
 name|link
@@ -2122,17 +2111,6 @@ decl_stmt|;
 name|u_long
 name|lasttime
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-name|u_short
-name|imask
-decl_stmt|;
-name|u_short
-name|mcount
-decl_stmt|;
-endif|#
-directive|endif
 comment|/*----------------------------------------------- 	**	Debug and profiling 	**----------------------------------------------- 	** 	**	register dump 	*/
 name|struct
 name|ncr_reg
@@ -2783,6 +2761,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* NEW_SCSICONF */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -3078,6 +3060,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !__NetBSD */
+end_comment
+
 begin_function_decl
 specifier|static
 name|char
@@ -3112,274 +3098,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_escape
-end_escape
-
-begin_comment
-comment|/*========================================================== ** ** **	Access to processor ports. ** ** **========================================================== */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIRTY
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<i386/include/cpufunc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/include/pio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isareg.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|x
-parameter_list|)
-value|delay(x)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__NetBSD__ */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANCIENT
-end_ifdef
-
-begin_comment
-comment|/* **	Doch das ist alles nur geklaut .. **	aus:  386bsd:/sys/i386/include/pio.h ** ** Mach Operating System ** Copyright (c) 1990 Carnegie-Mellon University ** All rights reserved.  The CMU software License Agreement specifies ** the terms and conditions for use and redistribution. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|inb
-end_undef
-
-begin_define
-define|#
-directive|define
-name|inb
-parameter_list|(
-name|port
-parameter_list|)
-define|\
-value|({ unsigned char data; \ 	__asm __volatile("inb %1, %0": "=a" (data): "d" ((u_short)(port))); \ 	data; })
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|outb
-end_undef
-
-begin_define
-define|#
-directive|define
-name|outb
-parameter_list|(
-name|port
-parameter_list|,
-name|data
-parameter_list|)
-define|\
-value|{__asm __volatile("outb %0, %1"::"a" ((u_char)(data)), "d" ((u_short)(port)));}
-end_define
-
-begin_define
-define|#
-directive|define
-name|disable_intr
-parameter_list|()
-define|\
-value|{__asm __volatile("cli");}
-end_define
-
-begin_define
-define|#
-directive|define
-name|enable_intr
-parameter_list|()
-define|\
-value|{__asm __volatile("sti");}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ANCIENT */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/*------------------------------------------------------------------ ** **	getirr: get a bit vector of the pending interrupts. ** **	NOTE: this is HIGHLY hardware dependent :-( ** **------------------------------------------------------------------ */
-end_comment
-
-begin_function
-specifier|static
-name|u_long
-name|getirr
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|u_long
-name|mask
-decl_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-comment|/* **	XXX FreeBSD defaults to having the irr selected at all times, **	so this is unnecessary. */
-name|outb
-argument_list|(
-name|IO_ICU2
-argument_list|,
-literal|0x0a
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|mask
-operator|=
-name|inb
-argument_list|(
-name|IO_ICU2
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-comment|/* **	XXX FreeBSD defaults to having the irr selected at all times, **	so this breaks things. */
-name|outb
-argument_list|(
-name|IO_ICU2
-argument_list|,
-literal|0x0b
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|mask
-operator|<<=
-literal|8
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-name|outb
-argument_list|(
-name|IO_ICU1
-argument_list|,
-literal|0x0a
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|mask
-operator||=
-name|inb
-argument_list|(
-name|IO_ICU1
-argument_list|)
-expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-name|outb
-argument_list|(
-name|IO_ICU1
-argument_list|,
-literal|0x0b
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|enable_intr
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|mask
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* __NetBSD__ */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* DIRTY */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|getirr
-parameter_list|()
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DIRTY */
 end_comment
 
 begin_endif
@@ -3404,7 +3124,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.7 1994/10/12 02:33:19 se Exp $\n"
+literal|"\n$Id: ncr.c,v 2.12 94/10/12 18:30:05 wolf Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3487,13 +3207,22 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
+name|int
+name|ncr_debug
+init|=
+name|SCSI_DEBUG_FLAGS
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ncr_cache
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* may _NOT_ be static */
+comment|/* to be alligned _NOT_ static */
 end_comment
 
 begin_comment
@@ -8346,12 +8075,9 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_SCRIPT
 condition|)
@@ -8374,9 +8100,6 @@ operator|)
 name|opcode
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 		**	We don't have to decode ALL commands 		*/
 switch|switch
 condition|(
@@ -9320,7 +9043,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%s scanning for targets 0..%d ($Revision: 1.7 $)\n"
+literal|"%s scanning for targets 0..%d ($Revision: 2.12 $)\n"
 argument_list|,
 name|ncr_name
 argument_list|(
@@ -9466,12 +9189,9 @@ name|n
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -9480,9 +9200,6 @@ argument_list|(
 literal|"["
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 if|if
 condition|(
 name|INB
@@ -9536,12 +9253,9 @@ literal|100
 expr_stmt|;
 block|}
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -9550,9 +9264,6 @@ argument_list|(
 literal|"]\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 return|return
 operator|(
 name|n
@@ -9861,12 +9572,9 @@ empty_stmt|;
 endif|#
 directive|endif
 comment|/* ANCIENT */
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -9900,9 +9608,6 @@ name|datalen
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/*-------------------------------------------- 	** 	**   Sanity checks ... 	**	copied from Elischer's Adaptec driver. 	** 	**-------------------------------------------- 	*/
 name|flags
 operator|=
@@ -10325,12 +10030,9 @@ name|lp
 operator|->
 name|lasttag
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TAGS
 condition|)
@@ -10351,9 +10053,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 block|}
 empty_stmt|;
 block|}
@@ -10378,6 +10077,13 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
+operator|&&
+operator|!
+operator|(
+name|__FreeBSD__
+operator|>=
+literal|2
+operator|)
 comment|/* 		** @GENSCSI@	Bug in "/sys/scsi/cd.c" 		** 		**	/sys/scsi/cd.c initializes opennings with 2. 		**	Our info value of 1 is not respected. 		*/
 if|if
 condition|(
@@ -10602,12 +10308,9 @@ name|tp
 operator|->
 name|maxoffs
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -10644,9 +10347,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 break|break;
 case|case
 name|NS_WIDE
@@ -10693,12 +10393,9 @@ name|tp
 operator|->
 name|usrwide
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -10735,9 +10432,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 break|break;
 block|}
 empty_stmt|;
@@ -11382,12 +11076,9 @@ name|squeueput
 operator|=
 name|ptr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_QUEUE
 condition|)
@@ -11431,9 +11122,6 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**	Script processor may be waiting for reconnect. 	**	Wake it up. 	*/
 name|OUTB
 argument_list|(
@@ -11470,12 +11158,9 @@ operator|->
 name|lasttime
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -11484,9 +11169,6 @@ argument_list|(
 literal|"Q"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 return|return
 operator|(
 name|SUCCESSFULLY_QUEUED
@@ -11497,12 +11179,9 @@ empty_stmt|;
 block|}
 empty_stmt|;
 comment|/*---------------------------------------------------- 	** 	**	Interrupts not yet enabled - have to poll. 	** 	**---------------------------------------------------- 	*/
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_POLL
 condition|)
@@ -11511,9 +11190,6 @@ argument_list|(
 literal|"P"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 for|for
 control|(
 name|i
@@ -11537,13 +11213,10 @@ name|i
 operator|--
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
 operator|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_POLL
 operator|)
@@ -11569,9 +11242,6 @@ operator|+
 literal|'0'
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|DELAY
 argument_list|(
 literal|1000
@@ -11701,12 +11371,9 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESULT
 condition|)
@@ -11731,9 +11398,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 if|if
 condition|(
 operator|!
@@ -11870,12 +11534,9 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -11899,9 +11560,6 @@ operator|->
 name|scsi_status
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|xp
 operator|=
 name|cp
@@ -12284,12 +11942,9 @@ name|error
 operator|=
 name|XS_SENSE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 operator|(
 name|DEBUG_RESULT
@@ -12353,9 +12008,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 block|}
 elseif|else
 if|if
@@ -12762,12 +12414,9 @@ break|break;
 case|case
 name|HS_DISCONNECT
 case|:
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -12776,9 +12425,6 @@ argument_list|(
 literal|"D"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* fall through */
 case|case
 name|HS_BUSY
@@ -14808,23 +14454,9 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-name|u_long
-name|imask
-init|=
-name|getirr
-argument_list|()
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -14833,20 +14465,14 @@ argument_list|(
 literal|"{"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|ncr_exception
 argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -14855,146 +14481,11 @@ argument_list|(
 literal|"}"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-name|imask
-operator|&=
-operator|~
-name|getirr
-argument_list|()
-expr_stmt|;
-name|imask
-operator|&=
-operator|~
-operator|(
-literal|0x87
-operator|)
-expr_stmt|;
-comment|/* remove 7,2,1,0 */
 name|splx
 argument_list|(
 name|oldspl
 argument_list|)
 expr_stmt|;
-comment|/* 		**	automagically find int vector. 		*/
-if|if
-condition|(
-name|imask
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|imask
-operator|!=
-name|np
-operator|->
-name|imask
-operator|)
-operator|&&
-operator|(
-name|np
-operator|->
-name|mcount
-operator|<
-literal|100
-operator|)
-condition|)
-name|np
-operator|->
-name|mcount
-operator|=
-literal|0
-expr_stmt|;
-name|np
-operator|->
-name|imask
-operator|=
-name|imask
-expr_stmt|;
-name|np
-operator|->
-name|mcount
-operator|++
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|/* 		**	a hint to the user :-) 		*/
-if|if
-condition|(
-name|np
-operator|->
-name|mcount
-operator|==
-literal|100
-condition|)
-block|{
-if|if
-condition|(
-name|np
-operator|->
-name|imask
-operator|&
-operator|(
-name|np
-operator|->
-name|imask
-operator|-
-literal|1
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: uses one of the irq in %x.\n"
-argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
-argument_list|,
-name|np
-operator|->
-name|imask
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"%s: please configure irq %d.\n"
-argument_list|,
-name|ncr_name
-argument_list|(
-name|np
-argument_list|)
-argument_list|,
-name|ffs
-argument_list|(
-name|np
-operator|->
-name|imask
-argument_list|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
-name|np
-operator|->
-name|mcount
-operator|++
-expr_stmt|;
-block|}
-empty_stmt|;
-endif|#
-directive|endif
 block|}
 empty_stmt|;
 block|}
@@ -15032,12 +14523,9 @@ operator|&
 name|INTF
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -15046,9 +14534,6 @@ argument_list|(
 literal|"F"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -15108,12 +14593,9 @@ operator|.
 name|num_int
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -15147,9 +14629,6 @@ name|nc_dbc
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 if|if
 condition|(
 operator|(
@@ -15905,13 +15384,10 @@ argument_list|)
 expr_stmt|;
 comment|/* clear scsi offsets */
 block|}
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 comment|/* 	**	Freeze controller to be able to read the messages. 	*/
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_FREEZE
 condition|)
@@ -16051,9 +15527,6 @@ expr_stmt|;
 return|return;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**	sorry, have to kill ALL jobs ... 	*/
 name|ncr_init
 argument_list|(
@@ -16083,12 +15556,9 @@ decl_stmt|;
 name|ccb_p
 name|cp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -16097,9 +15567,6 @@ argument_list|(
 literal|"T"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**	look for ccb and set the status. 	*/
 name|dsa
 operator|=
@@ -16622,13 +16089,10 @@ name|dsp
 expr_stmt|;
 block|}
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 comment|/* 	**	log the information 	*/
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 operator|(
 name|DEBUG_TINY
@@ -16671,7 +16135,7 @@ block|}
 empty_stmt|;
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_PHASE
 condition|)
@@ -16714,9 +16178,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**	get old startaddress and old length. 	*/
 name|oadr
 operator|=
@@ -16788,12 +16249,9 @@ literal|0xffffff
 expr_stmt|;
 block|}
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_PHASE
 condition|)
@@ -16832,9 +16290,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**	if old phase not dataphase, leave here. 	*/
 name|assert
 argument_list|(
@@ -16975,12 +16430,9 @@ index|]
 operator|=
 name|nxtdsp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_PHASE
 condition|)
@@ -17036,9 +16488,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**	fake the return address (to the patch). 	**	and restart script processor at dispatcher. 	*/
 name|np
 operator|->
@@ -17242,12 +16691,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TINY
 condition|)
@@ -17258,9 +16704,6 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 switch|switch
 condition|(
 name|num
@@ -17346,12 +16789,9 @@ case|case
 name|SIR_SENSE_RESTART
 case|:
 comment|/*------------------------------------------ 		**	Script processor is idle. 		**	Look for interrupted "check cond" 		**------------------------------------------ 		*/
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17367,9 +16807,6 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|cp
 operator|=
 operator|(
@@ -17391,12 +16828,9 @@ name|i
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17407,9 +16841,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|tp
 operator|=
 operator|&
@@ -17420,12 +16851,9 @@ index|[
 name|i
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17434,9 +16862,6 @@ argument_list|(
 literal|"+"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|cp
 operator|=
 name|tp
@@ -17449,12 +16874,9 @@ operator|!
 name|cp
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17463,9 +16885,6 @@ argument_list|(
 literal|"+"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 if|if
 condition|(
 operator|(
@@ -17485,12 +16904,9 @@ name|S_CHECK_COND
 operator|)
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17499,9 +16915,6 @@ argument_list|(
 literal|"- (remove)"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|tp
 operator|->
 name|hold_cp
@@ -17520,12 +16933,9 @@ condition|(
 name|cp
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17534,9 +16944,6 @@ argument_list|(
 literal|"+ restart job ..\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|OUTL
 argument_list|(
 name|nc_dsa
@@ -17569,12 +16976,9 @@ return|return;
 block|}
 empty_stmt|;
 comment|/* 		**	no job, resume normal processing 		*/
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17583,9 +16987,6 @@ argument_list|(
 literal|" -- remove trap\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|np
 operator|->
 name|script
@@ -17614,12 +17015,9 @@ operator|->
 name|xfer
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_RESTART
 condition|)
@@ -17635,9 +17033,6 @@ operator|&
 literal|7
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 		**	Mark this job 		*/
 name|cp
 operator|->
@@ -17696,12 +17091,9 @@ case|case
 name|SIR_NEGO_PROTO
 case|:
 comment|/*------------------------------------------------------- 		** 		**	Negotiation failed. 		**	Target doesn't fetch the answer message. 		** 		**------------------------------------------------------- 		*/
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -17726,9 +17118,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 		**	any error in negotiation: 		**	fall back to default mode. 		*/
 switch|switch
 condition|(
@@ -17809,12 +17198,9 @@ case|case
 name|SIR_NEGO_SYNC
 case|:
 comment|/* 		**	Synchronous request message received. 		*/
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -17848,9 +17234,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 		**	get requested values. 		*/
 name|chg
 operator|=
@@ -18005,12 +17388,9 @@ name|fak
 operator|=
 literal|7
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -18036,9 +17416,6 @@ name|chg
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 if|if
 condition|(
 name|INB
@@ -18227,12 +17604,9 @@ name|nego_status
 operator|=
 name|NS_SYNC
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -18265,20 +17639,14 @@ literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 break|break;
 case|case
 name|SIR_NEGO_WIDE
 case|:
 comment|/* 		**	Wide request message received. 		*/
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -18312,9 +17680,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 		**	get requested values. 		*/
 name|chg
 operator|=
@@ -18364,12 +17729,9 @@ operator|->
 name|usrwide
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -18391,9 +17753,6 @@ name|chg
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 if|if
 condition|(
 name|INB
@@ -18561,12 +17920,9 @@ name|nego_status
 operator|=
 name|NS_WIDE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_NEGO
 condition|)
@@ -18599,9 +17955,6 @@ literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 break|break;
 comment|/*-------------------------------------------------------------------- ** **	Processing of special messages ** **-------------------------------------------------------------------- */
 case|case
@@ -19625,12 +18978,9 @@ operator|!
 name|cp
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_ALLOC
 condition|)
@@ -19651,9 +19001,6 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**	Count it 	*/
 name|lp
 operator|->
@@ -19853,12 +19200,9 @@ name|actlink
 operator|-=
 name|diff
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TAGS
 condition|)
@@ -19882,9 +19226,6 @@ operator|->
 name|reqlink
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 return|return;
 block|}
 empty_stmt|;
@@ -19935,12 +19276,9 @@ operator|->
 name|sc_link
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TAGS
 condition|)
@@ -19964,8 +19302,6 @@ operator|->
 name|reqlink
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 empty_stmt|;
 endif|#
@@ -20101,12 +19437,9 @@ name|chunk
 operator|/=
 literal|2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_SCATTER
 condition|)
@@ -20130,9 +19463,6 @@ operator|)
 name|chunk
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 comment|/* 	**   Build data descriptors. 	*/
 while|while
 condition|(
@@ -20257,12 +19587,9 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_SCATTER
 condition|)
@@ -20288,9 +19615,6 @@ operator|)
 name|datalen
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 name|phys
 operator|->
 name|data
@@ -21298,12 +20622,9 @@ name|rv_scntl3
 operator||=
 name|f
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCSI_NCR_DEBUG
 if|if
 condition|(
-name|ncr_debug
+name|DEBUG_FLAGS
 operator|&
 name|DEBUG_TIMING
 condition|)
@@ -21331,9 +20652,6 @@ operator|->
 name|rv_scntl3
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCSI_NCR_DEBUG */
 block|}
 end_block
 
