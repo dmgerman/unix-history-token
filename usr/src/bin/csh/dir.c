@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dir.c	5.3 (Berkeley) %G%"
+literal|"@(#)dir.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,18 +164,22 @@ operator|==
 name|NULL
 condition|)
 block|{
+define|#
+directive|define
+name|WDERR
+value|"csh: can't get current directory.\n"
 operator|(
 name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|SHDIAG
 argument_list|,
-name|path
+name|WDERR
 argument_list|,
 name|strlen
 argument_list|(
-name|path
+name|WDERR
 argument_list|)
 argument_list|)
 expr_stmt|;
