@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -99,27 +105,11 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_KERNEL
-end_define
-
-begin_comment
-comment|/* Avoid userland compatability headers */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sys/user.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|_KERNEL
-end_undef
 
 begin_include
 include|#
@@ -164,22 +154,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|printf
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
