@@ -1752,6 +1752,10 @@ operator|.
 name|rexmt_limit
 operator|||
 name|inp
+operator|==
+name|NULL
+operator|||
+name|inp
 operator|->
 name|inp_gencnt
 operator|!=
