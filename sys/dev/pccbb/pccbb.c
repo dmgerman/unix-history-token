@@ -5389,7 +5389,7 @@ name|flags
 operator|&
 name|INTR_MPSAFE
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|mtx_lock
@@ -5419,7 +5419,7 @@ name|flags
 operator|&
 name|INTR_MPSAFE
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|mtx_unlock
