@@ -239,7 +239,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdef:iK:k:np:Prs:UuxX:"
+literal|"cdef:iK:k:Lnp:rs:UuxX:"
 argument_list|)
 operator|)
 operator|!=
