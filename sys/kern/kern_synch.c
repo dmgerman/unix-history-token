@@ -1208,8 +1208,6 @@ init|=
 name|curproc
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|sig
 decl_stmt|,
 name|catch
@@ -1268,11 +1266,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|cold
@@ -1302,11 +1295,6 @@ name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1644,11 +1632,6 @@ argument_list|)
 expr_stmt|;
 name|resume
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_sflag
@@ -1783,6 +1766,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
@@ -1804,6 +1792,11 @@ else|else
 name|rval
 operator|=
 name|ERESTART
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -2415,6 +2408,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
@@ -2436,6 +2434,11 @@ else|else
 name|rval
 operator|=
 name|ERESTART
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -3180,18 +3183,9 @@ literal|0
 block|register struct rlimit *rlim;
 endif|#
 directive|endif
-name|int
-name|x
-decl_stmt|;
 name|u_int
 name|sched_nest
 decl_stmt|;
-comment|/* 	 * XXX this spl is almost unnecessary.  It is partly to allow for 	 * sloppy callers that don't do it (issignal() via CURSIG() is the 	 * main offender).  It is partly to work around a bug in the i386 	 * cpu_switch() (the ipl is not preserved).  We ran for years 	 * without it.  I think there was only a interrupt latency problem. 	 * The main caller, msleep(), does an splx() a couple of instructions 	 * after calling here.  The buggy caller, issignal(), usually calls 	 * here at spl0() and sometimes returns at splhigh().  The process 	 * then runs for a little too long at splhigh().  The ipl gets fixed 	 * when the process returns to user mode (or earlier). 	 * 	 * It would probably be better to always call here at spl0(). Callers 	 * are prepared to give up control to another process, so they must 	 * be prepared to be interrupted.  The clock stuff here may not 	 * actually need splstatclock(). 	 */
-name|x
-operator|=
-name|splstatclock
-argument_list|()
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3282,7 +3276,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Check if the process exceeds its cpu resource allocation. 	 * If over max, kill it. 	 * 	 * XXX drop sched_lock, pickup Giant 	 */
-block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			mtx_unlock_spin(&sched_lock); 			killproc(p, "exceeded maximum CPU limit"); 			mtx_lock_spin(&sched_lock); 		} else { 			mtx_unlock_spin(&sched_lock); 			psignal(p, SIGXCPU); 			mtx_lock_spin(&sched_lock); 			if (rlim->rlim_cur< rlim->rlim_max) {
+block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			mtx_unlock_spin(&sched_lock); 			killproc(p, "exceeded maximum CPU limit"); 			mtx_lock_spin(&sched_lock); 		} else { 			mtx_unlock_spin(&sched_lock); 			PROC_LOCK(p); 			psignal(p, SIGXCPU); 			mtx_lock_spin(&sched_lock); 			PROC_UNLOCK_NOSWITCH(p); 			if (rlim->rlim_cur< rlim->rlim_max) {
 comment|/* XXX: we should make a private copy */
 block|rlim->rlim_cur += 5; 			} 		} 	}
 endif|#
@@ -3424,11 +3418,6 @@ argument_list|(
 name|switchticks
 argument_list|,
 name|ticks
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|x
 argument_list|)
 expr_stmt|;
 block|}
