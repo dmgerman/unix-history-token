@@ -17340,7 +17340,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__alpha__
+name|TRY_WITHOUT_THIS__alpha__
 argument_list|)
 if|if
 condition|(
