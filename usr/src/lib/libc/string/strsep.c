@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/stdc.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
@@ -43,7 +43,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strsep.c	5.3 (Berkeley) %G%"
+literal|"@(#)strsep.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

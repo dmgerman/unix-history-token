@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/stdc.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcasecmp.c	5.9 (Berkeley) %G%"
+literal|"@(#)strcasecmp.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

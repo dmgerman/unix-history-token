@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memcmp.c	5.5 (Berkeley) %G%"
+literal|"@(#)memcmp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stdc.h>
+file|<string.h>
 end_include
 
 begin_comment

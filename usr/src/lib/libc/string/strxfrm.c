@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strxfrm.c	5.1 (Berkeley) %G%"
+literal|"@(#)strxfrm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/stdc.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
