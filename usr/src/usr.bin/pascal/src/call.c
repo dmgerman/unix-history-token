@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.11 %G%"
+literal|"@(#)call.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -392,11 +392,12 @@ name|p
 operator|->
 name|symbol
 argument_list|,
+name|BLOCKNO
+argument_list|(
 name|p
 operator|->
 name|nl_block
-operator|&
-literal|037
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putleaf
@@ -594,6 +595,8 @@ literal|1
 index|]
 argument_list|,
 name|MOD
+operator||
+name|ASGN
 argument_list|,
 name|LREQ
 argument_list|)
