@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992, 1993, 1995  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/*  * Umap Layer  * (See mount_umap(8) for a description of this layer.)  */
+comment|/*  * Umap Layer  * (See mount_umapfs(8) for a description of this layer.)  */
 end_comment
 
 begin_include
