@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.8	%H%	*/
+comment|/*	dz.c	3.9	%H%	*/
 end_comment
 
 begin_comment
@@ -1937,7 +1937,10 @@ name|TIOCSDTR
 case|:
 name|dzmodem
 argument_list|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|ON
 argument_list|)
@@ -1948,7 +1951,10 @@ name|TIOCCDTR
 case|:
 name|dzmodem
 argument_list|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|OFF
 argument_list|)
