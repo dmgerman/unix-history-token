@@ -237,6 +237,8 @@ operator|(
 name|MDF_WRITECOMBINE
 operator||
 name|MDF_UNCACHEABLE
+operator||
+name|MDF_FORCE
 operator|)
 condition|)
 return|return

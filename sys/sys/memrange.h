@@ -157,6 +157,17 @@ begin_comment
 comment|/* range is in use */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MDF_FORCE
+value|(1<<31)
+end_define
+
+begin_comment
+comment|/* force risky changes */
+end_comment
+
 begin_struct
 struct|struct
 name|mem_range_desc

@@ -126,6 +126,14 @@ name|MDF_SETTABLE
 block|}
 block|,
 block|{
+literal|"force"
+block|,
+name|MDF_FORCE
+block|,
+name|MDF_SETTABLE
+block|}
+block|,
+block|{
 literal|"unknown"
 block|,
 name|MDF_UNKNOWN
