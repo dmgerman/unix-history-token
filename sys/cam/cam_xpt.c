@@ -1026,6 +1026,30 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* 		 * PR:	kern/21139 		 * DNES docs state on page 203 that this device only 		 * supports 64 queued commands.  9gig and 18gig devices P/N  		 * DNES-318350 and DNES-309170. 		 * Reported by: Tracey Camp<campt@miralink.com>  		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"IBM"
+block|,
+literal|"DNES*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+literal|0
+block|,
+comment|/*mintags*/
+literal|2
+block|,
+comment|/*maxtags*/
+literal|32
+block|}
+block|,
+block|{
 comment|/* Broken tagged queuing drive */
 block|{
 name|T_DIRECT
