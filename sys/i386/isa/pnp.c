@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pnpcfg.c,v 1.6 1996/05/06 02:08:25 smpatel Exp smpatel $  */
+comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pnp.c,v 1.1 1997/09/09 12:31:57 jmg Exp $  */
 end_comment
 
 begin_include
@@ -97,7 +97,9 @@ name|MAX_PNP_LDN
 index|]
 init|=
 block|{
+block|{
 literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -238,7 +240,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"Called nullpnp_probe with tag 0x%08x, type 0x%08x\n"
+literal|"Called nullpnp_probe with tag 0x%08lx, type 0x%08lx\n"
 argument_list|,
 name|tag
 argument_list|,
@@ -274,7 +276,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"nullpnp_attach: csn %d, vend_id 0x%08x name %s unit %d\n"
+literal|"nullpnp_attach: csn %ld, vend_id 0x%08lx name %s unit %d\n"
 argument_list|,
 name|csn
 argument_list|,
@@ -1113,6 +1115,10 @@ expr_stmt|;
 break|break ;
 block|}
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"port 0x%04x 0x%04x 0x%04x 0x%04x irq %d:%d drq %d:%d en %d\n"
@@ -1712,11 +1718,6 @@ name|int
 name|csn
 parameter_list|)
 block|{
-name|struct
-name|pnp_cinfo
-modifier|*
-name|ci
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1746,7 +1747,7 @@ name|name
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"CSN %d Vendor ID: %c%c%c%02x%02x [0x%08x] Serial 0x%08x\n"
+literal|"CSN %d Vendor ID: %c%c%c%02x%02x [0x%08lx] Serial 0x%08lx\n"
 argument_list|,
 name|csn
 argument_list|,
@@ -2001,11 +2002,13 @@ name|ls_items
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dvp
 operator|=
 operator|*
 name|dvpp
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -2017,6 +2020,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|name
 operator|=
 call|(
@@ -2032,6 +2036,7 @@ name|p
 operator|->
 name|vendor_id
 argument_list|)
+operator|)
 condition|)
 break|break;
 block|}
@@ -2204,7 +2209,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%s%d (%s<%s> sn 0x%08x) at 0x%x "
+literal|"%s%d (%s<%s> sn 0x%08lx) at 0x%x "
 literal|"irq %d drq %d flags 0x%x id %d\n"
 argument_list|,
 name|dvp
@@ -2297,8 +2302,6 @@ name|pnp_isolation_protocol
 parameter_list|()
 block|{
 name|int
-name|i
-decl_stmt|,
 name|csn
 decl_stmt|;
 name|pnp_send_Initiation_LFSR
