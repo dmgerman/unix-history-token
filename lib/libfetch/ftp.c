@@ -461,6 +461,8 @@ condition|)
 block|{
 while|while
 condition|(
+name|lr_length
+operator|&&
 operator|!
 name|isftpreply
 argument_list|(
