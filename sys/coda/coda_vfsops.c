@@ -243,13 +243,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|vfs_omount_t
-name|coda_omount
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|coda_vfsopstats_init
@@ -327,6 +320,22 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|coda_opts
+index|[]
+init|=
+block|{
+literal|"from"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * cfs mount vfsop  * Set up mount info record and attach it to vfs struct.  */
 end_comment
@@ -337,36 +346,18 @@ end_comment
 
 begin_function
 name|int
-name|coda_omount
+name|coda_mount
 parameter_list|(
-name|vfsp
-parameter_list|,
-name|path
-parameter_list|,
-name|data
-parameter_list|,
-name|td
-parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|vfsp
-decl_stmt|;
-comment|/* Allocated and initialized by mount(2) */
-name|char
-modifier|*
-name|path
-decl_stmt|;
-comment|/* path covered: ignored by the fs-layer */
-name|caddr_t
-name|data
-decl_stmt|;
-comment|/* Need to define a data type for this in netbsd? */
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vnode
@@ -412,6 +403,49 @@ name|ndp
 decl_stmt|;
 name|ENTRY
 expr_stmt|;
+name|char
+modifier|*
+name|from
+decl_stmt|;
+if|if
+condition|(
+name|vfs_filteropt
+argument_list|(
+name|vfsp
+operator|->
+name|mnt_optnew
+argument_list|,
+name|coda_opts
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|from
+operator|=
+name|vfs_getopts
+argument_list|(
+name|vfsp
+operator|->
+name|mnt_optnew
+argument_list|,
+literal|"from"
+argument_list|,
+operator|&
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|coda_vfsopstats_init
 argument_list|()
 expr_stmt|;
@@ -452,9 +486,9 @@ name|LOOKUP
 argument_list|,
 name|FOLLOW
 argument_list|,
-name|UIO_USERSPACE
+name|UIO_SYSSPACE
 argument_list|,
-name|data
+name|from
 argument_list|,
 name|td
 argument_list|)
@@ -682,25 +716,12 @@ name|mi_rootvp
 operator|=
 name|rootvp
 expr_stmt|;
-comment|/* set filesystem block size */
+name|vfs_mountedfrom
+argument_list|(
 name|vfsp
-operator|->
-name|mnt_stat
-operator|.
-name|f_bsize
-operator|=
-literal|8192
-expr_stmt|;
-comment|/* XXX -JJK */
-comment|/* Set f_iosize.  XXX -- inamura@isl.ntt.co.jp.         For vnode_pager_haspage() references. The value should be obtained         from underlying UFS. */
-comment|/* Checked UFS. iosize is set as 8192 */
-name|vfsp
-operator|->
-name|mnt_stat
-operator|.
-name|f_iosize
-operator|=
-literal|8192
+argument_list|,
+name|from
+argument_list|)
 expr_stmt|;
 comment|/* error is currently guaranteed to be zero, but in case some        code changes... */
 name|CODADEBUG
@@ -1557,22 +1578,6 @@ name|snprintf
 argument_list|(
 name|sbp
 operator|->
-name|f_mntfromname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sbp
-operator|->
-name|f_mntfromname
-argument_list|)
-argument_list|,
-literal|"CODA"
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|sbp
-operator|->
 name|f_fstypename
 argument_list|,
 sizeof|sizeof
@@ -2070,9 +2075,9 @@ name|coda_vfsops
 init|=
 block|{
 operator|.
-name|vfs_omount
+name|vfs_mount
 operator|=
-name|coda_omount
+name|coda_mount
 block|,
 operator|.
 name|vfs_root
