@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.1.1.1 %G%"
+literal|"@(#)lex.c	2.1.1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1906,7 +1906,7 @@ name|char
 modifier|*
 name|greeting
 init|=
-literal|"Mail version 2.1 %s.  Type ? for help.\n"
+literal|"Mail version %s.  Type ? for help.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -2288,7 +2288,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-name|greeting
+literal|"Version %s\n"
 argument_list|,
 name|version
 argument_list|)
