@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n5.c	4.3 (Berkeley) %G%"
+literal|"@(#)n5.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,7 +272,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|nlist
+name|nlistx
 index|[
 name|NTRAP
 index|]
@@ -1688,7 +1688,7 @@ index|]
 operator|=
 name|j
 expr_stmt|;
-name|nlist
+name|nlistx
 index|[
 name|k
 index|]
@@ -1785,7 +1785,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|nlist
+name|nlistx
 index|[
 name|k
 index|]
@@ -1829,7 +1829,7 @@ control|)
 if|if
 condition|(
 operator|(
-name|nlist
+name|nlistx
 index|[
 name|k
 index|]

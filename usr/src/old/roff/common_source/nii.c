@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nii.c	4.2 (Berkeley) %G%"
+literal|"@(#)nii.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -749,12 +749,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nlist
+name|nlistx
 index|[
 name|NTRAP
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* "x" added to avoid libc collisions */
+end_comment
 
 begin_decl_stmt
 name|int

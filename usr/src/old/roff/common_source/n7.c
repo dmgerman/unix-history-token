@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n7.c	4.5 (Berkeley) %G%"
+literal|"@(#)n7.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,7 +223,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|nlist
+name|nlistx
 index|[
 name|NTRAP
 index|]
@@ -2944,7 +2944,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|nlist
+name|nlistx
 index|[
 name|i
 index|]
@@ -3141,7 +3141,7 @@ condition|(
 operator|(
 name|j
 operator|=
-name|nlist
+name|nlistx
 index|[
 name|i
 index|]
