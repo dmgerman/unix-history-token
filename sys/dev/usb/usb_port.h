@@ -531,6 +531,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|config_pending_incr
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|config_pending_decr
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
 name|usbpoll
 value|usbselect
 end_define
@@ -995,6 +1009,20 @@ name|a1
 parameter_list|)
 define|\
 value|kthread_create((f), (s), (p), RFHIGHPID, (a0), (a1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|config_pending_incr
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|config_pending_decr
+parameter_list|()
 end_define
 
 begin_define
