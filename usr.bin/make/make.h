@@ -550,7 +550,7 @@ comment|/* starting size for expandable buffers */
 end_comment
 
 begin_comment
-comment|/*  * These constants are all used by the Str_Concat function to decide how the  * final string should look. If STR_ADDSPACE is given, a space will be  * placed between the two strings. If STR_ADDSLASH is given, a '/' will  * be used instead of a space. If neither is given, no intervening characters  * will be placed between the two strings in the final output. If the  * STR_DOFREE bit is set, the two input strings will be freed before  * Str_Concat returns.  */
+comment|/*  * These constants are all used by the Str_Concat function to decide how the  * final string should look. If STR_ADDSPACE is given, a space will be  * placed between the two strings. If STR_ADDSLASH is given, a '/' will  * be used instead of a space. If neither is given, no intervening characters  * will be placed between the two strings in the final output.  */
 end_comment
 
 begin_define
@@ -562,17 +562,6 @@ end_define
 
 begin_comment
 comment|/* add a space when Str_Concat'ing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STR_DOFREE
-value|0x02
-end_define
-
-begin_comment
-comment|/* free source strings after concatenation */
 end_comment
 
 begin_define

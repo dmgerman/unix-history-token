@@ -3113,6 +3113,10 @@ modifier|*
 name|tstr
 decl_stmt|;
 comment|/* the current directory preceded by 'flag' */
+name|char
+modifier|*
+name|nstr
+decl_stmt|;
 name|LstNode
 modifier|*
 name|ln
@@ -3174,7 +3178,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|str
+name|nstr
 operator|=
 name|str_concat
 argument_list|(
@@ -3183,9 +3187,21 @@ argument_list|,
 name|tstr
 argument_list|,
 name|STR_ADDSPACE
-operator||
-name|STR_DOFREE
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tstr
+argument_list|)
+expr_stmt|;
+name|str
+operator|=
+name|nstr
 expr_stmt|;
 block|}
 name|Lst_Close

@@ -486,9 +486,11 @@ name|char
 modifier|*
 name|str_concat
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

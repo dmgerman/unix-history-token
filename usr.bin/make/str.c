@@ -148,7 +148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * str_concat --  *	concatenate the two strings, inserting a space or slash between them,  *	freeing them if requested.  *  * returns --  *	the resulting string in allocated space.  */
+comment|/*-  * str_concat --  *	concatenate the two strings, inserting a space or slash between them.  *  * returns --  *	the resulting string in allocated space.  */
 end_comment
 
 begin_function
@@ -156,10 +156,12 @@ name|char
 modifier|*
 name|str_concat
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s1
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s2
@@ -266,25 +268,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* free original strings */
-if|if
-condition|(
-name|flags
-operator|&
-name|STR_DOFREE
-condition|)
-block|{
-name|free
-argument_list|(
-name|s1
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|s2
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|result
