@@ -1016,6 +1016,11 @@ name|u_int8_t
 name|cmd
 decl_stmt|;
 comment|/* last cmd executed */
+name|struct
+name|atapi_reqsense
+name|sense
+decl_stmt|;
+comment|/* last cmd sense if error */
 name|int
 name|flags
 decl_stmt|;
