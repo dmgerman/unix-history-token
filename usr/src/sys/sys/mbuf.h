@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.8 81/12/09 */
+comment|/* mbuf.h 4.9 81/12/20 */
 end_comment
 
 begin_comment
@@ -142,9 +142,9 @@ name|m_len
 decl_stmt|;
 comment|/* amount of data in this mbuf */
 name|short
-name|m_cnt
+name|m_free
 decl_stmt|;
-comment|/* reference count */
+comment|/* is mbuf free? (consistency check) */
 name|u_char
 name|m_dat
 index|[
@@ -227,7 +227,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ mbstat.m_bufs--; mfree = (m)->m_next; (m)->m_next = 0; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_free == 0) panic("mget"); (m)->m_free = 0; \ 		  mbstat.m_bufs--; mfree = (m)->m_next; (m)->m_next = 0; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -253,7 +253,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree; mclfree = (n); nmclfree++; } \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_bufs++; \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)->m_free) panic("mfree"); (m)->m_free = 1; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree; mclfree = (n); nmclfree++; } \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_bufs++; \ 	  splx(ms); }
 end_define
 
 begin_struct
