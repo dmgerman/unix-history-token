@@ -925,11 +925,11 @@ literal|"	register int yy_act;"
 block|,
 literal|""
 block|,
-literal|" yy_cp = yy_bp = NULL;"
+literal|"%% user's declarations go here"
 block|,
 literal|""
 block|,
-literal|"%% user's declarations go here"
+literal|" yy_cp = yy_bp = NULL;"
 block|,
 literal|""
 block|,
