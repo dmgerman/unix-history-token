@@ -1689,6 +1689,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1704,16 +1706,6 @@ name|CAM_RESRC_UNAVAIL
 operator|)
 return|;
 block|}
-name|bzero
-argument_list|(
-name|new
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tstate_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|status
 operator|=
 name|xpt_create_path
