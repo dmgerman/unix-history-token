@@ -3934,7 +3934,10 @@ name|mask
 operator||=
 literal|0x02
 expr_stmt|;
-comment|/*if (bootverbose)*/
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
@@ -3965,24 +3968,6 @@ name|scp
 argument_list|,
 operator|&
 name|mask
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|ata_printf
-argument_list|(
-name|scp
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|"devices = 0x%x\n"
-argument_list|,
-name|scp
-operator|->
-name|devices
 argument_list|)
 expr_stmt|;
 if|if
@@ -6405,7 +6390,10 @@ operator|&=
 operator|~
 literal|0x02
 expr_stmt|;
-comment|/*if (bootverbose)*/
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
@@ -6553,6 +6541,10 @@ operator|+
 name|ATA_CYL_MSB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
@@ -6653,6 +6645,10 @@ operator|+
 name|ATA_CYL_MSB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
@@ -6789,7 +6785,10 @@ operator|&=
 operator|~
 literal|0x02
 expr_stmt|;
-comment|/*if (bootverbose)*/
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
@@ -6896,6 +6895,10 @@ operator|+
 name|ATA_CYL_LSB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
@@ -7009,6 +7012,10 @@ operator|+
 name|ATA_CYL_LSB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
@@ -7039,6 +7046,10 @@ operator||=
 name|ATA_ATA_SLAVE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|ata_printf
 argument_list|(
 name|scp
