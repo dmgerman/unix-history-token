@@ -1219,8 +1219,7 @@ name|T_val
 operator|*
 sizeof|sizeof
 argument_list|(
-name|char
-operator|*
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
