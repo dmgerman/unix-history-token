@@ -5417,6 +5417,10 @@ block|}
 block|}
 name|quit
 label|:
+if|if
+condition|(
+name|item
+condition|)
 name|NG_FREE_ITEM
 argument_list|(
 name|item
