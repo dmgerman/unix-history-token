@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.5	82/02/21	*/
+comment|/*	if_acc.c	4.6	82/02/25	*/
 end_comment
 
 begin_include
@@ -839,8 +839,15 @@ operator|->
 name|icsr
 operator|=
 name|IN_MRDY
+operator||
+name|IN_WEN
 expr_stmt|;
 comment|/* close the relay */
+name|DELAY
+argument_list|(
+literal|5000
+argument_list|)
+expr_stmt|;
 comment|/* YECH!!! */
 name|x
 operator|=
@@ -884,6 +891,8 @@ operator|->
 name|icsr
 operator|=
 name|IN_MRDY
+operator||
+name|IN_WEN
 expr_stmt|;
 name|DELAY
 argument_list|(
