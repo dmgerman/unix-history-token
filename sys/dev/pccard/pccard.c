@@ -2273,6 +2273,9 @@ if|if
 condition|(
 name|start
 condition|)
+ifdef|#
+directive|ifdef
+name|COOKIE_FOR_IMP
 name|end
 operator|=
 name|start
@@ -2288,6 +2291,13 @@ name|length
 operator|-
 literal|1
 expr_stmt|;
+else|#
+directive|else
+goto|goto
+name|not_this_one
+goto|;
+endif|#
+directive|endif
 else|else
 name|end
 operator|=
