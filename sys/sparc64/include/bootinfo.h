@@ -34,6 +34,10 @@ name|u_int
 name|bi_version
 decl_stmt|;
 comment|/* Version number of this structure. */
+name|u_int
+name|bi_howto
+decl_stmt|;
+comment|/* How to boot. */
 name|u_long
 name|bi_end
 decl_stmt|;
@@ -46,6 +50,10 @@ name|u_long
 name|bi_metadata
 decl_stmt|;
 comment|/* Preload modules. */
+name|u_long
+name|bi_envp
+decl_stmt|;
+comment|/* Kernel environment. */
 block|}
 struct|;
 end_struct
