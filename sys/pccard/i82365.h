@@ -124,10 +124,6 @@ begin_comment
 comment|/* IBM KING PCMCIA Controller */
 end_comment
 
-begin_comment
-comment|/* These last two aren't in normal freebsd */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -137,6 +133,10 @@ end_define
 
 begin_comment
 comment|/* NEC PC98 PCMCIA Controller */
+end_comment
+
+begin_comment
+comment|/* These last ones aren't in normal freebsd */
 end_comment
 
 begin_define

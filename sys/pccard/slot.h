@@ -63,6 +63,20 @@ begin_struct
 struct|struct
 name|slot_ctrl
 block|{
+name|void
+function_decl|(
+modifier|*
+name|mapirq
+function_decl|)
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+comment|/* Map irq */
 name|int
 function_decl|(
 modifier|*
