@@ -1261,6 +1261,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|AL_SIO_MII_CLK
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* MDIO clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AL_SIO_MII_DATAOUT
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* MDIO data out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AL_SIO_MII_DIR
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* MDIO dir */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AL_SIO_MII_DATAIN
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* MDIO data in */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AL_EECMD_WRITE
 value|0x140
 end_define
@@ -2765,6 +2809,17 @@ define|#
 directive|define
 name|AL_DEVICEID_AL981
 value|0x0981
+end_define
+
+begin_comment
+comment|/*  * AN985 device ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AL_DEVICEID_AN985
+value|0x0985
 end_define
 
 begin_comment
