@@ -2248,11 +2248,6 @@ name|void
 name|sighup_handler
 parameter_list|()
 block|{
-name|int
-name|ttydisc
-init|=
-name|TTYDISC
-decl_stmt|;
 if|if
 condition|(
 name|exiting
@@ -2260,15 +2255,16 @@ condition|)
 return|return;
 name|again
 label|:
+name|acquire_line
+argument_list|()
+expr_stmt|;
+comment|/* reopen dead line */
 comment|/* invoke a shell for redial_cmd or punt. */
 if|if
 condition|(
 name|redial_cmd
 condition|)
 block|{
-name|acquire_line
-argument_list|()
-expr_stmt|;
 name|setup_line
 argument_list|(
 name|CLOCAL
@@ -2434,41 +2430,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-literal|0
-comment|/* 		 * XXX should do this except we are called from main() via 		 * kill(getpid(), SIGHUP).  Ick. 		 */
-block|syslog(LOG_NOTICE, "SIGHUP on %s (sl%d); exiting", dev, unit); 		exit_handler(0);
-endif|#
-directive|endif
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|TIOCSETD
-argument_list|,
-operator|&
-name|ttydisc
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"ioctl(TIOCSETD): %m"
-argument_list|)
-expr_stmt|;
-name|exit_handler
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|setup_line
 argument_list|(
 literal|0
