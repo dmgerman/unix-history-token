@@ -1211,7 +1211,42 @@ directive|endif
 case|case
 literal|'c'
 case|:
-comment|/* Clear screen& home */
+comment|/* reset */
+name|tcp
+operator|->
+name|attr_mask
+operator|=
+name|NORMAL_ATTR
+expr_stmt|;
+name|tcp
+operator|->
+name|cur_color
+operator|=
+name|tcp
+operator|->
+name|std_color
+operator|=
+name|tcp
+operator|->
+name|dflt_std_color
+expr_stmt|;
+name|tcp
+operator|->
+name|rev_color
+operator|=
+name|tcp
+operator|->
+name|dflt_rev_color
+expr_stmt|;
+name|tcp
+operator|->
+name|cur_attr
+operator|=
+name|mask2attr
+argument_list|(
+name|tcp
+argument_list|)
+expr_stmt|;
 name|sc_clear_screen
 argument_list|(
 name|scp
@@ -2229,11 +2264,95 @@ break|break;
 case|case
 literal|7
 case|:
-comment|/* reverse video */
+comment|/* reverse */
 name|tcp
 operator|->
 name|attr_mask
 operator||=
+name|REVERSE_ATTR
+expr_stmt|;
+name|tcp
+operator|->
+name|cur_attr
+operator|=
+name|mask2attr
+argument_list|(
+name|tcp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|22
+case|:
+comment|/* remove bold (or dim) */
+name|tcp
+operator|->
+name|attr_mask
+operator|&=
+operator|~
+name|BOLD_ATTR
+expr_stmt|;
+name|tcp
+operator|->
+name|cur_attr
+operator|=
+name|mask2attr
+argument_list|(
+name|tcp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|24
+case|:
+comment|/* remove underline */
+name|tcp
+operator|->
+name|attr_mask
+operator|&=
+operator|~
+name|UNDERLINE_ATTR
+expr_stmt|;
+name|tcp
+operator|->
+name|cur_attr
+operator|=
+name|mask2attr
+argument_list|(
+name|tcp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|25
+case|:
+comment|/* remove blink */
+name|tcp
+operator|->
+name|attr_mask
+operator|&=
+operator|~
+name|BLINK_ATTR
+expr_stmt|;
+name|tcp
+operator|->
+name|cur_attr
+operator|=
+name|mask2attr
+argument_list|(
+name|tcp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|27
+case|:
+comment|/* remove reverse */
+name|tcp
+operator|->
+name|attr_mask
+operator|&=
+operator|~
 name|REVERSE_ATTR
 expr_stmt|;
 name|tcp
@@ -2252,7 +2371,7 @@ case|:
 case|case
 literal|31
 case|:
-comment|/* set fg color */
+comment|/* set ansi fg color */
 case|case
 literal|32
 case|:
@@ -2303,12 +2422,17 @@ break|break;
 case|case
 literal|39
 case|:
+comment|/* restore fg color back to normal */
 name|tcp
 operator|->
 name|attr_mask
 operator|&=
 operator|~
+operator|(
 name|FG_CHANGED
+operator||
+name|BOLD_ATTR
+operator|)
 expr_stmt|;
 name|tcp
 operator|->
@@ -2338,7 +2462,7 @@ case|:
 case|case
 literal|41
 case|:
-comment|/* set bg color */
+comment|/* set ansi bg color */
 case|case
 literal|42
 case|:
@@ -2389,6 +2513,7 @@ break|break;
 case|case
 literal|49
 case|:
+comment|/* restore bg color back to normal */
 name|tcp
 operator|->
 name|attr_mask
@@ -2507,7 +2632,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* reset colors and attributes */
+comment|/* reset colors and attributes back to normal */
 name|tcp
 operator|->
 name|attr_mask
@@ -2637,7 +2762,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* set video attribute directly */
+comment|/* set adapter attribute directly */
 name|tcp
 operator|->
 name|attr_mask
@@ -2708,7 +2833,7 @@ break|break;
 case|case
 literal|5
 case|:
-comment|/* set ansi reverse video background */
+comment|/* set ansi reverse background */
 name|tcp
 operator|->
 name|rev_color
@@ -2740,7 +2865,7 @@ break|break;
 case|case
 literal|6
 case|:
-comment|/* set ansi reverse video foreground */
+comment|/* set ansi reverse foreground */
 name|tcp
 operator|->
 name|rev_color
@@ -2772,7 +2897,7 @@ break|break;
 case|case
 literal|7
 case|:
-comment|/* set reverse video attribute directly */
+comment|/* set adapter reverse attribute directly */
 name|tcp
 operator|->
 name|rev_color
@@ -3230,7 +3355,7 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* set foreground */
+comment|/* set adapter foreground */
 if|if
 condition|(
 name|tcp
@@ -3282,7 +3407,7 @@ break|break;
 case|case
 literal|'G'
 case|:
-comment|/* set background */
+comment|/* set adapter background */
 if|if
 condition|(
 name|tcp
@@ -3334,7 +3459,7 @@ break|break;
 case|case
 literal|'H'
 case|:
-comment|/* set reverse video foreground */
+comment|/* set adapter reverse foreground */
 if|if
 condition|(
 name|tcp
@@ -3373,7 +3498,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-comment|/* set reverse video background */
+comment|/* set adapter reverse background */
 if|if
 condition|(
 name|tcp
