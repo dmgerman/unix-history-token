@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.134 (Berkeley) %G%"
+literal|"@(#)main.c	8.135 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7189,13 +7189,17 @@ operator|==
 literal|0
 condition|)
 block|{
-while|while
-condition|(
+for|for
+control|(
+init|;
 operator|*
 name|p
 operator|!=
-literal|'\n'
-condition|)
+literal|'\0'
+condition|;
+name|p
+operator|++
+control|)
 block|{
 switch|switch
 condition|(
