@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.31 (Berkeley) %G%"
+literal|"@(#)conf.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3805,6 +3805,10 @@ name|statbuf
 decl_stmt|;
 define|#
 directive|define
+name|FSBLOCKSIZE
+value|DEV_BSIZE
+define|#
+directive|define
 name|f_bavail
 value|f_tfree
 else|#
@@ -3823,12 +3827,20 @@ define|#
 directive|define
 name|f_bavail
 value|fd_bfreen
+define|#
+directive|define
+name|FSBLOCKSIZE
+value|fs.fd_bsize
 else|#
 directive|else
 name|struct
 name|statfs
 name|fs
 decl_stmt|;
+define|#
+directive|define
+name|FSBLOCKSIZE
+value|fs.f_bsize
 endif|#
 directive|endif
 endif|#
@@ -4001,9 +4013,7 @@ name|msize
 operator|=
 name|msize
 operator|/
-name|fs
-operator|.
-name|f_bsize
+name|FSBLOCKSIZE
 operator|+
 literal|1
 expr_stmt|;
