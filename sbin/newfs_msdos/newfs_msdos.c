@@ -5284,7 +5284,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot get disk size, %s\n"
+literal|"Cannot get disk size, %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -5400,7 +5400,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot get sector size, %s\n"
+literal|"Cannot get sector size, %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -5429,7 +5429,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot get number of sectors, %s\n"
+literal|"Cannot get number of sectors, %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -5458,7 +5458,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot get number of heads, %s\n"
+literal|"Cannot get number of heads, %s"
 argument_list|,
 name|strerror
 argument_list|(
