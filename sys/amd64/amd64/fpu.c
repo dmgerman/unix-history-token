@@ -1308,7 +1308,7 @@ argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 operator|&
-name|ioport_rid
+name|irq_rid
 argument_list|,
 name|irq_num
 argument_list|,
