@@ -5779,7 +5779,7 @@ argument_list|)
 argument_list|)
 argument_list|,
 operator|(
-literal|"pipespace: pipe mutex locked"
+literal|"pipe_free_kmem: pipe mutex locked"
 operator|)
 argument_list|)
 expr_stmt|;
