@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.37 1996/03/28 14:28:51 scrappy Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.38 1996/05/05 17:09:04 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -9137,28 +9137,21 @@ goto|goto
 name|end_rx
 goto|;
 block|}
-comment|/* 			 * Process read characters if not skipped above 			 */
-name|c
-operator|=
-name|ccbp
-operator|->
-name|hi_rxipos
-operator|-
-name|ccbp
-operator|->
-name|hi_rxopos
-expr_stmt|;
+comment|/* 			 * If the tty input buffers are blocked, stop emptying 			 * the incoming buffers and let the auto flow control 			 * assert.. 			 */
 if|if
 condition|(
-name|c
-operator|==
-literal|0
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_TBLOCK
 condition|)
 block|{
 goto|goto
 name|end_rx
 goto|;
 block|}
+comment|/* 			 * Process read characters if not skipped above 			 */
 name|op
 operator|=
 name|ccbp
@@ -9171,11 +9164,38 @@ name|ccbp
 operator|->
 name|hi_rxipos
 expr_stmt|;
+name|c
+operator|=
+name|ip
+operator|-
+name|op
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+block|{
+goto|goto
+name|end_rx
+goto|;
+block|}
 name|n
 operator|=
 name|c
 operator|&
 literal|0xff
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|250
+condition|)
+name|n
+operator|=
+literal|250
 expr_stmt|;
 name|DPRINT
 argument_list|(
