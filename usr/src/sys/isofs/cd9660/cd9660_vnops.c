@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_vnops.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2060,16 +2060,8 @@ name|current
 operator|.
 name|d_name
 argument_list|,
-operator|(
-name|u_short
-operator|*
-operator|)
 operator|&
-name|idp
-operator|->
-name|current
-operator|.
-name|d_namlen
+name|elen
 argument_list|,
 operator|&
 name|idp
@@ -2080,6 +2072,17 @@ name|d_fileno
 argument_list|,
 name|imp
 argument_list|)
+expr_stmt|;
+name|idp
+operator|->
+name|current
+operator|.
+name|d_namlen
+operator|=
+operator|(
+name|u_char
+operator|)
+name|elen
 expr_stmt|;
 if|if
 condition|(
