@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	4.3 (Berkeley) %G%"
+literal|"@(#)ping.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1677,6 +1677,21 @@ name|w
 expr_stmt|;
 comment|/* 	 * add back carry outs from top 16 bits to low 16 bits 	 */
 name|sum
+operator|=
+operator|(
+name|sum
+operator|>>
+literal|16
+operator|)
+operator|+
+operator|(
+name|sum
+operator|&
+literal|0xffff
+operator|)
+expr_stmt|;
+comment|/* add hi 16 to low 16 */
+name|sum
 operator|+=
 operator|(
 name|sum
@@ -1684,7 +1699,7 @@ operator|>>
 literal|16
 operator|)
 expr_stmt|;
-comment|/* add hi 16 to low 16 */
+comment|/* add carry */
 name|answer
 operator|=
 operator|~
