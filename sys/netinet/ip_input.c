@@ -2888,9 +2888,6 @@ name|m_pkthdr
 operator|.
 name|header
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|ip
 expr_stmt|;
 ifdef|#
