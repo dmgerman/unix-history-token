@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.4 1997/06/25 20:44:00 smp Exp smp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.22 1997/06/25 21:01:52 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -1555,7 +1555,7 @@ argument_list|)
 expr_stmt|;
 comment|/* disconnect 8259s/NMI */
 block|}
-comment|/* mask the LVT1 */
+comment|/* mask lint0 (the 8259 'virtual wire' connection) */
 name|temp
 operator|=
 name|lapic
@@ -1569,6 +1569,54 @@ expr_stmt|;
 name|lapic
 operator|.
 name|lvt_lint0
+operator|=
+name|temp
+expr_stmt|;
+comment|/* setup lint1 to handle NMI */
+if|#
+directive|if
+literal|1
+comment|/** XXX FIXME:          *	should we arrange for ALL CPUs to catch NMI???          *	it would probably crash, so for now only the BSP          *	will catch it          */
+if|if
+condition|(
+name|cpuid
+operator|!=
+literal|0
+condition|)
+return|return;
+endif|#
+directive|endif
+comment|/* 0/1 */
+name|temp
+operator|=
+name|lapic
+operator|.
+name|lvt_lint1
+expr_stmt|;
+comment|/* clear fields of interest, preserve undefined fields */
+name|temp
+operator|&=
+operator|~
+operator|(
+literal|0x1f000
+operator||
+name|APIC_LVT_DM
+operator||
+name|APIC_LVT_VECTOR
+operator|)
+expr_stmt|;
+comment|/* setup for NMI, edge trigger, active hi */
+name|temp
+operator||=
+operator|(
+name|APIC_LVT_DM_NMI
+operator||
+name|APIC_LVT_IIPP_INTAHI
+operator|)
+expr_stmt|;
+name|lapic
+operator|.
+name|lvt_lint1
 operator|=
 name|temp
 expr_stmt|;
