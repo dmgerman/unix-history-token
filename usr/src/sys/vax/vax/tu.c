@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	81/11/18	4.2	*/
+comment|/*	tu.c	81/11/20	4.3	*/
 end_comment
 
 begin_if
@@ -2447,10 +2447,6 @@ begin_comment
 comment|/*  * Compute checksum TU58 fashion  *  * *** WARNING ***  * This procedure is not in C because  * it has to be fast and it is hard to  * do add-carry in C.  Sorry.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_expr_stmt
 name|tuchk
 argument_list|(
@@ -2494,6 +2490,32 @@ end_comment
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+comment|/* for some reason ARGSUSED doesn't work to quiet lint */
+name|word0
+operator|=
+literal|0
+expr_stmt|;
+name|n
+operator|=
+name|word0
+expr_stmt|;
+name|word0
+operator|=
+name|n
+expr_stmt|;
+name|wp
+operator|=
+literal|0
+expr_stmt|;
+name|wp
+operator|=
+name|wp
+expr_stmt|;
+endif|#
+directive|endif
 asm|asm("loop:");
 asm|asm("	addw2	(r10)+,r11");
 comment|/* add a word to sum */
