@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.25 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,6 +231,38 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|PACKETSZ
+operator|>
+literal|1024
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAXPACKET
+value|PACKETSZ
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAXPACKET
+value|1024
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 union|union
@@ -241,7 +273,7 @@ decl_stmt|;
 name|char
 name|qb2
 index|[
-name|PACKETSZ
+name|MAXPACKET
 index|]
 decl_stmt|;
 block|}
@@ -529,9 +561,20 @@ break|break;
 case|case
 name|NOERROR
 case|:
+if|if
+condition|(
+name|hp
+operator|->
+name|aa
+condition|)
 name|h_errno
 operator|=
 name|NO_ADDRESS
+expr_stmt|;
+else|else
+name|h_errno
+operator|=
+name|TRY_AGAIN
 expr_stmt|;
 break|break;
 case|case
@@ -659,9 +702,11 @@ block|}
 else|else
 name|cp
 operator|+=
-name|dn_skip
+name|dn_skipname
 argument_list|(
 name|cp
+argument_list|,
+name|eom
 argument_list|)
 operator|+
 name|QFIXEDSZ
@@ -675,9 +720,11 @@ literal|0
 condition|)
 name|cp
 operator|+=
-name|dn_skip
+name|dn_skipname
 argument_list|(
 name|cp
+argument_list|,
+name|eom
 argument_list|)
 operator|+
 name|QFIXEDSZ
@@ -1579,6 +1626,9 @@ name|domain
 operator|==
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nbuf
@@ -1591,6 +1641,9 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nbuf
