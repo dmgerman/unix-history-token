@@ -7435,9 +7435,9 @@ name|flags
 operator|&
 name|BUS_SPACE_BARRIER_READ
 condition|)
-asm|__asm __volatile ("lock; addl $0,0(%esp)" : : : "memory");
+asm|__asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
 else|else
-asm|__asm __volatile ("" : : : "memory");
+asm|__asm __volatile("" : : : "memory");
 block|}
 end_function
 
