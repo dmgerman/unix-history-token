@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)quotaon.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)quotaon.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,13 +98,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -152,7 +184,96 @@ begin_comment
 comment|/* verbose */
 end_comment
 
+begin_decl_stmt
+name|int
+name|hasquota
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fstab
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|oneof
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|quotaonoff
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fstab
+operator|*
+name|fs
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|readonly
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fstab
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -182,10 +303,6 @@ name|qfnp
 decl_stmt|,
 modifier|*
 name|whoami
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
 decl_stmt|;
 name|long
 name|argnum
@@ -204,15 +321,6 @@ decl_stmt|,
 name|errs
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|whoami
 operator|=
@@ -267,22 +375,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Name must be quotaon or quotaoff not %s\n"
-argument_list|,
-name|whoami
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"name must be quotaon or quotaoff"
 argument_list|)
 expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(
@@ -337,9 +436,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|whoami
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -361,9 +458,7 @@ operator|!
 name|aflag
 condition|)
 name|usage
-argument_list|(
-name|whoami
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -607,11 +702,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s not found in fstab\n"
+literal|"%s not found in fstab"
 argument_list|,
 name|argv
 index|[
@@ -627,38 +720,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|(
-argument|whoami
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|whoami
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n\t%s [-g] [-u] [-v] -a\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-name|whoami
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: quotaon [-g] [-u] [-v] -a"
 argument_list|,
-literal|"\t%s [-g] [-u] [-v] filesys ...\n"
+literal|"       quotaon [-g] [-u] [-v] filesystem ..."
 argument_list|,
-name|whoami
+literal|"       quotaoff [-g] [-u] [-v] -a"
+argument_list|,
+literal|"       quotaoff [-g] [-u] [-v] filesystem ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -667,43 +747,35 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|quotaonoff
-argument_list|(
+parameter_list|(
 name|fs
-argument_list|,
+parameter_list|,
 name|offmode
-argument_list|,
+parameter_list|,
 name|type
-argument_list|,
+parameter_list|,
 name|qfpathname
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fstab
-operator|*
+modifier|*
 name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|offmode
 decl_stmt|,
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|qfpathname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -754,15 +826,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"quotaoff: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|fs
 operator|->
 name|fs_file
@@ -816,17 +883,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"quotaon: using %s on"
+literal|"using %s on"
 argument_list|,
 name|qfpathname
 argument_list|)
 expr_stmt|;
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|fs
 operator|->
 name|fs_file
@@ -862,13 +929,14 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if target appears in list of size cnt.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|oneof
 argument_list|(
 name|target
@@ -877,16 +945,16 @@ name|list
 argument_list|,
 name|cnt
 argument_list|)
-specifier|register
+decl|register
 name|char
-operator|*
+modifier|*
 name|target
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|list
 index|[]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -945,38 +1013,30 @@ begin_comment
 comment|/*  * Check to see if a particular quota is to be enabled.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|hasquota
-argument_list|(
+parameter_list|(
 name|fs
-argument_list|,
+parameter_list|,
 name|type
-argument_list|,
+parameter_list|,
 name|qfnamep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fstab
-operator|*
+modifier|*
 name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|qfnamep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -986,14 +1046,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strtok
-argument_list|()
 decl_stmt|;
 specifier|static
 name|char
@@ -1089,6 +1141,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -1097,6 +1150,7 @@ name|opt
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cp
@@ -1195,26 +1249,24 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Verify file system is mounted and not readonly.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|readonly
-argument_list|(
+parameter_list|(
 name|fs
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fstab
-operator|*
+modifier|*
 name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|statfs
@@ -1302,7 +1354,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
