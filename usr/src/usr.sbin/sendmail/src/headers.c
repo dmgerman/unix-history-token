@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.36 (Berkeley) %G%"
+literal|"@(#)headers.c	6.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1468,6 +1468,8 @@ expr_stmt|;
 comment|/* see if this is an errors-to header */
 if|if
 condition|(
+name|UseErrorsTo
+operator|&&
 name|bitset
 argument_list|(
 name|H_ERRORSTO

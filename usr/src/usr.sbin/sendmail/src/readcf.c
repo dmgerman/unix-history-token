@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.41 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4211,6 +4211,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'l'
+case|:
+comment|/* use Errors-To: header */
+name|UseErrorsTo
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'L'
 case|:
 comment|/* log level */
@@ -4274,6 +4286,7 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 'N' available -- was "net name" */
 case|case
 literal|'O'
 case|:
@@ -4698,6 +4711,8 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* 'w' available -- was "no wildcard MX matching" */
+comment|/* 'W' available -- was wizard password */
 case|case
 literal|'x'
 case|:
