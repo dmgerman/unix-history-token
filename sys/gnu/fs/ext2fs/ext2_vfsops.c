@@ -441,9 +441,9 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_EXT2NODE
 argument_list|,
-literal|"EXT2 nodes"
+literal|"EXT2 node"
 argument_list|,
-literal|"EXT2 Filsystem inodes"
+literal|"EXT2 vnode private part"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
