@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* From: static char sccsid[] = "@(#)route.c	5.35 (Berkeley) 6/27/91"; */
+end_comment
+
 begin_decl_stmt
-specifier|static
+specifier|const
 name|char
-name|sccsid
+name|main_c_rcsid
 index|[]
 init|=
-literal|"@(#)route.c	5.35 (Berkeley) 6/27/91"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,12 +110,6 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -129,11 +127,6 @@ include|#
 directive|include
 file|<netccitt/x25.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -236,9 +229,6 @@ name|struct
 name|sockaddr_in
 name|s_in
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|struct
 name|sockaddr_ns
 name|sns
@@ -247,21 +237,14 @@ name|struct
 name|sockaddr_iso
 name|siso
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|sockaddr_dl
 name|sdl
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|struct
 name|sockaddr_x25
 name|sx25
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 name|so_dst
 union|,
@@ -483,15 +466,10 @@ modifier|*
 name|inet_ntoa
 argument_list|()
 decl_stmt|,
-ifdef|#
-directive|ifdef
-name|notdef
 modifier|*
 name|iso_ntoa
 argument_list|()
 decl_stmt|,
-endif|#
-directive|endif
 modifier|*
 name|link_ntoa
 argument_list|()
@@ -1672,9 +1650,6 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_NS
 case|:
@@ -1691,8 +1666,6 @@ name|sa
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 case|case
 name|AF_LINK
 case|:
@@ -1709,9 +1682,6 @@ name|sa
 argument_list|)
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_ISO
 case|:
@@ -1741,8 +1711,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 block|{
 name|u_short
@@ -2228,9 +2196,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_NS
 case|:
@@ -2248,8 +2213,6 @@ argument_list|)
 operator|)
 return|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|AF_LINK
 case|:
@@ -2266,9 +2229,6 @@ name|sa
 argument_list|)
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_ISO
 case|:
@@ -2298,8 +2258,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 block|{
 name|u_short
@@ -2673,9 +2631,6 @@ name|sockaddr_dl
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|K_OSI
 case|:
@@ -2695,8 +2650,6 @@ name|sockaddr_iso
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|K_INET
 case|:
@@ -2713,9 +2666,6 @@ name|sockaddr_in
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|K_X25
 case|:
@@ -2732,8 +2682,6 @@ name|sockaddr_x25
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|K_SA
 case|:
@@ -2750,9 +2698,6 @@ name|sockunion
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|K_XNS
 case|:
@@ -2769,8 +2714,6 @@ name|sockaddr_ns
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|K_IFACE
 case|:
@@ -3793,9 +3736,6 @@ specifier|register
 name|sup
 name|su
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|struct
 name|ns_addr
 name|ns_addr
@@ -3807,8 +3747,6 @@ modifier|*
 name|iso_addr
 parameter_list|()
 function_decl|;
-endif|#
-directive|endif
 name|struct
 name|hostent
 modifier|*
@@ -4020,9 +3958,6 @@ return|return
 literal|0
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|af
@@ -4041,8 +3976,6 @@ condition|)
 goto|goto
 name|do_osi
 goto|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|af
@@ -4052,9 +3985,6 @@ condition|)
 goto|goto
 name|do_link
 goto|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|af
@@ -4064,8 +3994,6 @@ condition|)
 goto|goto
 name|do_ccitt
 goto|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|af
@@ -4293,9 +4221,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 name|do_xns
 label|:
 if|if
@@ -4509,8 +4434,6 @@ operator|(
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
 name|do_link
 label|:
 name|link_addr
@@ -4559,12 +4482,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
 
 begin_decl_stmt
 name|short
@@ -4924,11 +4841,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -5404,14 +5316,9 @@ operator|.
 name|sa_family
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_NS
 case|:
-endif|#
-directive|endif
 case|case
 name|AF_INET
 case|:
@@ -5419,9 +5326,6 @@ case|case
 literal|0
 case|:
 return|return;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_ISO
 case|:
@@ -5444,8 +5348,6 @@ operator|-
 literal|6
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|cp1
 operator|=
@@ -5528,9 +5430,6 @@ operator|*
 operator|--
 name|cp2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 switch|switch
 condition|(
 name|so_dst
@@ -5552,8 +5451,6 @@ operator|=
 name|olen
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -6305,9 +6202,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_ISO
 case|:
@@ -6332,8 +6226,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|AF_INET
 case|:
@@ -6357,9 +6249,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|AF_NS
 case|:
@@ -6383,8 +6272,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 block|}
 operator|(
 name|void
