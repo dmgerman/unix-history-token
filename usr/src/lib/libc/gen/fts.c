@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.4 (Berkeley) %G%"
+literal|"@(#)fts.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1173,6 +1173,22 @@ condition|(
 name|instr
 operator|==
 name|FTS_SKIP
+operator|||
+name|sp
+operator|->
+name|fts_options
+operator|&
+name|FTS_XDEV
+operator|&&
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_dev
+operator|!=
+name|sp
+operator|->
+name|sdev
 condition|)
 block|{
 if|if
@@ -1472,6 +1488,16 @@ name|p
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|sdev
+operator|=
+name|p
+operator|->
+name|fts_statb
+operator|.
+name|st_dev
 expr_stmt|;
 block|}
 else|else
