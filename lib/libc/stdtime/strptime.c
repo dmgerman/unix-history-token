@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: strptime.c,v 1.2 1997/08/09 15:43:56 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -197,6 +201,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -453,6 +461,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -473,6 +485,10 @@ literal|0
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -524,6 +540,10 @@ literal|0
 operator|||
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -534,6 +554,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -554,6 +578,10 @@ literal|0
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -611,6 +639,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -625,6 +657,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -650,6 +686,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -670,6 +710,10 @@ literal|0
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -736,6 +780,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -750,6 +798,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -1000,6 +1052,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1020,6 +1076,10 @@ literal|0
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1064,6 +1124,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1078,6 +1142,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -1210,6 +1278,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1230,6 +1302,10 @@ literal|0
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1280,6 +1356,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1294,6 +1374,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
@@ -1317,6 +1401,10 @@ literal|0
 operator|||
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1327,6 +1415,10 @@ condition|(
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1347,6 +1439,10 @@ literal|0
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1401,6 +1497,10 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 argument_list|)
@@ -1415,6 +1515,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)
