@@ -1,0 +1,109 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: pcb.h 1.13 89/04/23$  *  *	@(#)pcb.h	7.4 (Berkeley) 5/4/91  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_comment
+comment|/*  * HP300 process control block  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcb
+block|{
+name|short
+name|pcb_flags
+decl_stmt|;
+comment|/* misc. process flags (+0) */
+name|short
+name|pcb_ps
+decl_stmt|;
+comment|/* processor status word (+2) */
+name|int
+name|pcb_ustp
+decl_stmt|;
+comment|/* user segment table pointer (+4) */
+name|int
+name|pcb_usp
+decl_stmt|;
+comment|/* user stack pointer (+8) */
+name|int
+name|pcb_regs
+index|[
+literal|12
+index|]
+decl_stmt|;
+comment|/* D0-D7, A0-A7 (+C) */
+name|int
+name|pcb_cmap2
+decl_stmt|;
+comment|/* temporary copy PTE */
+name|caddr_t
+name|pcb_onfault
+decl_stmt|;
+comment|/* for copyin/out faults */
+name|struct
+name|fpframe
+name|pcb_fpregs
+decl_stmt|;
+comment|/* 68881/2 context save area */
+name|int
+name|pcb_exec
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* exec structure for core dumps */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCB_HPUXMMAP
+value|0x0010
+end_define
+
+begin_comment
+comment|/* VA space is multiple mapped */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCB_HPUXTRACE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* being traced by an HPUX process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCB_HPUXBIN
+value|0x0040
+end_define
+
+begin_comment
+comment|/* loaded from an HPUX format binary */
+end_comment
+
+begin_comment
+comment|/* note: does NOT imply SHPUX */
+end_comment
+
+end_unit
+
