@@ -331,30 +331,38 @@ name|__inline
 name|void
 name|softintr
 parameter_list|(
-name|ipl
-parameter_list|)
 name|int
 name|ipl
-decl_stmt|;
+parameter_list|)
 block|{
+name|unsigned
 name|int
 name|msrsave
 decl_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("mfmsr %0" : "=r"(msrsave));
-asm|__asm__
-specifier|volatile
-asm|("mtmsr %0" :: "r"(msrsave& ~PSL_EE));
+name|msrsave
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msrsave
+operator|&
+operator|~
+name|PSL_EE
+argument_list|)
+expr_stmt|;
 name|ipending
 operator||=
 literal|1
 operator|<<
 name|ipl
 expr_stmt|;
-asm|__asm__
-specifier|volatile
-asm|("mtmsr %0" :: "r"(msrsave));
+name|mtmsr
+argument_list|(
+name|msrsave
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -27,6 +27,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -52,6 +58,86 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* CPU register mangling inlines */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|mtmsr
+parameter_list|(
+name|unsigned
+name|int
+name|value
+parameter_list|)
+block|{
+asm|__asm __volatile ("mtmsr %0" :: "r"(value));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|unsigned
+name|int
+name|mfmsr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|value
+decl_stmt|;
+asm|__asm __volatile ("mfmsr %0" : "=r"(value));
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|mtdec
+parameter_list|(
+name|unsigned
+name|int
+name|value
+parameter_list|)
+block|{
+asm|__asm __volatile ("mtdec %0" :: "r"(value));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|unsigned
+name|int
+name|mfdec
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|value
+decl_stmt|;
+asm|__asm __volatile ("mfdec %0" : "=r"(value));
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Bogus interrupt manipulation  */
 end_comment
 
@@ -64,32 +150,28 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int32_t
+name|unsigned
+name|int
 name|msr
 decl_stmt|;
 name|msr
 operator|=
-literal|0
+name|mfmsr
+argument_list|()
 expr_stmt|;
-asm|__asm __volatile(
-literal|"mfmsr %0\n\t"
-literal|"rlwinm %0, %0, 0, 17, 15\n\t"
-literal|"mtmsr %0"
-operator|:
-literal|"+r"
-operator|(
+name|mtmsr
+argument_list|(
 name|msr
-operator|)
-block|)
-function|;
+operator|&
+operator|~
+name|PSL_EE
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
-begin_return
-return|return;
-end_return
-
 begin_function
-unit|}  static
+specifier|static
 name|__inline
 name|void
 name|enable_intr
@@ -97,43 +179,44 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int32_t
+name|unsigned
+name|int
 name|msr
 decl_stmt|;
 name|msr
 operator|=
-literal|0
+name|mfmsr
+argument_list|()
 expr_stmt|;
-asm|__asm __volatile(
-literal|"mfmsr %0\n\t"
-literal|"ori %0, %0, 0x8000\n\t"
-literal|"mtmsr %0"
-operator|:
-literal|"+r"
-operator|(
+name|mtmsr
+argument_list|(
 name|msr
-operator|)
-block|)
-function|;
+operator||
+name|PSL_EE
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
-begin_return
-return|return;
-end_return
-
 begin_function
-unit|}  static
+specifier|static
 name|__inline
-name|u_int
+name|unsigned
+name|int
 name|save_intr
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|unsigned
+name|int
 name|msr
 decl_stmt|;
-asm|__asm __volatile("mfmsr %0" : "=r" (msr));
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
 return|return
 name|msr
 return|;
@@ -167,12 +250,16 @@ name|__inline
 name|void
 name|restore_intr
 parameter_list|(
-name|u_int
+name|unsigned
+name|int
 name|msr
 parameter_list|)
 block|{
-asm|__asm __volatile("mtmsr %0" : : "r" (msr));
-return|return;
+name|mtmsr
+argument_list|(
+name|msr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -191,7 +278,8 @@ operator|(
 name|restore_intr
 argument_list|(
 operator|(
-name|u_int
+name|unsigned
+name|int
 operator|)
 name|msr
 argument_list|)
@@ -209,32 +297,33 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("eieio;" : : : "memory");
+asm|__asm __volatile("eieio; sync" : : : "memory");
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
 name|__inline
-name|void
-modifier|*
+expr|struct
+name|globaldata
+operator|*
 name|powerpc_get_globalp
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|void
-modifier|*
+argument_list|(
+argument|void
+argument_list|)
+block|{ 	struct
+name|globaldata
+operator|*
 name|ret
-decl_stmt|;
-asm|__asm __volatile("mfsprg %0, 0" : "=r" (ret));
+block|;
+asm|__asm ("mfsprg %0, 0" : "=r"(ret));
 return|return
 operator|(
 name|ret
 operator|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_endif
 endif|#

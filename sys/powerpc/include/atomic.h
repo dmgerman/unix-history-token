@@ -148,9 +148,9 @@ name|u_int32_t
 name|temp
 decl_stmt|;
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %2\n\t"
+literal|"1:\tlwarx %0, 0, %1\n\t"
 comment|/* load old value */
-literal|"or %0, %0, %3\n\t"
+literal|"or %0, %0, %2\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
@@ -163,16 +163,9 @@ literal|"=&r"
 operator|(
 name|temp
 operator|)
-operator|,
-literal|"=r"
-operator|(
-operator|*
-name|p
-operator|)
 operator|:
 literal|"r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
@@ -205,9 +198,9 @@ name|u_int32_t
 name|temp
 decl_stmt|;
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %2\n\t"
+literal|"1:\tlwarx %0, 0, %1\n\t"
 comment|/* load old value */
-literal|"andc %0, %0, %3\n\t"
+literal|"andc %0, %0, %2\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
@@ -220,16 +213,9 @@ literal|"=&r"
 operator|(
 name|temp
 operator|)
-operator|,
-literal|"=r"
-operator|(
-operator|*
-name|p
-operator|)
 operator|:
 literal|"r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
@@ -262,9 +248,9 @@ name|u_int32_t
 name|temp
 decl_stmt|;
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %2\n\t"
+literal|"1:\tlwarx %0, 0, %1\n\t"
 comment|/* load old value */
-literal|"add %0, %0, %3\n\t"
+literal|"add %0, %0, %2\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
@@ -277,16 +263,9 @@ literal|"=&r"
 operator|(
 name|temp
 operator|)
-operator|,
-literal|"=r"
-operator|(
-operator|*
-name|p
-operator|)
 operator|:
 literal|"r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
@@ -319,9 +298,9 @@ name|u_int32_t
 name|temp
 decl_stmt|;
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %2\n\t"
+literal|"1:\tlwarx %0, 0, %1\n\t"
 comment|/* load old value */
-literal|"sub %0, %3, %0\n\t"
+literal|"sub %0, %2, %0\n\t"
 comment|/* calculate new value */
 literal|"stwcx. %0, 0, %1\n\t"
 comment|/* attempt to store */
@@ -334,16 +313,9 @@ literal|"=&r"
 operator|(
 name|temp
 operator|)
-operator|,
-literal|"=r"
-operator|(
-operator|*
-name|p
-operator|)
 operator|:
 literal|"r"
 operator|(
-operator|*
 name|p
 operator|)
 operator|,
@@ -377,7 +349,7 @@ decl_stmt|;
 asm|__asm __volatile (
 literal|"\teieio\n"
 comment|/* memory barrier */
-literal|"1:\tlwarx %0, 0, %3\n\t"
+literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
 literal|"li %1, 0\n\t"
 comment|/* load new value */
@@ -397,16 +369,9 @@ literal|"=&r"
 operator|(
 name|temp
 operator|)
-operator|,
-literal|"=r"
-operator|(
-operator|*
-name|addr
-operator|)
 operator|:
 literal|"r"
 operator|(
-operator|*
 name|addr
 operator|)
 operator|:
