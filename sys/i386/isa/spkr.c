@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.5 1993/11/15 01:33:11 ache Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.6 1993/11/29 19:26:32 ache Exp $  */
 end_comment
 
 begin_include
@@ -155,7 +155,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int
+name|void
 name|tone
 parameter_list|(
 name|thz
@@ -180,8 +180,6 @@ name|thz
 decl_stmt|;
 name|int
 name|sps
-decl_stmt|,
-name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -258,11 +256,9 @@ name|PPI_SPKR
 argument_list|)
 expr_stmt|;
 comment|/*      * Set timeout to endtone function, then give up the timeslice.      * This is so other processes can execute while the tone is being      * emitted.      */
-while|while
-condition|(
 operator|(
-name|error
-operator|=
+name|void
+operator|)
 name|tsleep
 argument_list|(
 operator|(
@@ -279,11 +275,7 @@ literal|"spkrtn"
 argument_list|,
 name|ticks
 argument_list|)
-operator|)
-operator|==
-name|ERESTART
-condition|)
-empty_stmt|;
+expr_stmt|;
 name|outb
 argument_list|(
 name|PPI
@@ -297,25 +289,12 @@ operator|~
 name|PPI_SPKR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-name|EWOULDBLOCK
-condition|)
-name|error
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|error
-return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|rest
 parameter_list|(
 name|ticks
@@ -325,9 +304,6 @@ name|int
 name|ticks
 decl_stmt|;
 block|{
-name|int
-name|error
-decl_stmt|;
 comment|/*      * Set timeout to endrest function, then give up the timeslice.      * This is so other processes can execute while the rest is being      * waited out.      */
 ifdef|#
 directive|ifdef
@@ -345,11 +321,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-while|while
-condition|(
 operator|(
-name|error
-operator|=
+name|void
+operator|)
 name|tsleep
 argument_list|(
 operator|(
@@ -366,24 +340,7 @@ literal|"spkrrs"
 argument_list|,
 name|ticks
 argument_list|)
-operator|)
-operator|==
-name|ERESTART
-condition|)
-empty_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-name|EWOULDBLOCK
-condition|)
-name|error
-operator|=
-literal|0
 expr_stmt|;
-return|return
-name|error
-return|;
 block|}
 end_function
 
@@ -941,7 +898,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|playtone
 parameter_list|(
 name|pitch
@@ -973,9 +930,6 @@ name|sdenom
 init|=
 literal|1
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 comment|/* this weirdness avoids floating-point arithmetic */
 for|for
 control|(
@@ -1003,8 +957,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
-operator|=
 name|rest
 argument_list|(
 name|whole
@@ -1090,8 +1042,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
-name|error
-operator|=
 name|tone
 argument_list|(
 name|pitchtab
@@ -1104,28 +1054,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
-if|if
-condition|(
 name|fill
 operator|!=
 name|LEGATO
 condition|)
-name|error
-operator|=
 name|rest
 argument_list|(
 name|silence
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-name|error
-return|;
 block|}
 end_function
 
@@ -1163,7 +1101,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|playstring
 parameter_list|(
 name|cp
@@ -1189,9 +1127,6 @@ init|=
 name|OCTAVE_NOTES
 operator|*
 name|DFLT_OCTAVE
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 define|#
 directive|define
@@ -1484,8 +1419,6 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* time to emit the actual tone */
-name|error
-operator|=
 name|playtone
 argument_list|(
 name|pitch
@@ -1499,13 +1432,6 @@ name|fill
 operator|=
 name|oldfill
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 break|break;
 case|case
 literal|'O'
@@ -1699,8 +1625,6 @@ name|slen
 operator|--
 expr_stmt|;
 block|}
-name|error
-operator|=
 name|playtone
 argument_list|(
 name|pitch
@@ -1716,13 +1640,6 @@ name|fill
 operator|=
 name|oldfill
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 break|break;
 case|case
 literal|'L'
@@ -1801,8 +1718,6 @@ name|sustain
 operator|++
 expr_stmt|;
 block|}
-name|error
-operator|=
 name|playtone
 argument_list|(
 operator|-
@@ -1813,13 +1728,6 @@ argument_list|,
 name|sustain
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 break|break;
 case|case
 literal|'T'
@@ -1950,9 +1858,6 @@ block|}
 break|break;
 block|}
 block|}
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -2180,8 +2085,6 @@ name|uio
 argument_list|)
 operator|)
 condition|)
-name|error
-operator|=
 name|playstring
 argument_list|(
 name|cp
@@ -2350,16 +2253,14 @@ name|frequency
 operator|==
 literal|0
 condition|)
-return|return
 name|rest
 argument_list|(
 name|tp
 operator|->
 name|duration
 argument_list|)
-return|;
+expr_stmt|;
 else|else
-return|return
 name|tone
 argument_list|(
 name|tp
@@ -2370,6 +2271,9 @@ name|tp
 operator|->
 name|duration
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 elseif|else
@@ -2452,8 +2356,6 @@ name|frequency
 operator|==
 literal|0
 condition|)
-name|error
-operator|=
 name|rest
 argument_list|(
 name|ttp
@@ -2462,8 +2364,6 @@ name|duration
 argument_list|)
 expr_stmt|;
 else|else
-name|error
-operator|=
 name|tone
 argument_list|(
 name|ttp
@@ -2475,15 +2375,6 @@ operator|.
 name|duration
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 return|return
 operator|(
