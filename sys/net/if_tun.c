@@ -1500,7 +1500,7 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|r_unit
+name|tun_unit
 operator|=
 name|r
 expr_stmt|;
@@ -1605,7 +1605,7 @@ name|KASSERT
 argument_list|(
 name|tp
 operator|->
-name|r_unit
+name|tun_unit
 argument_list|,
 operator|(
 literal|"Unit %d not marked open"
@@ -1769,7 +1769,7 @@ name|rman_release_resource
 argument_list|(
 name|tp
 operator|->
-name|r_unit
+name|tun_unit
 argument_list|)
 expr_stmt|;
 name|KASSERT

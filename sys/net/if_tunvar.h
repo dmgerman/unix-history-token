@@ -84,11 +84,6 @@ name|tun_rsel
 decl_stmt|;
 comment|/* read select */
 name|struct
-name|selinfo
-name|tun_wsel
-decl_stmt|;
-comment|/* write select (not used) */
-name|struct
 name|tun_softc
 modifier|*
 name|next
@@ -97,7 +92,7 @@ comment|/* Next softc in list */
 name|struct
 name|resource
 modifier|*
-name|r_unit
+name|tun_unit
 decl_stmt|;
 comment|/* resource allocated for this unit */
 block|}
