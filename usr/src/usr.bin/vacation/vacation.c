@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.17 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,23 +150,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VDIR
-value|".vacation.dir"
+name|VDB
+value|".vacation.db"
 end_define
 
 begin_comment
-comment|/* dbm's DB prefix, part 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VPAG
-value|".vacation.pag"
-end_define
-
-begin_comment
-comment|/* dbm's DB prefix, part 2 */
+comment|/* dbm's database */
 end_comment
 
 begin_typedef
@@ -559,7 +548,7 @@ name|iflag
 operator|||
 name|access
 argument_list|(
-name|VDIR
+name|VDB
 argument_list|,
 name|F_OK
 argument_list|)
@@ -1690,17 +1679,19 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|fd
+name|DBM
+modifier|*
+name|db
 decl_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
-name|fd
+name|db
 operator|=
-name|open
+name|dbm_open
 argument_list|(
-name|VDIR
+name|VACAT
 argument_list|,
 name|O_WRONLY
 operator||
@@ -1711,8 +1702,6 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|<
-literal|0
 condition|)
 block|{
 name|syslog
@@ -1721,7 +1710,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"vacation: %s: %s\n"
 argument_list|,
-name|VDIR
+name|VDB
 argument_list|,
 name|strerror
 argument_list|(
@@ -1735,62 +1724,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|close
+name|dbm_close
 argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
-argument_list|(
-name|VPAG
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
-argument_list|,
-literal|0644
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"vacation: %s: %s\n"
-argument_list|,
-name|VPAG
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
+name|db
 argument_list|)
 expr_stmt|;
 block|}
