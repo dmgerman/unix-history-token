@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imphost.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imphost.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -900,6 +900,11 @@ modifier|*
 name|lp
 decl_stmt|;
 name|struct
+name|imp_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
 name|hmbuf
 modifier|*
 name|hm
@@ -932,15 +937,20 @@ name|any
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|m
+name|sc
 operator|=
+operator|&
 name|imp_softc
 index|[
 name|unit
 index|]
-operator|.
+expr_stmt|;
+for|for
+control|(
+name|m
+operator|=
+name|sc
+operator|->
 name|imp_hosts
 init|;
 name|m
@@ -1065,6 +1075,20 @@ argument_list|(
 name|hp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|imp_hostq
+operator|==
+name|m
+condition|)
+name|sc
+operator|->
+name|imp_hostq
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -1073,11 +1097,13 @@ if|if
 condition|(
 name|any
 condition|)
+block|{
 name|hostcompress
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(
