@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|KIOCSOUND
-value|_IOW('k', 63, long)
+value|_IO('k', 63)
 end_define
 
 begin_define
@@ -553,6 +553,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALKED
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|LED_CAP
 value|1
 end_define
@@ -600,7 +607,7 @@ begin_define
 define|#
 directive|define
 name|NUM_KEYS
-value|128
+value|256
 end_define
 
 begin_define
@@ -608,6 +615,13 @@ define|#
 directive|define
 name|NUM_STATES
 value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTGR_OFFSET
+value|128
 end_define
 
 begin_struct
@@ -924,6 +938,20 @@ define|#
 directive|define
 name|RALT
 value|0x7c
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALK
+value|0x7d
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASH
+value|0x7e
 end_define
 
 begin_define
