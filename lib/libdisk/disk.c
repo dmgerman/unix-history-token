@@ -338,6 +338,11 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+name|struct
+name|disk
+modifier|*
+name|d
+decl_stmt|;
 name|char
 modifier|*
 name|conftxt
@@ -452,13 +457,24 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* in case kernel bug is still there */
-return|return
+name|d
+operator|=
 name|Int_Open_Disk
 argument_list|(
 name|name
 argument_list|,
 name|conftxt
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|conftxt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|d
+operator|)
 return|;
 block|}
 end_function
