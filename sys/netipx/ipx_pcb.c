@@ -787,7 +787,7 @@ name|ipx_zeronet
 argument_list|)
 condition|)
 block|{
-comment|/*  		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
+comment|/* 		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
 comment|/* 		 * If we found a route, use the address 		 * corresponding to the outgoing interface 		 */
 if|if
 condition|(
@@ -947,7 +947,7 @@ name|ipxp_laddr
 argument_list|)
 condition|)
 block|{
-comment|/*  		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
+comment|/* 		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
 comment|/* 		 * If we found a route, use the address 		 * corresponding to the outgoing interface 		 */
 if|if
 condition|(
