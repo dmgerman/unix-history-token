@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: script.c,v 1.3.2.1 1997/08/11 07:17:45 charnier Exp $"
+literal|"$Id: script.c,v 1.3.2.2 1997/08/29 05:29:52 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +194,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|qflg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|termios
 name|tt
@@ -231,7 +237,9 @@ name|doshell
 name|__P
 argument_list|(
 operator|(
-name|void
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -341,7 +349,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a"
+literal|"aq"
 argument_list|)
 operator|)
 operator|!=
@@ -357,6 +365,14 @@ case|case
 literal|'a'
 case|:
 name|aflg
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|qflg
 operator|=
 literal|1
 expr_stmt|;
@@ -383,6 +399,7 @@ name|argc
 operator|>
 literal|0
 condition|)
+block|{
 name|fname
 operator|=
 name|argv
@@ -390,6 +407,13 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+block|}
 else|else
 name|fname
 operator|=
@@ -476,6 +500,11 @@ argument_list|,
 literal|"openpty"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflg
+condition|)
 operator|(
 name|void
 operator|)
@@ -586,7 +615,9 @@ argument_list|()
 expr_stmt|;
 else|else
 name|doshell
-argument_list|()
+argument_list|(
+name|argv
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
@@ -645,7 +676,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: script [-a] [file]\n"
+literal|"usage: script [-a] [-q] [file] [command]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -759,6 +790,11 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflg
+condition|)
 operator|(
 name|void
 operator|)
@@ -922,7 +958,14 @@ end_function
 begin_function
 name|void
 name|doshell
-parameter_list|()
+parameter_list|(
+name|av
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|av
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -966,6 +1009,24 @@ argument_list|(
 name|slave
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|av
+index|[
+literal|0
+index|]
+condition|)
+name|execvp
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|,
+name|av
+argument_list|)
+expr_stmt|;
+else|else
 name|execl
 argument_list|(
 name|shell
@@ -1029,6 +1090,11 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflg
+condition|)
 operator|(
 name|void
 operator|)
@@ -1077,6 +1143,11 @@ operator|&
 name|tt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflg
+condition|)
 operator|(
 name|void
 operator|)
