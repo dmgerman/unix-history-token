@@ -687,7 +687,13 @@ begin_function_decl
 name|void
 name|r_debug_state
 parameter_list|(
-name|void
+name|struct
+name|r_debug
+modifier|*
+parameter_list|,
+name|struct
+name|link_map
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -926,8 +932,10 @@ directive|define
 name|GDB_STATE
 parameter_list|(
 name|s
+parameter_list|,
+name|m
 parameter_list|)
-value|r_debug.r_state = s; r_debug_state();
+value|r_debug.r_state = s; r_debug_state(&r_debug,m);
 end_define
 
 begin_decl_stmt
@@ -2007,7 +2015,14 @@ name|initlist
 argument_list|)
 expr_stmt|;
 name|r_debug_state
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|obj_main
+operator|->
+name|linkmap
+argument_list|)
 expr_stmt|;
 comment|/* say hello to gdb! */
 name|objlist_call_init
@@ -6764,6 +6779,11 @@ comment|/* Finish cleaning up the newly-unreferenced objects. */
 name|GDB_STATE
 argument_list|(
 name|RT_DELETE
+argument_list|,
+operator|&
+name|root
+operator|->
+name|linkmap
 argument_list|)
 expr_stmt|;
 name|unload_object
@@ -6774,6 +6794,8 @@ expr_stmt|;
 name|GDB_STATE
 argument_list|(
 name|RT_CONSISTENT
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -6968,6 +6990,8 @@ expr_stmt|;
 name|GDB_STATE
 argument_list|(
 name|RT_ADD
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|old_obj_tail
@@ -7157,6 +7181,15 @@ block|}
 name|GDB_STATE
 argument_list|(
 name|RT_CONSISTENT
+argument_list|,
+name|obj
+condition|?
+operator|&
+name|obj
+operator|->
+name|linkmap
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Call the init functions with no locks held. */
@@ -7917,14 +7950,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function for the debugger to set a breakpoint on to gain control.  */
+comment|/*  * Function for the debugger to set a breakpoint on to gain control.  *  * The two parameters allow the debugger to easily find and determine  * what the runtime loader is doing and to whom it is doing it.  *  * When the loadhook trap is hit (r_debug_state, set at program  * initialization), the arguments can be found on the stack:  *  *  +8   struct link_map *m  *  +4   struct r_debug  *rd  *  +0   RetAddr  */
 end_comment
 
 begin_function
 name|void
 name|r_debug_state
 parameter_list|(
-name|void
+name|struct
+name|r_debug
+modifier|*
+name|rd
+parameter_list|,
+name|struct
+name|link_map
+modifier|*
+name|m
 parameter_list|)
 block|{ }
 end_function
