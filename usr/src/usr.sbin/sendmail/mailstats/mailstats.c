@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	5.7 (Berkeley) %G%"
+literal|"@(#)mailstats.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

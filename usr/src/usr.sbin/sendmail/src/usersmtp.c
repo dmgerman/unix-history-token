@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.27 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.1 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.27 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.1 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 

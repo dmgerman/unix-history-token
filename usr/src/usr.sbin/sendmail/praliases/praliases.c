@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)praliases.c	5.5 (Berkeley) %G%"
+literal|"@(#)praliases.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

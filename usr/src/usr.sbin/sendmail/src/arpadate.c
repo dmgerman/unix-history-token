@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	5.13 (Berkeley) %G%"
+literal|"@(#)arpadate.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

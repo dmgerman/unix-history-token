@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	5.4 (Berkeley) %G%"
+literal|"@(#)convtime.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
