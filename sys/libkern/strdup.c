@@ -27,18 +27,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_STRING
-argument_list|,
-literal|"string"
-argument_list|,
-literal|"string buffers"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|char
 modifier|*
