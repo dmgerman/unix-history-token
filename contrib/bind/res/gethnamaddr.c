@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethnamaddr.c,v 8.21 1997/06/01 20:34:37 vixie Exp $"
+literal|"$Id: gethnamaddr.c,v 8.23 1998/04/07 04:59:46 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,6 +578,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|BOUNDED_INCR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|do { \ 		cp += x; \ 		if (cp> eom) { \ 			h_errno = NO_RECOVERY; \ 			return (NULL); \ 		} \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOUNDS_CHECK
+parameter_list|(
+name|ptr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|do { \ 		if ((ptr) + (count)> eom) { \ 			h_errno = NO_RECOVERY; \ 			return (NULL); \ 		} \ 	} while (0)
+end_define
+
 begin_function
 specifier|static
 name|struct
@@ -630,6 +654,9 @@ specifier|const
 name|u_char
 modifier|*
 name|eom
+decl_stmt|,
+modifier|*
+name|erdata
 decl_stmt|;
 name|char
 modifier|*
@@ -778,8 +805,11 @@ operator|=
 name|answer
 operator|->
 name|buf
-operator|+
+expr_stmt|;
+name|BOUNDED_INCR
+argument_list|(
 name|HFIXEDSZ
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -843,11 +873,12 @@ name|NULL
 operator|)
 return|;
 block|}
-name|cp
-operator|+=
+name|BOUNDED_INCR
+argument_list|(
 name|n
 operator|+
 name|QFIXEDSZ
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1008,6 +1039,17 @@ operator|+=
 name|n
 expr_stmt|;
 comment|/* name */
+name|BOUNDS_CHECK
+argument_list|(
+name|cp
+argument_list|,
+literal|3
+operator|*
+name|INT16SZ
+operator|+
+name|INT32SZ
+argument_list|)
+expr_stmt|;
 name|type
 operator|=
 name|_getshort
@@ -1046,6 +1088,19 @@ operator|+=
 name|INT16SZ
 expr_stmt|;
 comment|/* len */
+name|BOUNDS_CHECK
+argument_list|(
+name|cp
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+name|erdata
+operator|=
+name|cp
+operator|+
+name|n
+expr_stmt|;
 if|if
 condition|(
 name|class
@@ -1136,6 +1191,23 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|erdata
+condition|)
+block|{
+name|h_errno
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Store alias. */
 operator|*
 name|ap
@@ -1274,6 +1346,23 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|erdata
+condition|)
+block|{
+name|h_errno
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* Get canonical name. */
 name|n
 operator|=
@@ -1446,6 +1535,23 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|erdata
+condition|)
+block|{
+name|h_errno
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1788,6 +1894,23 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|!=
+name|erdata
+condition|)
+block|{
+name|h_errno
+operator|=
+name|NO_RECOVERY
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 break|break;
 default|default:
 name|abort
