@@ -1874,7 +1874,7 @@ name|va_ctime
 operator|=
 name|vap
 operator|->
-name|va_ctime
+name|va_mtime
 expr_stmt|;
 name|vap
 operator|->
