@@ -137,7 +137,7 @@ comment|/* mask for FAT32 cluster numbers */
 end_comment
 
 begin_comment
-comment|/*  * MSDOSFS:  * Return true if filesystem uses 12 bit fats. Microsoft Programmer's  * Reference says if the maximum cluster number in a filesystem is greater  * than 4078 ((CLUST_RSRVS - CLUST_FIRST)& FAT12_MASK) then we've got a  * 16 bit fat filesystem. While mounting, the result of this test is stored  * in pm_fatentrysize.  * GEMDOS-flavour (atari):  * If the filesystem is on floppy we've got a 12 bit fat filesystem, otherwise  * 16 bit. We check the d_type field in the disklabel struct while mounting  * and store the result in the pm_fatentrysize. Note that this kind of  * detection gets flakey when mounting a vnd-device.  */
+comment|/*  * MSDOSFS:  * Return true if filesystem uses 12 bit fats. Microsoft Programmer's  * Reference says if the maximum cluster number in a filesystem is greater  * than 4078 ((CLUST_RSRVS - CLUST_FIRST)& FAT12_MASK) then we've got a  * 16 bit fat filesystem. While mounting, the result of this test is stored  * in pm_fatentrysize.  */
 end_comment
 
 begin_define

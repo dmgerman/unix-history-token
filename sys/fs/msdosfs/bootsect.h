@@ -243,62 +243,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|atari
-end_ifdef
-
-begin_comment
-comment|/*  * The boot sector on a gemdos fs is a little bit different from the msdos fs  * format. Currently there is no need to declare a separate structure, the  * bootsector33 struct will do.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|struct bootsec_atari { 	u_int8_t	bsBranch[2];
-comment|/* branch inst if auto-boot	*/
-end_comment
-
-begin_comment
-unit|int8_t		bsFiller[6];
-comment|/* anything or nothing		*/
-end_comment
-
-begin_comment
-unit|int8_t		bsSerial[3];
-comment|/* serial no. for mediachange	*/
-end_comment
-
-begin_comment
-unit|int8_t		bsBPB[19];
-comment|/* BIOS parameter block		*/
-end_comment
-
-begin_comment
-unit|int8_t		bsBootCode[482];
-comment|/* pad so struct is 512b	*/
-end_comment
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* atari */
-end_comment
-
 begin_union
 union|union
 name|bootsector
