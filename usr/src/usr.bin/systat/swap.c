@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.5 (Berkeley) %G%"
+literal|"@(#)swap.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -302,7 +302,7 @@ if|if
 condition|(
 name|xp
 operator|->
-name|x_iptr
+name|x_vptr
 operator|==
 name|NULL
 condition|)
@@ -387,7 +387,7 @@ name|xp
 operator|->
 name|x_flag
 operator|&
-name|XPAGI
+name|XPAGV
 operator|)
 operator|&&
 name|xp
