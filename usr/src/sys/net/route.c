@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.20 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"machine/reg.h"
-end_include
 
 begin_include
 include|#
@@ -19,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -61,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"protosw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"errno.h"
 end_include
 
 begin_include
@@ -1049,6 +1031,8 @@ argument_list|(
 argument|req
 argument_list|,
 argument|data
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1061,6 +1045,14 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1132,14 +1124,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
