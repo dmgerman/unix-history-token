@@ -1262,6 +1262,9 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1353,6 +1356,13 @@ name|v_type
 operator|=
 name|VNON
 expr_stmt|;
+name|ino
+operator|=
+name|ip
+operator|->
+name|i_number
+expr_stmt|;
+comment|/* Save this before vgone() invalidates ip. */
 name|vgone
 argument_list|(
 operator|*
@@ -1369,9 +1379,7 @@ name|a_dvp
 operator|->
 name|v_mount
 argument_list|,
-name|ip
-operator|->
-name|i_ino
+name|ino
 argument_list|,
 name|vpp
 argument_list|)
