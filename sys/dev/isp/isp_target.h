@@ -1138,6 +1138,54 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * For some of the dual port SCSI adapters, port (bus #) is reported  * in the MSbit of ct_iid. Bit fields are a bit too awkward here.  *  * Note that this does not apply to FC adapters at all which can and  * do report IIDs between 129&& 255 (these represent devices that have  * logged in across a SCSI fabric).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_IID_VAL
+parameter_list|(
+name|x
+parameter_list|)
+value|(x& 0x3f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GET_BUS_VAL
+parameter_list|(
+name|x
+parameter_list|)
+value|((x>> 7)& 0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_IID_VAL
+parameter_list|(
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+value|(y | (x& 0x3f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_BUS_VAL
+parameter_list|(
+name|y
+parameter_list|,
+name|x
+parameter_list|)
+value|(y | ((x& 0x1)<< 7))
+end_define
+
+begin_comment
 comment|/*  * ct_flags values  */
 end_comment
 
@@ -1503,7 +1551,7 @@ name|u_int32_t
 name|ct_reloff
 decl_stmt|;
 comment|/* relative offset */
-name|u_int32_t
+name|int32_t
 name|ct_resid
 decl_stmt|;
 comment|/* residual length */
@@ -1783,6 +1831,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MCIDF
+parameter_list|(
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|if ((void *) d != (void *)s) MEMCPY(d, s, QENTRY_LEN)
+end_define
+
 begin_comment
 comment|/* This is really only for SBus cards on a sparc */
 end_comment
@@ -1805,7 +1865,7 @@ parameter_list|,
 name|vsrc
 parameter_list|)
 define|\
-value|{									\ 	at_entry_t *source = (at_entry_t *) vsrc;			\ 	dest->at_header = source->at_header;				\ 	dest->at_reserved2 = source->at_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, dest, at_lun, at_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, dest, at_cdblen, at_tgt);		\ 	dest->at_flags = source->at_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, dest, at_status, at_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, dest, at_tag_val, at_tag_type);	\ 	MEMCPY(dest->at_cdb, source->at_cdb, ATIO_CDBLEN);		\ 	MEMCPY(dest->at_sense, source->at_sense, QLTM_SENSELEN);	\ }
+value|{									\ 	at_entry_t *source = (at_entry_t *) vsrc;			\ 	at_entry_t local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (at_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->at_header = source->at_header;				\ 	vdst->at_reserved2 = source->at_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_lun, at_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_cdblen, at_tgt);		\ 	vdst->at_flags = source->at_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_status, at_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, at_tag_val, at_tag_type);	\ 	MEMCPY(vdst->at_cdb, source->at_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->at_sense, source->at_sense, QLTM_SENSELEN);	\ }
 end_define
 
 begin_define
@@ -1820,7 +1880,7 @@ parameter_list|,
 name|vsrc
 parameter_list|)
 define|\
-value|{									\ 	ct_entry_t *source = (ct_entry-t *) vsrc;			\ 	dest->ct_header = source->ct_header;				\ 	dest->ct_reserved = source->ct_reserved;			\ 	ISP_SBUS_SWOZZLE(isp, source, dest, ct_lun, ct_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, dest, ct_rsvd, ct_tgt);		\ 	dest->ct_flags = source->ct_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, dest, ct_status, ct_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, dest, ct_tag_val, ct_tag_type);	\ 	dest->ct_xfrlen = source->ct_xfrlen;				\ 	dest->ct_resid = source->ct_resid;				\ 	dest->ct_timeout = source->ct_timeout;				\ 	dest->ct_seg_count = source->ct_seg_count;			\ 	MEMCPY(dest->ct_cdb, source->ct_cdb, ATIO_CDBLEN);		\ 	MEMCPY(dest->ct_sense, source->ct_sense, QLTM_SENSELEN);	\ 	dest->ct_dataseg = source->ct_dataseg;				\ }
+value|{									\ 	ct_entry_t *source = (ct_entry-t *) vsrc;			\ 	ct_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (ct_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->ct_header = source->ct_header;				\ 	vdst->ct_reserved = source->ct_reserved;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_lun, ct_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_rsvd, ct_tgt);		\ 	vdst->ct_flags = source->ct_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_status, ct_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, ct_tag_val, ct_tag_type);	\ 	vdst->ct_xfrlen = source->ct_xfrlen;				\ 	vdst->ct_resid = source->ct_resid;				\ 	vdst->ct_timeout = source->ct_timeout;				\ 	vdst->ct_seg_count = source->ct_seg_count;			\ 	MEMCPY(vdst->ct_cdb, source->ct_cdb, ATIO_CDBLEN);		\ 	MEMCPY(vdst->ct_sense, source->ct_sense, QLTM_SENSELEN);	\ 	vdst->ct_dataseg = source->ct_dataseg;				\ }
 end_define
 
 begin_define
@@ -1835,7 +1895,7 @@ parameter_list|,
 name|vsrc
 parameter_list|)
 define|\
-value|{									\ 	lun_entry_t *source = (lun_entry_t *)vsrc;			\ 	dest->le_header = source->le_header;				\ 	dest->le_reserved2 = source->le_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, dest, le_lun, le_rsvd);		\ 	ISP_SBUS_SWOZZLE(isp, source, dest, le_ops, le_tgt);		\ 	dest->le_flags = source->le_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, dest, le_status, le_rsvd2);	\ 	ISP_SBUS_SWOZZLE(isp, source, dest, le_cmd_count, le_in_count);	\ 	ISP_SBUS_SWOZZLE(isp, source, dest, le_cdb6len, le_cdb7len);	\ 	dest->le_timeout = source->le_timeout;				\ 	dest->le_reserved = source->le_reserved;			\ }
+value|{									\ 	lun_entry_t *source = (lun_entry_t *)vsrc;			\ 	lun_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (lun_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->le_header = source->le_header;				\ 	vdst->le_reserved2 = source->le_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, le_lun, le_rsvd);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, le_ops, le_tgt);		\ 	vdst->le_flags = source->le_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, le_status, le_rsvd2);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, le_cmd_count, le_in_count);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, le_cdb6len, le_cdb7len);	\ 	vdst->le_timeout = source->le_timeout;				\ 	vdst->le_reserved = source->le_reserved;			\ }
 end_define
 
 begin_define
@@ -1850,7 +1910,7 @@ parameter_list|,
 name|vsrc
 parameter_list|)
 define|\
-value|{									\ 	in_entry_type *source = (in_entry_t *)vsrc;			\ 	dest->in_header = source->in_header;				\ 	dest->in_reserved2 = source->in_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, dest, in_lun, in_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, dest, in_rsvd, in_tgt);		\ 	dest->in_flags = source->in_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, dest, in_status, in_rsvd2);	\ 	ISP_SBUS_SWOZZLE(isp, source, dest, in_tag_val, in_tag_type);	\ 	dest->in_seqid = source->in_seqid;				\ 	MEMCPY(dest->in_msg, source->in_msg, IN_MSGLEN);		\ 	MEMCPY(dest->in_reserved, source->in_reserved, IN_RESERVED);	\ 	MEMCPY(dest->in_sense, source->in_sense, QLTM_SENSELEN);	\ }
+value|{									\ 	in_entry_type *source = (in_entry_t *)vsrc;			\ 	in_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (in_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->in_header = source->in_header;				\ 	vdst->in_reserved2 = source->in_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, in_lun, in_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, in_rsvd, in_tgt);		\ 	vdst->in_flags = source->in_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, in_status, in_rsvd2);	\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, in_tag_val, in_tag_type);	\ 	vdst->in_seqid = source->in_seqid;				\ 	MEMCPY(vdst->in_msg, source->in_msg, IN_MSGLEN);		\ 	MEMCPY(vdst->in_reserved, source->in_reserved, IN_RESERVED);	\ 	MEMCPY(vdst->in_sense, source->in_sense, QLTM_SENSELEN);	\ }
 end_define
 
 begin_define
@@ -1863,7 +1923,7 @@ parameter_list|,
 name|dest
 parameter_list|)
 define|\
-value|{									\ 	na_entry_t *source = (na_entry_t *)vsrc;			\ 	dest->na_header = source->na_header;				\ 	dest->na_reserved2 = source->na_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, dest, na_lun, na_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, dest, na_rsvd, na_tgt);		\ 	dest->na_flags = source->na_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, dest, na_status, na_event);	\ 	dest->na_seqid = source->na_seqid;				\ 	MEMCPY(dest->na_reserved, source->na_reserved, NA_RSVDLEN);	\ }
+value|{									\ 	na_entry_t *source = (na_entry_t *)vsrc;			\ 	na_entry_t *local, *vdst;					\ 	if ((void *)dest == (void *)vsrc) {				\ 		MEMCPY(vsrc,&local, sizeof (na_entry_t));		\ 		vdst =&local;						\ 	} else {							\ 		vdst = dest;						\ 	}								\ 	vdst->na_header = source->na_header;				\ 	vdst->na_reserved2 = source->na_reserved2;			\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, na_lun, na_iid);		\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, na_rsvd, na_tgt);		\ 	vdst->na_flags = source->na_flags;				\ 	ISP_SBUS_SWOZZLE(isp, source, vdst, na_status, na_event);	\ 	vdst->na_seqid = source->na_seqid;				\ 	MEMCPY(vdst->na_reserved, source->na_reserved, NA_RSVDLEN);	\ }
 end_define
 
 begin_define
@@ -1877,7 +1937,35 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SWIZ_ATIO2
+parameter_list|(
+name|isp
+parameter_list|,
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|MCIDF(d, s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_SWIZ_CTIO2
+parameter_list|(
+name|isp
+parameter_list|,
+name|d
+parameter_list|,
+name|s
+parameter_list|)
+value|MCIDF(d, s)
 end_define
 
 begin_else
@@ -1896,7 +1984,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
 
 begin_define
@@ -1910,7 +1998,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
 
 begin_define
@@ -1924,7 +2012,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
 
 begin_define
@@ -1938,7 +2026,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
 
 begin_define
@@ -1952,7 +2040,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
 
 begin_define
@@ -1966,13 +2054,8 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1985,7 +2068,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
 
 begin_define
@@ -1999,8 +2082,13 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|MEMCPY((void *)d, (void *)s, QENTRY_LEN)
+value|MCIDF(d, s)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Debug macros  */
@@ -2043,68 +2131,7 @@ value|if (level> isp_tdebug) PRINTF msg
 end_define
 
 begin_comment
-comment|/*  * Common (for all platfoms) software SCSI msg/event structures.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int8_t
-name|nt_iid
-decl_stmt|;
-comment|/* inititator id */
-name|u_int8_t
-name|nt_tgt
-decl_stmt|;
-comment|/* target id */
-name|u_int16_t
-name|nt_lun
-decl_stmt|;
-comment|/* logical unit */
-name|u_int8_t
-name|nt_bus
-decl_stmt|;
-comment|/* bus */
-name|u_int8_t
-name|nt_tagtype
-decl_stmt|;
-comment|/* tag type */
-name|u_int16_t
-name|nt_tagval
-decl_stmt|;
-comment|/* tag value */
-name|u_int8_t
-name|nt_msg
-index|[
-name|IN_MSGLEN
-index|]
-decl_stmt|;
-comment|/* message content */
-block|}
-name|tmd_msg_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int16_t
-name|ev_bus
-decl_stmt|;
-comment|/* bus */
-name|u_int16_t
-name|ev_event
-decl_stmt|;
-comment|/* type of async event */
-block|}
-name|tmd_event_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Target Mode functions  */
+comment|/*  * The functions below are target mode functions that  * are generally internal to the Qlogic driver.  */
 end_comment
 
 begin_comment
@@ -2250,6 +2277,13 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ECMD_SVALID
+value|0x100
+end_define
 
 begin_comment
 comment|/*  * Handle an asynchronous event  */
