@@ -16437,9 +16437,7 @@ end_comment
 begin_function
 name|void
 name|default_flag_random_seed
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 block|{
 name|unsigned
 name|HOST_WIDE_INT

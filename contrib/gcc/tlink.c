@@ -2114,7 +2114,7 @@ name|putenv
 argument_list|(
 name|xstrdup
 argument_list|(
-literal|"COMPILER_PATH"
+literal|"COMPILER_PATH="
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2122,7 +2122,7 @@ name|putenv
 argument_list|(
 name|xstrdup
 argument_list|(
-literal|"LIBRARY_PATH"
+literal|"LIBRARY_PATH="
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -2775,7 +2775,7 @@ index|]
 return|;
 block|}
 return|return
-name|src
+literal|0
 return|;
 case|case
 name|MEM

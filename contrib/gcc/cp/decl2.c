@@ -15019,6 +15019,16 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|fn
+operator|==
+name|k
+operator|->
+name|functions
+condition|)
+empty_stmt|;
+elseif|else
+if|if
+condition|(
 name|is_overloaded_fn
 argument_list|(
 name|k

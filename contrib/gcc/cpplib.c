@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CPP Library. (Directive handling.)    Copyright (C) 1986, 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Per Bothner, 1994-95.    Based on CCCP program by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* CPP Library. (Directive handling.)    Copyright (C) 1986, 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Per Bothner, 1994-95.    Based on CCCP program by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -4927,6 +4927,13 @@ specifier|const
 name|cpp_token
 modifier|*
 name|token
+decl_stmt|,
+modifier|*
+name|pragma_token
+init|=
+name|pfile
+operator|->
+name|cur_token
 decl_stmt|;
 name|unsigned
 name|int
@@ -5024,7 +5031,12 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* FIXME.  This is an awful kludge to get the front ends to update      their notion of line number for diagnostic purposes.  The line      number should be passed to the handler and they should do it      themselves.  Stand-alone CPP must ignore us, otherwise it will      prefix the directive with spaces, hence the 1.  Ugh.  */
+if|if
+condition|(
+name|p
+condition|)
+block|{
+comment|/* Since the handler below doesn't get the line number, that it 	 might need for diagnostics, make sure it has the right 	 numbers in place.  */
 if|if
 condition|(
 name|pfile
@@ -5044,15 +5056,11 @@ call|)
 argument_list|(
 name|pfile
 argument_list|,
-name|token
+name|pragma_token
 argument_list|,
-literal|1
+name|false
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-condition|)
 call|(
 modifier|*
 name|p
@@ -5065,6 +5073,33 @@ argument_list|(
 name|pfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pfile
+operator|->
+name|cb
+operator|.
+name|line_change
+condition|)
+call|(
+modifier|*
+name|pfile
+operator|->
+name|cb
+operator|.
+name|line_change
+call|)
+argument_list|(
+name|pfile
+argument_list|,
+name|pfile
+operator|->
+name|cur_token
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

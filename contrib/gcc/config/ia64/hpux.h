@@ -34,6 +34,24 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+define|\
+value|"%{mt|pthread:-D_REENTRANT -D_THREAD_SAFE -D_POSIX_C_SOURCE=199506L}"
+end_define
+
+begin_comment
+comment|/* aCC defines also -DRWSTD_MULTI_THREAD, -DRW_MULTI_THREAD.  These    affect only aCC's C++ library (Rogue Wave-derived) which we do not    use, and they violate the user's name space.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
 name|ASM_EXTRA_SPEC
 end_undef
 
@@ -88,7 +106,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{!shared: \      %{p:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	 %{mlp64:-L/usr/lib/hpux64/libp} -lprof} \      %{pg:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	  %{mlp64:-L/usr/lib/hpux64/libp} -lgprof} \      %{!symbolic:-lc}}"
+value|"%{!shared: \      %{mt|pthread:-lpthread} \      %{p:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	 %{mlp64:-L/usr/lib/hpux64/libp} -lprof} \      %{pg:%{!mlp64:-L/usr/lib/hpux32/libp} \ 	  %{mlp64:-L/usr/lib/hpux64/libp} -lgprof} \      %{!symbolic:-lc}}"
 end_define
 
 begin_ifndef
@@ -261,6 +279,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* The HPUX dynamic linker objects to weak symbols with no    definitions, so do not use them in gthr-posix.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTHREAD_USE_WEAK
+value|0
+end_define
+
+begin_comment
 comment|/* Put out the needed function declarations at the end.  */
 end_comment
 
@@ -298,6 +327,17 @@ define|#
 directive|define
 name|DTORS_SECTION_ASM_OP
 value|"\t.section\t.fini_array,\t\"aw\",\"fini_array\""
+end_define
+
+begin_comment
+comment|/* The init_array/fini_array technique does not permit the use of    initialization priorities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUPPORTS_INIT_PRIORITY
+value|0
 end_define
 
 begin_undef

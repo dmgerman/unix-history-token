@@ -1109,9 +1109,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|abort
-argument_list|()
+call|(
+modifier|*
+name|p_msg
+call|)
+argument_list|(
+literal|"invalid use of incomplete type"
+argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 end_function

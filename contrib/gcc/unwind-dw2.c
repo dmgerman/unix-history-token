@@ -182,6 +182,8 @@ name|char
 name|dwarf_reg_size_table
 index|[
 name|DWARF_FRAME_REGISTERS
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -713,7 +715,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Word
 operator|)
 name|context
 operator|->
@@ -3765,6 +3767,17 @@ name|lsda
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|context
+operator|->
+name|ra
+operator|==
+literal|0
+condition|)
+return|return
+name|_URC_END_OF_STACK
+return|;
 name|fde
 operator|=
 name|_Unwind_Find_FDE

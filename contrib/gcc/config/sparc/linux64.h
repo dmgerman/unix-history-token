@@ -758,6 +758,20 @@ directive|undef
 name|DTORS_SECTION_ASM_OP
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|LINK_GCC_C_SEQUENCE_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_GCC_C_SEQUENCE_SPEC
+define|\
+value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
+end_define
+
 begin_comment
 comment|/* Do code reading to identify a signal frame, and set the frame    state data appropriately.  See unwind-dw2.c for the structs.  */
 end_comment

@@ -15909,7 +15909,7 @@ name|int_size_in_bytes
 argument_list|(
 name|type
 argument_list|)
-operator|<=
+operator|<
 literal|0
 return|;
 block|}
@@ -17127,7 +17127,7 @@ name|int_size_in_bytes
 argument_list|(
 name|type
 argument_list|)
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{

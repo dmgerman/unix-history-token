@@ -520,6 +520,16 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* @@@ Retrieve the Backing Store Pointer of the given context.  */
+specifier|extern
+name|_Unwind_Word
+name|_Unwind_GetBSP
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+parameter_list|)
+function_decl|;
 else|#
 directive|else
 specifier|extern

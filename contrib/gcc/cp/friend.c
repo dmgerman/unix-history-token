@@ -1205,6 +1205,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|DECL_TEMPLATE_INFO
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+empty_stmt|;
+elseif|else
+if|if
+condition|(
 name|template_class_depth
 argument_list|(
 name|current_class_type

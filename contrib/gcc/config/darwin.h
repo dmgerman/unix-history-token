@@ -499,7 +499,9 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     const char *xname = NAME;                                           \     if (GET_CODE (XEXP (DECL_RTL (DECL), 0)) != SYMBOL_REF)             \       xname = IDENTIFIER_POINTER (DECL_NAME (DECL));                    \     if ((TREE_STATIC (DECL)                                             \&& (!DECL_COMMON (DECL) || !TREE_PUBLIC (DECL)))               \         || DECL_INITIAL (DECL))                                         \       machopic_define_name (xname);                                     \     if ((TREE_STATIC (DECL)                                             \&& (!DECL_COMMON (DECL) || !TREE_PUBLIC (DECL)))               \         || DECL_INITIAL (DECL))                                         \       (* targetm.encode_section_info) (DECL, false);			\     ASM_OUTPUT_LABEL (FILE, xname);                                     \   } while (0)
+value|do {									\     const char *xname = NAME;                                           \     if (GET_CODE (XEXP (DECL_RTL (DECL), 0)) != SYMBOL_REF)             \       xname = IDENTIFIER_POINTER (DECL_NAME (DECL));                    \     if ((TREE_STATIC (DECL)                                             \&& (!DECL_COMMON (DECL) || !TREE_PUBLIC (DECL)))               \         || DECL_INITIAL (DECL))                                         \       machopic_define_name (xname);                                     \     if ((TREE_STATIC (DECL)                                             \&& (!DECL_COMMON (DECL) || !TREE_PUBLIC (DECL)))               \         || DECL_INITIAL (DECL))                                         \       (* targetm.encode_section_info) (DECL, false);			\     ASM_OUTPUT_LABEL (FILE, xname);                                     \
+comment|/* Darwin doesn't support zero-size objects, so give them a 	\        byte.  */
+value|\     if (tree_low_cst (DECL_SIZE_UNIT (DECL), 1) == 0)			\       assemble_zeros (1);						\   } while (0)
 end_define
 
 begin_define
@@ -517,6 +519,25 @@ define|\
 value|do {									\     const char *xname = NAME;                                           \     if (GET_CODE (XEXP (DECL_RTL (DECL), 0)) != SYMBOL_REF)             \       xname = IDENTIFIER_POINTER (DECL_NAME (DECL));                    \     if ((TREE_STATIC (DECL)                                             \&& (!DECL_COMMON (DECL) || !TREE_PUBLIC (DECL)))               \         || DECL_INITIAL (DECL))                                         \       machopic_define_name (xname);                                     \     if ((TREE_STATIC (DECL)                                             \&& (!DECL_COMMON (DECL) || !TREE_PUBLIC (DECL)))               \         || DECL_INITIAL (DECL))                                         \       (* targetm.encode_section_info) (DECL, false);			\     ASM_OUTPUT_LABEL (FILE, xname);                                     \
 comment|/* Avoid generating stubs for functions we've just defined by	\        outputting any required stub name label now.  */
 value|\     machopic_output_possible_stub_label (FILE, xname);			\   } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_DECLARE_CONSTANT_NAME
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|,
+name|EXP
+parameter_list|,
+name|SIZE
+parameter_list|)
+define|\
+value|do {								\     ASM_OUTPUT_LABEL (FILE, NAME);				\
+comment|/* Darwin doesn't support zero-size objects, so give them a	\        byte.  */
+value|\     if ((SIZE) == 0)						\       assemble_zeros (1);					\   } while (0)
 end_define
 
 begin_comment

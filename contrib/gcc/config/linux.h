@@ -271,6 +271,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|LINK_GCC_C_SEQUENCE_SPEC
+define|\
+value|"%{static:--start-group} %G %L %{static:--end-group}%{!static:%G}"
+end_define
+
 begin_comment
 comment|/* Define this so we can compile MS code for use with WINE.  */
 end_comment

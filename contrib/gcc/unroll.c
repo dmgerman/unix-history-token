@@ -8463,6 +8463,15 @@ operator|->
 name|mode
 argument_list|)
 condition|)
+block|{
+comment|/* If we have already counted it, skip it.  */
+if|if
+condition|(
+name|v
+operator|->
+name|same
+condition|)
+continue|continue;
 name|result
 operator|=
 name|fold_rtx_mult_add
@@ -8480,6 +8489,7 @@ operator|->
 name|mode
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 return|return
 literal|0
@@ -12196,6 +12206,14 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* If we have already counted it, skip it.  */
+if|if
+condition|(
+name|biv_inc
+operator|->
+name|same
+condition|)
+continue|continue;
 name|offset
 operator|-=
 name|INTVAL

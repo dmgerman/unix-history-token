@@ -3550,7 +3550,7 @@ name|to
 argument_list|,
 name|expr
 argument_list|,
-name|tf_none
+name|tf_conv
 argument_list|)
 expr_stmt|;
 if|if
@@ -4100,10 +4100,9 @@ argument_list|(
 name|to
 argument_list|)
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+comment|/* [conv.ptr] 		   	          An rvalue of type "pointer to cv D," where D is a 		  class type, can be converted to an rvalue of type 		  "pointer to cv B," where B is a base class (clause 		  _class.derived_) of D.  If B is an inaccessible 		  (clause _class.access_) or ambiguous 		  (_class.member.lookup_) base class of D, a program 		  that necessitates this conversion is ill-formed.  */
+comment|/* Therefore, we use DERIVED_FROM_P, and not 		  ACESSIBLY_UNIQUELY_DERIVED_FROM_P, in this test.  */
+operator|&&
 name|DERIVED_FROM_P
 argument_list|(
 name|TREE_TYPE
@@ -4154,7 +4153,6 @@ argument_list|,
 name|conv
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -23725,7 +23723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert EXPR to TYPE (as a direct-initialization) if that is    permitted.  If the conversion is valid, the converted expression is    returned.  Otherwise, NULL_TREE is returned.  */
+comment|/* Convert EXPR to TYPE (as a direct-initialization) if that is    permitted.  If the conversion is valid, the converted expression is    returned.  Otherwise, NULL_TREE is returned, except in the case    that TYPE is a class type; in that case, an error is issued.  */
 end_comment
 
 begin_function
@@ -23756,6 +23754,47 @@ condition|)
 return|return
 name|error_mark_node
 return|;
+comment|/* [dcl.init]       If the destination type is a (possibly cv-qualified) class type:       -- If the initialization is direct-initialization ...,      constructors are considered. ... If no constructor applies, or      the overload resolution is ambiguous, the initialization is      ill-formed.  */
+if|if
+condition|(
+name|CLASS_TYPE_P
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+name|expr
+operator|=
+name|build_special_member_call
+argument_list|(
+name|NULL_TREE
+argument_list|,
+name|complete_ctor_identifier
+argument_list|,
+name|build_tree_list
+argument_list|(
+name|NULL_TREE
+argument_list|,
+name|expr
+argument_list|)
+argument_list|,
+name|TYPE_BINFO
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|LOOKUP_NORMAL
+argument_list|)
+expr_stmt|;
+return|return
+name|build_cplus_new
+argument_list|(
+name|type
+argument_list|,
+name|expr
+argument_list|)
+return|;
+block|}
 name|conv
 operator|=
 name|implicit_conversion
@@ -23922,7 +23961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert EXPR to the indicated reference TYPE, in a way suitable for    initializing a variable of that TYPE.   If DECL is non-NULL, it is    the VAR_DECL being initialized with the EXPR.  (In that case, the    type of DECL will be TYPE.)     Return the converted expression.  */
+comment|/* Convert EXPR to the indicated reference TYPE, in a way suitable      for initializing a variable of that TYPE.  If DECL is non-NULL,      it is the VAR_DECL being initialized with the EXPR.  (In that      case, the type of DECL will be TYPE.)  If DECL is non-NULL, then      CLEANUP must also be non-NULL, and with *CLEANUP initialized to      NULL.  Upon return, if *CLEANUP is no longer NULL, it will be a      CLEANUP_STMT that should be inserted after the returned      expression is used to initialize DECL.       Return the converted expression.  */
 end_comment
 
 begin_function
@@ -23934,6 +23973,8 @@ parameter_list|,
 name|expr
 parameter_list|,
 name|decl
+parameter_list|,
+name|cleanup
 parameter_list|)
 name|tree
 name|type
@@ -23943,6 +23984,10 @@ name|expr
 decl_stmt|;
 name|tree
 name|decl
+decl_stmt|;
+name|tree
+modifier|*
+name|cleanup
 decl_stmt|;
 block|{
 name|tree
@@ -23989,13 +24034,52 @@ name|conv
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|TYPE_QUALS
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|&
+name|TYPE_QUAL_CONST
+operator|)
+operator|&&
+operator|!
+name|real_lvalue_p
+argument_list|(
+name|expr
+argument_list|)
+condition|)
 name|error
 argument_list|(
-literal|"could not convert `%E' to `%T'"
-argument_list|,
-name|expr
+literal|"invalid initialization of non-const reference of "
+literal|"type '%T' from a temporary of type '%T'"
 argument_list|,
 name|type
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"invalid initialization of reference of type "
+literal|"'%T' from expression of type '%T'"
+argument_list|,
+name|type
+argument_list|,
+name|TREE_TYPE
+argument_list|(
+name|expr
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -24124,20 +24208,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Create the INIT_EXPR that will initialize the temporary 	     variable.  */
+name|init
+operator|=
+name|build
+argument_list|(
+name|INIT_EXPR
+argument_list|,
+name|type
+argument_list|,
+name|var
+argument_list|,
+name|expr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|at_function_scope_p
 argument_list|()
 condition|)
 block|{
-name|tree
-name|cleanup
-decl_stmt|;
 name|add_decl_stmt
 argument_list|(
 name|var
 argument_list|)
 expr_stmt|;
+operator|*
 name|cleanup
 operator|=
 name|cxx_maybe_build_cleanup
@@ -24147,12 +24243,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|cleanup
 condition|)
-name|finish_decl_cleanup
+comment|/* We must be careful to destroy the temporary only 		   after its initialization has taken place.  If the 		   initialization throws an exception, then the 		   destructor should not be run.  We cannot simply 		   transform INIT into something like: 	      		     (INIT, ({ CLEANUP_STMT; }))  		   because emit_local_var always treats the 		   initializer as a full-expression.  Thus, the 		   destructor would run too early; it would run at the 		   end of initializing the reference variable, rather 		   than at the end of the block enclosing the 		   reference variable.  		   The solution is to pass back a CLEANUP_STMT which 		   the caller is responsible for attaching to the 		   statement tree.  */
+operator|*
+name|cleanup
+operator|=
+name|build_stmt
 argument_list|(
+name|CLEANUP_STMT
+argument_list|,
 name|var
 argument_list|,
+operator|*
 name|cleanup
 argument_list|)
 expr_stmt|;
@@ -24190,19 +24294,6 @@ name|static_aggregates
 argument_list|)
 expr_stmt|;
 block|}
-name|init
-operator|=
-name|build
-argument_list|(
-name|INIT_EXPR
-argument_list|,
-name|type
-argument_list|,
-name|var
-argument_list|,
-name|expr
-argument_list|)
-expr_stmt|;
 comment|/* Use its address to initialize the reference variable.  */
 name|expr
 operator|=
