@@ -435,17 +435,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|malloc_type_t
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
 name|M_EXT2NODE
-init|=
-block|{
+argument_list|,
 literal|"EXT2 nodes"
-block|,
+argument_list|,
 literal|"EXT2 Filsystem inodes"
-block|}
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

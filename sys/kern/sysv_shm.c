@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.28 1997/02/22 09:39:23 peter Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.29 1997/08/02 14:31:39 bde Exp $ */
 end_comment
 
 begin_comment
@@ -265,6 +265,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SHM
+argument_list|,
+literal|"shm"
+argument_list|,
+literal|"SVID compatible shared memory segments"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

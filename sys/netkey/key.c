@@ -154,6 +154,18 @@ directive|include
 file|<netkey/key_debug.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SECA
+argument_list|,
+literal|"key mgmt"
+argument_list|,
+literal|"security associations, key management"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.19 1997/03/23 03:37:06 bde Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.20 1997/08/16 19:15:24 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -124,6 +124,18 @@ include|#
 directive|include
 file|<msdosfs/fat.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_MSDOSFSFAT
+argument_list|,
+literal|"MSDOSFS FAT"
+argument_list|,
+literal|"MSDOSFS file allocation table"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

@@ -35,19 +35,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.10 1996/09/10 08:27:42 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.11 1996/11/21 07:19:00 julian Exp $  */
 end_comment
 
 begin_comment
 comment|/* first a couple of defines for compatibility with inodes */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|M_DEVFSNAME
-value|M_DEVFSBACK
-end_define
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.25 1997/08/26 04:36:21 dyson Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.26 1997/09/02 20:06:15 bde Exp $ */
 end_comment
 
 begin_comment
@@ -108,6 +108,18 @@ include|#
 directive|include
 file|<msdosfs/fat.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_MSDOSFSNODE
+argument_list|,
+literal|"MSDOSFS node"
+argument_list|,
+literal|"MSDOSFS vnode private part"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct

@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.41 1997/09/16 09:10:18 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.42 1997/10/10 07:54:05 julian Exp $  */
 end_comment
 
 begin_include
@@ -90,6 +90,30 @@ end_include
 
 begin_escape
 end_escape
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_DEVFSNODE
+argument_list|,
+literal|"DEVFS node"
+argument_list|,
+literal|"DEVFS node"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_DEVFSNAME
+argument_list|,
+literal|"DEVFS name"
+argument_list|,
+literal|"DEVFS name"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|devnm_p

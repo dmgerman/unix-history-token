@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.19 1997/08/02 14:31:55 bde Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.20 1997/08/16 19:15:10 wollman Exp $  *  *  */
 end_comment
 
 begin_include
@@ -44,6 +44,18 @@ include|#
 directive|include
 file|<miscfs/devfs/devfsdefs.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_DEVFSMNT
+argument_list|,
+literal|"DEVFS mount"
+argument_list|,
+literal|"DEVFS mount structure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static
