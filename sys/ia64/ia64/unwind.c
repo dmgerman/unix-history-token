@@ -149,7 +149,7 @@ name|sz
 argument_list|,
 name|M_UNWIND
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 operator|)
 return|;
