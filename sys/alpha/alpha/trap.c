@@ -560,14 +560,6 @@ name|p
 operator|->
 name|p_priority
 expr_stmt|;
-name|currtpriority
-operator|=
-name|p
-operator|->
-name|p_rtprio
-operator|.
-name|prio
-expr_stmt|;
 block|}
 end_function
 

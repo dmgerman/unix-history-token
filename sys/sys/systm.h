@@ -138,17 +138,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_char
-name|currtpriority
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* realtime priority of current process */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|physmem
 decl_stmt|;
