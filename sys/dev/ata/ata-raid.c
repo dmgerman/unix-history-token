@@ -9685,6 +9685,10 @@ name|printf
 argument_list|(
 literal|"total_sectors	%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|config
 operator|->
 name|total_sectors
@@ -9791,6 +9795,10 @@ name|printf
 argument_list|(
 literal|"	sectors	%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|config
 operator|->
 name|disks
