@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: handler.c,v 1.1.1.3 2002/02/17 21:56:45 gshapiro Exp $"
+literal|"@(#)$Id: handler.c,v 8.30 2002/04/29 15:06:48 ca Exp $"
 argument_list|)
 end_macro
 
@@ -70,9 +70,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return
+name|ret
+operator|=
 name|MI_FAILURE
-return|;
+expr_stmt|;
+else|else
 name|ret
 operator|=
 name|mi_engine

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 1.1.1.7 2002/04/10 03:04:51 gshapiro Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.90 2002/05/09 20:44:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -39,12 +39,6 @@ if|#
 directive|if
 name|SASL
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sasl.h>
-end_include
 
 begin_include
 include|#
@@ -521,6 +515,21 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+specifier|const
+name|char
+modifier|*
+name|outbuf
+init|=
+name|NULL
+decl_stmt|;
+else|#
+directive|else
+comment|/* SASL>= 20000 */
 specifier|static
 name|char
 modifier|*
@@ -528,6 +537,9 @@ name|outbuf
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* SASL>= 20000 */
 specifier|static
 name|unsigned
 name|int
@@ -714,11 +726,19 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|SASL
+operator|<
+literal|20000
 name|SASL_DEALLOC
 argument_list|(
 name|outbuf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* SASL< 20000 */
 name|outbuf
 operator|=
 name|NULL
@@ -789,10 +809,26 @@ block|{
 name|int
 name|result
 decl_stmt|;
+if|#
+directive|if
+name|SASL
+operator|>=
+literal|20000
+specifier|const
 name|char
 modifier|*
 name|outbuf
 decl_stmt|;
+else|#
+directive|else
+comment|/* SASL>= 20000 */
+name|char
+modifier|*
+name|outbuf
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* SASL>= 20000 */
 name|unsigned
 name|int
 name|outlen
@@ -896,11 +932,19 @@ operator|+=
 name|ret
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|SASL
+operator|<
+literal|20000
 name|SASL_DEALLOC
 argument_list|(
 name|outbuf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* SASL< 20000 */
 block|}
 return|return
 name|size

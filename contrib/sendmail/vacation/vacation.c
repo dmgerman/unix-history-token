@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 1.1.1.7 2002/04/10 03:05:00 gshapiro Exp $"
+literal|"@(#)$Id: vacation.c,v 8.137 2002/04/22 18:48:12 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -480,7 +480,7 @@ parameter_list|(
 name|excode
 parameter_list|)
 define|\
-value|{ \ 	if (!iflag&& !lflag) \ 		eatmsg(); \ 	exit(excode); \ }
+value|{ \ 	if (!initdb&& !list) \ 		eatmsg(); \ 	exit(excode); \ }
 end_define
 
 begin_function
@@ -501,7 +501,12 @@ name|argv
 decl_stmt|;
 block|{
 name|bool
-name|iflag
+name|alwaysrespond
+init|=
+name|false
+decl_stmt|;
+name|bool
+name|initdb
 decl_stmt|,
 name|exclude
 decl_stmt|;
@@ -511,7 +516,7 @@ init|=
 name|false
 decl_stmt|;
 name|bool
-name|lflag
+name|list
 init|=
 name|false
 decl_stmt|;
@@ -620,7 +625,7 @@ name|readheaders
 name|__P
 argument_list|(
 operator|(
-name|void
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -797,7 +802,7 @@ name|opterr
 operator|=
 literal|0
 expr_stmt|;
-name|iflag
+name|initdb
 operator|=
 name|false
 expr_stmt|;
@@ -814,23 +819,10 @@ name|From
 operator|=
 literal|'\0'
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_RETURN_ADDR
 define|#
 directive|define
 name|OPTIONS
-value|"a:C:df:Iilm:R:r:s:t:Uxz"
-else|#
-directive|else
-comment|/* _FFR_RETURN_ADDR */
-define|#
-directive|define
-name|OPTIONS
-value|"a:C:df:Iilm:r:s:t:Uxz"
-endif|#
-directive|endif
-comment|/* _FFR_RETURN_ADDR */
+value|"a:C:df:Iijlm:R:r:s:t:Uxz"
 while|while
 condition|(
 name|mfail
@@ -951,15 +943,29 @@ case|case
 literal|'i'
 case|:
 comment|/* init the database */
-name|iflag
+name|initdb
 operator|=
 name|true
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_RESPOND_ALL
+case|case
+literal|'j'
+case|:
+name|alwaysrespond
+operator|=
+name|true
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_RESPOND_ALL */
 case|case
 literal|'l'
 case|:
-name|lflag
+name|list
 operator|=
 name|true
 expr_stmt|;
@@ -1136,10 +1142,10 @@ block|{
 if|if
 condition|(
 operator|!
-name|iflag
+name|initdb
 operator|&&
 operator|!
-name|lflag
+name|list
 operator|&&
 operator|!
 name|exclude
@@ -1611,7 +1617,7 @@ operator||
 name|O_RDWR
 operator||
 operator|(
-name|iflag
+name|initdb
 condition|?
 name|O_TRUNC
 else|:
@@ -1661,7 +1667,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|lflag
+name|list
 condition|)
 block|{
 name|listdb
@@ -1696,7 +1702,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|iflag
+name|initdb
 operator|&&
 operator|!
 name|exclude
@@ -1811,7 +1817,9 @@ expr_stmt|;
 name|result
 operator|=
 name|readheaders
-argument_list|()
+argument_list|(
+name|alwaysrespond
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1917,13 +1925,18 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** READHEADERS -- read mail headers ** **	Parameters: **		none. ** **	Returns: **		a exit code: NOUSER if no reply, OK if reply, * if error ** **	Side Effects: **		may exit(). ** */
+comment|/* ** READHEADERS -- read mail headers ** **	Parameters: **		alwaysrespond -- respond regardless of whether msg is to me ** **	Returns: **		a exit code: NOUSER if no reply, OK if reply, * if error ** **	Side Effects: **		may exit(). ** */
 end_comment
 
 begin_function
 name|int
 name|readheaders
-parameter_list|()
+parameter_list|(
+name|alwaysrespond
+parameter_list|)
+name|bool
+name|alwaysrespond
+decl_stmt|;
 block|{
 name|bool
 name|tome
@@ -1973,9 +1986,11 @@ argument_list|)
 decl_stmt|;
 name|cont
 operator|=
+name|false
+expr_stmt|;
 name|tome
 operator|=
-name|false
+name|alwaysrespond
 expr_stmt|;
 while|while
 condition|(
@@ -4162,6 +4177,14 @@ block|{
 name|char
 modifier|*
 name|retusage
+init|=
+literal|""
+decl_stmt|;
+name|char
+modifier|*
+name|respusage
+init|=
+literal|""
 decl_stmt|;
 if|#
 directive|if
@@ -4170,24 +4193,29 @@ name|retusage
 operator|=
 literal|"[-R returnaddr] "
 expr_stmt|;
-else|#
-directive|else
-comment|/* _FFR_RETURN_ADDR */
-name|retusage
-operator|=
-literal|""
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* _FFR_RETURN_ADDR */
+if|#
+directive|if
+name|_FFR_RESPOND_ALL
+name|respusage
+operator|=
+literal|"[-j] "
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_RESPOND_ALL */
 name|msglog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"uid %u: usage: vacation [-a alias] [-C cfpath] [-d] [-f db] [-i] [-l] [-m msg] %s[-r interval] [-s sender] [-t time] [-U] [-x] [-z] login\n"
+literal|"uid %u: usage: vacation [-a alias] [-C cfpath] [-d] [-f db] [-i] %s[-l] [-m msg] %s[-r interval] [-s sender] [-t time] [-U] [-x] [-z] login\n"
 argument_list|,
 name|getuid
 argument_list|()
+argument_list|,
+name|respusage
 argument_list|,
 name|retusage
 argument_list|)
@@ -4310,6 +4338,10 @@ operator|==
 name|SMDBE_OK
 condition|)
 block|{
+name|char
+modifier|*
+name|timestamp
+decl_stmt|;
 comment|/* skip magic VIT entry */
 if|if
 condition|(
@@ -4416,6 +4448,30 @@ name|size
 operator|=
 literal|40
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* must be an exclude */
+name|timestamp
+operator|=
+literal|"(exclusion)\n"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|timestamp
+operator|=
+name|ctime
+argument_list|(
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
+block|}
 name|sm_io_fprintf
 argument_list|(
 name|smioout
@@ -4439,11 +4495,7 @@ name|db_key
 operator|.
 name|data
 argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|t
-argument_list|)
+name|timestamp
 argument_list|)
 expr_stmt|;
 name|memset

@@ -53,7 +53,7 @@ name|SM_IDSTR
 argument_list|(
 argument|MilterlId
 argument_list|,
-literal|"@(#)$Id: libmilter.h,v 1.1.1.6 2002/02/17 21:56:45 gshapiro Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.33 2002/04/30 23:52:24 msk Exp $"
 argument_list|)
 end_macro
 
@@ -754,6 +754,26 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mi_opensocket
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|smfiDesc_ptr
 operator|)
 argument_list|)
 decl_stmt|;

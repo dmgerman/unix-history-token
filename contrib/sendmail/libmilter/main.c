@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 1.1.1.5 2002/04/10 03:05:00 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.63 2002/04/30 23:52:24 msk Exp $"
 argument_list|)
 end_macro
 
@@ -285,6 +285,58 @@ init|=
 name|MI_SOMAXCONN
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_SMFI_OPENSOCKET
+end_if
+
+begin_comment
+comment|/* **  SMFI_OPENSOCKET -- try the socket setup to make sure we'll be **                     able to start up ** **  	Parameters: **  		None. ** **  	Return: **  		MI_SUCCESS/MI_FAILURE */
+end_comment
+
+begin_function
+name|int
+name|smfi_opensocket
+parameter_list|()
+block|{
+if|if
+condition|(
+name|smfi
+operator|==
+name|NULL
+operator|||
+name|conn
+operator|==
+name|NULL
+condition|)
+return|return
+name|MI_FAILURE
+return|;
+return|return
+name|mi_opensocket
+argument_list|(
+name|conn
+argument_list|,
+name|backlog
+argument_list|,
+name|dbg
+argument_list|,
+name|smfi
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SMFI_OPENSOCKET */
+end_comment
 
 begin_comment
 comment|/* **  SMFI_SETDBG -- set debug level. ** **	Parameters: **		odbg -- new debug level. ** **	Returns: **		MI_SUCCESS */

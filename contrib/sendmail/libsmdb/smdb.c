@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
+comment|/* ** Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers. **	All rights reserved. ** ** By using this file, you agree to the terms and conditions set ** forth in the LICENSE file which can be found at the top level of ** the sendmail distribution. */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb.c,v 1.1.1.4 2002/04/10 03:04:59 gshapiro Exp $"
+literal|"@(#)$Id: smdb.c,v 8.57 2002/05/24 23:09:11 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -843,7 +843,7 @@ decl_stmt|;
 name|char
 name|file_name
 index|[
-name|SMDB_MAX_NAME_LEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|result
@@ -852,7 +852,8 @@ name|smdb_add_extension
 argument_list|(
 name|file_name
 argument_list|,
-name|SMDB_MAX_NAME_LEN
+sizeof|sizeof
+name|file_name
 argument_list|,
 name|db_name
 argument_list|,
@@ -880,7 +881,7 @@ operator|&
 operator|~
 name|O_TRUNC
 argument_list|,
-literal|0644
+name|DBMMODE
 argument_list|,
 name|sff
 argument_list|)
@@ -1108,7 +1109,7 @@ decl_stmt|;
 name|char
 name|db_file_name
 index|[
-name|SMDB_MAX_NAME_LEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|result
@@ -1117,7 +1118,8 @@ name|smdb_add_extension
 argument_list|(
 name|db_file_name
 argument_list|,
-name|SMDB_MAX_NAME_LEN
+sizeof|sizeof
+name|db_file_name
 argument_list|,
 name|db_name
 argument_list|,
@@ -1212,7 +1214,7 @@ decl_stmt|;
 name|char
 name|db_file_name
 index|[
-name|SMDB_MAX_NAME_LEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|result
@@ -1221,7 +1223,8 @@ name|smdb_add_extension
 argument_list|(
 name|db_file_name
 argument_list|,
-name|SMDB_MAX_NAME_LEN
+sizeof|sizeof
+name|db_file_name
 argument_list|,
 name|db_name
 argument_list|,

@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_snprintf.c,v 1.1.1.3 2002/02/17 21:56:43 gshapiro Exp $"
+literal|"@(#)$Id: t_snprintf.c,v 8.4 2001/09/23 03:35:41 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 

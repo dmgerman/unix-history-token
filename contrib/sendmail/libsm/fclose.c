@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: fclose.c,v 1.1.1.2 2002/04/10 03:04:55 gshapiro Exp $"
+literal|"@(#)$Id: fclose.c,v 1.42 2002/02/01 02:28:00 ca Exp $"
 argument_list|)
 end_macro
 

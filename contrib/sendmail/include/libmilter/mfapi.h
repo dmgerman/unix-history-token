@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 1.1.1.4 2002/04/10 03:04:55 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfapi.h,v 8.42 2002/04/30 23:52:23 msk Exp $  */
 end_comment
 
 begin_comment
@@ -442,6 +442,34 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|_FFR_SMFI_OPENSOCKET
+end_if
+
+begin_decl_stmt
+name|LIBMILTER_API
+name|int
+name|smfi_opensocket
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SMFI_OPENSOCKET */
+end_comment
 
 begin_decl_stmt
 name|LIBMILTER_API

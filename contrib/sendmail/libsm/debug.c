@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: debug.c,v 1.1.1.1 2002/02/17 21:56:43 gshapiro Exp $"
+literal|"@(#)$Id: debug.c,v 1.28 2001/09/25 19:57:05 gshapiro Exp $"
 argument_list|)
 end_macro
 

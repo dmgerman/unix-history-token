@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: alias.c,v 1.1.1.7 2002/02/17 21:56:38 gshapiro Exp $"
+literal|"@(#)$Id: alias.c,v 8.214 2002/05/24 20:50:16 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1401,9 +1401,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXNAME
-operator|+
-literal|1
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 if|if
@@ -1696,9 +1694,8 @@ name|stb
 operator|.
 name|st_mtime
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|sm_strlcpyn
 argument_list|(
 name|buf
@@ -1720,7 +1717,56 @@ literal|""
 else|:
 name|ext
 argument_list|)
+operator|>=
+sizeof|sizeof
+name|buf
+condition|)
+block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"alias database %s%s name too long"
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+name|ext
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|ext
+argument_list|)
 expr_stmt|;
+name|message
+argument_list|(
+literal|"alias database %s%s name too long"
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|,
+name|ext
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|ext
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|stat
@@ -3486,8 +3532,6 @@ name|char
 name|buf
 index|[
 name|MAXPATHLEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct

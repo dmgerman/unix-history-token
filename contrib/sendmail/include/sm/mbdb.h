@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: mbdb.h,v 1.1.1.1 2002/02/17 21:56:43 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: mbdb.h,v 1.6 2002/05/24 20:50:14 gshapiro Exp $  */
 end_comment
 
 begin_ifndef
@@ -84,16 +84,12 @@ name|char
 name|mbdb_homedir
 index|[
 name|PATH_MAX
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|char
 name|mbdb_shell
 index|[
 name|PATH_MAX
-operator|+
-literal|1
 index|]
 decl_stmt|;
 block|}

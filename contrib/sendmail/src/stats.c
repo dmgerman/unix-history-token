@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stats.c,v 1.1.1.7 2002/04/10 03:04:52 gshapiro Exp $"
+literal|"@(#)$Id: stats.c,v 8.55 2002/05/21 22:28:52 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -474,7 +474,7 @@ name|sfile
 argument_list|,
 name|O_RDWR
 argument_list|,
-literal|0644
+literal|0600
 argument_list|,
 name|sff
 argument_list|)

@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: bf.c,v 1.1.1.2 2002/04/10 03:04:47 gshapiro Exp $"
+literal|"@(#)$Id: bf.c,v 8.54 2002/04/20 18:03:42 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -765,10 +765,38 @@ begin_comment
 comment|/* **  BFOPEN -- create a new buffered file ** **	Parameters: **		filename -- the file's name **		fmode -- what mode the file should be created as **		bsize -- amount of buffer space to allocate (may be 0) **		flags -- if running under sendmail, passed directly to safeopen ** **	Returns: **		a SM_FILE_T * which may then be used with stdio functions, **		or NULL	on failure. SM_FILE_T * is opened for writing **		"SM_IO_WHAT_VECTORS"). ** **	Side Effects: **		none. ** **	Sets errno: **		any value of errno specified by sm_io_setinfo_type() **		any value of errno specified by sm_io_open() **		any value of errno specified by sm_io_setinfo() */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_comment
+comment|/* **  XXX This is a temporary hack since MODE_T on HP-UX 10.x is short. **	If we use K&R here, the compiler will complain about **	Inconsistent parameter list declaration **	due to the change from short to int. */
+end_comment
+
 begin_function
 name|SM_FILE_T
 modifier|*
 name|bfopen
+parameter_list|(
+name|char
+modifier|*
+name|filename
+parameter_list|,
+name|MODE_T
+name|fmode
+parameter_list|,
+name|size_t
+name|bsize
+parameter_list|,
+name|long
+name|flags
+parameter_list|)
+else|#
+directive|else
+comment|/* __STDC__ */
+function|SM_FILE_T * bfopen
 parameter_list|(
 name|filename
 parameter_list|,
@@ -791,6 +819,9 @@ decl_stmt|;
 name|long
 name|flags
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* __STDC__ */
 block|{
 name|MODE_T
 name|omask
@@ -1953,7 +1984,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  BFREWIND -- rewinds the SM_FILE_T * ** **	Parameters: **		fp -- SM_FILE_T * to rewind ** **	Returns: **		0 on success, -1 on error ** **	Side Effects: **		rewinds the SM_FILE_T * and puts it into read mode. Normally one **		would bfopen() a file, write to it, then bfrewind() and **		fread(). If fp is not a buffered file, this is equivalent to **		rewind(). ** **	Sets errno: **		any value of errno specified by sm_io_rewind() */
+comment|/* **  BFREWIND -- rewinds the SM_FILE_T * ** **	Parameters: **		fp -- SM_FILE_T * to rewind ** **	Returns: **		0 on success, -1 on error ** **	Side Effects: **		rewinds the SM_FILE_T * and puts it into read mode. Normally **		one would bfopen() a file, write to it, then bfrewind() and **		fread(). If fp is not a buffered file, this is equivalent to **		rewind(). ** **	Sets errno: **		any value of errno specified by sm_io_rewind() */
 end_comment
 
 begin_function
@@ -2440,7 +2471,6 @@ endif|#
 directive|endif
 comment|/* NOFTRUNCATE */
 block|}
-else|else
 return|return
 literal|0
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: smdb.h,v 1.1.1.4 2002/02/17 21:56:43 gshapiro Exp $  *  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: smdb.h,v 8.40 2002/05/24 23:20:14 gshapiro Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -111,13 +111,6 @@ begin_define
 define|#
 directive|define
 name|SMDB_MAX_USER_NAME_LEN
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
-name|SMDB_MAX_NAME_LEN
 value|1024
 end_define
 
