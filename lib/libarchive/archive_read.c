@@ -713,6 +713,14 @@ argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
+name|archive_string_empty
+argument_list|(
+operator|&
+name|a
+operator|->
+name|error_string
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If client didn't consume entire data, skip any remainder 	 * (This is especially important for GNU incremental directories.) 	 */
 if|if
 condition|(
