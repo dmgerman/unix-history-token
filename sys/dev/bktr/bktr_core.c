@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.73 1999/04/30 11:16:30 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.74 1999/05/09 17:06:40 peter Exp $ */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  * 1. Redistributions of source code must retain the   * Copyright (c
 end_comment
 
 begin_comment
-comment|/*		Change History: Note: These version numbers represent the authors own numbering. They are unrelated to Revision Control numbering of FreeBSD or any other system. 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com 1.27                       Last batch of patches for radio support from                            Flemming Jacobsen<fj@trw.nl>.                            Added B849 PCI ID submitted by:                             Tomi Vainio<tomppa@fidata.fi> 1.28                       Frank Nobis<fn@Radio-do.de> added tuner support                            for the  German Phillips PAL tuner and                            additional channels for german cable tv. 1.29                       Roger Hardiman<roger@cs.strath.ac.uk>                            Revised autodetection code to correctly handle both                            old and new VideoLogic Captivator PCI cards.                            Added tsleep of 2 seconds to initialistion code                            for PAL users.Corrected clock selection code on                            format change. 1.30                       Bring back Frank Nobis<fn@Radio-do.de>'s opt_bktr.h  1.31                       Randall Hopper<rhh@ct.picker.com>                            submitted ioctl to clear the video buffer                            prior to starting video capture 			   Amancio : clean up yuv12 so that it does not                            affect rgb capture. Basically, fxtv after                            capturing in yuv12 mode , switching to rgb                            would cause the video capture to be too bright. 1.32                       disable inverse gamma function for rgb and yuv                            capture. fixed meteor brightness ioctl it now                            converts the brightness value from unsigned to                             signed. 1.33                       added sysctl: hw.bt848.tuner, hw.bt848.reverse_mute,                            hw.bt848.card 			   card takes a value from 0 to bt848_max_card                            tuner takes a value from 0 to bt848_max_tuner                            reverse_mute : 0 no effect, 1 reverse tuner                            mute function some tuners are wired reversed :( 1.34                       reverse mute function for ims turbo card  1.35                       Roger Hardiman<roger@cs.strath.ac.uk>                            options BROOKTREE_SYSTEM_DEFAULT=BROOKTREE_PAL                            in the kernel config file makes the driver's                            video_open() function select PAL rather than NTSC.                            This fixed all the hangs on my Dual Crystal card                            when using a PAL video signal. As a result, you                            can loose the tsleep (of 2 seconds - now 0.25!!)                            which I previously added. (Unless someone else                            wanted the 0.25 second tsleep).  1.36                       added bt848.format sysctl variable.                             1 denotes NTSC , 0 denotes PAL  1.37                       added support for Bt878 and improved Hauppauge's                            bt848 tuner recognition 1.38                       Further improvements on Hauppauge's rely on                            eeprom[9] to determine the tuner type 8)                             AVerMedia card type added<sos@freebsd.org>  1.39            08/05/98   Roger Hardiman<roger@cs.strath.ac.uk>                            Updated Hauppauge detection code for Tuner ID 0x0a                             for newer NTSC WinCastTV 404 with Bt878 chipset.                            Tidied up PAL default in video_open()  1.49       10 August 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Added Capture Area ioctl - BT848[SG]CAPAREA.                            Normally the full 640x480 (768x576 PAL) image                            is grabbed. This ioctl allows a smaller area                            from anywhere within the video image to be                            grabbed, eg a 400x300 image from (50,10).                            See restrictions in BT848SCAPAREA.  1.50       31 August 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Renamed BT848[SG]CAPAREA to BT848_[SG]CAPAREA.                            Added PR kern/7177 for SECAM Video Highway Xtreme                            with single crystal PLL configuration                            submitted by Vsevolod Lobko<seva@alex-ua.com>.                            In kernel configuration file add                              options OVERRIDE_CARD=2                              options OVERRIDE_TUNER=11                              options BKTR_USE_PLL  1.51       31 August 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Fixed bug in Miro Tuner detection. Missing Goto.                            Removed Hauppauge EEPROM 0x10 detection as I think 			   0x10 should be a PAL tuner, not NTSC. 			   Reinstated some Tuner Guesswork code from 1.27  1.52           3 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Submitted patch by Vsevolod Lobko<seva@alex-ua.com>                            to correct SECAM B-Delay and add XUSSR channel set.  1.53           9 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Changed METEORSINPUT for Hauppauge cards with bt878.                            Submitted by Fred Templin<templin@erg.sri.com>                            Also fixed video_open defines and 878 support.  1.54          18 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Changed tuner code to autodetect tuner i2c address.                            Addresses were incorrectly hardcoded.  1.55          21 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Hauppauge Tech Support confirmed all Hauppauge 878                            PAL/SECAM boards will use PLL mode. 			   Added to card probe. Thanks to Ken and Fred.  1.56    21 Jan 1999 Roger Hardiman<roger@cs.strath.ac.uk>                     Added detection of Hauppauge IR remote control.                     and MSP34xx Audio chip. Fixed i2c read error.                     Hauppauge supplied details of new Tuner Types.                     Danny Braniss<danny@cs.huji.ac.il> submitted Bt878                     AverMedia detection with PCI subsystem vendor id.  1.57    26 Jan 1999 Roger Hardiman<roger@cs.strath.ac.uk>                     Support for MSP3410D / MSP3415D Stereo/Mono audio                     using the audio format Auto Detection Mode.                     Nicolas Souchu<nsouch@freebsd.org> ported the                     msp_read/write/reset functions to smbus/iicbus.                     METEOR_INPUT_DEV2 now selects a composite camera on                     the SVIDEO port for Johan Larsson<gozer@ludd.luth.se>                     For true SVIDEO, use METEOR_INPUT_DEV_SVIDEO  1.58     8 Feb 1999 Roger Hardiman<roger@cs.strath.ac.uk>                     Added check to bktr_mmap from OpenBSD driver.                     Improved MSP34xx reset for bt848 Hauppauge boards.                     Added detection for Bt848a.                     Vsevolod Lobko<seva@sevasoft.alex-ua.com> added                     more XUSSR channels.  1.59     9 Feb 1999 Added ioctl REMOTE_GETKEY for Hauppauge Infra-Red                     Remote Control. Submitted by Roger Hardiman.                     Added ioctl TVTUNER_GETCHANSET and                     BT848_GPIO_SET_EN,BT848_GPIO_SET_DATA (and GETs)                     Submitted by Vsevolod Lobko<seva@alex-ua.com>  1.60    23 Feb 1999 Roger Hardiman<roger@freebsd.org>                     Corrected Mute on Hauppauge Radio cards.                     Autodetect MMAC Osprey by looking for "MMAC" in the EEPROM.                     Added for Jan Schmidt<mmedia@rz.uni-greifswald.de>                     Added ALPS Tuner Type from Hiroki Mori<mori@infocity.co.jp>  1.61    29 Apr 1999 Roger Hardiman<roger@freebsd.org>                     Fix row=0/columns=0 bug. From Randal Hopper<aa8vb@ipass.net>                     Add option to block the reset of the MSP34xx audio chip by                     adding options BKTR_NO_MSP_RESET to the kernel config file.                     This is usefull if you run another operating system                     first to initialise the audio chip, then do a soft reboot.                     Added for Yuri Gindin<yuri@xpert.com>  1.62    29 Apr 1999 Added new cards: NEC PK-UG-X017 and I/O DATA GV-BCTV2/PCI                     Added new tuner: ALPS_TSBH1 (plus FM Radio for ALPS_TSCH5)                     Added support for BCTV audio mux.                     All submitted by Hiroki Mori<mori@infocity.co.jp>   1.63    29 Apr 1999 Roger Hardiman<roger@freebsd.org>                     Added initial code for VBI capture based on work by                     Hiroki Mori<mori@infocity.co.jp> and reworked by myself.                     This allows software decoding of teletext, intercast and                     subtitles via /dev/vbi. */
+comment|/*		Change History: Note: These version numbers represent the authors own numbering. They are unrelated to Revision Control numbering of FreeBSD or any other system. 1.0		1/24/97	   First Alpha release  1.1		2/20/97	   Added video ioctl so we can do PCI To PCI 			   data transfers. This is for capturing data 			   directly to a vga frame buffer which has 			   a linear frame buffer. Minor code clean-up.  1.3		2/23/97	   Fixed system lock-up reported by  			   Randall Hopper<rhh@ct.picker.com>. This 			   problem seems somehow to be exhibited only 			   in his system. I changed the setting of 			   INT_MASK for CAP_CONTINUOUS to be exactly 			   the same as CAP_SINGLE apparently setting 			   bit 23 cleared the system lock up.  			   version 1.1 of the driver has been reported 			   to work with STB's WinTv, Hauppage's Wincast/Tv 			   and last but not least with the Intel Smart 			   Video Recorder.  1.4		3/9/97	   fsmp@freefall.org 			   Merged code to support tuners on STB and WinCast 			   cards. 			   Modifications to the contrast and chroma ioctls. 			   Textual cleanup.  1.5             3/15/97    fsmp@freefall.org                 	   new bt848 specific versions of hue/bright/                            contrast/satu/satv.                            Amancio's patch to fix "screen freeze" problem.  1.6             3/19/97    fsmp@freefall.org 			   new table-driven frequency lookup. 			   removed disable_intr()/enable_intr() calls from i2c. 			   misc. cleanup.  1.7             3/19/97    fsmp@freefall.org 			   added audio support submitted by: 				Michael Petry<petry@netwolf.NetMasters.com>  1.8             3/20/97    fsmp@freefall.org 			   extended audio support. 			   card auto-detection. 			   major cleanup, order of routines, declarations, etc.  1.9             3/22/97    fsmp@freefall.org 			   merged in Amancio's minor unit for tuner control 			   mods. 			   misc. cleanup, especially in the _intr routine. 			   made AUDIO_SUPPORT mainline code.  1.10            3/23/97    fsmp@freefall.org 			   added polled hardware i2c routines, 			   removed all existing software i2c routines. 			   created software i2cProbe() routine. 			   Randall Hopper's fixes of BT848_GHUE& BT848_GBRIG. 			   eeprom support.  1.11            3/24/97    fsmp@freefall.org 			   Louis Mamakos's new bt848 struct.  1.12		3/25/97    fsmp@freefall.org 			   japanese freq table from Naohiro Shichijo. 			   new table structs for tuner lookups. 			   major scrub for "magic numbers".  1.13		3/28/97    fsmp@freefall.org 			   1st PAL support. 			   MAGIC_[1-4] demarcates magic #s needing PAL work. 			   AFC code submitted by Richard Tobin<richard@cogsci.ed.ac.uk>.  1.14		3/29/97    richard@cogsci.ed.ac.uk 			   PAL support: magic numbers moved into 			   format_params structure. 			   Revised AFC interface. 			   fixed DMA_PROG_ALLOC size misdefinition.  1.15		4/18/97	   John-Mark Gurney<gurney_j@resnet.uoregon.edu>                            Added [SR]RGBMASKs ioctl for byte swapping.  1.16		4/20/97	   Randall Hopper<rhh@ct.picker.com>                            Generalized RGBMASK ioctls for general pixel 			   format setting [SG]ACTPIXFMT, and added query API 			   to return driver-supported pix fmts GSUPPIXFMT.  1.17		4/21/97	   hasty@rah.star-gate.com                            Clipping support added.  1.18		4/23/97	   Clean up after failed CAP_SINGLEs where bt                             interrupt isn't delivered, and fixed fixing  			   CAP_SINGLEs that for ODD_ONLY fields. 1.19            9/8/97     improved yuv support , cleaned up weurope                            channel table, incorporated cleanup work from                            Luigi, fixed pci interface bug due to a                            change in the pci interface which disables                            interrupts from a PCI device by default,                            Added Luigi's, ioctl's BT848_SLNOTCH,                             BT848_GLNOTCH (set luma notch and get luma not) 1.20            10/5/97    Keith Sklower<sklower@CS.Berkeley.EDU> submitted                            a patch to fix compilation of the BSDI's PCI                            interface.                             Hideyuki Suzuki<hideyuki@sat.t.u-tokyo.ac.jp>                            Submitted a patch for Japanese cable channels                            Joao Carlos Mendes Luis jonny@gta.ufrj.br                            Submitted general ioctl to set video broadcast                            formats (PAL, NTSC, etc..) previously we depended                            on the Bt848 auto video detect feature. 1.21            10/24/97   Randall Hopper<rhh@ct.picker.com>                            Fix temporal decimation, disable it when                            doing CAP_SINGLEs, and in dual-field capture, don't                            capture fields for different frames 1.22            11/08/97   Randall Hopper<rhh@ct.picker.com>                            Fixes for packed 24bpp - FIFO alignment 1.23            11/17/97   Amancio<hasty@star-gate.com>                            Added yuv support mpeg encoding  1.24            12/27/97   Jonathan Hanna<pangolin@rogers.wave.ca>                            Patch to support Philips FR1236MK2 tuner 1.25            02/02/98   Takeshi Ohashi<ohashi@atohasi.mickey.ai.kyutech.ac.jp> submitted                            code to support bktr_read .                            Flemming Jacobsen<fj@schizo.dk.tfs.com>                            submitted code to support  radio available with in                            some bt848 based cards;additionally, wrote code to                            correctly recognized his bt848 card.                            Roger Hardiman<roger@cs.strath.ac.uk> submitted                             various fixes to smooth out the microcode and made                             all modes consistent. 1.26                       Moved Luigi's I2CWR ioctl from the video_ioctl                            section to the tuner_ioctl section                            Changed Major device from 79 to 92 and reserved                            our Major device number -- hasty@star-gate.com 1.27                       Last batch of patches for radio support from                            Flemming Jacobsen<fj@trw.nl>.                            Added B849 PCI ID submitted by:                             Tomi Vainio<tomppa@fidata.fi> 1.28                       Frank Nobis<fn@Radio-do.de> added tuner support                            for the  German Phillips PAL tuner and                            additional channels for german cable tv. 1.29                       Roger Hardiman<roger@cs.strath.ac.uk>                            Revised autodetection code to correctly handle both                            old and new VideoLogic Captivator PCI cards.                            Added tsleep of 2 seconds to initialistion code                            for PAL users.Corrected clock selection code on                            format change. 1.30                       Bring back Frank Nobis<fn@Radio-do.de>'s opt_bktr.h  1.31                       Randall Hopper<rhh@ct.picker.com>                            submitted ioctl to clear the video buffer                            prior to starting video capture 			   Amancio : clean up yuv12 so that it does not                            affect rgb capture. Basically, fxtv after                            capturing in yuv12 mode , switching to rgb                            would cause the video capture to be too bright. 1.32                       disable inverse gamma function for rgb and yuv                            capture. fixed meteor brightness ioctl it now                            converts the brightness value from unsigned to                             signed. 1.33                       added sysctl: hw.bt848.tuner, hw.bt848.reverse_mute,                            hw.bt848.card 			   card takes a value from 0 to bt848_max_card                            tuner takes a value from 0 to bt848_max_tuner                            reverse_mute : 0 no effect, 1 reverse tuner                            mute function some tuners are wired reversed :( 1.34                       reverse mute function for ims turbo card  1.35                       Roger Hardiman<roger@cs.strath.ac.uk>                            options BROOKTREE_SYSTEM_DEFAULT=BROOKTREE_PAL                            in the kernel config file makes the driver's                            video_open() function select PAL rather than NTSC.                            This fixed all the hangs on my Dual Crystal card                            when using a PAL video signal. As a result, you                            can loose the tsleep (of 2 seconds - now 0.25!!)                            which I previously added. (Unless someone else                            wanted the 0.25 second tsleep).  1.36                       added bt848.format sysctl variable.                             1 denotes NTSC , 0 denotes PAL  1.37                       added support for Bt878 and improved Hauppauge's                            bt848 tuner recognition 1.38                       Further improvements on Hauppauge's rely on                            eeprom[9] to determine the tuner type 8)                             AVerMedia card type added<sos@freebsd.org>  1.39            08/05/98   Roger Hardiman<roger@cs.strath.ac.uk>                            Updated Hauppauge detection code for Tuner ID 0x0a                             for newer NTSC WinCastTV 404 with Bt878 chipset.                            Tidied up PAL default in video_open()  1.49       10 August 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Added Capture Area ioctl - BT848[SG]CAPAREA.                            Normally the full 640x480 (768x576 PAL) image                            is grabbed. This ioctl allows a smaller area                            from anywhere within the video image to be                            grabbed, eg a 400x300 image from (50,10).                            See restrictions in BT848SCAPAREA.  1.50       31 August 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Renamed BT848[SG]CAPAREA to BT848_[SG]CAPAREA.                            Added PR kern/7177 for SECAM Video Highway Xtreme                            with single crystal PLL configuration                            submitted by Vsevolod Lobko<seva@alex-ua.com>.                            In kernel configuration file add                              options OVERRIDE_CARD=2                              options OVERRIDE_TUNER=11                              options BKTR_USE_PLL  1.51       31 August 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Fixed bug in Miro Tuner detection. Missing Goto.                            Removed Hauppauge EEPROM 0x10 detection as I think 			   0x10 should be a PAL tuner, not NTSC. 			   Reinstated some Tuner Guesswork code from 1.27  1.52           3 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Submitted patch by Vsevolod Lobko<seva@alex-ua.com>                            to correct SECAM B-Delay and add XUSSR channel set.  1.53           9 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Changed METEORSINPUT for Hauppauge cards with bt878.                            Submitted by Fred Templin<templin@erg.sri.com>                            Also fixed video_open defines and 878 support.  1.54          18 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Changed tuner code to autodetect tuner i2c address.                            Addresses were incorrectly hardcoded.  1.55          21 Sep 1998  Roger Hardiman<roger@cs.strath.ac.uk>                            Hauppauge Tech Support confirmed all Hauppauge 878                            PAL/SECAM boards will use PLL mode. 			   Added to card probe. Thanks to Ken and Fred.  1.56    21 Jan 1999 Roger Hardiman<roger@cs.strath.ac.uk>                     Added detection of Hauppauge IR remote control.                     and MSP34xx Audio chip. Fixed i2c read error.                     Hauppauge supplied details of new Tuner Types.                     Danny Braniss<danny@cs.huji.ac.il> submitted Bt878                     AverMedia detection with PCI subsystem vendor id.  1.57    26 Jan 1999 Roger Hardiman<roger@cs.strath.ac.uk>                     Support for MSP3410D / MSP3415D Stereo/Mono audio                     using the audio format Auto Detection Mode.                     Nicolas Souchu<nsouch@freebsd.org> ported the                     msp_read/write/reset functions to smbus/iicbus.                     METEOR_INPUT_DEV2 now selects a composite camera on                     the SVIDEO port for Johan Larsson<gozer@ludd.luth.se>                     For true SVIDEO, use METEOR_INPUT_DEV_SVIDEO  1.58     8 Feb 1999 Roger Hardiman<roger@cs.strath.ac.uk>                     Added check to bktr_mmap from OpenBSD driver.                     Improved MSP34xx reset for bt848 Hauppauge boards.                     Added detection for Bt848a.                     Vsevolod Lobko<seva@sevasoft.alex-ua.com> added                     more XUSSR channels.  1.59     9 Feb 1999 Added ioctl REMOTE_GETKEY for Hauppauge Infra-Red                     Remote Control. Submitted by Roger Hardiman.                     Added ioctl TVTUNER_GETCHANSET and                     BT848_GPIO_SET_EN,BT848_GPIO_SET_DATA (and GETs)                     Submitted by Vsevolod Lobko<seva@alex-ua.com>  1.60    23 Feb 1999 Roger Hardiman<roger@freebsd.org>                     Corrected Mute on Hauppauge Radio cards.                     Autodetect MMAC Osprey by looking for "MMAC" in the EEPROM.                     Added for Jan Schmidt<mmedia@rz.uni-greifswald.de>                     Added ALPS Tuner Type from Hiroki Mori<mori@infocity.co.jp>  1.61    29 Apr 1999 Roger Hardiman<roger@freebsd.org>                     Fix row=0/columns=0 bug. From Randal Hopper<aa8vb@ipass.net>                     Add option to block the reset of the MSP34xx audio chip by                     adding options BKTR_NO_MSP_RESET to the kernel config file.                     This is usefull if you run another operating system                     first to initialise the audio chip, then do a soft reboot.                     Added for Yuri Gindin<yuri@xpert.com>  1.62    29 Apr 1999 Added new cards: NEC PK-UG-X017 and I/O DATA GV-BCTV2/PCI                     Added new tuner: ALPS_TSBH1 (plus FM Radio for ALPS_TSCH5)                     Added support for BCTV audio mux.                     All submitted by Hiroki Mori<mori@infocity.co.jp>   1.63    29 Apr 1999 Roger Hardiman<roger@freebsd.org>                     Added initial code for VBI capture based on work by                     Hiroki Mori<mori@infocity.co.jp> and reworked by myself.                     This allows software decoding of teletext, intercast and                     subtitles via /dev/vbi.  1.64     7 May 1999 Roger Hardiman<roger@freebsd.org>                     Support LifeView FlyVideo 98 cards. Use EEPROM for card                     autodetection. Use bttv's audio mux values.                       Thanks to Paul Reece<paul@fastlane.net.au>,                               Ivan Brawley<brawley@internode.com.au> and                               Gilad Rom<rom_glsa@ein-hashofet.co.il> 		    Automatically locate the EEPROM i2c address and read the 		    subsystem_vendor_id from EEPROM and not the PCI registers.                     Add NSMBUS checks around smbus/iicbus i2c bus code                     making it easier to compile the driver under 2.2.x.                     Add GPIO mask for the audio mux to each card type.                     Add CARD_ZOLTRIX and CARD_KISS from mailing list searches. */
 end_comment
 
 begin_define
@@ -68,6 +68,12 @@ directive|include
 file|"pci.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"smbus.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -76,6 +82,32 @@ end_endif
 begin_comment
 comment|/* __FreeBSD__ */
 end_comment
+
+begin_comment
+comment|/* define NSMBUS as 0 if it is not already defined */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NSMBUS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NSMBUS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -87,13 +119,17 @@ name|__FreeBSD__
 argument_list|)
 operator|||
 operator|(
+operator|(
 name|NBKTR
 operator|>
 literal|0
+operator|)
 operator|&&
+operator|(
 name|NPCI
 operator|>
 literal|0
+operator|)
 operator|)
 end_if
 
@@ -224,17 +260,42 @@ begin_comment
 comment|/* extensions to ioctl_meteor.h */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|NSMBUS
+operator|>
+literal|0
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/bus.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<pci/brktree_reg.h>
 end_include
+
+begin_if
+if|#
+directive|if
+operator|(
+name|NSMBUS
+operator|>
+literal|0
+operator|)
+end_if
 
 begin_include
 include|#
@@ -265,6 +326,11 @@ include|#
 directive|include
 file|"iicbus_if.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2615,17 +2681,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* the GPIO bits that control the audio MUXes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GPIO_AUDIOMUX_BITS
-value|0x0f
-end_define
-
-begin_comment
 comment|/*  * the data for each type of tuner  *  * if probeCard() fails to detect the proper tuner on boot you can  * override it by setting the following define to the tuner present:  * #define OVERRIDE_TUNER<tuner type>  *  * where<tuner type> is one of the following tuner defines.  */
 end_comment
 
@@ -2820,7 +2875,7 @@ comment|/* input type */
 block|{
 literal|0x00
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 literal|0x00
 block|,
 literal|0x00
@@ -2858,7 +2913,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -2896,7 +2951,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -2934,7 +2989,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -2972,7 +3027,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -3010,7 +3065,7 @@ comment|/* input type */
 block|{
 name|TSA552x_FCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_FCONTROL
 block|,
 name|TSA552x_FCONTROL
@@ -3048,7 +3103,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -3086,7 +3141,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -3124,7 +3179,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -3162,7 +3217,7 @@ comment|/* input type */
 block|{
 name|TSA552x_SCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_SCONTROL
 block|,
 name|TSA552x_SCONTROL
@@ -3200,7 +3255,7 @@ comment|/* input type */
 block|{
 name|TSA552x_FCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_FCONTROL
 block|,
 name|TSA552x_FCONTROL
@@ -3238,7 +3293,7 @@ comment|/* input type */
 block|{
 name|TSA552x_FCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSA552x_FCONTROL
 block|,
 name|TSA552x_FCONTROL
@@ -3276,7 +3331,7 @@ comment|/* input type */
 block|{
 name|TSCH5_FCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSCH5_FCONTROL
 block|,
 name|TSCH5_FCONTROL
@@ -3314,7 +3369,7 @@ comment|/* input type */
 block|{
 name|TSBH1_FCONTROL
 block|,
-comment|/* control byte for PLL */
+comment|/* control byte for Tuner PLL */
 name|TSBH1_FCONTROL
 block|,
 name|TSBH1_FCONTROL
@@ -3425,8 +3480,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_FLYVIDEO
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_ZOLTRIX
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|CARD_KISS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|13
 end_define
 
 begin_comment
@@ -3477,8 +3553,11 @@ literal|0
 block|,
 literal|0
 block|}
+block|,
+literal|0
 block|}
 block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_MIRO
 block|,
@@ -3514,9 +3593,12 @@ literal|0x0a
 block|,
 literal|1
 block|}
+block|,
+comment|/* audio MUX values */
+literal|0x0f
 block|}
 block|,
-comment|/* XXX ??? */
+comment|/* GPIO mask */
 block|{
 name|CARD_HAUPPAUGE
 block|,
@@ -3559,9 +3641,12 @@ literal|0x04
 block|,
 literal|1
 block|}
-block|}
 block|,
 comment|/* audio MUX values */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_STB
 block|,
@@ -3604,9 +3689,12 @@ literal|0x02
 block|,
 literal|1
 block|}
-block|}
 block|,
 comment|/* audio MUX values */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_INTEL
 block|,
@@ -3639,8 +3727,12 @@ literal|0
 block|,
 literal|0
 block|}
+block|,
+comment|/* audio MUX values */
+literal|0x0f
 block|}
 block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_IMS_TURBO
 block|,
@@ -3683,9 +3775,12 @@ literal|0x00
 block|,
 literal|1
 block|}
-block|}
 block|,
 comment|/* audio MUX values */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_AVER_MEDIA
 block|,
@@ -3721,9 +3816,12 @@ literal|0x0b
 block|,
 literal|1
 block|}
-block|}
 block|,
 comment|/* audio MUX values */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_OSPREY
 block|,
@@ -3756,19 +3854,22 @@ argument_list|)
 block|,
 comment|/* 256 bytes */
 block|{
-literal|0x0c
+literal|0x00
 block|,
 literal|0x00
 block|,
-literal|0x0b
+literal|0x00
 block|,
-literal|0x0b
+literal|0x00
 block|,
-literal|1
-block|}
+literal|0
 block|}
 block|,
 comment|/* audio MUX values */
+literal|0
+block|}
+block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_NEC_PK
 block|,
@@ -3804,9 +3905,12 @@ literal|0x00
 block|,
 literal|1
 block|}
-block|}
 block|,
 comment|/* audio MUX values */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
 block|{
 name|CARD_IO_GV
 block|,
@@ -3842,9 +3946,145 @@ literal|0x00
 block|,
 literal|1
 block|}
+block|,
+comment|/* Has special MUX handler */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
+block|{
+name|CARD_FLYVIDEO
+block|,
+comment|/* the card id */
+literal|"FlyVideo"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+comment|/* msp34xx is optional */
+literal|0xac
+block|,
+comment|/* EEProm type */
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+block|,
+comment|/* 256 bytes */
+block|{
+literal|0x000
+block|,
+literal|0x800
+block|,
+literal|0x400
+block|,
+literal|0x8dff00
+block|,
+literal|1
 block|}
 block|,
 comment|/* audio MUX values */
+literal|0x8dff00
+block|}
+block|,
+comment|/* GPIO mask */
+block|{
+name|CARD_ZOLTRIX
+block|,
+comment|/* the card id */
+literal|"Zoltrix"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+comment|/* msp34xx is optional */
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+block|{
+literal|0x04
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x0a
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
+block|{
+name|CARD_KISS
+block|,
+comment|/* the card id */
+literal|"KISS TV/FM PCI"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+comment|/* msp34xx is optional */
+literal|0
+block|,
+comment|/* EEProm type */
+literal|0
+block|,
+comment|/* EEProm size */
+block|{
+literal|0x0c
+block|,
+literal|0x00
+block|,
+literal|0x0b
+block|,
+literal|0x0b
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0x0f
+block|}
+block|,
+comment|/* GPIO mask */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4782,11 +5022,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifndef
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|NSMBUS
+operator|==
+literal|0
+operator|)
+operator|)
+end_if
 
 begin_comment
 comment|/*  * i2c primatives for low level control of i2c bus. Added for MSP34xx control  */
@@ -5127,6 +5381,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* XXX call bt848_i2c dependent attach() routine */
+if|#
+directive|if
+operator|(
+name|NSMBUS
+operator|>
+literal|0
+operator|)
 if|if
 condition|(
 name|bt848_i2c_attach
@@ -5150,6 +5411,8 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|BROOKTREE_IRQ
@@ -7854,7 +8117,11 @@ name|base
 operator|->
 name|gpio_out_en
 operator||=
-name|GPIO_AUDIOMUX_BITS
+name|bktr
+operator|->
+name|card
+operator|.
+name|gpio_mux_bits
 expr_stmt|;
 comment|/* unmute the audio stream */
 name|set_audio
@@ -8146,7 +8413,11 @@ operator|->
 name|gpio_out_en
 operator|&
 operator|~
-name|GPIO_AUDIOMUX_BITS
+name|bktr
+operator|->
+name|card
+operator|.
+name|gpio_mux_bits
 expr_stmt|;
 return|return
 operator|(
@@ -13197,7 +13468,7 @@ case|case
 name|RADIO_SETFREQ
 case|:
 comment|/* The argument to this ioctl is NOT freq*16. It is 	    ** freq*100. 	    */
-comment|/* The radio in my stereo and the linear regression function 	    ** in my HP48 have reached the conclusion that in order to 	    ** set the radio tuner of the FM1216 to f MHz, the value to 	    ** enter into the PLL is: f*20-407 	    ** If anyone has the exact values from the spec. sheet 	    ** please forward them  -- fj@login.dknet.dk 	    */
+comment|/* The radio in my stereo and the linear regression function 	    ** in my HP48 have reached the conclusion that in order to 	    ** set the radio tuner of the FM1216 to f MHz, the value to 	    ** enter into the Tuner PLL is: f*20-407 	    ** If anyone has the exact values from the spec. sheet 	    ** please forward them  -- fj@login.dknet.dk 	    */
 if|if
 condition|(
 name|bktr
@@ -20517,10 +20788,18 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+operator|(
+name|NSMBUS
+operator|>
+literal|0
+operator|)
+operator|)
 end_if
 
 begin_comment
@@ -21325,7 +21604,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* defined(__FreeBSD__) */
+comment|/* defined(__FreeBSD__)&& (NSMBUS> 0) */
 end_comment
 
 begin_comment
@@ -22638,9 +22917,6 @@ modifier|*
 name|remote
 parameter_list|)
 block|{
-name|int
-name|read
-decl_stmt|;
 comment|/* XXX errors ignored */
 name|i2c_start
 argument_list|(
@@ -22722,7 +22998,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !define(__FreeBSD__) */
+comment|/* defined(__FreeBSD__)&& (NSMBUS> 0) */
 end_comment
 
 begin_if
@@ -23563,6 +23839,69 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Search for a configuration EEPROM on the i2c bus by looking at i2c addresses  * where EEPROMs are usually found.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|locate_eeprom_address
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+block|{
+if|if
+condition|(
+name|i2cRead
+argument_list|(
+name|bktr
+argument_list|,
+literal|0xa0
+argument_list|)
+operator|!=
+name|ABSENT
+condition|)
+return|return
+literal|0xa0
+return|;
+if|if
+condition|(
+name|i2cRead
+argument_list|(
+name|bktr
+argument_list|,
+literal|0xac
+argument_list|)
+operator|!=
+name|ABSENT
+condition|)
+return|return
+literal|0xac
+return|;
+if|if
+condition|(
+name|i2cRead
+argument_list|(
+name|bktr
+argument_list|,
+literal|0xae
+argument_list|)
+operator|!=
+name|ABSENT
+condition|)
+return|return
+literal|0xae
+return|;
+return|return
+operator|-
+literal|1
+return|;
+comment|/* no eeprom found */
+block|}
+end_function
+
+begin_comment
 comment|/*  * determine the card brand/model  * OVERRIDE_CARD, OVERRIDE_TUNER, OVERRIDE_DBX and OVERRIDE_MSP  * can be used to select a specific device, regardless of the  * autodetection and i2c device checks.  *  * The scheme used for probing cards has one major drawback:  *  on bt848/849 based cards, it is impossible to work out which type  *  of tuner is actually fitted, or if there is extra hardware on board  *  connected to GPIO pins (eg radio chips or MSP34xx reset logic)  *  The driver cannot tell if the Tuner is PAL,NTSC, Temic or Philips.  *  *  All Hauppauge cards have a configuration eeprom which tells us the  *  tuner type and other features of the their cards.  *  Also, Bt878 based cards (certainly Hauppauge and AverMedia) should support   *  sub-system vendor id, identifying the make and model of the card.  *  * The current probe code works as follows  * 1) Check if it is a BT878. If so, read the sub-system vendor id.  *    Select the required tuner and other onboard features.  * 2) If it is a BT848, 848A or 849, continue on:  *   3) Some cards have no I2C devices. Check if the i2c bus is empty  *      and if so, our detection job is nearly over.  *   4) Check I2C address 0xa0. If present this will be a Hauppauge card  *      or an Osprey card. The Hauppauge EEPROM can determine on board tuner  *      type and other features.   *   4) Check I2C address 0xa8. If present this is a STB card.  *      Still have to guess on the tuner type.  *   5) Otherwise we are in the dark. Miro cards have the tuner type  *      hard-coded on the GPIO pins, but we do not actually know if we have   *      a Miro card.  *      Some older makes of card put Philips tuners and Temic tuners at  *      different I2C addresses, so an i2c bus probe can help, but it is  *      really just a guess.  *                * 6) After determining the Tuner Type, we probe the i2c bus for other  *    devices at known locations, eg IR-Remote Control, MSP34xx and TDA  *    stereo chips.  */
 end_comment
 
@@ -23578,6 +23917,13 @@ define|#
 directive|define
 name|VENDOR_HAUPPAUGE
 value|0x0070
+end_define
+
+begin_define
+define|#
+directive|define
+name|VENDOR_FLYVIDEO
+value|0x1851
 end_define
 
 begin_function
@@ -23622,7 +23968,7 @@ decl_stmt|;
 name|u_char
 name|probe_eeprom
 index|[
-literal|128
+literal|256
 index|]
 decl_stmt|;
 name|u_char
@@ -23636,14 +23982,12 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|u_int
-name|subsystem_vendor_id
+name|int
+name|eeprom_i2c_address
+init|=
+operator|-
+literal|1
 decl_stmt|;
-comment|/* vendors own PCI-SIG registered ID */
-name|u_int
-name|subsystem_id
-decl_stmt|;
-comment|/* the boards revision/version number */
 name|any_i2c_devices
 operator|=
 name|check_for_i2c_devices
@@ -23817,6 +24161,12 @@ goto|;
 block|}
 comment|/* No override, so try and determine the make of the card */
 comment|/* On BT878/879 cards, read the sub-system vendor id */
+comment|/* This identifies the manufacturer of the card and the model */
+comment|/* In theory this can be read from PCI registers but this does not */
+comment|/* appear to work on the FlyVideo 98. Hauppauge also warned that */
+comment|/* the PCI registers are sometimes not loaded correctly. */
+comment|/* Therefore, I will read the sub-system vendor ID from the EEPROM */
+comment|/* (just like the Bt878 does during power up initialisation) */
 if|if
 condition|(
 name|bktr
@@ -23832,35 +24182,144 @@ operator|==
 name|BROOKTREE_879
 condition|)
 block|{
-name|subsystem_vendor_id
+comment|/* Try and locate the EEPROM */
+name|eeprom_i2c_address
 operator|=
-name|pci_conf_read
+name|locate_eeprom_address
 argument_list|(
 name|bktr
-operator|->
-name|tag
-argument_list|,
-name|PCIR_SUBVEND_0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|eeprom_i2c_address
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|unsigned
+name|int
+name|subsystem_vendor_id
+decl_stmt|;
+comment|/* vendors PCI-SIG ID */
+name|unsigned
+name|int
+name|subsystem_id
+decl_stmt|;
+comment|/* board model number */
+name|unsigned
+name|int
+name|byte_252
+decl_stmt|,
+name|byte_253
+decl_stmt|,
+name|byte_254
+decl_stmt|,
+name|byte_255
+decl_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
+name|readEEProm
+argument_list|(
+name|bktr
+argument_list|,
+literal|0
+argument_list|,
+literal|256
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
-literal|0xffff
+name|probe_eeprom
+argument_list|)
+expr_stmt|;
+name|byte_252
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|probe_eeprom
+index|[
+literal|252
+index|]
+expr_stmt|;
+name|byte_253
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|probe_eeprom
+index|[
+literal|253
+index|]
+expr_stmt|;
+name|byte_254
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|probe_eeprom
+index|[
+literal|254
+index|]
+expr_stmt|;
+name|byte_255
+operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
+name|probe_eeprom
+index|[
+literal|255
+index|]
 expr_stmt|;
 name|subsystem_id
 operator|=
 operator|(
-name|pci_conf_read
-argument_list|(
-name|bktr
-operator|->
-name|tag
-argument_list|,
-name|PCIR_SUBVEND_0
-argument_list|)
-operator|>>
-literal|16
+name|byte_252
+operator|<<
+literal|8
 operator|)
-operator|&
-literal|0xffff
+operator||
+name|byte_253
+expr_stmt|;
+name|subsystem_vendor_id
+operator|=
+operator|(
+name|byte_254
+operator|<<
+literal|8
+operator|)
+operator||
+name|byte_255
 expr_stmt|;
 if|if
 condition|(
@@ -23901,7 +24360,7 @@ name|card
 operator|.
 name|eepromAddr
 operator|=
-literal|0xa0
+name|eeprom_i2c_address
 expr_stmt|;
 name|bktr
 operator|->
@@ -23942,23 +24401,104 @@ name|CARD_HAUPPAUGE
 operator|)
 index|]
 expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
 goto|goto
 name|checkTuner
 goto|;
 block|}
-comment|/* Vendor is unknown. We will use the standard probe code which */
-comment|/* may not give best results */
+if|if
+condition|(
+name|subsystem_vendor_id
+operator|==
+name|VENDOR_FLYVIDEO
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|CARD_FLYVIDEO
+operator|)
+index|]
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkTuner
+goto|;
+block|}
+comment|/* Vendor is unknown. We will use the standard probe code */
+comment|/* which may not give best results */
 name|printf
 argument_list|(
-literal|"Warning - card vendor %4x unknown. This can cause poor performance\n"
+literal|"Warning - card vendor %4x (model %d) unknown. This may cause poor performance\n"
 argument_list|,
 name|subsystem_vendor_id
+argument_list|,
+name|subsystem_id
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* end of subsystem vendor id code */
-comment|/* So, we must have a Bt848/848a/849 card or a Bt878 with an unknown */
-comment|/* subsystem vendor id */
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Warning - card has no configuration EEPROM. Cannot determine card make. This may cause poor performance\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* end of bt878/bt879 card detection code */
+comment|/* If we get to this point, we must have a Bt848/848a/849 card */
+comment|/* or a Bt878 with an unknown subsystem vendor id */
 comment|/* Try and determine the make of card by clever i2c probing */
 comment|/* Check for i2c devices. If none, move on */
 if|if
@@ -25311,6 +25851,35 @@ condition|(
 name|card
 operator|==
 name|CARD_OSPREY
+condition|)
+name|bktr
+operator|->
+name|xtal_pll_mode
+operator|=
+name|BT848_USE_PLL
+expr_stmt|;
+comment|/* Enable PLL mode for PAL/SECAM users on FlyVideo 878 cards */
+if|if
+condition|(
+operator|(
+name|card
+operator|==
+name|CARD_FLYVIDEO
+operator|)
+operator|&&
+operator|(
+name|bktr
+operator|->
+name|id
+operator|==
+name|BROOKTREE_878
+operator|||
+name|bktr
+operator|->
+name|id
+operator|==
+name|BROOKTREE_879
+operator|)
 condition|)
 name|bktr
 operator|->
@@ -27933,7 +28502,11 @@ operator|->
 name|gpio_data
 operator|&
 operator|~
-name|GPIO_AUDIOMUX_BITS
+name|bktr
+operator|->
+name|card
+operator|.
+name|gpio_mux_bits
 expr_stmt|;
 name|bt848
 operator|->
