@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	6.2	83/10/22	*/
+comment|/*	ip_output.c	6.3	83/12/15	*/
 end_comment
 
 begin_include
@@ -344,6 +344,34 @@ goto|goto
 name|gotif
 goto|;
 block|}
+name|rtalloc
+argument_list|(
+name|ro
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_UP
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * The old route has gone away; try for a new one. 		 */
+name|rtfree
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+argument_list|)
+expr_stmt|;
 name|rtalloc
 argument_list|(
 name|ro
