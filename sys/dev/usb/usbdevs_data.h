@@ -103,15 +103,15 @@ literal|"Digital Science DC280"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_CATC
+name|USB_VENDOR_MELCO
 block|,
-name|USB_PRODUCT_CATC_CHIEF
+name|USB_PRODUCT_MELCO_LUATX
 block|,
 literal|0
 block|,
-literal|"Computer Access Technology Corp."
+literal|"Melco Inc."
 block|,
-literal|"USB Chief Bus& Protocol Analyzer"
+literal|"LU-ATX Ethernet adapter"
 block|, 	}
 block|,
 block|{
@@ -124,6 +124,18 @@ block|,
 literal|"Computer Access Technology Corp."
 block|,
 literal|"Andromeda hub"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_CATC
+block|,
+name|USB_PRODUCT_CATC_CHIEF
+block|,
+literal|0
+block|,
+literal|"Computer Access Technology Corp."
+block|,
+literal|"USB Chief Bus& Protocol Analyzer"
 block|, 	}
 block|,
 block|{
@@ -544,18 +556,6 @@ block|,
 literal|"American Power Conversion"
 block|,
 literal|"Back-UPS Pro 500"
-block|, 	}
-block|,
-block|{
-name|USB_VENDOR_NETCHIP
-block|,
-name|USB_PRODUCT_NETCHIP_TURBOCONNECT
-block|,
-literal|0
-block|,
-literal|"NetChip Technology"
-block|,
-literal|"Turbo-Connect"
 block|, 	}
 block|,
 block|{
@@ -1063,6 +1063,18 @@ literal|"USB ImageMate"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_ADMTEK
+block|,
+name|USB_PRODUCT_ADMTEK_PEGASUS
+block|,
+literal|0
+block|,
+literal|"ADMtek Inc."
+block|,
+literal|"AN986 USB Ethernet adapter"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_SIIG
 block|,
 name|USB_PRODUCT_SIIG_DIGIFILMREADER
@@ -1108,6 +1120,18 @@ block|,
 literal|"ActiveWire Inc."
 block|,
 literal|"I/O Board, rev. 1 firmware"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_BILLIONTON
+block|,
+name|USB_PRODUCT_BILLIONTON_USB100
+block|,
+literal|0
+block|,
+literal|"Billionton Systems"
+block|,
+literal|"USB100 Ethernet adapter"
 block|, 	}
 block|,
 block|{
@@ -1190,6 +1214,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Eastman Kodak Corp."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MELCO
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Melco Inc."
 block|,
 name|NULL
 block|, 	}
@@ -1555,18 +1591,6 @@ name|NULL
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_NETCHIP
-block|,
-literal|0
-block|,
-name|USB_KNOWNDEV_NOPROD
-block|,
-literal|"NetChip Technology"
-block|,
-name|NULL
-block|, 	}
-block|,
-block|{
 name|USB_VENDOR_AKS
 block|,
 literal|0
@@ -1891,6 +1915,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_ADMTEK
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"ADMtek Inc."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_SIIG
 block|,
 literal|0
@@ -1922,6 +1958,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"ActiveWire Inc."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_BILLIONTON
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Billionton Systems"
 block|,
 name|NULL
 block|, 	}

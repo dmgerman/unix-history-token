@@ -59,6 +59,11 @@ directive|define
 name|UQ_SPUR_BUT_UP
 value|0x80
 comment|/* spurious mouse button up events */
+define|#
+directive|define
+name|UQ_NO_TSLEEP
+value|0x100
+comment|/* device needs to work at interrupt 				 * context, must avoid tsleep! */
 block|}
 struct|;
 end_struct

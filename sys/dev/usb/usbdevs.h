@@ -51,6 +51,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_MELCO
+value|0x0411
+end_define
+
+begin_comment
+comment|/* Melco Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_CATC
 value|0x0423
 end_define
@@ -381,17 +392,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_VENDOR_NETCHIP
-value|0x0525
-end_define
-
-begin_comment
-comment|/* NetChip Technology */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|USB_VENDOR_AKS
 value|0x0529
 end_define
@@ -689,6 +689,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_ADMTEK
+value|0x07a6
+end_define
+
+begin_comment
+comment|/* ADMtek Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_SIIG
 value|0x07cc
 end_define
@@ -717,6 +728,17 @@ end_define
 
 begin_comment
 comment|/* ActiveWire Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_BILLIONTON
+value|0x08DD
+end_define
+
+begin_comment
+comment|/* Billionton Systems */
 end_comment
 
 begin_define
@@ -868,18 +890,22 @@ comment|/* Digital Science DC280 */
 end_comment
 
 begin_comment
-comment|/* CATC products */
+comment|/* Melco products */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_CATC_CHIEF
-value|0x000d
+name|USB_PRODUCT_MELCO_LUATX
+value|0x0001
 end_define
 
 begin_comment
-comment|/* USB Chief Bus& Protocol Analyzer */
+comment|/* LU-ATX Ethernet adapter */
+end_comment
+
+begin_comment
+comment|/* CATC products */
 end_comment
 
 begin_define
@@ -891,6 +917,17 @@ end_define
 
 begin_comment
 comment|/* Andromeda hub */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_CATC_CHIEF
+value|0x000d
+end_define
+
+begin_comment
+comment|/* USB Chief Bus& Protocol Analyzer */
 end_comment
 
 begin_comment
@@ -1380,21 +1417,6 @@ end_define
 
 begin_comment
 comment|/* Back-UPS Pro 500 */
-end_comment
-
-begin_comment
-comment|/* NetChip Technology Products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_NETCHIP_TURBOCONNECT
-value|0x1080
-end_define
-
-begin_comment
-comment|/* Turbo-Connect */
 end_comment
 
 begin_comment
@@ -1968,6 +1990,21 @@ comment|/* USB ImageMate */
 end_comment
 
 begin_comment
+comment|/* ADMtek products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ADMTEK_PEGASUS
+value|0x0986
+end_define
+
+begin_comment
+comment|/* AN986 USB Ethernet adapter */
+end_comment
+
+begin_comment
 comment|/* SIIG products */
 end_comment
 
@@ -2021,6 +2058,21 @@ end_define
 
 begin_comment
 comment|/* I/O Board, rev. 1 firmware */
+end_comment
+
+begin_comment
+comment|/* Billionton products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BILLIONTON_USB100
+value|0x0986
+end_define
+
+begin_comment
+comment|/* USB100 Ethernet adapter */
 end_comment
 
 begin_comment

@@ -1331,6 +1331,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"aue"
+block|,
+literal|"ADMtek AN986 USB ethernet adapter"
+block|,
+name|FLG_FIXED
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"cs"
 block|,
 literal|"IBM EtherJet, CS89x0-based Ethernet adapters"
