@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rcp.c,v 1.20 1998/08/02 14:25:24 bde Exp $"
+literal|"$Id: rcp.c,v 1.22 1999/04/25 10:36:00 dt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3299,6 +3299,8 @@ name|off_t
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|size
 decl_stmt|;
 name|int
 name|amt
@@ -3319,8 +3321,6 @@ name|omode
 decl_stmt|;
 name|int
 name|setimes
-decl_stmt|,
-name|size
 decl_stmt|,
 name|targisdir
 decl_stmt|,
