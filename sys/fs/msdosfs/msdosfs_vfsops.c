@@ -1489,12 +1489,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-else|else
-name|vrele
-argument_list|(
-name|devvp
-argument_list|)
-expr_stmt|;
 return|return
 name|error
 return|;
