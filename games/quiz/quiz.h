@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/defs.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_expr_stmt
