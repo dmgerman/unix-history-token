@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.13 (Berkeley) %G%  *  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.14 (Berkeley) %G%  *  */
 end_comment
 
 begin_comment
@@ -84,12 +84,6 @@ end_define
 begin_comment
 comment|/* default DMA burst size */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -184,6 +178,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vax/cpu.h"
 end_include
 
@@ -236,101 +236,6 @@ include|#
 directive|include
 file|"../vax/mtpr.h"
 end_include
-
-begin_comment
-comment|/*  * Backwards compatibility:  Reuse the old names.  Should fix someday.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|udaprobe
-value|udprobe
-end_define
-
-begin_define
-define|#
-directive|define
-name|udaslave
-value|udslave
-end_define
-
-begin_define
-define|#
-directive|define
-name|udaattach
-value|udattach
-end_define
-
-begin_define
-define|#
-directive|define
-name|udaopen
-value|udopen
-end_define
-
-begin_define
-define|#
-directive|define
-name|udaclose
-value|udclose
-end_define
-
-begin_define
-define|#
-directive|define
-name|udastrategy
-value|udstrategy
-end_define
-
-begin_define
-define|#
-directive|define
-name|udaread
-value|udread
-end_define
-
-begin_define
-define|#
-directive|define
-name|udawrite
-value|udwrite
-end_define
-
-begin_define
-define|#
-directive|define
-name|udaioctl
-value|udioctl
-end_define
-
-begin_define
-define|#
-directive|define
-name|udareset
-value|udreset
-end_define
-
-begin_define
-define|#
-directive|define
-name|udaintr
-value|udintr
-end_define
-
-begin_define
-define|#
-directive|define
-name|udadump
-value|uddump
-end_define
-
-begin_define
-define|#
-directive|define
-name|udasize
-value|udsize
-end_define
 
 begin_comment
 comment|/*  * UDA communications area and MSCP packet pools, per controller.  */
@@ -2167,9 +2072,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ra%d: floppy\n"
-argument_list|,
-name|unit
+literal|": floppy"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2206,6 +2109,9 @@ index|]
 operator|=
 name|ui
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* 	 * RX50s cannot be brought on line unless there is 	 * a floppy in the drive.  Since an ONLINE while cold 	 * takes ten seconds to fail, and (when notyet becomes now) 	 * no sensible person will swap to an RX50, we just 	 * defer the ONLINE until someone tries to use the drive. 	 */
 if|if
 condition|(
@@ -2221,13 +2127,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ra%d: rx50\n"
-argument_list|,
-name|unit
+literal|": rx50"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|uda_rainit
@@ -2239,18 +2145,14 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"ra%d: offline\n"
-argument_list|,
-name|unit
+literal|": offline"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
 name|printf
 argument_list|(
-literal|"ra%d: %s\n"
-argument_list|,
-name|unit
+literal|": %s, size = %d sectors"
 argument_list|,
 name|udalabel
 index|[
@@ -2258,6 +2160,13 @@ name|unit
 index|]
 operator|.
 name|d_typename
+argument_list|,
+name|ra_info
+index|[
+name|unit
+index|]
+operator|.
+name|ra_dsize
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3364,6 +3273,12 @@ index|]
 decl_stmt|;
 specifier|register
 name|struct
+name|disklabel
+modifier|*
+name|lp
+decl_stmt|;
+specifier|register
+name|struct
 name|mscp
 modifier|*
 name|mp
@@ -3717,6 +3632,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|cold
+condition|)
+name|printf
+argument_list|(
+literal|": %s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+else|else
 name|log
 argument_list|(
 name|LOG_ERR
@@ -3844,7 +3771,7 @@ name|check
 operator|&&
 name|ra
 operator|->
-name|ra_type
+name|ra_mediaid
 operator|!=
 name|mp
 operator|->
@@ -3861,7 +3788,7 @@ name|unit
 argument_list|,
 name|ra
 operator|->
-name|ra_type
+name|ra_mediaid
 argument_list|,
 name|mp
 operator|->
@@ -6325,7 +6252,7 @@ index|[
 name|ctlr
 index|]
 expr_stmt|;
-comment|/* 	 * Handle buffer purge requests. 	 * I have never seen these to work usefully, thus the log(). 	 */
+comment|/* 	 * Handle buffer purge requests. 	 */
 if|if
 condition|(
 name|ud
@@ -6335,21 +6262,6 @@ operator|.
 name|ca_bdp
 condition|)
 block|{
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"uda%d: purge bdp %d\n"
-argument_list|,
-name|ctlr
-argument_list|,
-name|ud
-operator|->
-name|uda_ca
-operator|.
-name|ca_bdp
-argument_list|)
-expr_stmt|;
 name|UBAPURGE
 argument_list|(
 name|um
@@ -7046,6 +6958,11 @@ name|mscp_onle
 operator|.
 name|onle_unitsize
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
 name|printf
 argument_list|(
 literal|"ra%d: uda%d, unit %d, size = %d sectors\n"
@@ -7569,6 +7486,16 @@ operator|*
 operator|)
 name|data
 argument_list|,
+operator|(
+name|ra
+operator|->
+name|ra_state
+operator|==
+name|OPENRAW
+operator|)
+condition|?
+literal|0
+else|:
 name|ra
 operator|->
 name|ra_openpart
@@ -7663,6 +7590,16 @@ operator|*
 operator|)
 name|data
 argument_list|,
+operator|(
+name|ra
+operator|->
+name|ra_state
+operator|==
+name|OPENRAW
+operator|)
+condition|?
+literal|0
+else|:
 name|ra
 operator|->
 name|ra_openpart
@@ -7671,6 +7608,13 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|ra
+operator|->
+name|ra_state
+operator|=
+name|OPEN
+expr_stmt|;
 name|error
 operator|=
 name|writedisklabel
@@ -7682,6 +7626,7 @@ argument_list|,
 name|lp
 argument_list|)
 expr_stmt|;
+block|}
 name|ra
 operator|->
 name|ra_openpart
@@ -7693,18 +7638,6 @@ operator||
 name|ra
 operator|->
 name|ra_bopenpart
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-name|ra
-operator|->
-name|ra_state
-operator|=
-name|OPEN
 expr_stmt|;
 name|ra
 operator|->
@@ -10405,11 +10338,23 @@ operator|->
 name|ra_mediaid
 expr_stmt|;
 comment|/* print the port type too */
-name|printf
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+name|log
 argument_list|(
-literal|"ra%d: don't have a partition table for %c%c %c%c%c%d;\n\ using (s,t,c)=(%d,%d,%d)\n"
+name|LOG_ERR
+argument_list|,
+literal|"ra%d"
 argument_list|,
 name|unit
+argument_list|)
+expr_stmt|;
+name|addlog
+argument_list|(
+literal|": don't have a partition table for %c%c %c%c%c%d;\n\ using (s,t,c)=(%d,%d,%d)"
 argument_list|,
 name|MSCP_MID_CHAR
 argument_list|(
@@ -10469,6 +10414,16 @@ argument_list|,
 name|lp
 operator|->
 name|d_ncylinders
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+name|addlog
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|lp
