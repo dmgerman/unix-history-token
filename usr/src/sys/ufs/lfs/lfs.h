@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -432,15 +432,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Inode 0 is the out-of-band inode, and inode 1 is the inode number for the  * ifile.  Thus the root inode is 2, and the lost+found inode is 3.  */
+comment|/*  * Inode 0 is the out-of-band inode number, inode 1 is the inode number for  * the IFILE, the root inode is 2 and the lost+found inode is 3.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LOSTFOUNDINO
-value|((ino_t)3)
-end_define
 
 begin_comment
 comment|/* Fixed inode numbers. */
@@ -465,19 +458,30 @@ value|1
 end_define
 
 begin_comment
-comment|/* inode number of the ifile */
+comment|/* IFILE inode number */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOSTFOUNDINO
+value|3
+end_define
+
 begin_comment
-comment|/* first free inode number */
+comment|/* lost+found inode number */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LFS_FIRST_INUM
-value|(LOSTFOUNDINO + 1)
+value|4
 end_define
+
+begin_comment
+comment|/* first free inode number */
+end_comment
 
 begin_comment
 comment|/*  * Used to access the first spare of the dinode which we use to store  * the ifile number so we can identify them  */
@@ -582,27 +586,10 @@ name|daddr_t
 name|if_daddr
 decl_stmt|;
 comment|/* inode disk address */
-union|union
-block|{
 name|ino_t
-name|nextfree
+name|if_nextfree
 decl_stmt|;
 comment|/* next-unallocated inode */
-name|time_t
-name|st_atime
-decl_stmt|;
-comment|/* access time */
-block|}
-name|__ifile_u
-union|;
-define|#
-directive|define
-name|if_st_atime
-value|__ifile_u.st_atime
-define|#
-directive|define
-name|if_nextfree
-value|__ifile_u.nextfree
 block|}
 struct|;
 end_struct
@@ -796,6 +783,34 @@ define|\
 value|((loc)>> (fs)->lfs_bshift)
 end_define
 
+begin_define
+define|#
+directive|define
+name|datosn
+parameter_list|(
+name|fs
+parameter_list|,
+name|daddr
+parameter_list|)
+comment|/* disk address to segment number */
+define|\
+value|(((daddr) - (fs)->lfs_sboffs[0]) / fsbtodb((fs), (fs)->lfs_ssize))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sntoda
+parameter_list|(
+name|fs
+parameter_list|,
+name|sn
+parameter_list|)
+comment|/* segment number to disk address */
+define|\
+value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) + \ 	    (fs)->lfs_sboffs[0]))
+end_define
+
 begin_comment
 comment|/* Read in the block with the cleaner info from the ifile. */
 end_comment
@@ -811,7 +826,7 @@ name|F
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	if (bread((F)->lfs_ivnode, (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(CP) = (CLEANERINFO *)(BP)->b_un.b_addr; \ }
+value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(CP) = (CLEANERINFO *)(BP)->b_un.b_addr; \ }
 end_define
 
 begin_comment
@@ -855,35 +870,17 @@ value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, 
 end_define
 
 begin_comment
-comment|/* Release the ifile block, updating the access time. */
+comment|/* Write a block and update the inode change times. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LFS_IRELEASE
+name|LFS_UBWRITE
 parameter_list|(
-name|F
-parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	brelse((BP)); \ }
-end_define
-
-begin_comment
-comment|/* Release the ifile block, scheduling it for writing. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LFS_IWRITE
-parameter_list|(
-name|F
-parameter_list|,
-name|BP
-parameter_list|)
-value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= ICHG | IUPD; \ 	lfs_bwrite((BP)); \ }
+value|{ \ 	VTOI((BP)->b_vp)->i_flag |= ICHG | IUPD; \ 	lfs_bwrite(BP); \ }
 end_define
 
 begin_comment
