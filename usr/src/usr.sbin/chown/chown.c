@@ -35,7 +35,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.6 (Berkeley) %G%"
+literal|"@(#)chown.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,16 @@ block|{
 specifier|register
 name|c
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'\0'
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|c
