@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)users.c	5.1 (Berkeley) %G%"
+literal|"@(#)users.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,23 +373,30 @@ name|p
 operator|!=
 name|names
 condition|)
-name|printf
+name|putchar
 argument_list|(
-literal|" "
+literal|' '
 argument_list|)
 expr_stmt|;
-name|printf
+name|fputs
 argument_list|(
-literal|"%s"
-argument_list|,
 operator|*
 name|p
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+if|if
+condition|(
+name|namp
+operator|!=
+name|names
+condition|)
+comment|/* at least one user */
+name|putchar
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
