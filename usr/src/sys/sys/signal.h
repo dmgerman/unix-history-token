@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.h	6.1	83/07/29	*/
+comment|/*	signal.h	4.3	83/08/08	*/
 end_comment
 
 begin_ifndef
@@ -471,17 +471,6 @@ name|int
 argument_list|(
 operator|*
 name|signal
-argument_list|()
-argument_list|)
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|int
-argument_list|(
-operator|*
-name|sigvec
 argument_list|()
 argument_list|)
 argument_list|()
