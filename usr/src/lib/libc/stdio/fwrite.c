@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fwrite.c	4.1 (Berkeley) %G% */
+comment|/* @(#)fwrite.c	4.2 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -124,6 +124,8 @@ operator|)
 operator|*
 name|ptr
 operator|++
+operator|&
+literal|0377
 argument_list|,
 name|iop
 argument_list|)
