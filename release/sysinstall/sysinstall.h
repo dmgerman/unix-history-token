@@ -2318,6 +2318,17 @@ begin_comment
 comment|/* Select XFree86 configuration type		*/
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|FixItMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* FixItMode starts shell onc urrent device (ie Serial port) */
+end_comment
+
 begin_comment
 comment|/* Stuff from libdialog which isn't properly declared outside */
 end_comment
@@ -5585,6 +5596,26 @@ parameter_list|(
 name|char
 modifier|*
 name|cmd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|systemSuspendDialog
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|systemResumeDialog
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
