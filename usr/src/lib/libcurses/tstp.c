@@ -5,12 +5,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGTSTP
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -18,7 +12,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * handle stop and start signals  *  * %G% (Berkeley) @(#)tstp.c	1.1  */
+comment|/*  * handle stop and start signals  *  * %G% (Berkeley) @(#)tstp.c	1.2  */
 end_comment
 
 begin_macro
@@ -28,6 +22,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|SIGTSTP
 name|SGTTY
 name|tty
 decl_stmt|;
@@ -103,13 +100,11 @@ argument_list|(
 name|curscr
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+endif|SIGTSTP
+block|}
+end_block
 
 end_unit
 
