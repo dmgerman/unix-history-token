@@ -3110,6 +3110,11 @@ name|a
 operator|.
 name|changelist
 operator|=
+operator|(
+expr|struct
+name|kevent
+operator|*
+operator|)
 name|uap
 operator|->
 name|changelist
@@ -3126,6 +3131,11 @@ name|a
 operator|.
 name|eventlist
 operator|=
+operator|(
+expr|struct
+name|kevent
+operator|*
+operator|)
 name|uap
 operator|->
 name|eventlist
