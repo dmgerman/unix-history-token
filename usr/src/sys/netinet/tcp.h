@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.3 81/10/21 */
+comment|/* tcp.h 1.4 81/10/21 */
 end_comment
 
 begin_comment
@@ -80,41 +80,32 @@ literal|4
 decl_stmt|;
 comment|/* data offset */
 name|u_char
-name|t_fin
-range|:
-literal|1
-decl_stmt|,
-comment|/* fin flag */
-name|t_syn
-range|:
-literal|1
-decl_stmt|,
-comment|/* syn flag */
-name|t_rst
-range|:
-literal|1
-decl_stmt|,
-comment|/* reset flag */
-name|t_eol
-range|:
-literal|1
-decl_stmt|,
-comment|/* eol flag */
-name|t_ack
-range|:
-literal|1
-decl_stmt|,
-comment|/* ack flag */
-name|t_urg
-range|:
-literal|1
-decl_stmt|,
-comment|/* urgent flag */
-name|t_x3
-range|:
-literal|2
+name|th_flags
 decl_stmt|;
-comment|/* (unused) */
+define|#
+directive|define
+name|TH_FIN
+value|001
+define|#
+directive|define
+name|TH_SYN
+value|002
+define|#
+directive|define
+name|TH_RST
+value|004
+define|#
+directive|define
+name|TH_EOL
+value|010
+define|#
+directive|define
+name|TH_ACK
+value|020
+define|#
+directive|define
+name|TH_URG
+value|040
 name|u_short
 name|t_win
 decl_stmt|;
@@ -249,85 +240,87 @@ decl_stmt|;
 comment|/* seq # sent when xmt timer started */
 comment|/* various flags and state variables */
 name|u_short
-name|ack_due
-range|:
-literal|1
-decl_stmt|,
-comment|/* must we send ACK */
-name|cancelled
-range|:
-literal|1
-decl_stmt|,
-comment|/* retransmit timer cancelled */
-name|dropped_txt
-range|:
-literal|1
-decl_stmt|,
-comment|/* dropped incoming data */
-name|fin_rcvd
-range|:
-literal|1
-decl_stmt|,
-comment|/* FIN received */
-name|force_one
-range|:
-literal|1
-decl_stmt|,
-comment|/* force sending of one byte */
-name|new_window
-range|:
-literal|1
-decl_stmt|,
-comment|/* received new window size */
-name|rexmt
-range|:
-literal|1
-decl_stmt|,
-comment|/* this msg is a retransmission */
-name|snd_fin
-range|:
-literal|1
-decl_stmt|,
-comment|/* FIN should be sent */
-name|snd_rst
-range|:
-literal|1
-decl_stmt|,
-comment|/* RST should be sent */
-name|snd_urg
-range|:
-literal|1
-decl_stmt|,
-comment|/* urgent data to send */
-name|syn_acked
-range|:
-literal|1
-decl_stmt|,
-comment|/* SYN has been ACKed */
-name|syn_rcvd
-range|:
-literal|1
-decl_stmt|,
-comment|/* SYN has been received */
-name|usr_closed
-range|:
-literal|1
-decl_stmt|,
-comment|/* user has closed connection */
-name|waited_2_ml
-range|:
-literal|1
-decl_stmt|,
-comment|/* wait time for FIN ACK is up */
-name|net_keep
-range|:
-literal|1
-decl_stmt|,
-comment|/* don't free this net input */
-name|usr_abort
-range|:
-literal|1
+name|tc_flags
 decl_stmt|;
+define|#
+directive|define
+name|TC_ACK_DUE
+value|0x0001
+comment|/* must we send ACK */
+define|#
+directive|define
+name|TC_CANCELLED
+value|0x0002
+comment|/* retransmit timer cancelled */
+define|#
+directive|define
+name|TC_DROPPED_TXT
+value|0x0004
+comment|/* dropped incoming data */
+define|#
+directive|define
+name|TC_FIN_RCVD
+value|0x0008
+comment|/* FIN received */
+define|#
+directive|define
+name|TC_FORCE_ONE
+value|0x0010
+comment|/* force sending of one byte */
+define|#
+directive|define
+name|TC_NEW_WINDOW
+value|0x0020
+comment|/* received new window size */
+define|#
+directive|define
+name|TC_REXMT
+value|0x0040
+comment|/* this msg is a retransmission */
+define|#
+directive|define
+name|TC_SND_FIN
+value|0x0080
+comment|/* FIN should be sent */
+define|#
+directive|define
+name|TC_SND_RST
+value|0x0100
+comment|/* RST should be sent */
+define|#
+directive|define
+name|TC_SND_URG
+value|0x0200
+comment|/* urgent data to send */
+define|#
+directive|define
+name|TC_SYN_ACKED
+value|0x0400
+comment|/* SYN has been ACKed */
+define|#
+directive|define
+name|TC_SYN_RCVD
+value|0x0800
+comment|/* SYN has been received */
+define|#
+directive|define
+name|TC_USR_CLOSED
+value|0x1000
+comment|/* user has closed connection */
+define|#
+directive|define
+name|TC_WAITED_2_ML
+value|0x2000
+comment|/* wait time for FIN ACK is up */
+define|#
+directive|define
+name|TC_NET_KEEP
+value|0x4000
+comment|/* don't free this net input */
+define|#
+directive|define
+name|TC_USR_ABORT
+value|0x8000
 comment|/* user has closed and does not expect 					   to receive any more data */
 name|u_short
 name|t_lport
@@ -567,7 +560,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|(!(y)->t_ack || ((x)->iss< (y)->t_ackno&& (y)->t_ackno<= (x)->snd_hi))
+value|(((y)->th_flags&TH_ACK)==0 || \       ((x)->iss< (y)->t_ackno&& (y)->t_ackno<= (x)->snd_hi))
 end_define
 
 begin_define
@@ -580,7 +573,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|((y)->t_syn)
+value|((y)->th_flags&TH_SYN)
 end_define
 
 begin_define
@@ -604,7 +597,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((x)->usr_abort || \       ((x)->t_ucb->uc_rbuf == NULL&& (x)->t_rcv_next == (x)->t_rcv_prev))
+value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_ucb->uc_rbuf == NULL&& (x)->t_rcv_next == (x)->t_rcv_prev))
 end_define
 
 end_unit

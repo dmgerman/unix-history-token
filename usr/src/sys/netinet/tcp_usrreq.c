@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.5 81/10/21 */
+comment|/* tcp_usrreq.c 1.6 81/10/21 */
 end_comment
 
 begin_include
@@ -371,9 +371,10 @@ name|t_state
 expr_stmt|;
 name|tp
 operator|->
-name|net_keep
-operator|=
-literal|0
+name|tc_flags
+operator|&=
+operator|~
+name|TC_NET_KEEP
 expr_stmt|;
 name|acounts
 index|[
@@ -473,9 +474,9 @@ case|:
 comment|/* 10 */
 name|tp
 operator|->
-name|snd_fin
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_SND_FIN
 expr_stmt|;
 name|send_ctl
 argument_list|(
@@ -484,9 +485,9 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|usr_closed
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_USR_CLOSED
 expr_stmt|;
 name|nstate
 operator|=
@@ -546,9 +547,9 @@ case|:
 comment|/* 24,25 */
 name|tp
 operator|->
-name|snd_fin
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_SND_FIN
 expr_stmt|;
 name|send_ctl
 argument_list|(
@@ -557,9 +558,9 @@ argument_list|)
 expr_stmt|;
 name|tp
 operator|->
-name|usr_closed
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_USR_CLOSED
 expr_stmt|;
 name|nstate
 operator|=
@@ -616,9 +617,9 @@ case|:
 comment|/* 45 */
 name|tp
 operator|->
-name|snd_rst
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_SND_RST
 expr_stmt|;
 name|send_null
 argument_list|(
@@ -1269,7 +1270,9 @@ if|if
 condition|(
 name|tp
 operator|->
-name|usr_abort
+name|tc_flags
+operator|&
+name|TC_USR_ABORT
 condition|)
 name|up
 operator|->
@@ -1573,9 +1576,9 @@ literal|1
 expr_stmt|;
 name|tp
 operator|->
-name|snd_urg
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_SND_URG
 expr_stmt|;
 block|}
 name|send
@@ -1641,10 +1644,15 @@ case|:
 comment|/* initialization timer */
 if|if
 condition|(
-operator|!
+operator|(
 name|tp
 operator|->
-name|syn_acked
+name|tc_flags
+operator|&
+name|TC_SYN_ACKED
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 35 */
@@ -1714,9 +1722,9 @@ name|CLOSING1
 case|:
 name|tp
 operator|->
-name|waited_2_ml
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_WAITED_2_ML
 expr_stmt|;
 return|return
 operator|(
@@ -1757,9 +1765,9 @@ name|snd_una
 expr_stmt|;
 name|tp
 operator|->
-name|rexmt
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_REXMT
 expr_stmt|;
 name|tp
 operator|->
@@ -1825,7 +1833,9 @@ if|if
 condition|(
 name|tp
 operator|->
-name|usr_closed
+name|tc_flags
+operator|&
+name|TC_USR_CLOSED
 condition|)
 block|{
 name|t_close
@@ -1853,11 +1863,10 @@ comment|/* persist timer */
 comment|/* 		 * Force a byte send through closed window. 		 */
 name|tp
 operator|->
-name|force_one
-operator|=
-literal|1
+name|tc_flags
+operator||=
+name|TC_FORCE_ONE
 expr_stmt|;
-comment|/* 38 */
 name|send
 argument_list|(
 name|tp
