@@ -727,10 +727,6 @@ index|]
 decl_stmt|;
 specifier|extern
 name|int
-name|errno
-decl_stmt|;
-specifier|extern
-name|int
 name|debug
 decl_stmt|;
 name|debug
