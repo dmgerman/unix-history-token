@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -472,15 +472,15 @@ name|int32_t
 name|fs_inodefmt
 decl_stmt|;
 comment|/* format of on-disk inodes */
-name|u_quad_t
+name|u_int64_t
 name|fs_maxfilesize
 decl_stmt|;
 comment|/* maximum representable file size */
-name|quad_t
+name|int64_t
 name|fs_qbmask
 decl_stmt|;
 comment|/* ~fs_bmask - for use with quad size */
-name|quad_t
+name|int64_t
 name|fs_qfmask
 decl_stmt|;
 comment|/* ~fs_fmask - for use with quad size */
@@ -911,7 +911,7 @@ name|cg_firstfield
 decl_stmt|;
 comment|/* historic linked list of cyl groups */
 name|int32_t
-name|unused_1
+name|cg_unused_1
 decl_stmt|;
 comment|/*     used for incore cyl groups */
 name|time_t
@@ -1392,7 +1392,7 @@ value|((fsb)&~ ((fs)->fs_frag - 1))
 end_define
 
 begin_comment
-comment|/*  * Determine the number of available frags given a  * percentage to hold in reserve  */
+comment|/*  * Determine the number of available frags given a  * percentage to hold in reserve.  */
 end_comment
 
 begin_define
