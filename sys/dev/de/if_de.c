@@ -20018,26 +20018,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TULIP_BUS_DMA */
-if|if
-condition|(
-name|sc
-operator|->
-name|tulip_if
-operator|.
-name|if_bpf
-operator|!=
-name|NULL
-condition|)
-name|bpf_mtap
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|tulip_if
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -22975,6 +22955,27 @@ do|;
 endif|#
 directive|endif
 comment|/* TULIP_BUS_DMA */
+comment|/*      * bounce a copy to the bpf listener, if any.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|tulip_if
+operator|.
+name|if_bpf
+operator|!=
+name|NULL
+condition|)
+name|bpf_mtap
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|tulip_if
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 comment|/*      * The descriptors have been filled in.  Now get ready      * to transmit.      */
 name|IF_ENQUEUE
 argument_list|(
