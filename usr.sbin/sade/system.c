@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.9 1995/05/10 18:59:51 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.10 1995/05/11 09:01:35 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
 end_comment
 
 begin_include
@@ -58,12 +58,6 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -75,18 +69,6 @@ condition|)
 name|systemShutdown
 argument_list|()
 expr_stmt|;
-else|else
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|clear
-argument_list|()
-expr_stmt|;
-name|refresh
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -603,6 +585,10 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+decl_stmt|;
 name|fname
 operator|=
 name|systemHelpFile
@@ -639,6 +625,13 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|w
+operator|=
+name|dupwin
+argument_list|(
+name|newscr
+argument_list|)
+expr_stmt|;
 name|dialog_mesgbox
 argument_list|(
 literal|"Sorry!"
@@ -652,8 +645,20 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
+name|touchwin
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+name|delwin
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -661,9 +666,6 @@ return|;
 block|}
 else|else
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|use_helpfile
 argument_list|(
 name|NULL
@@ -672,6 +674,13 @@ expr_stmt|;
 name|use_helpline
 argument_list|(
 name|NULL
+argument_list|)
+expr_stmt|;
+name|w
+operator|=
+name|dupwin
+argument_list|(
+name|newscr
 argument_list|)
 expr_stmt|;
 name|dialog_textbox
@@ -685,8 +694,20 @@ argument_list|,
 name|COLS
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
+name|touchwin
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+name|wrefresh
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+name|delwin
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
 block|}
 return|return

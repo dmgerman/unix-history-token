@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.14 1995/05/11 06:47:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.15 1995/05/16 02:53:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -202,6 +202,7 @@ literal|"scd0a"
 block|,
 literal|"Sony CDROM drive - CDU31/33A type"
 block|,			}
+block|,
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
@@ -215,10 +216,7 @@ name|DEVICE_TYPE_CDROM
 block|,
 literal|"matcd0a"
 block|,
-literal|"Matsushita CDROM ("
-name|sound
-name|blaster
-literal|" type)"
+literal|"Matsushita CDROM ('sound blaster' type)"
 block|}
 block|,
 block|{
@@ -226,10 +224,7 @@ name|DEVICE_TYPE_CDROM
 block|,
 literal|"matcd1a"
 block|,
-literal|"Matsushita CDROM ("
-name|sound
-name|blaster
-literal|" type - 2nd unit)"
+literal|"Matsushita CDROM (2nd unit)"
 block|}
 block|,
 block|{
@@ -349,7 +344,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ie"
 block|,
-literal|"AT&T StarLAN 10 and EN100; 3Com 3C507; unknown NI5210"
+literal|"AT&T StarLAN 10 and EN100; 3Com 3C507; NI5210"
 block|}
 block|,
 block|{
@@ -365,7 +360,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"lnc"
 block|,
-literal|"Lance/PCnet cards (Isolan, Novell NE2100, NE32-VL)"
+literal|"Lance/PCnet cards (Isolan/Novell NE2100/NE32-VL)"
 block|}
 block|,
 block|{
@@ -373,7 +368,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"ze"
 block|,
-literal|"IBM/National Semiconductor PCMCIA ethernet controller"
+literal|"IBM/National Semiconductor PCMCIA ethernet"
 block|}
 block|,
 block|{
@@ -461,6 +456,9 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
 name|snprintf
 argument_list|(
 name|try
@@ -526,7 +524,7 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|Disk_Close
+name|Free_Disk
 argument_list|(
 name|dev
 operator|->
@@ -544,8 +542,7 @@ begin_function
 name|void
 name|deviceGetAll
 parameter_list|(
-name|Boolean
-name|disksOnly
+name|void
 parameter_list|)
 block|{
 name|int
@@ -569,16 +566,11 @@ name|end
 decl_stmt|;
 name|int
 name|ifflags
-decl_stmt|,
-name|selectflag
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|char
 name|buffer
 index|[
-name|INTERFACES_MAX
+name|INTERFACE_MAX
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -587,23 +579,22 @@ name|ifreq
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* We do this at the very beginning */
-if|if
-condition|(
-name|disksOnly
-condition|)
-block|{
 name|char
 modifier|*
 modifier|*
 name|names
-init|=
-name|Disk_names
-argument_list|()
 decl_stmt|;
+comment|/* Try and get the disks first */
 if|if
 condition|(
+operator|(
 name|names
+operator|=
+name|Disk_Names
+argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int
@@ -653,9 +644,9 @@ index|[
 name|numDevs
 index|]
 operator|->
-name|ignore
+name|enabled
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 name|Devices
 index|[
@@ -664,7 +655,7 @@ index|]
 operator|->
 name|init
 operator|=
-name|NULL
+name|mediaInitUFS
 expr_stmt|;
 name|Devices
 index|[
@@ -673,7 +664,7 @@ index|]
 operator|->
 name|get
 operator|=
-name|mediaUFSGet
+name|mediaGetUFS
 expr_stmt|;
 name|Devices
 index|[
@@ -739,8 +730,6 @@ name|names
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
-block|}
 comment|/*      * Try to get all the types of devices it makes sense to get at the      * second stage of the installation.      */
 for|for
 control|(
@@ -803,7 +792,7 @@ index|[
 name|numDevs
 index|]
 operator|=
-name|new_devices
+name|new_device
 argument_list|(
 name|device_names
 index|[
@@ -829,7 +818,7 @@ index|]
 operator|->
 name|description
 operator|=
-name|devices_names
+name|device_names
 index|[
 name|i
 index|]
@@ -841,10 +830,11 @@ index|[
 name|numDevs
 index|]
 operator|->
-name|ignore
+name|enabled
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
+comment|/* XXX check for FreeBSD disk later XXX */
 name|Devices
 index|[
 name|numDevs
@@ -852,7 +842,7 @@ index|]
 operator|->
 name|init
 operator|=
-name|NULL
+name|mediaInitCDROM
 expr_stmt|;
 name|Devices
 index|[
@@ -861,7 +851,7 @@ index|]
 operator|->
 name|get
 operator|=
-name|mediaCDROMGet
+name|mediaGetCDROM
 expr_stmt|;
 name|Devices
 index|[
@@ -885,10 +875,12 @@ name|msgDebug
 argument_list|(
 literal|"Found a device of type CDROM named: %s\n"
 argument_list|,
-name|cdrom_table
+name|device_names
 index|[
 name|i
 index|]
+operator|.
+name|name
 argument_list|)
 expr_stmt|;
 operator|++
@@ -930,7 +922,7 @@ index|[
 name|numDevs
 index|]
 operator|=
-name|new_devices
+name|new_device
 argument_list|(
 name|device_names
 index|[
@@ -954,9 +946,9 @@ index|[
 name|numDevs
 index|]
 operator|->
-name|ignore
+name|enabled
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 name|Devices
 index|[
@@ -965,7 +957,7 @@ index|]
 operator|->
 name|init
 operator|=
-name|mediaTapeInit
+name|mediaInitTape
 expr_stmt|;
 name|Devices
 index|[
@@ -974,7 +966,7 @@ index|]
 operator|->
 name|get
 operator|=
-name|mediaTapeGet
+name|mediaGetTape
 expr_stmt|;
 name|Devices
 index|[
@@ -983,7 +975,7 @@ index|]
 operator|->
 name|close
 operator|=
-name|mediaTapeClose
+name|mediaCloseTape
 expr_stmt|;
 name|Devices
 index|[
@@ -998,16 +990,23 @@ name|msgDebug
 argument_list|(
 literal|"Found a device of type TAPE named: %s\n"
 argument_list|,
-name|tape_table
+name|device_names
 index|[
 name|i
 index|]
+operator|.
+name|name
 argument_list|)
 expr_stmt|;
 operator|++
 name|numDevs
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|DEVICE_TYPE_FLOPPY
+case|:
+default|default:
 break|break;
 block|}
 block|}
@@ -1103,19 +1102,35 @@ operator|.
 name|ifc_len
 operator|)
 expr_stmt|;
+for|for
+control|(
 name|ifptr
 operator|=
 name|ifc
 operator|.
 name|ifc_req
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|ifptr
 operator|<
 name|end
-condition|)
+condition|;
+name|ifptr
+operator|++
+control|)
 block|{
+if|if
+condition|(
+name|ifptr
+operator|->
+name|ifr_ifru
+operator|.
+name|ifru_addr
+operator|.
+name|sa_family
+operator|!=
+name|AF_LINK
+condition|)
+continue|continue;
 name|CHECK_DEVS
 expr_stmt|;
 name|Devices
@@ -1123,7 +1138,7 @@ index|[
 name|numDevs
 index|]
 operator|=
-name|new_devices
+name|new_device
 argument_list|(
 name|ifptr
 operator|->
@@ -1144,9 +1159,9 @@ index|[
 name|numDevs
 index|]
 operator|->
-name|ignore
+name|enabled
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 name|Devices
 index|[
@@ -1155,7 +1170,7 @@ index|]
 operator|->
 name|init
 operator|=
-name|mediaNetworkInit
+name|mediaInitNetwork
 expr_stmt|;
 name|Devices
 index|[
@@ -1164,7 +1179,7 @@ index|]
 operator|->
 name|get
 operator|=
-name|mediaNetworkGet
+name|mediaGetNetwork
 expr_stmt|;
 name|Devices
 index|[
@@ -1173,7 +1188,7 @@ index|]
 operator|->
 name|close
 operator|=
-name|mediaNetworkClose
+name|mediaCloseNetwork
 expr_stmt|;
 name|Devices
 index|[
@@ -1208,7 +1223,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|af
+name|AF_INET
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -1260,9 +1275,6 @@ expr|struct
 name|sockaddr
 argument_list|)
 operator|)
-expr_stmt|;
-name|ifptr
-operator|++
 expr_stmt|;
 block|}
 comment|/* Terminate the devices array */
@@ -1418,6 +1430,20 @@ modifier|*
 modifier|*
 name|devs
 decl_stmt|;
+name|int
+name|numdevs
+decl_stmt|;
+name|DMenu
+modifier|*
+name|tmp
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
 name|devs
 operator|=
 name|deviceFind
@@ -1429,18 +1455,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|devs
 condition|)
-block|{
-name|DMenu
-modifier|*
-name|tmp
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
+return|return
+name|NULL
+return|;
+for|for
+control|(
+name|numdevs
+operator|=
+literal|0
+init|;
+name|devs
+index|[
+name|numdevs
+index|]
+condition|;
+name|numdevs
+operator|++
+control|)
+empty_stmt|;
 name|tmp
 operator|=
 operator|(
@@ -1486,13 +1521,12 @@ name|i
 operator|=
 literal|0
 init|;
-operator|*
 name|devs
+index|[
+name|i
+index|]
 condition|;
 name|i
-operator|++
-operator|,
-name|devs
 operator|++
 control|)
 block|{
@@ -1505,8 +1539,10 @@ index|]
 operator|.
 name|title
 operator|=
-operator|*
 name|devs
+index|[
+name|i
+index|]
 operator|->
 name|name
 expr_stmt|;
@@ -1532,8 +1568,10 @@ condition|(
 operator|!
 name|strncmp
 argument_list|(
-operator|*
 name|devs
+index|[
+name|i
+index|]
 operator|->
 name|name
 argument_list|,
@@ -1555,6 +1593,7 @@ name|name
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|tmp
 operator|->
 name|items
@@ -1564,13 +1603,15 @@ index|]
 operator|.
 name|prompt
 operator|=
-name|devices_names
+name|device_names
 index|[
 name|j
 index|]
 operator|.
 name|description
 expr_stmt|;
+break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -1652,7 +1693,6 @@ expr_stmt|;
 return|return
 name|tmp
 return|;
-block|}
 block|}
 end_function
 
