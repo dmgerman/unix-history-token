@@ -1101,9 +1101,13 @@ operator|=
 literal|0
 init|;
 name|act
-operator|<=
+operator|<
+operator|(
 operator|-
+operator|(
 name|_PAM_ACTION_UNDEF
+operator|)
+operator|)
 condition|;
 operator|++
 name|act
