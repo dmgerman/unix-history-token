@@ -21,6 +21,10 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/*  * Stub out what's in -lcrypt.  */
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma

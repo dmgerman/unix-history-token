@@ -14,13 +14,6 @@ name|MD5_SIZE
 value|16
 end_define
 
-begin_define
-define|#
-directive|define
-name|SHS_SIZE
-value|20
-end_define
-
 begin_function_decl
 name|char
 modifier|*
