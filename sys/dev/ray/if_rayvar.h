@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayvar.h,v 1.3 2000/05/11 18:53:50 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayvar.h,v 1.4 2000/05/21 20:43:24 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -203,6 +203,20 @@ argument_list|)
 name|sc_comq
 expr_stmt|;
 comment|/* Command queue		*/
+if|#
+directive|if
+name|XXX_IOCTLLOCK
+name|int
+name|sc_ioctl_lock
+decl_stmt|;
+comment|/* IOCTL lock 			*/
+name|int
+name|sc_ioctl_cnt
+decl_stmt|;
+comment|/* IOCTL lock count		*/
+endif|#
+directive|endif
+comment|/* XXX_IOCTLLOCK */
 name|struct
 name|ray_nw_param
 name|sc_c
@@ -363,18 +377,10 @@ modifier|*
 name|c_pr
 decl_stmt|;
 comment|/* MIB report/update	*/
-if|#
-directive|if
-name|RAY_DEBUG
-operator|&
-name|RAY_DBG_COM
 name|char
 modifier|*
 name|c_mesg
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* RAY_DEBUG& RAY_DBG_COM */
 block|}
 struct|;
 end_struct
@@ -898,12 +904,6 @@ parameter_list|)
 value|do {				\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\         __FUNCTION__ , __LINE__ , ##args);				\ } while (0)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RAY_COM_MALLOC
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -913,17 +913,24 @@ name|function
 parameter_list|,
 name|flags
 parameter_list|)
-value|ray_com_malloc((function), (flags));
+define|\
+value|ray_com_malloc((function), (flags), __STRING(function));
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RAY_COM_MALLOC */
-end_comment
+begin_define
+define|#
+directive|define
+name|RAY_COM_INIT
+parameter_list|(
+name|com
+parameter_list|,
+name|function
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|ray_com_init((com), (function), (flags), __STRING(function));
+end_define
 
 begin_ifndef
 ifndef|#
@@ -949,34 +956,6 @@ end_endif
 
 begin_comment
 comment|/* RAY_COM_CHECK */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|RAY_COM_DUMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|RAY_COM_DUMP
-parameter_list|(
-name|sc
-parameter_list|,
-name|com
-parameter_list|,
-name|s
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* RAY_COM_DUMP */
 end_comment
 
 begin_ifndef

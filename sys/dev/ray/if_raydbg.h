@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raydbg.h,v 1.3 2000/05/11 18:53:10 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raydbg.h,v 1.4 2000/05/21 20:51:09 dmlb Exp $  *  */
 end_comment
 
 begin_comment
@@ -201,7 +201,23 @@ name|len
 parameter_list|,
 name|s
 parameter_list|)
-value|do { if (RAY_DEBUG& (mask)) {	\     int i, j;								\     device_printf((sc)->dev, "%s(%d) %s\n",				\     	__FUNCTION__ , __LINE__ , (s));					\     for (i = (off); i< (off)+(len); i += 8) {				\ 	    printf("  0x%04x ",	i);					\ 	    for (j = 0; j< 8; j++)					\ 		    printf("%02x ", SRAM_READ_1((sc), i+j));		\ 	    printf("\n");						\     }									\ } } while (0)
+value|do { if (RAY_DEBUG& (mask)) {	\     int i, j;								\     device_printf((sc)->dev, "%s(%d) %s\n",				\     	__FUNCTION__ , __LINE__ , (s));					\     for (i = (off); i< (off)+(len); i += 8) {				\ 	    printf(".  0x%04x ", i);					\ 	    for (j = 0; j< 8; j++)					\ 		    printf("%02x ", SRAM_READ_1((sc), i+j));		\ 	    printf("\n");						\     }									\ } } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_DCOM
+parameter_list|(
+name|sc
+parameter_list|,
+name|mask
+parameter_list|,
+name|com
+parameter_list|,
+name|s
+parameter_list|)
+value|do { if (RAY_DEBUG& (mask)) {	\     device_printf((sc)->dev, "%s(%d) %s com entry 0x%p\n",		\         __FUNCTION__ , __LINE__ , (s) , (com));				\     printf(".  c_mesg %s\n", (com)->c_mesg);				\     printf(".  c_flags 0x%b\n", (com)->c_flags, RAY_COM_FLAGS_PRINTFB);	\     printf(".  c_retval 0x%x\n", (com)->c_retval);			\     printf(".  c_ccs 0x%0x index 0x%02x\n",				\         (com)->c_ccs, RAY_CCS_INDEX((com)->c_ccs));			\ } } while (0)
 end_define
 
 begin_else
@@ -242,6 +258,21 @@ name|s
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RAY_DCOM
+parameter_list|(
+name|sc
+parameter_list|,
+name|mask
+parameter_list|,
+name|com
+parameter_list|,
+name|s
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -266,20 +297,6 @@ end_if
 begin_define
 define|#
 directive|define
-name|RAY_COM_DUMP
-parameter_list|(
-name|sc
-parameter_list|,
-name|com
-parameter_list|,
-name|s
-parameter_list|)
-value|do { if (RAY_DEBUG& RAY_DBG_COM) {	\     device_printf((sc)->dev, "%s(%d) %s com entry 0x%p\n",		\         __FUNCTION__ , __LINE__ , (s) , (com));				\     printf("  c_mesg %s\n", (com)->c_mesg);				\     printf("  c_flags 0x%b\n", (com)->c_flags, RAY_COM_FLAGS_PRINTFB);	\     printf("  c_retval 0x%x\n", (com)->c_retval);			\     printf("  c_ccs 0x%0x index 0x%02x\n",				\         (com)->c_ccs, RAY_CCS_INDEX((com)->c_ccs));			\ } } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RAY_COM_CHECK
 parameter_list|(
 name|sc
@@ -287,19 +304,6 @@ parameter_list|,
 name|com
 parameter_list|)
 value|do { if (RAY_DEBUG& RAY_DBG_COM) {	\     ray_com_ecf_check((sc), (com), __FUNCTION__ );			\ } } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAY_COM_MALLOC
-parameter_list|(
-name|function
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|ray_com_malloc((function), (flags), __STRING(function));
 end_define
 
 begin_endif
@@ -332,7 +336,7 @@ name|m
 parameter_list|,
 name|s
 parameter_list|)
-value|do { if (RAY_DEBUG& (mask)) {	\ 	ray_dump_mbuf((sc), (m), (s));					\ } } while (0)
+value|do { if (RAY_DEBUG& (mask)) {	\     ray_dump_mbuf((sc), (m), (s));					\ } } while (0)
 end_define
 
 begin_endif
