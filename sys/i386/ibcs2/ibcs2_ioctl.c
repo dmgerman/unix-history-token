@@ -2204,7 +2204,7 @@ expr|struct
 name|file
 operator|*
 operator|,
-name|int
+name|u_long
 operator|,
 name|caddr_t
 operator|,

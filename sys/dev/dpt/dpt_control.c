@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.4 1998/04/17 22:36:20 des Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.5 1998/06/02 00:32:38 eivind Exp $"
 end_empty
 
 begin_include
@@ -281,7 +281,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -2998,7 +2998,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.28 1998/04/28 18:15:06 eivind Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_sysvec.c,v 1.29 1998/05/07 00:42:25 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -151,7 +151,7 @@ name|linux_fixup
 name|__P
 argument_list|(
 operator|(
-name|int
+name|long
 operator|*
 operator|*
 name|stack_base
@@ -172,7 +172,7 @@ name|elf_linux_fixup
 name|__P
 argument_list|(
 operator|(
-name|int
+name|long
 operator|*
 operator|*
 name|stack_base
@@ -710,7 +710,7 @@ specifier|static
 name|int
 name|linux_fixup
 parameter_list|(
-name|int
+name|long
 modifier|*
 modifier|*
 name|stack_base
@@ -721,7 +721,7 @@ modifier|*
 name|imgp
 parameter_list|)
 block|{
-name|int
+name|long
 modifier|*
 name|argv
 decl_stmt|,
@@ -757,7 +757,7 @@ operator|*
 name|stack_base
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|envp
 expr_stmt|;
@@ -772,7 +772,7 @@ operator|*
 name|stack_base
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|argv
 expr_stmt|;
@@ -787,7 +787,7 @@ operator|*
 name|stack_base
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|imgp
 operator|->
@@ -804,7 +804,7 @@ specifier|static
 name|int
 name|elf_linux_fixup
 parameter_list|(
-name|int
+name|long
 modifier|*
 modifier|*
 name|stack_base
@@ -827,7 +827,7 @@ name|imgp
 operator|->
 name|auxargs
 decl_stmt|;
-name|int
+name|long
 modifier|*
 name|pos
 decl_stmt|;
@@ -1059,7 +1059,7 @@ operator|*
 name|stack_base
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|imgp
 operator|->
@@ -1729,9 +1729,12 @@ directive|endif
 comment|/* 	 * The trampoline code hands us the context. 	 * It is unsafe to keep track of it ourselves, in the event that a 	 * program jumps out of a signal handler. 	 */
 name|scp
 operator|=
+name|SCARG
+argument_list|(
 name|args
-operator|->
+argument_list|,
 name|scp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

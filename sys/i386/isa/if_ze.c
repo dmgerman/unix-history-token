@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.51 1998/03/28 13:24:24 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.52 1998/04/15 17:45:26 bde Exp $  */
 end_comment
 
 begin_comment
@@ -688,7 +688,7 @@ name|ifnet
 operator|*
 name|ifp
 operator|,
-name|int
+name|u_long
 name|command
 operator|,
 name|caddr_t
@@ -4488,7 +4488,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
+name|u_long
 name|command
 decl_stmt|;
 name|caddr_t

@@ -6440,9 +6440,10 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
-decl_stmt|,
+decl_stmt|;
+name|int
 name|flag
 decl_stmt|;
 name|caddr_t

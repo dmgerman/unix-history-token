@@ -200,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|EN_IOCTL_CMDT
-value|int
+value|u_long
 end_define
 
 begin_struct

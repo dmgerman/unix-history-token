@@ -372,7 +372,7 @@ expr|struct
 name|ifnet
 operator|*
 operator|,
-name|int
+name|u_long
 operator|,
 name|caddr_t
 operator|)
@@ -1305,7 +1305,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t
@@ -1881,7 +1881,7 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t

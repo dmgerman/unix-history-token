@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.81 1998/03/08 06:21:33 dyson Exp $  */
+comment|/*  * Copyright (c) 1993, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern_exec.c,v 1.82 1998/04/17 22:36:50 des Exp $  */
 end_comment
 
 begin_include
@@ -209,7 +209,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 modifier|*
 name|exec_copyout_strings
 name|__P
@@ -386,7 +386,7 @@ decl_stmt|,
 modifier|*
 name|ndp
 decl_stmt|;
-name|int
+name|long
 modifier|*
 name|stack_base
 decl_stmt|;
@@ -1662,6 +1662,14 @@ literal|0
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|ma
+index|[
+literal|0
+index|]
+condition|)
+block|{
 name|vm_page_protect
 argument_list|(
 name|ma
@@ -1680,6 +1688,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -2019,7 +2028,8 @@ name|envp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|length
 decl_stmt|;
 comment|/* 	 * extract arguments first 	 */
@@ -2295,7 +2305,7 @@ comment|/*  * Copy strings out to the new process address space, constructing  *
 end_comment
 
 begin_function
-name|int
+name|long
 modifier|*
 name|exec_copyout_strings
 parameter_list|(
@@ -2324,7 +2334,7 @@ decl_stmt|,
 modifier|*
 name|destp
 decl_stmt|;
-name|int
+name|long
 modifier|*
 name|stack_base
 decl_stmt|;
@@ -2485,7 +2495,7 @@ comment|/* 	 * vectp also becomes our initial stack base 	 */
 name|stack_base
 operator|=
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 name|vectp
@@ -2531,7 +2541,7 @@ operator|->
 name|ps_argvstr
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|vectp
 argument_list|)
@@ -2564,7 +2574,7 @@ name|vectp
 operator|++
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|destp
 argument_list|)
@@ -2601,7 +2611,7 @@ operator|->
 name|ps_envstr
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|vectp
 argument_list|)
@@ -2634,7 +2644,7 @@ name|vectp
 operator|++
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|destp
 argument_list|)

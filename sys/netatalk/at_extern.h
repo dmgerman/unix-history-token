@@ -158,7 +158,7 @@ name|socket
 operator|*
 name|so
 operator|,
-name|int
+name|u_long
 name|cmd
 operator|,
 name|caddr_t

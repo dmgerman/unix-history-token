@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.31 1998/02/22 10:01:23 jkh Exp $ */
+comment|/* $Id: ccd.c,v 1.32 1998/03/09 20:39:26 julian Exp $ */
 end_comment
 
 begin_comment
@@ -4837,7 +4837,7 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t

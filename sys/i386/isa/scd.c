@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.35 1998/01/24 02:54:24 eivind Exp $ */
+comment|/* $Id: scd.c,v 1.36 1998/04/15 17:45:48 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2092,7 +2092,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t

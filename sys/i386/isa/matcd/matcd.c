@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.31 1997/12/02 21:06:37 phk Exp $ */
+comment|/* $Id: matcd.c,v 1.32 1998/01/24 02:54:32 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -3328,7 +3328,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|u_long
 name|command
 parameter_list|,
 name|caddr_t

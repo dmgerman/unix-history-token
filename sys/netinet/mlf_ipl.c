@@ -51,6 +51,12 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_version
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -61,6 +67,11 @@ end_define
 begin_comment
 comment|/* this will do as a hack */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

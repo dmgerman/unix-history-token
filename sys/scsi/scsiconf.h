@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.59 1998/04/17 22:37:09 des Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.60 1998/05/24 04:52:31 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -499,7 +499,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -630,7 +630,7 @@ parameter_list|)
 define|\
 value|static errval NAME##attach(struct scsi_link *sc_link);			    \ extern struct scsi_device NAME##_switch;
 comment|/* XXX actually static */
-value|\ void NAME##init(void) {							    \ 	scsi_device_register(&NAME##_switch);				    \ }									    \ static int NAME##open(dev_t dev, int flags, int fmt, struct proc *p) {	    \ 	return scsi_open(dev, flags, fmt, p,&NAME##_switch);		    \ }									    \ static int NAME##ioctl(dev_t dev, int cmd, caddr_t addr,		    \ 			int flag, struct proc *p) {			    \ 	return scsi_ioctl(dev, cmd, addr, flag, p,&NAME##_switch);	    \ }									    \ static int NAME##close(dev_t dev, int flag, int fmt, struct proc *p) {	    \ 	return scsi_close(dev, flag, fmt, p,&NAME##_switch);		    \ }									    \ static void NAME##minphys(struct buf *bp) {				    \ 	scsi_minphys(bp,&NAME##_switch);				    \ } 									    \ static void NAME##strategy(struct buf *bp) {				    \ 	scsi_strategy(bp,&NAME##_switch);				    \ }
+value|\ void NAME##init(void) {							    \ 	scsi_device_register(&NAME##_switch);				    \ }									    \ static int NAME##open(dev_t dev, int flags, int fmt, struct proc *p) {	    \ 	return scsi_open(dev, flags, fmt, p,&NAME##_switch);		    \ }									    \ static int NAME##ioctl(dev_t dev, u_long cmd, caddr_t addr,		    \ 			int flag, struct proc *p) {			    \ 	return scsi_ioctl(dev, cmd, addr, flag, p,&NAME##_switch);	    \ }									    \ static int NAME##close(dev_t dev, int flag, int fmt, struct proc *p) {	    \ 	return scsi_close(dev, flag, fmt, p,&NAME##_switch);		    \ }									    \ static void NAME##minphys(struct buf *bp) {				    \ 	scsi_minphys(bp,&NAME##_switch);				    \ } 									    \ static void NAME##strategy(struct buf *bp) {				    \ 	scsi_strategy(bp,&NAME##_switch);				    \ }
 end_define
 
 begin_ifdef
@@ -2013,7 +2013,7 @@ operator|(
 name|dev_t
 name|dev
 operator|,
-name|int
+name|u_long
 name|cmd
 operator|,
 name|caddr_t

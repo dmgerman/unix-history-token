@@ -278,7 +278,7 @@ name|socket
 modifier|*
 name|so
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t

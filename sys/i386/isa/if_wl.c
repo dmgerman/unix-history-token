@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: if_wl.c,v 1.10 1998/01/08 23:41:04 eivind Exp $ */
+comment|/* $Id: if_wl.c,v 1.11 1998/02/20 13:11:47 bde Exp $ */
 end_comment
 
 begin_comment
@@ -592,7 +592,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -4961,7 +4961,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t

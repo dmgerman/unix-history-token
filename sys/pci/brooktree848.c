@@ -354,7 +354,7 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|int
+name|u_long
 name|ioctl_cmd_t
 typedef|;
 end_typedef

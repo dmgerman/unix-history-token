@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_run.c,v 1.12 1997/02/22 09:28:29 peter Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_run.c,v 1.13 1997/06/14 11:52:37 bde Exp $  */
 end_comment
 
 begin_comment
@@ -153,12 +153,22 @@ name|db_regs_t
 operator|*
 name|regs
 operator|)
-argument_list|;
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifndef
 ifndef|#
 directive|ifndef
 name|db_clear_single_step
+end_ifndef
+
+begin_decl_stmt
 specifier|extern
 name|void
 name|db_clear_single_step
@@ -170,12 +180,21 @@ operator|*
 name|regs
 operator|)
 argument_list|)
-argument_list|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|notused
+end_ifdef
+
+begin_decl_stmt
 specifier|static
 name|void
 name|db_single_step
@@ -187,18 +206,24 @@ operator|*
 name|regs
 operator|)
 argument_list|)
-argument_list|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_function
 name|boolean_t
 name|db_stop_at_pc
-argument_list|(
-argument|is_breakpoint
-argument_list|)
-name|boolean_t
-operator|*
+parameter_list|(
 name|is_breakpoint
-argument_list|;
+parameter_list|)
+name|boolean_t
+modifier|*
+name|is_breakpoint
+decl_stmt|;
 block|{
 specifier|register
 name|db_addr_t
@@ -298,12 +323,18 @@ operator|*
 name|is_breakpoint
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
+comment|/* XXx */
 name|ddb_regs
 operator|.
 name|tf_eip
 operator|+=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 operator|*
 name|is_breakpoint
@@ -569,7 +600,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|void
@@ -876,11 +907,6 @@ name|inst
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|unsigned
-name|getreg_val
-parameter_list|()
-function_decl|;
 name|brpc
 operator|=
 name|branch_taken
@@ -888,8 +914,6 @@ argument_list|(
 name|inst
 argument_list|,
 name|pc
-argument_list|,
-name|getreg_val
 argument_list|,
 name|regs
 argument_list|)

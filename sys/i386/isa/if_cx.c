@@ -404,7 +404,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -1719,7 +1719,7 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|int
+name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.26 1998/02/11 01:28:29 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.4 1997/11/08 14:46:58 peter Exp $ */
+comment|/*	$Id: if_devar.h,v 1.5 1998/03/08 16:54:00 peter Exp $ */
 end_comment
 
 begin_comment
@@ -3436,7 +3436,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
+name|u_long
 name|ioctl_cmd_t
 typedef|;
 end_typedef

@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.56 1998/04/06 11:43:10 phk Exp $ */
+comment|/* $Id: if_ppp.c,v 1.57 1998/05/19 14:04:09 dg Exp $ */
 end_comment
 
 begin_comment
@@ -288,12 +288,23 @@ begin_comment
 comment|/* minimise diffs */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|splsoftnet
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|splsoftnet
 value|splnet
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -383,7 +394,7 @@ name|ifnet
 operator|*
 name|ifp
 operator|,
-name|int
+name|u_long
 name|cmd
 operator|,
 name|caddr_t
@@ -1441,7 +1452,7 @@ name|ppp_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t
@@ -2677,7 +2688,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.26 1997/10/27 17:23:18 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_trace.c,v 1.27 1997/11/20 18:24:52 bde Exp $  */
 end_comment
 
 begin_include
@@ -77,7 +77,7 @@ block|{
 literal|"cs"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -90,7 +90,7 @@ block|,
 literal|"ds"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -103,7 +103,7 @@ block|,
 literal|"es"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -116,13 +116,13 @@ block|,
 if|#
 directive|if
 literal|0
-block|"fs",	(int *)&ddb_regs.tf_fs,  FCN_NULL, 	"gs",	(int *)&ddb_regs.tf_gs,  FCN_NULL,
+block|"fs",	(long *)&ddb_regs.tf_fs,  FCN_NULL, 	"gs",	(long *)&ddb_regs.tf_gs,  FCN_NULL,
 endif|#
 directive|endif
 literal|"ss"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -135,7 +135,7 @@ block|,
 literal|"eax"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -148,7 +148,7 @@ block|,
 literal|"ecx"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -161,7 +161,7 @@ block|,
 literal|"edx"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -174,7 +174,7 @@ block|,
 literal|"ebx"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -187,7 +187,7 @@ block|,
 literal|"esp"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -200,7 +200,7 @@ block|,
 literal|"ebp"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -213,7 +213,7 @@ block|,
 literal|"esi"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -226,7 +226,7 @@ block|,
 literal|"edi"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -239,7 +239,7 @@ block|,
 literal|"eip"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&
@@ -252,7 +252,7 @@ block|,
 literal|"efl"
 block|,
 operator|(
-name|int
+name|long
 operator|*
 operator|)
 operator|&

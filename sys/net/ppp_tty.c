@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.34 1998/04/15 17:46:46 bde Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.35 1998/05/01 16:40:21 bde Exp $ */
 end_comment
 
 begin_include
@@ -267,7 +267,7 @@ name|tty
 operator|*
 name|tp
 operator|,
-name|int
+name|u_long
 name|cmd
 operator|,
 name|caddr_t
@@ -2024,7 +2024,7 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t
