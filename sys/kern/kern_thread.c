@@ -657,6 +657,11 @@ modifier|*
 name|uc
 parameter_list|)
 block|{
+empty|# XXX this is declared in a MD include file, i386/include/ucontext.h but
+empty|# is used in MI code.
+ifdef|#
+directive|ifdef
+name|__i386__
 name|get_mcontext
 argument_list|(
 name|td
@@ -667,6 +672,8 @@ operator|->
 name|uc_mcontext
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|uc
 operator|->
 name|uc_sigmask
@@ -701,6 +708,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+empty|# XXX this is declared in a MD include file, i386/include/ucontext.h but
+empty|# is used in MI code.
+ifdef|#
+directive|ifdef
+name|__i386__
 name|ret
 operator|=
 name|set_mcontext
@@ -713,6 +725,14 @@ operator|->
 name|uc_mcontext
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ret
+operator|=
+name|ENOSYS
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ret
