@@ -1109,21 +1109,6 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_comment
-comment|/* XXX dubious. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__BSD_VISIBLE
-end_if
-
 begin_define
 define|#
 directive|define
