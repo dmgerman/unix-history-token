@@ -1171,16 +1171,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-name|wi_device_desc
-index|[]
-init|=
-literal|"WaveLAN/IEEE 802.11"
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -1812,13 +1802,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-name|wi_device_desc
-argument_list|)
-expr_stmt|;
 comment|/* Make sure interrupts are disabled. */
 name|CSR_WRITE_2
 argument_list|(
