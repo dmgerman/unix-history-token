@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	5.2 (Berkeley) %G%"
+literal|"@(#)mkproto.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,6 +226,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|char
+modifier|*
+name|calloc
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|argc
@@ -337,6 +342,9 @@ name|calloc
 argument_list|(
 literal|1
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|fs
 operator|->
 name|fs_cssize
@@ -1935,6 +1943,9 @@ name|i
 decl_stmt|;
 name|daddr_t
 name|bno
+decl_stmt|,
+name|alloc
+argument_list|()
 decl_stmt|;
 name|bno
 operator|=
@@ -2060,6 +2071,9 @@ begin_block
 block|{
 name|daddr_t
 name|d
+decl_stmt|,
+name|alloc
+argument_list|()
 decl_stmt|;
 name|int
 name|i
@@ -2077,6 +2091,10 @@ name|dinode
 argument_list|)
 index|]
 decl_stmt|;
+name|time_t
+name|time
+parameter_list|()
+function_decl|;
 name|ip
 operator|->
 name|i_atime
@@ -2092,10 +2110,10 @@ operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2758,22 +2776,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|struct
-name|dinode
-name|buf
-index|[
-name|MAXBSIZE
-operator|/
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dinode
-argument_list|)
-index|]
-decl_stmt|;
-name|daddr_t
-name|d
-decl_stmt|;
 name|int
 name|c
 decl_stmt|;
@@ -2962,7 +2964,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fsinit: inode value out of range (%d).\n"
+literal|"fsinit: inode value out of range (%lu).\n"
 argument_list|,
 name|ip
 operator|->
@@ -2975,13 +2977,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|ip
-operator|->
-name|i_number
-operator|)
-return|;
+comment|/* return (ip->i_number); */
 block|}
 end_block
 
@@ -3020,6 +3016,10 @@ block|{
 name|int
 name|n
 decl_stmt|;
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|lseek
@@ -3038,7 +3038,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"seek error: %ld\n"
+literal|"seek error: %d\n"
 argument_list|,
 name|bno
 argument_list|)
@@ -3074,7 +3074,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"read error: %ld\n"
+literal|"read error: %d\n"
 argument_list|,
 name|bno
 argument_list|)
@@ -3128,6 +3128,10 @@ block|{
 name|int
 name|n
 decl_stmt|;
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|lseek
@@ -3146,7 +3150,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"seek error: %ld\n"
+literal|"seek error: %d\n"
 argument_list|,
 name|bno
 argument_list|)
@@ -3182,7 +3186,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"write error: %D\n"
+literal|"write error: %d\n"
 argument_list|,
 name|bno
 argument_list|)
@@ -3364,7 +3368,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isblock bad fs_frag %d\n"
+literal|"isblock bad fs_frag %ld\n"
 argument_list|,
 name|fs
 operator|->
@@ -3519,7 +3523,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"clrblock bad fs_frag %d\n"
+literal|"clrblock bad fs_frag %ld\n"
 argument_list|,
 name|fs
 operator|->
