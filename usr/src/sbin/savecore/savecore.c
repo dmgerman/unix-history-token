@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.33 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -707,7 +707,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdfvz"
+literal|"cdfNvz"
 argument_list|)
 operator|)
 operator|!=
@@ -744,6 +744,14 @@ case|:
 name|force
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|vmunix
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1804,9 +1812,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-goto|goto
-name|XXX
-goto|;
 comment|/* Create the core file. */
 operator|(
 name|void
@@ -2205,8 +2210,6 @@ name|ofd
 argument_list|)
 expr_stmt|;
 comment|/* Copy the kernel. */
-name|XXX
-label|:
 name|ifd
 operator|=
 name|Open
@@ -3022,6 +3025,7 @@ expr_stmt|;
 block|}
 name|spacefree
 operator|=
+operator|(
 name|fsbuf
 operator|.
 name|f_bavail
@@ -3029,6 +3033,7 @@ operator|*
 name|fsbuf
 operator|.
 name|f_bsize
+operator|)
 operator|/
 literal|1024
 expr_stmt|;
@@ -3475,7 +3480,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: savecore [-cfv] dirname [system]"
+literal|"usage: savecore [-cfvz] [-N system] directory"
 argument_list|)
 expr_stmt|;
 name|exit
