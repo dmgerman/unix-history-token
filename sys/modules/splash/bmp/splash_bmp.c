@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: splash_bmp.c,v 1.3.2.2 1999/02/07 03:03:28 yokota Exp $  */
+comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * Copyright (c) 1999 Kazutaka YOKOTA<yokota@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: splash_bmp.c,v 1.3.2.3 1999/03/29 15:15:21 yokota Exp $  */
 end_comment
 
 begin_include
@@ -238,9 +238,16 @@ operator|<=
 literal|0
 operator|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"splash_bmp: No bitmap file found\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENODEV
 return|;
+block|}
 for|for
 control|(
 name|i
@@ -322,6 +329,17 @@ name|modes
 index|[
 name|i
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|splash_mode
+operator|<
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"splash_bmp: No appropriate video mode found\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2415,12 +2433,57 @@ operator|!=
 literal|0x4d42
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"splash_bmp: not a BMP file\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 comment|/* XXX check word ordering for big-endian ports? */
+block|}
+comment|/* do we understand this bitmap format? */
+if|if
+condition|(
+name|bmf
+operator|->
+name|bmfi
+operator|.
+name|bmiHeader
+operator|.
+name|biSize
+operator|>
+sizeof|sizeof
+argument_list|(
+name|bmf
+operator|->
+name|bmfi
+operator|.
+name|bmiHeader
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"splash_bmp: unsupported BMP format (size=%d)\n"
+argument_list|,
+name|bmf
+operator|->
+name|bmfi
+operator|.
+name|bmiHeader
+operator|.
+name|biSize
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 comment|/* save what we know about the screen */
 name|bmp_info
@@ -2514,6 +2577,11 @@ name|BI_RLE8
 case|:
 break|break;
 default|default:
+name|printf
+argument_list|(
+literal|"splash_bmp: unsupported compression format\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2574,6 +2642,56 @@ name|bmiHeader
 operator|.
 name|biBitCount
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|bmf
+operator|->
+name|bmfi
+operator|.
+name|bmiHeader
+operator|.
+name|biBitCount
+operator|!=
+name|sdepth
+operator|)
+operator|||
+operator|(
+name|bmp_info
+operator|.
+name|ncols
+operator|>
+operator|(
+literal|1
+operator|<<
+name|sdepth
+operator|)
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"splash_bmp: unsupported color depth (%d bits, %d colors)\n"
+argument_list|,
+name|bmf
+operator|->
+name|bmfi
+operator|.
+name|bmiHeader
+operator|.
+name|biBitCount
+argument_list|,
+name|bmp_info
+operator|.
+name|ncols
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 if|if
 condition|(
