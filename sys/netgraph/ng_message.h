@@ -228,7 +228,7 @@ begin_define
 define|#
 directive|define
 name|NG_VERSION
-value|5
+value|6
 end_define
 
 begin_comment
