@@ -64,7 +64,7 @@ value|AND(var, mask, r1, r2, r3, l1) ; \ 	brz	r1, l1 ## f ; \ 	 nop
 end_define
 
 begin_comment
-comment|/*  * XXX doesn't do timestamp or ktr_cpu.  */
+comment|/*  * XXX doesn't do timestamp or ktr_cpu.  * XXX could really use another register.  */
 end_comment
 
 begin_define
@@ -85,7 +85,7 @@ parameter_list|,
 name|l2
 parameter_list|)
 define|\
-value|.sect	.rodata ; \ l1 ## :	.asciz	desc ; \ 	.previous ; \ 	set	ktr_idx, r1 ; \ 	lduw	[r1], r2 ; \ l2 ## :	add	r2, 1, r3 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne	%icc, l2 ## b ; \ 	 mov	r3, r2 ; \ 	set	ktr_buf, r1 ; \ 	mulx	r2, KTR_SIZEOF, r2 ; \ 	add	r1, r2, r1 ; \ 	set	l1 ## b, r2 ; \ 	stx	r2, [r1 + KTR_DESC]
+value|.sect	.rodata ; \ l1 ## :	.asciz	desc ; \ 	.previous ; \ 	set	ktr_idx, r1 ; \ 	lduw	[r1], r2 ; \ l2 ## :	add	r2, 1, r3 ; \ 	set	KTR_ENTRIES - 1, r1 ; \ 	and	r3, r1, r3 ; \ 	set	ktr_idx, r1 ; \ 	casa	[r1] ASI_N, r2, r3 ; \ 	cmp	r2, r3 ; \ 	bne	%icc, l2 ## b ; \ 	 mov	r3, r2 ; \ 	set	ktr_buf, r1 ; \ 	mulx	r2, KTR_SIZEOF, r2 ; \ 	add	r1, r2, r1 ; \ 	set	l1 ## b, r2 ; \ 	stx	r2, [r1 + KTR_DESC]
 end_define
 
 begin_define
