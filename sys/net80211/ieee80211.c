@@ -682,21 +682,13 @@ operator|=
 name|IEEE80211_CHAN_ANYC
 expr_stmt|;
 comment|/* any channel is ok */
+if|#
+directive|if
+literal|0
 comment|/* 	 * Enable WME by default if we're capable. 	 */
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_caps
-operator|&
-name|IEEE80211_C_WME
-condition|)
-name|ic
-operator|->
-name|ic_flags
-operator||=
-name|IEEE80211_F_WME
-expr_stmt|;
+block|if (ic->ic_caps& IEEE80211_C_WME) 		ic->ic_flags |= IEEE80211_F_WME;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
