@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.437 2002/05/24 18:53:48 gshapiro Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.437.2.5 2002/08/16 16:48:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3706,7 +3706,7 @@ directive|if
 name|SASL
 operator|>=
 literal|20000
-name|r
+name|ret
 operator|=
 name|sasl_decode64
 argument_list|(
@@ -3748,7 +3748,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* SASL>= 20000 */
-name|r
+name|ret
 operator|=
 name|sasl_decode64
 argument_list|(
@@ -3784,7 +3784,7 @@ directive|endif
 comment|/* SASL>= 20000 */
 if|if
 condition|(
-name|r
+name|ret
 operator|!=
 name|SASL_OK
 condition|)
@@ -3838,6 +3838,7 @@ name|i
 expr_stmt|;
 block|}
 comment|/* did we get the expected data? */
+comment|/* XXX: EXTERNAL mechanism only requires (and only uses) SASL_USER */
 if|if
 condition|(
 operator|!
@@ -7149,6 +7150,39 @@ condition|(
 name|out
 operator|==
 name|NULL
+if|#
+directive|if
+name|_FFR_SASL_INITIAL_WORKAROUND
+comment|/* login and digest-md5 up to 1.5.28 set out="" */
+operator|||
+operator|(
+name|outlen
+operator|==
+literal|0
+operator|&&
+operator|(
+name|sm_strcasecmp
+argument_list|(
+name|mechusing
+argument_list|,
+literal|"LOGIN"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|sm_strcasecmp
+argument_list|(
+name|mechusing
+argument_list|,
+literal|"DIGEST-MD5"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|)
+endif|#
+directive|endif
+comment|/* _FFR_SASL_INITIAL_WORKAROUND */
 condition|)
 block|{
 comment|/* no initial response */

@@ -33,7 +33,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.829 2002/06/17 21:54:57 gshapiro Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.4 2002/08/16 14:56:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6294,9 +6294,9 @@ literal|"STARTTLS"
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|RSF_RMCOMM
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|5
 argument_list|,
@@ -8453,9 +8453,9 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|RSF_RMCOMM
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,
@@ -9404,9 +9404,9 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|RSF_RMCOMM
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,
@@ -9442,6 +9442,24 @@ argument_list|)
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/* If discarding, don't bother to verify user */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_DISCARD
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|a
+operator|->
+name|q_state
+operator|=
+name|QS_VERIFIED
 expr_stmt|;
 if|#
 directive|if
@@ -10104,9 +10122,7 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|false
+name|RSF_RMCOMM
 argument_list|,
 literal|3
 argument_list|,
@@ -10458,9 +10474,7 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|false
+name|RSF_RMCOMM
 argument_list|,
 literal|3
 argument_list|,
@@ -11383,9 +11397,11 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|false
+name|RSF_RMCOMM
+operator||
+name|RSF_UNSTRUCTURED
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,
@@ -11572,9 +11588,9 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|false
-argument_list|,
-name|true
+name|RSF_UNSTRUCTURED
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,
@@ -13976,9 +13992,7 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|false
+name|RSF_RMCOMM
 argument_list|,
 literal|9
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.359.2.1 2002/06/19 18:24:26 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.359.2.2 2002/08/16 14:56:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -12277,7 +12277,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  RSCHECK -- check string(s) for validity using rewriting sets ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		rmcomm -- remove comments? **		cnt -- count rejections (statistics)? **		logl -- logging level. **		host -- NULL or relay host. **		logid -- id for sm_syslog. ** **	Returns: **		EX_OK -- if the rwset doesn't resolve to $#error **		else -- the failure status (message printed) */
+comment|/* **  RSCHECK -- check string(s) for validity using rewriting sets ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		flags -- control some behavior, see RSF_ in sendmail.h **		logl -- logging level. **		host -- NULL or relay host. **		logid -- id for sm_syslog. ** **	Returns: **		EX_OK -- if the rwset doesn't resolve to $#error **		else -- the failure status (message printed) */
 end_comment
 
 begin_function
@@ -12292,9 +12292,7 @@ name|p2
 parameter_list|,
 name|e
 parameter_list|,
-name|rmcomm
-parameter_list|,
-name|cnt
+name|flags
 parameter_list|,
 name|logl
 parameter_list|,
@@ -12318,10 +12316,8 @@ name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-name|bool
-name|rmcomm
-decl_stmt|,
-name|cnt
+name|int
+name|flags
 decl_stmt|;
 name|int
 name|logl
@@ -12603,7 +12599,12 @@ name|pvpbuf
 argument_list|,
 name|NULL
 argument_list|,
-name|rmcomm
+name|bitset
+argument_list|(
+name|RSF_RMCOMM
+argument_list|,
+name|flags
+argument_list|)
 condition|?
 name|NULL
 else|:
@@ -12640,6 +12641,19 @@ goto|goto
 name|finis
 goto|;
 block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|RSF_UNSTRUCTURED
+argument_list|,
+name|flags
+argument_list|)
+condition|)
+name|SuprErrs
+operator|=
+name|true
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -12651,6 +12665,19 @@ name|rsno
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|RSF_UNSTRUCTURED
+argument_list|,
+name|flags
+argument_list|)
+condition|)
+name|SuprErrs
+operator|=
+name|saveSuprErrs
 expr_stmt|;
 if|if
 condition|(
@@ -12975,7 +13002,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|cnt
+name|bitset
+argument_list|(
+name|RSF_COUNT
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|markstats
 argument_list|(

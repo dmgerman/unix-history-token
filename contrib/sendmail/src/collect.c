@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.242 2002/05/10 15:40:09 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.242.2.2 2002/08/16 14:56:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -217,9 +217,9 @@ name|hsize
 argument_list|,
 name|e
 argument_list|,
-name|false
-argument_list|,
-name|true
+name|RSF_UNSTRUCTURED
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,
@@ -2749,6 +2749,10 @@ name|char
 modifier|*
 name|problem
 decl_stmt|;
+name|ADDRESS
+modifier|*
+name|q
+decl_stmt|;
 name|host
 operator|=
 name|RealHostName
@@ -2896,6 +2900,43 @@ name|e_flags
 operator||=
 name|EF_CLRQUEUE
 expr_stmt|;
+comment|/* Don't send any message notification to sender */
+for|for
+control|(
+name|q
+operator|=
+name|e
+operator|->
+name|e_sendqueue
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+name|QS_IS_DEAD
+argument_list|(
+name|q
+operator|->
+name|q_state
+argument_list|)
+condition|)
+continue|continue;
+name|q
+operator|->
+name|q_state
+operator|=
+name|QS_FATALERR
+expr_stmt|;
+block|}
 name|finis
 argument_list|(
 name|true

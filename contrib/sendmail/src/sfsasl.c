@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.91 2002/06/07 00:06:27 geir Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.91.2.1 2002/08/27 01:35:17 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1802,6 +1802,24 @@ break|break;
 case|case
 name|SSL_ERROR_SSL
 case|:
+if|#
+directive|if
+name|_FFR_DEAL_WITH_ERROR_SSL
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+operator|&&
+name|errno
+operator|==
+literal|0
+condition|)
+comment|/* out of protocol EOF found */
+break|break;
+endif|#
+directive|endif
+comment|/* _FFR_DEAL_WITH_ERROR_SSL */
 name|err
 operator|=
 literal|"generic SSL error"
@@ -1817,6 +1835,24 @@ argument_list|(
 literal|"read"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_DEAL_WITH_ERROR_SSL
+comment|/* avoid repeated calls? */
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+name|r
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DEAL_WITH_ERROR_SSL */
 break|break;
 block|}
 if|if
@@ -2097,6 +2133,24 @@ argument_list|(
 literal|"write"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_DEAL_WITH_ERROR_SSL
+comment|/* avoid repeated calls? */
+if|if
+condition|(
+name|r
+operator|==
+literal|0
+condition|)
+name|r
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_DEAL_WITH_ERROR_SSL */
 break|break;
 block|}
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.109 2002/03/13 17:18:44 gshapiro Exp $"
+literal|"@(#)$Id: engine.c,v 8.109.2.1 2002/07/29 16:40:47 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1659,6 +1659,13 @@ name|newstate
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|buf
+operator|!=
+name|NULL
+condition|)
+block|{
 name|free
 argument_list|(
 name|buf
@@ -1668,6 +1675,7 @@ name|buf
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 continue|continue;
 block|}
 block|}
