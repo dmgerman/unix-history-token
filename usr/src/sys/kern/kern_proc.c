@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.7	%G%	*/
+comment|/*	kern_proc.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -837,7 +837,7 @@ condition|(
 operator|(
 name|bno
 operator|=
-name|malloc
+name|rmalloc
 argument_list|(
 name|argmap
 argument_list|,
@@ -881,7 +881,7 @@ name|CLSIZE
 condition|)
 name|panic
 argument_list|(
-literal|"execa malloc"
+literal|"execa rmalloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1588,7 +1588,7 @@ if|if
 condition|(
 name|bno
 condition|)
-name|mfree
+name|rmfree
 argument_list|(
 name|argmap
 argument_list|,

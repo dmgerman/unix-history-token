@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.10	%G%	*/
+comment|/*	subr_prf.c	4.11	%G%	*/
 end_comment
 
 begin_include
@@ -87,26 +87,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Scaled down version of C Library printf.  * Only %s %u %d (==%u) %o %x %D are recognized.  * Used to print diagnostic information  * directly on console tty.  * Since it is not interrupt driven,  * all system activities are pretty much  * suspended.  * Printf should not be used for chit-chat.  */
+comment|/*  * Scaled down version of C Library printf.  * Used to print diagnostic information directly on console tty.  * Since it is not interrupt driven, all system activities are  * suspended.  Printf should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Usage is:  *	printf("reg=%b\n", regval, "<base><arg>*");  * Where<base> is the output base expressed as a control character,  * e.g. \10 gives octal; \20 gives hex.  Each arg is a sequence of  * characters, the first of which gives the bit number to be inspected  * (origin 1), and the next characters (up to a control character, i.e.  * a character<= 32), give the name of the register.  Thus  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  * would produce output:  *	reg=2<BITTWO,BITONE>  */
 end_comment
 
 begin_comment
 comment|/*VARARGS1*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|printf
 argument_list|(
-name|fmt
+argument|fmt
 argument_list|,
-name|x1
+argument|x1
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|fmt
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
@@ -130,7 +132,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * print to the current users terminal,  * guarantee not to sleep (so can be called by intr routine)  * no watermark checking - so no verbose messages  */
+comment|/*  * Uprintf prints to the current user's terminal,  * guarantees not to sleep (so can be called by interrupt routines)  * and does no watermark checking - (so no verbose messages).  */
 end_comment
 
 begin_comment
@@ -173,10 +175,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* THIS CODE IS VAX DEPENDENT */
-end_comment
 
 begin_expr_stmt
 name|prf
@@ -257,6 +255,7 @@ operator|*
 name|fmt
 operator|++
 expr_stmt|;
+comment|/* THIS CODE IS VAX DEPENDENT IN HANDLING %l? AND %c */
 switch|switch
 condition|(
 name|c
@@ -532,7 +531,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* END VAX DEPENDENT CODE */
+comment|/*  * Printn prints a number n in base b.  * We don't use recursion to avoid deep kernel stacks.  */
 end_comment
 
 begin_macro
@@ -649,7 +648,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Panic is called on unresolvable fatal errors.  * It syncs, prints "panic: mesg", and then reboots.  */
+comment|/*  * Panic is called on unresolvable fatal errors.  * It prints "panic: mesg", and then reboots.  * If we are called twice, then we avoid trying to  * sync the disks as this often leads to recursive panics.  */
 end_comment
 
 begin_macro
@@ -668,6 +667,17 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|bootopt
+init|=
+name|panicstr
+condition|?
+name|RB_AUTOBOOT
+else|:
+name|RB_AUTOBOOT
+operator||
+name|RB_NOSYNC
+decl_stmt|;
 name|panicstr
 operator|=
 name|s
@@ -685,23 +695,18 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
 name|boot
 argument_list|(
 name|RB_PANIC
 argument_list|,
-name|RB_AUTOBOOT
+name|bootopt
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * prdev prints a warning message of the  * form "mesg on dev x/y".  * x and y are the major and minor parts of  * the device argument.  */
+comment|/*  * Prdev prints a warning message of the form "mesg on dev x/y".  * x and y are the major and minor parts of the device argument.  *  * PRDEV SHOULD COMPUTE AND USE DEVICE NAMES  */
 end_comment
 
 begin_macro
@@ -748,6 +753,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Hard error is the preface to plaintive error messages  * about failing device transfers.  */
+end_comment
+
 begin_macro
 name|harderr
 argument_list|(
@@ -767,7 +776,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"hard err bn %d "
+literal|"hard err bn%d "
 argument_list|,
 name|bp
 operator|->
