@@ -2383,6 +2383,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ETHERTYPE_PAE
+value|0x888e
+end_define
+
+begin_comment
+comment|/* EAPOL PAE/802.1x */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ETHERTYPE_LOOPBACK
 value|0x9000
 end_define
