@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.21 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,11 @@ name|defined
 argument_list|(
 name|i386
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mips
+argument_list|)
 end_if
 
 begin_define
@@ -203,6 +208,11 @@ operator|||
 name|defined
 argument_list|(
 name|i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mips
 argument_list|)
 end_if
 
