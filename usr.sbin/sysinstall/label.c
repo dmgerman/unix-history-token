@@ -2843,6 +2843,11 @@ name|i
 operator|=
 literal|0
 init|;
+name|devs
+index|[
+name|i
+index|]
+operator|&&
 operator|(
 operator|(
 name|Disk
