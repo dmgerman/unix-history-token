@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_thread_nanosleep
+name|nanosleep
 parameter_list|(
 specifier|const
 name|struct
