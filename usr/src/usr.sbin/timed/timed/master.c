@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.11 (Berkeley) %G%"
+literal|"@(#)master.c	2.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2696,10 +2696,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Rounding doesn't work well because new time is always  * truncated, but oldtime is normally distributed.  */
-end_comment
-
 begin_macro
 name|logwtmp
 argument_list|(
@@ -2745,7 +2741,17 @@ name|otime
 operator|.
 name|tv_sec
 expr_stmt|;
-comment|/* +(otime.tv_usec + 500000)/1000000;*/
+operator|+
+operator|(
+name|otime
+operator|.
+name|tv_usec
+operator|+
+literal|500000
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
 name|wtmp
 index|[
 literal|1
@@ -2757,7 +2763,17 @@ name|ntime
 operator|.
 name|tv_sec
 expr_stmt|;
-comment|/* +(ntime.tv_usec + 500000)/1000000;*/
+operator|+
+operator|(
+name|ntime
+operator|.
+name|tv_usec
+operator|+
+literal|500000
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
 if|if
 condition|(
 operator|(
