@@ -603,7 +603,13 @@ name|mbpr
 name|__P
 argument_list|(
 operator|(
-name|void
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|u_long
+operator|,
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
