@@ -1776,11 +1776,18 @@ return|;
 comment|/* 		 * We are very inconsistent about handling unsupported 		 * attributes.  We ignored the access time and the 		 * read and execute bits.  We were strict for the other 		 * attributes. 		 * 		 * Here we are strict, stricter than ufs in not allowing 		 * users to attempt to set SF_SETTABLE bits or anyone to 		 * set unsupported bits.  However, we ignore attempts to 		 * set ATTR_ARCHIVE for directories `cp -pr' from a more 		 * sensible file system attempts it a lot. 		 */
 if|if
 condition|(
+name|suser_xxx
+argument_list|(
 name|cred
+argument_list|,
+name|ap
 operator|->
-name|cr_uid
-operator|!=
-literal|0
+name|a_td
+operator|->
+name|td_proc
+argument_list|,
+name|PRISON_ROOT
+argument_list|)
 condition|)
 block|{
 if|if

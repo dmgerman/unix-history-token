@@ -919,15 +919,10 @@ block|{
 comment|/* 			 * If upgrade to read-write by non-root, then verify 			 * that user has necessary permissions on the device. 			 */
 if|if
 condition|(
+name|suser_td
+argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 name|devvp
@@ -1149,15 +1144,10 @@ block|}
 comment|/* 	 * If mount by non-root, then verify that user has necessary 	 * permissions on the device. 	 */
 if|if
 condition|(
+name|suser_td
+argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 name|accessmode
