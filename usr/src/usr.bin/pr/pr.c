@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr.c	8.2 (Berkeley) %G%"
+literal|"@(#)pr.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,7 +362,7 @@ end_comment
 begin_decl_stmt
 name|FILE
 modifier|*
-name|err
+name|errf
 decl_stmt|;
 end_decl_stmt
 
@@ -3234,7 +3234,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: page width too small for %d columns\n"
 argument_list|,
@@ -4786,7 +4786,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: cannot get time of day, %s\n"
 argument_list|,
@@ -4914,7 +4914,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: cannot get time of day, %s\n"
 argument_list|,
@@ -4978,7 +4978,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: Cannot open %s, %s\n"
 argument_list|,
@@ -5070,7 +5070,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: cannot get time of day, %s\n"
 argument_list|,
@@ -5133,7 +5133,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: Cannot stat %s, %s\n"
 argument_list|,
@@ -5222,7 +5222,7 @@ name|fputs
 argument_list|(
 literal|"pr: time conversion failed\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -5669,19 +5669,19 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|err
+name|errf
 operator|==
 name|stderr
 condition|)
 return|return;
 name|rewind
 argument_list|(
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 while|while
@@ -5692,7 +5692,7 @@ name|buf
 argument_list|,
 name|BUFSIZ
 argument_list|,
-name|err
+name|errf
 argument_list|)
 operator|!=
 name|NULL
@@ -5722,7 +5722,7 @@ name|fputs
 argument_list|(
 literal|"pr: memory allocation failed\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 block|}
@@ -5738,7 +5738,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: write failure, %s\n"
 argument_list|,
@@ -5763,7 +5763,7 @@ name|fputs
 argument_list|(
 literal|"usage: pr [+page] [-col] [-adFmrt] [-e[ch][gap]] [-h header]\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5773,7 +5773,7 @@ name|fputs
 argument_list|(
 literal|"          [-i[ch][gap]] [-l line] [-n[ch][width]] [-o offset]\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5783,7 +5783,7 @@ name|fputs
 argument_list|(
 literal|"          [-s[ch]] [-w width] [-] [file ...]\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 block|}
@@ -5851,7 +5851,7 @@ comment|/* 		 * defer diagnostics until processing is done 		 */
 if|if
 condition|(
 operator|(
-name|err
+name|errf
 operator|=
 name|tmpfile
 argument_list|()
@@ -5878,7 +5878,7 @@ return|;
 block|}
 block|}
 else|else
-name|err
+name|errf
 operator|=
 name|stderr
 expr_stmt|;
@@ -5929,7 +5929,7 @@ name|fputs
 argument_list|(
 literal|"pr: +page number must be 1 or more\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -5963,7 +5963,7 @@ name|fputs
 argument_list|(
 literal|"pr: -columns must be 1 or more\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6064,7 +6064,7 @@ name|fputs
 argument_list|(
 literal|"pr: -e gap must be 0 or more\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6106,7 +6106,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: invalid value for -e %s\n"
 argument_list|,
@@ -6208,7 +6208,7 @@ name|fputs
 argument_list|(
 literal|"pr: -i gap must be 0 or more\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6250,7 +6250,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: invalid value for -i %s\n"
 argument_list|,
@@ -6302,7 +6302,7 @@ name|fputs
 argument_list|(
 literal|"pr: Number of lines must be 1 or more\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6384,7 +6384,7 @@ name|fputs
 argument_list|(
 literal|"pr: -n width must be 1 or more\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6416,7 +6416,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: invalid value for -n %s\n"
 argument_list|,
@@ -6468,7 +6468,7 @@ name|fputs
 argument_list|(
 literal|"pr: -o offset must be 1 or more\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6521,7 +6521,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: invalid value for -s %s\n"
 argument_list|,
@@ -6578,7 +6578,7 @@ name|fputs
 argument_list|(
 literal|"pr: -w width must be 1 or more \n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6659,7 +6659,7 @@ name|fputs
 argument_list|(
 literal|"pr: -a flag requires multiple columns\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6680,7 +6680,7 @@ name|fputs
 argument_list|(
 literal|"pr: -m cannot be used with -a\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6765,7 +6765,7 @@ name|fputs
 argument_list|(
 literal|"pr: -m cannot be used with multiple columns\n"
 argument_list|,
-name|err
+name|errf
 argument_list|)
 expr_stmt|;
 return|return
@@ -6857,7 +6857,7 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
-name|err
+name|errf
 argument_list|,
 literal|"pr: page width is too small for %d columns\n"
 argument_list|,
