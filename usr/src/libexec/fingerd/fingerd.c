@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fingerd.c	5.2 (Berkeley) %G%"
+literal|"@(#)fingerd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,16 +166,25 @@ argument_list|,
 literal|"getpeername"
 argument_list|)
 expr_stmt|;
-name|line
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|gets
+if|if
+condition|(
+name|fgets
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+name|stdin
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 name|sp
@@ -189,14 +198,14 @@ index|]
 operator|=
 literal|"finger"
 expr_stmt|;
+for|for
+control|(
 name|i
 operator|=
 literal|1
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+init|;
+condition|;
+control|)
 block|{
 while|while
 condition|(
