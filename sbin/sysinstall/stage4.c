@@ -151,7 +151,7 @@ break|break;
 block|}
 name|TellEm
 argument_list|(
-literal|"cd /stand ; gunzip< /dev/fd0 | cpio -icdum"
+literal|"cd /stand ; gunzip< /dev/fd0 | cpio -idum"
 argument_list|)
 expr_stmt|;
 name|pipe
@@ -305,7 +305,7 @@ literal|"/stand/cpio"
 argument_list|,
 literal|"/stand/cpio"
 argument_list|,
-literal|"-icdum"
+literal|"-idum"
 argument_list|,
 literal|0
 argument_list|)
@@ -403,6 +403,11 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|TellEm
+argument_list|(
+literal|"unlink /stand/need_cpio_floppy"
 argument_list|)
 expr_stmt|;
 name|unlink

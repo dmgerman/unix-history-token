@@ -74,6 +74,13 @@ name|void
 name|stage5
 parameter_list|()
 block|{
+name|end_dialog
+argument_list|()
+expr_stmt|;
+name|dialog_active
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -81,7 +88,7 @@ condition|;
 control|)
 name|exec
 argument_list|(
-literal|1
+literal|2
 argument_list|,
 literal|"/stand/sh"
 argument_list|,

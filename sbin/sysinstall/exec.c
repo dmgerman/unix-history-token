@@ -278,7 +278,6 @@ break|break;
 case|case
 literal|1
 case|:
-break|break;
 name|close
 argument_list|(
 literal|2
@@ -291,6 +290,10 @@ argument_list|,
 name|O_WRONLY
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
 default|default:
 break|break;
 block|}
