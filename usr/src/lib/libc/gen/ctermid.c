@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctermid.c	5.1 (Berkeley) %G%"
+literal|"@(#)ctermid.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,8 +69,8 @@ decl_stmt|;
 block|{
 specifier|static
 name|char
-modifier|*
 name|def
+index|[]
 init|=
 name|_PATH_TTY
 decl_stmt|;
