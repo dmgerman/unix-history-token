@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	8.4 (Berkeley) %G%"
+literal|"@(#)umount.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,7 +520,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 name|errs
@@ -795,7 +795,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
@@ -986,7 +986,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 if|if
@@ -1089,7 +1089,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 if|if
