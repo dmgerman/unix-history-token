@@ -131,7 +131,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select IRQs that can be used by PC-cards"
 block|,
-literal|"Please specify an IRQs that CANNOT be used by PC-card.\n"
+literal|"Please specify IRQs that CAN be used by PC-card.\n"
 literal|"For example, if you have a sound card that can't be probed by\n"
 literal|"this installation floppy and it uses IRQ 10, you have to \n"
 literal|"choose \"Option 1\" or \"Option 2\" at this menu.\n"
