@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crtplot.c	4.5 (Berkeley) %G%"
+literal|"@(#)crtplot.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,18 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -126,14 +138,6 @@ end_decl_stmt
 begin_comment
 comment|/* last point plotted */
 end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* This routine just moves the cursor. */
@@ -467,10 +471,6 @@ name|i
 decl_stmt|,
 name|length
 decl_stmt|;
-name|int
-name|strlen
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
