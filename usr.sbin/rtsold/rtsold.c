@@ -1367,7 +1367,7 @@ name|LOG_ERR
 argument_list|,
 name|__FUNCTION__
 argument_list|,
-literal|"interface %s was already cofigured"
+literal|"interface %s was already configured"
 argument_list|,
 name|ifname
 argument_list|)
