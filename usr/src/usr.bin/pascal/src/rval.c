@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.10 %G%"
+literal|"@(#)rval.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,18 @@ end_comment
 begin_decl_stmt
 name|short
 name|reccompline
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line number of the last non-standard set comparison */
+end_comment
+
+begin_decl_stmt
+name|short
+name|nssetline
 init|=
 literal|0
 decl_stmt|;
@@ -4042,6 +4054,55 @@ condition|)
 goto|goto
 name|clash
 goto|;
+if|if
+condition|(
+name|opt
+argument_list|(
+literal|'s'
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|r
+index|[
+literal|0
+index|]
+operator|==
+name|T_LT
+operator|)
+operator|||
+operator|(
+name|r
+index|[
+literal|0
+index|]
+operator|==
+name|T_GT
+operator|)
+operator|)
+operator|&&
+operator|(
+name|line
+operator|!=
+name|nssetline
+operator|)
+condition|)
+block|{
+name|nssetline
+operator|=
+name|line
+expr_stmt|;
+name|standard
+argument_list|()
+expr_stmt|;
+name|error
+argument_list|(
+literal|"%s comparison on sets is non-standard"
+argument_list|,
+name|opname
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|p
