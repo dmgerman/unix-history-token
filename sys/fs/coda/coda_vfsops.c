@@ -640,6 +640,13 @@ name|mi_vfsp
 operator|=
 name|vfsp
 expr_stmt|;
+name|mi
+operator|->
+name|mi_started
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX See coda_root() */
 comment|/*      * Make a root vnode to placate the Vnode interface, but don't      * actually make the CODA_ROOT call to venus until the first call      * to coda_root in case a server is down while venus is starting.      */
 name|rootfid
 operator|.
@@ -1093,6 +1100,7 @@ operator|->
 name|mi_vfsp
 condition|)
 block|{
+comment|/* 	 * Cache the root across calls. We only need to pass the request 	 * on to Venus if the root vnode is the dummy we installed in 	 * coda_mount() with all c_fid members zeroed. 	 * 	 * XXX In addition, if we are called between coda_mount() and 	 * coda_start(), we assume that the request is from vfs_mount() 	 * (before the call to checkdirs()) and return the dummy root 	 * node to avoid a deadlock. This bug is fixed in the Coda CVS 	 * repository but not in any released versions as of 6 Mar 2003. 	 */
 if|if
 condition|(
 operator|(
@@ -1139,6 +1147,12 @@ name|Unique
 operator|!=
 literal|0
 operator|)
+operator|||
+name|mi
+operator|->
+name|mi_started
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Found valid root. */
@@ -1393,6 +1407,48 @@ label|:
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|coda_start
+parameter_list|(
+name|mp
+parameter_list|,
+name|flags
+parameter_list|,
+name|td
+parameter_list|)
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+block|{
+comment|/* XXX See coda_root(). */
+name|vftomi
+argument_list|(
+name|mp
+argument_list|)
+operator|->
+name|mi_started
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -2066,7 +2122,7 @@ init|=
 block|{
 name|coda_mount
 block|,
-name|vfs_stdstart
+name|coda_start
 block|,
 name|coda_unmount
 block|,
