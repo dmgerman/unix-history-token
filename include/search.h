@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: search.h,v 1.12 1999/02/22 10:34:28 christos Exp $	*/
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/*  * Written by J.T. Conklin<jtc@netbsd.org>  * Public domain.  */
+comment|/*-  * Written by J.T. Conklin<jtc@netbsd.org>  * Public domain.  *  *	$NetBSD: search.h,v 1.12 1999/02/22 10:34:28 christos Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -212,6 +204,7 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+specifier|const
 modifier|*
 parameter_list|,
 name|int
@@ -285,6 +278,10 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * XXX missing insque(), lsearch(), remque().  */
+end_comment
 
 begin_macro
 name|__END_DECLS
