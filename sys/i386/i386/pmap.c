@@ -8819,7 +8819,7 @@ name|UPT_MIN_ADDRESS
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_copy: invalid to pmap_copy page tables\n"
+literal|"pmap_copy: invalid to pmap_copy page tables"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Don't let optional prefaulting of pages make us go 		 * way below the low water mark of free pages or way 		 * above high water mark of used pv entries. 		 */
@@ -8926,16 +8926,12 @@ operator|->
 name|hold_count
 operator|==
 literal|0
-operator|||
-operator|(
-name|srcmpte
-operator|->
-name|flags
-operator|&
-name|PG_BUSY
-operator|)
 condition|)
-continue|continue;
+name|panic
+argument_list|(
+literal|"pmap_copy: source page table page is unused"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pdnxt
