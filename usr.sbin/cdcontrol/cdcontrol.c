@@ -3037,7 +3037,7 @@ name|t
 operator|.
 name|starting_track
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|t
 operator|.
