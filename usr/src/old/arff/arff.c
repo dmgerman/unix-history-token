@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	4.13 (Berkeley) 83/04/22"
+literal|"@(#)arff.c	4.14 (Berkeley) 83/06/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,7 +606,7 @@ block|{
 define|#
 directive|define
 name|SURE
-value|"Last chance before clobbering floppy?"
+value|"Are you sure you want to clobber the floppy?"
 name|int
 name|tty
 decl_stmt|;
