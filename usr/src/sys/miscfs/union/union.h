@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -186,6 +186,14 @@ name|unsigned
 name|int
 name|un_flags
 decl_stmt|;
+name|off_t
+name|un_uppersz
+decl_stmt|;
+comment|/* size of upper object */
+name|off_t
+name|un_lowersz
+decl_stmt|;
+comment|/* size of lower object */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -455,6 +463,25 @@ operator|,
 expr|struct
 name|vnode
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|union_newsize
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+name|off_t
+operator|,
+name|off_t
 operator|)
 argument_list|)
 decl_stmt|;
