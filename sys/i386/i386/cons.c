@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)cons.c	7.2 (Berkeley) 5/9/91  *	$Id: cons.c,v 1.31 1995/09/03 05:43:01 julian Exp $  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)cons.c	7.2 (Berkeley) 5/9/91  *	$Id: cons.c,v 1.32 1995/09/09 18:09:44 davidg Exp $  */
 end_comment
 
 begin_include
@@ -243,24 +243,55 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/devfsext.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|<sys/devfsext.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|cndev_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|cndev
+argument_list|,
+argument|SI_SUB_DEVFS
+argument_list|,
+argument|SI_ORDER_ANY
+argument_list|,
+argument|cndev_init
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
+
 begin_function
+specifier|static
 name|void
 name|cndev_init
 parameter_list|(
+name|dummy
+parameter_list|)
 name|void
 modifier|*
-name|data
-parameter_list|)
-comment|/* data not used */
+name|dummy
+decl_stmt|;
 block|{
 name|void
 modifier|*
@@ -291,28 +322,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|SYSINIT
-argument_list|(
-argument|cndev
-argument_list|,
-argument|SI_SUB_DEVFS
-argument_list|,
-argument|SI_ORDER_ANY
-argument_list|,
-argument|cndev_init
-argument_list|,
-argument|NULL
-argument_list|)
-end_macro
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*DEVFS*/
+comment|/* DEVFS */
 end_comment
 
 begin_function
@@ -320,18 +336,19 @@ name|void
 name|cninit
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|consdev
 modifier|*
+name|best_cp
+decl_stmt|,
+modifier|*
 name|cp
 decl_stmt|;
-name|struct
-name|cdevsw
-modifier|*
-name|cdp
-decl_stmt|;
-comment|/* 	 * Collect information about all possible consoles 	 * and find the one with highest priority 	 */
+comment|/* 	 * Find the first console with the highest priority. 	 */
+name|best_cp
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|cp
@@ -365,7 +382,7 @@ operator|>
 name|CN_DEAD
 operator|&&
 operator|(
-name|cn_tab
+name|best_cp
 operator|==
 name|NULL
 operator|||
@@ -373,24 +390,61 @@ name|cp
 operator|->
 name|cn_pri
 operator|>
-name|cn_tab
+name|best_cp
 operator|->
 name|cn_pri
 operator|)
 condition|)
-name|cn_tab
+name|best_cp
 operator|=
 name|cp
 expr_stmt|;
 block|}
-comment|/* 	 * No console, give up. 	 */
+comment|/* 	 * If no console, give up. 	 */
 if|if
 condition|(
-operator|(
-name|cp
-operator|=
+name|best_cp
+operator|==
+name|NULL
+condition|)
+block|{
 name|cn_tab
-operator|)
+operator|=
+name|best_cp
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Initialize console, then attach to it.  This ordering allows 	 * debugging using the previous console, if any. 	 * XXX if there was a previous console, then its driver should 	 * be informed when we forget about it. 	 */
+call|(
+modifier|*
+name|best_cp
+operator|->
+name|cn_init
+call|)
+argument_list|(
+name|best_cp
+argument_list|)
+expr_stmt|;
+name|cn_tab
+operator|=
+name|best_cp
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cninit_finish
+parameter_list|()
+block|{
+name|struct
+name|cdevsw
+modifier|*
+name|cdp
+decl_stmt|;
+if|if
+condition|(
+name|cn_tab
 operator|==
 name|NULL
 condition|)
@@ -451,17 +505,6 @@ comment|/* 	 * XXX there are too many tty pointers.  cn_tty is only used for 	 *
 name|cn_tty
 operator|=
 name|cn_tp
-expr_stmt|;
-comment|/* 	 * Turn on console 	 */
-call|(
-modifier|*
-name|cp
-operator|->
-name|cn_init
-call|)
-argument_list|(
-name|cp
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -997,10 +1040,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
 
 begin_function
 name|int
