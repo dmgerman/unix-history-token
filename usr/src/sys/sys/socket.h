@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)socket.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -391,6 +391,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AF_OSI
+value|AF_ISO
+end_define
+
+begin_define
+define|#
+directive|define
 name|AF_ECMA
 value|8
 end_define
@@ -451,7 +458,7 @@ value|13
 end_define
 
 begin_comment
-comment|/* Direct data link interface */
+comment|/* DEC Direct data link interface */
 end_comment
 
 begin_define
@@ -501,8 +508,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_LINK
 value|18
+end_define
+
+begin_comment
+comment|/* Link layer interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pseudo_AF_XTP
+value|19
+end_define
+
+begin_comment
+comment|/* eXpress Transfer Protocol (no AF) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|20
 end_define
 
 begin_comment
@@ -528,29 +557,6 @@ literal|14
 index|]
 decl_stmt|;
 comment|/* actually longer; address value */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * 4.3 compat sockaddr, move to compat file later  */
-end_comment
-
-begin_struct
-struct|struct
-name|osockaddr
-block|{
-name|u_short
-name|sa_family
-decl_stmt|;
-comment|/* address family */
-name|char
-name|sa_data
-index|[
-literal|14
-index|]
-decl_stmt|;
-comment|/* up to 14 bytes of direct address */
 block|}
 struct|;
 end_struct
@@ -638,6 +644,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_OSI
+value|AF_ISO
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_ECMA
 value|AF_ECMA
 end_define
@@ -708,6 +721,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_LINK
+value|AF_LINK
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_XTP
+value|pseudo_AF_XTP
+end_define
+
+begin_comment
+comment|/* really just proto family, no AF */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PF_MAX
 value|AF_MAX
 end_define
@@ -750,19 +781,13 @@ name|msg_iovlen
 decl_stmt|;
 comment|/* # elements in msg_iov */
 name|caddr_t
-name|msg_accrights
-decl_stmt|;
-comment|/* access rights sent/received */
-name|int
-name|msg_accrightslen
-decl_stmt|;
-name|caddr_t
 name|msg_control
 decl_stmt|;
-comment|/* ancillary data not conveyable 					 * by flags; msgs of the form 					 *	u_short type; 					 *	u_short count; 					 *	u_char  data[count]; 					 */
+comment|/* ancillary data, see below */
 name|int
 name|msg_controllen
 decl_stmt|;
+comment|/* ancillary data buffer len */
 name|int
 name|msg_flags
 decl_stmt|;
@@ -837,6 +862,128 @@ begin_comment
 comment|/* control data lost before delivery */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MSG_WAITALL
+value|0x40
+end_define
+
+begin_comment
+comment|/* wait for full request or error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSG_MAXIOVLEN
+value|16
+end_define
+
+begin_comment
+comment|/*  * Header for ancillary data objects in msg_control buffer.  * Used for additional information with/about a datagram  * not expressible by flags.  The format is a sequence  * of message elements headed by cmsghdr structures.  */
+end_comment
+
+begin_struct
+struct|struct
+name|cmsghdr
+block|{
+name|u_int
+name|cmsg_len
+decl_stmt|;
+comment|/* data byte count, including hdr */
+name|u_int
+name|cmsg_level
+decl_stmt|;
+comment|/* originating protocol */
+name|u_int
+name|cmsg_type
+decl_stmt|;
+comment|/* protocol-specific type */
+comment|/* followed by	u_char  cmsg_data[]; */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* given pointer to struct adatahdr, return pointer to data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMSG_DATA
+parameter_list|(
+name|cmsg
+parameter_list|)
+value|((u_char *)((cmsg) + 1))
+end_define
+
+begin_comment
+comment|/* given pointer to struct adatahdr, return pointer to next adatahdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMSG_NXTHDR
+parameter_list|(
+name|mhdr
+parameter_list|,
+name|cmsg
+parameter_list|)
+define|\
+value|(((caddr_t)(cmsg) + (cmsg)->cmsg_len + sizeof(struct cmsghdr)> \ 	    (mhdr)->msg_control + (mhdr)->msg_controllen) ? \ 	    (struct cmsghdr *)NULL : \ 	    (struct cmsghdr *)((caddr_t)(cmsg) + ALIGN((cmsg)->cmsg_len)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMSG_FIRSTHDR
+parameter_list|(
+name|mhdr
+parameter_list|)
+value|((struct cmsghdr *)(mhdr)->msg_control)
+end_define
+
+begin_comment
+comment|/* "Socket"-level control message types: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCM_RIGHTS
+value|0x01
+end_define
+
+begin_comment
+comment|/* access rights (array of int) */
+end_comment
+
+begin_comment
+comment|/*  * 4.3 compat sockaddr, move to compat file later  */
+end_comment
+
+begin_struct
+struct|struct
+name|osockaddr
+block|{
+name|u_short
+name|sa_family
+decl_stmt|;
+comment|/* address family */
+name|char
+name|sa_data
+index|[
+literal|14
+index|]
+decl_stmt|;
+comment|/* up to 14 bytes of direct address */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * 4.3-compat message header (move to compat file later).  */
 end_comment
@@ -873,13 +1020,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|MSG_MAXIOVLEN
-value|16
-end_define
 
 end_unit
 
