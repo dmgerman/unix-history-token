@@ -3130,7 +3130,7 @@ operator|>>
 literal|24
 operator|)
 operator|&
-literal|0xffffff
+literal|0xfffffffffful
 expr_stmt|;
 name|sd
 operator|->
