@@ -3112,9 +3112,18 @@ name|td2
 argument_list|)
 condition|)
 continue|continue;
-comment|/* 					 * maybe other inhibitted states too? 					 * XXXKSE Is it totally safe to 					 * suspend a non-interruptable thread? 					 */
+comment|/* 					 * maybe other inhibitted states too? 					 */
 if|if
 condition|(
+operator|(
+name|td2
+operator|->
+name|td_flags
+operator|&
+name|TDF_SINTR
+operator|)
+operator|&&
+operator|(
 name|td2
 operator|->
 name|td_inhibitors
@@ -3123,6 +3132,7 @@ operator|(
 name|TDI_SLEEPING
 operator||
 name|TDI_SWAPPED
+operator|)
 operator|)
 condition|)
 name|thread_suspend_one
