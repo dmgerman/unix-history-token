@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.17 (Berkeley) %G%"
+literal|"@(#)util.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,31 +159,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|match
-argument_list|(
-argument|pw
-argument_list|,
-argument|user
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pw
+parameter_list|,
+name|user
+parameter_list|)
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|user
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -335,7 +327,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -776,14 +768,14 @@ modifier|*
 name|pw
 decl_stmt|;
 block|{
-name|PERSON
-modifier|*
-name|pn
-decl_stmt|;
 name|DBT
 name|data
 decl_stmt|,
 name|key
+decl_stmt|;
+name|PERSON
+modifier|*
+name|pn
 decl_stmt|;
 if|if
 condition|(
@@ -802,7 +794,7 @@ name|O_RDWR
 argument_list|,
 literal|0
 argument_list|,
-name|DB_HASH
+name|DB_BTREE
 argument_list|,
 name|NULL
 argument_list|)
