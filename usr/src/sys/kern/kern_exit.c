@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"resourcevar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/cpu.h"
 end_include
 
 begin_ifdef
@@ -323,12 +329,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_fd
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SYSVSHM
@@ -347,19 +347,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vmspace_free
-argument_list|(
-name|p
-operator|->
-name|p_vmspace
-argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_vmspace
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -398,7 +385,18 @@ operator|->
 name|s_ttyvp
 condition|)
 block|{
-comment|/* 			 * Controlling process. 			 * Signal foreground pgrp and revoke access 			 * to controlling terminal. 			 */
+comment|/* 			 * Controlling process. 			 * Signal foreground pgrp, 			 * drain controlling terminal 			 * and revoke access to controlling terminal. 			 */
+if|if
+condition|(
+name|sp
+operator|->
+name|s_ttyp
+operator|->
+name|t_session
+operator|==
+name|sp
+condition|)
+block|{
 if|if
 condition|(
 name|sp
@@ -420,6 +418,16 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ttywait
+argument_list|(
+name|sp
+operator|->
+name|s_ttyp
+argument_list|)
+expr_stmt|;
 name|vgoneall
 argument_list|(
 name|sp
@@ -427,6 +435,7 @@ operator|->
 name|s_ttyvp
 argument_list|)
 expr_stmt|;
+block|}
 name|vrele
 argument_list|(
 name|sp
@@ -446,7 +455,7 @@ name|sp
 operator|->
 name|s_leader
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|fixjobc
@@ -865,8 +874,11 @@ name|defined
 argument_list|(
 name|tahoe
 argument_list|)
-name|u
-operator|.
+comment|/* move this to cpu_exit */
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_savacc
@@ -881,36 +893,11 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Free the memory for the user structure and kernel stack. 	 * As we continue using it until the swtch completes 	 * (or switches to an interrupt stack), we need to block 	 * memory allocation by raising priority until we are gone. 	 */
-operator|(
-name|void
-operator|)
-name|splimp
-argument_list|()
-expr_stmt|;
-comment|/* I don't think this will cause a sleep/realloc anywhere... */
-name|kmem_free
+comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_free(p->p_vmspace)"; 	 * This is machine-dependent, as we may have to change stacks 	 * or ensure that the current one isn't reallocated before we 	 * finish.  cpu_exit will end with a call to swtch(), finishing 	 * our execution (pun intended). 	 */
+name|cpu_exit
 argument_list|(
-name|kernel_map
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|p
-operator|->
-name|p_addr
-argument_list|,
-name|round_page
-argument_list|(
-name|ctob
-argument_list|(
-name|UPAGES
 argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|swtch
-argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
