@@ -2178,7 +2178,7 @@ condition|(
 name|AcpiGbl_FADT
 operator|->
 name|Plvl2Lat
-operator|<
+operator|<=
 literal|100
 condition|)
 block|{
@@ -2266,7 +2266,7 @@ condition|(
 name|AcpiGbl_FADT
 operator|->
 name|Plvl3Lat
-operator|<
+operator|<=
 literal|1000
 operator|&&
 operator|(
