@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1145,7 +1145,30 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Everything's okay, do it.  Copy credentials so other references do 	 * not see our changes. 	 */
+comment|/* 	 * Everything's okay, do it. 	 * Transfer proc count to new user. 	 * Copy credentials so other references do not see our changes. 	 */
+operator|(
+name|void
+operator|)
+name|chgproccnt
+argument_list|(
+name|pc
+operator|->
+name|p_ruid
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chgproccnt
+argument_list|(
+name|uid
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|pc
 operator|->
 name|pc_ucred
