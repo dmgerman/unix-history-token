@@ -1674,15 +1674,12 @@ name|flags
 argument_list|)
 operator|)
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"ebus_alloc_resource: unsupported resource type %d"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
 block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
