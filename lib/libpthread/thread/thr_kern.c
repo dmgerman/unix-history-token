@@ -1256,7 +1256,9 @@ literal|"kse_release"
 argument_list|)
 expr_stmt|;
 name|kse_release
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|_kern_idle_running
