@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.19 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.20 %G%  */
 end_comment
 
 begin_define
@@ -664,7 +664,7 @@ decl_stmt|;
 comment|/* if JXXX, where going to */
 ifdef|#
 directive|ifdef
-name|DJXXX
+name|DEBUG
 name|short
 name|s_jxline
 decl_stmt|;

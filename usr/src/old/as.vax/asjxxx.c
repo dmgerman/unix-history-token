@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.7 %G%"
+literal|"@(#)asjxxx.c 4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -308,7 +308,29 @@ name|dotp
 operator|-
 name|usedot
 expr_stmt|;
-comment|/* 		 *	value ALWAYS (ALWAYS!!!) indexes the next instruction 		 *	after the jump, even in the jump must be exploded 		 *	(bumped) 		 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|jumpfrom
+operator|->
+name|s_name
+operator|=
+name|ITABFETCH
+argument_list|(
+name|opcode
+argument_list|)
+operator|->
+name|i_name
+expr_stmt|;
+name|jumpfrom
+operator|->
+name|s_jxline
+operator|=
+name|lineno
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 		 *	value ALWAYS (ALWAYS!!!) indexes the next instruction 		 *	after the jump, even if the jump must be exploded 		 *	(bumped) 		 */
 name|jumpfrom
 operator|->
 name|s_value
@@ -556,6 +578,16 @@ specifier|register
 name|int
 name|mask
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+specifier|static
+name|struct
+name|strdesc
+name|noname
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 *	Problem with .align 	 * 	 *	When the loader constructs an executable file from 	 *	a number of objects, it effectively concatnates 	 *	together all of the text segments from all objects, 	 *	and then all of the data segments. 	 * 	 *	If we do an align by a large value, we can align 	 *	within the a.out this assembly produces, but 	 *	after the loader concatnates, the alignment can't 	 *	be guaranteed if the objects preceding this one 	 *	in the load are also aligned to the same size. 	 * 	 *	Currently, the loader guarantees full word alignment. 	 *	So, ridiculous aligns are caught here and converted 	 *	to a .align 2, if possible. 	 */
 if|if
 condition|(
@@ -687,6 +719,28 @@ name|dotp
 operator|-
 name|usedot
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|sp
+operator|->
+name|s_name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|noname
+expr_stmt|;
+name|sp
+operator|->
+name|s_jxline
+operator|=
+name|lineno
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 *	We guess that the align will take up at least one 		 *	byte in the code output.  We will correct for this 		 *	initial high guess when we explode (bump) aligns 		 *	when we fix the jxxxes.  We must do this guess 		 *	so that the symbol table is sorted correctly 		 *	and labels declared to fall before the align 		 *	really get their, instead of guessing zero size 		 *	and have the label (incorrectly) fall after the jxxx. 		 *	This is a quirk of our requirement that indices into 		 *	the code stream point to the next byte following 		 *	the logical entry in the symbol table 		 */
 name|dotp
 operator|->
@@ -1112,7 +1166,9 @@ argument_list|(
 name|jumpfrom
 argument_list|)
 argument_list|,
-name|lineno
+name|jumpfrom
+operator|->
+name|s_jxline
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1171,7 +1227,7 @@ condition|(
 name|intdest
 operator|->
 name|s_value
-operator|>
+operator|>=
 name|dest
 operator|->
 name|s_value
@@ -1671,13 +1727,19 @@ operator|->
 name|s_dest
 argument_list|)
 argument_list|,
-name|lineno
+name|sp
+operator|->
+name|s_jxline
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Explode an align!\n"
+literal|"Explode an align! on line %d\n"
+argument_list|,
+name|sp
+operator|->
+name|s_jxline
 argument_list|)
 expr_stmt|;
 block|}

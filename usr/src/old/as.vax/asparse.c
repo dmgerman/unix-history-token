@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.17 %G%"
+literal|"@(#)asparse.c 4.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -692,13 +692,10 @@ operator|->
 name|e_xvalue
 operator|||
 operator|(
-operator|(
 name|passno
 operator|==
 literal|1
-operator|)
 operator|&&
-operator|(
 name|np
 operator|->
 name|s_index
@@ -707,27 +704,7 @@ name|dotp
 operator|->
 name|e_xloc
 operator|)
-operator|)
 condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|DEBUG
-if|if
-condition|(
-name|FETCHNAME
-argument_list|(
-name|np
-argument_list|)
-index|[
-literal|0
-index|]
-operator|!=
-literal|'L'
-condition|)
-endif|#
-directive|endif
-endif|not DEBUG
 block|{
 if|if
 condition|(
@@ -764,7 +741,6 @@ operator|->
 name|e_xvalue
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|np
@@ -836,7 +812,7 @@ block|}
 block|}
 comment|/*end of this being a label*/
 block|}
-comment|/*end of to consuming all labels, NLs and SEMIS */
+comment|/*end of consuming all labels, NLs and SEMIS */
 name|xp
 operator|=
 name|explist
