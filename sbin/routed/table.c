@@ -7384,6 +7384,11 @@ operator|)
 name|mask
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
