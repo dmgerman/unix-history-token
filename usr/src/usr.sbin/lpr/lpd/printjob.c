@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	8.3 (Berkeley) %G%"
+literal|"@(#)printjob.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -816,6 +816,8 @@ name|off_t
 name|pidoff
 decl_stmt|;
 name|int
+name|errcnt
+decl_stmt|,
 name|count
 init|=
 literal|0
@@ -1255,6 +1257,10 @@ operator|<
 literal|0
 condition|)
 continue|continue;
+name|errcnt
+operator|=
+literal|0
+expr_stmt|;
 name|restart
 label|:
 operator|(
@@ -1448,6 +1454,11 @@ condition|(
 name|i
 operator|==
 name|REPRINT
+operator|&&
+operator|++
+name|errcnt
+operator|<
+literal|5
 condition|)
 block|{
 comment|/* try reprinting the job */
@@ -1544,6 +1555,80 @@ comment|/* try to reopen printer */
 goto|goto
 name|restart
 goto|;
+block|}
+else|else
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"%s: job could not be %s (%s)"
+argument_list|,
+name|printer
+argument_list|,
+name|remote
+condition|?
+literal|"sent to remote host"
+else|:
+literal|"printed"
+argument_list|,
+name|q
+operator|->
+name|q_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+name|REPRINT
+condition|)
+block|{
+comment|/* insure we don't attempt this job again */
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|q
+operator|->
+name|q_name
+argument_list|)
+expr_stmt|;
+name|q
+operator|->
+name|q_name
+index|[
+literal|0
+index|]
+operator|=
+literal|'d'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|q
+operator|->
+name|q_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|logname
+index|[
+literal|0
+index|]
+condition|)
+name|sendmail
+argument_list|(
+name|logname
+argument_list|,
+name|FATALERR
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|free
@@ -1822,7 +1907,7 @@ argument_list|,
 literal|"0"
 argument_list|)
 expr_stmt|;
-comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		S -- "stat info" for symbolic link protection 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		n -- "file name" ditroff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
+comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		S -- "stat info" for symbolic link protection 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *		R -- laser dpi "resolution" 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		n -- "file name" ditroff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
 comment|/* pass 1 */
 while|while
 condition|(
@@ -2310,6 +2395,9 @@ literal|'U'
 case|:
 case|case
 literal|'M'
+case|:
+case|case
+literal|'R'
 case|:
 continue|continue;
 block|}
@@ -3303,6 +3391,38 @@ return|;
 block|}
 if|if
 condition|(
+name|prog
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fi
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: no filter found in printcap for format character '%c'"
+argument_list|,
+name|printer
+argument_list|,
+name|format
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|(
 name|av
 index|[
@@ -3449,13 +3569,17 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: output filter died (%d)"
+literal|"%s: output filter died (retcode=%d termsig=%d)"
 argument_list|,
 name|printer
 argument_list|,
 name|status
 operator|.
 name|w_retcode
+argument_list|,
+name|status
+operator|.
+name|w_termsig
 argument_list|)
 expr_stmt|;
 return|return
@@ -3714,7 +3838,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: Daemon filter '%c' terminated (%d)"
+literal|"%s: filter '%c' terminated (termsig=%d)"
 argument_list|,
 name|printer
 argument_list|,
@@ -3758,12 +3882,20 @@ operator|(
 name|REPRINT
 operator|)
 return|;
+case|case
+literal|2
+case|:
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
 default|default:
 name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: Daemon filter '%c' exited (%d)"
+literal|"%s: filter '%c' exited (retcode=%d)"
 argument_list|,
 name|printer
 argument_list|,
@@ -3774,12 +3906,9 @@ operator|.
 name|w_retcode
 argument_list|)
 expr_stmt|;
-case|case
-literal|2
-case|:
 return|return
 operator|(
-name|ERROR
+name|FILTERERR
 operator|)
 return|;
 block|}
@@ -5548,7 +5677,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Subject: printer job\n\n"
+literal|"Subject: %s printer job \"%s\"\n"
+argument_list|,
+name|printer
+argument_list|,
+operator|*
+name|jobname
+condition|?
+name|jobname
+else|:
+literal|"<unknown>"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Reply-To: root@%s\n\n"
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5640,14 +5785,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nwas printed but had some errors\n"
+literal|"\nhad some errors and may not have printed\n"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 name|printf
 argument_list|(
-literal|"\nwas printed but had the following errors:\n"
+literal|"\nhad the following errors and may not have printed:\n"
 argument_list|)
 expr_stmt|;
 while|while
