@@ -29340,6 +29340,11 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|key_sendup_mbuf
 argument_list|(
