@@ -565,6 +565,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|file
+operator|*
+name|fget_locked
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|filedesc
+operator|*
+name|fdp
+operator|,
+name|int
+name|fd
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|pid_t
 name|fgetown
@@ -653,23 +675,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|file
-operator|*
-name|fget_locked
-argument_list|(
-expr|struct
-name|filedesc
-operator|*
-argument_list|,
-name|int
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|void
 name|setugidsafety
@@ -712,12 +717,9 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|fd
-operator|<
-literal|0
-operator|||
+comment|/* u_int cast checks for negative descriptors. */
+return|return
+operator|(
 operator|(
 name|u_int
 operator|)
@@ -726,14 +728,9 @@ operator|>=
 name|fdp
 operator|->
 name|fd_nfiles
-condition|)
-return|return
-operator|(
+condition|?
 name|NULL
-operator|)
-return|;
-return|return
-operator|(
+else|:
 name|fdp
 operator|->
 name|fd_ofiles
