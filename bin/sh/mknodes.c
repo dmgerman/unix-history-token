@@ -361,8 +361,6 @@ specifier|static
 name|FILE
 modifier|*
 name|infp
-init|=
-name|stdin
 decl_stmt|;
 end_decl_stmt
 
@@ -583,6 +581,10 @@ name|error
 argument_list|(
 literal|"usage: mknodes file"
 argument_list|)
+expr_stmt|;
+name|infp
+operator|=
+name|stdin
 expr_stmt|;
 if|if
 condition|(
