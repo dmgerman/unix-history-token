@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.10 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ directive|define
 name|X_MSGBUF
 value|0
 block|{
-literal|"_msgbuf"
+literal|"_msgbufp"
 block|}
 block|,
 block|{
@@ -182,6 +182,9 @@ name|ep
 decl_stmt|;
 name|struct
 name|msgbuf
+modifier|*
+name|bufp
+decl_stmt|,
 name|cur
 decl_stmt|;
 name|char
@@ -322,7 +325,7 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"s: msgbuf not found"
+literal|"s: msgbufp not found"
 argument_list|,
 name|nlistf
 condition|?
@@ -343,6 +346,27 @@ name|X_MSGBUF
 index|]
 operator|.
 name|n_value
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|bufp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bufp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|kvm_read
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|bufp
 argument_list|,
 operator|(
 name|void
