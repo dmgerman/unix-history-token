@@ -418,6 +418,11 @@ expr_stmt|;
 name|setup
 argument_list|()
 expr_stmt|;
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|updatestat
 argument_list|()
 expr_stmt|;
@@ -755,6 +760,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|kvm_close
+argument_list|(
+name|kd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|from_inetd
