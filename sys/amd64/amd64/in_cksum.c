@@ -195,7 +195,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|size_t
+name|int
 name|len
 parameter_list|)
 block|{
