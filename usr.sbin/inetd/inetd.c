@@ -4573,7 +4573,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ typeof(a) c = a; a = b; b = c; }
+value|{ __typeof__(a) c = a; a = b; b = c; }
 name|omask
 operator|=
 name|sigblock
