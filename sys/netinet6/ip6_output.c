@@ -2279,6 +2279,7 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* XXX rt not locked */
 name|ia
 operator|=
 name|ifatoia6
@@ -2618,7 +2619,6 @@ name|ro_rt
 operator|==
 literal|0
 condition|)
-block|{
 name|ro
 operator|->
 name|ro_rt
@@ -2640,7 +2640,14 @@ argument_list|,
 literal|0UL
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|RT_LOCK
+argument_list|(
+name|ro
+operator|->
+name|ro_rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ro
