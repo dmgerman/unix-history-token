@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.33 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -780,6 +780,16 @@ argument_list|,
 operator|*
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|e
+operator|->
+name|e_sendmode
+operator|=
+name|SM_DELIVER
 expr_stmt|;
 name|bh
 operator|=
