@@ -3473,7 +3473,7 @@ operator|-
 name|seg_addr
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Is this .text or .data?  Use VM_PROT_WRITE 			 * to distinguish between the two for the purposes 			 * of limit checking and vmspace fields. 			 */
+comment|/* 			 * Is this .text or .data?  Use VM_PROT_WRITE 			 * to distinguish between the two for the purpose 			 * of limit checking and vmspace fields. 			 */
 if|if
 condition|(
 name|prot
@@ -3557,7 +3557,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Does the entry point belongs to this segment? */
+comment|/* Does the entry point belong to this segment? */
 if|if
 condition|(
 name|hdr
