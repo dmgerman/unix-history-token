@@ -291,6 +291,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX: This is disgusting and wrong in every way imaginable:  The only reason  * XXX: we have a clone function is because of the root-mount hack we currently  * XXX: employ.  An improvment would be to unregister this cloner once we know  * XXX: we no longer need it.  Ideally, root-fs would be mounted through DEVFS  * XXX: eliminating the need for this hack.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -330,7 +334,6 @@ return|return;
 name|g_waitidle
 argument_list|()
 expr_stmt|;
-comment|/* XXX: can I drop Giant here ??? */
 comment|/* g_topology_lock(); */
 name|LIST_FOREACH
 argument_list|(
