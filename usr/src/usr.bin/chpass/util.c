@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.6 (Berkeley) %G%"
+literal|"@(#)util.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,9 +541,9 @@ argument_list|(
 name|year
 argument_list|)
 condition|?
-name|DAYS_PER_LYEAR
+name|DAYSPERLYEAR
 else|:
-name|DAYS_PER_NYEAR
+name|DAYSPERNYEAR
 expr_stmt|;
 while|while
 condition|(
@@ -567,11 +567,11 @@ name|tval
 operator|=
 name|tval
 operator|*
-name|HOURS_PER_DAY
+name|HOURSPERDAY
 operator|*
-name|MINS_PER_HOUR
+name|MINSPERHOUR
 operator|*
-name|SECS_PER_MIN
+name|SECSPERMIN
 expr_stmt|;
 name|tval
 operator|-=
