@@ -266,7 +266,7 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-name|__FreeBSD_version__
+name|__FreeBSD_version
 operator|>=
 literal|500023
 end_if
@@ -451,9 +451,9 @@ block|,
 if|#
 directive|if
 operator|(
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|<
-literal|5
+literal|500000
 operator|)
 operator|-
 literal|1
