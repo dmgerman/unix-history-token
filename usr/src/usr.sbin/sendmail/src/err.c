@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.25 (Berkeley) %G%"
+literal|"@(#)err.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,10 +82,7 @@ end_function_decl
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|NAMED_BIND
-argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -1632,8 +1629,8 @@ case|:
 return|return
 literal|"Timeout on file open"
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 case|case
 name|HOST_NOT_FOUND

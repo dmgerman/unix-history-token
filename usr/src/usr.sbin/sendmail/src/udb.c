@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.5 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.6 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.5 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.6 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2157,8 +2157,8 @@ operator|==
 literal|'*'
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|nmx
 operator|=

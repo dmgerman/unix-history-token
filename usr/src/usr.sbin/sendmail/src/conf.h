@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.95 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.96 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -280,17 +280,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NAMED_BIND
-value|1
-end_define
-
-begin_comment
-comment|/* use Berkeley Internet Domain Server */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MATCHGECOS
 value|1
 end_define
@@ -325,6 +314,32 @@ end_define
 
 begin_comment
 comment|/* look in user database (requires NEWDB) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/********************************************************************** **  0/1 Compilation options. **	#define these to 1 if they are available; **	#define them to 0 otherwise. **********************************************************************/
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAMED_BIND
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NAMED_BIND
+value|1
+end_define
+
+begin_comment
+comment|/* use Berkeley Internet Domain Server */
 end_comment
 
 begin_endif

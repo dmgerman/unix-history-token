@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.21 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,11 +46,11 @@ directive|include
 file|<grp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -2041,8 +2041,8 @@ argument_list|,
 literal|"host host"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -3723,11 +3723,11 @@ begin_comment
 comment|/* set if option is stuck */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_struct
 struct|struct
@@ -4402,8 +4402,8 @@ case|case
 literal|'I'
 case|:
 comment|/* use internet domain name server */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|UseNameServer
 operator|=

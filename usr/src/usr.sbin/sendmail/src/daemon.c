@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.37 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.38 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.37 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.38 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,11 +90,11 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -791,8 +791,8 @@ decl_stmt|;
 name|int
 name|addrlen
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 specifier|extern
 name|int
@@ -801,8 +801,8 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	**  Set up the address for the mailer. 	**	Accept "[a.b.c.d]" syntax for host name. 	*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|h_errno
 operator|=
@@ -986,8 +986,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -2803,8 +2803,8 @@ modifier|*
 name|gethostbyaddr
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 specifier|extern
 name|int
@@ -2868,8 +2868,8 @@ name|s_namecanon
 operator|.
 name|nc_errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|h_errno
 operator|=
@@ -3063,8 +3063,8 @@ name|nc_errno
 operator|=
 name|errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|s
 operator|->
@@ -3361,8 +3361,8 @@ name|nc_errno
 operator|=
 name|errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|s
 operator|->
@@ -3722,8 +3722,8 @@ decl_stmt|;
 name|int
 name|saveretry
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 comment|/* shorten name server timeout to avoid higher level timeouts */
 name|saveretry
@@ -3859,8 +3859,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|_res
 operator|.

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.27 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3144,8 +3144,8 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|char
 modifier|*

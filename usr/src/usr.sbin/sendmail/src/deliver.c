@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.77 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,11 +46,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -2149,8 +2149,8 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 comment|/* unless interactive, try twice, over a minute */
 if|if
@@ -3337,8 +3337,8 @@ name|e
 operator|->
 name|e_from
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -3911,8 +3911,8 @@ name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|mci
 operator|->
@@ -5383,8 +5383,8 @@ name|mci
 operator|->
 name|mci_errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|h_errno
 operator|=
@@ -5779,8 +5779,8 @@ block|}
 endif|#
 directive|endif
 comment|/* SMTP */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -6545,8 +6545,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -6641,8 +6641,8 @@ operator|=
 name|buf
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 elseif|else
 if|if
@@ -6927,8 +6927,8 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|h_errno
 operator|=
@@ -9208,8 +9208,8 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|int
 name|nmx
@@ -9299,8 +9299,8 @@ operator|->
 name|s_hostsig
 return|;
 comment|/* 	**  Not already there -- create a signature. 	*/
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 if|if
 condition|(
@@ -9411,8 +9411,8 @@ name|mci_errno
 operator|=
 name|errno
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NAMED_BIND
 name|mci
 operator|->

@@ -15,11 +15,11 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.18 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.19 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.18 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.19 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,11 +60,11 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NAMED_BIND
-end_ifdef
+end_if
 
 begin_include
 include|#
