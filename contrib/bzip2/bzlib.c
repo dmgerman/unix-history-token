@@ -16,7 +16,7 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2000 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
+comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2002 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ literal|"when you were using some program which uses libbzip2 as a\n"
 literal|"component, you should also report this bug to the author(s)\n"
 literal|"of that program.  Please make an effort to report this bug;\n"
 literal|"timely and accurate bug reports eventually lead to higher\n"
-literal|"quality software.  Thanks.  Julian Seward, 21 March 2000.\n\n"
+literal|"quality software.  Thanks.  Julian Seward, 30 December 2001.\n\n"
 argument_list|,
 name|errcode
 argument_list|,
@@ -78,6 +78,43 @@ name|BZ2_bzlibVersion
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errcode
+operator|==
+literal|1007
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n*** A special note about internal error number 1007 ***\n"
+literal|"\n"
+literal|"Experience suggests that a common cause of i.e. 1007\n"
+literal|"is unreliable memory or other hardware.  The 1007 assertion\n"
+literal|"just happens to cross-check the results of huge numbers of\n"
+literal|"memory reads/writes, and so acts (unintendedly) as a stress\n"
+literal|"test of your memory system.\n"
+literal|"\n"
+literal|"I suggest the following: try compressing the file again,\n"
+literal|"possibly monitoring progress in detail with the -vv flag.\n"
+literal|"\n"
+literal|"* If the error cannot be reproduced, and/or happens at different\n"
+literal|"  points in compression, you may have a flaky memory system.\n"
+literal|"  Try a memory-test program.  I have used Memtest86\n"
+literal|"  (www.memtest86.com).  At the time of writing it is free (GPLd).\n"
+literal|"  Memtest86 tests memory much more thorougly than your BIOSs\n"
+literal|"  power-on test, and may find failures that the BIOS doesn't.\n"
+literal|"\n"
+literal|"* If the error can be repeatably reproduced, this is a bug in\n"
+literal|"  bzip2, and I would very much like to hear about it.  Please\n"
+literal|"  let me know, and, ideally, save a copy of the file causing the\n"
+literal|"  problem -- without which I will be unable to investigate it.\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|3
@@ -7149,7 +7186,7 @@ operator|=
 operator|*
 name|mode
 operator|-
-literal|'0'
+name|BZ_HDR_0
 expr_stmt|;
 block|}
 block|}
