@@ -2408,9 +2408,14 @@ name|LogDNS
 argument_list|)
 operator|)
 operator|&&
+operator|(
+operator|!
+name|filter
+operator|||
 name|filter
 operator|->
 name|logok
+operator|)
 expr_stmt|;
 name|loglen
 operator|=
@@ -2443,6 +2448,10 @@ sizeof|sizeof
 name|logbuf
 condition|)
 block|{
+if|if
+condition|(
+name|filter
+condition|)
 name|snprintf
 argument_list|(
 name|logbuf
@@ -2459,6 +2468,21 @@ argument_list|,
 name|filter
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|logbuf
+operator|+
+name|loglen
+argument_list|,
+sizeof|sizeof
+name|logbuf
+operator|-
+name|loglen
+argument_list|,
+literal|"  "
 argument_list|)
 expr_stmt|;
 name|loglen
@@ -3455,6 +3479,8 @@ break|break;
 block|}
 if|if
 condition|(
+name|filter
+operator|&&
 name|FilterCheck
 argument_list|(
 name|pip
@@ -3515,6 +3541,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|filter
+operator|&&
 name|FilterCheck
 argument_list|(
 name|pip
@@ -3554,6 +3582,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|filter
+operator|&&
 name|uh
 operator|&&
 name|ntohs
