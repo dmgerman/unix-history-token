@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: read.c,v 1.6 1995/05/30 04:46:31 rgrimes Exp $"
+literal|"$Id: read.c,v 1.7 1996/10/01 00:11:37 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1992,6 +1992,14 @@ block|{
 literal|"org"
 block|,
 name|s_org
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"p2align"
+block|,
+name|s_align_ptwo
 block|,
 literal|0
 block|}
