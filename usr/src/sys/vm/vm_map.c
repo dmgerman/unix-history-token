@@ -37,12 +37,6 @@ directive|include
 file|<vm/vm_page.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_object.h>
-end_include
-
 begin_comment
 comment|/*  *	Virtual memory maps provide for the mapping, protection,  *	and sharing of virtual memory objects.  In addition,  *	this module provides for an efficient virtual copy of  *	memory from one map to another.  *  *	Synchronization is required prior to most operations.  *  *	Maps consist of an ordered doubly-linked list of simple  *	entries; a single hint is used to speed up lookups.  *  *	In order to properly represent the sharing of virtual  *	memory regions among maps, the map structure is bi-level.  *	Top-level ("address") maps refer to regions of sharable  *	virtual memory.  These regions are implemented as  *	("sharing") maps, which then refer to the actual virtual  *	memory objects.  When two address maps "share" memory,  *	their top-level maps both have references to the same  *	sharing map.  When memory is virtual-copied from one  *	address map to another, the references in the sharing  *	maps are actually copied -- no copying occurs at the  *	virtual memory object level.  *  *	Since portions of maps are specified by start/end addreses,  *	which may not align with existing map entries, all  *	routines merely "clip" entries to these start/end values.  *	[That is, an entry is split into two, bordering at a  *	start or end value.]  Note that these clippings may not  *	always be necessary (as the two resulting entries are then  *	not changed); however, the clipping is done for convenience.  *	No attempt is currently made to "glue back together" two  *	abutting entries.  *  *	As mentioned above, virtual copy operations are performed  *	by copying VM object references from one sharing map to  *	another, and then marking both regions as copy-on-write.  *	It is important to note that only one writeable reference  *	to a VM object region exists in any map -- this means that  *	shadow object creation can be delayed until a write operation  *	occurs.  */
 end_comment
@@ -654,7 +648,13 @@ name|map
 operator|->
 name|lock
 argument_list|,
-name|TRUE
+name|PVM
+argument_list|,
+literal|"thrd_sleep"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|simple_lock_init
@@ -3420,7 +3420,7 @@ name|next
 expr_stmt|;
 block|}
 comment|/* 		 *	Now decrement the wiring count for each region. 		 *	If a region becomes completely unwired, 		 *	unwire its physical pages and mappings. 		 */
-name|lock_set_recursive
+name|vm_map_set_recursive
 argument_list|(
 operator|&
 name|map
@@ -3494,7 +3494,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-name|lock_clear_recursive
+name|vm_map_clear_recursive
 argument_list|(
 operator|&
 name|map
@@ -3767,7 +3767,7 @@ comment|/* trust me ... */
 block|}
 else|else
 block|{
-name|lock_set_recursive
+name|vm_map_set_recursive
 argument_list|(
 operator|&
 name|map
@@ -3775,12 +3775,16 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|lock_write_to_read
+name|lockmgr
 argument_list|(
 operator|&
 name|map
 operator|->
 name|lock
+argument_list|,
+name|LK_DOWNGRADE
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 block|}
@@ -3886,7 +3890,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lock_clear_recursive
+name|vm_map_clear_recursive
 argument_list|(
 operator|&
 name|map
@@ -5905,7 +5909,7 @@ name|src_entry
 operator|->
 name|start
 expr_stmt|;
-name|lock_set_recursive
+name|vm_map_set_recursive
 argument_list|(
 operator|&
 name|src_map
@@ -6007,7 +6011,7 @@ name|dst_entry
 operator|->
 name|start
 expr_stmt|;
-name|lock_set_recursive
+name|vm_map_set_recursive
 argument_list|(
 operator|&
 name|dst_map
@@ -6043,7 +6047,7 @@ name|dst_map
 operator|==
 name|new_dst_map
 condition|)
-name|lock_clear_recursive
+name|vm_map_clear_recursive
 argument_list|(
 operator|&
 name|dst_map
@@ -6057,7 +6061,7 @@ name|src_map
 operator|==
 name|new_src_map
 condition|)
-name|lock_clear_recursive
+name|vm_map_clear_recursive
 argument_list|(
 operator|&
 name|src_map
@@ -7050,12 +7054,16 @@ block|{
 comment|/* 			 *	Make a new object, and place it in the 			 *	object chain.  Note that no new references 			 *	have appeared -- one just moved from the 			 *	share map to the new object. 			 */
 if|if
 condition|(
-name|lock_read_to_write
+name|lockmgr
 argument_list|(
 operator|&
 name|share_map
 operator|->
 name|lock
+argument_list|,
+name|LK_EXCLUPGRADE
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
 block|{
@@ -7108,12 +7116,16 @@ name|needs_copy
 operator|=
 name|FALSE
 expr_stmt|;
-name|lock_write_to_read
+name|lockmgr
 argument_list|(
 operator|&
 name|share_map
 operator|->
 name|lock
+argument_list|,
+name|LK_DOWNGRADE
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 block|}
@@ -7143,12 +7155,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|lock_read_to_write
+name|lockmgr
 argument_list|(
 operator|&
 name|share_map
 operator|->
 name|lock
+argument_list|,
+name|LK_EXCLUPGRADE
+argument_list|,
+name|curproc
 argument_list|)
 condition|)
 block|{
@@ -7195,12 +7211,16 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-name|lock_write_to_read
+name|lockmgr
 argument_list|(
 operator|&
 name|share_map
 operator|->
 name|lock
+argument_list|,
+name|LK_DOWNGRADE
+argument_list|,
+name|curproc
 argument_list|)
 expr_stmt|;
 block|}
