@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	7.44 (Berkeley) 5/28/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00062  * --------------------         -----   ----------------------  *  * 11 Dec 92	Williams Jolitz		Fixed tty handling  * 28 Nov 1991	Warren Toomey		Cleaned up the use of COMPAT_43  *					in the 386BSD kernel.	   */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	7.44 (Berkeley) 5/28/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         3       00163  * --------------------         -----   ----------------------  *  * 11 Dec 92	Williams Jolitz		Fixed tty handling  * 28 Nov 1991	Warren Toomey		Cleaned up the use of COMPAT_43  *					in the 386BSD kernel.	   * 27 May 93	Bruce Evans		Sign Ext fix for TIOCSTI from the net  *					Kludge to hook in RTS/CTS flow control  *					Avoid sleeping on lbolt, it slows down  *					output unnecessarily.  */
 end_comment
 
 begin_decl_stmt
@@ -2498,7 +2498,7 @@ operator|)
 operator|(
 operator|*
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|data
@@ -2794,7 +2794,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*struct ringb tb;*/
 name|catb
 argument_list|(
 operator|&
@@ -2821,7 +2820,6 @@ operator|->
 name|t_raw
 argument_list|)
 expr_stmt|;
-comment|/*tb = tp->t_raw; 					tp->t_raw = tp->t_can; 					tp->t_can = tb;*/
 block|}
 block|}
 name|tp
@@ -3815,6 +3813,7 @@ name|t_pgrp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/*  * XXX - do we need to send cc[VSTART] or do a ttstart() here in some cases?  * (TS_TBLOCK and TS_RTSBLOCK are being cleared.)  */
 name|tp
 operator|->
 name|t_state
@@ -6691,13 +6690,29 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Look to unblock output now that (presumably) 	 * the input queue has gone down. 	 */
+if|#
+directive|if
+literal|0
+block|if (tp->t_state&TS_TBLOCK&& RB_LEN(&tp->t_raw)< TTYHOG/5) { 		if (cc[VSTART] != _POSIX_VDISABLE&& 		    putc(cc[VSTART],&tp->t_out) == 0) { 			tp->t_state&= ~TS_TBLOCK; 			ttstart(tp); 		} 	}
+else|#
+directive|else
+define|#
+directive|define
+name|TS_RTSBLOCK
+value|TS_TBLOCK
+comment|/* XXX */
+define|#
+directive|define
+name|RB_I_LOW_WATER
+value|((RBSZ - 2 * 256) * 7 / 8)
+comment|/* XXX */
 if|if
 condition|(
 name|tp
 operator|->
 name|t_state
 operator|&
-name|TS_TBLOCK
+name|TS_RTSBLOCK
 operator|&&
 name|RB_LEN
 argument_list|(
@@ -6706,35 +6721,8 @@ name|tp
 operator|->
 name|t_raw
 argument_list|)
-operator|<
-name|TTYHOG
-operator|/
-literal|5
-condition|)
-block|{
-if|if
-condition|(
-name|cc
-index|[
-name|VSTART
-index|]
-operator|!=
-name|_POSIX_VDISABLE
-operator|&&
-name|putc
-argument_list|(
-name|cc
-index|[
-name|VSTART
-index|]
-argument_list|,
-operator|&
-name|tp
-operator|->
-name|t_out
-argument_list|)
-operator|==
-literal|0
+operator|<=
+name|RB_I_LOW_WATER
 condition|)
 block|{
 name|tp
@@ -6742,7 +6730,7 @@ operator|->
 name|t_state
 operator|&=
 operator|~
-name|TS_TBLOCK
+name|TS_RTSBLOCK
 expr_stmt|;
 name|ttstart
 argument_list|(
@@ -6750,7 +6738,8 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
@@ -7420,6 +7409,12 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nttysleep - no c-lists\n"
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|error
@@ -7672,11 +7667,33 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* out of space, wait a bit */
 name|ttstart
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RB_CONTIGPUT
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_out
+argument_list|)
+operator|>
+literal|0
+condition|)
+goto|goto
+name|loop
+goto|;
+comment|/* synchronous/fast */
+comment|/* out of space, wait a bit */
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_ASLEEP
 expr_stmt|;
 if|if
 condition|(
@@ -7690,7 +7707,9 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|lbolt
+name|tp
+operator|->
+name|t_out
 argument_list|,
 name|TTOPRI
 operator||
