@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.44 1998/10/23 17:05:06 bde Exp $"
+literal|"$Id: mkioconf.c,v 1.45 1998/11/15 18:07:35 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4212,15 +4212,61 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"{ -1,&%3sdriver, %8s,"
+literal|"{ -1,&%3sdriver, "
 argument_list|,
 name|mp
 operator|->
 name|d_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|d_port
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %8s,"
 argument_list|,
 name|mp
 operator|->
 name|d_port
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mp
+operator|->
+name|d_portn
+operator|==
+operator|-
+literal|1
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"       %d,"
+argument_list|,
+name|mp
+operator|->
+name|d_portn
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"   0x%04x,"
+argument_list|,
+name|mp
+operator|->
+name|d_portn
 argument_list|)
 expr_stmt|;
 name|fprintf
