@@ -574,7 +574,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|" (%.*s)"
+literal|"[%.*s]"
 argument_list|,
 operator|(
 name|int
