@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.12 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2178,7 +2178,7 @@ index|[
 literal|1
 index|]
 operator|=
-literal|"-l"
+literal|"-c"
 expr_stmt|;
 name|av
 index|[
