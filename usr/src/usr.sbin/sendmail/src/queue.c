@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.31
+literal|3.32
 operator|%
 name|G
 operator|%
@@ -1260,6 +1260,15 @@ literal|0
 index|]
 operator|!=
 literal|'c'
+operator|||
+name|d
+operator|->
+name|d_name
+index|[
+literal|1
+index|]
+operator|!=
+literal|'f'
 condition|)
 continue|continue;
 comment|/* yes -- find the control file location */
@@ -1877,6 +1886,9 @@ name|readqf
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|eatheader
+argument_list|()
 expr_stmt|;
 comment|/* do the delivery */
 if|if
