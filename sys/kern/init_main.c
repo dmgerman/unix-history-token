@@ -2248,12 +2248,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|devfs_present
-condition|)
-block|{
-comment|/* 		 * For disk based systems, we probably cannot do this yet 		 * since the fs will be read-only.  But a NFS root 		 * might be ok.  It is worth a shot. 		 */
+ifndef|#
+directive|ifndef
+name|NODEVFS
+comment|/* 	 * For disk based systems, we probably cannot do this yet 	 * since the fs will be read-only.  But a NFS root 	 * might be ok.  It is worth a shot. 	 */
 name|error
 operator|=
 name|kern_mkdir
@@ -2310,7 +2308,8 @@ name|init_does_devfs
 operator|=
 literal|1
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 comment|/* 	 * Need just enough stack to hold the faked-up "execve()" arguments. 	 */
 name|addr
 operator|=

@@ -9514,11 +9514,9 @@ argument_list|,
 literal|"stderr"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|devfs_present
-condition|)
+ifdef|#
+directive|ifdef
+name|NODEVFS
 block|{
 name|int
 name|fd
@@ -9555,6 +9553,8 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 end_function
 

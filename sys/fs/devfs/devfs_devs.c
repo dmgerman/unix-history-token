@@ -2329,10 +2329,6 @@ name|devfs_destroy_hook
 operator|=
 name|devfs_destroy
 expr_stmt|;
-name|devfs_present
-operator|=
-literal|1
-expr_stmt|;
 name|devfs_rules_init
 argument_list|()
 expr_stmt|;

@@ -179,12 +179,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|devfs_present
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|ready_for_devs
@@ -275,15 +269,16 @@ operator|->
 name|si_devsw
 operator|)
 return|;
-if|if
-condition|(
-name|devfs_present
-condition|)
+ifndef|#
+directive|ifndef
+name|NODEVFS
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+else|#
+directive|else
 return|return
 operator|(
 name|cdevsw
@@ -295,6 +290,8 @@ argument_list|)
 index|]
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
