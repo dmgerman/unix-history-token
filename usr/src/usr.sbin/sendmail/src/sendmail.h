@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.12	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.13	%G% */
 end_comment
 
 begin_include
@@ -622,6 +622,80 @@ end_define
 
 begin_comment
 comment|/* canonical user, next N tokens */
+end_comment
+
+begin_comment
+comment|/* **  Symbol table definitions */
+end_comment
+
+begin_struct
+struct|struct
+name|symtab
+block|{
+name|char
+modifier|*
+name|s_name
+decl_stmt|;
+comment|/* name to be entered */
+name|char
+name|s_type
+decl_stmt|;
+comment|/* general type (unused) */
+name|long
+name|s_class
+decl_stmt|;
+comment|/* bit-map of word classes */
+name|struct
+name|symtab
+modifier|*
+name|s_next
+decl_stmt|;
+comment|/* pointer to next in chain */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|symtab
+name|STAB
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|STAB
+modifier|*
+name|stab
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* opcodes to stab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_FIND
+value|0
+end_define
+
+begin_comment
+comment|/* find entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_ENTER
+value|1
+end_define
+
+begin_comment
+comment|/* enter if not there */
 end_comment
 
 begin_comment
