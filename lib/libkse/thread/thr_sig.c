@@ -498,26 +498,7 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-comment|/* Check if system calls are not restarted: */
-if|if
-condition|(
-operator|(
-name|_thread_sigact
-index|[
-name|sig
-operator|-
-literal|1
-index|]
-operator|.
-name|sa_flags
-operator|&
-name|SA_RESTART
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* 		 * System calls are flagged for restart. 		 * 		 * Process according to thread state: 		 */
+comment|/* 	 * Process according to thread state: 	 */
 switch|switch
 condition|(
 name|pthread
@@ -525,7 +506,7 @@ operator|->
 name|state
 condition|)
 block|{
-comment|/* 		 * States which do not change when a signal is trapped: 		 */
+comment|/* 	 * States which do not change when a signal is trapped: 	 */
 case|case
 name|PS_COND_WAIT
 case|:
@@ -561,99 +542,7 @@ name|PS_SUSPENDED
 case|:
 comment|/* Nothing to do here. */
 break|break;
-comment|/* 		 * System calls that are restarted when interrupted by 		 * a signal: 		 */
-case|case
-name|PS_FDR_WAIT
-case|:
-case|case
-name|PS_FDW_WAIT
-case|:
-case|case
-name|PS_SELECT_WAIT
-case|:
-break|break;
-comment|/* 		 * States that are interrupted by the occurrence of a signal 		 * other than the scheduling alarm:  		 */
-case|case
-name|PS_SLEEP_WAIT
-case|:
-case|case
-name|PS_SIGWAIT
-case|:
-case|case
-name|PS_WAIT_WAIT
-case|:
-comment|/* Flag the operation as interrupted: */
-name|pthread
-operator|->
-name|interrupted
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Change the state of the thread to run: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-comment|/* Return the signal number: */
-name|pthread
-operator|->
-name|signo
-operator|=
-name|sig
-expr_stmt|;
-break|break;
-block|}
-block|}
-else|else
-block|{
-comment|/* 		 * Process according to thread state: 		 */
-switch|switch
-condition|(
-name|pthread
-operator|->
-name|state
-condition|)
-block|{
-comment|/* 		 * States which do not change when a signal is trapped: 		 */
-case|case
-name|PS_COND_WAIT
-case|:
-case|case
-name|PS_DEAD
-case|:
-case|case
-name|PS_FDLR_WAIT
-case|:
-case|case
-name|PS_FDLW_WAIT
-case|:
-case|case
-name|PS_FILE_WAIT
-case|:
-case|case
-name|PS_JOIN
-case|:
-case|case
-name|PS_MUTEX_WAIT
-case|:
-case|case
-name|PS_RUNNING
-case|:
-case|case
-name|PS_STATE_MAX
-case|:
-case|case
-name|PS_SIGTHREAD
-case|:
-case|case
-name|PS_SUSPENDED
-case|:
-comment|/* Nothing to do here. */
-break|break;
-comment|/* 		 * States that are interrupted by the occurrence of a signal 		 * other than the scheduling alarm:  		 */
+comment|/* 	 * States that are interrupted by the occurrence of a signal 	 * other than the scheduling alarm:  	 */
 case|case
 name|PS_FDR_WAIT
 case|:
@@ -695,7 +584,6 @@ operator|=
 name|sig
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 end_function
