@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -90,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"includes.h"
 end_include
 
@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ssh.h"
 end_include
 
@@ -109,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"authfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"authfile.h"
 end_include
 
 begin_define
@@ -334,7 +346,6 @@ name|ENV
 modifier|*
 name|self
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|s
@@ -413,7 +424,6 @@ specifier|static
 name|void
 name|env_swap
 parameter_list|(
-specifier|const
 name|ENV
 modifier|*
 name|self
@@ -616,20 +626,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|p
-operator|=
-name|SLIST_FIRST
+name|SLIST_FOREACH
 argument_list|(
-operator|&
-name|self
-operator|->
-name|e_head
+argument|p
+argument_list|,
+argument|&self->e_head
+argument_list|,
+argument|ee_entries
 argument_list|)
-operator|)
-condition|)
 block|{
 name|free
 argument_list|(
@@ -641,16 +645,6 @@ expr_stmt|;
 name|free
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|SLIST_REMOVE_HEAD
-argument_list|(
-operator|&
-name|self
-operator|->
-name|e_head
-argument_list|,
-name|ee_entries
 argument_list|)
 expr_stmt|;
 block|}
@@ -748,8 +742,7 @@ modifier|*
 name|identity
 decl_stmt|;
 comment|/* user's identity file */
-name|RSA
-modifier|*
+name|Key
 name|key
 decl_stmt|;
 comment|/* user's private key */
@@ -768,8 +761,7 @@ modifier|*
 name|prompt
 decl_stmt|;
 comment|/* passphrase prompt */
-name|RSA
-modifier|*
+name|Key
 name|public_key
 decl_stmt|;
 comment|/* user's public key */
@@ -896,11 +888,27 @@ return|;
 block|}
 comment|/* 	 * Fail unless we can load the public key.  Change to the 	 * owner's UID to appease load_public_key(). 	 */
 name|key
+operator|.
+name|type
+operator|=
+name|KEY_RSA
+expr_stmt|;
+name|key
+operator|.
+name|rsa
 operator|=
 name|RSA_new
 argument_list|()
 expr_stmt|;
 name|public_key
+operator|.
+name|type
+operator|=
+name|KEY_RSA
+expr_stmt|;
+name|public_key
+operator|.
+name|rsa
 operator|=
 name|RSA_new
 argument_list|()
@@ -928,6 +936,7 @@ name|load_public_key
 argument_list|(
 name|identity
 argument_list|,
+operator|&
 name|public_key
 argument_list|,
 operator|&
@@ -960,6 +969,8 @@ block|}
 name|RSA_free
 argument_list|(
 name|public_key
+operator|.
+name|rsa
 argument_list|)
 expr_stmt|;
 comment|/* build the passphrase prompt */
@@ -1063,6 +1074,7 @@ name|identity
 argument_list|,
 name|pass
 argument_list|,
+operator|&
 name|key
 argument_list|,
 operator|&
@@ -1103,6 +1115,8 @@ argument_list|,
 literal|"ssh_private_key"
 argument_list|,
 name|key
+operator|.
+name|rsa
 argument_list|,
 name|rsa_cleanup
 argument_list|)
@@ -1114,6 +1128,8 @@ block|{
 name|RSA_free
 argument_list|(
 name|key
+operator|.
+name|rsa
 argument_list|)
 expr_stmt|;
 name|free
@@ -1312,8 +1328,7 @@ modifier|*
 name|env_fp
 decl_stmt|;
 comment|/* env_file handle */
-name|RSA
-modifier|*
+name|Key
 name|key
 decl_stmt|;
 comment|/* user's private key */
@@ -1551,9 +1566,6 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|env_fp
 operator|=
 name|fopen
@@ -1561,17 +1573,6 @@ argument_list|(
 name|env_file
 argument_list|,
 literal|"w"
-argument_list|)
-operator|)
-condition|)
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|env_file
-argument_list|,
-name|S_IRUSR
 argument_list|)
 expr_stmt|;
 name|pipe
@@ -1868,6 +1869,12 @@ return|return
 name|PAM_SESSION_ERR
 return|;
 block|}
+name|key
+operator|.
+name|type
+operator|=
+name|KEY_RSA
+expr_stmt|;
 comment|/* connect to the agent and hand off the private key */
 if|if
 condition|(
@@ -1888,6 +1895,8 @@ operator|*
 operator|)
 operator|&
 name|key
+operator|.
+name|rsa
 argument_list|)
 operator|)
 operator|!=
@@ -1972,6 +1981,8 @@ argument_list|(
 name|ac
 argument_list|,
 name|key
+operator|.
+name|rsa
 argument_list|,
 name|comment
 argument_list|)
