@@ -345,11 +345,11 @@ begin_define
 define|#
 directive|define
 name|PPTP_MIN_TIMEOUT
-value|(PPTP_TIME_SCALE / 500)
+value|(PPTP_TIME_SCALE / 83)
 end_define
 
 begin_comment
-comment|/* 2 milliseconds */
+comment|/* 12 milliseconds */
 end_comment
 
 begin_define
@@ -486,12 +486,12 @@ name|xmitWin
 decl_stmt|;
 comment|/* size of xmit window */
 name|struct
-name|callout_handle
+name|callout
 name|sackTimer
 decl_stmt|;
 comment|/* send ack timer */
 name|struct
-name|callout_handle
+name|callout
 name|rackTimer
 decl_stmt|;
 comment|/* recv ack timer */
@@ -574,6 +574,10 @@ name|u_int32_t
 name|xmitAck
 decl_stmt|;
 comment|/* last seq # we ack'd */
+name|u_int
+name|timers
+decl_stmt|;
+comment|/* number of pending timers */
 name|struct
 name|timeval
 name|startTime
@@ -702,7 +706,29 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|ng_pptpgre_stop_send_ack_timer
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|ng_pptpgre_start_recv_ack_timer
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ng_pptpgre_stop_recv_ack_timer
 parameter_list|(
 name|node_p
 name|node
@@ -1068,7 +1094,7 @@ operator|=
 name|priv
 expr_stmt|;
 comment|/* Initialize state */
-name|callout_handle_init
+name|callout_init
 argument_list|(
 operator|&
 name|priv
@@ -1078,7 +1104,7 @@ operator|.
 name|sackTimer
 argument_list|)
 expr_stmt|;
-name|callout_handle_init
+name|callout_init
 argument_list|(
 operator|&
 name|priv
@@ -1675,17 +1701,16 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
+comment|/* If no timers remain, free private info as well */
+if|if
+condition|(
 name|priv
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|priv
-argument_list|)
-argument_list|)
-expr_stmt|;
+operator|->
+name|timers
+operator|==
+literal|0
+condition|)
+block|{
 name|FREE
 argument_list|(
 name|priv
@@ -1699,6 +1724,8 @@ name|private
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+comment|/* Done */
 name|ng_unref
 argument_list|(
 name|node
@@ -2129,13 +2156,11 @@ name|priv
 operator|->
 name|recvSeq
 expr_stmt|;
-name|a
-operator|->
-name|sackTimerPtr
-operator|=
-name|NULL
+name|ng_pptpgre_stop_send_ack_timer
+argument_list|(
+name|node
+argument_list|)
 expr_stmt|;
-comment|/* "stop" timer */
 block|}
 comment|/* Prepend GRE header to outgoing frame */
 name|grelen
@@ -3142,11 +3167,10 @@ name|xmitWin
 expr_stmt|;
 block|}
 comment|/* Stop/(re)start receive ACK timer as necessary */
-name|a
-operator|->
-name|rackTimerPtr
-operator|=
-name|NULL
+name|ng_pptpgre_stop_recv_ack_timer
+argument_list|(
+name|node
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3281,11 +3305,8 @@ operator|->
 name|conf
 operator|.
 name|enableDelayedAck
-operator|||
-name|maxWait
-operator|<
-name|PPTP_MIN_ACK_DELAY
 condition|)
+comment|/* ack now */
 name|ng_pptpgre_xmit
 argument_list|(
 name|node
@@ -3297,7 +3318,17 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* send the ack later */
+comment|/* ack later */
+if|if
+condition|(
+name|maxWait
+operator|<
+name|PPTP_MIN_ACK_DELAY
+condition|)
+name|maxWait
+operator|=
+name|PPTP_MIN_ACK_DELAY
+expr_stmt|;
 if|if
 condition|(
 name|maxWait
@@ -3535,13 +3566,18 @@ name|rackTimerPtr
 operator|=
 name|node
 expr_stmt|;
-comment|/* insures the correct timeout event */
+comment|/* ensures the correct timeout event */
 name|node
 operator|->
 name|refs
 operator|++
 expr_stmt|;
-comment|/* Be conservative: timeout() can return up to 1 tick early */
+name|priv
+operator|->
+name|timers
+operator|++
+expr_stmt|;
+comment|/* Be conservative: timeout can happen up to 1 tick early */
 name|ticks
 operator|=
 operator|(
@@ -3562,20 +3598,93 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|a
 operator|->
 name|rackTimer
-operator|=
-name|timeout
-argument_list|(
+argument_list|,
+name|ticks
+argument_list|,
 name|ng_pptpgre_recv_ack_timeout
 argument_list|,
 name|a
 operator|->
 name|rackTimerPtr
-argument_list|,
-name|ticks
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Stop receive ack timer.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ng_pptpgre_stop_recv_ack_timer
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+block|{
+specifier|const
+name|priv_p
+name|priv
+init|=
+name|node
+operator|->
+name|private
+decl_stmt|;
+name|struct
+name|ng_pptpgre_ackp
+modifier|*
+specifier|const
+name|a
+init|=
+operator|&
+name|priv
+operator|->
+name|ackp
+decl_stmt|;
+if|if
+condition|(
+name|callout_stop
+argument_list|(
+operator|&
+name|a
+operator|->
+name|rackTimer
+argument_list|)
+condition|)
+block|{
+name|FREE
+argument_list|(
+name|a
+operator|->
+name|rackTimerPtr
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|timers
+operator|--
+expr_stmt|;
+name|ng_unref
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+block|}
+name|a
+operator|->
+name|rackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -3655,6 +3764,24 @@ name|__FUNCTION__
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|priv
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: priv=NULL"
+operator|,
+name|__FUNCTION__
+operator|)
+argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|timers
+operator|--
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3669,6 +3796,29 @@ literal|0
 condition|)
 block|{
 comment|/* shutdown race condition */
+if|if
+condition|(
+name|priv
+operator|->
+name|timers
+operator|==
+literal|0
+condition|)
+block|{
+name|FREE
+argument_list|(
+name|priv
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|node
+operator|->
+name|private
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|ng_unref
 argument_list|(
 name|node
@@ -3975,12 +4125,18 @@ name|sackTimerPtr
 operator|=
 name|node
 expr_stmt|;
+comment|/* ensures the correct timeout event */
 name|node
 operator|->
 name|refs
 operator|++
 expr_stmt|;
-comment|/* Be conservative: timeout() can return up to 1 tick early */
+name|priv
+operator|->
+name|timers
+operator|++
+expr_stmt|;
+comment|/* Be conservative: timeout can happen up to 1 tick early */
 name|ticks
 operator|=
 operator|(
@@ -3999,20 +4155,93 @@ operator|/
 name|PPTP_TIME_SCALE
 operator|)
 expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
 name|a
 operator|->
 name|sackTimer
-operator|=
-name|timeout
-argument_list|(
+argument_list|,
+name|ticks
+argument_list|,
 name|ng_pptpgre_send_ack_timeout
 argument_list|,
 name|a
 operator|->
 name|sackTimerPtr
-argument_list|,
-name|ticks
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Stop send ack timer.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ng_pptpgre_stop_send_ack_timer
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+block|{
+specifier|const
+name|priv_p
+name|priv
+init|=
+name|node
+operator|->
+name|private
+decl_stmt|;
+name|struct
+name|ng_pptpgre_ackp
+modifier|*
+specifier|const
+name|a
+init|=
+operator|&
+name|priv
+operator|->
+name|ackp
+decl_stmt|;
+if|if
+condition|(
+name|callout_stop
+argument_list|(
+operator|&
+name|a
+operator|->
+name|sackTimer
+argument_list|)
+condition|)
+block|{
+name|FREE
+argument_list|(
+name|a
+operator|->
+name|sackTimerPtr
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|timers
+operator|--
+expr_stmt|;
+name|ng_unref
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+block|}
+name|a
+operator|->
+name|sackTimerPtr
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -4092,6 +4321,24 @@ name|__FUNCTION__
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|priv
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: priv=NULL"
+operator|,
+name|__FUNCTION__
+operator|)
+argument_list|)
+expr_stmt|;
+name|priv
+operator|->
+name|timers
+operator|--
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4106,6 +4353,29 @@ literal|0
 condition|)
 block|{
 comment|/* shutdown race condition */
+if|if
+condition|(
+name|priv
+operator|->
+name|timers
+operator|==
+literal|0
+condition|)
+block|{
+name|FREE
+argument_list|(
+name|priv
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+name|node
+operator|->
+name|private
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|ng_unref
 argument_list|(
 name|node
@@ -4355,18 +4625,16 @@ name|stats
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* "Stop" timers */
-name|a
-operator|->
-name|sackTimerPtr
-operator|=
-name|NULL
+comment|/* Stop timers */
+name|ng_pptpgre_stop_send_ack_timer
+argument_list|(
+name|node
+argument_list|)
 expr_stmt|;
-name|a
-operator|->
-name|rackTimerPtr
-operator|=
-name|NULL
+name|ng_pptpgre_stop_recv_ack_timer
+argument_list|(
+name|node
+argument_list|)
 expr_stmt|;
 block|}
 end_function
