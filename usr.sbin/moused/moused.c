@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.12 1997/12/15 02:57:45 yokota Exp $"
+literal|"$Id: moused.c,v 1.13 1997/12/23 08:04:38 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -709,6 +709,15 @@ block|,
 name|MOUSE_PROTO_INTELLI
 block|,
 name|MOUSE_MODEL_MOUSEMANPLUS
+block|}
+block|,
+comment|/* Logitech serial */
+block|{
+literal|"LGI8001"
+block|,
+name|MOUSE_PROTO_LOGIMOUSEMAN
+block|,
+name|MOUSE_MODEL_GENERIC
 block|}
 block|,
 comment|/* MS bus */
