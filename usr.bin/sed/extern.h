@@ -53,13 +53,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|lastline
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|aflag
 decl_stmt|,
 name|eflag
@@ -119,6 +112,7 @@ parameter_list|(
 name|SPACE
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -155,6 +149,15 @@ modifier|*
 parameter_list|,
 name|enum
 name|e_spflag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lastline
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

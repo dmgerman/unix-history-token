@@ -3,6 +3,20 @@ begin_comment
 comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -25,36 +39,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)main.c	8.2 (Berkeley) 1/3/94";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)main.c	8.2 (Berkeley) 1/3/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,16 +60,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -83,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -256,6 +250,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|FILE
+modifier|*
+name|curfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current open file */
+end_comment
+
+begin_decl_stmt
 name|int
 name|aflag
 decl_stmt|,
@@ -317,16 +323,6 @@ name|u_long
 name|linenum
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|lastline
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* TRUE on the last line of the last file */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1194,12 +1190,6 @@ name|e_spflag
 name|spflag
 decl_stmt|;
 block|{
-specifier|static
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-comment|/* Current open file */
 name|size_t
 name|len
 decl_stmt|;
@@ -1216,7 +1206,7 @@ name|firstfile
 decl_stmt|;
 if|if
 condition|(
-name|f
+name|curfile
 operator|==
 name|NULL
 condition|)
@@ -1244,7 +1234,7 @@ argument_list|,
 literal|"-i may not be used with stdin"
 argument_list|)
 expr_stmt|;
-name|f
+name|curfile
 operator|=
 name|stdin
 expr_stmt|;
@@ -1266,7 +1256,7 @@ control|)
 block|{
 if|if
 condition|(
-name|f
+name|curfile
 operator|!=
 name|NULL
 operator|&&
@@ -1275,7 +1265,7 @@ name|c
 operator|=
 name|getc
 argument_list|(
-name|f
+name|curfile
 argument_list|)
 operator|)
 operator|!=
@@ -1289,7 +1279,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-name|f
+name|curfile
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1297,7 +1287,7 @@ block|}
 comment|/* If we are here then either eof or no files are open yet */
 if|if
 condition|(
-name|f
+name|curfile
 operator|==
 name|stdin
 condition|)
@@ -1308,10 +1298,6 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-name|lastline
-operator|=
-literal|1
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1320,14 +1306,14 @@ return|;
 block|}
 if|if
 condition|(
-name|f
+name|curfile
 operator|!=
 name|NULL
 condition|)
 block|{
 name|fclose
 argument_list|(
-name|f
+name|curfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -1362,10 +1348,6 @@ operator|->
 name|len
 operator|=
 literal|0
-expr_stmt|;
-name|lastline
-operator|=
-literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -1404,7 +1386,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|f
+name|curfile
 operator|=
 name|fopen
 argument_list|(
@@ -1447,12 +1429,12 @@ name|fname
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We are here only when f is open and we still have something to 	 * read from it. 	 * 	 * Use fgetln so that we can handle essentially infinite input data. 	 * Can't use the pointer into the stdio buffer as the process space 	 * because the ungetc() can cause it to move. 	 */
+comment|/* 	 * We are here only when curfile is open and we still have something 	 * to read from it. 	 * 	 * Use fgetln so that we can handle essentially infinite input data. 	 * Can't use the pointer into the stdio buffer as the process space 	 * because the ungetc() can cause it to move. 	 */
 name|p
 operator|=
 name|fgetln
 argument_list|(
-name|f
+name|curfile
 argument_list|,
 operator|&
 name|len
@@ -1462,7 +1444,7 @@ if|if
 condition|(
 name|ferror
 argument_list|(
-name|f
+name|curfile
 argument_list|)
 condition|)
 name|errx
@@ -1515,48 +1497,6 @@ expr_stmt|;
 name|linenum
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|files
-operator|->
-name|next
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|c
-operator|=
-name|getc
-argument_list|(
-name|f
-argument_list|)
-operator|)
-operator|!=
-name|EOF
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|ungetc
-argument_list|(
-name|c
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|lastline
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
 return|return
 operator|(
 literal|1
@@ -2069,6 +2009,62 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|lastline
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|ch
+decl_stmt|;
+if|if
+condition|(
+name|files
+operator|->
+name|next
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|ch
+operator|=
+name|getc
+argument_list|(
+name|curfile
+argument_list|)
+operator|)
+operator|==
+name|EOF
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|ungetc
+argument_list|(
+name|ch
+argument_list|,
+name|curfile
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
