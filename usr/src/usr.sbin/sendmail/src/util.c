@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.62 (Berkeley) %G%"
+literal|"@(#)util.c	8.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5671,7 +5671,12 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"(badsock)"
+literal|"(%s)"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5770,7 +5775,12 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"(badsock)"
+literal|"(%s)"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
