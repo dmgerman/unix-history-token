@@ -619,6 +619,17 @@ value|25
 end_define
 
 begin_comment
+comment|/*  * Timeout value for the PIO loops to wait until the FDC main status  * register matches our expectations (request for master, direction  * bit).  This is supposed to be a number of microseconds, although  * timing might actually not be very accurate.  *  * Timeouts of 100 msec are believed to be required for some broken  * (old) hardware.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDSTS_TIMEOUT
+value|100000
+end_define
+
+begin_comment
 comment|/*  * Number of subdevices that can be used for different density types.  * By now, the lower 6 bit of the minor number are reserved for this,  * allowing for up to 64 subdevices, but we only use 16 out of this.  * Density #0 is used for automatic format detection, the other  * densities are available as programmable densities (for assignment  * by fdcontrol(8)).  * The upper 2 bits of the minor number are reserved for the subunit  * (drive #) per controller.  */
 end_comment
 
@@ -6815,6 +6826,27 @@ argument_list|,
 literal|"ready for output in input\n"
 argument_list|)
 return|;
+comment|/* 		 * After (maybe) 1 msec of waiting, back off to larger 		 * stepping to get the timing more accurate. 		 */
+if|if
+condition|(
+name|FDSTS_TIMEOUT
+operator|-
+name|j
+operator|>
+literal|1000
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|j
+operator|-=
+literal|999
+expr_stmt|;
+block|}
+else|else
 name|DELAY
 argument_list|(
 literal|1
@@ -6933,6 +6965,27 @@ operator|--
 operator|>
 literal|0
 condition|)
+comment|/* 		 * After (maybe) 1 msec of waiting, back off to larger 		 * stepping to get the timing more accurate. 		 */
+if|if
+condition|(
+name|FDSTS_TIMEOUT
+operator|-
+name|i
+operator|>
+literal|1000
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|i
+operator|-=
+literal|999
+expr_stmt|;
+block|}
+else|else
 name|DELAY
 argument_list|(
 literal|1
@@ -6975,6 +7028,27 @@ operator|--
 operator|>
 literal|0
 condition|)
+comment|/* 		 * After (maybe) 1 msec of waiting, back off to larger 		 * stepping to get the timing more accurate. 		 */
+if|if
+condition|(
+name|FDSTS_TIMEOUT
+operator|-
+name|i
+operator|>
+literal|1000
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|i
+operator|-=
+literal|999
+expr_stmt|;
+block|}
+else|else
 name|DELAY
 argument_list|(
 literal|1

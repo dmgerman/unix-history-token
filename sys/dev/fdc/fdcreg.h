@@ -187,16 +187,5 @@ begin_comment
 comment|/* is cleared by any step pulse to drive */
 end_comment
 
-begin_comment
-comment|/*  * Timeout value for the PIO loops to wait until the FDC main status  * register matches our expextations (request for master, direction  * bit).  This is the number of cycles to loop while waiting, with a  * 1-microsecond (in theory) DELAY() in each cycle.  In particular on  * slower hardware, it could take a fair amount more to execute.  Of  * course, as soon as the FDC main status register indicates the correct  * bits are set, the loop will terminate, so this is merely a safety  * measure to avoid looping forever in case of broken hardware.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FDSTS_TIMEOUT
-value|200
-end_define
-
 end_unit
 
