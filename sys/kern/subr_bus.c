@@ -1736,6 +1736,8 @@ name|devices
 index|[
 name|unit
 index|]
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1744,7 +1746,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s: %s%d already exists, skipping it\n"
+literal|"%s: %s%d already exists; skipping it\n"
 argument_list|,
 name|dc
 operator|->
