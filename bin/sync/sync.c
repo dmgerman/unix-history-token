@@ -53,15 +53,14 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_function_decl
-name|void
-name|sync
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|()
 block|{
