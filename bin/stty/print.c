@@ -210,6 +210,17 @@ literal|"slip disc; "
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|NTTYDISC
+case|:
+name|cnt
+operator|+=
+name|printf
+argument_list|(
+literal|"new tty disc; "
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|cnt
 operator|+=
