@@ -124,6 +124,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|text
@@ -165,6 +166,11 @@ operator|*
 name|text
 operator|==
 literal|'\n'
+operator|||
+operator|*
+name|text
+operator|==
+literal|'\r'
 condition|)
 block|{
 name|xscroll
@@ -188,6 +194,18 @@ operator|==
 name|win
 operator|->
 name|cerase
+operator|||
+operator|*
+name|text
+operator|==
+literal|010
+comment|/* backspace */
+operator|||
+operator|*
+name|text
+operator|==
+literal|0177
+comment|/* del */
 condition|)
 block|{
 name|wmove
@@ -279,6 +297,12 @@ operator|==
 name|win
 operator|->
 name|werase
+operator|||
+operator|*
+name|text
+operator|==
+literal|027
+comment|/* ^W */
 condition|)
 block|{
 name|int
@@ -448,6 +472,12 @@ operator|==
 name|win
 operator|->
 name|kill
+operator|||
+operator|*
+name|text
+operator|==
+literal|025
+comment|/* ^U */
 condition|)
 block|{
 name|wmove
@@ -508,6 +538,25 @@ condition|)
 name|wrefresh
 argument_list|(
 name|curscr
+argument_list|)
+expr_stmt|;
+name|text
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|*
+name|text
+operator|==
+literal|'\7'
+condition|)
+block|{
+name|_putchar
+argument_list|(
+operator|*
+name|text
 argument_list|)
 expr_stmt|;
 name|text
