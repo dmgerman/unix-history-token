@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.9 (Berkeley) %G%"
+literal|"@(#)table.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2069,6 +2069,10 @@ block|,
 name|TINT
 operator||
 name|TUNSIGNED
+operator||
+name|TLONG
+operator||
+name|TULONG
 block|,
 name|SANY
 block|,
