@@ -2158,23 +2158,6 @@ name|maxio
 operator|=
 name|NUM_IO_WINDOWS
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"pcic: pccard bridge %s (%d mem& %d I/O windows)\n"
-argument_list|,
-name|ctrl
-operator|->
-name|name
-argument_list|,
-name|ctrl
-operator|->
-name|maxmem
-argument_list|,
-name|ctrl
-operator|->
-name|maxio
-argument_list|)
-expr_stmt|;
 block|}
 name|callout_handle_init
 argument_list|(
@@ -2499,8 +2482,6 @@ decl_stmt|,
 name|irq
 init|=
 literal|0
-decl_stmt|,
-name|s
 decl_stmt|;
 name|pccarddev
 operator|=

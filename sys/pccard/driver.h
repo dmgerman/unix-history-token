@@ -92,22 +92,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|pcic_probe
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX should be linker set */
-end_comment
-
 begin_enum
 enum|enum
 name|beepstate
