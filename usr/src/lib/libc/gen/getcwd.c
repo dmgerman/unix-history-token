@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getcwd.c	5.4 (Berkeley) %G%"
+literal|"@(#)getcwd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,7 +442,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|path
+name|store
 argument_list|,
 literal|"getwd: %s"
 argument_list|,
