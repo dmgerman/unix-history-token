@@ -8796,7 +8796,7 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Fibre Channel always requires some kind of tag, but 		 * the firmware seems to be happy if we don't use a tag. 		 */
+comment|/* 		 * Fibre Channel always requires some kind of tag. 		 * The Qlogic drivers seem be happy not to use a tag, 		 * but this breaks for some devices (IBM drives). 		 */
 if|if
 condition|(
 name|XS_CANTAG
@@ -8813,6 +8813,35 @@ name|XS_KINDOF_TAG
 argument_list|(
 name|xs
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|XS_CDBP
+argument_list|(
+name|xs
+argument_list|)
+index|[
+literal|0
+index|]
+operator|==
+literal|0x3
+condition|)
+comment|/* REQUEST SENSE */
+name|t2reqp
+operator|->
+name|req_flags
+operator|=
+name|REQFLAG_HTAG
+expr_stmt|;
+else|else
+name|t2reqp
+operator|->
+name|req_flags
+operator|=
+name|REQFLAG_OTAG
 expr_stmt|;
 block|}
 block|}
