@@ -2025,10 +2025,6 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|Message_Ptr
 argument_list|,
 name|size
@@ -2550,10 +2546,6 @@ expr_stmt|;
 comment|/* 	 *  Reset the Reply Status 	 */
 name|bzero
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|buffer
 argument_list|,
 sizeof|sizeof
@@ -6116,10 +6108,6 @@ operator|)
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|Operations_Ptr
 argument_list|,
 sizeof|sizeof
@@ -6186,13 +6174,6 @@ argument_list|,
 name|Group
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
 name|Buffer_Ptr
 operator|=
 name|getAlignLong
@@ -6202,7 +6183,10 @@ name|ParamBuffer
 argument_list|,
 name|Buffer
 argument_list|)
-operator|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|Buffer_Ptr
 argument_list|,
 name|BufferSize
 argument_list|)
@@ -8566,15 +8550,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|sc
 operator|->
 name|ha_Msgs
@@ -9107,10 +9084,6 @@ name|Entry
 decl_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|Hrt
 argument_list|,
@@ -9620,8 +9593,6 @@ expr_stmt|;
 name|PPRIVATE_SCSI_SCB_EXECUTE_MESSAGE
 name|Message_Ptr
 decl_stmt|;
-name|bzero
-argument_list|(
 name|Message_Ptr
 operator|=
 name|getAlignLong
@@ -9630,6 +9601,10 @@ name|PRIVATE_SCSI_SCB_EXECUTE_MESSAGE
 argument_list|,
 name|Message
 argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|Message_Ptr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -11528,8 +11503,6 @@ name|posted
 init|=
 literal|0
 decl_stmt|;
-name|bzero
-argument_list|(
 name|Message_Ptr
 operator|=
 name|getAlignLong
@@ -11538,6 +11511,10 @@ name|PRIVATE_SCSI_SCB_EXECUTE_MESSAGE
 argument_list|,
 name|Message
 argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|Message_Ptr
 argument_list|,
 sizeof|sizeof
 argument_list|(
