@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lib.c	4.10 (Berkeley) %G%"
+literal|"@(#)lib.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,7 +1286,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|isnumber
+name|isanumber
 argument_list|(
 name|fldtab
 index|[
@@ -1793,7 +1793,7 @@ comment|/* maximum exponenet for fp number */
 end_comment
 
 begin_expr_stmt
-name|isnumber
+name|isanumber
 argument_list|(
 name|s
 argument_list|)
@@ -2157,7 +2157,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* isnumber(s) char *s; {return(0);} */
+comment|/* isanumber(s) char *s; {return(0);} */
 end_comment
 
 end_unit

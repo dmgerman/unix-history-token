@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tran.c	4.6 (Berkeley) %G%"
+literal|"@(#)tran.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1309,7 +1309,7 @@ comment|/* $1 == $2 comparisons sort of make sense when */
 comment|/* one or the other is numeric */
 if|if
 condition|(
-name|isnumber
+name|isanumber
 argument_list|(
 name|vp
 operator|->

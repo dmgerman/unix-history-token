@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)run.c	4.9 (Berkeley) %G%"
+literal|"@(#)run.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3986,7 +3986,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|isanumber
 argument_list|(
 name|t
 argument_list|)
@@ -4114,7 +4114,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isnumber
+name|isanumber
 argument_list|(
 name|t
 argument_list|)
