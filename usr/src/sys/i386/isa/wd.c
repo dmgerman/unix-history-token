@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)wd.c	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1878,7 +1878,7 @@ name|inb
 argument_list|(
 name|wdc
 operator|+
-name|wd_altsts
+name|wd_status
 argument_list|)
 operator|&
 name|WDCS_READY
@@ -1953,7 +1953,7 @@ name|inb
 argument_list|(
 name|wdc
 operator|+
-name|wd_altsts
+name|wd_status
 argument_list|)
 operator|&
 name|WDCS_DRQ
@@ -2192,6 +2192,27 @@ name|wd_error
 argument_list|)
 expr_stmt|;
 comment|/* save error status */
+name|outb
+argument_list|(
+name|wdc
+operator|+
+name|wd_command
+argument_list|,
+name|WDCC_RESTORE
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|inb
+argument_list|(
+name|wdc
+operator|+
+name|wd_status
+argument_list|)
+operator|&
+name|WDCS_BUSY
+condition|)
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|WDDEBUG
@@ -3403,7 +3424,7 @@ name|inb
 argument_list|(
 name|wdc
 operator|+
-name|wd_altsts
+name|wd_status
 argument_list|)
 operator|)
 operator|&
