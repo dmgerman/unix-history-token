@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)protosw.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)protosw.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -104,6 +104,14 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* flush any excess space possible */
+name|int
+function_decl|(
+modifier|*
+name|pr_sysctl
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* sysctl for protocol */
 block|}
 struct|;
 end_struct
