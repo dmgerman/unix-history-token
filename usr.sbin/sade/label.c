@@ -33,6 +33,17 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|AUTO_HOME
+value|0
+end_define
+
+begin_comment
+comment|/* do not create /home automatically */
+end_comment
+
 begin_comment
 comment|/*  * Everything to do with editing the contents of disk labels.  */
 end_comment
@@ -3191,7 +3202,7 @@ literal|20
 argument_list|,
 literal|0
 argument_list|,
-literal|"T = Toggle Newfs  U = Undo     A = Auto Defaults"
+literal|"T = Toggle Newfs  U = Undo     A = Auto Defaults    R = Delete+Merge"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -3477,6 +3488,11 @@ block|{
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|int
+name|rflags
+init|=
+name|DELCHUNK_NORMAL
 decl_stmt|;
 name|print_label_chunks
 argument_list|()
@@ -4334,6 +4350,16 @@ case|case
 name|KEY_DC
 case|:
 case|case
+literal|'R'
+case|:
+comment|/* recover space (delete w/ recover) */
+comment|/* 	     * Delete the partition w/ space recovery. 	     */
+name|rflags
+operator|=
+name|DELCHUNK_RECOVER
+expr_stmt|;
+comment|/* fall through */
+case|case
 literal|'D'
 case|:
 comment|/* delete */
@@ -4374,7 +4400,7 @@ literal|"Use the Disk Partition Editor to delete DOS partitions"
 expr_stmt|;
 break|break;
 block|}
-name|Delete_Chunk
+name|Delete_Chunk2
 argument_list|(
 name|label_chunk_info
 index|[
@@ -4391,6 +4417,8 @@ name|here
 index|]
 operator|.
 name|c
+argument_list|,
+name|rflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -6069,8 +6097,21 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|AUTO_HOME
+operator|==
 literal|0
-block|sz = space_free(label_chunk_info[here].c);
+name|sz
+operator|=
+name|space_free
+argument_list|(
+name|label_chunk_info
+index|[
+name|here
+index|]
+operator|.
+name|c
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -6180,6 +6221,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+name|AUTO_HOME
+operator|==
+literal|1
 if|if
 condition|(
 operator|!
@@ -6341,6 +6387,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* At this point, we're reasonably "labelled" */
 if|if
 condition|(
