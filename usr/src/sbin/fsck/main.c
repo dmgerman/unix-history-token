@@ -4,7 +4,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.17	(Berkeley)	%G%"
+literal|"@(#)main.c	2.18	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1725,7 +1725,7 @@ operator|++
 expr_stmt|;
 name|raw
 operator|=
-name|unrawname
+name|rawname
 argument_list|(
 name|name
 argument_list|)
