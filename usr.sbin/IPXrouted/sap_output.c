@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Hay.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY John Hay AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL John Hay OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sap_output.c,v 1.4 1996/04/13 15:13:24 jhay Exp $  */
+comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Hay.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY John Hay AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL John Hay OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sap_output.c,v 1.4.2.1 1996/11/28 08:26:36 phk Exp $  */
 end_comment
 
 begin_comment
@@ -27,8 +27,11 @@ begin_function
 name|void
 name|sap_supply_toall
 parameter_list|(
-name|void
+name|changesonly
 parameter_list|)
+name|int
+name|changesonly
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -149,6 +152,8 @@ argument_list|,
 name|ifp
 argument_list|,
 name|SAP_WILDCARD
+argument_list|,
+name|changesonly
 argument_list|)
 expr_stmt|;
 block|}
@@ -164,6 +169,8 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|ifp
+parameter_list|,
+name|changesonly
 parameter_list|)
 name|struct
 name|sockaddr
@@ -177,6 +184,9 @@ name|struct
 name|interface
 modifier|*
 name|ifp
+decl_stmt|;
+name|int
+name|changesonly
 decl_stmt|;
 block|{
 name|struct
@@ -292,6 +302,8 @@ parameter_list|,
 name|ifp
 parameter_list|,
 name|ServType
+parameter_list|,
+name|changesonly
 parameter_list|)
 name|struct
 name|sockaddr
@@ -308,6 +320,9 @@ name|ifp
 decl_stmt|;
 name|int
 name|ServType
+decl_stmt|;
+name|int
+name|changesonly
 decl_stmt|;
 block|{
 specifier|register
@@ -527,7 +542,7 @@ condition|)
 block|{
 name|usleep
 argument_list|(
-literal|20000
+literal|50000
 argument_list|)
 expr_stmt|;
 name|delay
@@ -536,6 +551,20 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|changesonly
+operator|&&
+operator|!
+operator|(
+name|sap
+operator|->
+name|state
+operator|&
+name|RTS_CHANGED
+operator|)
+condition|)
+continue|continue;
 comment|/* 		 * Check for the servicetype except if the ServType is 		 * a wildcard (0xFFFF). 		 */
 if|if
 condition|(

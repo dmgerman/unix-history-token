@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * This file includes significant work done at Cornell University by  * Bill Nesheim.  That work included by permission.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: output.c,v 1.3 1996/04/13 15:13:20 jhay Exp $  */
+comment|/*  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * This file includes significant work done at Cornell University by  * Bill Nesheim.  That work included by permission.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: output.c,v 1.3.2.1 1996/11/28 08:26:35 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,8 @@ argument_list|(
 name|f
 argument_list|,
 name|except
+argument_list|,
+name|changesonly
 argument_list|)
 name|void
 argument_list|(
@@ -71,6 +73,8 @@ argument_list|,
 expr|struct
 name|interface
 operator|*
+argument_list|,
+name|int
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -80,6 +84,12 @@ name|struct
 name|rt_entry
 modifier|*
 name|except
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|changesonly
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +242,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|ifp
+argument_list|,
+name|changesonly
 argument_list|)
 expr_stmt|;
 block|}
@@ -251,6 +263,8 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|ifp
+parameter_list|,
+name|changesonly
 parameter_list|)
 name|struct
 name|sockaddr
@@ -264,6 +278,9 @@ name|struct
 name|interface
 modifier|*
 name|ifp
+decl_stmt|;
+name|int
+name|changesonly
 decl_stmt|;
 block|{
 operator|(
@@ -320,6 +337,8 @@ parameter_list|,
 name|flags
 parameter_list|,
 name|ifp
+parameter_list|,
+name|changesonly
 parameter_list|)
 name|struct
 name|sockaddr
@@ -333,6 +352,9 @@ name|struct
 name|interface
 modifier|*
 name|ifp
+decl_stmt|;
+name|int
+name|changesonly
 decl_stmt|;
 block|{
 specifier|register
@@ -371,13 +393,6 @@ operator|->
 name|rip_nets
 decl_stmt|;
 name|struct
-name|rthash
-modifier|*
-name|base
-init|=
-name|hosthash
-decl_stmt|;
-name|struct
 name|sockaddr_ipx
 modifier|*
 name|sipx
@@ -403,10 +418,6 @@ operator|.
 name|af_output
 decl_stmt|;
 name|int
-name|doinghost
-init|=
-literal|1
-decl_stmt|,
 name|size
 decl_stmt|,
 name|metric
@@ -448,18 +459,16 @@ argument_list|(
 name|RIPCMD_RESPONSE
 argument_list|)
 expr_stmt|;
-name|again
-label|:
 for|for
 control|(
 name|rh
 operator|=
-name|base
+name|nethash
 init|;
 name|rh
 operator|<
 operator|&
-name|base
+name|nethash
 index|[
 name|ROUTEHASHSIZ
 index|]
@@ -570,7 +579,7 @@ condition|)
 block|{
 name|usleep
 argument_list|(
-literal|20000
+literal|50000
 argument_list|)
 expr_stmt|;
 name|delay
@@ -579,6 +588,20 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|changesonly
+operator|&&
+operator|!
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_CHANGED
+operator|)
+condition|)
+continue|continue;
 comment|/* 		 * This should do rule one and two of the split horizon 		 * algorithm. 		 */
 if|if
 condition|(
@@ -847,23 +870,6 @@ expr_stmt|;
 name|next
 label|:
 empty_stmt|;
-block|}
-if|if
-condition|(
-name|doinghost
-condition|)
-block|{
-name|doinghost
-operator|=
-literal|0
-expr_stmt|;
-name|base
-operator|=
-name|nethash
-expr_stmt|;
-goto|goto
-name|again
-goto|;
 block|}
 if|if
 condition|(
