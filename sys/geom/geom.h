@@ -777,6 +777,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|g_waitfor_event
+parameter_list|(
+name|g_event_t
+modifier|*
+name|func
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|flag
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|g_cancel_event
 parameter_list|(

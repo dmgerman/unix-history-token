@@ -373,11 +373,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-name|wakeup
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -622,11 +617,6 @@ expr_stmt|;
 name|sbuf_finish
 argument_list|(
 name|sb
-argument_list|)
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1319,11 +1309,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 block|}
