@@ -2165,6 +2165,18 @@ name|size_t
 name|len
 parameter_list|)
 block|{
+name|DEBUG
+argument_list|(
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|">>> %s\n"
+argument_list|,
+name|str
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|_fetch_write
