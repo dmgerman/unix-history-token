@@ -7,6 +7,10 @@ begin_comment
 comment|/* #define ENTROPYSOURCE nn	   entropy sources (actually classes)  *					This is properly defined in  *					an enum in sys/random.h  */
 end_comment
 
+begin_comment
+comment|/* The ring size _MUST_ be a power of 2 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -17,6 +21,13 @@ end_define
 begin_comment
 comment|/* harvest ring buffer size */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HARVEST_RING_MASK
+value|(HARVEST_RING_SIZE - 1)
+end_define
 
 begin_define
 define|#
@@ -244,6 +255,13 @@ name|selinfo
 name|rsel
 decl_stmt|;
 comment|/* For poll(2) */
+name|u_char
+name|raw
+index|[
+name|HARVESTSIZE
+index|]
+decl_stmt|;
+comment|/* Raw buffer for checking */
 block|}
 struct|;
 end_struct
