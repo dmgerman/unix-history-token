@@ -2687,12 +2687,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|rdcd
 argument_list|(
 name|codec
 argument_list|,
 name|AC97_REGEXT_STAT
 argument_list|)
+operator|&
+name|AC97_EXTCAPS
+operator|)
 operator|!=
 name|codec
 operator|->
@@ -2716,6 +2720,8 @@ name|codec
 argument_list|,
 name|AC97_REGEXT_STAT
 argument_list|)
+operator|&
+name|AC97_EXTCAPS
 argument_list|)
 expr_stmt|;
 block|}
