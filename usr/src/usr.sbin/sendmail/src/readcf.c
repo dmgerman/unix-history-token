@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.109 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.110 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8696,6 +8696,33 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|==
+name|p
+operator|||
+operator|!
+name|isalpha
+argument_list|(
+operator|*
+name|q
+argument_list|)
+condition|)
+block|{
+comment|/* no valid characters */
+name|syserr
+argument_list|(
+literal|"invalid ruleset name: \"%.20s\""
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 while|while
 condition|(
 name|isascii
