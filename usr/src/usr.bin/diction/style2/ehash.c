@@ -8,7 +8,7 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|ehash_sccsid
 index|[]
 init|=
 literal|"@(#)ehash.c	4.2	(Berkeley)	82/11/06"
@@ -1278,7 +1278,7 @@ name|struct
 name|hnode
 name|aa4root
 index|[
-literal|31
+literal|37
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1287,21 +1287,21 @@ begin_define
 define|#
 directive|define
 name|aa4tsize
-value|31
+value|37
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa4p1
-value|23
+value|29
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa4p2
-value|29
+value|31
 end_define
 
 begin_function
@@ -1648,7 +1648,7 @@ name|struct
 name|hnode
 name|aa11root
 index|[
-literal|19
+literal|31
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1657,21 +1657,21 @@ begin_define
 define|#
 directive|define
 name|aa11tsize
-value|19
+value|31
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa11p1
-value|13
+value|23
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa11p2
-value|17
+value|29
 end_define
 
 begin_function
@@ -2166,7 +2166,7 @@ name|struct
 name|hnode
 name|aa21root
 index|[
-literal|61
+literal|89
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2175,21 +2175,21 @@ begin_define
 define|#
 directive|define
 name|aa21tsize
-value|61
+value|89
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa21p1
-value|53
+value|79
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa21p2
-value|59
+value|83
 end_define
 
 begin_function
@@ -2980,7 +2980,7 @@ name|struct
 name|hnode
 name|aa34root
 index|[
-literal|29
+literal|37
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2989,21 +2989,21 @@ begin_define
 define|#
 directive|define
 name|aa34tsize
-value|29
+value|37
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa34p1
-value|19
+value|29
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa34p2
-value|23
+value|31
 end_define
 
 begin_function
@@ -3572,7 +3572,7 @@ name|struct
 name|hnode
 name|aa45root
 index|[
-literal|43
+literal|47
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -3581,21 +3581,21 @@ begin_define
 define|#
 directive|define
 name|aa45tsize
-value|43
+value|47
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa45p1
-value|37
+value|41
 end_define
 
 begin_define
 define|#
 directive|define
 name|aa45p2
-value|41
+value|43
 end_define
 
 begin_function
