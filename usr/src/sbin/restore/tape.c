@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.24	(Berkeley)	85/01/14"
+literal|"@(#)tape.c	3.25	(Berkeley)	85/01/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -1042,10 +1042,16 @@ name|nextvol
 operator|==
 literal|1
 condition|)
+block|{
 name|tapesread
 operator|=
 literal|0
 expr_stmt|;
+name|gettingfile
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pipein
