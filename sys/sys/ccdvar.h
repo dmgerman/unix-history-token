@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ccdvar.h,v 1.3 1995/12/28 00:21:32 asami Exp $ */
 end_comment
 
 begin_comment
@@ -131,12 +131,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCDF_PARITY
+name|CCDF_MIRROR
 value|0x04
 end_define
 
 begin_comment
-comment|/* use parity */
+comment|/* use mirroring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCDF_PARITY
+value|0x08
+end_define
+
+begin_comment
+comment|/* use parity (RAID level 5) */
 end_comment
 
 begin_comment
@@ -147,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|CCDF_USERMASK
-value|(CCDF_SWAP|CCDF_UNIFORM|CCDF_PARITY)
+value|(CCDF_SWAP|CCDF_UNIFORM|CCDF_MIRROR|CCDF_PARITY)
 end_define
 
 begin_comment
