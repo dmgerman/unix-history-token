@@ -6376,7 +6376,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* can't trace a process that's currently exec'ing */
+comment|/* 	 * Can't trace a process that's currently exec'ing. 	 * XXX: Note, this is not a security policy decision, it's a 	 * basic correctness/functionality decision.  Therefore, this check 	 * should be moved to the caller's of p_candebug(). 	 */
 if|if
 condition|(
 operator|(
