@@ -292,6 +292,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RESCUE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_DHCLIENT_SCRIPT
+value|"/rescue/dhclient-script"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -354,6 +372,11 @@ name|cmds
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|RESCUE
+comment|/* rescue environment can't rely on these ... */
+comment|/* Actually, /sbin/dhclient shouldn't use these, either. */
 literal|"/bin/ps -axlw 2>&1"
 block|,
 literal|"/usr/sbin/arp -an 2>&1"
@@ -374,6 +397,8 @@ literal|"/usr/bin/vmstat  2>&1"
 block|,
 literal|"/usr/bin/w  2>&1"
 block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
@@ -387,6 +412,9 @@ name|dirs
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|RESCUE
 literal|"/tmp"
 block|,
 literal|"/usr/tmp"
@@ -405,6 +433,8 @@ literal|"/home"
 block|,
 literal|"/usr/home"
 block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
@@ -418,12 +448,17 @@ name|files
 index|[]
 init|=
 block|{
+ifndef|#
+directive|ifndef
+name|RESCUE
 literal|"/var/log/messages"
 block|,
 literal|"/var/log/wtmp"
 block|,
 literal|"/var/log/lastlog"
 block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
