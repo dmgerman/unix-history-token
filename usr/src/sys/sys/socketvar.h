@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socketvar.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -182,14 +182,25 @@ name|so_tpcb
 decl_stmt|;
 comment|/* Wisc. protocol control block XXX */
 name|void
-function_decl|(
-modifier|*
-name|so_upcall
-function_decl|)
-parameter_list|(
-comment|/* so, so->so_upcallarg, waitf */
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|*so_upcall
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
+operator|,
+name|caddr_t
+name|arg
+operator|,
+name|int
+name|waitf
+operator|)
+argument_list|)
+expr_stmt|;
 name|caddr_t
 name|so_upcallarg
 decl_stmt|;
