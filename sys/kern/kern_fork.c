@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_fork.c	8.6 (Berkeley) 4/8/94  * $Id: kern_fork.c,v 1.47 1997/08/26 00:13:06 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_fork.c	8.6 (Berkeley) 4/8/94  * $Id: kern_fork.c,v 1.48 1997/11/06 19:29:09 phk Exp $  */
 end_comment
 
 begin_include
@@ -96,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -123,12 +117,6 @@ directive|include
 file|<vm/vm_extern.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_inherit.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -136,6 +124,7 @@ name|SMP
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fast_vfork
 init|=
@@ -144,7 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Doesn't work on SMP yet */
+comment|/* Doesn't work on SMP yet. */
 end_comment
 
 begin_else
@@ -153,6 +142,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fast_vfork
 init|=
@@ -200,10 +190,6 @@ name|p
 operator|,
 name|int
 name|flags
-operator|,
-name|int
-operator|*
-name|retval
 operator|)
 argument_list|)
 decl_stmt|;
@@ -290,15 +276,9 @@ name|fork1
 argument_list|(
 name|p
 argument_list|,
-operator|(
 name|RFFDG
 operator||
 name|RFPROC
-operator|)
-argument_list|,
-name|p
-operator|->
-name|p_retval
 argument_list|)
 operator|)
 return|;
@@ -334,7 +314,6 @@ name|fork1
 argument_list|(
 name|p
 argument_list|,
-operator|(
 name|RFFDG
 operator||
 name|RFPROC
@@ -348,11 +327,6 @@ name|RFMEM
 else|:
 literal|0
 operator|)
-operator|)
-argument_list|,
-name|p
-operator|->
-name|p_retval
 argument_list|)
 operator|)
 return|;
@@ -391,10 +365,6 @@ argument_list|,
 name|uap
 operator|->
 name|flags
-argument_list|,
-name|p
-operator|->
-name|p_retval
 argument_list|)
 operator|)
 return|;
@@ -430,8 +400,6 @@ parameter_list|(
 name|p1
 parameter_list|,
 name|flags
-parameter_list|,
-name|retval
 parameter_list|)
 specifier|register
 name|struct
@@ -441,10 +409,6 @@ name|p1
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|;
-name|int
-name|retval
-index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -1275,7 +1239,7 @@ name|p_refcnt
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Preserve some flags in subprocess. 	 */
+comment|/* 	 * Preserve some more flags in subprocess.  P_PROFIL has already 	 * been preserved. 	 */
 name|p2
 operator|->
 name|p_flag
@@ -1539,8 +1503,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Return child pid to parent process, 	 * marking us as parent via retval[1]. 	 */
-name|retval
+comment|/* 	 * Return child pid to parent process, 	 * marking us as parent via p1->p_retval[1]. 	 */
+name|p1
+operator|->
+name|p_retval
 index|[
 literal|0
 index|]
@@ -1549,7 +1515,9 @@ name|p2
 operator|->
 name|p_pid
 expr_stmt|;
-name|retval
+name|p1
+operator|->
+name|p_retval
 index|[
 literal|1
 index|]
