@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.9";  *  * formatted read routines  */
+comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.10";  *  * formatted read routines  */
 end_comment
 
 begin_include
@@ -135,6 +135,8 @@ argument_list|,
 name|p
 operator|->
 name|p1
+argument_list|,
+name|len
 argument_list|)
 operator|)
 expr_stmt|;
@@ -813,13 +815,21 @@ argument_list|(
 argument|n
 argument_list|,
 argument|w
+argument_list|,
+argument|len
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|ftnint
+name|uint
 modifier|*
 name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ftnlen
+name|len
 decl_stmt|;
 end_decl_stmt
 
@@ -929,8 +939,25 @@ operator|=
 name|F_ERLOGIF
 operator|)
 return|;
-operator|*
+if|if
+condition|(
+name|len
+operator|==
+sizeof|sizeof
+argument_list|(
+name|short
+argument_list|)
+condition|)
 name|n
+operator|->
+name|is
+operator|=
+name|v
+expr_stmt|;
+else|else
+name|n
+operator|->
+name|il
 operator|=
 name|v
 expr_stmt|;
