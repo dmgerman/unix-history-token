@@ -76,7 +76,7 @@ name|char
 modifier|*
 name|config_file
 init|=
-literal|"/etc/pccard.conf"
+literal|"/etc/defaults/pccard.conf"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,12 @@ expr_stmt|;
 name|pccard_init_sleep
 operator|=
 literal|5000000
+expr_stmt|;
+name|cards
+operator|=
+name|last_card
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(

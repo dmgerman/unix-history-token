@@ -473,6 +473,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
+name|struct
+name|card
+modifier|*
+name|last_card
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|EXTERN
 name|bitstr_t
 modifier|*
 name|mem_avail
@@ -727,6 +736,13 @@ begin_define
 define|#
 directive|define
 name|MAXINCLUDES
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXERRORS
 value|10
 end_define
 
