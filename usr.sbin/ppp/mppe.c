@@ -118,7 +118,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"throughput.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"layer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"link.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"chap_ms.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"proto.h"
 end_include
 
 begin_include
@@ -993,6 +1017,82 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|MPPEUsable
+parameter_list|(
+name|struct
+name|fsm
+modifier|*
+name|fp
+parameter_list|)
+block|{
+name|struct
+name|lcp
+modifier|*
+name|lcp
+decl_stmt|;
+name|int
+name|ok
+decl_stmt|;
+name|lcp
+operator|=
+operator|&
+name|fp
+operator|->
+name|link
+operator|->
+name|lcp
+expr_stmt|;
+name|ok
+operator|=
+operator|(
+name|lcp
+operator|->
+name|want_auth
+operator|==
+name|PROTO_CHAP
+operator|&&
+name|lcp
+operator|->
+name|want_authtype
+operator|==
+literal|0x81
+operator|)
+operator|||
+operator|(
+name|lcp
+operator|->
+name|his_auth
+operator|==
+name|PROTO_CHAP
+operator|&&
+name|lcp
+operator|->
+name|his_authtype
+operator|==
+literal|0x81
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ok
+condition|)
+name|log_Printf
+argument_list|(
+name|LogCCP
+argument_list|,
+literal|"MPPE: Not usable without CHAP81\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ok
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|MPPEInitOptsOutput
 parameter_list|(
@@ -1035,7 +1135,7 @@ argument_list|(
 name|LogCCP
 argument_list|,
 literal|"MPPE: MasterKey is invalid,"
-literal|" MPPE is capable only with CHAP81 authentication\n"
+literal|" MPPE is available only with CHAP81 authentication\n"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1392,9 +1492,9 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
-literal|"MPPE: InitInput: MasterKey is invalid!!!!\n"
+literal|"MPPE: Cannot initialise without CHAP81\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1601,9 +1701,9 @@ condition|)
 block|{
 name|log_Printf
 argument_list|(
-name|LogERROR
+name|LogWARN
 argument_list|,
-literal|"MPPE: InitOutput: MasterKey is invalid!!!!\n"
+literal|"MPPE: Cannot initialise without CHAP81\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1824,6 +1924,8 @@ block|,
 name|CCP_NEG_MPPE
 block|,
 name|MPPEDispOpts
+block|,
+name|MPPEUsable
 block|,
 block|{
 name|MPPESetOptsInput

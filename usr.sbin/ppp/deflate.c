@@ -2891,10 +2891,12 @@ init|=
 block|{
 name|TY_PPPD_DEFLATE
 block|,
-comment|/* pppd (wrongly) expects this ``type'' field */
+comment|/* Older versions of pppd expected this ``type'' */
 name|CCP_NEG_DEFLATE24
 block|,
 name|DeflateDispOpts
+block|,
+name|ccp_IsUsable
 block|,
 block|{
 name|DeflateSetOptsInput
@@ -2940,6 +2942,8 @@ comment|/* rfc 1979 */
 name|CCP_NEG_DEFLATE
 block|,
 name|DeflateDispOpts
+block|,
+name|ccp_IsUsable
 block|,
 block|{
 name|DeflateSetOptsInput
