@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.122 (Berkeley) %G%"
+literal|"@(#)main.c	8.123 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3234,6 +3234,10 @@ comment|/* remove things that don't make sense in daemon mode */
 name|FullName
 operator|=
 name|NULL
+expr_stmt|;
+name|GrabTo
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* arrange to restart on hangup signal */
 name|setsignal
