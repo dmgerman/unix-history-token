@@ -135,13 +135,11 @@ specifier|static
 name|int
 name|exec_linux_imgact
 parameter_list|(
-name|imgp
-parameter_list|)
 name|struct
 name|image_params
 modifier|*
 name|imgp
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
