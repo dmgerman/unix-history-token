@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpc.c,v 1.9 1999/08/19 03:29:13 mdodd Exp $"
+literal|"$Id: lpc.c,v 1.10 1999/08/19 04:10:32 mdodd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -614,6 +614,9 @@ name|num
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -730,26 +733,31 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|len
+operator|=
+operator|(
+name|num
+operator|>
+name|MAX_CMDLINE
+operator|)
+condition|?
+name|MAX_CMDLINE
+else|:
+name|num
+block|)
+empty_stmt|;
 name|memcpy
 argument_list|(
 name|cmdline
 argument_list|,
 name|bp
 argument_list|,
-operator|(
-name|MAX_CMDLINE
-operator|>
-name|num
-condition|?
-name|MAX_CMDLINE
-else|:
-name|num
-operator|)
+name|len
 argument_list|)
 expr_stmt|;
 name|cmdline
 index|[
-name|num
+name|len
 index|]
 operator|=
 literal|0
@@ -930,11 +938,10 @@ name|margv
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_function
-specifier|static
+unit|}  static
 name|struct
 name|cmd
 modifier|*

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cdcontrol.c,v 1.19 1999/08/19 03:29:11 mdodd Exp $"
+literal|"$Id: cdcontrol.c,v 1.20 1999/08/19 04:10:31 mdodd Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5677,6 +5677,9 @@ name|num
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -5797,26 +5800,30 @@ operator|(
 literal|0
 operator|)
 return|;
+name|len
+operator|=
+operator|(
+name|num
+operator|>
+name|MAXLINE
+operator|)
+condition|?
+name|MAXLINE
+else|:
+name|num
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|buf
 argument_list|,
 name|bp
 argument_list|,
-operator|(
-name|MAXLINE
-operator|>
-name|num
-condition|?
-name|MAXLINE
-else|:
-name|num
-operator|)
+name|len
 argument_list|)
 expr_stmt|;
 name|buf
 index|[
-name|num
+name|len
 index|]
 operator|=
 literal|0
