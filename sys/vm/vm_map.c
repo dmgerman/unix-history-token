@@ -3775,7 +3775,7 @@ name|end
 decl_stmt|,
 name|st
 decl_stmt|;
-comment|/* Request must fit within min/max VM address. */
+comment|/* 	 * Request must fit within min/max VM address and must avoid 	 * address wrap. 	 */
 if|if
 condition|(
 name|start
@@ -3799,6 +3799,12 @@ operator|>
 name|map
 operator|->
 name|max_offset
+operator|||
+name|start
+operator|+
+name|length
+operator|<
+name|start
 condition|)
 return|return
 operator|(
@@ -3860,7 +3866,7 @@ goto|goto
 name|found
 goto|;
 block|}
-comment|/* 	 * Root is the last node that might begin its gap before 	 * start. 	 */
+comment|/* 	 * Root is the last node that might begin its gap before 	 * start, and this is the last comparison where address 	 * wrap might be a problem. 	 */
 name|st
 operator|=
 operator|(
@@ -3883,8 +3889,6 @@ name|end
 expr_stmt|;
 if|if
 condition|(
-name|st
-operator|+
 name|length
 operator|<=
 name|map
@@ -3898,6 +3902,8 @@ operator|->
 name|root
 operator|->
 name|adj_free
+operator|-
+name|st
 condition|)
 block|{
 operator|*
