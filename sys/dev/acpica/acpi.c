@@ -2361,11 +2361,11 @@ name|acpi_cdevsw
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|5
+name|GID_WHEEL
 argument_list|,
-literal|0660
+literal|0600
 argument_list|,
 literal|"acpi"
 argument_list|)

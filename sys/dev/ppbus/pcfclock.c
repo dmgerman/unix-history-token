@@ -481,7 +481,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0444
+literal|0400
 argument_list|,
 name|PCFCLOCK_NAME
 literal|"%d"

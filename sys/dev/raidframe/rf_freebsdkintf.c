@@ -1236,11 +1236,11 @@ name|raidctl_cdevsw
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
-literal|0644
+literal|0600
 argument_list|,
 literal|"raidctl"
 argument_list|)

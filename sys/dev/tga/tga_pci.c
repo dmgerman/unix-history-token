@@ -742,11 +742,11 @@ name|cdevsw
 argument_list|,
 name|unit
 argument_list|,
-literal|0
+name|UID_ROOT
 argument_list|,
-literal|0
+name|GID_WHEEL
 argument_list|,
-literal|02660
+literal|0600
 argument_list|,
 literal|"tga%x"
 argument_list|,
