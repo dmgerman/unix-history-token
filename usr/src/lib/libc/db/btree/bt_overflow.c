@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_overflow.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_overflow.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,11 +428,9 @@ condition|(
 operator|(
 name|h
 operator|=
-name|mpool_new
+name|__bt_new
 argument_list|(
 name|t
-operator|->
-name|bt_mp
 argument_list|,
 operator|&
 name|npg
@@ -700,6 +698,8 @@ operator|)
 return|;
 block|}
 comment|/* Step through the chain, calling the free routine for each page. */
+for|for
+control|(
 name|plen
 operator|=
 name|t
@@ -707,9 +707,6 @@ operator|->
 name|bt_psize
 operator|-
 name|BTDATAOFF
-expr_stmt|;
-for|for
-control|(
 init|;
 condition|;
 name|sz
@@ -717,20 +714,26 @@ operator|-=
 name|plen
 control|)
 block|{
-if|if
-condition|(
-name|sz
-operator|>=
-name|plen
-condition|)
-break|break;
 name|pg
 operator|=
 name|h
 operator|->
 name|nextpg
 expr_stmt|;
-comment|/* XXX mpool_free(t->bt_mp, h->pgno); */
+name|__bt_free
+argument_list|(
+name|t
+argument_list|,
+name|h
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|<=
+name|plen
+condition|)
+break|break;
 if|if
 condition|(
 operator|(
