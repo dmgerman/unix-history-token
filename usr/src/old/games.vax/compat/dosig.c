@@ -1,13 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dosig.c	4.2  83/07/31"
+literal|"@(#)dosig.c	4.3  84/05/05"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* From Lou Salkind: compat/RCS/dosig.c,v 1.2 84/01/31 13:34:17 */
+end_comment
 
 begin_comment
 comment|/*  * Handle signal trapping from version 6 or  * version 7 compatability mode programs.  *	Art Wetzel	November 1979  */
@@ -41,6 +56,12 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|sigtrapped
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
@@ -303,6 +324,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sigtrapped
+operator|=
+literal|1
+expr_stmt|;
 comment|/* where is the stack */
 name|sp
 operator|=
@@ -371,13 +396,7 @@ index|[
 name|signum
 index|]
 expr_stmt|;
-name|signal
-argument_list|(
-name|signum
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
+comment|/*	signal(signum, SIG_DFL); */
 block|}
 end_block
 

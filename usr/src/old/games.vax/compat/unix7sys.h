@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 	unix7sys.h	4.2	83/07/31  */
+comment|/*  * 	unix7sys.h	4.3	84/05/05  */
+end_comment
+
+begin_comment
+comment|/* From Lou Salkind: compat/RCS/unix7sys.h,v 1.2 84/01/31 13:34:22 */
 end_comment
 
 begin_define
@@ -55,8 +59,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|READ
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|OPEN
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOSE
+value|6
 end_define
 
 begin_define

@@ -1,7 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_empty
-empty|#
-end_empty
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -9,9 +11,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	unixstart.c	4.1	82/05/12	"
+literal|"	unixstart.c	4.2	84/05/05	"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* From Lou Salkind: compat/RCS/unixstart.c,v 1.2 84/01/31 13:34:27 */
+end_comment
 
 begin_comment
 comment|/*	Start up a version 6 or version 7 pdp-11 UNIX compatability mode  *	program. Must set up the memory layout with args etc.  *	Art Wetzel	August 1979  */
@@ -440,15 +451,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|V7UNIX
-comment|/* clear a word */
-operator|*
-operator|(
-operator|--
-name|ssp
-operator|)
-operator|=
-literal|0
-expr_stmt|;
 comment|/* set up environment pointers */
 for|for
 control|(
@@ -482,15 +484,6 @@ name|i
 index|]
 expr_stmt|;
 block|}
-comment|/* clear another word */
-operator|*
-operator|(
-operator|--
-name|ssp
-operator|)
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* set up argument pointers */
