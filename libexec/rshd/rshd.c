@@ -2722,6 +2722,10 @@ literal|"-c"
 argument_list|,
 name|cmdbuf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
