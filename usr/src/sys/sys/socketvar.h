@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	4.10	81/12/02	*/
+comment|/*	socketvar.h	4.11	82/01/13	*/
 end_comment
 
 begin_comment
@@ -19,6 +19,10 @@ name|short
 name|so_options
 decl_stmt|;
 comment|/* from socket call, see socket.h */
+name|short
+name|so_linger
+decl_stmt|;
+comment|/* time to linger while closing */
 name|short
 name|so_state
 decl_stmt|;
@@ -236,7 +240,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|(((so)->so_options& SO_NBIO) || ((so)->so_proto->pr_flags& PR_ATOMIC))
+value|(((so)->so_options& SO_NONBLOCKING) || ((so)->so_proto->pr_flags& PR_ATOMIC))
 end_define
 
 begin_comment
