@@ -4088,13 +4088,6 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* Temporary panic to verify exclusive locking */
-comment|/* This panic goes away when we allow shared refs */
-name|panic
-argument_list|(
-literal|"brelse: multiple refs"
-argument_list|)
-expr_stmt|;
 comment|/* do not release to free list */
 name|BUF_UNLOCK
 argument_list|(
@@ -4652,11 +4645,6 @@ literal|1
 condition|)
 block|{
 comment|/* do not release to free list */
-name|panic
-argument_list|(
-literal|"bqrelse: multiple refs"
-argument_list|)
-expr_stmt|;
 name|BUF_UNLOCK
 argument_list|(
 name|bp
