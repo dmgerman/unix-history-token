@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_io.c	7.19 (Berkeley) %G%"
+literal|"@(#)ex_io.c	7.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2031,6 +2031,9 @@ argument_list|(
 literal|" Compressed file"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARCHIVES_ARE_OK
 if|if
 condition|(
 operator|!
@@ -2058,6 +2061,8 @@ argument_list|(
 literal|" Archive"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 break|break;
 block|}
