@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* quotearg.c - quote arguments for output    Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* quotearg.c - quote arguments for output     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -52,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
 end_include
 
 begin_include
@@ -647,7 +653,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Place into buffer BUFFER (of size BUFFERSIZE) a quoted version of    argument ARG (of size ARGSIZE), using QUOTING_STYLE and the    non-quoting-style part of O to control quoting.    Terminate the output with a null character, and return the written    size of the output, not counting the terminating null.    If BUFFERSIZE is too small to store the output string, return the    value that would have been returned had BUFFERSIZE been large enough.    If ARGSIZE is -1, use the string length of the argument for ARGSIZE.     This function acts like quotearg_buffer (BUFFER, BUFFERSIZE, ARG,    ARGSIZE, O), except it uses QUOTING_STYLE instead of the quoting    style specified by O, and O may not be null.  */
+comment|/* Place into buffer BUFFER (of size BUFFERSIZE) a quoted version of    argument ARG (of size ARGSIZE), using QUOTING_STYLE and the    non-quoting-style part of O to control quoting.    Terminate the output with a null character, and return the written    size of the output, not counting the terminating null.    If BUFFERSIZE is too small to store the output string, return the    value that would have been returned had BUFFERSIZE been large enough.    If ARGSIZE is SIZE_MAX, use the string length of the argument for ARGSIZE.     This function acts like quotearg_buffer (BUFFER, BUFFERSIZE, ARG,    ARGSIZE, O), except it uses QUOTING_STYLE instead of the quoting    style specified by O, and O may not be null.  */
 end_comment
 
 begin_function
@@ -701,12 +707,12 @@ name|quote_string_len
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|bool
 name|backslash_escapes
 init|=
-literal|0
+name|false
 decl_stmt|;
-name|int
+name|bool
 name|unibyte_locale
 init|=
 name|MB_CUR_MAX
@@ -736,7 +742,7 @@ argument_list|)
 expr_stmt|;
 name|backslash_escapes
 operator|=
-literal|1
+name|true
 expr_stmt|;
 name|quote_string
 operator|=
@@ -752,7 +758,7 @@ name|escape_quoting_style
 case|:
 name|backslash_escapes
 operator|=
-literal|1
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -813,7 +819,7 @@ argument_list|)
 expr_stmt|;
 name|backslash_escapes
 operator|=
-literal|1
+name|true
 expr_stmt|;
 name|quote_string
 operator|=
@@ -1170,6 +1176,35 @@ goto|;
 block|}
 break|break;
 case|case
+literal|'{'
+case|:
+case|case
+literal|'}'
+case|:
+comment|/* sometimes special if isolated */
+if|if
+condition|(
+operator|!
+operator|(
+name|argsize
+operator|==
+name|SIZE_MAX
+condition|?
+name|arg
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+else|:
+name|argsize
+operator|==
+literal|1
+operator|)
+condition|)
+break|break;
+comment|/* Fall through.  */
+case|case
 literal|'#'
 case|:
 case|case
@@ -1214,6 +1249,10 @@ case|:
 case|case
 literal|'<'
 case|:
+case|case
+literal|'='
+case|:
+comment|/* sometimes special in 0th or (with "set -k") later args */
 case|case
 literal|'>'
 case|:
@@ -1328,9 +1367,6 @@ literal|'9'
 case|:
 case|case
 literal|':'
-case|:
-case|case
-literal|'='
 case|:
 case|case
 literal|'A'
@@ -1494,12 +1530,6 @@ case|:
 case|case
 literal|'z'
 case|:
-case|case
-literal|'{'
-case|:
-case|case
-literal|'}'
-case|:
 comment|/* These characters don't cause problems, no matter what the 	     quoting style is.  They cannot start multibyte sequences.  */
 break|break;
 default|default:
@@ -1509,7 +1539,7 @@ comment|/* Length of multibyte sequence found so far.  */
 name|size_t
 name|m
 decl_stmt|;
-name|int
+name|bool
 name|printable
 decl_stmt|;
 if|if
@@ -1527,6 +1557,8 @@ name|isprint
 argument_list|(
 name|c
 argument_list|)
+operator|!=
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -1551,7 +1583,7 @@ literal|0
 expr_stmt|;
 name|printable
 operator|=
-literal|1
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -1620,7 +1652,7 @@ condition|)
 block|{
 name|printable
 operator|=
-literal|0
+name|false
 expr_stmt|;
 break|break;
 block|}
@@ -1638,7 +1670,7 @@ condition|)
 block|{
 name|printable
 operator|=
-literal|0
+name|false
 expr_stmt|;
 while|while
 condition|(
@@ -1662,6 +1694,66 @@ break|break;
 block|}
 else|else
 block|{
+comment|/* Work around a bug with older shells that "see" a '\' 			   that is really the 2nd byte of a multibyte character. 			   In practice the problem is limited to ASCII 			   chars>= '@' that are shell special chars.  */
+if|if
+condition|(
+literal|'['
+operator|==
+literal|0x5b
+operator|&&
+name|quoting_style
+operator|==
+name|shell_quoting_style
+condition|)
+block|{
+name|size_t
+name|j
+decl_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|1
+init|;
+name|j
+operator|<
+name|bytes
+condition|;
+name|j
+operator|++
+control|)
+switch|switch
+condition|(
+name|arg
+index|[
+name|i
+operator|+
+name|m
+operator|+
+name|j
+index|]
+condition|)
+block|{
+case|case
+literal|'['
+case|:
+case|case
+literal|'\\'
+case|:
+case|case
+literal|'^'
+case|:
+case|case
+literal|'`'
+case|:
+case|case
+literal|'|'
+case|:
+goto|goto
+name|use_shell_always_quoting_style
+goto|;
+block|}
+block|}
 if|if
 condition|(
 operator|!
@@ -1672,7 +1764,7 @@ argument_list|)
 condition|)
 name|printable
 operator|=
-literal|0
+name|false
 expr_stmt|;
 name|m
 operator|+=
@@ -1844,6 +1936,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|i
+operator|==
+literal|0
+operator|&&
+name|quoting_style
+operator|==
+name|shell_quoting_style
+condition|)
+goto|goto
+name|use_shell_always_quoting_style
+goto|;
+if|if
+condition|(
 name|quote_string
 condition|)
 for|for
@@ -1899,7 +2004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Place into buffer BUFFER (of size BUFFERSIZE) a quoted version of    argument ARG (of size ARGSIZE), using O to control quoting.    If O is null, use the default.    Terminate the output with a null character, and return the written    size of the output, not counting the terminating null.    If BUFFERSIZE is too small to store the output string, return the    value that would have been returned had BUFFERSIZE been large enough.    If ARGSIZE is -1, use the string length of the argument for ARGSIZE.  */
+comment|/* Place into buffer BUFFER (of size BUFFERSIZE) a quoted version of    argument ARG (of size ARGSIZE), using O to control quoting.    If O is null, use the default.    Terminate the output with a null character, and return the written    size of the output, not counting the terminating null.    If BUFFERSIZE is too small to store the output string, return the    value that would have been returned had BUFFERSIZE been large enough.    If ARGSIZE is SIZE_MAX, use the string length of the argument for    ARGSIZE.  */
 end_comment
 
 begin_function
@@ -1977,7 +2082,86 @@ block|}
 end_function
 
 begin_comment
-comment|/* Use storage slot N to return a quoted version of argument ARG.    ARG is of size ARGSIZE, but if that is -1, ARG is a null-terminated string.    OPTIONS specifies the quoting options.    The returned value points to static storage that can be    reused by the next call to this function with the same value of N.    N must be nonnegative.  N is deliberately declared with type "int"    to allow for future extensions (using negative values).  */
+comment|/* Like quotearg_buffer (..., ARG, ARGSIZE, O), except return newly    allocated storage containing the quoted string.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|quotearg_alloc
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|arg
+parameter_list|,
+name|size_t
+name|argsize
+parameter_list|,
+name|struct
+name|quoting_options
+specifier|const
+modifier|*
+name|o
+parameter_list|)
+block|{
+name|int
+name|e
+init|=
+name|errno
+decl_stmt|;
+name|size_t
+name|bufsize
+init|=
+name|quotearg_buffer
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|arg
+argument_list|,
+name|argsize
+argument_list|,
+name|o
+argument_list|)
+operator|+
+literal|1
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+init|=
+name|xmalloc
+argument_list|(
+name|bufsize
+argument_list|)
+decl_stmt|;
+name|quotearg_buffer
+argument_list|(
+name|buf
+argument_list|,
+name|bufsize
+argument_list|,
+name|arg
+argument_list|,
+name|argsize
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|e
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Use storage slot N to return a quoted version of argument ARG.    ARG is of size ARGSIZE, but if that is SIZE_MAX, ARG is a    null-terminated string.    OPTIONS specifies the quoting options.    The returned value points to static storage that can be    reused by the next call to this function with the same value of N.    N must be nonnegative.  N is deliberately declared with type "int"    to allow for future extensions (using negative values).  */
 end_comment
 
 begin_function

@@ -84,7 +84,7 @@ comment|/* Return the index of the element of ARGLIST (NULL terminated) that    
 end_comment
 
 begin_function_decl
-name|int
+name|ptrdiff_t
 name|argmatch
 parameter_list|(
 name|char
@@ -167,7 +167,7 @@ specifier|const
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ptrdiff_t
 name|problem
 parameter_list|)
 function_decl|;
@@ -236,7 +236,7 @@ comment|/* Same as argmatch, but upon failure, reports a explanation on the    f
 end_comment
 
 begin_function_decl
-name|int
+name|ptrdiff_t
 name|__xargmatch_internal
 parameter_list|(
 name|char
