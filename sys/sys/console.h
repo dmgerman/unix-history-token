@@ -233,6 +233,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CONS_GETVERS
+value|_IOR('c', 74, long)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CONS_80x25TEXT
 value|_IO('c', 102)
 end_define
