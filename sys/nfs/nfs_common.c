@@ -1102,13 +1102,9 @@ end_function
 
 begin_function
 name|void
+modifier|*
 name|nfsm_build_xx
 parameter_list|(
-name|void
-modifier|*
-modifier|*
-name|a
-parameter_list|,
 name|int
 name|s
 parameter_list|,
@@ -1127,6 +1123,10 @@ name|struct
 name|mbuf
 modifier|*
 name|mb2
+decl_stmt|;
+name|void
+modifier|*
+name|ret
 decl_stmt|;
 if|if
 condition|(
@@ -1194,8 +1194,7 @@ name|caddr_t
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|a
+name|ret
 operator|=
 operator|*
 name|bpos
@@ -1214,6 +1213,9 @@ name|bpos
 operator|+=
 name|s
 expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 

@@ -99,13 +99,9 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
 name|nfsm_build_xx
 parameter_list|(
-name|void
-modifier|*
-modifier|*
-name|a
-parameter_list|,
 name|int
 name|s
 parameter_list|,
@@ -237,17 +233,16 @@ define|#
 directive|define
 name|nfsm_build
 parameter_list|(
-name|a
-parameter_list|,
 name|c
 parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|do { \ 	nfsm_build_xx((void **)&(a), (s),&mb,&bpos); \ } while (0)
+value|(c)nfsm_build_xx((s),&mb,&bpos);
 end_define
 
 begin_comment
+unit|\
 comment|/* XXX 'c' arg (type) is not used */
 end_comment
 
