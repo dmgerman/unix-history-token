@@ -1813,22 +1813,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|warn
 argument_list|(
-literal|"ioctl (WDINFO)"
-argument_list|)
-expr_stmt|;
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s: can't rewrite disk label"
+literal|"ioctl (WDINFO): %s: can't rewrite disk label"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
