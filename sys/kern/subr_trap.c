@@ -215,7 +215,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
+name|DIAGNOSTIC
 comment|/* Check that we called signotify() enough. */
 name|PROC_LOCK
 argument_list|(
