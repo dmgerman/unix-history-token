@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.15 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -111,7 +111,7 @@ name|cltom
 parameter_list|(
 name|x
 parameter_list|)
-value|((caddr_t)((u_int)mbutl + ((u_int)(x)>> MCLSHIFT)))
+value|((caddr_t)((u_int)mbutl + ((u_int)(x)<< MCLSHIFT)))
 end_define
 
 begin_comment
