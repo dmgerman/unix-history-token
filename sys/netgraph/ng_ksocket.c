@@ -3831,11 +3831,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|sockaddr
-modifier|*
-name|nam
-decl_stmt|;
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -3944,8 +3939,13 @@ call|)
 argument_list|(
 name|so
 argument_list|,
-operator|&
-name|nam
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|*
+operator|)
+literal|0
 argument_list|,
 operator|&
 name|auio
