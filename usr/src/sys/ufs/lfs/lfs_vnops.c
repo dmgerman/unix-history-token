@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.87 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.88 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -78,18 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/specdev.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -97,6 +85,18 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<miscfs/specfs/specdev.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<miscfs/fifofs/fifo.h>
 end_include
 
 begin_include
@@ -1298,6 +1298,27 @@ begin_block
 block|{
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|ip
+init|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+decl_stmt|;
+specifier|register
+name|struct
 name|uio
 modifier|*
 name|uio
@@ -1308,24 +1329,10 @@ name|a_uio
 decl_stmt|;
 specifier|register
 name|struct
-name|inode
-modifier|*
-name|ip
-init|=
-name|VTOI
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-decl_stmt|;
-specifier|register
-name|struct
 name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-comment|/* LFS */
 name|struct
 name|buf
 modifier|*
@@ -1338,40 +1345,27 @@ name|bn
 decl_stmt|,
 name|rablock
 decl_stmt|;
+name|off_t
+name|diff
+decl_stmt|;
 name|int
-name|size
-decl_stmt|,
 name|error
 init|=
 literal|0
+decl_stmt|,
+name|size
 decl_stmt|;
 name|long
 name|n
 decl_stmt|,
 name|on
-decl_stmt|,
-name|type
 decl_stmt|;
-name|off_t
-name|diff
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_read: ino %d\n"
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+name|int
+name|type
+decl_stmt|;
 if|if
 condition|(
 name|uio
@@ -1382,7 +1376,7 @@ name|UIO_READ
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_read mode"
+literal|"lfs_read mode"
 argument_list|)
 expr_stmt|;
 name|type
@@ -1409,7 +1403,31 @@ name|IFLNK
 condition|)
 name|panic
 argument_list|(
-literal|"ufs_read type"
+literal|"lfs_read type"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|IFLNK
+operator|&&
+operator|(
+name|int
+operator|)
+name|ip
+operator|->
+name|i_size
+operator|<
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_maxsymlinklen
+condition|)
+name|panic
+argument_list|(
+literal|"read short symlink"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1427,6 +1445,12 @@ operator|(
 literal|0
 operator|)
 return|;
+name|fs
+operator|=
+name|ip
+operator|->
+name|i_lfs
+expr_stmt|;
 if|if
 condition|(
 name|uio
@@ -1434,10 +1458,25 @@ operator|->
 name|uio_offset
 operator|<
 literal|0
+operator|||
+operator|(
+name|u_quad_t
+operator|)
+name|uio
+operator|->
+name|uio_offset
+operator|+
+name|uio
+operator|->
+name|uio_resid
+operator|>
+name|fs
+operator|->
+name|lfs_maxfilesize
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EFBIG
 operator|)
 return|;
 name|ip
@@ -1446,13 +1485,6 @@ name|i_flag
 operator||=
 name|IACC
 expr_stmt|;
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_lfs
-expr_stmt|;
-comment|/* LFS */
 do|do
 block|{
 name|lbn
@@ -1479,7 +1511,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 call|(
 name|unsigned
@@ -1535,7 +1567,6 @@ argument_list|(
 name|fs
 argument_list|)
 expr_stmt|;
-comment|/* LFS */
 name|rablock
 operator|=
 name|lbn
@@ -1544,9 +1575,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_lastr
 operator|+
@@ -1612,9 +1641,7 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_lastr
 operator|=
@@ -1622,7 +1649,7 @@ name|lbn
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|n
 argument_list|,
@@ -1834,20 +1861,6 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_write ino %d\n"
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
@@ -2007,6 +2020,34 @@ operator|->
 name|i_lfs
 expr_stmt|;
 comment|/* LFS */
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_offset
+operator|<
+literal|0
+operator|||
+operator|(
+name|u_quad_t
+operator|)
+name|uio
+operator|->
+name|uio_offset
+operator|+
+name|uio
+operator|->
+name|uio_resid
+operator|>
+name|fs
+operator|->
+name|lfs_maxfilesize
+condition|)
+return|return
+operator|(
+name|EFBIG
+operator|)
+return|;
 name|flags
 operator|=
 literal|0
@@ -2052,7 +2093,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 call|(
 name|unsigned
@@ -2140,7 +2181,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|n
 argument_list|,
