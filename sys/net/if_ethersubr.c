@@ -476,7 +476,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|void
 function_decl|(
 modifier|*
