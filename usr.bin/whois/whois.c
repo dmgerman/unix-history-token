@@ -200,6 +200,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|KNICHOST
+value|"whois.krnic.net"
+end_define
+
+begin_define
+define|#
+directive|define
 name|RNICHOST
 value|"whois.ripe.net"
 end_define
@@ -483,7 +490,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abc:dgh:iIlmpQrR6"
+literal|"abc:dgh:iIklmpQrR6"
 argument_list|)
 operator|)
 operator|!=
@@ -558,6 +565,14 @@ case|:
 name|host
 operator|=
 name|IANAHOST
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|host
+operator|=
+name|KNICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -1748,7 +1763,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-abdgiIlmpQrR6] [-c country-code | -h hostname] "
+literal|"usage: whois [-abdgiIklmpQrR6] [-c country-code | -h hostname] "
 literal|"name ...\n"
 argument_list|)
 expr_stmt|;
