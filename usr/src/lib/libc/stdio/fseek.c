@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fseek.c	8.2 (Berkeley) %G%"
+literal|"@(#)fseek.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -610,7 +610,7 @@ operator|->
 name|_r
 expr_stmt|;
 block|}
-comment|/* 	 * If the target offset is within the current buffer, 	 * simply adjust the pointers, clear EOF, undo ungetc(), 	 * and return.  (If the buffer was modified, we have to 	 * skip this; see fgetline.c.) 	 */
+comment|/* 	 * If the target offset is within the current buffer, 	 * simply adjust the pointers, clear EOF, undo ungetc(), 	 * and return.  (If the buffer was modified, we have to 	 * skip this; see fgetln.c.) 	 */
 if|if
 condition|(
 operator|(

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getcap.c	8.1 (Berkeley) %G%"
+literal|"@(#)getcap.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2508,7 +2508,7 @@ else|else
 block|{
 name|line
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|pfp
 argument_list|,
@@ -2786,7 +2786,7 @@ block|{
 comment|/* name field extends beyond the line */
 name|line
 operator|=
-name|fgetline
+name|fgetln
 argument_list|(
 name|pfp
 argument_list|,
