@@ -4674,6 +4674,17 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 name|ret
 operator|+
