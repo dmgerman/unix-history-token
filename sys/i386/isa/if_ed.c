@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.76 1995/08/25 19:50:15 bde Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.77 1995/10/10 09:52:30 phk Exp $  */
 end_comment
 
 begin_include
@@ -6022,8 +6022,6 @@ name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
 operator||
-name|IFF_NOTRAILERS
-operator||
 name|IFF_MULTICAST
 operator||
 name|IFF_ALTPHYS
@@ -6038,8 +6036,6 @@ operator|(
 name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
-operator||
-name|IFF_NOTRAILERS
 operator||
 name|IFF_MULTICAST
 operator|)

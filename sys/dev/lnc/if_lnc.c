@@ -4461,8 +4461,6 @@ name|if_flags
 operator|=
 name|IFF_BROADCAST
 operator||
-name|IFF_NOTRAILERS
-operator||
 name|IFF_SIMPLEX
 expr_stmt|;
 name|sc
@@ -4715,10 +4713,9 @@ name|if_flags
 operator||=
 name|IFF_BROADCAST
 operator||
-name|IFF_NOTRAILERS
-operator||
 name|IFF_SIMPLEX
 expr_stmt|;
+comment|/* XXX??? */
 comment|/* 	 * This sets up the memory area for the controller. Memory is set up for 	 * the initialisation block (12 words of contiguous memory starting 	 * on a word boundary),the transmit and receive ring structures (each 	 * entry is 4 words long and must start on a quadword boundary) and 	 * the data buffers. 	 * 	 * The alignment tests are particularly paranoid. 	 */
 name|sc
 operator|->

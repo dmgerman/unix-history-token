@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.29 1995/07/05 07:21:34 davidg Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.30 1995/08/28 12:01:17 guido Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -1983,8 +1983,6 @@ operator|=
 name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
-operator||
-name|IFF_NOTRAILERS
 expr_stmt|;
 name|ifp
 operator|->

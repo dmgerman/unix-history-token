@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.19 1995/08/16 16:12:35 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.20 1995/09/26 08:57:47 phk Exp $  */
 end_comment
 
 begin_include
@@ -2126,8 +2126,6 @@ operator|(
 name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
-operator||
-name|IFF_NOTRAILERS
 operator|)
 expr_stmt|;
 comment|/* 	 * Attach the interface 	 */

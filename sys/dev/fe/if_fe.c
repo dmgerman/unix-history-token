@@ -4022,8 +4022,6 @@ name|if_flags
 operator|=
 name|IFF_BROADCAST
 operator||
-name|IFF_NOTRAILERS
-operator||
 name|IFF_MULTICAST
 expr_stmt|;
 comment|/* 	 * Set maximum size of output queue, if it has not been set. 	 * It is done here as this driver may be started after the 	 * system intialization (i.e., the interface is PCMCIA.) 	 * 	 * I'm not sure this is really necessary, but, even if it is, 	 * it should be done somewhere else, e.g., in if_attach(), 	 * since it must be a common workaround for all network drivers. 	 * FIXME. 	 */
