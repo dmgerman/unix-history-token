@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	3.2 83/08/12"
+literal|"@(#)cmd1.c	3.3 83/08/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -714,7 +714,7 @@ name|row
 argument_list|,
 name|col
 argument_list|,
-literal|0
+literal|48
 argument_list|)
 operator|)
 operator|==
