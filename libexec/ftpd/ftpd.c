@@ -55,7 +55,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftpd.c,v 1.49 1998/05/16 21:23:33 ache Exp $"
+literal|"$Id: ftpd.c,v 1.50 1998/05/25 03:45:35 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2267,17 +2267,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|signal
 argument_list|(
 name|SIGURG
 argument_list|,
 name|myoob
 argument_list|)
-operator|<
-literal|0
+operator|==
+name|SIG_ERR
 condition|)
 name|syslog
 argument_list|(
@@ -5685,7 +5682,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|long
+name|time_t
 name|start
 decl_stmt|;
 if|if
@@ -11301,7 +11298,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|long
+name|time_t
 name|now
 decl_stmt|;
 if|if
