@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mcount.c,v 1.12 1997/02/22 09:39:55 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ name|selfpc
 argument_list|)
 comment|/* _mcount; may be static, inline, etc */
 specifier|register
-name|fptrint_t
+name|uintfptr_t
 name|frompc
 operator|,
 name|selfpc
@@ -294,7 +294,7 @@ operator|->
 name|lowpc
 operator|>=
 call|(
-name|fptrint_t
+name|uintfptr_t
 call|)
 argument_list|(
 name|VM_MAXUSER_ADDRESS
@@ -310,7 +310,7 @@ goto|;
 name|frompci
 operator|=
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|user
 operator|-
@@ -401,22 +401,22 @@ comment|/* 	 * When we are called from an exception handler, frompc is faked 	 *
 if|if
 condition|(
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|selfpc
 operator|>=
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|btrap
 operator|&&
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|selfpc
 operator|<
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|eintr
 condition|)
@@ -424,19 +424,19 @@ block|{
 if|if
 condition|(
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|selfpc
 operator|>=
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|bintr
 condition|)
 name|frompci
 operator|=
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|bintr
 operator|-
@@ -448,7 +448,7 @@ else|else
 name|frompci
 operator|=
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|btrap
 operator|-
@@ -798,7 +798,7 @@ name|mexitcount
 parameter_list|(
 name|selfpc
 parameter_list|)
-name|fptrint_t
+name|uintfptr_t
 name|selfpc
 decl_stmt|;
 block|{
@@ -807,7 +807,7 @@ name|gmonparam
 modifier|*
 name|p
 decl_stmt|;
-name|fptrint_t
+name|uintfptr_t
 name|selfpcdiff
 decl_stmt|;
 name|p
@@ -820,7 +820,7 @@ operator|=
 name|selfpc
 operator|-
 operator|(
-name|fptrint_t
+name|uintfptr_t
 operator|)
 name|p
 operator|->
