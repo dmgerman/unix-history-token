@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	$Id: login_cap.c,v 1.1 1997/01/04 16:50:02 davidn Exp $  */
+comment|/*-  * Copyright (c) 1996 by  * Sean Eric Fagan<sef@kithrup.com>  * David Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Low-level routines relating to the user capabilities database  *  *	$Id: login_cap.c,v 1.2 1997/01/07 13:29:21 davidn Exp $  */
 end_comment
 
 begin_include
@@ -827,13 +827,12 @@ name|pw_class
 operator|)
 operator|==
 name|NULL
-condition|)
 operator|||
 operator|*
 name|class
 operator|==
 literal|'\0'
-block|)
+condition|)
 name|class
 operator|=
 operator|(
@@ -849,9 +848,6 @@ else|:
 name|NULL
 expr_stmt|;
 block|}
-end_function
-
-begin_return
 return|return
 name|login_getclassbyname
 argument_list|(
@@ -860,34 +856,38 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * login_getuserclass()  * Get the login class for a given password entry, allowing user  * overrides via ~/.login_conf.  * ### WAS: If the password entry's class field is not set,  * #######  or the class specified does not exist, then use  * If an entry with the recordid "me" does not exist, then use  * the default of LOGIN_DEFCLASS (ie. "default").  * Return a filled-out login_cap_t structure, including  * class name, and the capability record buffer.  */
 end_comment
 
-begin_expr_stmt
-unit|login_cap_t
-operator|*
+begin_function
+name|login_cap_t
+modifier|*
 name|login_getuserclass
-argument_list|(
-argument|const struct passwd *pwd
-argument_list|)
+parameter_list|(
+specifier|const
+name|struct
+name|passwd
+modifier|*
+name|pwd
+parameter_list|)
 block|{
 specifier|const
 name|char
-operator|*
+modifier|*
 name|class
-operator|=
+init|=
 literal|"me"
-block|;
+decl_stmt|;
 comment|/* (pwd == NULL) ? NULL : pwd->pw_class; */
 specifier|const
 name|char
-operator|*
+modifier|*
 name|home
-operator|=
+init|=
 operator|(
 name|pwd
 operator|==
@@ -899,7 +899,7 @@ else|:
 name|pwd
 operator|->
 name|pw_dir
-block|;
+decl_stmt|;
 return|return
 name|login_getclassbyname
 argument_list|(
@@ -909,7 +909,7 @@ name|home
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/*  * login_getcapstr()  * Given a login_cap entry, and a capability name, return the  * value defined for that capability, a defualt if not found, or  * an error string on error.  */
