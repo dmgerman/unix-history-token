@@ -321,17 +321,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_mmap_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_einval
-block|}
-block|,
-block|{
-operator|&
 name|vop_open_desc
 block|,
 operator|(

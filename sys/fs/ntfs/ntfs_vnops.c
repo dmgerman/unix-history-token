@@ -4564,14 +4564,6 @@ block|,
 comment|/* revoke */
 block|{
 operator|&
-name|vop_mmap_desc
-block|,
-name|genfs_eopnotsupp
-block|}
-block|,
-comment|/* mmap */
-block|{
-operator|&
 name|vop_fsync_desc
 block|,
 name|genfs_fsync

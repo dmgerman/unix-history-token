@@ -405,14 +405,6 @@ block|,
 comment|/* ioctl */
 block|{
 operator|&
-name|vop_mmap_desc
-block|,
-name|coda_vop_error
-block|}
-block|,
-comment|/* mmap */
-block|{
-operator|&
 name|vop_fsync_desc
 block|,
 name|coda_fsync

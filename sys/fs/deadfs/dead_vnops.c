@@ -373,17 +373,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_mmap_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|dead_badop
-block|}
-block|,
-block|{
-operator|&
 name|vop_open_desc
 block|,
 operator|(
