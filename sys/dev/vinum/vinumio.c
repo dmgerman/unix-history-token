@@ -2635,24 +2635,13 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|"sd name %s drive %s plex %s len %llus driveoffset %llus state %s"
+literal|"sd name %s drive %s len %llus driveoffset %llus state %s"
 argument_list|,
 name|sd
 operator|->
 name|name
 argument_list|,
 name|drivename
-argument_list|,
-name|vinum_conf
-operator|.
-name|plex
-index|[
-name|sd
-operator|->
-name|plexno
-index|]
-operator|.
-name|name
 argument_list|,
 operator|(
 name|unsigned
@@ -2705,7 +2694,18 @@ name|configend
 operator|-
 name|s
 argument_list|,
-literal|" plexoffset %llds"
+literal|" plex %s plexoffset %llds"
+argument_list|,
+name|vinum_conf
+operator|.
+name|plex
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+operator|.
+name|name
 argument_list|,
 operator|(
 name|long
