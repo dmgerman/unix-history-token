@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	6.1	83/07/29	*/
+comment|/*	rx.c	6.2	84/07/09	*/
 end_comment
 
 begin_include
@@ -942,6 +942,13 @@ name|sc_csbits
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|RXF_LOCK
+expr_stmt|;
 return|return
 operator|(
 name|bp
@@ -1031,7 +1038,8 @@ block|}
 name|sc
 operator|->
 name|sc_open
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -1077,10 +1085,11 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
-operator|--
 name|sc
 operator|->
 name|sc_open
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
