@@ -63,6 +63,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|sflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Include secondary (SSDT) tables. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|tflag
 decl_stmt|;
 end_decl_stmt
@@ -96,7 +106,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-d] [-t] [-h] [-v] [-f dsdt_input] "
+literal|"usage: %s [-d] [-s] [-t] [-h] [-v] [-f dsdt_input] "
 literal|"[-o dsdt_output]\n"
 argument_list|,
 name|progname
@@ -179,7 +189,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dhtvf:o:"
+literal|"dhstvf:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -196,6 +206,14 @@ case|case
 literal|'d'
 case|:
 name|dflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|sflag
 operator|=
 literal|1
 expr_stmt|;
@@ -403,7 +421,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Dump the DSDT to a file */
+comment|/* Dump the DSDT and SSDTs to a file */
 if|if
 condition|(
 name|dsdt_output_file
