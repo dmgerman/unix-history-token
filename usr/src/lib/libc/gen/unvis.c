@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unvis.c	1.1 (Berkeley) %G%"
+literal|"@(#)unvis.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,16 @@ end_define
 begin_comment
 comment|/* octal digit 3 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|isoctal
+parameter_list|(
+name|c
+parameter_list|)
+value|(((u_char)(c))>= '0'&& ((u_char)(c))<= '7')
+end_define
 
 begin_comment
 comment|/*  * unvis - decode characters previously encoded by vis  */
@@ -535,6 +545,20 @@ operator|(
 name|UNVIS_NOCHAR
 operator|)
 return|;
+case|case
+literal|'$'
+case|:
+comment|/* 			 * hidden marker 			 */
+operator|*
+name|astate
+operator|=
+name|S_GROUND
+expr_stmt|;
+return|return
+operator|(
+name|UNVIS_NOCHAR
+operator|)
+return|;
 block|}
 operator|*
 name|astate
@@ -748,19 +772,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * strvis - visually encode characters from src into dst  *  *	If len>= 0, encodes exactly len chars from src (including NULL's).  *	Otherwise, stops before first NULL in src.  In all cases, dst is   *	NULL terminated.  *  *	Dst must be 4 times the size of src to account for possible  *	expansion.  The length of dst, not including the trailing NULL,  *	is returned.  */
+comment|/*  * strunvis - decode src into dst   *  *	Number of chars decoded into dst is returned, -1 on error.  *	Dst is null terminated.  */
 end_comment
 
 begin_expr_stmt
-name|strvis
+name|strunvis
 argument_list|(
 name|dst
 argument_list|,
 name|src
-argument_list|,
-name|len
-argument_list|,
-name|flag
 argument_list|)
 specifier|register
 name|char
@@ -772,74 +792,84 @@ name|src
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|register
-name|int
-name|len
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
+specifier|register
+name|char
+name|c
+decl_stmt|;
 name|char
 modifier|*
 name|start
 init|=
 name|dst
 decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
+name|int
+name|state
+decl_stmt|;
+while|while
 condition|(
-name|len
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|len
-operator|--
-operator|==
-literal|0
-condition|)
-break|break;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
+name|c
+operator|=
 operator|*
 name|src
+operator|++
 condition|)
-break|break;
-name|dst
-operator|=
-name|vis
+block|{
+name|again
+label|:
+switch|switch
+condition|(
+name|unvis
 argument_list|(
 name|dst
 argument_list|,
-operator|*
-name|src
+name|c
 argument_list|,
-name|flag
+operator|&
+name|state
 argument_list|,
-operator|*
-operator|(
-name|src
-operator|+
-literal|1
-operator|)
+literal|0
 argument_list|)
-expr_stmt|;
-name|src
+condition|)
+block|{
+case|case
+name|UNVIS_VALID
+case|:
+name|dst
 operator|++
 expr_stmt|;
+break|break;
+case|case
+name|UNVIS_VALIDPUSH
+case|:
+name|dst
+operator|++
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+case|case
+literal|0
+case|:
+case|case
+name|UNVIS_NOCHAR
+case|:
+break|break;
+default|default:
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
+block|}
+operator|*
+name|dst
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
 name|dst
