@@ -3366,7 +3366,7 @@ name|sscanf
 argument_list|(
 name|argv
 index|[
-literal|0
+literal|1
 index|]
 argument_list|,
 literal|"%d"
@@ -3793,7 +3793,7 @@ name|sscanf
 argument_list|(
 name|argv
 index|[
-literal|0
+literal|1
 index|]
 argument_list|,
 literal|"%d"
@@ -6683,7 +6683,7 @@ literal|0
 operator|||
 name|n
 operator|>
-literal|0xeff
+literal|0xffff
 condition|)
 return|return
 operator|(
