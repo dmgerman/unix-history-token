@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	4.6 (Berkeley) %G%"
+literal|"@(#)time.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,12 @@ argument_list|(
 operator|&
 name|before
 argument_list|,
-literal|0
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|p
@@ -193,6 +198,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -200,6 +208,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -228,7 +239,12 @@ argument_list|(
 operator|&
 name|after
 argument_list|,
-literal|0
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -372,7 +388,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -385,7 +401,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -400,7 +416,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -415,7 +431,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -430,7 +446,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -443,7 +459,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -456,7 +472,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -469,7 +485,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -482,7 +498,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -495,7 +511,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -508,7 +524,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -521,7 +537,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -534,7 +550,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -547,7 +563,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%10D  %s\n"
+literal|"%10ld  %s\n"
 argument_list|,
 name|ru
 operator|.
@@ -597,7 +613,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%9d.%02d %s "
+literal|"%9ld.%02ld %s "
 argument_list|,
 name|tv
 operator|->
