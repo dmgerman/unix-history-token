@@ -82,7 +82,7 @@ name|void
 name|setregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|u_long

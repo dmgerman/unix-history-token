@@ -300,9 +300,9 @@ define|#
 directive|define
 name|cpu_getstack
 parameter_list|(
-name|p
+name|td
 parameter_list|)
-value|((p)->p_frame->fixreg[1])
+value|((td)->td_frame->fixreg[1])
 end_define
 
 begin_decl_stmt

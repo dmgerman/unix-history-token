@@ -83,9 +83,9 @@ define|#
 directive|define
 name|trapframe
 parameter_list|(
-name|p
+name|td
 parameter_list|)
-value|((struct trapframe *)((char *)(p)->p_addr \ 			    + USPACE - FRAMELEN + 8))
+value|((td)->td_frame)
 end_define
 
 begin_struct

@@ -221,7 +221,7 @@ begin_function
 name|void
 name|cpu_fork
 parameter_list|(
-name|p1
+name|td1
 parameter_list|,
 name|p2
 parameter_list|,
@@ -229,26 +229,23 @@ name|flags
 parameter_list|)
 specifier|register
 name|struct
+name|thread
+modifier|*
+name|td1
+decl_stmt|;
+specifier|register
+name|struct
 name|proc
 modifier|*
-name|p1
-decl_stmt|,
-decl|*
 name|p2
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* XXX: coming soon... */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Intercept the return address from a freshly forked process that has NOT  * been scheduled yet.  *  * This is needed to make kernel threads stay in kernel mode.  */
@@ -258,16 +255,16 @@ begin_function_decl
 name|void
 name|cpu_set_fork_handler
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|func
 parameter_list|,
 name|arg
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 function_decl|void
 parameter_list|(
@@ -300,7 +297,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX */
-block|p->p_addr->u_pcb.pcb_context[0] = (u_long) func; 	p->p_addr->u_pcb.pcb_context[2] = (u_long) arg;
+block|td->p_addr->u_pcb.pcb_context[0] = (u_long) func; 	td->p_addr->u_pcb.pcb_context[2] = (u_long) arg;
 endif|#
 directive|endif
 block|}
@@ -314,13 +311,13 @@ begin_function
 name|void
 name|cpu_exit
 parameter_list|(
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{ }
 end_function
@@ -329,12 +326,12 @@ begin_function
 name|void
 name|cpu_wait
 parameter_list|(
-name|p
+name|td
 parameter_list|)
 name|struct
 name|proc
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{ }
 end_function
@@ -369,16 +366,16 @@ begin_function
 name|int
 name|cpu_coredump
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|vp
 parameter_list|,
 name|cred
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|vnode
@@ -391,6 +388,15 @@ modifier|*
 name|cred
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 return|return
 operator|(
 name|vn_rdwr
@@ -404,11 +410,11 @@ name|caddr_t
 operator|)
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 argument_list|,
 name|ctob
 argument_list|(
-name|UPAGES
+name|UAREA_PAGES
 argument_list|)
 argument_list|,
 operator|(

@@ -356,26 +356,48 @@ name|MAXDUMPPGS
 value|(DFLTPHYS/PAGE_SIZE)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KSTACK_UPAGES
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|UPAGES
+name|KSTACK_PAGES
 value|2
 end_define
 
 begin_comment
-comment|/* pages of u-area */
+comment|/* includes pcb */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
 name|USPACE
-value|(UPAGES * PAGE_SIZE)
+value|(KSTACK_PAGES * PAGE_SIZE)
 end_define
 
 begin_comment
-comment|/* total size of u-area */
+comment|/* total size of pcb */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UAREA_PAGES
+value|1
+end_define
+
+begin_comment
+comment|/* holds struct user WITHOUT PCB */
 end_comment
 
 begin_comment
