@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwupdate.c	3.13 %G%"
+literal|"@(#)wwupdate.c	3.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -285,6 +285,11 @@ name|wwnmajmiss
 operator|++
 expr_stmt|;
 block|}
+operator|*
+name|touched
+operator|=
+literal|0
+expr_stmt|;
 name|wwnupdline
 operator|++
 expr_stmt|;
@@ -719,14 +724,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-name|os
-index|[
-operator|-
-literal|1
-index|]
-operator|=
-name|lastc
-expr_stmt|;
 call|(
 modifier|*
 name|tt
@@ -742,6 +739,19 @@ name|buf
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+name|os
+index|[
+operator|-
+literal|1
+index|]
+operator|=
+name|lastc
+expr_stmt|;
+operator|*
+name|touched
+operator|=
+name|WWU_TOUCHED
 expr_stmt|;
 block|}
 block|}
@@ -785,11 +795,6 @@ name|didit
 condition|)
 name|wwnupdmiss
 operator|++
-expr_stmt|;
-operator|*
-name|touched
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
