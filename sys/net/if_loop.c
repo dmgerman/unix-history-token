@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1013,6 +1025,23 @@ operator|.
 name|tags
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+comment|/*  		 * XXXMAC: Once we put labels in tags and proper 		 * primitives are used for relocating mbuf header 		 * data, this will no longer be required. 		 */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|label
+operator|.
+name|l_flags
+operator|&=
+operator|~
+name|MAC_FLAG_INITIALIZED
+expr_stmt|;
+endif|#
+directive|endif
 name|m_freem
 argument_list|(
 name|m
