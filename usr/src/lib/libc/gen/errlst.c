@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)errlst.c	4.3 (Berkeley) 82/02/11 */
+comment|/* @(#)errlst.c	4.4 (Berkeley) 82/04/01 */
 end_comment
 
 begin_decl_stmt
@@ -200,6 +200,12 @@ comment|/* 60 - ETIMEDOUT */
 literal|"Connection refused"
 block|,
 comment|/* 61 - EREFUSED */
+literal|"Too many levels of symbolic links"
+block|,
+comment|/* 62 - ELOOP */
+literal|"File name too long"
+block|,
+comment|/* 63 - ENAMETOOLONG */
 block|}
 decl_stmt|;
 end_decl_stmt
