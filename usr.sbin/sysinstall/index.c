@@ -312,6 +312,10 @@ literal|"libraries"
 block|,
 literal|"Software development libraries."
 block|,
+literal|"linux"
+block|,
+literal|"Linux programs that can be run under binary compatibility."
+block|,
 literal|"mail"
 block|,
 literal|"Electronic mail packages and utilities."
@@ -416,6 +420,10 @@ literal|"tcl82"
 block|,
 literal|"TCL v8.2 and packages that depend on it."
 block|,
+literal|"tcl83"
+block|,
+literal|"TCL v8.3 and packages that depend on it."
+block|,
 literal|"textproc"
 block|,
 literal|"Text processing/search utilities."
@@ -439,6 +447,10 @@ block|,
 literal|"tk82"
 block|,
 literal|"Tk8.2 and packages that depend on it."
+block|,
+literal|"tk83"
+block|,
+literal|"Tk8.3 and packages that depend on it."
 block|,
 literal|"tkstep80"
 block|,
