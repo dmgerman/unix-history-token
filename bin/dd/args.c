@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: args.c,v 1.12 1998/05/06 06:51:29 charnier Exp $"
+literal|"$Id: args.c,v 1.13 1998/05/13 07:33:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1624,7 +1624,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Convert an expression of the following forms to an unsigned long.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1024).  *	4) A positive decimal number followed by a m (mult by 512).  *	5) A positive decimal number followed by a w (mult by sizeof int)  *	6) Two or more positive decimal numbers (with/without k,b or w).  *	   seperated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  */
+comment|/*  * Convert an expression of the following forms to an unsigned long.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1024).  *	4) A positive decimal number followed by a m (mult by 512).  *	5) A positive decimal number followed by a w (mult by sizeof int)  *	6) Two or more positive decimal numbers (with/without k,b or w).  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  */
 end_comment
 
 begin_function

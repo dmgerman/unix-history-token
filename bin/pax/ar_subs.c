@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ar_subs.c,v 1.11 1998/05/15 06:27:36 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -811,7 +811,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Non standard -Y and -Z flag. When the exisiting file is 		 * same age or newer skip 		 */
+comment|/* 		 * Non standard -Y and -Z flag. When the existing file is 		 * same age or newer skip 		 */
 if|if
 condition|(
 operator|(
@@ -1783,7 +1783,7 @@ operator|)
 condition|)
 break|break;
 block|}
-comment|/* 	 * tell format to write trailer; pad to block boundry; reset directory 	 * mode/access times, and check if all patterns supplied by the user 	 * were matched. block off signals to avoid chance for multiple entry 	 * into the cleanup code 	 */
+comment|/* 	 * tell format to write trailer; pad to block boundary; reset directory 	 * mode/access times, and check if all patterns supplied by the user 	 * were matched. block off signals to avoid chance for multiple entry 	 * into the cleanup code 	 */
 if|if
 condition|(
 name|wr_one
@@ -1835,7 +1835,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * append()  *	Add file to previously written archive. Archive format specified by the  *	user must agree with archive. The archive is read first to collect  *	modification times (if -u) and locate the archive trailer. The archive  *	is positioned in front of the record with the trailer and wr_archive()  *	is called to add the new members.  *	PAX IMPLEMENTATION DETAIL NOTE:  *	-u is implemented by adding the new members to the end of the archive.  *	Care is taken so that these do not end up as links to the older  *	version of the same file already stored in the archive. It is expected  *	when extraction occurs these newer versions will over-write the older  *	ones stored "earlier" in the archive (this may be a bad assumption as  *	it depends on the implementation of the program doing the extraction).  *	It is really difficult to splice in members without either re-writing  *	the entire archive (from the point were the old version was), or having  *	assistance of the format specification in terms of a special update  *	header that invalidates a previous archive record. The posix spec left  *	the method used to implement -u unspecified. This pax is able to  *	over write existing files that it creates.  */
+comment|/*  * append()  *	Add file to previously written archive. Archive format specified by the  *	user must agree with archive. The archive is read first to collect  *	modification times (if -u) and locate the archive trailer. The archive  *	is positioned in front of the record with the trailer and wr_archive()  *	is called to add the new members.  *	PAX IMPLEMENTATION DETAIL NOTE:  *	-u is implemented by adding the new members to the end of the archive.  *	Care is taken so that these do not end up as links to the older  *	version of the same file already stored in the archive. It is expected  *	when extraction occurs these newer versions will over-write the older  *	ones stored "earlier" in the archive (this may be a bad assumption as  *	it depends on the implementation of the program doing the extraction).  *	It is really difficult to splice in members without either re-writing  *	the entire archive (from the point were the old version was), or having  *	assistance of the format specification in terms of a special update  *	header that invalidates a previous archive record. The POSIX spec left  *	the method used to implement -u unspecified. This pax is able to  *	over write existing files that it creates.  */
 end_comment
 
 begin_if
@@ -1889,7 +1889,7 @@ name|orgfrmt
 operator|=
 name|frmt
 expr_stmt|;
-comment|/* 	 * Do not allow an append operation if the actual archive is of a 	 * different format than the user specified foramt. 	 */
+comment|/* 	 * Do not allow an append operation if the actual archive is of a 	 * different format than the user specified format. 	 */
 if|if
 condition|(
 name|get_arc
@@ -2146,7 +2146,7 @@ expr_stmt|;
 name|lnk_end
 argument_list|()
 expr_stmt|;
-comment|/* 	 * try to postion for write, if this fails quit. if any error occurs, 	 * we will refuse to write 	 */
+comment|/* 	 * try to position for write, if this fails quit. if any error occurs, 	 * we will refuse to write 	 */
 if|if
 condition|(
 name|appnd_start

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: options.c,v 1.11 1998/05/15 06:27:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2929,7 +2929,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*  * opt_add()  *	breaks the value supplied to -o into a option name and value. options  *	are given to -o in the form -o name-value,name=value  *	mulltiple -o may be specified.  * Return:  *	0 if format in name=value format, -1 if -o is passed junk  */
+comment|/*  * opt_add()  *	breaks the value supplied to -o into a option name and value. options  *	are given to -o in the form -o name-value,name=value  *	multiple -o may be specified.  * Return:  *	0 if format in name=value format, -1 if -o is passed junk  */
 end_comment
 
 begin_if

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: proc.c,v 1.8 1998/02/28 10:49:59 jraynard Exp $"
+literal|"$Id: proc.c,v 1.9 1998/05/06 06:50:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,7 +300,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * pchild - called at interrupt level by the SIGCHLD signal  *	indicating that at least one child has terminated or stopped  *	thus at least one wait system call will definitely return a  *	childs status.  Top level routines (like pwait) must be sure  *	to mask interrupts when playing with the proclist data structures!  */
+comment|/*  * pchild - called at interrupt level by the SIGCHLD signal  *	indicating that at least one child has terminated or stopped  *	thus at least one wait system call will definitely return a  *	child's status.  Top level routines (like pwait) must be sure  *	to mask interrupts when playing with the proclist data structures!  */
 end_comment
 
 begin_comment

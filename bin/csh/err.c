@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: err.c,v 1.7 1998/05/06 06:50:41 charnier Exp $"
+literal|"$Id: err.c,v 1.8 1998/05/13 07:28:55 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -941,7 +941,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print the error with the given id.  *  * Special ids:  *	ERR_SILENT: Print nothing.  *	ERR_OLD: Print the previously set error if one was there.  *	         otherwise return.  *	ERR_NAME: If this bit is set, print the name of the function  *		  in bname  *  * This routine always resets or exits.  The flag haderr  * is set so the routine who catches the unwind can propogate  * it if they want.  *  * Note that any open files at the point of error will eventually  * be closed in the routine process in sh.c which is the only  * place error unwinds are ever caught.  */
+comment|/*  * Print the error with the given id.  *  * Special ids:  *	ERR_SILENT: Print nothing.  *	ERR_OLD: Print the previously set error if one was there.  *	         otherwise return.  *	ERR_NAME: If this bit is set, print the name of the function  *		  in bname  *  * This routine always resets or exits.  The flag haderr  * is set so the routine who catches the unwind can propagate  * it if they want.  *  * Note that any open files at the point of error will eventually  * be closed in the routine process in sh.c which is the only  * place error unwinds are ever caught.  */
 end_comment
 
 begin_function

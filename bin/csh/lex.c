@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lex.c,v 1.9 1998/05/06 06:50:52 charnier Exp $"
+literal|"$Id: lex.c,v 1.10 1998/05/13 07:29:05 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5434,7 +5434,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* FALLSTHROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(

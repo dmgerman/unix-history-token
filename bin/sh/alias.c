@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: alias.c,v 1.10 1998/05/18 06:43:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,7 +275,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX - HACK: in order that the parser will not finish reading the 	 * alias value off the input before processing the next alias, we 	 * dummy up an extra space at the end of the alias.  This is a crock 	 * and should be re-thought.  The idea (if you feel inclined to help) 	 * is to avoid alias recursions.  The mechanism used is: when 	 * expanding an alias, the value of the alias is pushed back on the 	 * input as a string and a pointer to the alias is stored with the 	 * string.  The alias is marked as being in use.  When the input 	 * routine finishes reading the string, it markes the alias not 	 * in use.  The problem is synchronization with the parser.  Since 	 * it reads ahead, the alias is marked not in use before the 	 * resulting token(s) is next checked for further alias sub.  The 	 * H A C K is that we add a little fluff after the alias value 	 * so that the string will not be exhausted.  This is a good 	 * idea ------- ***NOT*** 	 */
+comment|/* 	 * XXX - HACK: in order that the parser will not finish reading the 	 * alias value off the input before processing the next alias, we 	 * dummy up an extra space at the end of the alias.  This is a crock 	 * and should be re-thought.  The idea (if you feel inclined to help) 	 * is to avoid alias recursions.  The mechanism used is: when 	 * expanding an alias, the value of the alias is pushed back on the 	 * input as a string and a pointer to the alias is stored with the 	 * string.  The alias is marked as being in use.  When the input 	 * routine finishes reading the string, it marks the alias not 	 * in use.  The problem is synchronization with the parser.  Since 	 * it reads ahead, the alias is marked not in use before the 	 * resulting token(s) is next checked for further alias sub.  The 	 * H A C K is that we add a little fluff after the alias value 	 * so that the string will not be exhausted.  This is a good 	 * idea ------- ***NOT*** 	 */
 ifdef|#
 directive|ifdef
 name|notyet

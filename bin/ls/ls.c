@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.22 1998/07/29 00:46:09 hoek Exp $"
+literal|"$Id: ls.c,v 1.23 1998/08/02 22:47:11 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1599,7 +1599,7 @@ literal|20
 index|]
 decl_stmt|;
 comment|/* 32 bits == 10 digits */
-comment|/* 	 * If list is NULL there are two possibilities: that the parent 	 * directory p has no children, or that fts_children() returned an 	 * error.  We ignore the error case since it will be replicated 	 * on the next call to fts_read() on the post-order visit to the 	 * directory p, and will be signalled in traverse(). 	 */
+comment|/* 	 * If list is NULL there are two possibilities: that the parent 	 * directory p has no children, or that fts_children() returned an 	 * error.  We ignore the error case since it will be replicated 	 * on the next call to fts_read() on the post-order visit to the 	 * directory p, and will be signaled in traverse(). 	 */
 if|if
 condition|(
 name|list

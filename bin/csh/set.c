@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: set.c,v 1.9 1998/05/06 06:51:04 charnier Exp $"
+literal|"$Id: set.c,v 1.10 1998/05/13 07:29:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -810,7 +810,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* get the old value back */
-comment|/* 	     * convert to cononical pathname (possibly resolving symlinks) 	     */
+comment|/* 	     * convert to canonical pathname (possibly resolving symlinks) 	     */
 name|cp
 operator|=
 name|dcanon
@@ -3649,7 +3649,7 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* sigle rotate */
+comment|/* single rotate */
 name|pp
 operator|->
 name|v_link
@@ -3863,7 +3863,7 @@ break|break;
 case|case
 literal|0
 case|:
-comment|/* signle rotate */
+comment|/* single rotate */
 name|pp
 operator|->
 name|v_link

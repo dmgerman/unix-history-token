@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ar_io.c,v 1.10 1998/05/15 06:27:34 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,7 +175,7 @@ value|"<STDOUT>"
 end_define
 
 begin_comment
-comment|/* psuedo name for stdout */
+comment|/* pseudo name for stdout */
 end_comment
 
 begin_define
@@ -186,7 +186,7 @@ value|"<STDIN>"
 end_define
 
 begin_comment
-comment|/* psuedo name for stdin */
+comment|/* pseudo name for stdin */
 end_comment
 
 begin_decl_stmt
@@ -996,7 +996,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* 		 * When we cannont find a match, we may have a flawed archive. 		 */
+comment|/* 		 * When we cannot find a match, we may have a flawed archive. 		 */
 if|if
 condition|(
 name|rdblksz
@@ -1543,7 +1543,7 @@ literal|0
 argument|; 		break; 	case ISPIPE: 	default:
 comment|/* 		 * we cannot fix errors to these devices 		 */
 argument|break; 	}
-comment|/* 	 * Better tell the user the bad news... 	 * if this is a block aligned archive format, we may have a bad archive 	 * if the format wants the header to start at a BLKMULT boundry. While 	 * we can deal with the mis-aligned data, it violates spec and other 	 * archive readers will likely fail. if the format is not block 	 * aligned, the user may be lucky (and the archive is ok). 	 */
+comment|/* 	 * Better tell the user the bad news... 	 * if this is a block aligned archive format, we may have a bad archive 	 * if the format wants the header to start at a BLKMULT boundary. While 	 * we can deal with the mis-aligned data, it violates spec and other 	 * archive readers will likely fail. if the format is not block 	 * aligned, the user may be lucky (and the archive is ok). 	 */
 argument|if (res>=
 literal|0
 argument|) { 		if (res>
@@ -1610,7 +1610,7 @@ literal|1
 argument|); 	} 	if (io_ok) 		did_io =
 literal|1
 argument|;  	switch(artyp) { 	case ISTAPE:
-comment|/* 		 * if the last i/o was a successful data transfer, we assume 		 * the fault is just a bad record on the tape that we are now 		 * past. If we did not get any data since the last resync try 		 * to move the tape foward one PHYSICAL record past any 		 * damaged tape section. Some tape drives are stubborn and need 		 * to be pushed. 		 */
+comment|/* 		 * if the last i/o was a successful data transfer, we assume 		 * the fault is just a bad record on the tape that we are now 		 * past. If we did not get any data since the last resync try 		 * to move the tape forward one PHYSICAL record past any 		 * damaged tape section. Some tape drives are stubborn and need 		 * to be pushed. 		 */
 argument|if (io_ok) { 			io_ok =
 literal|0
 argument|; 			lstrval =
@@ -1693,7 +1693,7 @@ literal|0
 argument|); 	} 	sys_warn(
 literal|1
 argument|, errno,
-literal|"Foward positioning operation on archive failed"
+literal|"Forward positioning operation on archive failed"
 argument|); 	lstrval = -
 literal|1
 argument|; 	return(-

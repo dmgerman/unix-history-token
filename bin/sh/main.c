@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.15 1998/05/18 06:43:52 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1087,7 +1087,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Take commands from a file.  To be compatable we should do a path  * search for the file, which is necessary to find sub-commands.  */
+comment|/*  * Take commands from a file.  To be compatible we should do a path  * search for the file, which is necessary to find sub-commands.  */
 end_comment
 
 begin_function

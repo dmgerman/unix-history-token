@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cache.c,v 1.10 1998/05/15 06:27:37 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -781,7 +781,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * no match for this uid in the local password file 		 * a string that is the uid in numberic format 		 */
+comment|/* 		 * no match for this uid in the local password file 		 * a string that is the uid in numeric format 		 */
 if|if
 condition|(
 name|ptr
@@ -1103,7 +1103,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * no match for this gid in the local group file, put in 		 * a string that is the gid in numberic format 		 */
+comment|/* 		 * no match for this gid in the local group file, put in 		 * a string that is the gid in numeric format 		 */
 if|if
 condition|(
 name|ptr

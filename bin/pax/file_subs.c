@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: file_subs.c,v 1.10 1998/05/15 06:27:39 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,7 +216,7 @@ decl_stmt|;
 name|int
 name|oerrno
 decl_stmt|;
-comment|/* 	 * assume file doesn't exist, so just try to create it, most times this 	 * works. We have to take special handling when the file does exist. To 	 * detect this, we use O_EXCL. For example when trying to create a 	 * file and a character device or fifo exists with the same name, we 	 * can accidently open the device by mistake (or block waiting to open) 	 * If we find that the open has failed, then figure spend the effore to 	 * figure out why. This strategy was found to have better average 	 * performance in common use than checking the file (and the path) 	 * first with lstat. 	 */
+comment|/* 	 * assume file doesn't exist, so just try to create it, most times this 	 * works. We have to take special handling when the file does exist. To 	 * detect this, we use O_EXCL. For example when trying to create a 	 * file and a character device or fifo exists with the same name, we 	 * can accidently open the device by mistake (or block waiting to open) 	 * If we find that the open has failed, then figure spend the effort to 	 * figure out why. This strategy was found to have better average 	 * performance in common use than checking the file (and the path) 	 * first with lstat. 	 */
 name|file_mode
 operator|=
 name|arcn
@@ -718,7 +718,7 @@ end_endif
 
 begin_block
 block|{
-comment|/* 	 * try to make a link to orginal file (-l flag in copy mode). make sure 	 * we do not try to link to directories in case we are running as root 	 * (and it might succeed). 	 */
+comment|/* 	 * try to make a link to original file (-l flag in copy mode). make sure 	 * we do not try to link to directories in case we are running as root 	 * (and it might succeed). 	 */
 if|if
 condition|(
 name|arcn
