@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jonathan Lemon<jlemon@freebsd.org>  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1995, David Greenman  * Copyright (c) 2001 Jonathan Lemon<jlemon@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
 comment|/*  * Intel EtherExpress Pro/100B PCI Fast Ethernet driver  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"vlan.h"
+end_include
 
 begin_include
 include|#
@@ -166,6 +172,31 @@ begin_comment
 comment|/* for DELAY */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_vlan_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -227,6 +258,54 @@ include|#
 directive|include
 file|"miibus_if.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLD_MODULE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NMIIBUS
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"miibus.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|NMIIBUS
+operator|<
+literal|1
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"You need to add 'device miibus' to your kernel config!"
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/*  * NOTE!  On the Alpha, we have an alignment constraint.  The  * card DMAs the packet immediately following the RFA.  However,  * the first thing in the packet is a 14-byte Ethernet header.  * This means that the packet is misaligned.  To compensate,  * we actually offset the RFA 2 bytes into the cluster.  This  * alignes the packet after the Ethernet header at a 32-bit  * boundary.  HOWEVER!  This means that the RFA is misaligned!  */
@@ -1161,7 +1240,35 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"SCB timeout\n"
+literal|"SCB timeout: 0x%x, 0x%x, 0x%x 0x%x\n"
+argument_list|,
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_COMMAND
+argument_list|)
+argument_list|,
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_STATACK
+argument_list|)
+argument_list|,
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_RUSCUS
+argument_list|)
+argument_list|,
+name|CSR_READ_2
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_FLOWCONTROL
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2051,7 +2158,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Determine in whether we must use the 503 serial interface. 	 */
+comment|/* 	 * Determine whether we must use the 503 serial interface. 	 */
 name|fxp_read_eeprom
 argument_list|(
 name|sc
@@ -2086,6 +2193,87 @@ name|flags
 operator|&=
 name|FXP_FLAG_SERIAL_MEDIA
 expr_stmt|;
+comment|/* 	 * Find out the basic controller type; we currently only 	 * differentiate between a 82557 and greater. 	 */
+name|fxp_read_eeprom
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|data
+argument_list|,
+literal|5
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|data
+operator|>>
+literal|8
+operator|)
+operator|==
+literal|1
+condition|)
+name|sc
+operator|->
+name|chip
+operator|=
+name|FXP_CHIP_82557
+expr_stmt|;
+comment|/* 	 * If we are not a 82557 chip, we can enable extended features. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|chip
+operator|!=
+name|FXP_CHIP_82557
+condition|)
+block|{
+comment|/* 		 * If there is a valid cacheline size (8 or 16 dwords), 		 * then turn on MWI. 		 */
+if|if
+condition|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_CACHELNSZ
+argument_list|,
+literal|1
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_MWI_ENABLE
+expr_stmt|;
+comment|/* turn on the extended TxCB feature */
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_EXT_TXCB
+expr_stmt|;
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+comment|/* enable reception of long frames for VLAN */
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_LONG_PKT_EN
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 comment|/* 	 * Read MAC address. 	 */
 name|fxp_read_eeprom
 argument_list|(
@@ -2161,6 +2349,17 @@ name|pci_get_subdevice
 argument_list|(
 name|dev
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Chip Type: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|chip
 argument_list|)
 expr_stmt|;
 block|}
@@ -2336,6 +2535,26 @@ argument_list|,
 name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
+name|ifp
+operator|->
+name|if_data
+operator|.
+name|ifi_hdrlen
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_vlan_header
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Let the system queue as many packets as we have available 	 * TX descriptors. 	 */
 name|ifp
 operator|->
@@ -2405,13 +2624,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|miibus
-condition|)
-block|{
 name|bus_generic_detach
 argument_list|(
 name|sc
@@ -2419,6 +2631,12 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|miibus
+condition|)
 name|device_delete_child
 argument_list|(
 name|sc
@@ -2430,7 +2648,6 @@ operator|->
 name|miibus
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
@@ -3636,7 +3853,7 @@ name|mbuf
 modifier|*
 name|mn
 decl_stmt|;
-comment|/* 			 * We ran out of segments. We have to recopy this mbuf 			 * chain first. Bail out if we can't get the new buffers. 			 */
+comment|/* 			 * We ran out of segments. We have to recopy this 			 * mbuf chain first. Bail out if we can't get the 			 * new buffers. 			 */
 name|MGETHDR
 argument_list|(
 name|mn
@@ -3807,7 +4024,7 @@ name|FXP_CB_COMMAND_S
 operator||
 name|FXP_CB_COMMAND_I
 expr_stmt|;
-comment|/* 			 * Set a 5 second timer just in case we don't hear from the 			 * card again. 			 */
+comment|/* 			 * Set a 5 second timer just in case we don't hear 			 * from the card again. 			 */
 name|ifp
 operator|->
 name|if_timer
@@ -4237,6 +4454,32 @@ goto|goto
 name|rcvloop
 goto|;
 block|}
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+comment|/* 					 * Drop the packet if it has CRC 					 * errors.  This test is only needed 					 * when doing 802.1q VLAN on the 82557 					 * chip. 					 */
+if|if
+condition|(
+name|rfa
+operator|->
+name|rfa_status
+operator|&
+name|FXP_RFA_STATUS_CRC
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+goto|goto
+name|rcvloop
+goto|;
+block|}
+endif|#
+directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -5312,6 +5555,27 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* don't pass overrun frames to host */
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
+name|cbp
+operator|->
+name|save_bf
+operator|=
+name|sc
+operator|->
+name|chip
+operator|==
+name|FXP_CHIP_82557
+condition|?
+literal|1
+else|:
+name|prm
+expr_stmt|;
+else|#
+directive|else
 name|cbp
 operator|->
 name|save_bf
@@ -5319,6 +5583,8 @@ operator|=
 name|prm
 expr_stmt|;
 comment|/* save bad frames */
+endif|#
+directive|endif
 name|cbp
 operator|->
 name|disc_short_rx
@@ -5495,60 +5761,6 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-comment|/* 	 * we may want to move all FC stuff to a separate section. 	 * the values here are 82557 compatible. 	 */
-name|cbp
-operator|->
-name|fc_delay_lsb
-operator|=
-literal|0
-expr_stmt|;
-name|cbp
-operator|->
-name|fc_delay_msb
-operator|=
-literal|0x40
-expr_stmt|;
-name|cbp
-operator|->
-name|pri_fc_thresh
-operator|=
-literal|0x03
-expr_stmt|;
-name|cbp
-operator|->
-name|tx_fc_dis
-operator|=
-literal|0
-expr_stmt|;
-comment|/* (don't) disable transmit FC */
-name|cbp
-operator|->
-name|rx_fc_restop
-operator|=
-literal|0
-expr_stmt|;
-comment|/* (don't) enable FC stop frame */
-name|cbp
-operator|->
-name|rx_fc_restart
-operator|=
-literal|0
-expr_stmt|;
-comment|/* (don't) enable FC start frame */
-name|cbp
-operator|->
-name|fc_filter
-operator|=
-literal|0
-expr_stmt|;
-comment|/* (do) pass FC frames to host */
-name|cbp
-operator|->
-name|pri_fc_loc
-operator|=
-literal|1
-expr_stmt|;
-comment|/* location of priority in FC frame */
 name|cbp
 operator|->
 name|stripping
@@ -5635,6 +5847,122 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|chip
+operator|==
+name|FXP_CHIP_82557
+condition|)
+block|{
+comment|/* 		 * The 82557 has no hardware flow control, the values 		 * below are the defaults for the chip. 		 */
+name|cbp
+operator|->
+name|fc_delay_lsb
+operator|=
+literal|0
+expr_stmt|;
+name|cbp
+operator|->
+name|fc_delay_msb
+operator|=
+literal|0x40
+expr_stmt|;
+name|cbp
+operator|->
+name|pri_fc_thresh
+operator|=
+literal|3
+expr_stmt|;
+name|cbp
+operator|->
+name|tx_fc_dis
+operator|=
+literal|0
+expr_stmt|;
+name|cbp
+operator|->
+name|rx_fc_restop
+operator|=
+literal|0
+expr_stmt|;
+name|cbp
+operator|->
+name|rx_fc_restart
+operator|=
+literal|0
+expr_stmt|;
+name|cbp
+operator|->
+name|fc_filter
+operator|=
+literal|0
+expr_stmt|;
+name|cbp
+operator|->
+name|pri_fc_loc
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cbp
+operator|->
+name|fc_delay_lsb
+operator|=
+literal|0x1f
+expr_stmt|;
+name|cbp
+operator|->
+name|fc_delay_msb
+operator|=
+literal|0x01
+expr_stmt|;
+name|cbp
+operator|->
+name|pri_fc_thresh
+operator|=
+literal|3
+expr_stmt|;
+name|cbp
+operator|->
+name|tx_fc_dis
+operator|=
+literal|0
+expr_stmt|;
+comment|/* enable transmit FC */
+name|cbp
+operator|->
+name|rx_fc_restop
+operator|=
+literal|1
+expr_stmt|;
+comment|/* enable FC restop frames */
+name|cbp
+operator|->
+name|rx_fc_restart
+operator|=
+literal|1
+expr_stmt|;
+comment|/* enable FC restart frames */
+name|cbp
+operator|->
+name|fc_filter
+operator|=
+operator|!
+name|prm
+expr_stmt|;
+comment|/* drop FC frames to host */
+name|cbp
+operator|->
+name|pri_fc_loc
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FC pri location (byte31) */
+block|}
 comment|/* 	 * Start the config command/DMA. 	 */
 name|fxp_scb_wait
 argument_list|(
@@ -5847,6 +6175,36 @@ operator|.
 name|cb_status
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|FXP_FLAG_EXT_TXCB
+condition|)
+name|txp
+index|[
+name|i
+index|]
+operator|.
+name|tbd_array_addr
+operator|=
+name|vtophys
+argument_list|(
+operator|&
+name|txp
+index|[
+name|i
+index|]
+operator|.
+name|tbd
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|txp
 index|[
 name|i
@@ -5993,6 +6351,16 @@ name|if_flags
 operator|&=
 operator|~
 name|IFF_OACTIVE
+expr_stmt|;
+comment|/* 	 * Enable interrupts. 	 */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|FXP_CSR_SCB_INTRCNTL
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -7431,6 +7799,15 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NMIIBUS> 0 */
+end_comment
 
 end_unit
 

@@ -311,6 +311,9 @@ name|suspended
 decl_stmt|;
 comment|/* 0 = normal  1 = suspended (APM) */
 name|int
+name|chip
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 name|u_int32_t
@@ -335,6 +338,17 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|FXP_CHIP_82557
+value|1
+end_define
+
+begin_comment
+comment|/* 82557 chip type */
+end_comment
 
 begin_define
 define|#
