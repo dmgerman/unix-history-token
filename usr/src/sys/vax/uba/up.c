@@ -313,17 +313,17 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 1023 */
-literal|0
+literal|27786
 block|,
-literal|0
+literal|668
 block|,
-literal|0
+literal|27786
 block|,
-literal|0
+literal|723
 block|,
-literal|0
+literal|125440
 block|,
-literal|0
+literal|778
 block|,
 literal|181760
 block|,
