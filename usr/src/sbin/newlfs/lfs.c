@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.7 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2236,7 +2236,7 @@ sizeof|sizeof
 argument_list|(
 name|daddr_t
 argument_list|)
-expr_stmt|;
+operator|+
 operator|(
 name|lfsp
 operator|->
