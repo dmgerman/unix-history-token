@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.18 (Berkeley) 5/21/95  *  *	$Id: procfs_vnops.c,v 1.50 1997/12/27 02:56:25 bde Exp $  */
+comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)procfs_vnops.c	8.18 (Berkeley) 5/21/95  *  *	$Id: procfs_vnops.c,v 1.51 1998/01/06 01:37:12 sef Exp $  */
 end_comment
 
 begin_comment
@@ -821,36 +821,9 @@ operator||
 name|O_EXCL
 operator|)
 expr_stmt|;
-comment|/* 		 * This rather complicated-looking code is trying to 		 * determine if this was the last close on this particular 		 * vnode.  While one would expect v_usecount to be 1 at 		 * that point, it seems that (according to John Dyson) 		 * the VM system will bump up the usecount.  So:  if the 		 * usecount is 2, and VVMIO is set, then this is really 		 * the last close.  Otherwise, if the usecount is< 2 		 * then it is definitely the last close. 		 * If this is the last close, then it checks to see if 		 * the target process has PF_LINGER set in p_pfsflags, 		 * if this is *not* the case, then the process' stop flags 		 * are cleared, and the process is woken up.  This is 		 * to help prevent the case where a process has been 		 * told to stop on an event, but then the requesting process 		 * has gone away or forgotten about it. 		 */
+comment|/* 		 * This rather complicated-looking code is trying to 		 * determine if this was the last close on this particular 		 * vnode.  While one would expect v_usecount to be 1 at 		 * that point, it seems that (according to John Dyson) 		 * the VM system will bump up the usecount.  So:  if the 		 * usecount is 2, and VOBJBUF is set, then this is really 		 * the last close.  Otherwise, if the usecount is< 2 		 * then it is definitely the last close. 		 * If this is the last close, then it checks to see if 		 * the target process has PF_LINGER set in p_pfsflags, 		 * if this is *not* the case, then the process' stop flags 		 * are cleared, and the process is woken up.  This is 		 * to help prevent the case where a process has been 		 * told to stop on an event, but then the requesting process 		 * has gone away or forgotten about it. 		 */
 if|if
 condition|(
-operator|(
-operator|(
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_usecount
-operator|==
-literal|2
-operator|&&
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_object
-operator|&&
-operator|(
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_flag
-operator|&
-name|VVMIO
-operator|)
-operator|)
-operator|||
 operator|(
 name|ap
 operator|->
@@ -859,7 +832,6 @@ operator|->
 name|v_usecount
 operator|<
 literal|2
-operator|)
 operator|)
 operator|&&
 operator|(
