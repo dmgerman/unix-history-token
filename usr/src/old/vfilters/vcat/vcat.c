@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vcat.c	5.1 (Berkeley) %G%"
+literal|"@(#)vcat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3686,7 +3686,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|clear
+name|bzero
 argument_list|(
 name|buf0p
 argument_list|,
@@ -3735,7 +3735,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|clear
+name|bzero
 argument_list|(
 name|buf0p
 argument_list|,
@@ -3776,38 +3776,6 @@ name|nlines
 argument_list|)
 expr_stmt|;
 comment|/* ioctl(vc, VSETSTATE, pltmode);  WHY? */
-block|}
-end_block
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_macro
-name|clear
-argument_list|(
-argument|lp
-argument_list|,
-argument|nbytes
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-modifier|*
-name|lp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nbytes
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-asm|asm("movc5 $0,(sp),$0,8(ap),*4(ap)");
 block|}
 end_block
 
