@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	4.6 (Berkeley) %G%"
+literal|"@(#)ar.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2562,10 +2562,16 @@ name|stbuf
 operator|.
 name|st_mtime
 argument_list|,
+operator|(
+name|u_short
+operator|)
 name|stbuf
 operator|.
 name|st_uid
 argument_list|,
+operator|(
+name|u_short
+operator|)
 name|stbuf
 operator|.
 name|st_gid
