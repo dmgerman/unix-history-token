@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.26	82/12/17	*/
+comment|/*	trap.c	4.27	83/01/22	*/
 end_comment
 
 begin_include
@@ -508,6 +508,8 @@ expr_stmt|;
 name|pagein
 argument_list|(
 name|code
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|u
