@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fsck.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fsck.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -23,6 +23,17 @@ end_define
 
 begin_comment
 comment|/* limit on bad blks (per inode) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXBUFSPACE
+value|128*1024
+end_define
+
+begin_comment
+comment|/* maximum space to allocate to buffers */
 end_comment
 
 begin_typedef
@@ -167,26 +178,9 @@ define|\
 value|(((dip)->di_mode& IFMT) == IFBLK || ((dip)->di_mode& IFMT) == IFCHR)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXNINDIR
-value|(MAXBSIZE / sizeof (daddr_t))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXINOPB
-value|(MAXBSIZE / sizeof (struct dinode))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPERB
-value|(MAXBSIZE / sizeof(short))
-end_define
+begin_comment
+comment|/*  * buffer cache structure.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -197,7 +191,13 @@ name|bufarea
 modifier|*
 name|b_next
 decl_stmt|;
-comment|/* must be first */
+comment|/* free list queue */
+name|struct
+name|bufarea
+modifier|*
+name|b_prev
+decl_stmt|;
+comment|/* free list queue */
 name|daddr_t
 name|b_bno
 decl_stmt|;
@@ -207,45 +207,37 @@ decl_stmt|;
 name|int
 name|b_errs
 decl_stmt|;
+name|int
+name|b_flags
+decl_stmt|;
 union|union
 block|{
 name|char
+modifier|*
 name|b_buf
-index|[
-name|MAXBSIZE
-index|]
 decl_stmt|;
 comment|/* buffer space */
-name|short
-name|b_lnks
-index|[
-name|SPERB
-index|]
-decl_stmt|;
-comment|/* link counts */
 name|daddr_t
+modifier|*
 name|b_indir
-index|[
-name|MAXNINDIR
-index|]
 decl_stmt|;
 comment|/* indirect block */
 name|struct
 name|fs
+modifier|*
 name|b_fs
 decl_stmt|;
 comment|/* super block */
 name|struct
 name|cg
+modifier|*
 name|b_cg
 decl_stmt|;
 comment|/* cylinder group */
 name|struct
 name|dinode
+modifier|*
 name|b_dinode
-index|[
-name|MAXINOPB
-index|]
 decl_stmt|;
 comment|/* inode block */
 block|}
@@ -258,6 +250,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|B_INUSE
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -266,24 +265,25 @@ name|BUFAREA
 typedef|;
 end_typedef
 
-begin_decl_stmt
-name|BUFAREA
-name|inoblk
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|MINBUFS
+value|5
+end_define
 
 begin_comment
-comment|/* inode blocks */
+comment|/* minimum number of buffers required */
 end_comment
 
 begin_decl_stmt
 name|BUFAREA
-name|fileblk
+name|bufhead
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* other blks in filesys */
+comment|/* head of list of other blks in filesys */
 end_comment
 
 begin_decl_stmt
@@ -306,15 +306,13 @@ begin_comment
 comment|/* cylinder group blocks */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|initbarea
-parameter_list|(
-name|x
-parameter_list|)
-value|(x)->b_dirty = 0;(x)->b_bno = (daddr_t)-1
-end_define
+begin_function_decl
+name|BUFAREA
+modifier|*
+name|getdatablk
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -329,9 +327,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|inodirty
-parameter_list|()
-value|inoblk.b_dirty = 1
+name|initbarea
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(x)->b_dirty = 0; \ 	(x)->b_bno = (daddr_t)-1; \ 	(x)->b_flags = 0;
 end_define
 
 begin_define
@@ -353,22 +354,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|dirblk
-value|fileblk.b_un
-end_define
-
-begin_define
-define|#
-directive|define
 name|sblock
-value|sblk.b_un.b_fs
+value|(*sblk.b_un.b_fs)
 end_define
 
 begin_define
 define|#
 directive|define
 name|cgrp
-value|cgblk.b_un.b_cg
+value|(*cgblk.b_un.b_cg)
 end_define
 
 begin_struct
