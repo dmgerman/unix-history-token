@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.7 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.8 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/wait.h>
 end_include
 
@@ -102,7 +108,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.7 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.8 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,17 +186,25 @@ block|{
 name|int
 name|t
 decl_stmt|;
-name|union
-name|wait
-name|status
-decl_stmt|;
 specifier|register
 name|struct
 name|servent
 modifier|*
 name|sp
 decl_stmt|;
+extern|extern reapchild(
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/* 	**  Set up the address for the mailer. 	*/
+end_comment
+
+begin_expr_stmt
 name|sp
 operator|=
 name|getservbyname
@@ -200,6 +214,9 @@ argument_list|,
 literal|"tcp"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|sp
@@ -216,12 +233,18 @@ goto|goto
 name|severe
 goto|;
 block|}
+end_if
+
+begin_expr_stmt
 name|SendmailAddress
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SendmailAddress
 operator|.
 name|sin_addr
@@ -230,6 +253,9 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SendmailAddress
 operator|.
 name|sin_port
@@ -238,10 +264,19 @@ name|sp
 operator|->
 name|s_port
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	**  Try to actually open the connection. 	*/
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
+end_ifdef
+
+begin_if
 if|if
 condition|(
 name|tTd
@@ -260,10 +295,19 @@ operator|.
 name|sin_port
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
 endif|DEBUG
+end_endif
+
+begin_comment
 comment|/* get a socket for the SMTP connection */
+end_comment
+
+begin_expr_stmt
 name|DaemonSocket
 operator|=
 name|socket
@@ -275,6 +319,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|DaemonSocket
@@ -313,10 +360,19 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+end_if
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
+end_ifdef
+
+begin_comment
 comment|/* turn on network debugging? */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|tTd
@@ -355,9 +411,15 @@ name|on
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_endif
 endif|#
 directive|endif
 endif|DEBUG
+end_endif
+
+begin_if
 if|if
 condition|(
 name|bind
@@ -391,6 +453,9 @@ goto|goto
 name|severe
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|listen
@@ -420,9 +485,25 @@ goto|goto
 name|severe
 goto|;
 block|}
+end_if
+
+begin_expr_stmt
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reapchild
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
+end_ifdef
+
+begin_if
 if|if
 condition|(
 name|tTd
@@ -439,37 +520,58 @@ argument_list|,
 name|DaemonSocket
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
 endif|DEBUG
+end_endif
+
+begin_decl_stmt
 name|struct
 name|wh
 name|wbuf
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|wbuf
 operator|.
 name|index
 operator|=
 name|index
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|wbuf
 operator|.
 name|count
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|wbuf
 operator|.
 name|ccount
 operator|=
 name|cnt
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|wbuf
 operator|.
 name|data
 operator|=
 name|buf
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|write
 argument_list|(
 name|MailPort
@@ -481,35 +583,32 @@ sizeof|sizeof
 name|wbuf
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
 begin_escape
+unit|}
 end_escape
 
 begin_comment
 comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		outfile -- a pointer to a place to put the outfile **			descriptor. **		infile -- ditto for infile. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
 end_comment
 
-begin_macro
-name|makeconnection
-argument_list|(
-argument|host
-argument_list|,
-argument|port
-argument_list|,
-argument|outfile
-argument_list|,
-argument|infile
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
+begin_expr_stmt
+unit|makeconnection
+operator|(
 name|host
-decl_stmt|;
-end_decl_stmt
+operator|,
+name|port
+operator|,
+name|outfile
+operator|,
+name|infile
+operator|)
+name|char
+operator|*
+name|host
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|u_short
