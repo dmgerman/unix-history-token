@@ -80,7 +80,9 @@ block|{
 name|char
 name|hook
 index|[
-name|NG_HOOKSIZ
+name|NG_HOOKLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|u_int16_t
