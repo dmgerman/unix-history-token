@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.41 (Berkeley) %G%"
+literal|"@(#)ls.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,15 +116,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|lstat
-argument_list|()
-decl_stmt|,
-name|strlen
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char
@@ -420,9 +417,6 @@ argument_list|()
 decl_stmt|;
 name|int
 name|acccmp
-argument_list|()
-decl_stmt|,
-name|bcopy
 argument_list|()
 decl_stmt|,
 name|modcmp
