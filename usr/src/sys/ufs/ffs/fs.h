@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California. 
 end_comment
 
 begin_comment
-comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at mkfs time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * The first boot and super blocks are given in absolute disk addresses.  * The byte-offset forms are preferred, as they don't imply a sector size.  * The byte-offset forms are preferred, as they don't imply a sector size.  */
+comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at `newfs' time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(fs, cg)'' macro.  *  * The first boot and super blocks are given in absolute disk addresses.  * The byte-offset forms are preferred, as they don't imply a sector size.  * The byte-offset forms are preferred, as they don't imply a sector size.  */
 end_comment
 
 begin_define
@@ -76,7 +76,7 @@ endif|SECSIZE
 end_endif
 
 begin_comment
-comment|/*  * Addresses stored in inodes are capable of addressing fragments  * of `blocks'. File system blocks of at most size MAXBSIZE can   * be optionally broken into 2, 4, or 8 pieces, each of which is  * addressible; these pieces may be DEV_BSIZE, or some multiple of  * a DEV_BSIZE unit.  *  * Large files consist of exclusively large data blocks.  To avoid  * undue wasted disk space, the last data block of a small file may be  * allocated as only as many fragments of a large block as are  * necessary.  The file system format retains only a single pointer  * to such a fragment, which is a piece of a single large block that  * has been divided.  The size of such a fragment is determinable from  * information in the inode, using the ``blksize(fs, ip, lbn)'' macro.  *  * The file system records space availability at the fragment level;  * to determine block availability, aligned fragments are examined.  *  * The root inode is the root of the file system.  * Inode 0 can't be used for normal purposes and  * historically bad blocks were linked to inode 1,  * thus the root inode is 2. (inode 1 is no longer used for  * this purpose, however numerous dump tapes make this  * assumption, so we are stuck with it)  * The lost+found directory is given the next available  * inode when it is created by ``mkfs''.  */
+comment|/*  * Addresses stored in inodes are capable of addressing fragments  * of `blocks'. File system blocks of at most size MAXBSIZE can   * be optionally broken into 2, 4, or 8 pieces, each of which is  * addressible; these pieces may be DEV_BSIZE, or some multiple of  * a DEV_BSIZE unit.  *  * Large files consist of exclusively large data blocks.  To avoid  * undue wasted disk space, the last data block of a small file may be  * allocated as only as many fragments of a large block as are  * necessary.  The file system format retains only a single pointer  * to such a fragment, which is a piece of a single large block that  * has been divided.  The size of such a fragment is determinable from  * information in the inode, using the ``blksize(fs, ip, lbn)'' macro.  *  * The file system records space availability at the fragment level;  * to determine block availability, aligned fragments are examined.  *  * The root inode is the root of the file system.  * Inode 0 can't be used for normal purposes and  * historically bad blocks were linked to inode 1,  * thus the root inode is 2. (inode 1 is no longer used for  * this purpose, however numerous dump tapes make this  * assumption, so we are stuck with it)  */
 end_comment
 
 begin_define
@@ -90,45 +90,8 @@ begin_comment
 comment|/* i number of all roots */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOSTFOUNDINO
-value|(ROOTINO + 1)
-end_define
-
 begin_comment
-comment|/*  * Cylinder group related limits.  *  * For each cylinder we keep track of the availability of blocks at different  * rotational positions, so that we can lay out the data to be picked  * up with minimum rotational latency.  NRPOS is the number of rotational  * positions which we distinguish.  With NRPOS 8 the resolution of our  * summary information is 2ms for a typical 3600 rpm drive.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NRPOS
-value|8
-end_define
-
-begin_comment
-comment|/* number distinct rotational positions */
-end_comment
-
-begin_comment
-comment|/*  * MAXIPG bounds the number of inodes per cylinder group, and  * is needed only to keep the structure simpler by having the  * only a single variable size element (the free bit map).  *  * N.B.: MAXIPG must be a multiple of INOPB(fs).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXIPG
-value|2048
-end_define
-
-begin_comment
-comment|/* max number inodes/cyl group */
-end_comment
-
-begin_comment
-comment|/*  * MINBSIZE is the smallest allowable block size.  * In order to insure that it is possible to create files of size  * 2^32 with only two levels of indirection, MINBSIZE is set to 4096.  * MINBSIZE must be big enough to hold a cylinder group block,  * thus changes to (struct cg) must keep its size within MINBSIZE.  * MAXCPG is limited only to dimension an array in (struct cg);  * it can be made larger as long as that structures size remains  * within the bounds dictated by MINBSIZE.  * Note that super blocks are always of size SBSIZE,  * and that both SBSIZE and MAXBSIZE must be>= MINBSIZE.  */
+comment|/*  * MINBSIZE is the smallest allowable block size.  * In order to insure that it is possible to create files of size  * 2^32 with only two levels of indirection, MINBSIZE is set to 4096.  * MINBSIZE must be big enough to hold a cylinder group block,  * thus changes to (struct cg) must keep its size within MINBSIZE.  * Note that super blocks are always of size SBSIZE,  * and that both SBSIZE and MAXBSIZE must be>= MINBSIZE.  */
 end_comment
 
 begin_define
@@ -138,17 +101,6 @@ name|MINBSIZE
 value|4096
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXCPG
-value|32
-end_define
-
-begin_comment
-comment|/* maximum fs_cpg */
-end_comment
-
 begin_comment
 comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for a  * maximum of two million cylinders.  */
 end_comment
@@ -157,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|MAXMNTLEN
-value|384
+value|512
 end_define
 
 begin_define
@@ -476,21 +428,52 @@ name|fs_cpc
 decl_stmt|;
 comment|/* cyl per cycle in postbl */
 name|short
-name|fs_postbl
+name|fs_opostbl
 index|[
-name|MAXCPG
+literal|16
 index|]
 index|[
-name|NRPOS
+literal|8
 index|]
 decl_stmt|;
-comment|/* head of blocks for each rotation */
+comment|/* old rotation block list head */
+name|long
+name|fs_sparecon
+index|[
+literal|56
+index|]
+decl_stmt|;
+comment|/* reserved for future constants */
+name|quad
+name|fs_qbmask
+decl_stmt|;
+comment|/* ~fs_bmask - for use with quad size */
+name|quad
+name|fs_qfmask
+decl_stmt|;
+comment|/* ~fs_fmask - for use with quad size */
+name|long
+name|fs_postblformat
+decl_stmt|;
+comment|/* format of positional layout tables */
+name|long
+name|fs_nrpos
+decl_stmt|;
+comment|/* number of rotaional positions */
+name|long
+name|fs_postbloff
+decl_stmt|;
+comment|/* (short) rotation block list head */
+name|long
+name|fs_rotbloff
+decl_stmt|;
+comment|/* (u_char) blocks for each rotation */
 name|long
 name|fs_magic
 decl_stmt|;
 comment|/* magic number */
 name|u_char
-name|fs_rotbl
+name|fs_space
 index|[
 literal|1
 index|]
@@ -528,6 +511,60 @@ comment|/* minimize disk fragmentation */
 end_comment
 
 begin_comment
+comment|/*  * Rotational layout table format types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_42POSTBLFMT
+value|-1
+end_define
+
+begin_comment
+comment|/* 4.2BSD rotational table format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_DYNAMICPOSTBLFMT
+value|1
+end_define
+
+begin_comment
+comment|/* dynamic rotational table format */
+end_comment
+
+begin_comment
+comment|/*  * Macros for access to superblock array structures  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|fs_postbl
+parameter_list|(
+name|fs
+parameter_list|,
+name|cylno
+parameter_list|)
+define|\
+value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_opostbl[cylno]) \     : ((short *)((char *)(fs) + (fs)->fs_postbloff) + (cylno) * (fs)->fs_nrpos))
+end_define
+
+begin_define
+define|#
+directive|define
+name|fs_rotbl
+parameter_list|(
+name|fs
+parameter_list|)
+define|\
+value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_space) \     : ((u_char *)((char *)(fs) + (fs)->fs_rotbloff)))
+end_define
+
+begin_comment
 comment|/*  * Convert cylinder group to base address of its global summary info.  *  * N.B. This macro assumes that sizeof(struct csum) is a power of two.  */
 end_comment
 
@@ -542,17 +579,6 @@ name|indx
 parameter_list|)
 define|\
 value|fs_csp[(indx)>> (fs)->fs_csshift][(indx)& ~(fs)->fs_csmask]
-end_define
-
-begin_comment
-comment|/*  * MAXBPC bounds the size of the rotational layout tables and  * is limited by the fact that the super block is of size SBSIZE.  * The size of these tables is INVERSELY proportional to the block  * size of the file system. It is aggravated by sector sizes that  * are not powers of two, as this increases the number of cylinders  * included before the rotational pattern repeats (fs_cpc).  * Its size is derived from the number of bytes remaining in (struct fs)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXBPC
-value|(SBSIZE - sizeof (struct fs))
 end_define
 
 begin_comment
@@ -576,12 +602,10 @@ modifier|*
 name|cg_link
 decl_stmt|;
 comment|/* linked list of cyl groups */
-name|struct
-name|cg
-modifier|*
-name|cg_rlink
+name|long
+name|cg_magic
 decl_stmt|;
-comment|/*     used for incore cyl groups */
+comment|/* magic number */
 name|time_t
 name|cg_time
 decl_stmt|;
@@ -627,28 +651,192 @@ index|]
 decl_stmt|;
 comment|/* counts of available frags */
 name|long
+name|cg_btotoff
+decl_stmt|;
+comment|/* (long) block totals per cylinder */
+name|long
+name|cg_boff
+decl_stmt|;
+comment|/* (short) free block positions */
+name|long
+name|cg_iusedoff
+decl_stmt|;
+comment|/* (char) used inode map */
+name|long
+name|cg_freeoff
+decl_stmt|;
+comment|/* (u_char) free block map */
+name|long
+name|cg_nextfreeoff
+decl_stmt|;
+comment|/* (u_char) next available space */
+name|long
+name|cg_sparecon
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* reserved for future use */
+name|u_char
+name|cg_space
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* space for cylinder group maps */
+comment|/* actually longer */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Macros for access to cylinder group array structures  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cg_blktot
+parameter_list|(
+name|cgp
+parameter_list|)
+define|\
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_btot) \     : ((long *)((char *)(cgp) + (cgp)->cg_btotoff)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cg_blks
+parameter_list|(
+name|fs
+parameter_list|,
+name|cgp
+parameter_list|,
+name|cylno
+parameter_list|)
+define|\
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_b[cylno]) \     : ((short *)((char *)(cgp) + (cgp)->cg_boff) + (cylno) * (fs)->fs_nrpos))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cg_inosused
+parameter_list|(
+name|cgp
+parameter_list|)
+define|\
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_iused) \     : ((char *)((char *)(cgp) + (cgp)->cg_iusedoff)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cg_blksfree
+parameter_list|(
+name|cgp
+parameter_list|)
+define|\
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_free) \     : ((u_char *)((char *)(cgp) + (cgp)->cg_freeoff)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cg_chkmagic
+parameter_list|(
+name|cgp
+parameter_list|)
+define|\
+value|((cgp)->cg_magic == CG_MAGIC || ((struct ocg *)(cgp))->cg_magic == CG_MAGIC)
+end_define
+
+begin_comment
+comment|/*  * The following structure is defined  * for compatibility with old file systems.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ocg
+block|{
+name|struct
+name|ocg
+modifier|*
+name|cg_link
+decl_stmt|;
+comment|/* linked list of cyl groups */
+name|struct
+name|ocg
+modifier|*
+name|cg_rlink
+decl_stmt|;
+comment|/*     used for incore cyl groups */
+name|time_t
+name|cg_time
+decl_stmt|;
+comment|/* time last written */
+name|long
+name|cg_cgx
+decl_stmt|;
+comment|/* we are the cgx'th cylinder group */
+name|short
+name|cg_ncyl
+decl_stmt|;
+comment|/* number of cyl's this cg */
+name|short
+name|cg_niblk
+decl_stmt|;
+comment|/* number of inode blocks this cg */
+name|long
+name|cg_ndblk
+decl_stmt|;
+comment|/* number of data blocks this cg */
+name|struct
+name|csum
+name|cg_cs
+decl_stmt|;
+comment|/* cylinder summary information */
+name|long
+name|cg_rotor
+decl_stmt|;
+comment|/* position of last used block */
+name|long
+name|cg_frotor
+decl_stmt|;
+comment|/* position of last used frag */
+name|long
+name|cg_irotor
+decl_stmt|;
+comment|/* position of last used inode */
+name|long
+name|cg_frsum
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* counts of available frags */
+name|long
 name|cg_btot
 index|[
-name|MAXCPG
+literal|32
 index|]
 decl_stmt|;
 comment|/* block totals per cylinder */
 name|short
 name|cg_b
 index|[
-name|MAXCPG
+literal|32
 index|]
 index|[
-name|NRPOS
+literal|8
 index|]
 decl_stmt|;
 comment|/* positions of free blocks */
 name|char
 name|cg_iused
 index|[
-name|MAXIPG
-operator|/
-name|NBBY
+literal|256
 index|]
 decl_stmt|;
 comment|/* used inode map */
@@ -667,21 +855,6 @@ comment|/* actually longer */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * MAXBPG bounds the number of blocks of data per cylinder group,  * and is limited by the fact that cylinder groups are at most one block.  * Its size is derived from the size of blocks and the (struct cg) size,  * by the number of remaining bits.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXBPG
-parameter_list|(
-name|fs
-parameter_list|)
-define|\
-value|(fragstoblks((fs), (NBBY * ((fs)->fs_bsize - (sizeof (struct cg))))))
-end_define
 
 begin_comment
 comment|/*  * Turn file system block numbers into disk block addresses.  * This maps file system blocks to device size blocks.  */
@@ -915,7 +1088,7 @@ parameter_list|,
 name|bno
 parameter_list|)
 define|\
-value|(((bno) * NSPF(fs) % (fs)->fs_spc / (fs)->fs_nsect * (fs)->fs_trackskew + \      (bno) * NSPF(fs) % (fs)->fs_spc % (fs)->fs_nsect * (fs)->fs_interleave) % \      (fs)->fs_nsect * NRPOS / (fs)->fs_npsect)
+value|(((bno) * NSPF(fs) % (fs)->fs_spc / (fs)->fs_nsect * (fs)->fs_trackskew + \      (bno) * NSPF(fs) % (fs)->fs_spc % (fs)->fs_nsect * (fs)->fs_interleave) % \      (fs)->fs_nsect * (fs)->fs_nrpos / (fs)->fs_npsect)
 end_define
 
 begin_comment
