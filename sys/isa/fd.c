@@ -1544,14 +1544,6 @@ name|u_int8_t
 name|v
 parameter_list|)
 block|{
-if|if
-condition|(
-name|fdc
-operator|->
-name|flags
-operator|&
-name|FDC_ISPNP
-condition|)
 name|bus_space_write_1
 argument_list|(
 name|fdc
@@ -1563,22 +1555,6 @@ operator|->
 name|ctlh
 argument_list|,
 literal|0
-argument_list|,
-name|v
-argument_list|)
-expr_stmt|;
-else|else
-name|bus_space_write_1
-argument_list|(
-name|fdc
-operator|->
-name|portt
-argument_list|,
-name|fdc
-operator|->
-name|porth
-argument_list|,
-name|FDCTL
 argument_list|,
 name|v
 argument_list|)
@@ -2040,22 +2016,17 @@ name|fdc_errs
 operator|<
 name|FDC_ERRMAX
 condition|)
-block|{
-name|device_print_prettyname
+name|device_printf
 argument_list|(
 name|fdc
 operator|->
 name|fdc_dev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"%s"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2065,20 +2036,16 @@ name|fdc_errs
 operator|==
 name|FDC_ERRMAX
 condition|)
-block|{
-name|device_print_prettyname
+name|device_printf
 argument_list|(
 name|fdc
 operator|->
 name|fdc_dev
+argument_list|,
+literal|"too many errors, not "
+literal|"logging any more\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"too many errors, not logging any more\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 name|FD_FAILED
@@ -2837,6 +2804,7 @@ name|res_drq
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * We don't just use an 8 port range (e.g. 0x3f0-0x3f7) since that 	 * covers an IDE control register at 0x3f6. 	 * Isn't PC hardware wonderful. 	 */
 name|fdc
 operator|->
 name|res_ioport
@@ -2861,7 +2829,7 @@ name|ispnp
 condition|?
 literal|1
 else|:
-name|IO_FDCSIZE
+literal|6
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2908,26 +2876,9 @@ operator|->
 name|res_ioport
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some bios' report the device at 0x3f2-0x3f5,0x3f7 and some at 	 * 0x3f0-0x3f5,0x3f7. We detect the former by checking the size 	 * and adjust the port address accordingly. 	 * 	 * And some (!!) report 0x3f2-0x3f5 and completely leave out the 	 * control register!  It seems that some non-antique controller chips 	 * have a different method of programming the transfer speed which 	 * doesn't require the control register, but it's mighty bogus as the 	 * chip still responds to the address for the control register. 	 */
+comment|/* 	 * Some BIOSen report the device at 0x3f2-0x3f5,0x3f7 and some at 	 * 0x3f0-0x3f5,0x3f7. We detect the former by checking the size 	 * and adjust the port address accordingly. 	 */
 if|if
 condition|(
-name|ispnp
-condition|)
-block|{
-name|int
-name|cntport0
-decl_stmt|;
-name|int
-name|cntport1
-decl_stmt|;
-name|u_long
-name|ctlstart
-decl_stmt|;
-name|u_long
-name|ctlend
-decl_stmt|;
-name|cntport0
-operator|=
 name|bus_get_resource_count
 argument_list|(
 name|dev
@@ -2936,30 +2887,6 @@ name|SYS_RES_IOPORT
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|cntport1
-operator|=
-name|bus_get_resource_count
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|ctlstart
-operator|=
-literal|0ul
-expr_stmt|;
-name|ctlend
-operator|=
-operator|~
-literal|0ul
-expr_stmt|;
-if|if
-condition|(
-name|cntport0
 operator|==
 literal|4
 condition|)
@@ -2970,14 +2897,25 @@ operator|=
 operator|-
 literal|2
 expr_stmt|;
+comment|/* 	 * Register the control port range as rid 1 if it isn't there 	 * already. Most PnP BIOSen will have already done this but 	 * non-PnP configurations don't. 	 * 	 * And some (!!) report 0x3f2-0x3f5 and completely leave out the 	 * control register!  It seems that some non-antique controller chips 	 * have a different method of programming the transfer speed which 	 * doesn't require the control register, but it's mighty bogus as the 	 * chip still responds to the address for the control register. 	 */
 if|if
 condition|(
-name|cntport1
+name|bus_get_resource_count
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|1
+argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* GRRR, request a specific port */
+name|u_long
+name|ctlstart
+decl_stmt|;
+comment|/* Find the control port, usually 0x3f7 */
 name|ctlstart
 operator|=
 name|rman_get_start
@@ -2993,29 +2931,21 @@ name|port_off
 operator|+
 literal|7
 expr_stmt|;
-comment|/* usually 0x3f7 */
-name|ctlend
-operator|=
-name|ctlstart
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
+name|bus_set_resource
 argument_list|(
 name|dev
 argument_list|,
-literal|"added missing ctrl port\n"
+name|SYS_RES_IOPORT
+argument_list|,
+literal|1
+argument_list|,
+name|ctlstart
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|fdc
-operator|->
-name|flags
-operator||=
-name|FDC_ISPNP
-expr_stmt|;
+comment|/* 	 * Now (finally!) allocate the control port. 	 */
 name|fdc
 operator|->
 name|rid_ctl
@@ -3037,9 +2967,10 @@ name|fdc
 operator|->
 name|rid_ctl
 argument_list|,
-name|ctlstart
+literal|0ul
 argument_list|,
-name|ctlend
+operator|~
+literal|0ul
 argument_list|,
 literal|1
 argument_list|,
@@ -3059,7 +2990,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot reserve I/O port range 2\n"
+literal|"cannot reserve control I/O port range\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3088,7 +3019,6 @@ operator|->
 name|res_ctl
 argument_list|)
 expr_stmt|;
-block|}
 name|fdc
 operator|->
 name|res_irq
@@ -4522,16 +4452,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|device_print_prettyname
+name|device_printf
 argument_list|(
 name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"FIFO enabled, %d bytes threshold\n"
 argument_list|,
 name|fifo_threshold
@@ -7832,15 +7759,12 @@ operator|->
 name|fd
 condition|)
 block|{
-name|device_print_prettyname
+name|device_printf
 argument_list|(
 name|fdc
 operator|->
 name|fdc_dev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unexpected valid fd pointer\n"
 argument_list|)
 expr_stmt|;
@@ -7921,20 +7845,15 @@ operator|->
 name|fd
 operator|)
 condition|)
-block|{
-name|device_print_prettyname
+name|device_printf
 argument_list|(
 name|fd
 operator|->
 name|dev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"confused fd pointers\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|read
 operator|=
 name|bp
@@ -9883,15 +9802,12 @@ operator|)
 return|;
 comment|/* will return immediatly */
 default|default:
-name|device_print_prettyname
+name|device_printf
 argument_list|(
 name|fdc
 operator|->
 name|fdc_dev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+argument_list|,
 literal|"unexpected FD int->"
 argument_list|)
 expr_stmt|;

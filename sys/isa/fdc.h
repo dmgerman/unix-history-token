@@ -71,10 +71,6 @@ define|#
 directive|define
 name|FDC_UNLOADED
 value|0x80
-define|#
-directive|define
-name|FDC_ISPNP
-value|0x100
 name|struct
 name|fd_data
 modifier|*
