@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-sparc.c,v 1.2 1993/10/27 00:14:52 pk Exp $"
+literal|"$Id: tc-sparc.c,v 1.1 1993/11/03 00:54:52 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2904,6 +2904,9 @@ case|:
 case|case
 literal|'d'
 case|:
+case|case
+literal|'x'
+case|:
 if|if
 condition|(
 operator|*
@@ -3257,6 +3260,20 @@ name|mask
 operator|<<
 literal|14
 operator|)
+expr_stmt|;
+continue|continue;
+case|case
+literal|'x'
+case|:
+name|opcode
+operator||=
+operator|(
+name|mask
+operator|<<
+literal|25
+operator|)
+operator||
+name|mask
 expr_stmt|;
 continue|continue;
 block|}
