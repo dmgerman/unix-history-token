@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.126 2000/11/10 14:11:49 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.127 2000/11/22 05:50:59 soren Exp $	*/
 end_comment
 
 begin_comment
@@ -5923,6 +5923,27 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|status
+operator|=
+name|UREAD2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_STS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+literal|0
+condition|)
+comment|/* The interrupt was not for us. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|sc
@@ -5952,27 +5973,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|status
-operator|=
-name|UREAD2
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_STS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|==
-literal|0
-condition|)
-comment|/* The interrupt was not for us. */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 if|#
 directive|if
 name|defined
