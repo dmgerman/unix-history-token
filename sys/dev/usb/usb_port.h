@@ -46,9 +46,11 @@ directive|include
 file|"opt_usbverbose.h"
 end_include
 
-begin_comment
-comment|/*#define USB_USE_SOFTINTR */
-end_comment
+begin_define
+define|#
+directive|define
+name|USB_USE_SOFTINTR
+end_define
 
 begin_ifdef
 ifdef|#
@@ -1026,6 +1028,12 @@ begin_define
 define|#
 directive|define
 name|USBVERBOSE
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_USE_SOFTINTR
 end_define
 
 begin_define
