@@ -513,6 +513,21 @@ argument_list|)
 range|:
 name|ios_base
 argument_list|()
+decl_stmt|,
+name|_M_fctype
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|,
+name|_M_fnumput
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|,
+name|_M_fnumget
+argument_list|(
+literal|0
+argument_list|)
 block|{
 name|this
 operator|->
@@ -520,7 +535,8 @@ name|init
 argument_list|(
 name|__sb
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 comment|/**        *  @brief  Empty.        *        *  The destructor does nothing.  More specifically, it does not        *  destroy the streambuf held by rdbuf().       */
 name|virtual
 operator|~
@@ -532,13 +548,13 @@ comment|/**        *  @brief  Fetches the current @e tied stream.        *  @ret
 name|basic_ostream
 operator|<
 name|_CharT
-decl_stmt|,
+operator|,
 name|_Traits
-decl|>
-modifier|*
+operator|>
+operator|*
 name|tie
 argument_list|()
-decl|const
+specifier|const
 block|{
 return|return
 name|_M_tie
