@@ -2910,6 +2910,18 @@ begin_comment
 comment|/* Giant around struct file& filedesc */
 end_comment
 
+begin_decl_stmt
+name|int
+name|kern_giant_ucred
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Giant around ucred */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -2944,6 +2956,27 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|kern_giant_file
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_giant
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ucred
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|kern_giant_ucred
 argument_list|,
 literal|0
 argument_list|,

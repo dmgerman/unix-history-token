@@ -1079,6 +1079,13 @@ name|kern_giant_file
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|kern_giant_ucred
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Giant lock manipulation and clean exit macros.  * Used to replace return with an exit Giant and return.  *  * Note that DROP_GIANT*() needs to be paired with PICKUP_GIANT()   */
 end_comment
