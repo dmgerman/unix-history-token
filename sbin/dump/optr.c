@@ -1652,7 +1652,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Dump these filesystems:\n"
+literal|"Dump these file systems:\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1661,7 +1661,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Last dump(s) done (Dump '>' filesystems):\n"
+literal|"Last dump(s) done (Dump '>' file systems):\n"
 argument_list|)
 expr_stmt|;
 name|lastname

@@ -556,7 +556,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* filesystem version */
+comment|/* file system version */
 name|u_int8_t
 name|rdcl
 index|[
@@ -570,7 +570,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* filesystem info sector */
+comment|/* file system info sector */
 name|u_int8_t
 name|bkbs
 index|[
@@ -625,7 +625,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* filesystem type */
+comment|/* file system type */
 block|}
 struct|;
 end_struct
@@ -747,7 +747,7 @@ comment|/* root directory start cluster */
 name|u_int
 name|infs
 decl_stmt|;
-comment|/* filesystem info sector */
+comment|/* file system info sector */
 name|u_int
 name|bkbs
 decl_stmt|;
@@ -1394,7 +1394,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Construct a FAT12, FAT16, or FAT32 filesystem.  */
+comment|/*  * Construct a FAT12, FAT16, or FAT32 file system.  */
 end_comment
 
 begin_function
@@ -1944,7 +1944,7 @@ name|optarg
 argument_list|,
 literal|1
 argument_list|,
-literal|"filesystem size"
+literal|"file system size"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3375,7 +3375,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"meta data exceeds filesystem size"
+literal|"meta data exceeds file system size"
 argument_list|)
 expr_stmt|;
 name|x1
@@ -3542,7 +3542,7 @@ name|x2
 condition|)
 name|warnx
 argument_list|(
-literal|"warning: sectors/FAT limits filesystem to %u clusters"
+literal|"warning: sectors/FAT limits file system to %u clusters"
 argument_list|,
 name|cls
 argument_list|)
@@ -3609,7 +3609,7 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"warning: FAT type limits filesystem to %u sectors"
+literal|"warning: FAT type limits file system to %u sectors"
 argument_list|,
 name|bpb
 operator|.
@@ -4904,7 +4904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Exit with error if filesystem is mounted.  */
+comment|/*  * Exit with error if file system is mounted.  */
 end_comment
 
 begin_function
@@ -6504,7 +6504,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-N don't create filesystem: "
+literal|"\t-N don't create file system: "
 literal|"just print out parameters\n"
 argument_list|)
 expr_stmt|;
@@ -6596,7 +6596,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-i filesystem info sector\n"
+literal|"\t-i file system info sector\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -6638,7 +6638,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-s filesystem size (sectors)\n"
+literal|"\t-s file system size (sectors)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

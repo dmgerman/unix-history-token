@@ -695,7 +695,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Cannot find filesystem superblock\n"
+literal|"Cannot find file system superblock\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -731,7 +731,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"filesystem format is too old, sorry"
+literal|"file system format is too old, sorry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -757,7 +757,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"filesystem is not clean, fsck %s first"
+literal|"file system is not clean, fsck %s first"
 argument_list|,
 name|device
 argument_list|)
@@ -1103,7 +1103,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Randomize fs_id unless old 4.2BSD filesystem */
+comment|/* Randomize fs_id unless old 4.2BSD file system */
 if|if
 condition|(
 operator|!

@@ -306,7 +306,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Concurrent dump mods (Caltech) - disk block reading and tape writing  * are exported to several slave processes.  While one slave writes the  * tape, the others read disk blocks; they pass control of the tape in  * a ring via signals. The parent process traverses the filesystem and  * sends writeheader()'s and lists of daddr's to the slaves via pipes.  * The following structure defines the instruction packets sent to slaves.  */
+comment|/*  * Concurrent dump mods (Caltech) - disk block reading and tape writing  * are exported to several slave processes.  While one slave writes the  * tape, the others read disk blocks; they pass control of the tape in  * a ring via signals. The parent process traverses the file system and  * sends writeheader()'s and lists of daddr's to the slaves via pipes.  * The following structure defines the instruction packets sent to slaves.  */
 end_comment
 
 begin_struct

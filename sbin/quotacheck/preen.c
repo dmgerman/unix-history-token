@@ -144,7 +144,7 @@ name|char
 modifier|*
 name|fsname
 decl_stmt|;
-comment|/* mounted filesystem name */
+comment|/* mounted file system name */
 name|long
 name|auxdata
 decl_stmt|;

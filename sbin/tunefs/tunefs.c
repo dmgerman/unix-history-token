@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * tunefs: change layout parameters to an existing filesystem.  */
+comment|/*  * tunefs: change layout parameters to an existing file system.  */
 end_comment
 
 begin_include
@@ -988,7 +988,7 @@ name|errx
 argument_list|(
 literal|10
 argument_list|,
-literal|"%s: unknown filesystem"
+literal|"%s: unknown file system"
 argument_list|,
 name|special
 argument_list|)
@@ -1624,7 +1624,7 @@ argument_list|)
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"filesystem reloaded"
+literal|"file system reloaded"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1651,7 +1651,7 @@ literal|"usage: tunefs [-A] [-a maxcontig] [-d rotdelay] [-e maxbpg] [-f avgfile
 argument_list|,
 literal|"              [-m minfree] [-p] [-n enable | disable] [-o space | time]"
 argument_list|,
-literal|"              [-s filesperdir] special | filesystem"
+literal|"              [-s filesperdir] special | file system"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1838,7 +1838,7 @@ name|err
 argument_list|(
 literal|5
 argument_list|,
-literal|"Cannot find filesystem superblock"
+literal|"Cannot find file system superblock"
 argument_list|)
 expr_stmt|;
 name|dev_bsize

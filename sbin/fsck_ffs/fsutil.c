@@ -2935,7 +2935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When preening, allow a single quit to signal  * a special exit after filesystem checks complete  * so that reboot sequence may be interrupted.  */
+comment|/*  * When preening, allow a single quit to signal  * a special exit after file system checks complete  * so that reboot sequence may be interrupted.  */
 end_comment
 
 begin_function
@@ -2949,7 +2949,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"returning to single-user after filesystem check\n"
+literal|"returning to single-user after file system check\n"
 argument_list|)
 expr_stmt|;
 name|returntosingle
@@ -3126,7 +3126,7 @@ file|<stdarg.h>
 end_include
 
 begin_comment
-comment|/*  * An unexpected inconsistency occured.  * Die if preening or filesystem is running with soft dependency protocol,  * otherwise just print message and continue.  */
+comment|/*  * An unexpected inconsistency occured.  * Die if preening or file system is running with soft dependency protocol,  * otherwise just print message and continue.  */
 end_comment
 
 begin_function

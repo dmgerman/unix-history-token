@@ -1585,7 +1585,7 @@ operator|==
 name|lcnt
 condition|)
 block|{
-comment|/* 		 * If we have not hit any unresolved problems, are running 		 * in preen mode, and are on a filesystem using soft updates, 		 * then just toss any partially allocated files. 		 */
+comment|/* 		 * If we have not hit any unresolved problems, are running 		 * in preen mode, and are on a file system using soft updates, 		 * then just toss any partially allocated files. 		 */
 if|if
 condition|(
 name|resolved
@@ -1612,7 +1612,7 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* 			 * The filesystem can be marked clean even if 			 * a file is not linked up, but is cleared. 			 * Hence, resolved should not be cleared when 			 * linkup is answered no, but clri is answered yes. 			 */
+comment|/* 			 * The file system can be marked clean even if 			 * a file is not linked up, but is cleared. 			 * Hence, resolved should not be cleared when 			 * linkup is answered no, but clri is answered yes. 			 */
 name|saveresolved
 operator|=
 name|resolved

@@ -167,7 +167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We suck in lots of fsck code, and just pick& choose the stuff we want.  *  * fsreadfd is set up to read from the filesystem, fswritefd to write to  * the filesystem.  */
+comment|/*  * We suck in lots of fsck code, and just pick& choose the stuff we want.  *  * fsreadfd is set up to read from the file system, fswritefd to write to  * the file system.  */
 end_comment
 
 begin_function
@@ -284,14 +284,14 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cannot set up filesystem `%s'"
+literal|"cannot set up file system `%s'"
 argument_list|,
 name|fsys
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s filesystem `%s'\nLast Mounted on %s\n"
+literal|"%s file system `%s'\nLast Mounted on %s\n"
 argument_list|,
 name|nflag
 condition|?

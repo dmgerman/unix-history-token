@@ -415,7 +415,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Dump pass 1.  *  * Walk the inode list for a filesystem to find all allocated inodes  * that have been modified since the previous dump time. Also, find all  * the directories in the filesystem.  */
+comment|/*  * Dump pass 1.  *  * Walk the inode list for a file system to find all allocated inodes  * that have been modified since the previous dump time. Also, find all  * the directories in the file system.  */
 end_comment
 
 begin_function
@@ -596,7 +596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dump pass 2.  *  * Scan each directory on the filesystem to see if it has any modified  * files in it. If it does, and has not already been added to the dump  * list (because it was itself modified), then add it. If a directory  * has not been modified itself, contains no modified files and has no  * subdirectories, then it can be deleted from the dump list and from  * the list of directories. By deleting it from the list of directories,  * its parent may now qualify for the same treatment on this or a later  * pass using this algorithm.  */
+comment|/*  * Dump pass 2.  *  * Scan each directory on the file system to see if it has any modified  * files in it. If it does, and has not already been added to the dump  * list (because it was itself modified), then add it. If a directory  * has not been modified itself, contains no modified files and has no  * subdirectories, then it can be deleted from the dump list and from  * the list of directories. By deleting it from the list of directories,  * its parent may now qualify for the same treatment on this or a later  * pass using this algorithm.  */
 end_comment
 
 begin_function

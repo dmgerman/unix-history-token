@@ -365,7 +365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* all filesystems */
+comment|/* all file systems */
 end_comment
 
 begin_decl_stmt
@@ -1283,7 +1283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Scan the specified filesystem to check quota(s) present on it.  */
+comment|/*  * Scan the specified file system to check quota(s) present on it.  */
 end_comment
 
 begin_function
@@ -1559,7 +1559,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Cannot find filesystem superblock"
+literal|"Cannot find file system superblock"
 argument_list|)
 expr_stmt|;
 return|return

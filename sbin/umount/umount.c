@@ -1055,7 +1055,7 @@ name|FSTAB_RQ
 argument_list|)
 condition|)
 continue|continue;
-comment|/* Ignore unknown filesystem types. */
+comment|/* Ignore unknown file system types. */
 if|if
 condition|(
 name|getvfsbyname
@@ -1084,7 +1084,7 @@ name|typelist
 argument_list|)
 condition|)
 continue|continue;
-comment|/* 		 * We want to unmount the filesystems in the reverse order 		 * that they were mounted.  So, we save off the file name 		 * in some allocated memory, and then call recursively. 		 */
+comment|/* 		 * We want to unmount the file systems in the reverse order 		 * that they were mounted.  So, we save off the file name 		 * in some allocated memory, and then call recursively. 		 */
 if|if
 condition|(
 operator|(
@@ -2418,7 +2418,7 @@ literal|"calloc"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We want to get the filesystems in the reverse order 	 * that they were mounted. Mounted and unmounted filesystems 	 * are marked or unmarked in a table called 'mntcheck'. 	 * Unmount(const char *dir, int flags) does only take the 	 * mountpoint as argument, not the destination. If we don't pay 	 * attention to the order, it can happen that a overlaying 	 * filesystem get's unmounted instead of the one the user 	 * has choosen. 	 */
+comment|/* 	 * We want to get the file systems in the reverse order 	 * that they were mounted. Mounted and unmounted file systems 	 * are marked or unmarked in a table called 'mntcheck'. 	 * Unmount(const char *dir, int flags) does only take the 	 * mountpoint as argument, not the destination. If we don't pay 	 * attention to the order, it can happen that a overlaying 	 * file system get's unmounted instead of the one the user 	 * has choosen. 	 */
 switch|switch
 condition|(
 name|mark

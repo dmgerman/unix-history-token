@@ -6533,7 +6533,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"line %d: Warning, unknown filesystem type %s\n"
+literal|"line %d: Warning, unknown file system type %s\n"
 argument_list|,
 name|lineno
 argument_list|,
@@ -8274,7 +8274,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If we are installing a boot program that doesn't fit in d_bbsize  * we need to mark those partitions that the boot overflows into.  * This allows newfs to prevent creation of a filesystem where it might  * clobber bootstrap code.  */
+comment|/*  * If we are installing a boot program that doesn't fit in d_bbsize  * we need to mark those partitions that the boot overflows into.  * This allows newfs to prevent creation of a file system where it might  * clobber bootstrap code.  */
 end_comment
 
 begin_function

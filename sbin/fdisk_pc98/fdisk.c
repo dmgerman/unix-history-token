@@ -717,13 +717,13 @@ block|,
 block|{
 literal|0x02
 block|,
-literal|"XENIX / filesystem"
+literal|"XENIX / file system"
 block|}
 block|,
 block|{
 literal|0x03
 block|,
-literal|"XENIX /usr filesystem"
+literal|"XENIX /usr file system"
 block|}
 block|,
 block|{
@@ -753,7 +753,7 @@ block|,
 block|{
 literal|0x08
 block|,
-literal|"AIX filesystem"
+literal|"AIX file system"
 block|}
 block|,
 block|{
@@ -857,13 +857,13 @@ block|,
 block|{
 literal|0x02
 block|,
-literal|"XENIX / filesystem"
+literal|"XENIX / file system"
 block|}
 block|,
 block|{
 literal|0x03
 block|,
-literal|"XENIX /usr filesystem"
+literal|"XENIX /usr file system"
 block|}
 block|,
 block|{
@@ -893,7 +893,7 @@ block|,
 block|{
 literal|0x08
 block|,
-literal|"AIX filesystem"
+literal|"AIX file system"
 block|}
 block|,
 block|{
@@ -1019,13 +1019,13 @@ block|,
 block|{
 literal|0x83
 block|,
-literal|"Linux filesystem"
+literal|"Linux file system"
 block|}
 block|,
 block|{
 literal|0x93
 block|,
-literal|"Amoeba filesystem"
+literal|"Amoeba file system"
 block|}
 block|,
 block|{
@@ -1067,7 +1067,7 @@ block|,
 block|{
 literal|0xB7
 block|,
-literal|"BSDI BSD/386 filesystem"
+literal|"BSDI BSD/386 file system"
 block|}
 block|,
 block|{

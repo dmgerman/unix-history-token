@@ -1291,7 +1291,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: unknown special file or filesystem"
+literal|"%s: unknown special file or file system"
 argument_list|,
 operator|*
 name|argv
@@ -1310,7 +1310,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s has unknown filesystem type"
+literal|"%s has unknown file system type"
 argument_list|,
 operator|*
 name|argv
@@ -1345,7 +1345,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* 		 * If -t flag has not been specified, the path cannot be 		 * found, spec contains either a ':' or a '@', then assume 		 * that an NFS filesystem is being specified ala Sun. 		 * Check if the hostname contains only allowed characters 		 * to reduce false positives.  IPv6 addresses containing 		 * ':' will be correctly parsed only if the separator is '@'. 		 * The definition of a valid hostname is taken from RFC 1034. 		 */
+comment|/* 		 * If -t flag has not been specified, the path cannot be 		 * found, spec contains either a ':' or a '@', then assume 		 * that an NFS file system is being specified ala Sun. 		 * Check if the hostname contains only allowed characters 		 * to reduce false positives.  IPv6 addresses containing 		 * ':' will be correctly parsed only if the separator is '@'. 		 * The definition of a valid hostname is taken from RFC 1034. 		 */
 if|if
 condition|(
 name|vfslist
@@ -1634,7 +1634,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-comment|/* the root filesystem can always be remounted */
+comment|/* the root file system can always be remounted */
 return|return
 operator|(
 literal|0

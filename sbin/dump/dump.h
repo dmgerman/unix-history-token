@@ -360,7 +360,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the filesystem super block */
+comment|/* the file system super block */
 end_comment
 
 begin_decl_stmt

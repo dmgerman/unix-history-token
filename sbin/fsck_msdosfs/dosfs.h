@@ -118,7 +118,7 @@ define|#
 directive|define
 name|FAT32
 value|1
-comment|/* this is a FAT32 filesystem */
+comment|/* this is a FAT32 file system */
 comment|/* 					 * Maybe, we should separate out 					 * various parts of FAT32?	XXX 					 */
 name|int
 name|ValidFat

@@ -876,7 +876,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s has unknown filesystem type."
+literal|"%s has unknown file system type."
 argument_list|,
 name|spec
 argument_list|)
@@ -1022,7 +1022,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * If the -B flag has been given, then process the needed 	 * background checks. Background checks cannot be run on 	 * filesystems that will be mounted read-only or that were 	 * not mounted at boot time (typically those marked `noauto'). 	 * If these basic tests are passed, check with the filesystem 	 * itself to see if it is willing to do background checking 	 * by invoking its check program with the -F flag. 	 */
+comment|/* 	 * If the -B flag has been given, then process the needed 	 * background checks. Background checks cannot be run on 	 * file systems that will be mounted read-only or that were 	 * not mounted at boot time (typically those marked `noauto'). 	 * If these basic tests are passed, check with the file system 	 * itself to see if it is willing to do background checking 	 * by invoking its check program with the -F flag. 	 */
 if|if
 condition|(
 name|flags
@@ -1095,7 +1095,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * If the -F flag has been given, then consider deferring the 	 * check to background. Background checks cannot be run on 	 * filesystems that will be mounted read-only or that will 	 * not be mounted at boot time (e.g., marked `noauto'). If 	 * these basic tests are passed, check with the filesystem 	 * itself to see if it is willing to defer to background 	 * checking by invoking its check program with the -F flag. 	 */
+comment|/* 	 * If the -F flag has been given, then consider deferring the 	 * check to background. Background checks cannot be run on 	 * file systems that will be mounted read-only or that will 	 * not be mounted at boot time (e.g., marked `noauto'). If 	 * these basic tests are passed, check with the file system 	 * itself to see if it is willing to defer to background 	 * checking by invoking its check program with the -F flag. 	 */
 if|if
 condition|(
 operator|(
@@ -2596,7 +2596,7 @@ decl_stmt|;
 name|u_char
 name|t
 decl_stmt|;
-comment|/* deduce the filesystem type from the disk label */
+comment|/* deduce the file system type from the disk label */
 if|if
 condition|(
 operator|(

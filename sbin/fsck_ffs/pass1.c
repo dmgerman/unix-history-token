@@ -174,7 +174,7 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-comment|/* 	 * Set filesystem reserved blocks in used block map. 	 */
+comment|/* 	 * Set file system reserved blocks in used block map. 	 */
 for|for
 control|(
 name|c

@@ -225,7 +225,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * XXX 	 * mount(8) calls the mount programs with an argv[0] which is 	 * /just/ the filesystem name.  So, if there is no underscore 	 * in argv[0], we assume that we are being called from mount(8) 	 * and that argv[0] is thus the name of the filesystem type. 	 */
+comment|/* 	 * XXX 	 * mount(8) calls the mount programs with an argv[0] which is 	 * /just/ the file system name.  So, if there is no underscore 	 * in argv[0], we assume that we are being called from mount(8) 	 * and that argv[0] is thus the name of the file system type. 	 */
 name|fsname
 operator|=
 name|strrchr
@@ -476,7 +476,7 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try with the old mount syscall in the case 	 * this filesystem has not been converted yet, 	 * or the user didn't recompile his kernel. 	 */
+comment|/* 	 * Try with the old mount syscall in the case 	 * this file system has not been converted yet, 	 * or the user didn't recompile his kernel. 	 */
 if|if
 condition|(
 name|error

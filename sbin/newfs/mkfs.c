@@ -168,7 +168,7 @@ file|"newfs.h"
 end_include
 
 begin_comment
-comment|/*  * make filesystem for cylinder-group style filesystems  */
+comment|/*  * make file system for cylinder-group style file systems  */
 end_comment
 
 begin_define
@@ -629,7 +629,7 @@ name|fs_flags
 operator||=
 name|FS_DOSOFTDEP
 expr_stmt|;
-comment|/* 	 * Validate the given filesystem size. 	 * Verify that its last block can actually be accessed. 	 * Convert to filesystem fragment sized units. 	 */
+comment|/* 	 * Validate the given file system size. 	 * Verify that its last block can actually be accessed. 	 * Convert to file system fragment sized units. 	 */
 if|if
 condition|(
 name|fssize
@@ -673,7 +673,7 @@ operator|&
 name|sblock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * collect and verify the filesystem density info 	 */
+comment|/* 	 * collect and verify the file system density info 	 */
 name|sblock
 operator|.
 name|fs_avgfilesize
@@ -2483,7 +2483,7 @@ operator|.
 name|cs_nffree
 expr_stmt|;
 block|}
-comment|/* 	 * Dump out summary information about filesystem. 	 */
+comment|/* 	 * Dump out summary information about file system. 	 */
 define|#
 directive|define
 name|B2MBFACTOR
@@ -2742,7 +2742,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now construct the initial filesystem, 	 * then write out the super-block. 	 */
+comment|/* 	 * Now construct the initial file system, 	 * then write out the super-block. 	 */
 name|fsinit
 argument_list|(
 name|utime
@@ -4063,7 +4063,7 @@ argument_list|,
 name|iobuf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For the old filesystem, we have to initialize all the inodes. 	 */
+comment|/* 	 * For the old file system, we have to initialize all the inodes. 	 */
 if|if
 condition|(
 name|Oflag
@@ -4179,7 +4179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initialize the filesystem  */
+comment|/*  * initialize the file system  */
 end_comment
 
 begin_define
@@ -5341,7 +5341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read a block from the filesystem  */
+comment|/*  * read a block from the file system  */
 end_comment
 
 begin_function
@@ -5582,7 +5582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * write a block to the filesystem  */
+comment|/*  * write a block to the file system  */
 end_comment
 
 begin_function

@@ -723,7 +723,7 @@ name|mod
 operator||=
 name|FSERROR
 expr_stmt|;
-comment|/* filesystem not clean */
+comment|/* file system not clean */
 block|}
 block|}
 block|}

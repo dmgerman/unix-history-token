@@ -460,7 +460,7 @@ define|#
 directive|define
 name|DEFAULT_ROOTUID
 value|-2
-comment|/* 	 * ISO 9660 filesystems are not writeable. 	 */
+comment|/* 	 * ISO 9660 file systems are not writeable. 	 */
 name|mntflags
 operator||=
 name|MNT_RDONLY

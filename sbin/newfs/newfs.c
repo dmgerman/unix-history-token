@@ -216,7 +216,7 @@ value|16384
 end_define
 
 begin_comment
-comment|/*  * Cylinder groups may have up to MAXBLKSPERCG blocks. The actual  * number used depends upon how much information can be stored  * in a cylinder group map which must fit in a single filesystem  * block. The default is to use as many as possible blocks per group.  */
+comment|/*  * Cylinder groups may have up to MAXBLKSPERCG blocks. The actual  * number used depends upon how much information can be stored  * in a cylinder group map which must fit in a single file system  * block. The default is to use as many as possible blocks per group.  */
 end_comment
 
 begin_define
@@ -245,7 +245,7 @@ value|((bsize) / sizeof(ufs2_daddr_t))
 end_define
 
 begin_comment
-comment|/*  * Each filesystem has a number of inodes statically allocated.  * We allocate one inode slot per NFPI fragments, expecting this  * to be far more than we will ever need.  */
+comment|/*  * Each file system has a number of inodes statically allocated.  * We allocate one inode slot per NFPI fragments, expecting this  * to be far more than we will ever need.  */
 end_comment
 
 begin_define
@@ -262,7 +262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* run without writing filesystem */
+comment|/* run without writing file system */
 end_comment
 
 begin_decl_stmt
@@ -274,7 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* filesystem format (1 => UFS1, 2 => UFS2) */
+comment|/* file system format (1 => UFS1, 2 => UFS2) */
 end_comment
 
 begin_decl_stmt
@@ -294,7 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* enable soft updates for filesystem */
+comment|/* enable soft updates for file system */
 end_comment
 
 begin_decl_stmt
@@ -630,7 +630,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: bad filesystem format value"
+literal|"%s: bad file system format value"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1015,7 +1015,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: bad filesystem size"
+literal|"%s: bad file system size"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1218,7 +1218,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: maximum filesystem size is %u"
+literal|"%s: maximum file system size is %u"
 argument_list|,
 name|special
 argument_list|,
@@ -1288,7 +1288,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: can't figure out filesystem partition"
+literal|"%s: can't figure out file system partition"
 argument_list|,
 name|special
 argument_list|)
@@ -1394,7 +1394,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: maximum filesystem size %d"
+literal|"%s: maximum file system size %d"
 argument_list|,
 name|special
 argument_list|,
@@ -1501,7 +1501,7 @@ name|maxbsize
 operator|=
 name|bsize
 expr_stmt|;
-comment|/* 	 * Maxcontig sets the default for the maximum number of blocks 	 * that may be allocated sequentially. With filesystem clustering 	 * it is possible to allocate contiguous blocks up to the maximum 	 * transfer size permitted by the controller or buffering. 	 */
+comment|/* 	 * Maxcontig sets the default for the maximum number of blocks 	 * that may be allocated sequentially. With file system clustering 	 * it is possible to allocate contiguous blocks up to the maximum 	 * transfer size permitted by the controller or buffering. 	 */
 if|if
 condition|(
 name|maxcontig
@@ -1861,14 +1861,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-N do not create filesystem, just print out parameters\n"
+literal|"\t-N do not create file system, just print out parameters\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-O filesystem format: 1 => UFS1, 2 => UFS2\n"
+literal|"\t-O file system format: 1 => UFS1, 2 => UFS2\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

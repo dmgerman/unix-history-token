@@ -91,7 +91,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* filesystem currently checked */
+comment|/* file system currently checked */
 end_comment
 
 begin_decl_stmt
@@ -136,7 +136,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/*  * Check filesystem given as arg  */
+comment|/*  * Check file system given as arg  */
 end_comment
 
 begin_function_decl
@@ -239,7 +239,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* Fix filesystem FAT */
+comment|/* Fix file system FAT */
 end_comment
 
 begin_comment

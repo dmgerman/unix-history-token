@@ -523,7 +523,7 @@ argument_list|,
 name|infohandler
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Push up our allowed memory limit so we can cope 	 * with huge filesystems. 	 */
+comment|/* 	 * Push up our allowed memory limit so we can cope 	 * with huge file systems. 	 */
 if|if
 condition|(
 name|getrlimit
@@ -663,7 +663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check the specified filesystem.  */
+comment|/*  * Check the specified file system.  */
 end_comment
 
 begin_comment
@@ -733,7 +733,7 @@ argument_list|(
 literal|"starting\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make best effort to get the disk name. Check first to see 	 * if it is listed among the mounted filesystems. Failing that 	 * check to see if it is listed in /etc/fstab. 	 */
+comment|/* 	 * Make best effort to get the disk name. Check first to see 	 * if it is listed among the mounted file systems. Failing that 	 * check to see if it is listed in /etc/fstab. 	 */
 name|mntp
 operator|=
 name|getmntpt
@@ -901,7 +901,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we are to do a background check: 	 *	Get the mount point information of the filesystem 	 *	create snapshot file 	 *	return created snapshot file 	 *	if not found, clear bkgrdflag and proceed with normal fsck 	 */
+comment|/* 	 * If we are to do a background check: 	 *	Get the mount point information of the file system 	 *	create snapshot file 	 *	return created snapshot file 	 *	if not found, clear bkgrdflag and proceed with normal fsck 	 */
 if|if
 condition|(
 name|bkgrdflag
@@ -1039,7 +1039,7 @@ operator|&&
 name|preen
 condition|)
 block|{
-comment|/* 					 * filesystem is clean; 					 * skip snapshot and report it clean 					 */
+comment|/* 					 * file system is clean; 					 * skip snapshot and report it clean 					 */
 name|pwarn
 argument_list|(
 literal|"FILESYSTEM CLEAN; %s\n"
@@ -1288,7 +1288,7 @@ name|MNT_ROOTFS
 condition|)
 name|printf
 argument_list|(
-literal|"** Root filesystem\n"
+literal|"** Root file system\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1819,7 +1819,7 @@ name|resolved
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Check to see if the filesystem is mounted read-write. 	 */
+comment|/* 	 * Check to see if the file system is mounted read-write. 	 */
 if|if
 condition|(
 name|bkgrdflag
@@ -1930,7 +1930,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We modified a mounted filesystem.  Do a mount update on 		 * it unless it is read-write, so we can continue using it 		 * as safely as possible. 		 */
+comment|/* 		 * We modified a mounted file system.  Do a mount update on 		 * it unless it is read-write, so we can continue using it 		 * as safely as possible. 		 */
 if|if
 condition|(
 name|mntp
@@ -2293,7 +2293,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-BFpfny] [-b block] [-c level] [-m mode] "
-literal|"filesystem ...\n"
+literal|"file system ...\n"
 argument_list|,
 name|getprogname
 argument_list|()

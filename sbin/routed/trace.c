@@ -104,7 +104,7 @@ name|sgi
 end_ifdef
 
 begin_comment
-comment|/* use *stat64 for files on large filesystems */
+comment|/* use *stat64 for files on large file systems */
 end_comment
 
 begin_define

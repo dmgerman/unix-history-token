@@ -15,7 +15,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* run mkfs without writing filesystem */
+comment|/* run mkfs without writing file system */
 end_comment
 
 begin_decl_stmt
@@ -26,7 +26,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* build UFS1 format filesystem */
+comment|/* build UFS1 format file system */
 end_comment
 
 begin_decl_stmt
@@ -48,7 +48,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* enable soft updates for filesystem */
+comment|/* enable soft updates for file system */
 end_comment
 
 begin_decl_stmt

@@ -68,7 +68,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * badsect  *  * Badsect takes a list of file-system relative sector numbers  * and makes files containing the blocks of which these sectors are a part.  * It can be used to contain sectors which have problems if these sectors  * are not part of the bad file for the pack (see bad144).  For instance,  * this program can be used if the driver for the filesystem in question  * does not support bad block forwarding.  */
+comment|/*  * badsect  *  * Badsect takes a list of file-system relative sector numbers  * and makes files containing the blocks of which these sectors are a part.  * It can be used to contain sectors which have problems if these sectors  * are not part of the bad file for the pack (see bad144).  For instance,  * this program can be used if the driver for the file system in question  * does not support bad block forwarding.  */
 end_comment
 
 begin_include
@@ -659,7 +659,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Cannot find filesystem\n"
+literal|"Cannot find file system\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -849,7 +849,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block %ld out of range of filesystem\n"
+literal|"block %ld out of range of file system\n"
 argument_list|,
 operator|(
 name|long
@@ -1056,7 +1056,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * read a block from the filesystem  */
+comment|/*  * read a block from the file system  */
 end_comment
 
 begin_function

@@ -755,7 +755,7 @@ comment|/* ************************************************************ growfs *
 end_comment
 
 begin_comment
-comment|/*  * Here  we actually start growing the filesystem. We basically  read  the  * cylinder  summary  from the first cylinder group as we want  to  update  * this  on  the fly during our various operations. First  we  handle  the  * changes in the former last cylinder group. Afterwards we create all new  * cylinder  groups.  Now  we handle the  cylinder  group  containing  the  * cylinder  summary  which  might result in a  relocation  of  the  whole  * structure.  In the end we write back the updated cylinder summary,  the  * new superblock, and slightly patched versions of the super block  * copies.  */
+comment|/*  * Here  we actually start growing the file system. We basically  read  the  * cylinder  summary  from the first cylinder group as we want  to  update  * this  on  the fly during our various operations. First  we  handle  the  * changes in the former last cylinder group. Afterwards we create all new  * cylinder  groups.  Now  we handle the  cylinder  group  containing  the  * cylinder  summary  which  might result in a  relocation  of  the  whole  * structure.  In the end we write back the updated cylinder summary,  the  * new superblock, and slightly patched versions of the super block  * copies.  */
 end_comment
 
 begin_function
@@ -1041,7 +1041,7 @@ argument_list|,
 name|Nflag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Dump out summary information about filesystem. 	 */
+comment|/* 	 * Dump out summary information about file system. 	 */
 define|#
 directive|define
 name|B2MBFACTOR
@@ -2094,7 +2094,7 @@ operator|.
 name|fs_cgsize
 condition|)
 block|{
-comment|/* 		 * This should never happen as we would have had that panic 		 * already on filesystem creation 		 */
+comment|/* 		 * This should never happen as we would have had that panic 		 * already on file system creation 		 */
 name|errx
 argument_list|(
 literal|37
@@ -3256,7 +3256,7 @@ comment|/* ************************************************************ updjcg *
 end_comment
 
 begin_comment
-comment|/*  * Here we do all needed work for the former last cylinder group. It has to be  * changed  in  any case, even if the filesystem ended exactly on the  end  of  * this  group, as there is some slightly inconsistent handling of the  number  * of cylinders in the cylinder group. We start again by reading the  cylinder  * group from disk. If the last block was not fully available, we first handle  * the  missing  fragments, then we handle all new full blocks  in  that  file  * system  and  finally we handle the new last fragmented block  in  the  file  * system.  We again have to handle the fragment statistics rotational  layout  * tables and cluster summary during all those operations.  */
+comment|/*  * Here we do all needed work for the former last cylinder group. It has to be  * changed  in  any case, even if the file system ended exactly on the  end  of  * this  group, as there is some slightly inconsistent handling of the  number  * of cylinders in the cylinder group. We start again by reading the  cylinder  * group from disk. If the last block was not fully available, we first handle  * the  missing  fragments, then we handle all new full blocks  in  that  file  * system  and  finally we handle the new last fragmented block  in  the  file  * system.  We again have to handle the fragment statistics rotational  layout  * tables and cluster summary during all those operations.  */
 end_comment
 
 begin_function
@@ -3674,7 +3674,7 @@ operator|.
 name|fs_frag
 expr_stmt|;
 block|}
-comment|/* 	 * Now  we have to update the free fragment bitmap for our new  free 	 * space.  There again we have to handle the fragmentation and  also 	 * the  rotational  layout tables and the cluster summary.  This  is 	 * also  done per fragment for the first new block if the  old  file 	 * system end was not on a block boundary, per fragment for the  new 	 * last block if the new filesystem end is not on a block boundary, 	 * and per block for all space in between. 	 * 	 * Handle the first new block here if it was partially available 	 * before. 	 */
+comment|/* 	 * Now  we have to update the free fragment bitmap for our new  free 	 * space.  There again we have to handle the fragmentation and  also 	 * the  rotational  layout tables and the cluster summary.  This  is 	 * also  done per fragment for the first new block if the  old  file 	 * system end was not on a block boundary, per fragment for the  new 	 * last block if the new file system end is not on a block boundary, 	 * and per block for all space in between. 	 * 	 * Handle the first new block here if it was partially available 	 * before. 	 */
 if|if
 condition|(
 name|osblock
@@ -3762,7 +3762,7 @@ name|j
 operator|++
 expr_stmt|;
 block|}
-comment|/* 			 * Check  if the fragment just created could join  an 			 * already existing fragment at the former end of the 			 * filesystem. 			 */
+comment|/* 			 * Check  if the fragment just created could join  an 			 * already existing fragment at the former end of the 			 * file system. 			 */
 if|if
 condition|(
 name|isblock
@@ -4294,7 +4294,7 @@ comment|/* ********************************************************** updcsloc *
 end_comment
 
 begin_comment
-comment|/*  * Here  we update the location of the cylinder summary. We have  two  possible  * ways of growing the cylinder summary.  * (1)	We can try to grow the summary in the current location, and  relocate  *	possibly used blocks within the current cylinder group.  * (2)	Alternatively we can relocate the whole cylinder summary to the first  *	new completely empty cylinder group. Once the cylinder summary is  no  *	longer in the beginning of the first cylinder group you should  never  *	use  a version of fsck which is not aware of the possibility to  have  *	this structure in a non standard place.  * Option (1) is considered to be less intrusive to the structure of the  file-  * system. So we try to stick to that whenever possible. If there is not enough  * space  in the cylinder group containing the cylinder summary we have to  use  * method  (2). In case of active snapshots in the filesystem we  probably  can  * completely avoid implementing copy on write if we stick to method (2) only.  */
+comment|/*  * Here  we update the location of the cylinder summary. We have  two  possible  * ways of growing the cylinder summary.  * (1)	We can try to grow the summary in the current location, and  relocate  *	possibly used blocks within the current cylinder group.  * (2)	Alternatively we can relocate the whole cylinder summary to the first  *	new completely empty cylinder group. Once the cylinder summary is  no  *	longer in the beginning of the first cylinder group you should  never  *	use  a version of fsck which is not aware of the possibility to  have  *	this structure in a non standard place.  * Option (1) is considered to be less intrusive to the structure of the  file-  * system. So we try to stick to that whenever possible. If there is not enough  * space  in the cylinder group containing the cylinder summary we have to  use  * method  (2). In case of active snapshots in the file system we  probably  can  * completely avoid implementing copy on write if we stick to method (2) only.  */
 end_comment
 
 begin_function
@@ -5826,7 +5826,7 @@ name|cs_nffree
 operator|--
 expr_stmt|;
 block|}
-comment|/* 		 * No cluster handling is needed here, as there was at least 		 * one  fragment in use by the cylinder summary in  the  old 		 * filesystem. 		 * No block-free counter handling here as this block was not 		 * a free block. 		 */
+comment|/* 		 * No cluster handling is needed here, as there was at least 		 * one  fragment in use by the cylinder summary in  the  old 		 * file system. 		 * No block-free counter handling here as this block was not 		 * a free block. 		 */
 block|}
 name|frag_adjust
 argument_list|(
@@ -7352,7 +7352,7 @@ comment|/* ************************************************************* alloc *
 end_comment
 
 begin_comment
-comment|/*  * Here we allocate a free block in the current cylinder group. It is assumed,  * that  acg contains the current cylinder group. As we may take a block  from  * somewhere in the filesystem we have to handle cluster summary here.  */
+comment|/*  * Here we allocate a free block in the current cylinder group. It is assumed,  * that  acg contains the current cylinder group. As we may take a block  from  * somewhere in the file system we have to handle cluster summary here.  */
 end_comment
 
 begin_function
@@ -8751,7 +8751,7 @@ comment|/* ************************************************************** main *
 end_comment
 
 begin_comment
-comment|/*  * growfs(8)  is a utility which allows to increase the size of  an  existing  * ufs filesystem. Currently this can only be done on unmounted file  system.  * It  recognizes some command line options to specify the new desired  size,  * and  it does some basic checkings. The old filesystem size is  determined  * and  after some more checks like we can really access the new  last  block  * on the disk etc. we calculate the new parameters for the superblock. After  * having  done  this we just call growfs() which will do  the  work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand  what data structures are always replicated in the snapshot  on  * creation,  for all other blocks we touch during our procedure, we have  to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in  that  * way.  * Also  we  have to consider in what order we actually update  the  critical  * data structures of the filesystem to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The  foreseen last step then will be to provide for growing  even  mounted  * file  systems. There we have to extend the mount() system call to  provide  * userland access to the filesystem locking facility.  */
+comment|/*  * growfs(8)  is a utility which allows to increase the size of  an  existing  * ufs file system. Currently this can only be done on unmounted file  system.  * It  recognizes some command line options to specify the new desired  size,  * and  it does some basic checkings. The old file system size is  determined  * and  after some more checks like we can really access the new  last  block  * on the disk etc. we calculate the new parameters for the superblock. After  * having  done  this we just call growfs() which will do  the  work.  Before  * we finish the only thing left is to update the disklabel.  * We still have to provide support for snapshots. Therefore we first have to  * understand  what data structures are always replicated in the snapshot  on  * creation,  for all other blocks we touch during our procedure, we have  to  * keep the old blocks unchanged somewhere available for the snapshots. If we  * are lucky, then we only have to handle our blocks to be relocated in  that  * way.  * Also  we  have to consider in what order we actually update  the  critical  * data structures of the file system to make sure, that in case of a disaster  * fsck(8) is still able to restore any lost data.  * The  foreseen last step then will be to provide for growing  even  mounted  * file  systems. There we have to extend the mount() system call to  provide  * userland access to the file system locking facility.  */
 end_comment
 
 begin_function
@@ -9274,7 +9274,7 @@ literal|"unknown device"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Check if that partition looks suited for growing a filesystem. 	 */
+comment|/* 	 * Check if that partition looks suited for growing a file system. 	 */
 if|if
 condition|(
 name|pp
@@ -9599,7 +9599,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"active snapshot found in filesystem\n"
+literal|"active snapshot found in file system\n"
 literal|"	please remove all snapshots before "
 literal|"using growfs\n"
 argument_list|)
@@ -9680,14 +9680,14 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"new filesystemsize is: %d frags\n"
+literal|"new file systemsize is: %d frags\n"
 argument_list|,
 name|sblock
 operator|.
 name|fs_size
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to access our new last block in the filesystem. Even if we 	 * later on realize we have to abort our operation, on that block 	 * there should be no data, so we can't destroy something yet. 	 */
+comment|/* 	 * Try to access our new last block in the file system. Even if we 	 * later on realize we have to abort our operation, on that block 	 * there should be no data, so we can't destroy something yet. 	 */
 name|wtfs
 argument_list|(
 operator|(
@@ -9716,8 +9716,8 @@ argument_list|,
 name|Nflag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now calculate new superblock values and check for reasonable 	 * bound for new filesystem size: 	 *     fs_size:    is derived from label or user input 	 *     fs_dsize:   should get updated in the routines creating or 	 *                 updating the cylinder groups on the fly 	 *     fs_cstotal: should get updated in the routines creating or 	 *                 updating the cylinder groups 	 */
-comment|/* 	 * Update the number of cylinders and cylinder groups in the filesystem. 	 */
+comment|/* 	 * Now calculate new superblock values and check for reasonable 	 * bound for new file system size: 	 *     fs_size:    is derived from label or user input 	 *     fs_dsize:   should get updated in the routines creating or 	 *                 updating the cylinder groups on the fly 	 *     fs_cstotal: should get updated in the routines creating or 	 *                 updating the cylinder groups 	 */
+comment|/* 	 * Update the number of cylinders and cylinder groups in the file system. 	 */
 if|if
 condition|(
 name|sblock

@@ -677,7 +677,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* Windows 95 OSR2 (and possibly any later) changes 		 * the FAT signature to 0xXXffff7f for FAT16 and to 		 * 0xXXffff0fffffff07 for FAT32 upon boot, to know that the 		 * filesystem is dirty if it doesn't reboot cleanly. 		 * Check this special condition before errorring out. 		 */
+comment|/* Windows 95 OSR2 (and possibly any later) changes 		 * the FAT signature to 0xXXffff7f for FAT16 and to 		 * 0xXXffff0fffffff07 for FAT32 upon boot, to know that the 		 * file system is dirty if it doesn't reboot cleanly. 		 * Check this special condition before errorring out. 		 */
 if|if
 condition|(
 name|buffer

@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* highest numbered inode in this filesystem */
+comment|/* highest numbered inode in this file system */
 end_comment
 
 begin_decl_stmt
@@ -224,7 +224,7 @@ comment|/* need byte swapping on inodes and dirs */
 end_comment
 
 begin_comment
-comment|/*  * Each file in the filesystem is described by one of these entries  */
+comment|/*  * Each file in the file system is described by one of these entries  */
 end_comment
 
 begin_struct

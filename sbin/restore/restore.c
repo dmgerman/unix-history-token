@@ -1093,7 +1093,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* fall through */
-comment|/* 	 * A previously non-existent file. 	 * Add it to the filesystem, and request its extraction. 	 * If it is a directory, create it immediately. 	 * (Since the name is unused there can be no conflict) 	 */
+comment|/* 	 * A previously non-existent file. 	 * Add it to the file system, and request its extraction. 	 * If it is a directory, create it immediately. 	 * (Since the name is unused there can be no conflict) 	 */
 case|case
 name|ONTAPE
 case|:

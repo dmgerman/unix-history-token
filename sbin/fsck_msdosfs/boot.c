@@ -535,7 +535,7 @@ block|{
 comment|/* Correct?				XXX */
 name|pfatal
 argument_list|(
-literal|"Unknown filesystem version: %x.%x"
+literal|"Unknown file system version: %x.%x"
 argument_list|,
 name|block
 index|[

@@ -275,7 +275,7 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * UDF filesystems are not writeable. 	 */
+comment|/* 	 * UDF file systems are not writeable. 	 */
 name|mntflags
 operator||=
 name|MNT_RDONLY

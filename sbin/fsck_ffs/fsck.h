@@ -95,7 +95,7 @@ value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(dp)->dp1.field : (dp)->dp2.field
 end_define
 
 begin_comment
-comment|/*  * Each inode on the filesystem is described by the following structure.  * The linkcnt is initially set to the value in the inode. Each time it  * is found during the descent in passes 2, 3, and 4 the count is  * decremented. Any inodes whose count is non-zero after pass 4 needs to  * have its link count adjusted by the value remaining in ino_linkcnt.  */
+comment|/*  * Each inode on the file system is described by the following structure.  * The linkcnt is initially set to the value in the inode. Each time it  * is found during the descent in passes 2, 3, and 4 the count is  * decremented. Any inodes whose count is non-zero after pass 4 needs to  * have its link count adjusted by the value remaining in ino_linkcnt.  */
 end_comment
 
 begin_struct
@@ -345,7 +345,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* filesystem superblock */
+comment|/* file system superblock */
 end_comment
 
 begin_decl_stmt
@@ -797,7 +797,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sysctl filesystem update commands */
+comment|/* sysctl file system update commands */
 end_comment
 
 begin_decl_stmt
@@ -901,7 +901,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* convert to newer filesystem format */
+comment|/* convert to newer file system format */
 end_comment
 
 begin_decl_stmt
@@ -981,7 +981,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* skip clean filesystems if preening */
+comment|/* skip clean file systems if preening */
 end_comment
 
 begin_decl_stmt
@@ -991,7 +991,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1 => write done to filesystem */
+comment|/* 1 => write done to file system */
 end_comment
 
 begin_decl_stmt
@@ -1001,7 +1001,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file descriptor for reading filesystem */
+comment|/* file descriptor for reading file system */
 end_comment
 
 begin_decl_stmt
@@ -1011,7 +1011,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file descriptor for writing filesystem */
+comment|/* file descriptor for writing file system */
 end_comment
 
 begin_decl_stmt
@@ -1021,7 +1021,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of blocks in the filesystem */
+comment|/* number of blocks in the file system */
 end_comment
 
 begin_decl_stmt
@@ -1042,7 +1042,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of inodes in filesystem */
+comment|/* number of inodes in file system */
 end_comment
 
 begin_decl_stmt

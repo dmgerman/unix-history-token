@@ -2145,7 +2145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put a filesystem on the memory disk.  */
+comment|/*  * Put a file system on the memory disk.  */
 end_comment
 
 begin_function

@@ -156,7 +156,7 @@ parameter_list|()
 block|{
 name|errexit
 argument_list|(
-literal|"usage: fsck_msdos [-fnpy] filesystem ... \n"
+literal|"usage: fsck_msdos [-fnpy] file system ... \n"
 argument_list|)
 expr_stmt|;
 block|}

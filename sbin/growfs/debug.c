@@ -188,7 +188,7 @@ comment|/* ****************************************************** dbg_dump_hex *
 end_comment
 
 begin_comment
-comment|/*  * Dump out a full filesystem block in hex.  */
+comment|/*  * Dump out a full file system block in hex.  */
 end_comment
 
 begin_function

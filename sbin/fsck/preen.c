@@ -149,7 +149,7 @@ name|char
 modifier|*
 name|p_type
 decl_stmt|;
-comment|/* filesystem type */
+comment|/* file system type */
 block|}
 struct|;
 end_struct

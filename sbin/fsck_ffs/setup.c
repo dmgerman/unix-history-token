@@ -203,7 +203,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Read in a superblock finding an alternate if necessary.  * Return 1 if successful, 0 if unsuccessful, -1 if filesystem  * is already clean (preen mode only).  */
+comment|/*  * Read in a superblock finding an alternate if necessary.  * Return 1 if successful, 0 if unsuccessful, -1 if file system  * is already clean (preen mode only).  */
 end_comment
 
 begin_function
@@ -993,7 +993,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"Format of filesystem is too old.\n"
+literal|"Format of file system is too old.\n"
 argument_list|)
 expr_stmt|;
 name|pwarn
@@ -1647,7 +1647,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Cannot find filesystem superblock\n"
+literal|"Cannot find file system superblock\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1657,7 +1657,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 	 * Compute block size that the filesystem is based on, 	 * according to fsbtodb, and adjust superblock block number 	 * so we can tell if this is an alternate later. 	 */
+comment|/* 	 * Compute block size that the file system is based on, 	 * according to fsbtodb, and adjust superblock block number 	 * so we can tell if this is an alternate later. 	 */
 name|super
 operator|*=
 name|dev_bsize

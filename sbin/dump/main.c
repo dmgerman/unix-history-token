@@ -861,7 +861,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Must specify disk or filesystem\n"
+literal|"Must specify disk or file system\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1260,7 +1260,7 @@ name|getfstab
 argument_list|()
 expr_stmt|;
 comment|/* /etc/fstab snarfed */
-comment|/* 	 *	disk can be either the full special file name, 	 *	the suffix of the special file name, 	 *	the special name missing the leading '/', 	 *	the filesystem name with or without the leading '/'. 	 */
+comment|/* 	 *	disk can be either the full special file name, 	 *	the suffix of the special file name, 	 *	the special name missing the leading '/', 	 *	the file system name with or without the leading '/'. 	 */
 name|dt
 operator|=
 name|fstabsearch
@@ -1342,7 +1342,7 @@ name|spcl
 operator|.
 name|c_filesys
 argument_list|,
-literal|"an unlisted filesystem"
+literal|"an unlisted file system"
 argument_list|,
 name|NAMELEN
 argument_list|)
@@ -1606,7 +1606,7 @@ name|errx
 argument_list|(
 name|X_STARTUP
 argument_list|,
-literal|"%s: unknown filesystem"
+literal|"%s: unknown file system"
 argument_list|,
 name|disk
 argument_list|)
@@ -1721,7 +1721,7 @@ literal|1
 condition|)
 name|quit
 argument_list|(
-literal|"Cannot find filesystem superblock\n"
+literal|"Cannot find file system superblock\n"
 argument_list|)
 expr_stmt|;
 name|dev_bsize
@@ -2584,7 +2584,7 @@ endif|#
 directive|endif
 literal|"nSu] [-B records] [-b blocksize] [-D dumpdates]\n"
 literal|"            [-d density] [-f file ] [-h level] [-s feet] "
-literal|"[-T date] filesystem\n"
+literal|"[-T date] file system\n"
 literal|"       dump [-W | -w]\n"
 argument_list|)
 expr_stmt|;

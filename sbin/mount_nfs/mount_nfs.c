@@ -2529,7 +2529,7 @@ name|hostname
 operator|=
 name|nam
 expr_stmt|;
-comment|/* Add mounted filesystem to PATH_MOUNTTAB */
+comment|/* Add mounted file system to PATH_MOUNTTAB */
 if|if
 condition|(
 operator|!
