@@ -1508,7 +1508,7 @@ name|harvestring
 argument_list|,
 name|PUSER
 argument_list|,
-literal|"sleep"
+literal|"-"
 argument_list|,
 name|hz
 operator|/
