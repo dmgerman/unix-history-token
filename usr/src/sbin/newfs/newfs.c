@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.1 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1459,6 +1459,7 @@ operator|!=
 literal|2
 operator|&&
 operator|(
+operator|!
 name|mfs
 operator|||
 name|argc
@@ -2620,9 +2621,41 @@ argument_list|)
 expr_stmt|;
 name|args
 operator|.
-name|name
+name|fspec
 operator|=
 name|buf
+expr_stmt|;
+name|args
+operator|.
+name|export
+operator|.
+name|ex_root
+operator|=
+operator|-
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|mntflags
+operator|&
+name|MNT_RDONLY
+condition|)
+name|args
+operator|.
+name|export
+operator|.
+name|ex_flags
+operator|=
+name|MNT_EXRDONLY
+expr_stmt|;
+else|else
+name|args
+operator|.
+name|export
+operator|.
+name|ex_flags
+operator|=
+literal|0
 expr_stmt|;
 name|args
 operator|.
