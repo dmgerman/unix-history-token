@@ -503,7 +503,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|unit
+name|devminor
 operator|&
 literal|7
 operator|)
