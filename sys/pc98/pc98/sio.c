@@ -1241,7 +1241,7 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|combreak
 parameter_list|(
 name|struct
@@ -15877,7 +15877,7 @@ name|repeat
 goto|;
 block|}
 specifier|static
-name|int
+name|void
 name|combreak
 parameter_list|(
 name|tp
@@ -15960,11 +15960,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 specifier|static
 name|int
