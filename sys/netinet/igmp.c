@@ -201,6 +201,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * igmp_mtx protects all mutable global variables in igmp.c, as well as  * the data fields in struct router_info.  In general, a router_info  * structure will be valid as long as the referencing struct in_multi is  * valid, so no reference counting is used.  We allow unlocked reads of  * router_info data when accessed via an in_multi read-only.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|igmp_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|SLIST_HEAD
@@ -218,6 +230,10 @@ name|int
 name|igmp_timers_are_running
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * XXXRW: can we define these such that these can be made const?  In any  * case, these shouldn't be changed after igmp_init() and therefore don't  * need locking.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -401,6 +417,18 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|,
+literal|"igmp_mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|SLIST_INIT
 argument_list|(
 operator|&
@@ -428,6 +456,14 @@ name|router_info
 modifier|*
 name|rti
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|IGMP_PRINTF
 argument_list|(
 literal|"[igmp.c, _find_rti] --> entering \n"
@@ -461,6 +497,7 @@ name|rti
 return|;
 block|}
 block|}
+comment|/* 	 * XXXRW: return value of malloc not checked, despite M_NOWAIT. 	 */
 name|MALLOC
 argument_list|(
 name|rti
@@ -768,13 +805,6 @@ name|timer
 operator|=
 literal|1
 expr_stmt|;
-name|rti
-operator|=
-name|find_rti
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * In the IGMPv2 specification, there are 3 states and a flag. 	 * 	 * In Non-Member state, we simply don't have a membership record. 	 * In Delaying Member state, our timer is running (inm->inm_timer) 	 * In Idle Member state, our timer is not running (inm->inm_timer==0) 	 * 	 * The flag is inm->inm_state, it is set to IGMP_OTHERMEMBER if 	 * we have heard a report from another member, or IGMP_IREPORTEDLAST 	 * if I sent the last report. 	 */
 switch|switch
 condition|(
@@ -810,6 +840,19 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Old router.  Remember that the querier on this 			 * interface is old, and set the timer to the 			 * value in RFC 1112. 			 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|)
+expr_stmt|;
+name|rti
+operator|=
+name|find_rti
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|rti
 operator|->
 name|rti_type
@@ -821,6 +864,12 @@ operator|->
 name|rti_time
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|)
 expr_stmt|;
 name|timer
 operator|=
@@ -1204,6 +1253,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|)
+expr_stmt|;
 name|inm
 operator|->
 name|inm_rti
@@ -1213,6 +1268,12 @@ argument_list|(
 name|inm
 operator|->
 name|inm_ifp
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|igmp_mtx
 argument_list|)
 expr_stmt|;
 name|igmp_sendpkt
@@ -1453,6 +1514,12 @@ argument_list|(
 literal|"[igmp.c,_slowtimo] --> entering \n"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|)
+expr_stmt|;
 name|SLIST_FOREACH
 argument_list|(
 argument|rti
@@ -1492,6 +1559,12 @@ name|IGMP_V2_ROUTER
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|igmp_mtx
+argument_list|)
+expr_stmt|;
 name|IGMP_PRINTF
 argument_list|(
 literal|"[igmp.c,_slowtimo] --> exiting \n"
