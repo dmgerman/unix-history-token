@@ -149,6 +149,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|IF_F2_CC_SHIFT
+value|20
+end_define
+
+begin_comment
+comment|/* CC0 and CC1 combined. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_F2_CC_BITS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|IF_F2_D16HI_SHIFT
 value|20
 end_define
@@ -260,6 +278,24 @@ define|#
 directive|define
 name|IF_F3_CC0_BITS
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_F3_CC_SHIFT
+value|25
+end_define
+
+begin_comment
+comment|/* CC0 and CC1 combined. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_F3_CC_BITS
+value|2
 end_define
 
 begin_define
@@ -799,6 +835,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IF_F2_CC
+parameter_list|(
+name|i
+parameter_list|)
+value|IF_DECODE((i), F2_CC)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IF_F2_D16HI
 parameter_list|(
 name|i
@@ -878,6 +924,16 @@ parameter_list|(
 name|i
 parameter_list|)
 value|IF_DECODE((i), F3_CC0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_F3_CC
+parameter_list|(
+name|i
+parameter_list|)
+value|IF_DECODE((i), F3_CC)
 end_define
 
 begin_define
