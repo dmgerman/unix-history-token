@@ -256,8 +256,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
-name|k
-decl_stmt|,
 name|o
 decl_stmt|,
 name|p
