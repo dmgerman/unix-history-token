@@ -207,6 +207,7 @@ argument_list|(
 operator|(
 name|daddr_t
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -243,6 +244,7 @@ expr|struct
 name|fs
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -260,6 +262,7 @@ expr|struct
 name|fs
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -313,7 +316,9 @@ block|{
 name|char
 modifier|*
 name|special
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|name
 decl_stmt|;
@@ -409,13 +414,15 @@ name|fstab
 modifier|*
 name|fs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|chg
 index|[
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 name|device
 index|[
 name|MAXPATHLEN
@@ -1752,12 +1759,12 @@ name|fs
 parameter_list|,
 name|file
 parameter_list|)
-specifier|register
 name|struct
 name|fs
 modifier|*
 name|fs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1857,12 +1864,12 @@ name|file
 parameter_list|,
 name|all
 parameter_list|)
-specifier|register
 name|struct
 name|fs
 modifier|*
 name|fs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1918,6 +1925,7 @@ operator|/
 name|dev_bsize
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1960,6 +1968,7 @@ argument_list|)
 argument_list|)
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2133,6 +2142,7 @@ parameter_list|)
 name|daddr_t
 name|blk
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|buf
