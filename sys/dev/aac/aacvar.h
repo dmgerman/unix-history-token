@@ -1177,6 +1177,24 @@ define|#
 directive|define
 name|AAC_QUIRK_PERC2QC
 value|(1<< 0)
+define|#
+directive|define
+name|AAC_QUIRK_NOCAM
+value|(1<< 1)
+comment|/* No SCSI passthrough */
+define|#
+directive|define
+name|AAC_QUIRK_CAM_NORESET
+value|(1<< 2)
+comment|/* Fake SCSI resets */
+define|#
+directive|define
+name|AAC_QUIRK_CAM_PASSONLY
+value|(1<< 3)
+comment|/* Only create pass devices */
+name|u_int32_t
+name|scsi_method_id
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1295,8 +1313,53 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|aac_startio
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
-name|aac_get_sync_fib
+name|aac_alloc_command
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|aac_command
+modifier|*
+modifier|*
+name|cmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|aac_release_command
+parameter_list|(
+name|struct
+name|aac_command
+modifier|*
+name|cm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|aac_alloc_sync_fib
 parameter_list|(
 name|struct
 name|aac_softc

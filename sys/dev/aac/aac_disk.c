@@ -1040,7 +1040,7 @@ operator|)
 return|;
 block|}
 block|}
-name|aac_get_sync_fib
+name|aac_alloc_sync_fib
 argument_list|(
 name|sc
 argument_list|,
