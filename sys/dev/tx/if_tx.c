@@ -4589,6 +4589,13 @@ name|len
 expr_stmt|;
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+if|#
+directive|if
 name|NBPFILTER
 operator|>
 literal|0
@@ -4617,6 +4624,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NBPFILTER> 0 */
+endif|#
+directive|endif
+comment|/* !__FreeBSD__ */
 comment|/* Second mbuf holds packet ifself */
 name|m
 operator|->
