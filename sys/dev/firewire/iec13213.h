@@ -869,6 +869,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|crom_has_specver
+parameter_list|(
+name|u_int32_t
+modifier|*
+parameter_list|,
+name|u_int32_t
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef

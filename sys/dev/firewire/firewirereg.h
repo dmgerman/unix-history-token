@@ -1288,22 +1288,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int32_t
-name|getcsrdata
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|fw_device
-operator|*
-operator|,
-name|u_int8_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|fw_asybusy
 name|__P
