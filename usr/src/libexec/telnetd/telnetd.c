@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.18 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2648,11 +2648,23 @@ operator|++
 operator|=
 name|c
 expr_stmt|;
+comment|/* Don't do CR-NUL if we are in binary mode */
 if|if
 condition|(
+operator|(
 name|c
 operator|==
 literal|'\r'
+operator|)
+operator|&&
+operator|(
+name|myopts
+index|[
+name|TELOPT_BINARY
+index|]
+operator|==
+name|OPT_NO
+operator|)
 condition|)
 block|{
 if|if
@@ -2964,17 +2976,19 @@ comment|/* 			 * We map \r\n ==> \n, since \r\n says 			 * that we want to be in
 if|if
 condition|(
 operator|(
-name|myopts
+name|c
+operator|==
+literal|'\r'
+operator|)
+operator|&&
+operator|(
+name|hisopts
 index|[
 name|TELOPT_BINARY
 index|]
 operator|==
 name|OPT_NO
 operator|)
-operator|&&
-name|c
-operator|==
-literal|'\r'
 condition|)
 block|{
 if|if
