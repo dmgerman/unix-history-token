@@ -676,7 +676,7 @@ name|ip_hl
 index|]
 condition|)
 block|{
-comment|/*      * Wasn't the first -- search for it.      *       * States are kept in a circularly linked list with last_cs pointing to the      * end of the list.  The list is kept in lru order by moving a state to      * the head of the list whenever it is referenced.  Since the list is      * short and, empirically, the connection we want is almost always near      * the front, we locate states via linear search.  If we don't find a      * state for the datagram, the oldest state is (re-)used.      */
+comment|/*      * Wasn't the first -- search for it.      *      * States are kept in a circularly linked list with last_cs pointing to the      * end of the list.  The list is kept in lru order by moving a state to      * the head of the list whenever it is referenced.  Since the list is      * short and, empirically, the connection we want is almost always near      * the front, we locate states via linear search.  If we don't find a      * state for the datagram, the oldest state is (re-)used.      */
 specifier|register
 name|struct
 name|cstate

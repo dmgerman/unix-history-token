@@ -3065,7 +3065,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-comment|/*          * Drop the packet.  If we were to queue it, we'd just end up with          * a pile of timed-out data in our output queue by the time we get          * around to actually dialing.  We'd also prematurely reach the           * threshold at which we stop select()ing to read() the tun          * device - breaking auto-dial.          */
+comment|/*          * Drop the packet.  If we were to queue it, we'd just end up with          * a pile of timed-out data in our output queue by the time we get          * around to actually dialing.  We'd also prematurely reach the          * threshold at which we stop select()ing to read() the tun          * device - breaking auto-dial.          */
 return|return;
 block|}
 name|secs
