@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.19 1995/10/05 09:11:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.20 1995/10/05 09:15:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -903,7 +903,7 @@ literal|"Unable to mount the fixit floppy - do you want to try again?"
 argument_list|)
 condition|)
 return|return
-name|FALSE
+name|RET_FAIL
 return|;
 block|}
 name|dialog_clear
@@ -1065,7 +1065,7 @@ literal|"Please remove the fixit floppy and press return"
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|RET_SUCCESS
 return|;
 block|}
 end_function
@@ -1081,7 +1081,7 @@ parameter_list|)
 block|{
 comment|/* Storyboard:        1. Verify that user has mounted/newfs flagged all desired directories        for upgrading.  Should have selected a / at the very least, with        warning for no /usr.  If not, throw into partition/disklabel editors        with appropriate popup info in-between.         2. If BIN distribution selected, backup /etc to some location -        prompt user for this location.         3. Extract distributions.  Warn if BIN distribution not among those           selected.         4. If BIN extracted, do fixups - read in old sysconfig and try to        intelligently merge the old values into the new sysconfig (only replace        something if set in old and still defaulted or disabled in new).         Some fixups might be:  copy these files back from old:  passwd files, group file, fstab, exports, hosts,        make.conf, host.conf, ???         Spawn a shell and invite user to look around before exiting.        */
 return|return
-literal|0
+name|RET_SUCCESS
 return|;
 block|}
 end_function
@@ -1105,11 +1105,18 @@ literal|"a disk with multiple operating systems, do NOT use the\n"
 literal|"`A' command."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|diskPartitionEditor
 argument_list|(
 literal|"express"
 argument_list|)
-expr_stmt|;
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
 name|msgConfirm
 argument_list|(
 literal|"Next, you need to lay out BSD partitions inside of the\n"
@@ -1118,11 +1125,18 @@ literal|"do anything special, just type `A' to use the default\n"
 literal|"partitioning scheme and then `Q' to quit."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|diskLabelEditor
 argument_list|(
 literal|"express"
 argument_list|)
-expr_stmt|;
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
 name|msgConfirm
 argument_list|(
 literal|"Now it is time to select an installation subset.  There\n"
@@ -1137,12 +1151,18 @@ condition|(
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuInstallType
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|RET_FAIL
+return|;
 if|if
 condition|(
 name|Dists
@@ -1160,17 +1180,71 @@ argument_list|(
 literal|"Finally, you must specify an installation medium."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|dmenuOpenSimple
 argument_list|(
 operator|&
 name|MenuMedia
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|RET_FAIL
+return|;
+if|if
+condition|(
 name|installCommit
 argument_list|(
 literal|"express"
 argument_list|)
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Since you're running the express installation, a few\n"
+literal|"post-configuration questions will be asked at this point.\n\n"
+literal|"Our packages collection contains many useful things, from\n"
+literal|"text editors to WEB servers, and is definitely worth browsing\n"
+literal|"through, even if you don't install any of it for now.\n\n"
+literal|"Would you like to browse a selection of additional packaged\n"
+literal|"software at this time?"
+argument_list|)
+condition|)
+name|configPackages
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Would you like to configure any additional network services?"
+argument_list|)
+condition|)
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuNetworking
+argument_list|)
+expr_stmt|;
+comment|/* Put whatever other nice configuration questions you'd like to ask the user here */
+comment|/* Final menu of last resort */
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Would you like to go to the general configuration menu for\n"
+literal|"any last additional configuration options?"
+argument_list|)
+condition|)
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -1203,7 +1277,7 @@ name|mediaVerify
 argument_list|()
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 if|if
 condition|(
@@ -1212,16 +1286,24 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|installInitial
 argument_list|()
+operator|==
+name|RET_FAIL
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
+if|if
+condition|(
 name|configFstab
 argument_list|()
-expr_stmt|;
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
 block|}
 if|if
 condition|(
@@ -1238,17 +1320,21 @@ literal|"Failed to load the ROOT distribution.  Please correct\nthis problem and
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|distExtractAll
 argument_list|(
 name|NULL
 argument_list|)
-expr_stmt|;
+operator|==
+name|RET_FAIL
+condition|)
+return|return
+name|RET_FAIL
+return|;
 if|if
 condition|(
 operator|!
@@ -1256,7 +1342,7 @@ name|installFixup
 argument_list|()
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 name|dialog_clear
 argument_list|()
@@ -1284,7 +1370,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|RET_SUCCESS
 return|;
 block|}
 end_function
@@ -1304,7 +1390,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* XXX At some point maybe we want to make the selection of kernel configurable here XXX */
 if|if
 condition|(
 operator|!
@@ -1312,10 +1397,36 @@ name|file_readable
 argument_list|(
 literal|"/kernel"
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|file_readable
 argument_list|(
 literal|"/kernel.GENERIC"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/kernel.ATAPI"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"There are two kernels available - one for ATAPI (IDE CDROM)\n"
+literal|"systems and a GENERIC kernel for all other systems.  The"
+argument_list|,
+literal|"IDE CDROM driver was still in BETA test at the time of this"
+literal|"release and therefore got a copy of the generic kernel image"
+literal|"all for itself).\n\n"
+literal|"Would you like to install the GENERIC kernel image?  Otherwise\n"
+literal|"the ATAPI image will be used."
 argument_list|)
 condition|)
 block|{
@@ -1332,6 +1443,61 @@ argument_list|(
 literal|"Unable to link /kernel into place!"
 argument_list|)
 expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"ln -f /kernel.ATAPI /kernel"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to link /kernel into place!"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"ln -f /kernel.GENERIC /kernel"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to link /kernel into place!"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
+block|}
+else|else
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Can't find a kernel image to link to on the root filesystem!\n"
+literal|"You're going to have a hard time getting this system to\n"
+literal|"boot from the hard disk, I'm afraid!"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
 block|}
 block|}
 comment|/* Resurrect /dev after bin distribution screws it up */
@@ -1352,11 +1518,16 @@ argument_list|(
 literal|"cd /dev; sh MAKEDEV all"
 argument_list|)
 condition|)
+block|{
 name|msgConfirm
 argument_list|(
 literal|"MAKEDEV returned non-zero status"
 argument_list|)
 expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
 name|msgNotify
 argument_list|(
 literal|"Resurrecting /dev entries for slices.."
@@ -1502,7 +1673,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 block|}
@@ -1534,7 +1705,7 @@ literal|0755
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|RET_SUCCESS
 return|;
 block|}
 end_function
@@ -2316,12 +2487,9 @@ default|default:
 if|if
 condition|(
 operator|!
-call|(
-modifier|*
 name|mediaDevice
 operator|->
 name|init
-call|)
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -2329,12 +2497,9 @@ condition|)
 break|break;
 name|fd
 operator|=
-call|(
-modifier|*
 name|mediaDevice
 operator|->
 name|get
-call|)
 argument_list|(
 name|mediaDevice
 argument_list|,
@@ -2359,12 +2524,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
 name|mediaDevice
 operator|->
 name|shutdown
-call|)
 argument_list|(
 name|mediaDevice
 argument_list|)
@@ -2395,12 +2557,9 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
 name|mediaDevice
 operator|->
 name|close
-call|)
 argument_list|(
 name|mediaDevice
 argument_list|,
@@ -2614,6 +2773,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2635,6 +2797,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|variable_set2
 argument_list|(
 name|RELNAME
@@ -2642,11 +2805,21 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+name|RET_SUCCESS
+expr_stmt|;
+block|}
+else|else
+name|i
+operator|=
+name|RET_FAIL
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 return|return
-literal|0
+name|i
 return|;
 block|}
 end_function

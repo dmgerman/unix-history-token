@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.5 1995/10/03 23:36:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.6 1995/10/04 12:08:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -191,7 +191,7 @@ literal|"No CDROM devices found!  Please check that your system's\nconfiguration
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 elseif|else
@@ -249,7 +249,7 @@ operator|!
 name|status
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 else|else
@@ -263,9 +263,9 @@ expr_stmt|;
 return|return
 name|mediaDevice
 condition|?
-literal|1
+name|RET_DONE
 else|:
-literal|0
+name|RET_FAIL
 return|;
 block|}
 end_function
@@ -340,7 +340,7 @@ literal|"No floppy devices found!  Please check that your system's\nconfiguratio
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 elseif|else
@@ -398,7 +398,7 @@ operator|!
 name|status
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 else|else
@@ -412,9 +412,9 @@ expr_stmt|;
 return|return
 name|mediaDevice
 condition|?
-literal|1
+name|RET_DONE
 else|:
-literal|0
+name|RET_FAIL
 return|;
 block|}
 end_function
@@ -489,7 +489,7 @@ literal|"No DOS primary partitions found!  This installation method is unavailab
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 elseif|else
@@ -547,7 +547,7 @@ operator|!
 name|status
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 else|else
@@ -561,9 +561,9 @@ expr_stmt|;
 return|return
 name|mediaDevice
 condition|?
-literal|1
+name|RET_DONE
 else|:
-literal|0
+name|RET_FAIL
 return|;
 block|}
 end_function
@@ -638,7 +638,7 @@ literal|"No tape drive devices found!  Please check that your system's\nconfigur
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 elseif|else
@@ -696,7 +696,7 @@ operator|!
 name|status
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 block|}
 else|else
@@ -748,9 +748,9 @@ block|}
 return|return
 name|mediaDevice
 condition|?
-literal|1
+name|RET_DONE
 else|:
-literal|0
+name|RET_FAIL
 return|;
 block|}
 end_function
@@ -801,7 +801,7 @@ operator|!
 name|cp
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 if|if
 condition|(
@@ -838,7 +838,7 @@ literal|6
 argument_list|)
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 else|else
 name|variable_set2
@@ -865,8 +865,13 @@ operator|!
 name|str
 condition|)
 return|return
-literal|1
+name|RET_DONE
 return|;
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -874,8 +879,14 @@ name|tcpDeviceSelect
 argument_list|()
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
+block|}
+else|else
+name|mediaDevice
+operator|=
+name|NULL
+expr_stmt|;
 name|ftpDevice
 operator|.
 name|type
@@ -919,7 +930,7 @@ operator|&
 name|ftpDevice
 expr_stmt|;
 return|return
-literal|1
+name|RET_DONE
 return|;
 block|}
 end_function
@@ -1000,7 +1011,7 @@ operator|!
 name|val
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 name|strcpy
 argument_list|(
@@ -1056,7 +1067,7 @@ operator|&
 name|ufsDevice
 expr_stmt|;
 return|return
-literal|1
+name|RET_DONE
 return|;
 block|}
 end_function
@@ -1093,7 +1104,7 @@ operator|!
 name|val
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 name|strncpy
 argument_list|(
@@ -1113,7 +1124,7 @@ name|tcpDeviceSelect
 argument_list|()
 condition|)
 return|return
-literal|0
+name|RET_FAIL
 return|;
 name|nfsDevice
 operator|.
@@ -1157,7 +1168,7 @@ operator|&
 name|nfsDevice
 expr_stmt|;
 return|return
-literal|1
+name|RET_DONE
 return|;
 block|}
 end_function
@@ -2064,7 +2075,8 @@ literal|"Media type not set!  Please select a media type\nfrom the Installation 
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|mediaGetType
+argument_list|()
 return|;
 block|}
 return|return
@@ -2093,6 +2105,9 @@ decl_stmt|,
 modifier|*
 name|pass
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2114,6 +2129,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|variable_set2
 argument_list|(
 name|FTP_USER
@@ -2146,11 +2162,21 @@ argument_list|,
 name|pass
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+name|RET_SUCCESS
+expr_stmt|;
+block|}
+else|else
+name|i
+operator|=
+name|RET_FAIL
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 return|return
-literal|0
+name|i
 return|;
 block|}
 end_function
@@ -2171,6 +2197,9 @@ block|{
 name|char
 modifier|*
 name|bsize
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|dialog_clear
 argument_list|()
@@ -2193,6 +2222,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|variable_set2
 argument_list|(
 name|TAPE_BLOCKSIZE
@@ -2200,11 +2230,21 @@ argument_list|,
 name|bsize
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+name|RET_SUCCESS
+expr_stmt|;
+block|}
+else|else
+name|i
+operator|=
+name|RET_FAIL
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 return|return
-literal|0
+name|i
 return|;
 block|}
 end_function
@@ -2236,11 +2276,16 @@ condition|(
 operator|!
 name|cp
 condition|)
-name|msgFatal
+block|{
+name|msgConfirm
 argument_list|(
 literal|"CPIO Verbosity is not set to anything!"
 argument_list|)
 expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
 else|else
 block|{
 if|if
@@ -2289,7 +2334,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|RET_SUCCESS
 return|;
 block|}
 end_function

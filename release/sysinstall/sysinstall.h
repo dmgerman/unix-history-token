@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.42.2.7 1995/10/04 10:34:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.42.2.8 1995/10/04 12:08:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"dist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"index.h"
 end_include
 
 begin_include
@@ -203,6 +209,27 @@ end_define
 begin_comment
 comment|/* How many times to beat our heads against the wall */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RET_FAIL
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RET_SUCCESS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RET_DONE
+value|1
+end_define
 
 begin_comment
 comment|/*  * I make some pretty gross assumptions about having a max of 50 chunks  * total - 8 slices and 42 partitions.  I can't easily display many more  * than that on the screen at once!  *  * For 2.1 I'll revisit this and try to make it more dynamic, but since  * this will catch 99.99% of all possible cases, I'm not too worried.  */
@@ -883,6 +910,129 @@ parameter_list|()
 function_decl|;
 block|}
 name|Option
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Weird index nodey things we use for keeping track of information */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|PACKAGE
+block|,
+name|PLACE
+block|}
+name|node_type
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Types of nodes */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_pkgnode
+block|{
+comment|/* A node in the reconstructed hierarchy */
+name|struct
+name|_pkgnode
+modifier|*
+name|next
+decl_stmt|;
+comment|/* My next sibling			*/
+name|node_type
+name|type
+decl_stmt|;
+comment|/* What am I?				*/
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* My name				*/
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* My description (Hook)		*/
+name|struct
+name|_pkgnode
+modifier|*
+name|kids
+decl_stmt|;
+comment|/* My little children			*/
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/* A place to hang my data		*/
+block|}
+name|PkgNode
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|PkgNode
+modifier|*
+name|PkgNodePtr
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* A single package */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_indexEntry
+block|{
+comment|/* A single entry in an INDEX file */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name				*/
+name|char
+modifier|*
+name|path
+decl_stmt|;
+comment|/* full path to port		*/
+name|char
+modifier|*
+name|prefix
+decl_stmt|;
+comment|/* port prefix			*/
+name|char
+modifier|*
+name|comment
+decl_stmt|;
+comment|/* one line description		*/
+name|char
+modifier|*
+name|descrfile
+decl_stmt|;
+comment|/* path to description file	*/
+name|char
+modifier|*
+name|maintainer
+decl_stmt|;
+comment|/* maintainer			*/
+block|}
+name|IndexEntry
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|IndexEntry
+modifier|*
+name|IndexEntryPtr
 typedef|;
 end_typedef
 
@@ -1679,7 +1829,7 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|configFstab
 parameter_list|(
 name|void
@@ -2505,6 +2655,122 @@ name|void
 name|globalsInit
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* index.c */
+end_comment
+
+begin_function_decl
+name|int
+name|index_read
+parameter_list|(
+name|char
+modifier|*
+name|fname
+parameter_list|,
+name|PkgNodePtr
+name|papa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|index_fread
+parameter_list|(
+name|FILE
+modifier|*
+name|fp
+parameter_list|,
+name|PkgNodePtr
+name|papa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|index_menu
+parameter_list|(
+name|PkgNodePtr
+name|top
+parameter_list|,
+name|PkgNodePtr
+name|plist
+parameter_list|,
+name|int
+modifier|*
+name|pos
+parameter_list|,
+name|int
+modifier|*
+name|scroll
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|index_init
+parameter_list|(
+name|PkgNodePtr
+name|top
+parameter_list|,
+name|PkgNodePtr
+name|plist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|index_node_free
+parameter_list|(
+name|PkgNodePtr
+name|top
+parameter_list|,
+name|PkgNodePtr
+name|plist
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|index_sort
+parameter_list|(
+name|PkgNodePtr
+name|top
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|index_print
+parameter_list|(
+name|PkgNodePtr
+name|top
+parameter_list|,
+name|int
+name|level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|index_extract
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|,
+name|PkgNodePtr
+name|plist
 parameter_list|)
 function_decl|;
 end_function_decl
