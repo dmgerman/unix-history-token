@@ -97,9 +97,11 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
-begin_comment
-comment|/* These few lines are used by 386BSD (only??). */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
 
 begin_if
 if|#
@@ -287,11 +289,11 @@ value|-1
 end_define
 
 begin_comment
-comment|/*  * The way how the ioctl arguments are passed is another nonportable thing.  * In Linux the argument is just a pointer directly to the user segment. On  * 386bsd the data is already moved to the kernel space. The following  * macros should handle the difference.  */
+comment|/*  * The way how the ioctl arguments are passed is another nonportable thing.  * In Linux the argument is just a pointer directly to the user segment. On  * FreeBSD the data is already moved to the kernel space. The following  * macros should handle the difference.  */
 end_comment
 
 begin_comment
-comment|/*  * IOCTL_FROM_USER is used to copy a record pointed by the argument to  * a buffer in the kernel space. On 386bsd it can be done just by calling  * memcpy. With Linux a memcpy_from_fs should be called instead.  * Parameters of the following macros are like in the COPY_*_USER macros.  */
+comment|/*  * IOCTL_FROM_USER is used to copy a record pointed by the argument to  * a buffer in the kernel space. On FreeBSD it can be done just by calling  * memcpy. With Linux a memcpy_from_fs should be called instead.  * Parameters of the following macros are like in the COPY_*_USER macros.  */
 end_comment
 
 begin_comment
@@ -466,7 +468,7 @@ value|(f.mode& WK_SLEEP)
 end_define
 
 begin_comment
-comment|/*  * This driver handles interrupts little bit nonstandard way. The following  * macro is used to test if the current process has received a signal which  * is aborts the process. This macro is called from close() to see if the  * buffers should be discarded. If this kind info is not available, a constant  * 1 or 0 could be returned (1 should be better than 0).  * I'm not sure if the following is correct for 386BSD.  */
+comment|/*  * This driver handles interrupts little bit nonstandard way. The following  * macro is used to test if the current process has received a signal which  * is aborts the process. This macro is called from close() to see if the  * buffers should be discarded. If this kind info is not available, a constant  * 1 or 0 could be returned (1 should be better than 0).  */
 end_comment
 
 begin_define
@@ -478,11 +480,11 @@ name|q
 parameter_list|,
 name|f
 parameter_list|)
-value|(f.aborting | curproc->p_siglist)
+value|(f.aborting || CURSIG(curproc))
 end_define
 
 begin_comment
-comment|/*  * The following macro calls sleep. It should be implemented such that  * the process is resumed if it receives a signal. The following is propably  * not the way how it should be done on 386bsd.  * The on_what parameter is a wait_queue defined with DEFINE_WAIT_QUEUE(),  * and the second is a workarea parameter. The third is a timeout   * in ticks. Zero means no timeout.  */
+comment|/*  * The following macro calls tsleep. It should be implemented such that  * the process is resumed if it receives a signal.  * The q parameter is a wait_queue defined with DEFINE_WAIT_QUEUE(),  * and the second is a workarea parameter. The third is a timeout   * in ticks. Zero means no timeout.  */
 end_comment
 
 begin_define
@@ -497,7 +499,7 @@ parameter_list|,
 name|time_limit
 parameter_list|)
 define|\
-value|{ \ 	  int flag; \ 	  f.mode = WK_SLEEP; \ 	  flag=tsleep((caddr_t)&q, (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  if(flag == ERESTART) f.aborting = 1;\ 	  else f.aborting = 0;\ 	  f.mode&= ~WK_SLEEP; \ 	}
+value|{ \ 	  int flag; \ 	  f.mode = WK_SLEEP; \ 	  flag=tsleep(&q, (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  f.mode&= ~WK_SLEEP; \ 	  if (flag == EINTR) \ 		f.aborting = 1; \ 	  else { \ 		f.aborting = 0; \ 		if (flag == EWOULDBLOCK) \ 			f.mode |= WK_TIMEOUT; \ 	  } \ 	}
 end_define
 
 begin_comment
@@ -513,7 +515,7 @@ name|q
 parameter_list|,
 name|f
 parameter_list|)
-value|{f.mode = WK_WAKEUP;wakeup((caddr_t)&q);}
+value|wakeup(&q)
 end_define
 
 begin_comment
@@ -680,7 +682,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* memcpy() was not defined og 386bsd. Lets define it here */
+comment|/* memcpy() was not defined on FreeBSD. Lets define it here */
 end_comment
 
 begin_define
