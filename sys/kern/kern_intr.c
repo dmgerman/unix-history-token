@@ -1908,7 +1908,7 @@ name|p_stats
 operator|->
 name|p_ru
 operator|.
-name|ru_nvcsw
+name|ru_nivcsw
 operator|++
 expr_stmt|;
 name|mi_switch
