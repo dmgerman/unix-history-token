@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	5.3 (Berkeley) %G%"
+literal|"@(#)config.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,13 @@ specifier|extern
 name|char
 modifier|*
 name|progname
+decl_stmt|,
+modifier|*
+name|pathbuf
+decl_stmt|,
+modifier|*
+modifier|*
+name|arorder
 decl_stmt|;
 end_decl_stmt
 
@@ -90,14 +97,6 @@ specifier|static
 name|FILE
 modifier|*
 name|cfp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|buf
 decl_stmt|;
 end_decl_stmt
 
@@ -131,25 +130,11 @@ name|size_t
 name|len
 decl_stmt|;
 name|char
-modifier|*
-modifier|*
-name|ar
-decl_stmt|,
 name|line
 index|[
 name|MAXLINE
 index|]
-decl_stmt|,
-modifier|*
-modifier|*
-name|getorder
-argument_list|()
 decl_stmt|;
-name|ar
-operator|=
-name|getorder
-argument_list|()
-expr_stmt|;
 name|openconfig
 argument_list|()
 expr_stmt|;
@@ -286,7 +271,7 @@ for|for
 control|(
 name|av
 operator|=
-name|ar
+name|arorder
 init|;
 operator|*
 name|av
@@ -322,14 +307,13 @@ block|}
 block|}
 return|return
 operator|(
-name|buf
+name|pathbuf
 operator|)
 return|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|cadd
 argument_list|(
 argument|add1
@@ -338,14 +322,17 @@ argument|len1
 argument_list|,
 argument|add2
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|add1
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|add2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -403,11 +390,11 @@ if|if
 condition|(
 operator|!
 operator|(
-name|buf
+name|pathbuf
 operator|=
 name|realloc
 argument_list|(
-name|buf
+name|pathbuf
 argument_list|,
 name|buflen
 operator|+=
@@ -425,11 +412,11 @@ name|bp
 condition|)
 name|bp
 operator|=
-name|buf
+name|pathbuf
 expr_stmt|;
 name|endp
 operator|=
-name|buf
+name|pathbuf
 operator|+
 name|buflen
 expr_stmt|;
@@ -791,50 +778,49 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function
-unit|}  static
-name|char
-modifier|*
-modifier|*
+begin_expr_stmt
+unit|}  char
+operator|*
+operator|*
 name|getorder
-parameter_list|()
+argument_list|()
 block|{
 specifier|register
 name|char
-modifier|*
+operator|*
 name|p
-decl_stmt|;
+block|;
 name|int
 name|cnt
-decl_stmt|,
+block|,
 name|num
-decl_stmt|;
+block|;
 name|char
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|ar
-decl_stmt|,
+block|,
 name|line
 index|[
 name|MAXLINE
 index|]
-decl_stmt|;
+block|;
 name|ar
 operator|=
 name|NULL
-expr_stmt|;
+block|;
 name|num
 operator|=
 literal|0
-expr_stmt|;
+block|;
 name|cnt
 operator|=
 operator|-
 literal|1
-expr_stmt|;
+block|;
 name|openconfig
 argument_list|()
-expr_stmt|;
+block|;
 while|while
 condition|(
 name|fgets
@@ -888,10 +874,16 @@ argument_list|,
 literal|" \t\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_define
 define|#
 directive|define
 name|SUBDIR
 value|"_subdir"
+end_define
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -910,6 +902,9 @@ name|SUBDIR
 argument_list|)
 condition|)
 continue|continue;
+end_if
+
+begin_while
 while|while
 condition|(
 name|p
@@ -980,11 +975,13 @@ name|enomem
 argument_list|()
 expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
+end_while
+
+begin_expr_stmt
+unit|} 	if
+operator|(
 name|ar
-condition|)
+operator|)
 block|{
 if|if
 condition|(
@@ -1025,28 +1022,26 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-block|}
-return|return
+end_expr_stmt
+
+begin_expr_stmt
+unit|} 	return
 operator|(
 name|ar
 operator|)
-return|;
-block|}
-end_function
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|getsection
-argument_list|(
-argument|sect
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
+begin_expr_stmt
+unit|}  getsection
+operator|(
 name|sect
-decl_stmt|;
-end_decl_stmt
+operator|)
+name|char
+operator|*
+name|sect
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
