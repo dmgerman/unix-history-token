@@ -3969,6 +3969,12 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -3992,6 +3998,12 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|proctree_lock
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* Mark special process type. */
