@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)EXCEPT.c 1.3 %G%"
+literal|"@(#)EXCEPT.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ name|type
 condition|)
 block|{
 case|case
-literal|1
+name|FPE_INTOVF_TRAP
 case|:
 name|ERROR
 argument_list|(
@@ -80,7 +80,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-literal|2
+name|FPE_INTDIV_TRAP
 case|:
 name|ERROR
 argument_list|(
@@ -89,7 +89,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-literal|3
+name|FPE_FLTOVF_TRAP
+case|:
+case|case
+name|FPE_FLTOVF_FAULT
 case|:
 name|ERROR
 argument_list|(
@@ -98,7 +101,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-literal|4
+name|FPE_FLTDIV_TRAP
+case|:
+case|case
+name|FPE_FLTDIV_FAULT
 case|:
 name|ERROR
 argument_list|(
@@ -107,7 +113,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 case|case
-literal|5
+name|FPE_FLTUND_TRAP
+case|:
+case|case
+name|FPE_FLTUND_FAULT
 case|:
 name|ERROR
 argument_list|(
@@ -115,10 +124,18 @@ literal|"Real underflow\n"
 argument_list|)
 expr_stmt|;
 return|return;
+case|case
+name|FPE_DECOVF_TRAP
+case|:
+case|case
+name|FPE_SUBRNG_TRAP
+case|:
 default|default:
 name|ERROR
 argument_list|(
-literal|"Panic: Computational error in interpreter\n"
+literal|"Undefined arithmetic exception type (%d)\n"
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 return|return;
