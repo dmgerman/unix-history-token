@@ -968,6 +968,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+comment|/* XXX: Should VOP_CLOSE() again here. */
 goto|goto
 name|bad
 goto|;
