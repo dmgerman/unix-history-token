@@ -1612,8 +1612,8 @@ begin_function_decl
 name|int
 name|fb_attach
 parameter_list|(
-name|dev_t
-name|dev
+name|int
+name|unit
 parameter_list|,
 name|video_adapter_t
 modifier|*
@@ -1631,8 +1631,8 @@ begin_function_decl
 name|int
 name|fb_detach
 parameter_list|(
-name|dev_t
-name|dev
+name|int
+name|unit
 parameter_list|,
 name|video_adapter_t
 modifier|*

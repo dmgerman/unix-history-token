@@ -527,14 +527,9 @@ name|error
 operator|=
 name|fb_attach
 argument_list|(
-name|makedev
-argument_list|(
-literal|0
-argument_list|,
 name|VGA_MKMINOR
 argument_list|(
 name|unit
-argument_list|)
 argument_list|)
 argument_list|,
 name|sc
