@@ -902,37 +902,12 @@ directive|undef
 name|CPP_SPEC
 end_undef
 
-begin_if
-if|#
-directive|if
-name|TARGET_CPU_DEFAULT
-operator|==
-literal|2
-end_if
-
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %{!maout: -D__ELF__} \ %{munderscores: -D__UNDERSCORES__} \ %{maout: %{!mno-underscores: -D__UNDERSCORES__}} \ %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__}"
+value|"\ %{!maout: -D__ELF__} \ %{munderscores: -D__UNDERSCORES__} \ %{maout: %{!mno-underscores: -D__UNDERSCORES__}} \ %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}}"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"\ %{!maout: -D__ELF__} \ %{munderscores: -D__UNDERSCORES__} \ %{maout: %{!mno-underscores: -D__UNDERSCORES__}} \ %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{m486:-D__i486__}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
