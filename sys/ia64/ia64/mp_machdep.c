@@ -240,6 +240,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|mp_ipi_test
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +282,7 @@ init|=
 name|ia64_get_lid
 argument_list|()
 operator|&
-literal|0xffff0000
+literal|0xffff0000L
 decl_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -307,10 +309,12 @@ name|cpu_stack
 operator|)
 return|;
 block|}
-comment|/* XXX - Should never reach here */
-return|return
-name|NULL
-return|;
+name|panic
+argument_list|(
+name|__func__
+literal|": bad LID or RR5 misconfigured"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -332,7 +336,7 @@ init|=
 name|ia64_get_lid
 argument_list|()
 operator|&
-literal|0xffff0000
+literal|0xffff0000L
 decl_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -351,7 +355,19 @@ name|cpu_lid
 operator|==
 name|lid
 condition|)
-block|{
+break|break;
+block|}
+name|KASSERT
+argument_list|(
+name|cpu
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"foo!"
+operator|)
+argument_list|)
+expr_stmt|;
 name|cpu
 operator|->
 name|cpu_lid
@@ -364,15 +380,6 @@ operator|->
 name|cpu_awake
 operator|=
 literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SMP: CPU%d is awake!\n"
-argument_list|,
-name|cpu
-operator|->
-name|cpu_no
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -389,8 +396,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -430,12 +435,12 @@ modifier|*
 name|cpu
 decl_stmt|;
 name|u_int64_t
-name|lid
+name|bsp
 init|=
 name|ia64_get_lid
 argument_list|()
 operator|&
-literal|0xffff0000
+literal|0xffff0000L
 decl_stmt|;
 name|cpu
 operator|=
@@ -477,7 +482,9 @@ name|cpu_no
 operator|=
 name|acpiid
 expr_stmt|;
-name|lid
+name|cpu
+operator|->
+name|cpu_lid
 operator|=
 operator|(
 operator|(
@@ -499,42 +506,17 @@ literal|16
 expr_stmt|;
 if|if
 condition|(
-name|lid
-operator|==
-operator|(
-name|ia64_get_lid
-argument_list|()
-operator|&
-literal|0xffff0000L
-operator|)
-condition|)
-block|{
 name|cpu
 operator|->
 name|cpu_lid
-operator|=
-name|ia64_get_lid
-argument_list|()
-expr_stmt|;
+operator|==
+name|bsp
+condition|)
 name|cpu
 operator|->
 name|cpu_bsp
 operator|=
 literal|1
-expr_stmt|;
-name|cpu
-operator|->
-name|cpu_awake
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|cpu
-operator|->
-name|cpu_lid
-operator|=
-name|lid
 expr_stmt|;
 name|all_cpus
 operator||=
@@ -571,7 +553,7 @@ argument_list|)
 block|{
 name|printf
 argument_list|(
-literal|"cpu%d: SAPIC Id=%x, SAPIC Eid=%x (%s)\n"
+literal|"cpu%d: SAPIC Id=%x, SAPIC Eid=%x"
 argument_list|,
 name|cpu
 operator|->
@@ -590,16 +572,23 @@ name|cpu
 operator|->
 name|cpu_lid
 argument_list|)
-argument_list|,
-operator|(
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|cpu
 operator|->
 name|cpu_bsp
-operator|)
-condition|?
-literal|"BSP"
-else|:
-literal|"AP"
+condition|)
+name|printf
+argument_list|(
+literal|" (BSP)\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -654,7 +643,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"SMP: waking up CPU%d\n"
+literal|"SMP: waking up cpu%d\n"
 argument_list|,
 name|cpu
 operator|->
@@ -673,9 +662,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mp_ipi_test
+name|cpu
+operator|->
+name|cpu_lid
 operator|=
-literal|0
+name|ia64_get_lid
+argument_list|()
+expr_stmt|;
+name|cpu
+operator|->
+name|cpu_awake
+operator|=
+literal|1
 expr_stmt|;
 name|ipi_self
 argument_list|(
@@ -697,6 +695,16 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|struct
+name|mp_cpu
+modifier|*
+name|cpu
+decl_stmt|;
+name|int
+name|awake
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -712,6 +720,37 @@ condition|)
 name|printf
 argument_list|(
 literal|"SMP: sending of a test IPI to BSP failed\n"
+argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|cpu
+argument_list|,
+argument|&ia64_cpus
+argument_list|,
+argument|cpu_next
+argument_list|)
+block|{
+name|awake
+operator|+=
+name|cpu
+operator|->
+name|cpu_awake
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|awake
+operator|!=
+name|mp_ncpus
+condition|)
+name|printf
+argument_list|(
+literal|"SMP: %d CPU(s) didn't get woken\n"
+argument_list|,
+name|mp_ncpus
+operator|-
+name|awake
 argument_list|)
 expr_stmt|;
 block|}
