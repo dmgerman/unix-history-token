@@ -44,13 +44,6 @@ name|DEBUG
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|PROCFS
-value|1
-end_define
-
 begin_include
 include|#
 directive|include
