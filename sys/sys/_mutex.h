@@ -55,15 +55,15 @@ expr_stmt|;
 comment|/* Next contested mtx. */
 comment|/* Fields used only if MUTEX_PROFILING is configured: */
 name|u_int64_t
-name|acqtime
+name|mtx_acqtime
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|file
+name|mtx_filename
 decl_stmt|;
 name|int
-name|line
+name|mtx_lineno
 decl_stmt|;
 block|}
 struct|;
