@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	5.12 (Berkeley) %G%"
+literal|"@(#)umount.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1506,6 +1506,8 @@ name|getmntinfo
 argument_list|(
 operator|&
 name|mntbuf
+argument_list|,
+name|MNT_NOWAIT
 argument_list|)
 operator|)
 operator|==
