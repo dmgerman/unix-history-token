@@ -3211,6 +3211,13 @@ block|}
 block|,
 comment|/* CRD0001 - Cardinal MVP288IV ? */
 block|{
+literal|0x36033610
+block|,
+name|NULL
+block|}
+block|,
+comment|/* DAV0336 - DAVICOM 336PNP MODEM */
+block|{
 literal|0x0000aa1a
 block|,
 name|NULL
@@ -3294,6 +3301,13 @@ name|NULL
 block|}
 block|,
 comment|/* NECE761 - 33.6Modem */
+block|{
+literal|0x0f804f3f
+block|,
+name|NULL
+block|}
+block|,
+comment|/* OZO800f - Zoom 2812 (56k Modem) */
 block|{
 literal|0x39804f3f
 block|,
