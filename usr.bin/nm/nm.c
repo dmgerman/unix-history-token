@@ -159,6 +159,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|print_weak_symbols
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|fcount
 decl_stmt|;
 end_decl_stmt
@@ -228,6 +234,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x)& (N_TYPE | N_STAB))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYMBOL_BIND
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 4)& 0xf)
 end_define
 
 begin_function_decl
@@ -312,6 +328,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|typeletter
+name|__P
+argument_list|(
+operator|(
+name|u_char
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * main()  *	parse command line, execute process_file() for each file  *	specified on the command line.  */
 end_comment
@@ -353,7 +381,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"agnoprtuw"
+literal|"agnoprtuwW"
 argument_list|)
 operator|)
 operator|!=
@@ -435,6 +463,14 @@ case|:
 name|ignore_bad_archive_entries
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'W'
+case|:
+name|print_weak_symbols
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2128,11 +2164,8 @@ block|{
 name|char
 modifier|*
 name|typestring
-argument_list|()
-decl_stmt|,
-name|typeletter
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|table
@@ -2211,13 +2244,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+block|{
+name|putchar
 argument_list|(
-literal|"%c|"
-argument_list|,
 name|typeletter
 argument_list|(
 name|sym
@@ -2226,6 +2255,30 @@ name|n_type
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|print_weak_symbols
+operator|&&
+name|SYMBOL_BIND
+argument_list|(
+name|sym
+operator|->
+name|n_other
+argument_list|)
+operator|==
+literal|2
+condition|)
+name|putchar
+argument_list|(
+literal|'W'
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'|'
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* print the symbol's name */
 operator|(
 name|void
@@ -2346,13 +2399,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+block|{
+name|putchar
 argument_list|(
-literal|" %c "
-argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
 name|typeletter
 argument_list|(
 name|sym
@@ -2361,6 +2415,40 @@ name|n_type
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|print_weak_symbols
+condition|)
+block|{
+if|if
+condition|(
+name|SYMBOL_BIND
+argument_list|(
+name|sym
+operator|->
+name|n_other
+argument_list|)
+operator|==
+literal|2
+condition|)
+name|putchar
+argument_list|(
+literal|'W'
+argument_list|)
+expr_stmt|;
+else|else
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+block|}
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* print the symbol's name */
 operator|(
 name|void
@@ -2652,6 +2740,7 @@ return|;
 case|case
 name|N_FN
 case|:
+comment|/* This one is overloaded. EXT = Warn, INT = filename */
 return|return
 operator|(
 name|IS_EXTERNAL
@@ -2659,9 +2748,24 @@ argument_list|(
 name|type
 argument_list|)
 condition|?
-literal|'F'
+literal|'W'
 else|:
 literal|'f'
+operator|)
+return|;
+case|case
+name|N_INDR
+case|:
+return|return
+operator|(
+name|IS_EXTERNAL
+argument_list|(
+name|type
+argument_list|)
+condition|?
+literal|'I'
+else|:
+literal|'i'
 operator|)
 return|;
 case|case
