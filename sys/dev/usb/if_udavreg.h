@@ -1246,6 +1246,10 @@ name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
+name|struct
+name|usb_qdat
+name|sc_qdat
+decl_stmt|;
 elif|#
 directive|elif
 name|defined

@@ -230,14 +230,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|Static
-name|struct
-name|usb_qdat
-name|axe_qdat
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|Static
 name|int
@@ -2431,12 +2423,16 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
+name|sc
+operator|->
 name|axe_qdat
 operator|.
 name|ifp
 operator|=
 name|ifp
 expr_stmt|;
+name|sc
+operator|->
 name|axe_qdat
 operator|.
 name|if_rxstart
@@ -3410,6 +3406,8 @@ name|ifnet
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|axe_qdat
 expr_stmt|;
 name|m

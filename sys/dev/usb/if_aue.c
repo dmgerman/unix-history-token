@@ -888,14 +888,6 @@ parameter_list|)
 value|((const struct aue_type *)usb_lookup(aue_devs, v, p))
 end_define
 
-begin_decl_stmt
-name|Static
-name|struct
-name|usb_qdat
-name|aue_qdat
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|Static
 name|int
@@ -3794,12 +3786,16 @@ directive|endif
 name|USB_ATTACH_ERROR_RETURN
 expr_stmt|;
 block|}
+name|sc
+operator|->
 name|aue_qdat
 operator|.
 name|ifp
 operator|=
 name|ifp
 expr_stmt|;
+name|sc
+operator|->
 name|aue_qdat
 operator|.
 name|if_rxstart
@@ -5071,6 +5067,8 @@ name|ifnet
 operator|*
 operator|)
 operator|&
+name|sc
+operator|->
 name|aue_qdat
 expr_stmt|;
 name|m

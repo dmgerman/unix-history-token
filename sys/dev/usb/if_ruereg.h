@@ -975,6 +975,10 @@ name|struct
 name|timeval
 name|rue_rx_notice
 decl_stmt|;
+name|struct
+name|usb_qdat
+name|rue_qdat
+decl_stmt|;
 block|}
 struct|;
 end_struct

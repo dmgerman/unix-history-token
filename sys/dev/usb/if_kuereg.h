@@ -673,6 +673,10 @@ name|struct
 name|timeval
 name|kue_rx_notice
 decl_stmt|;
+name|struct
+name|usb_qdat
+name|kue_qdat
+decl_stmt|;
 block|}
 struct|;
 end_struct
