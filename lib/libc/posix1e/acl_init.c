@@ -150,12 +150,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acl_new
-condition|)
-return|return
+operator|!=
 name|NULL
-return|;
+condition|)
+block|{
 operator|*
 name|acl_new
 operator|=
@@ -174,6 +173,7 @@ name|ats_cur_entry
 operator|=
 literal|0
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|acl_new

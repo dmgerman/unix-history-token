@@ -148,8 +148,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|buf
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
