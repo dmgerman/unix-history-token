@@ -296,7 +296,6 @@ name|stack
 operator|!=
 name|NULL
 condition|)
-block|{
 comment|/* 						 * Free the stack of the 						 * dead thread: 						 */
 name|free
 argument_list|(
@@ -305,7 +304,6 @@ operator|->
 name|stack
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pthread
