@@ -1679,7 +1679,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -1689,7 +1689,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 condition|)
@@ -1704,7 +1704,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|4
+literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -1714,7 +1714,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|4
+literal|3
 index|]
 argument_list|)
 condition|)
@@ -1750,10 +1750,6 @@ name|dx
 argument_list|)
 expr_stmt|;
 comment|/* dx is diameter */
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|hpos
 operator|+=
 name|dx
@@ -1773,10 +1769,6 @@ argument_list|,
 name|dx
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|DRAWTHICK
@@ -1791,10 +1783,6 @@ name|DRAWTHICK
 argument_list|,
 name|dx
 argument_list|)
-expr_stmt|;
-name|w
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1813,10 +1801,6 @@ argument_list|,
 name|dy
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|hpos
 operator|+=
 name|dx
@@ -1826,21 +1810,11 @@ case|case
 name|DRAWLINE
 case|:
 comment|/* line */
-name|k
-operator|=
-name|cbits
-argument_list|(
-name|pi
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|ptid
 argument_list|,
-literal|"D%c %d %d "
+literal|"D%c %d %d\n"
 argument_list|,
 name|DRAWLINE
 argument_list|,
@@ -1848,44 +1822,6 @@ name|dx
 argument_list|,
 name|dy
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|k
-operator|<
-literal|128
-condition|)
-name|fprintf
-argument_list|(
-name|ptid
-argument_list|,
-literal|"%c\n"
-argument_list|,
-name|k
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|ptid
-argument_list|,
-literal|"%s\n"
-argument_list|,
-operator|&
-name|chname
-index|[
-name|chtab
-index|[
-name|k
-operator|-
-literal|128
-index|]
-index|]
-argument_list|)
-expr_stmt|;
-name|w
-operator|=
-literal|0
 expr_stmt|;
 name|hpos
 operator|+=
@@ -1906,7 +1842,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|5
+literal|4
 index|]
 argument_list|)
 expr_stmt|;
@@ -1916,7 +1852,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|5
+literal|4
 index|]
 argument_list|)
 condition|)
@@ -1931,7 +1867,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|6
+literal|5
 index|]
 argument_list|)
 expr_stmt|;
@@ -1941,7 +1877,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|6
+literal|5
 index|]
 argument_list|)
 condition|)
@@ -1966,10 +1902,6 @@ name|dx2
 argument_list|,
 name|dy2
 argument_list|)
-expr_stmt|;
-name|w
-operator|=
-literal|0
 expr_stmt|;
 name|hpos
 operator|+=
@@ -2011,10 +1943,6 @@ argument_list|,
 name|dy
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|hpos
 operator|+=
 name|dx
@@ -2027,7 +1955,7 @@ for|for
 control|(
 name|n
 operator|=
-literal|5
+literal|4
 init|;
 name|cbits
 argument_list|(
@@ -2131,7 +2059,7 @@ for|for
 control|(
 name|n
 operator|=
-literal|3
+literal|2
 init|;
 name|cbits
 argument_list|(
@@ -2147,12 +2075,14 @@ name|n
 operator|++
 control|)
 empty_stmt|;
-name|outsize
-operator|=
+return|return
+operator|(
 name|n
 operator|+
 literal|1
-expr_stmt|;
+operator|)
+return|;
+comment|/* leave here so the emboldening */
 block|}
 elseif|else
 if|if
@@ -2162,6 +2092,7 @@ operator|<
 literal|128
 condition|)
 block|{
+comment|/* doesn't screw up the graphics */
 comment|/* try to go faster and compress output */
 comment|/* by printing nnc for small positive motion followed by c */
 comment|/* kludgery; have to make sure set all the vars too */
