@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	drtest.c	4.7	83/02/04	*/
+comment|/*	drtest.c	4.8	83/02/20	*/
 end_comment
 
 begin_include
@@ -79,6 +79,10 @@ decl_stmt|,
 name|chunk
 decl_stmt|,
 name|j
+decl_stmt|,
+name|hc
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|st
@@ -92,11 +96,32 @@ argument_list|(
 literal|"Testprogram for stand-alone hp or up driver\n\n"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Is the console terminal a hard-copy device (y/n)? "
+argument_list|)
+expr_stmt|;
+name|gets
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|buf
+operator|==
+literal|'y'
+condition|)
+name|hc
+operator|=
+literal|1
+expr_stmt|;
 name|askunit
 label|:
 name|printf
 argument_list|(
-literal|"Enter disk name [ type(adapter,unit), e.g, hp(1,3) ]> "
+literal|"Enter disk name [ type(adapter,unit), e.g, hp(1,3) ] ? "
 argument_list|)
 expr_stmt|;
 name|gets
@@ -155,9 +180,11 @@ index|]
 operator|=
 literal|'0'
 operator|+
+operator|(
 name|unit
 operator|/
 literal|10
+operator|)
 expr_stmt|;
 name|diskname
 index|[
@@ -166,9 +193,11 @@ index|]
 operator|=
 literal|'0'
 operator|+
+operator|(
 name|unit
 operator|%
 literal|10
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -270,7 +299,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*		for (j=8;j<st.ntrak+8;j++) { 			lseek(fd,(i*st.nspc+((j%st.ntrak)*st.nsect))*SECTSIZ,0); */
 name|read
 argument_list|(
 name|fd
@@ -280,9 +308,9 @@ argument_list|,
 name|chunk
 argument_list|)
 expr_stmt|;
-comment|/*		}					*/
 if|if
 condition|(
+operator|(
 name|i
 operator|%
 operator|(
@@ -292,20 +320,60 @@ name|ntrak
 operator|*
 literal|5
 operator|)
+operator|)
 operator|==
 literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"%d\r"
-argument_list|,
+block|{
+name|int
+name|x
+init|=
 name|i
 operator|/
 name|st
 operator|.
 name|ntrak
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|hc
+condition|)
+name|printf
+argument_list|(
+literal|"%d\r"
+argument_list|,
+name|x
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|x
+operator|+
+literal|1
+operator|%
+literal|25
+operator|)
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|". %d\n"
+argument_list|,
+name|x
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 goto|goto
 name|askunit
