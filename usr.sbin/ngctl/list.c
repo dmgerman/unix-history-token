@@ -9,6 +9,13 @@ directive|include
 file|"ngctl.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|UNNAMED
+value|"<unnamed>"
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -34,13 +41,15 @@ init|=
 block|{
 name|ListCmd
 block|,
-literal|"list [-n]"
+literal|"list [-ln]"
 block|,
 literal|"Show information about all nodes"
 block|,
-literal|"The list command shows information every node that currently"
+literal|"The list command shows information about every node that currently"
 literal|" exists in the netgraph system. The optional -n argument limits"
 literal|" this list to only those nodes with a global name assignment."
+literal|" The optional -l argument provides verbose output that includes"
+literal|" hook information as well."
 block|,
 block|{
 literal|"ls"
@@ -73,6 +82,16 @@ name|namelist
 modifier|*
 name|nlist
 decl_stmt|;
+name|struct
+name|nodeinfo
+modifier|*
+name|ninfo
+decl_stmt|;
+name|int
+name|list_hooks
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|named_only
 init|=
@@ -84,9 +103,6 @@ decl_stmt|,
 name|rtn
 init|=
 name|CMDRTN_OK
-decl_stmt|;
-name|u_int
-name|k
 decl_stmt|;
 comment|/* Get options */
 name|optind
@@ -104,7 +120,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"n"
+literal|"ln"
 argument_list|)
 operator|)
 operator|!=
@@ -116,6 +132,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'l'
+case|:
+name|list_hooks
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
@@ -250,21 +274,16 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|k
+name|ninfo
 operator|=
-literal|0
-init|;
-name|k
-operator|<
 name|nlist
 operator|->
-name|numnames
-condition|;
-name|k
-operator|++
-control|)
+name|nodeinfo
+expr_stmt|;
+if|if
+condition|(
+name|list_hooks
+condition|)
 block|{
 name|char
 name|path
@@ -276,17 +295,24 @@ name|char
 modifier|*
 name|argv
 index|[
-literal|3
+literal|2
 index|]
 init|=
 block|{
-literal|"list"
-block|,
-literal|"-n"
+literal|"show"
 block|,
 name|path
 block|}
 decl_stmt|;
+while|while
+condition|(
+name|nlist
+operator|->
+name|numnames
+operator|>
+literal|0
+condition|)
+block|{
 name|snprintf
 argument_list|(
 name|path
@@ -301,13 +327,8 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|nlist
+name|ninfo
 operator|->
-name|nodeinfo
-index|[
-name|k
-index|]
-operator|.
 name|id
 argument_list|)
 expr_stmt|;
@@ -323,7 +344,7 @@ operator|.
 name|func
 call|)
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 name|argv
 argument_list|)
@@ -332,6 +353,84 @@ operator|!=
 name|CMDRTN_OK
 condition|)
 break|break;
+name|ninfo
+operator|++
+expr_stmt|;
+name|nlist
+operator|->
+name|numnames
+operator|--
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+while|while
+condition|(
+name|nlist
+operator|->
+name|numnames
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|*
+name|ninfo
+operator|->
+name|name
+condition|)
+name|snprintf
+argument_list|(
+name|ninfo
+operator|->
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ninfo
+operator|->
+name|name
+argument_list|)
+argument_list|,
+literal|"%s"
+argument_list|,
+name|UNNAMED
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  Name: %-15s Type: %-15s ID: %08x   "
+literal|"Num hooks: %d\n"
+argument_list|,
+name|ninfo
+operator|->
+name|name
+argument_list|,
+name|ninfo
+operator|->
+name|type
+argument_list|,
+name|ninfo
+operator|->
+name|id
+argument_list|,
+name|ninfo
+operator|->
+name|hooks
+argument_list|)
+expr_stmt|;
+name|ninfo
+operator|++
+expr_stmt|;
+name|nlist
+operator|->
+name|numnames
+operator|--
+expr_stmt|;
+block|}
 block|}
 comment|/* Done */
 name|free
