@@ -1000,6 +1000,32 @@ name|s_addr
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Sanity/Security checking */
+if|if
+condition|(
+operator|!
+name|org_addr
+operator|||
+operator|!
+name|org_port
+operator|||
+name|pip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|!=
+name|true_addr
+operator|.
+name|s_addr
+operator|||
+name|org_port
+operator|<
+name|IPPORT_RESERVED
+condition|)
+goto|goto
+name|lBAD_CTCP
+goto|;
 comment|/* Steal the FTP_DATA_PORT - it doesn't really matter, and this 				 would probably allow it through at least _some_ 				 firewalls. */
 name|dcc_link
 operator|=
