@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	5.7 (Berkeley) %G%"
+literal|"@(#)fstab.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,6 +106,9 @@ block|,
 operator|*
 name|strtok
 argument_list|()
+block|;
+name|int
+name|typexx
 block|;
 for|for
 control|(
@@ -288,6 +291,10 @@ end_expr_stmt
 begin_for
 for|for
 control|(
+name|typexx
+operator|=
+literal|0
+operator|,
 name|cp
 operator|=
 name|strtok
@@ -416,10 +423,21 @@ name|fs_type
 operator|=
 name|FSTAB_XX
 expr_stmt|;
+name|typexx
+operator|++
+expr_stmt|;
 break|break;
 block|}
 block|}
 end_for
+
+begin_if
+if|if
+condition|(
+name|typexx
+condition|)
+continue|continue;
+end_if
 
 begin_if
 if|if
