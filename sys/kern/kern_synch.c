@@ -583,7 +583,7 @@ literal|"sleeping without a mutex"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are capable of async syscalls and there isn't already 	 * another one ready to return, start a new thread 	 * and queue it as ready to run. Note that there is danger here 	 * because we need to make sure that we don't sleep allocating 	 * the thread (recursion here might be bad). 	 * Hence the TDF_INMSLEEP flag. 	 */
+comment|/* 	 * If we are capable of async syscalls and there isn't already 	 * another one ready to return, start a new thread 	 * and queue it as ready to run. Note that there is danger here 	 * because we need to make sure that we don't sleep allocating 	 * the thread (recursion here might be bad). 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&

@@ -903,17 +903,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_INMSLEEP
-value|0x000400
-end_define
-
-begin_comment
-comment|/* Don't recurse in msleep(). */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_ASTPENDING
 value|0x000800
 end_define
