@@ -216,25 +216,29 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX sio always uses its major with minor 0 no matter what we specify.  */
+comment|/*  * These are set up by the serial card that is configured to be the gdb port.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|REMOTE_DEV
-value|0
-end_define
+begin_decl_stmt
+name|dev_t
+name|gdbdev
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|cn_getc_t
-name|siocngetc
+modifier|*
+name|gdb_getc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|cn_putc_t
-name|siocnputc
+modifier|*
+name|gdb_putc
 decl_stmt|;
 end_decl_stmt
 
@@ -248,9 +252,22 @@ name|c
 parameter_list|)
 comment|/* write a single character      */
 block|{
-name|siocnputc
+if|if
+condition|(
+name|gdbdev
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+literal|0
+return|;
+call|(
+modifier|*
+name|gdb_putc
+call|)
 argument_list|(
-name|REMOTE_DEV
+name|gdbdev
 argument_list|,
 name|c
 argument_list|)
@@ -270,10 +287,24 @@ name|void
 parameter_list|)
 comment|/* read and return a single char */
 block|{
+if|if
+condition|(
+name|gdbdev
+operator|==
+operator|-
+literal|1
+condition|)
 return|return
-name|siocngetc
+operator|-
+literal|1
+return|;
+return|return
+call|(
+modifier|*
+name|gdb_getc
+call|)
 argument_list|(
-name|REMOTE_DEV
+name|gdbdev
 argument_list|)
 return|;
 block|}
