@@ -117,9 +117,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|warnlun
+index|[]
 init|=
 literal|"WARNING- cannot determine Expanded LUN capability- limiting to one LUN"
 decl_stmt|;
@@ -127,9 +128,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|portshift
+index|[]
 init|=
 literal|"Target %d Loop ID 0x%x (Port 0x%x) => Loop 0x%x (Port 0x%x)"
 decl_stmt|;
@@ -137,9 +139,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|portdup
+index|[]
 init|=
 literal|"Target %d duplicates Target %d- killing off both"
 decl_stmt|;
@@ -147,9 +150,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|retained
+index|[]
 init|=
 literal|"Retaining Loop ID 0x%x for Target %d (Port 0x%x)"
 decl_stmt|;
@@ -163,9 +167,10 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|lretained
+index|[]
 init|=
 literal|"Retained login of Target %d (Loop ID 0x%x) Port 0x%x"
 decl_stmt|;
@@ -173,9 +178,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|plogout
+index|[]
 init|=
 literal|"Logging out Target %d at Loop ID 0x%x (Port 0x%x)"
 decl_stmt|;
@@ -183,9 +189,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|plogierr
+index|[]
 init|=
 literal|"Command Error in PLOGI for Port 0x%x (0x%x)"
 decl_stmt|;
@@ -193,9 +200,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|nopdb
+index|[]
 init|=
 literal|"Could not get PDB for Device @ Port 0x%x"
 decl_stmt|;
@@ -203,9 +211,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|pdbmfail1
+index|[]
 init|=
 literal|"PDB Loop ID info for Device @ Port 0x%x does not match up (0x%x)"
 decl_stmt|;
@@ -213,9 +222,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|pdbmfail2
+index|[]
 init|=
 literal|"PDB Port info for Device @ Port 0x%x does not match up (0x%x)"
 decl_stmt|;
@@ -223,9 +233,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|ldumped
+index|[]
 init|=
 literal|"Target %d (Loop ID 0x%x) Port 0x%x dumped after login info mismatch"
 decl_stmt|;
@@ -238,9 +249,10 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|notresp
+index|[]
 init|=
 literal|"Not RESPONSE in RESPONSE Queue (type 0x%x) @ idx %d (next %d) nlooked %d"
 decl_stmt|;
@@ -248,9 +260,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|xact1
+index|[]
 init|=
 literal|"HBA attempted queued transaction with disconnect not set for %d.%d.%d"
 decl_stmt|;
@@ -258,9 +271,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|xact2
+index|[]
 init|=
 literal|"HBA attempted queued transaction to target routine %d on target %d bus %d"
 decl_stmt|;
@@ -268,9 +282,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|xact3
+index|[]
 init|=
 literal|"HBA attempted queued cmd for %d.%d.%d when queueing disabled"
 decl_stmt|;
@@ -278,9 +293,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|pskip
+index|[]
 init|=
 literal|"SCSI phase skipped for target %d.%d.%d"
 decl_stmt|;
@@ -288,9 +304,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|topology
+index|[]
 init|=
 literal|"Loop ID %d, AL_PA 0x%x, Port ID 0x%x, Loop State 0x%x, Topology '%s'"
 decl_stmt|;
@@ -298,9 +315,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|finmsg
+index|[]
 init|=
 literal|"(%d.%d.%d): FIN dl%d resid%d STS 0x%x SKEY %c XS_ERR=0x%x"
 decl_stmt|;
@@ -887,7 +905,7 @@ argument_list|,
 operator|&
 name|mbs
 argument_list|,
-name|MBLOGNONE
+name|MBOX_COMMAND_ERROR
 argument_list|)
 expr_stmt|;
 comment|/* 			 * This *shouldn't* fail..... 			 */
@@ -1068,9 +1086,10 @@ argument_list|)
 condition|)
 block|{
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|m
+index|[]
 init|=
 literal|"bus %d is in %s Mode"
 decl_stmt|;
@@ -3046,6 +3065,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|isp
+operator|->
+name|isp_confopts
+operator|&
+name|ISP_CFG_NOINIT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|IS_FC
 argument_list|(
 name|isp
@@ -3065,6 +3097,7 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -5744,14 +5777,13 @@ operator|&
 name|hra
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the elapsed time is less than 1 millisecond, 		 * delay a period of time up to that millisecond of 		 * waiting. 		 */
 name|isp_prt
 argument_list|(
 name|isp
 argument_list|,
 name|ISP_LOGDEBUG3
 argument_list|,
-literal|"usec%d: 0x%lx->0x%lx enano %u"
+literal|"usec%d: 0x%lx->0x%lx enano %lu"
 argument_list|,
 name|count
 argument_list|,
@@ -5773,10 +5805,31 @@ operator|&
 name|hrb
 argument_list|)
 argument_list|,
+operator|(
 name|enano
+operator|>
+operator|(
+operator|(
+name|u_int64_t
+operator|)
+literal|0xffffffff
+operator|)
+operator|)
+condition|?
+literal|0xffffffff
+else|:
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|enano
+operator|&
+literal|0xffffffff
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This peculiar code is an attempt to try and avoid 		 * invoking u_int64_t math support functions for some 		 * platforms where linkage is a problem. 		 */
+comment|/* 		 * If the elapsed time is less than 1 millisecond, 		 * delay a period of time up to that millisecond of 		 * waiting. 		 * 		 * This peculiar code is an attempt to try and avoid 		 * invoking u_int64_t math support functions for some 		 * platforms where linkage is a problem. 		 */
 if|if
 condition|(
 name|enano
@@ -12062,7 +12115,7 @@ literal|1
 init|;
 name|i
 operator|<
-literal|8
+name|MAX_MAILBOX
 condition|;
 name|i
 operator|++
@@ -20683,6 +20736,24 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|fcp
+operator|->
+name|isp_nodewwn
+operator|=
+name|ISP_NODEWWN
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
+name|fcp
+operator|->
+name|isp_portwwn
+operator|=
+name|ISP_PORTWWN
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|sdp
