@@ -397,6 +397,8 @@ operator|->
 name|siginfo
 index|[
 name|i
+operator|-
+literal|1
 index|]
 expr_stmt|;
 name|KSE_SCHED_UNLOCK

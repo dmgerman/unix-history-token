@@ -2082,6 +2082,8 @@ operator|->
 name|siginfo
 index|[
 name|i
+operator|-
+literal|1
 index|]
 expr_stmt|;
 break|break;
@@ -2557,6 +2559,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|,
 name|sig
@@ -2573,6 +2577,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 condition|)
 name|memcpy
@@ -2583,6 +2589,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|,
 name|info
@@ -2610,6 +2618,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|)
 condition|)
@@ -2828,6 +2838,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|,
 name|sig
@@ -2844,6 +2856,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 condition|)
 name|memcpy
@@ -2854,6 +2868,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|,
 name|info
@@ -2899,6 +2915,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 expr_stmt|;
 name|pthread
@@ -2960,6 +2978,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|,
 name|sig
@@ -2976,6 +2996,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 condition|)
 name|memcpy
@@ -2986,6 +3008,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|,
 name|info
@@ -3115,6 +3139,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 argument_list|,
 name|sig
@@ -3149,6 +3175,8 @@ operator|->
 name|siginfo
 index|[
 name|sig
+operator|-
+literal|1
 index|]
 expr_stmt|;
 name|pthread

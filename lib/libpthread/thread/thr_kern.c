@@ -6334,6 +6334,8 @@ operator|->
 name|siginfo
 index|[
 name|i
+operator|-
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
