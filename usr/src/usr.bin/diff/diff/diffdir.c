@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffdir.c 4.3 %G%"
+literal|"@(#)diffdir.c 4.4 1/25/81"
 decl_stmt|;
 end_decl_stmt
 
@@ -1117,6 +1117,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|stb
 operator|.
 name|st_size
@@ -1159,7 +1162,7 @@ operator|)
 name|dp
 argument_list|,
 operator|(
-name|short
+name|int
 operator|)
 name|stb
 operator|.
@@ -1167,7 +1170,7 @@ name|st_size
 argument_list|)
 operator|!=
 operator|(
-name|short
+name|int
 operator|)
 name|stb
 operator|.
@@ -1194,6 +1197,9 @@ name|qsort
 argument_list|(
 name|dp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|stb
 operator|.
 name|st_size
