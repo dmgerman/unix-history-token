@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.7 1995/10/22 17:39:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.8 1995/10/23 13:19:45 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -930,11 +930,9 @@ name|extractingBin
 init|=
 name|TRUE
 decl_stmt|;
-name|int
-name|waitstatus
-decl_stmt|;
-name|pid_t
-name|child
+name|struct
+name|termios
+name|foo
 decl_stmt|;
 if|if
 condition|(
@@ -955,6 +953,22 @@ return|return
 name|RET_FAIL
 return|;
 block|}
+name|systemDisplayHelp
+argument_list|(
+literal|"upgrade"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Given all that scary stuff you just read, are you sure you want to\n"
+literal|"risk it all and proceed with this upgrade?"
+argument_list|)
+condition|)
+return|return
+name|RET_FAIL
+return|;
 if|if
 condition|(
 operator|!
@@ -966,11 +980,11 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"You haven't specified any distributions yet.  The upgrade procedure\n"
-literal|"will only upgrade those portions of the system for which a distribution\n"
-literal|"has been selected.  In the next screen, we'll go to the Distributions\n"
-literal|"menu to select those portions of 2.1 you wish to install on top of your\n"
-literal|"2.0.5 system."
+literal|"You haven't specified any distributions yet.  The upgrade procedure will\n"
+literal|"only upgrade those portions of the system for which a distribution has\n"
+literal|"been selected.  In the next screen, we'll go to the Distributions menu\n"
+literal|"to select those portions of 2.1 you wish to install on top of your 2.0.5\n"
+literal|"system."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1036,22 +1050,36 @@ name|extractingBin
 operator|=
 name|FALSE
 expr_stmt|;
-name|systemDisplayHelp
+if|if
+condition|(
+operator|!
+name|mediaDevice
+condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|msgConfirm
 argument_list|(
-literal|"upgrade"
+literal|"Now you must specify an installation medium for the upgrade."
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msgYesNo
+operator|!
+name|dmenuOpenSimple
 argument_list|(
-literal|"Given all that scary stuff you just read, are you sure you want to\n"
-literal|"risk it all and proceed with this upgrade?"
+operator|&
+name|MenuMedia
 argument_list|)
+operator|||
+operator|!
+name|mediaDevice
 condition|)
 return|return
 name|RET_FAIL
 return|;
+block|}
 comment|/* Note that we're now upgrading */
 name|variable_set2
 argument_list|(
@@ -1072,7 +1100,7 @@ literal|"unless you're absolutely sure you know what you're doing!  In this\n"
 literal|"instance, you'll be using the label editor as little more than a fancy\n"
 literal|"screen-oriented filesystem mounting utility, so think of it that way.\n\n"
 literal|"Once you're done in the label editor, press Q to return here for the next\n"
-literal|"step.\n"
+literal|"step."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1110,7 +1138,7 @@ if|if
 condition|(
 name|diskLabelCommit
 argument_list|(
-name|NULL
+literal|"upgrade"
 argument_list|)
 operator|==
 name|RET_FAIL
@@ -1258,7 +1286,7 @@ if|if
 condition|(
 name|system
 argument_list|(
-literal|"chflags noschg /mnt/kernel&& mv /mnt/kernel /mnt/kernel.205"
+literal|"chflags noschg /kernel&& mv /kernel /kernel.205"
 argument_list|)
 condition|)
 block|{
@@ -1271,12 +1299,18 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"Hmmm!  I couldn't move the old kernel over!  Do you want to\n"
-literal|"treat this as a big problem and abort the upgrade?"
+literal|"treat this as a big problem and abort the upgrade?  Due to the\n"
+literal|"way that this upgrade process works, you will have to reboot\n"
+literal|"and start over from the beginning.  Select Yes to reboot now"
 argument_list|)
 condition|)
-return|return
-name|RET_FAIL
-return|;
+block|{
+name|reboot
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1289,7 +1323,7 @@ if|if
 condition|(
 name|distExtractAll
 argument_list|(
-name|NULL
+literal|"upgrade"
 argument_list|)
 operator|==
 name|RET_FAIL
@@ -1313,11 +1347,14 @@ name|msgConfirm
 argument_list|(
 literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
 literal|"should be considered a failure and started from the beginning, sorry!\n"
+literal|"The system will reboot now."
 argument_list|)
 expr_stmt|;
-return|return
-name|RET_FAIL
-return|;
+name|reboot
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|dialog_clear
 argument_list|()
@@ -1427,16 +1464,16 @@ literal|"your former /etc is toast.  I hope you didn't have any\n"
 literal|"important customizations you wanted to keep in there.. :(\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|RET_FAIL
-return|;
 block|}
+else|else
+block|{
 comment|/* Now try to resurrect the /etc files */
 name|traverseHitlist
 argument_list|(
 name|etc_files
 argument_list|)
 expr_stmt|;
+block|}
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1444,9 +1481,9 @@ name|msgConfirm
 argument_list|(
 literal|"OK!  At this stage, we've resurrected all the /etc files we could\n"
 literal|"(and you may have been warned about some that you'll have to merge\n"
-literal|"yourself, by hand) and we're going to drop you into a shell to do\n"
+literal|"yourself by hand) and we're going to drop you into a shell to do\n"
 literal|"the rest yourself (sorry about this!).  Once the system looks good\n"
-literal|"to you, exit the shell and reboot the system."
+literal|"to you, exit the shell to reboot the system."
 argument_list|)
 expr_stmt|;
 name|chdir
@@ -1467,21 +1504,6 @@ name|DialogActive
 operator|=
 name|FALSE
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|child
-operator|=
-name|fork
-argument_list|()
-operator|)
-condition|)
-block|{
-name|struct
-name|termios
-name|foo
-decl_stmt|;
 name|signal
 argument_list|(
 name|SIGTTOU
@@ -1541,7 +1563,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Well, good luck!  When you're done, type exit to return.\n"
+literal|"Well, good luck!  When you're done, please type \"reboot\" to reboot\n"
+literal|"the new system.\n"
 argument_list|)
 expr_stmt|;
 name|execlp
@@ -1563,36 +1586,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-operator|(
-name|void
-operator|)
-name|waitpid
-argument_list|(
-name|child
-argument_list|,
-operator|&
-name|waitstatus
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|DialogActive
-operator|=
-name|TRUE
-expr_stmt|;
-name|clear
-argument_list|()
-expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
+comment|/* NOTREACHED */
 return|return
-name|RET_SUCCESS
+literal|0
 return|;
 block|}
 end_function
