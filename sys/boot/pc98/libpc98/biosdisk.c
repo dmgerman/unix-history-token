@@ -251,7 +251,7 @@ name|struct
 name|pc98_partition
 name|od_slicetab
 index|[
-name|NEXTDOSPART
+name|NDOSPART
 index|]
 decl_stmt|;
 block|}
@@ -4001,7 +4001,7 @@ name|od
 operator|->
 name|od_nslices
 operator|==
-name|NEXTDOSPART
+name|NDOSPART
 condition|)
 goto|goto
 name|done
