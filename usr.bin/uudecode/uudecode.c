@@ -815,11 +815,13 @@ argument_list|,
 name|stdin
 argument_list|)
 operator|||
-name|strcmp
+name|strncmp
 argument_list|(
 name|buf
 argument_list|,
 literal|"end"
+argument_list|,
+literal|3
 argument_list|)
 operator|||
 operator|(
