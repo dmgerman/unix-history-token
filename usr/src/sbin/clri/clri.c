@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c	5.5 (Berkeley) %G%"
+literal|"@(#)clri.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,9 +155,10 @@ decl_stmt|;
 name|long
 name|generation
 decl_stmt|,
-name|offset
-decl_stmt|,
 name|bsize
+decl_stmt|;
+name|off_t
+name|offset
 decl_stmt|;
 name|int
 name|inonum
@@ -224,9 +225,14 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+call|(
+name|off_t
+call|)
+argument_list|(
 name|SBLOCK
 operator|*
 name|DEV_BSIZE
+argument_list|)
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -487,6 +493,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 operator|-
 name|bsize
 argument_list|,
