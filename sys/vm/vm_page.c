@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.131 1999/06/20 04:55:27 alc Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.132 1999/06/20 21:47:02 alc Exp $  */
 end_comment
 
 begin_comment
@@ -532,27 +532,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|long
-name|last_page
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_size_t
-name|page_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|page_shift
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|vm_page_zero_count
 init|=
@@ -592,7 +571,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	vm_set_page_size:  *  *	Sets the page size, perhaps based upon the memory  *	size.  Must be called before any use of page-size  *	dependent functions.  *  *	Sets page_shift and page_mask from cnt.v_page_size.  */
+comment|/*  *	vm_set_page_size:  *  *	Sets the page size, perhaps based upon the memory  *	size.  Must be called before any use of page-size  *	dependent functions.  */
 end_comment
 
 begin_function
@@ -614,18 +593,16 @@ name|v_page_size
 operator|=
 name|PAGE_SIZE
 expr_stmt|;
-name|page_mask
-operator|=
+if|if
+condition|(
+operator|(
+operator|(
 name|cnt
 operator|.
 name|v_page_size
 operator|-
 literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|page_mask
+operator|)
 operator|&
 name|cnt
 operator|.
@@ -639,29 +616,6 @@ argument_list|(
 literal|"vm_set_page_size: page size not a power of two"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|page_shift
-operator|=
-literal|0
-init|;
-condition|;
-name|page_shift
-operator|++
-control|)
-if|if
-condition|(
-operator|(
-literal|1
-operator|<<
-name|page_shift
-operator|)
-operator|==
-name|cnt
-operator|.
-name|v_page_size
-condition|)
-break|break;
 block|}
 end_function
 
@@ -1028,7 +982,7 @@ index|]
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-name|last_page
+name|page_range
 operator|=
 name|phys_avail
 index|[
@@ -1044,19 +998,8 @@ literal|1
 index|]
 operator|/
 name|PAGE_SIZE
-expr_stmt|;
-name|page_range
-operator|=
-name|last_page
 operator|-
-operator|(
-name|phys_avail
-index|[
-literal|0
-index|]
-operator|/
-name|PAGE_SIZE
-operator|)
+name|first_page
 expr_stmt|;
 name|npages
 operator|=
