@@ -138,7 +138,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* max time constant in PLL mode */
+comment|/* max time constant */
 end_comment
 
 begin_comment
@@ -214,23 +214,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOD_PLL
-value|0x0400
+name|MOD_PPSMAX
+value|0x0040
 end_define
 
 begin_comment
-comment|/* select default PLL mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOD_FLL
-value|0x0800
-end_define
-
-begin_comment
-comment|/* select default FLL mode */
+comment|/* set PPS maximum averaging time */
 end_comment
 
 begin_define
