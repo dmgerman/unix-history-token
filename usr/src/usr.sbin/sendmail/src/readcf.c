@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.15 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2033,6 +2033,9 @@ argument_list|,
 literal|"host host"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 if|if
 condition|(
 name|ConfigLevel
@@ -2046,6 +2049,8 @@ argument_list|,
 literal|" -a."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|makemapentry
 argument_list|(
 name|buf
