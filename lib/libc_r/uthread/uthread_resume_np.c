@@ -118,6 +118,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|SUSP_JOIN
+case|:
+comment|/* Set the thread's state back. */
+name|PTHREAD_SET_STATE
+argument_list|(
+name|thread
+argument_list|,
+name|PS_JOIN
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SUSP_NOWAIT
 case|:
 comment|/* Allow the thread to run. */

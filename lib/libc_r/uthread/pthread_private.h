@@ -1139,6 +1139,9 @@ comment|/* Not suspended. */
 name|SUSP_YES
 block|,
 comment|/* Suspended. */
+name|SUSP_JOIN
+block|,
+comment|/* Suspended, joining. */
 name|SUSP_NOWAIT
 block|,
 comment|/* Suspended, was in a mutex or condition queue. */
@@ -1907,16 +1910,13 @@ comment|/* 	 * Error variable used instead of errno. The function __error() 	 * 
 name|int
 name|error
 decl_stmt|;
-comment|/* Join queue head and link for waiting threads: */
-name|TAILQ_HEAD
-argument_list|(
-argument|join_head
-argument_list|,
-argument|pthread
-argument_list|)
-name|join_queue
-expr_stmt|;
-comment|/* 	 * The current thread can belong to only one scheduling queue at 	 * a time (ready or waiting queue).  It can also belong to: 	 * 	 *   o A queue of threads waiting for a mutex 	 *   o A queue of threads waiting for a condition variable 	 *   o A queue of threads waiting for another thread to terminate 	 *     (the join queue above) 	 *   o A queue of threads waiting for a file descriptor lock 	 *   o A queue of threads needing work done by the kernel thread 	 *     (waiting for a spinlock or file I/O) 	 * 	 * It is possible for a thread to belong to more than one of the 	 * above queues if it is handling a signal.  A thread may only 	 * enter a mutex, condition variable, or join queue when it is 	 * not being called from a signal handler.  If a thread is a 	 * member of one of these queues when a signal handler is invoked, 	 * it must remain in the queue.  For this reason, the links for 	 * these queues must not be (re)used for other queues. 	 * 	 * Use pqe for the scheduling queue link (both ready and waiting), 	 * sqe for synchronization (mutex, condition variable, and join) 	 * queue links, and qe for all other links. 	 */
+comment|/* Pointer to a thread that is waiting to join (NULL if no joiner). */
+name|struct
+name|pthread
+modifier|*
+name|joiner
+decl_stmt|;
+comment|/* 	 * The current thread can belong to only one scheduling queue at 	 * a time (ready or waiting queue).  It can also belong to: 	 * 	 *   o A queue of threads waiting for a mutex 	 *   o A queue of threads waiting for a condition variable 	 *   o A queue of threads waiting for a file descriptor lock 	 *   o A queue of threads needing work done by the kernel thread 	 *     (waiting for a spinlock or file I/O) 	 * 	 * A thread can also be joining a thread (the joiner field above). 	 * 	 * It must not be possible for a thread to belong to any of the 	 * above queues while it is handling a signal.  Signal handlers 	 * may longjmp back to previous stack frames circumventing normal 	 * control flow.  This could corrupt queue integrity if the thread 	 * retains membership in the queue.  Therefore, if a thread is a 	 * member of one of these queues when a signal handler is invoked, 	 * it must remove itself from the queue before calling the signal 	 * handler and reinsert itself after normal return of the handler. 	 * 	 * Use pqe for the scheduling queue link (both ready and waiting), 	 * sqe for synchronization (mutex and condition variable) queue 	 * links, and qe for all other links. 	 */
 name|TAILQ_ENTRY
 argument_list|(
 argument|pthread
@@ -2013,19 +2013,14 @@ value|0x0100
 comment|/* in mutex queue using sqe link */
 define|#
 directive|define
-name|PTHREAD_FLAGS_IN_JOINQ
-value|0x0200
-comment|/* in join queue using sqe link */
-define|#
-directive|define
 name|PTHREAD_FLAGS_TRACE
-value|0x0400
+value|0x0200
 comment|/* for debugging purposes */
 define|#
 directive|define
 name|PTHREAD_FLAGS_IN_SYNCQ
 define|\
-value|(PTHREAD_FLAGS_IN_CONDQ | PTHREAD_FLAGS_IN_MUTEXQ | PTHREAD_FLAGS_IN_JOINQ)
+value|(PTHREAD_FLAGS_IN_CONDQ | PTHREAD_FLAGS_IN_MUTEXQ)
 comment|/* 	 * Base priority is the user setable and retrievable priority 	 * of the thread.  It is only affected by explicit calls to 	 * set thread priority and upon thread creation via a thread 	 * attribute or default priority. 	 */
 name|char
 name|base_priority
@@ -3304,15 +3299,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|_funlock_owned
-parameter_list|(
-name|pthread_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_join_backout
 parameter_list|(
 name|pthread_t
 parameter_list|)

@@ -211,6 +211,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PS_JOIN
+case|:
+comment|/* Mark the thread as suspended and joining: */
+name|thread
+operator|->
+name|suspended
+operator|=
+name|SUSP_JOIN
+expr_stmt|;
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|thread
+argument_list|,
+name|PS_SUSPENDED
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PS_FDLR_WAIT
 case|:
 case|case
@@ -218,9 +236,6 @@ name|PS_FDLW_WAIT
 case|:
 case|case
 name|PS_FILE_WAIT
-case|:
-case|case
-name|PS_JOIN
 case|:
 comment|/* Mark the thread as suspended: */
 name|thread

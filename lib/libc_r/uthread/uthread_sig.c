@@ -2015,18 +2015,10 @@ block|}
 break|break;
 comment|/* 	 * States which cannot be interrupted but still require the 	 * signal handler to run: 	 */
 case|case
-name|PS_JOIN
-case|:
-comment|/* Only set the interrupted flag for PS_JOIN: */
-name|pthread
-operator|->
-name|interrupted
-operator|=
-literal|1
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
 name|PS_COND_WAIT
+case|:
+case|case
+name|PS_JOIN
 case|:
 case|case
 name|PS_MUTEX_WAIT
@@ -2754,23 +2746,6 @@ case|case
 name|PS_COND_WAIT
 case|:
 name|_cond_wait_backout
-argument_list|(
-name|thread
-argument_list|)
-expr_stmt|;
-name|psf
-operator|->
-name|saved_state
-operator|.
-name|psd_state
-operator|=
-name|PS_RUNNING
-expr_stmt|;
-break|break;
-case|case
-name|PS_JOIN
-case|:
-name|_join_backout
 argument_list|(
 name|thread
 argument_list|)

@@ -583,47 +583,50 @@ argument_list|(
 literal|"Cannot lock gc mutex"
 argument_list|)
 expr_stmt|;
-comment|/* Check if there are any threads joined to this one: */
-while|while
+comment|/* Check if there is a thread joining this one: */
+if|if
 condition|(
-operator|(
-name|pthread
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-operator|(
 name|_thread_run
 operator|->
-name|join_queue
-operator|)
-argument_list|)
-operator|)
+name|joiner
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Remove the thread from the queue: */
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
+name|pthread
+operator|=
 name|_thread_run
 operator|->
-name|join_queue
-argument_list|,
-name|pthread
-argument_list|,
-name|sqe
-argument_list|)
+name|joiner
 expr_stmt|;
+name|_thread_run
+operator|->
+name|joiner
+operator|=
+name|NULL
+expr_stmt|;
+switch|switch
+condition|(
 name|pthread
 operator|->
-name|flags
-operator|&=
-operator|~
-name|PTHREAD_FLAGS_IN_JOINQ
+name|suspended
+condition|)
+block|{
+case|case
+name|SUSP_JOIN
+case|:
+comment|/* 			 * The joining thread is suspended.  Change the 			 * suspension state to make the thread runnable when it 			 * is resumed: 			 */
+name|pthread
+operator|->
+name|suspended
+operator|=
+name|SUSP_NO
 expr_stmt|;
-comment|/* 		 * Wake the joined thread and let it 		 * detach this thread: 		 */
+break|break;
+case|case
+name|SUSP_NO
+case|:
+comment|/* Make the joining thread runnable: */
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
@@ -631,9 +634,33 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Set the return value for the woken thread: 		 */
-if|if
-condition|(
+break|break;
+default|default:
+name|PANIC
+argument_list|(
+literal|"Unreachable code reached"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Set the return value for the joining thread: */
+name|pthread
+operator|->
+name|ret
+operator|=
+name|_thread_run
+operator|->
+name|ret
+expr_stmt|;
+name|pthread
+operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Make this thread collectable by the garbage collector. */
+name|PTHREAD_ASSERT
+argument_list|(
+operator|(
 operator|(
 name|_thread_run
 operator|->
@@ -643,32 +670,21 @@ name|flags
 operator|&
 name|PTHREAD_DETACHED
 operator|)
-operator|!=
+operator|==
 literal|0
-condition|)
-name|pthread
-operator|->
-name|error
-operator|=
-name|ESRCH
+operator|)
+argument_list|,
+literal|"Cannot join a detached thread"
+argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|pthread
-operator|->
-name|ret
-operator|=
 name|_thread_run
 operator|->
-name|ret
+name|attr
+operator|.
+name|flags
+operator||=
+name|PTHREAD_DETACHED
 expr_stmt|;
-name|pthread
-operator|->
-name|error
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 comment|/* Remove this thread from the thread list: */
 name|TAILQ_REMOVE
