@@ -14356,6 +14356,14 @@ name|val
 argument_list|)
 index|]
 expr_stmt|;
+name|ic
+operator|->
+name|ic_ibss_chan
+operator|=
+name|ni
+operator|->
+name|ni_chan
+expr_stmt|;
 if|#
 directive|if
 name|NBPFILTER
