@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.33	(Berkeley) %G%"
+literal|"@(#)ftpd.c	5.34	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1554,7 +1554,7 @@ comment|/* had user command, ask for passwd */
 end_comment
 
 begin_comment
-comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists  * and is acceptable; sets askpasswd if a PASS command is  * expected. If logged in previously, need to reset state.  * If name is "ftp" or "anonymous", the name is not in /etc/ftpusers,  * and ftp account exists, set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  * Otherwise, check user requesting login privileges.  * Disallow anyone who does not have a standard  * shell as returned by getusershell().  * Disallow anyone mentioned in the file _PATH_FTPUSERS  * to allow people such as root and uucp to be avoided.  */
+comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists and is acceptable;  * sets askpasswd if a PASS command is expected.  If logged in previously,  * need to reset state.  If name is "ftp" or "anonymous", the name is not in  * _PATH_FTPUSERS, and ftp account exists, set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  Otherwise, check user  * requesting login privileges.  Disallow anyone who does not have a standard  * shell as returned by getusershell().  Disallow anyone mentioned in the file  * _PATH_FTPUSERS to allow people such as root and uucp to be avoided.  */
 end_comment
 
 begin_macro
@@ -1853,18 +1853,21 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|FILE
 modifier|*
 name|fd
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|char
 name|line
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 if|if
 condition|(
@@ -1898,11 +1901,10 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-block|{
 if|if
 condition|(
 operator|(
-name|cp
+name|p
 operator|=
 name|index
 argument_list|(
@@ -1914,11 +1916,22 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
-name|cp
+name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|strcmp
