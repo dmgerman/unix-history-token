@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.24	81/03/16	*/
+comment|/*	uba.c	4.25	81/03/21	*/
 end_comment
 
 begin_include
@@ -537,6 +537,22 @@ name|o
 decl_stmt|,
 name|ubinfo
 decl_stmt|;
+if|#
+directive|if
+name|VAX730
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_730
+condition|)
+name|flags
+operator|&=
+operator|~
+name|UBA_NEEDBDP
+expr_stmt|;
+endif|#
+directive|endif
 name|v
 operator|=
 name|btop
@@ -1717,11 +1733,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* give devices time to recover from power fail */
+comment|/* THIS IS PROBABLY UNNECESSARY */
 name|DELAY
 argument_list|(
 literal|5000000
 argument_list|)
 expr_stmt|;
+comment|/* END PROBABLY UNNECESSARY */
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX730
+case|case
+name|VAX_730
+case|:
 break|break;
 endif|#
 directive|endif
