@@ -403,7 +403,8 @@ literal|"a:b:hp:r:t:d"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 else|#
 directive|else
@@ -422,7 +423,8 @@ literal|"a:b:hp:r:t:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 endif|#
 directive|endif

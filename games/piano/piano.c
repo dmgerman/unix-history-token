@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: piano.c,v 1.1.1.1 1995/04/28 17:38:07 jkh Exp $"
+literal|"$Id: piano.c,v 1.2 1995/05/30 03:37:05 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,7 +647,8 @@ literal|"-vi:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
