@@ -1413,12 +1413,12 @@ begin_decl_stmt
 name|int
 name|remote_timeout
 init|=
-literal|20
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set default to 20 */
+comment|/* Set default to 1 second */
 end_comment
 
 begin_comment
