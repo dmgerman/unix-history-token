@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chroot.c	5.5 (Berkeley) %G%"
+literal|"@(#)chroot.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,9 @@ operator|<
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -140,12 +143,6 @@ name|argv
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -242,6 +239,9 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
