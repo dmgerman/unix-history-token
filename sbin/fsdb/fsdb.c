@@ -1655,8 +1655,9 @@ name|rval
 operator|<
 literal|0
 condition|)
+comment|/* user typed "quit" */
 return|return
-name|rval
+literal|0
 return|;
 if|if
 condition|(
