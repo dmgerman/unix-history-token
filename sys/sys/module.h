@@ -103,15 +103,12 @@ name|modeventhand_t
 function_decl|)
 parameter_list|(
 name|module_t
-name|mod
 parameter_list|,
 name|int
-comment|/*modeventtype_t*/
-name|what
+comment|/* modeventtype_t */
 parameter_list|,
 name|void
 modifier|*
-name|arg
 parameter_list|)
 function_decl|;
 end_typedef
@@ -146,7 +143,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A module can use this to report module specific data to  * the user via kldstat(2).  */
+comment|/*  * A module can use this to report module specific data to the user via  * kldstat(2).  */
 end_comment
 
 begin_typedef
@@ -260,7 +257,7 @@ parameter_list|,
 name|cval
 parameter_list|)
 define|\
-value|static struct mod_metadata _mod_metadata ## uniquifier = {	\ 	MDT_STRUCT_VERSION,				\ 	type,						\ 	data,						\ 	cval						\     };							\     DATA_SET(modmetadata_set, _mod_metadata ## uniquifier)
+value|static struct mod_metadata _mod_metadata##uniquifier = {	\ 		MDT_STRUCT_VERSION,					\ 		type,							\ 		data,							\ 		cval							\ 	};								\ 	DATA_SET(modmetadata_set, _mod_metadata##uniquifier)
 end_define
 
 begin_define
@@ -279,7 +276,7 @@ parameter_list|,
 name|vmax
 parameter_list|)
 define|\
-value|static struct mod_depend _ ##module ## _depend_on_ ## mdepend = {	\ 	vmin,					\ 	vpref,					\ 	vmax					\     };						\     MODULE_METADATA(_md_ ##module ## _on_ ##mdepend, MDT_DEPEND, \&_ ##module ## _depend_on_ ##mdepend, #mdepend)
+value|static struct mod_depend _##module##_depend_on_##mdepend = {	\ 		vmin,							\ 		vpref,							\ 		vmax							\ 	};								\ 	MODULE_METADATA(_md_##module##_on_##mdepend, MDT_DEPEND,	\&_##module##_depend_on_##mdepend, #mdepend)
 end_define
 
 begin_define
@@ -296,7 +293,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|MODULE_METADATA(_md_ ##name, MDT_MODULE,&data, #name); \     SYSINIT(name##module, sub, order, module_register_init,&data) \     struct __hack
+value|MODULE_METADATA(_md_##name, MDT_MODULE,&data, #name);		\ 	SYSINIT(name##module, sub, order, module_register_init,&data)	\ 	struct __hack
 end_define
 
 begin_define
@@ -309,8 +306,14 @@ parameter_list|,
 name|version
 parameter_list|)
 define|\
-value|static struct mod_version _ ## module ## _version = {	\ 	version							\     };								\     MODULE_METADATA(_ ## module ## _version, MDT_VERSION, 	\& _ ## module ## _version, #module)
+value|static struct mod_version _##module##_version = {		\ 		version							\ 	};								\ 	MODULE_METADATA(_##module##_version, MDT_VERSION,		\&_##module##_version, #module)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|linker_file
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|void
@@ -319,16 +322,9 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|data
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|linker_file
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
@@ -338,12 +334,10 @@ specifier|const
 name|struct
 name|moduledata
 modifier|*
-name|data
 parameter_list|,
 name|struct
 name|linker_file
 modifier|*
-name|lf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -355,7 +349,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -365,7 +358,6 @@ name|module_t
 name|module_lookupbyid
 parameter_list|(
 name|int
-name|modid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -375,7 +367,6 @@ name|void
 name|module_reference
 parameter_list|(
 name|module_t
-name|mod
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -385,7 +376,6 @@ name|void
 name|module_release
 parameter_list|(
 name|module_t
-name|mod
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -395,7 +385,6 @@ name|int
 name|module_unload
 parameter_list|(
 name|module_t
-name|mod
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -405,7 +394,6 @@ name|int
 name|module_getid
 parameter_list|(
 name|module_t
-name|mod
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -415,7 +403,6 @@ name|module_t
 name|module_getfnext
 parameter_list|(
 name|module_t
-name|mod
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -425,11 +412,9 @@ name|void
 name|module_setspecific
 parameter_list|(
 name|module_t
-name|mod
 parameter_list|,
 name|modspecific_t
 modifier|*
-name|datap
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -463,16 +448,35 @@ name|cat
 parameter_list|,
 name|args
 parameter_list|)
-define|\
-value|do {							\ 		if (mod_debug& MOD_DEBUG_##cat) printf args;	\ 	} while (0)
+value|do {						\
 end_define
 
-begin_else
+begin_if
+if|if
+condition|(
+name|mod_debug
+operator|&
+name|MOD_DEBUG_
+operator|#
+operator|#
+name|cat
+condition|)
+then|\
+name|printf
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+unit|\ } while
+operator|(
+literal|0
+operator|)
 else|#
 directive|else
-end_else
-
-begin_define
+comment|/* !MOD_DEBUG */
 define|#
 directive|define
 name|MOD_DPF
@@ -481,55 +485,39 @@ name|cat
 parameter_list|,
 name|args
 parameter_list|)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* _KERNEL */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|MAXMODNAME
 value|32
-end_define
-
-begin_struct
-struct|struct
+expr|struct
 name|module_stat
 block|{
 name|int
 name|version
-decl_stmt|;
+block|;
 comment|/* set to sizeof(struct module_stat) */
 name|char
 name|name
 index|[
 name|MAXMODNAME
 index|]
-decl_stmt|;
+block|;
 name|int
 name|refs
-decl_stmt|;
+block|;
 name|int
 name|id
-decl_stmt|;
+block|;
 name|modspecific_t
 name|data
-decl_stmt|;
-block|}
-struct|;
-end_struct
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_ifndef
 ifndef|#
