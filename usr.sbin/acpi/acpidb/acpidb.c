@@ -632,6 +632,9 @@ name|printf
 argument_list|(
 literal|"(default: 0x%x "
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -639,6 +642,9 @@ name|printf
 argument_list|(
 literal|" / %u)>>"
 argument_list|,
+operator|(
+name|uint32_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -1001,7 +1007,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d	0x%x	0x%x\n"
+literal|"%d	0x%jx	0x%x\n"
 argument_list|,
 name|rc
 operator|->
@@ -1093,6 +1099,7 @@ literal|256
 index|]
 decl_stmt|;
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|space_names
@@ -1197,7 +1204,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"[read (%s, %2d, 0x%x)]"
+literal|"[read (%s, %2d, 0x%jx)]"
 argument_list|,
 name|space_names
 index|[
@@ -1265,7 +1272,7 @@ name|sprintf
 argument_list|(
 name|msg
 argument_list|,
-literal|"[write(%s, %2d, 0x%x)]"
+literal|"[write(%s, %2d, 0x%jx)]"
 argument_list|,
 name|space_names
 index|[
@@ -1370,7 +1377,7 @@ name|name
 parameter_list|,
 name|id
 parameter_list|)
-value|;			\ static ACPI_STATUS						\ aml_vm_space_handler_##name (					\ 	UINT32			Function,			\ 	ACPI_PHYSICAL_ADDRESS	Address,			\ 	UINT32			BitWidth,			\ 	ACPI_INTEGER		*Value,				\ 	void			*HandlerContext,		\ 	void			*RegionContext)			\ {								\ 	return (aml_vm_space_handler(id, Function, Address,	\ 		BitWidth, Value, aml_debug_prompt));		\ }
+value|;			\ static ACPI_STATUS						\ aml_vm_space_handler_##name (					\ 	UINT32			Function,			\ 	ACPI_PHYSICAL_ADDRESS	Address,			\ 	UINT32			BitWidth,			\ 	ACPI_INTEGER		*Value)				\ {								\ 	return (aml_vm_space_handler(id, Function, Address,	\ 		BitWidth, Value, aml_debug_prompt));		\ }
 end_define
 
 begin_expr_stmt
@@ -1474,9 +1481,6 @@ decl_stmt|;
 name|u_int8_t
 modifier|*
 name|code
-decl_stmt|,
-modifier|*
-name|amlptr
 decl_stmt|;
 name|struct
 name|stat
@@ -1489,10 +1493,6 @@ name|fd2
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|tableptr
 decl_stmt|;
 name|fd
 operator|=
@@ -1765,6 +1765,9 @@ name|ACPI_ROOT_OBJECT
 argument_list|,
 name|ACPI_ADR_SPACE_SYSTEM_MEMORY
 argument_list|,
+operator|(
+name|ACPI_ADR_SPACE_HANDLER
+operator|)
 name|aml_vm_space_handler_system_memory
 argument_list|,
 name|NULL
@@ -1803,6 +1806,9 @@ name|ACPI_ROOT_OBJECT
 argument_list|,
 name|ACPI_ADR_SPACE_SYSTEM_IO
 argument_list|,
+operator|(
+name|ACPI_ADR_SPACE_HANDLER
+operator|)
 name|aml_vm_space_handler_system_io
 argument_list|,
 name|NULL
@@ -1841,6 +1847,9 @@ name|ACPI_ROOT_OBJECT
 argument_list|,
 name|ACPI_ADR_SPACE_PCI_CONFIG
 argument_list|,
+operator|(
+name|ACPI_ADR_SPACE_HANDLER
+operator|)
 name|aml_vm_space_handler_pci_config
 argument_list|,
 name|NULL
@@ -1879,6 +1888,9 @@ name|ACPI_ROOT_OBJECT
 argument_list|,
 name|ACPI_ADR_SPACE_EC
 argument_list|,
+operator|(
+name|ACPI_ADR_SPACE_HANDLER
+operator|)
 name|aml_vm_space_handler_ec
 argument_list|,
 name|NULL
@@ -1917,6 +1929,9 @@ name|ACPI_ROOT_OBJECT
 argument_list|,
 name|ACPI_ADR_SPACE_SMBUS
 argument_list|,
+operator|(
+name|ACPI_ADR_SPACE_HANDLER
+operator|)
 name|aml_vm_space_handler_smbus
 argument_list|,
 name|NULL
@@ -1955,6 +1970,9 @@ name|ACPI_ROOT_OBJECT
 argument_list|,
 name|ACPI_ADR_SPACE_CMOS
 argument_list|,
+operator|(
+name|ACPI_ADR_SPACE_HANDLER
+operator|)
 name|aml_vm_space_handler_cmos
 argument_list|,
 name|NULL
@@ -1993,6 +2011,9 @@ name|ACPI_ROOT_OBJECT
 argument_list|,
 name|ACPI_ADR_SPACE_PCI_BAR_TARGET
 argument_list|,
+operator|(
+name|ACPI_ADR_SPACE_HANDLER
+operator|)
 name|aml_vm_space_handler_pci_bar_target
 argument_list|,
 name|NULL
