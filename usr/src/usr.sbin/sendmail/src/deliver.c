@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.26 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,6 +387,8 @@ condition|(
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QQUEUEUP
 argument_list|,
 name|to
 operator|->
@@ -878,6 +880,8 @@ condition|(
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QQUEUEUP
 argument_list|,
 name|to
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.17 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  SENDTOLIST -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
+comment|/* **  SENDTOLIST -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		e -- the envelope in which to add these recipients. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
 end_comment
 
 begin_define
@@ -747,7 +747,7 @@ index|]
 decl_stmt|;
 comment|/* unquoted image of the user name */
 specifier|extern
-name|bool
+name|int
 name|safefile
 parameter_list|()
 function_decl|;
@@ -1129,6 +1129,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|err
+decl_stmt|;
 name|message
 argument_list|(
 literal|"including file %s"
@@ -1138,9 +1141,8 @@ operator|->
 name|q_user
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|err
+operator|=
 name|include
 argument_list|(
 name|a
@@ -1155,6 +1157,21 @@ name|sendq
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|transienterror
+argument_list|(
+name|err
+argument_list|)
+condition|)
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
+operator||
+name|QDONTSEND
 expr_stmt|;
 block|}
 block|}
@@ -1241,7 +1258,6 @@ name|p
 operator|=
 literal|'\0'
 operator|,
-operator|!
 name|safefile
 argument_list|(
 name|buf
@@ -1253,6 +1269,8 @@ name|S_IWRITE
 operator||
 name|S_IEXEC
 argument_list|)
+operator|!=
+literal|0
 operator|)
 condition|)
 block|{
@@ -1356,6 +1374,8 @@ operator|->
 name|q_flags
 operator||=
 name|QQUEUEUP
+operator||
+name|QDONTSEND
 expr_stmt|;
 if|if
 condition|(
@@ -1421,6 +1441,8 @@ condition|(
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QQUEUEUP
 operator||
 name|QVERIFIED
 argument_list|,
@@ -1506,6 +1528,8 @@ operator|!
 name|bitset
 argument_list|(
 name|QDONTSEND
+operator||
+name|QQUEUEUP
 argument_list|,
 name|a
 operator|->
@@ -2303,6 +2327,9 @@ decl_stmt|;
 name|int
 name|nincludes
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2383,7 +2410,9 @@ if|if
 condition|(
 name|forwarding
 operator|&&
-operator|!
+operator|(
+name|ret
+operator|=
 name|safefile
 argument_list|(
 name|fname
@@ -2394,6 +2423,9 @@ name|q_uid
 argument_list|,
 name|S_IREAD
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* don't use this .forward file */
@@ -2413,15 +2445,20 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"include: not safe (uid=%d)\n"
+literal|"include: not safe (uid=%d): %s\n"
 argument_list|,
 name|ctladdr
 operator|->
 name|q_uid
+argument_list|,
+name|errstring
+argument_list|(
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|EPERM
+name|ret
 return|;
 block|}
 name|fp
@@ -2786,7 +2823,7 @@ argument_list|,
 literal|1
 argument_list|)
 block|; }
-comment|/* **  SENDTOARGV -- send to an argument vector. ** **	Parameters: **		argv -- argument vector to send to. ** **	Returns: **		none. ** **	Side Effects: **		puts all addresses on the argument vector onto the **			send queue. */
+comment|/* **  SENDTOARGV -- send to an argument vector. ** **	Parameters: **		argv -- argument vector to send to. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		puts all addresses on the argument vector onto the **			send queue. */
 name|sendtoargv
 argument_list|(
 name|argv

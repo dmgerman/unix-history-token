@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.14 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1525,11 +1525,6 @@ name|char
 modifier|*
 modifier|*
 name|prescan
-parameter_list|()
-function_decl|;
-specifier|extern
-name|bool
-name|safefile
 parameter_list|()
 function_decl|;
 specifier|extern

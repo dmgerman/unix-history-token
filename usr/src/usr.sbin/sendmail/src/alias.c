@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.18 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.19 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.18 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.19 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.18 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.19 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.18 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.19 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3541,11 +3541,6 @@ name|char
 modifier|*
 name|ep
 decl_stmt|;
-specifier|extern
-name|bool
-name|safefile
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
@@ -3665,6 +3660,9 @@ operator|=
 name|ep
 control|)
 block|{
+name|int
+name|err
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -3673,6 +3671,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|extern
+name|bool
+name|transienterror
+parameter_list|()
+function_decl|;
 name|ep
 operator|=
 name|strchr
@@ -3739,8 +3742,8 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|err
+operator|=
 name|include
 argument_list|(
 name|buf
@@ -3753,10 +3756,33 @@ name|sendq
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|transienterror
+argument_list|(
+name|err
+argument_list|)
+condition|)
+block|{
+comment|/* we have to suspend this message */
+name|user
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
+operator||
+name|QDONTSEND
+expr_stmt|;
+return|return;
+block|}
 block|}
 block|}
 end_block
