@@ -129,7 +129,7 @@ name|__rfs
 parameter_list|(
 name|__fpsr
 parameter_list|)
-value|__asm("rfs %0" : "=r" (*(__fpsr)))
+value|__asm __volatile("rfs %0" : "=r" (*(__fpsr)))
 end_define
 
 begin_define

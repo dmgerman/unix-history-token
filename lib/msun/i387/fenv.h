@@ -202,7 +202,7 @@ name|__fnstenv
 parameter_list|(
 name|__env
 parameter_list|)
-value|__asm("fnstenv %0" : "=m" (*(__env)))
+value|__asm __volatile("fnstenv %0" : "=m" (*(__env)))
 end_define
 
 begin_define
@@ -212,7 +212,7 @@ name|__fnstcw
 parameter_list|(
 name|__cw
 parameter_list|)
-value|__asm("fnstcw %0" : "=m" (*(__cw)))
+value|__asm __volatile("fnstcw %0" : "=m" (*(__cw)))
 end_define
 
 begin_define
@@ -222,7 +222,7 @@ name|__fnstsw
 parameter_list|(
 name|__sw
 parameter_list|)
-value|__asm("fnstsw %0" : "=am" (*(__sw)))
+value|__asm __volatile("fnstsw %0" : "=am" (*(__sw)))
 end_define
 
 begin_define

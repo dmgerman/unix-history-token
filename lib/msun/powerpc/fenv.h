@@ -276,7 +276,7 @@ name|__mffs
 parameter_list|(
 name|__env
 parameter_list|)
-value|__asm("mffs %0" : "=f" (*(__env)))
+value|__asm __volatile("mffs %0" : "=f" (*(__env)))
 end_define
 
 begin_define
