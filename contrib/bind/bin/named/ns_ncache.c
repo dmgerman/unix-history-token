@@ -250,11 +250,16 @@ index|[
 name|MAXDATA
 index|]
 decl_stmt|;
-name|size_t
-name|len
+name|u_char
+modifier|*
+name|eod
 init|=
-sizeof|sizeof
 name|data
+operator|+
+sizeof|sizeof
+argument_list|(
+name|data
+argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
@@ -863,7 +868,9 @@ operator|*
 operator|)
 name|data
 argument_list|,
-name|len
+name|eod
+operator|-
+name|data
 argument_list|)
 expr_stmt|;
 if|if
@@ -907,10 +914,6 @@ name|data
 operator|+
 name|n
 expr_stmt|;
-name|len
-operator|-=
-name|n
-expr_stmt|;
 comment|/* mail */
 name|n
 operator|=
@@ -930,7 +933,9 @@ operator|*
 operator|)
 name|cp1
 argument_list|,
-name|len
+name|eod
+operator|-
+name|cp1
 argument_list|)
 expr_stmt|;
 if|if
@@ -972,16 +977,24 @@ name|cp1
 operator|+=
 name|n
 expr_stmt|;
-name|len
-operator|-=
-name|n
-expr_stmt|;
 name|n
 operator|=
 literal|5
 operator|*
 name|INT32SZ
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+operator|(
+name|eod
+operator|-
+name|cp1
+operator|)
+condition|)
+comment|/* Can't happen. See MAXDATA. */
+return|return;
 name|BOUNDS_CHECK
 argument_list|(
 name|cp
@@ -1001,10 +1014,6 @@ expr_stmt|;
 comment|/* serial, refresh, retry, expire, min */
 name|cp1
 operator|+=
-name|n
-expr_stmt|;
-name|len
-operator|-=
 name|n
 expr_stmt|;
 name|cp
@@ -1050,7 +1059,9 @@ operator|*
 operator|)
 name|cp1
 argument_list|,
-name|len
+name|eod
+operator|-
+name|cp1
 argument_list|)
 expr_stmt|;
 if|if
