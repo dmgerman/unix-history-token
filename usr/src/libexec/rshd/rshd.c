@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.15 83/05/03"
+literal|"@(#)rshd.c	4.16 83/06/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * remote execute server:  *	remuser\0  *	locuser\0  *	command\0  *	data  */
+comment|/*  * remote shell server:  *	remuser\0  *	locuser\0  *	command\0  *	data  */
 end_comment
 
 begin_function
@@ -168,6 +168,8 @@ decl_stmt|;
 block|{
 name|int
 name|f
+decl_stmt|,
+name|linger
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -498,6 +500,34 @@ argument_list|(
 literal|"rshd: setsockopt (SO_KEEPALIVE)"
 argument_list|)
 expr_stmt|;
+name|linger
+operator|=
+literal|60
+expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|f
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_LINGER
+argument_list|,
+operator|&
+name|linger
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"rshd: setsockopt (SO_LINGER)"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bind
@@ -532,7 +562,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|sigset
+name|signal
 argument_list|(
 name|SIGCHLD
 argument_list|,
