@@ -3352,17 +3352,17 @@ name|SYF_MPSAFE
 operator||
 name|AS
 argument_list|(
-name|nanosleep_args
+name|freebsd32_nanosleep_args
 argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nanosleep
+name|freebsd32_nanosleep
 block|}
 block|,
-comment|/* 240 = nanosleep */
+comment|/* 240 = freebsd32_nanosleep */
 block|{
 literal|0
 block|,

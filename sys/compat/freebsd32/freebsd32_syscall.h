@@ -1233,7 +1233,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FREEBSD32_SYS_nanosleep
+name|FREEBSD32_SYS_freebsd32_nanosleep
 value|240
 end_define
 

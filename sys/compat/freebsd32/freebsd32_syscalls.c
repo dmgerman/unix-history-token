@@ -731,9 +731,9 @@ comment|/* 238 = timer_gettime */
 literal|"#239"
 block|,
 comment|/* 239 = timer_getoverrun */
-literal|"nanosleep"
+literal|"freebsd32_nanosleep"
 block|,
-comment|/* 240 = nanosleep */
+comment|/* 240 = freebsd32_nanosleep */
 literal|"#241"
 block|,
 comment|/* 241 = nosys */
