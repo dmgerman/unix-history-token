@@ -197,6 +197,8 @@ block|,
 name|vn_statfile
 block|,
 name|vn_closefile
+block|,
+name|DFLAG_PASSABLE
 block|}
 decl_stmt|;
 end_decl_stmt

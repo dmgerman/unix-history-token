@@ -9645,6 +9645,8 @@ block|,
 name|badfo_stat
 block|,
 name|badfo_close
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

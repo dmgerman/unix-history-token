@@ -134,6 +134,8 @@ block|,
 name|soo_stat
 block|,
 name|soo_close
+block|,
+name|DFLAG_PASSABLE
 block|}
 decl_stmt|;
 end_decl_stmt

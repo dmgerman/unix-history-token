@@ -357,6 +357,13 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|fo_flags_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|fileops
@@ -389,9 +396,24 @@ name|fo_close_t
 modifier|*
 name|fo_close
 decl_stmt|;
+name|fo_flags_t
+name|fo_flags
+decl_stmt|;
+comment|/* DFLAG_* below */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DFLAG_PASSABLE
+value|0x01
+end_define
+
+begin_comment
+comment|/* may be passed via unix sockets. */
+end_comment
 
 begin_comment
 comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (fl)	filelist_lock  * (f)	f_mtx in struct file  * none	not locked  */

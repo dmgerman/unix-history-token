@@ -284,6 +284,8 @@ block|,
 name|pipe_stat
 block|,
 name|pipe_close
+block|,
+name|DFLAG_PASSABLE
 block|}
 decl_stmt|;
 end_decl_stmt

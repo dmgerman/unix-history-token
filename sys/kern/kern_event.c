@@ -273,6 +273,8 @@ block|,
 name|kqueue_stat
 block|,
 name|kqueue_close
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
