@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	6.3	83/12/15	*/
+comment|/*	route.c	6.4	84/04/12	*/
 end_comment
 
 begin_include
@@ -689,6 +689,12 @@ name|dst
 argument_list|,
 name|gateway
 argument_list|,
+operator|(
+name|flags
+operator|&
+name|RTF_HOST
+operator|)
+operator||
 name|RTF_GATEWAY
 argument_list|)
 expr_stmt|;
@@ -730,7 +736,7 @@ name|RTF_HOST
 operator|)
 condition|)
 block|{
-comment|/* 			 * Changing from route to gateway => route to host. 			 * Create new route, rather than smashing route to net. 			 */
+comment|/* 			 * Changing from route to net => route to host. 			 * Create new route, rather than smashing route to net. 			 */
 name|rtfree
 argument_list|(
 name|rt
@@ -744,11 +750,6 @@ name|gateway
 argument_list|,
 name|flags
 argument_list|)
-expr_stmt|;
-name|rtstat
-operator|.
-name|rts_newgateway
-operator|++
 expr_stmt|;
 block|}
 else|else
@@ -766,12 +767,12 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+block|}
 name|rtstat
 operator|.
 name|rts_newgateway
 operator|++
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
