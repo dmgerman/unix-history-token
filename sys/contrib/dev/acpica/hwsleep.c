@@ -230,6 +230,9 @@ decl_stmt|;
 name|UINT16
 name|PM1BControl
 decl_stmt|;
+name|UINT32
+name|Retry
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiEnterSleepState"
@@ -514,13 +517,24 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* wait until we enter sleep state */
+name|Retry
+operator|=
+literal|1000
+expr_stmt|;
 do|do
 block|{
-name|AcpiOsStall
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
+comment|/*          * Some BIOSes don't set WAK_STS at all,          * give up waiting for wakeup if we time out.          */
+if|if
+condition|(
+name|Retry
+operator|--
+operator|==
+literal|0
+condition|)
+block|{
+break|break;
+comment|/* giving up */
+block|}
 block|}
 do|while
 condition|(
