@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)Locore.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1192,9 +1192,9 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pte
-name|camap
+name|kmempt
 index|[
-literal|32
+literal|100
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1246,9 +1246,9 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|cabase
+name|kmembase
 decl_stmt|,
-name|calimit
+name|kmemlimit
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,12 +1273,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|int
-name|calimit
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*ARGSUSED*/
