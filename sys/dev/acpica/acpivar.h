@@ -1829,11 +1829,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ACPI_NO_THREADS
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ACPI_MAX_THREADS
+argument_list|)
+operator|&&
+name|ACPI_MAX_THREADS
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * ACPI task kernel thread initialization.  */
