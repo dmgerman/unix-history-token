@@ -532,7 +532,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Tuneable values  */
+comment|/*  * Tuneable values.  */
 end_comment
 
 begin_ifndef
@@ -549,7 +549,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/* note: sysv shared memory is swap backed */
+comment|/* Note: sysv shared memory is swap backed. */
 end_comment
 
 begin_endif
@@ -988,7 +988,6 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-comment|/* for vm_object_deallocate */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -997,6 +996,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* For vm_object_deallocate. */
 name|shm_handle
 operator|=
 name|shmseg
@@ -1089,7 +1089,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-comment|/* for vm_map_remove and shm_deallocate_segment */
+comment|/* For vm_map_remove and shm_deallocate_segment. */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -1767,7 +1767,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* This is just a hint to vm_map_find() about where to put it. */
+comment|/* 		 * This is just a hint to vm_map_find() about where to 		 * put it. 		 */
 name|attach_va
 operator|=
 name|round_page
@@ -2875,7 +2875,7 @@ name|shminfo
 operator|.
 name|shmmni
 condition|)
-comment|/* any shmids left? */
+comment|/* Any shmids left? */
 return|return
 name|ENOSPC
 return|;
@@ -2914,7 +2914,7 @@ block|{
 name|shmrealloc
 argument_list|()
 expr_stmt|;
-comment|/* maybe expand the shmsegs[] array */
+comment|/* Maybe expand the shmsegs[] array. */
 for|for
 control|(
 name|i
@@ -3645,7 +3645,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* shm_delete_mapping requires this */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -3654,6 +3653,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* For shm_delete_mapping. */
 name|shmmap_s
 operator|=
 operator|(
