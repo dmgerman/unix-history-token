@@ -375,17 +375,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|dev_t
-name|cn_devfsdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* represents the device private info */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|u_char
 name|console_pausing
 decl_stmt|;
@@ -2817,8 +2806,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|cn_devfsdev
-operator|=
 name|make_dev
 argument_list|(
 operator|&
