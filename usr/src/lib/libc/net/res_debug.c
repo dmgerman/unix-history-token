@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.19 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,7 +306,7 @@ name|file
 argument_list|,
 literal|"\topcode = %s"
 argument_list|,
-name|_opcodes
+name|_res_opcodes
 index|[
 name|hp
 operator|->
@@ -334,7 +334,7 @@ name|file
 argument_list|,
 literal|", rcode = %s\n"
 argument_list|,
-name|_rcodes
+name|_res_resultcodes
 index|[
 name|hp
 operator|->
