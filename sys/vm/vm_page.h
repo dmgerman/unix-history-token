@@ -164,7 +164,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * note SWAPBLK_NONE is a flag, basically the high bit.  */
+comment|/*  * note: currently use SWAPBLK_NONE as an absolute value rather then   * a flag bit.  */
 end_comment
 
 begin_define
@@ -1284,6 +1284,19 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|vm_page_cache
+name|__P
+argument_list|(
+operator|(
+specifier|register
+name|vm_page_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_page_dontneed
 name|__P
 argument_list|(
 operator|(
