@@ -5433,7 +5433,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|inthand2_t
+name|driver_intr_t
 operator|*
 operator|)
 name|clkintr
@@ -5488,7 +5488,7 @@ argument_list|,
 name|apic_8254_intr
 argument_list|,
 operator|(
-name|inthand2_t
+name|driver_intr_t
 operator|*
 operator|)
 name|clkintr
@@ -5574,7 +5574,7 @@ argument_list|,
 name|apic_8254_intr
 argument_list|,
 operator|(
-name|inthand2_t
+name|driver_intr_t
 operator|*
 operator|)
 name|clkintr
@@ -5602,7 +5602,7 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|inthand2_t
+name|driver_intr_t
 operator|*
 operator|)
 name|rtcintr
@@ -5766,7 +5766,7 @@ argument_list|,
 name|apic_8254_intr
 argument_list|,
 operator|(
-name|inthand2_t
+name|driver_intr_t
 operator|*
 operator|)
 name|clkintr
@@ -5797,7 +5797,7 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|inthand2_t
+name|driver_intr_t
 operator|*
 operator|)
 name|rtcintr
