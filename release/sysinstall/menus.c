@@ -9248,7 +9248,7 @@ name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
-literal|"keymap=si.iso.acc"
+literal|"keymap=si.iso"
 block|}
 block|,
 block|{
@@ -9916,7 +9916,21 @@ literal|"font8x8=iso-8x8,font8x14=iso-8x14,font8x16=iso-8x16"
 block|}
 block|,
 block|{
-literal|"7 KOI8-R"
+literal|"7 ISO 8859-2"
+block|,
+literal|"Eastern Europe, ISO encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=iso02-8x8,font8x14=iso02-8x14,font8x16=iso02-8x16"
+block|}
+block|,
+block|{
+literal|"8 KOI8-R"
 block|,
 literal|"Russian, KOI8-R encoding"
 block|,
@@ -9930,7 +9944,7 @@ literal|"font8x8=koi8-r-8x8,font8x14=koi8-r-8x14,font8x16=koi8-r-8x16"
 block|}
 block|,
 block|{
-literal|"8 SWISS"
+literal|"9 SWISS"
 block|,
 literal|"English, better resolution"
 block|,
