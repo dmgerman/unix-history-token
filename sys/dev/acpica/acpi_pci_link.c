@@ -2838,6 +2838,8 @@ name|ACPI_FAILURE
 argument_list|(
 name|error
 argument_list|)
+operator|&&
+name|bootverbose
 condition|)
 block|{
 name|printf
@@ -2857,9 +2859,6 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 if|if
 condition|(
