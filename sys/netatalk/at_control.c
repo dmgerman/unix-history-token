@@ -343,7 +343,7 @@ decl_stmt|,
 modifier|*
 name|ifa0
 decl_stmt|;
-comment|/*      * If we have an ifp, then find the matching at_ifaddr if it exists      */
+comment|/* 	 * If we have an ifp, then find the matching at_ifaddr if it exists 	 */
 if|if
 condition|(
 name|ifp
@@ -379,7 +379,7 @@ condition|)
 break|break;
 block|}
 block|}
-comment|/*      * In this first switch table we are basically getting ready for      * the second one, by getting the atalk-specific things set up      * so that they start to look more similar to other protocols etc.      */
+comment|/* 	 * In this first switch table we are basically getting ready for 	 * the second one, by getting the atalk-specific things set up 	 * so that they start to look more similar to other protocols etc. 	 */
 switch|switch
 condition|(
 name|cmd
@@ -391,7 +391,7 @@ case|:
 case|case
 name|SIOCDIFADDR
 case|:
-comment|/* 	 * If we have an appletalk sockaddr, scan forward of where 	 * we are now on the at_ifaddr list to find one with a matching  	 * address on this interface. 	 * This may leave aa pointing to the first address on the 	 * NEXT interface! 	 */
+comment|/* 		 * If we have an appletalk sockaddr, scan forward of where we 		 * are now on the at_ifaddr list to find one with a matching  		 * address on this interface.  This may leave aa pointing to 		 * the first address on the NEXT interface! 		 */
 if|if
 condition|(
 name|ifra
@@ -436,12 +436,10 @@ operator|->
 name|ifra_addr
 argument_list|)
 condition|)
-block|{
 break|break;
 block|}
 block|}
-block|}
-comment|/* 	 * If we a retrying to delete an addres but didn't find such, 	 * then rewurn with an error 	 */
+comment|/* 		 * If we a retrying to delete an addres but didn't find such, 		 * then rewurn with an error 		 */
 if|if
 condition|(
 name|cmd
@@ -452,18 +450,16 @@ name|aa
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-block|}
 comment|/*FALLTHROUGH*/
 case|case
 name|SIOCSIFADDR
 case|:
-comment|/*  	 * If we are not superuser, then we don't get to do these ops. 	 */
+comment|/*  		 * If we are not superuser, then we don't get to do these ops. 		 */
 if|if
 condition|(
 name|suser
@@ -471,13 +467,11 @@ argument_list|(
 name|td
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 name|EPERM
 operator|)
 return|;
-block|}
 name|sat
 operator|=
 name|satosat
@@ -508,7 +502,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 	     * Look for a phase 1 address on this interface. 	     * This may leave aa pointing to the first address on the 	     * NEXT interface! 	     */
+comment|/* 			 * Look for a phase 1 address on this interface. 			 * This may leave aa pointing to the first address on 			 * the NEXT interface! 			 */
 for|for
 control|(
 init|;
@@ -539,15 +533,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 else|else
 block|{
 comment|/* default to phase 2 */
-comment|/* 	     * Look for a phase 2 address on this interface. 	     * This may leave aa pointing to the first address on the 	     * NEXT interface! 	     */
+comment|/* 			 * Look for a phase 2 address on this interface. 			 * This may leave aa pointing to the first address on 			 * the NEXT interface! 			 */
 for|for
 control|(
 init|;
@@ -576,9 +568,7 @@ operator|&
 name|AFA_PHASE2
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -592,7 +582,7 @@ argument_list|(
 literal|"at_control"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we failed to find an existing at_ifaddr entry, then we  	 * allocate a fresh one.  	 */
+comment|/* 		 * If we failed to find an existing at_ifaddr entry, then we  		 * allocate a fresh one.  		 */
 if|if
 condition|(
 name|aa
@@ -628,7 +618,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Don't let the loopback be first, since the first 		 * address is the machine's default address for 		 * binding. 		 * If it is, stick ourself in front, otherwise 		 * go to the back of the list. 		 */
+comment|/* 				 * Don't let the loopback be first, since the 				 * first address is the machine's default 				 * address for binding.  If it is, stick 				 * ourself in front, otherwise go to the back 				 * of the list. 				 */
 if|if
 condition|(
 name|at_ifaddr_list
@@ -680,17 +670,15 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|at_ifaddr_list
 operator|=
 name|aa0
 expr_stmt|;
-block|}
 name|aa
 operator|=
 name|aa0
 expr_stmt|;
-comment|/* 	     * Find the end of the interface's addresses 	     * and link our new one on the end  	     */
+comment|/* 			 * Find the end of the interface's addresses 			 * and link our new one on the end  			 */
 name|ifa
 operator|=
 operator|(
@@ -723,7 +711,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-comment|/* 	     * As the at_ifaddr contains the actual sockaddrs, 	     * and the ifaddr itself, link them al together correctly. 	     */
+comment|/* 			 * As the at_ifaddr contains the actual sockaddrs, 			 * and the ifaddr itself, link them al together 			 * correctly. 			 */
 name|ifa
 operator|->
 name|ifa_addr
@@ -766,7 +754,7 @@ name|aa
 operator|->
 name|aa_netmask
 expr_stmt|;
-comment|/* 	     * Set/clear the phase 2 bit. 	     */
+comment|/* 			 * Set/clear the phase 2 bit. 			 */
 if|if
 condition|(
 name|nr
@@ -775,7 +763,6 @@ name|nr_phase
 operator|==
 literal|1
 condition|)
-block|{
 name|aa
 operator|->
 name|aa_flags
@@ -783,17 +770,14 @@ operator|&=
 operator|~
 name|AFA_PHASE2
 expr_stmt|;
-block|}
 else|else
-block|{
 name|aa
 operator|->
 name|aa_flags
 operator||=
 name|AFA_PHASE2
 expr_stmt|;
-block|}
-comment|/* 	     * and link it all together 	     */
+comment|/* 			 * and link it all together 			 */
 name|aa
 operator|->
 name|aa_ifp
@@ -803,7 +787,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * If we DID find one then we clobber any routes dependent on it.. 	     */
+comment|/* 			 * If we DID find one then we clobber any routes 			 * dependent on it.. 			 */
 name|at_scrub
 argument_list|(
 name|ifp
@@ -846,7 +830,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 	     * If the request is specifying phase 1, then 	     * only look at a phase one address 	     */
+comment|/* 			 * If the request is specifying phase 1, then 			 * only look at a phase one address 			 */
 for|for
 control|(
 init|;
@@ -877,14 +861,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 else|else
 block|{
-comment|/* 	     * default to phase 2 	     */
+comment|/* 			 * default to phase 2 			 */
 for|for
 control|(
 init|;
@@ -913,9 +895,7 @@ operator|&
 name|AFA_PHASE2
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 block|}
 if|if
@@ -931,7 +911,7 @@ operator|)
 return|;
 break|break;
 block|}
-comment|/*      * By the time this switch is run we should be able to assume that      * the "aa" pointer is valid when needed.      */
+comment|/* 	 * By the time this switch is run we should be able to assume that 	 * the "aa" pointer is valid when needed. 	 */
 switch|switch
 condition|(
 name|cmd
@@ -940,7 +920,7 @@ block|{
 case|case
 name|SIOCGIFADDR
 case|:
-comment|/* 	 * copy the contents of the sockaddr blindly. 	 */
+comment|/* 		 * copy the contents of the sockaddr blindly. 		 */
 name|sat
 operator|=
 operator|(
@@ -960,7 +940,7 @@ name|aa
 operator|->
 name|aa_addr
 expr_stmt|;
-comment|/*  	 * and do some cleanups 	 */
+comment|/*  		 * and do some cleanups 		 */
 operator|(
 operator|(
 expr|struct
@@ -1065,13 +1045,11 @@ operator|->
 name|aa_addr
 argument_list|)
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|at_ifinit
@@ -1095,7 +1073,7 @@ return|;
 case|case
 name|SIOCDIFADDR
 case|:
-comment|/* 	 * scrub all routes.. didn't we just DO this? XXX yes, del it 	 */
+comment|/* 		 * scrub all routes.. didn't we just DO this? XXX yes, del it 		 */
 name|at_scrub
 argument_list|(
 name|ifp
@@ -1103,7 +1081,7 @@ argument_list|,
 name|aa
 argument_list|)
 expr_stmt|;
-comment|/* 	 * remove the ifaddr from the interface 	 */
+comment|/* 		 * remove the ifaddr from the interface 		 */
 name|ifa0
 operator|=
 operator|(
@@ -1125,7 +1103,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now remove the at_ifaddr from the parallel structure 	 * as well, or we'd be in deep trouble 	 */
+comment|/* 		 * Now remove the at_ifaddr from the parallel structure 		 * as well, or we'd be in deep trouble 		 */
 name|aa0
 operator|=
 name|aa
@@ -1164,22 +1142,19 @@ operator|!=
 name|aa0
 operator|)
 condition|)
-block|{
 name|aa
 operator|=
 name|aa
 operator|->
 name|aa_next
 expr_stmt|;
-block|}
-comment|/* 	     * if we found it, remove it, otherwise we screwed up. 	     */
+comment|/* 			 * if we found it, remove it, otherwise we screwed up. 			 */
 if|if
 condition|(
 name|aa
 operator|->
 name|aa_next
 condition|)
-block|{
 name|aa
 operator|->
 name|aa_next
@@ -1188,17 +1163,14 @@ name|aa0
 operator|->
 name|aa_next
 expr_stmt|;
-block|}
 else|else
-block|{
 name|panic
 argument_list|(
 literal|"at_control"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * Now reclaim the reference. 	 */
+comment|/* 		 * Now reclaim the reference. 		 */
 name|IFAFREE
 argument_list|(
 name|ifa0
@@ -1258,20 +1230,16 @@ specifier|static
 name|int
 name|at_scrub
 parameter_list|(
-name|ifp
-parameter_list|,
-name|aa
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|at_ifaddr
 modifier|*
 name|aa
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -1324,13 +1292,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1439,27 +1405,21 @@ specifier|static
 name|int
 name|at_ifinit
 parameter_list|(
-name|ifp
-parameter_list|,
-name|aa
-parameter_list|,
-name|sat
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|at_ifaddr
 modifier|*
 name|aa
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr_at
 modifier|*
 name|sat
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|netrange
@@ -1490,7 +1450,7 @@ decl_stmt|;
 name|u_short
 name|net
 decl_stmt|;
-comment|/*       * save the old addresses in the at_ifaddr just in case we need them.      */
+comment|/*  	 * save the old addresses in the at_ifaddr just in case we need them. 	 */
 name|oldaddr
 operator|=
 name|aa
@@ -1513,7 +1473,7 @@ name|aa
 operator|->
 name|aa_lastnet
 expr_stmt|;
-comment|/*      * take the address supplied as an argument, and add it to the       * at_ifnet (also given). Remember ing to update      * those parts of the at_ifaddr that need special processing      */
+comment|/* 	 * take the address supplied as an argument, and add it to the  	 * at_ifnet (also given). Remember ing to update 	 * those parts of the at_ifaddr that need special processing 	 */
 name|bzero
 argument_list|(
 name|AA_SAT
@@ -1602,10 +1562,10 @@ comment|/* XXX ALC */
 if|#
 directive|if
 literal|0
-block|printf("at_ifinit: %s: %u.%u range %u-%u phase %d\n", 	ifp->if_name, 	ntohs(sat->sat_addr.s_net), sat->sat_addr.s_node, 	ntohs(aa->aa_firstnet), ntohs(aa->aa_lastnet), 	(aa->aa_flags& AFA_PHASE2) ? 2 : 1);
+block|printf("at_ifinit: %s: %u.%u range %u-%u phase %d\n", 	    ifp->if_name, 	    ntohs(sat->sat_addr.s_net), sat->sat_addr.s_node, 	    ntohs(aa->aa_firstnet), ntohs(aa->aa_lastnet), 	    (aa->aa_flags& AFA_PHASE2) ? 2 : 1);
 endif|#
 directive|endif
-comment|/*      * We could eliminate the need for a second phase 1 probe (post      * autoconf) if we check whether we're resetting the node. Note      * that phase 1 probes use only nodes, not net.node pairs.  Under      * phase 2, both the net and node must be the same.      */
+comment|/* 	 * We could eliminate the need for a second phase 1 probe (post 	 * autoconf) if we check whether we're resetting the node. Note 	 * that phase 1 probes use only nodes, not net.node pairs.  Under 	 * phase 2, both the net and node must be the same. 	 */
 if|if
 condition|(
 name|ifp
@@ -1670,20 +1630,20 @@ directive|if
 literal|0
 block|} else if (fp->if_flags& IFF_POINTOPOINT) {
 comment|/* unimplemented */
-comment|/* 	 * we'd have to copy the dstaddr field over from the sat  	 * but it's not clear that it would contain the right info.. 	 */
+comment|/* 		 * we'd have to copy the dstaddr field over from the sat  		 * but it's not clear that it would contain the right info.. 		 */
 endif|#
 directive|endif
 block|}
 else|else
 block|{
-comment|/* 	 * We are a normal (probably ethernet) interface. 	 * apply the new address to the interface structures etc. 	 * We will probe this address on the net first, before 	 * applying it to ensure that it is free.. If it is not, then 	 * we will try a number of other randomly generated addresses 	 * in this net and then increment the net.  etc.etc. until 	 * we find an unused address. 	 */
+comment|/* 		 * We are a normal (probably ethernet) interface. 		 * apply the new address to the interface structures etc. 		 * We will probe this address on the net first, before 		 * applying it to ensure that it is free.. If it is not, then 		 * we will try a number of other randomly generated addresses 		 * in this net and then increment the net.  etc.etc. until 		 * we find an unused address. 		 */
 name|aa
 operator|->
 name|aa_flags
 operator||=
 name|AFA_PROBING
 expr_stmt|;
-comment|/* if not loopback we Must probe? */
+comment|/* not loopback we Must probe? */
 name|AA_SAT
 argument_list|(
 name|aa
@@ -1726,14 +1686,13 @@ operator|==
 name|ATADDR_ANYNET
 condition|)
 block|{
-comment|/* 		 * If we are phase 2, and the net was not specified 		 * then we select a random net within the supplied netrange. 		 * XXX use /dev/random? 		 */
+comment|/* 				 * If we are phase 2, and the net was not 				 * specified then we select a random net 				 * within the supplied netrange. 				 * XXX use /dev/random? 				 */
 if|if
 condition|(
 name|nnets
 operator|!=
 literal|1
 condition|)
-block|{
 name|net
 operator|=
 name|ntohs
@@ -1751,9 +1710,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|net
 operator|=
 name|ntohs
@@ -1764,10 +1721,9 @@ name|nr_firstnet
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
-comment|/* 		 * if a net was supplied, then check that it is within 		 * the netrange. If it is not then replace the old values 		 * and return an error 		 */
+comment|/* 				 * if a net was supplied, then check that it 				 * is within the netrange. If it is not then 				 * replace the old values and return an error 				 */
 if|if
 condition|(
 name|ntohs
@@ -1831,7 +1787,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-comment|/* 		 * otherwise just use the new net number.. 		 */
+comment|/* 				 * otherwise just use the new net number.. 				 */
 name|net
 operator|=
 name|ntohs
@@ -1847,7 +1803,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * we must be phase one, so just use whatever we were given. 	     * I guess it really isn't going to be used... RIGHT? 	     */
+comment|/* 			 * we must be phase one, so just use whatever we were 			 * given.  I guess it really isn't going to be 			 * used... RIGHT? 			 */
 name|net
 operator|=
 name|ntohs
@@ -1860,7 +1816,7 @@ name|s_net
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * set the node part of the address into the ifaddr. 	 * If it's not specified, be random about it... 	 * XXX use /dev/random? 	 */
+comment|/*  		 * set the node part of the address into the ifaddr. 		 * If it's not specified, be random about it... 		 * XXX use /dev/random? 		 */
 if|if
 condition|(
 name|sat
@@ -1871,7 +1827,6 @@ name|s_node
 operator|==
 name|ATADDR_ANYNODE
 condition|)
-block|{
 name|AA_SAT
 argument_list|(
 name|aa
@@ -1883,9 +1838,7 @@ name|s_node
 operator|=
 name|time_second
 expr_stmt|;
-block|}
 else|else
-block|{
 name|AA_SAT
 argument_list|(
 name|aa
@@ -1901,8 +1854,7 @@ name|sat_addr
 operator|.
 name|s_node
 expr_stmt|;
-block|}
-comment|/*  	 * Copy the phase. 	 */
+comment|/*  		 * Copy the phase. 		 */
 name|AA_SAT
 argument_list|(
 name|aa
@@ -1928,7 +1880,7 @@ else|:
 literal|1
 operator|)
 expr_stmt|;
-comment|/*  	 * step through the nets in the range 	 * starting at the (possibly random) start point. 	 */
+comment|/*  		 * step through the nets in the range 		 * starting at the (possibly random) start point. 		 */
 for|for
 control|(
 name|i
@@ -1987,7 +1939,7 @@ argument_list|(
 name|net
 argument_list|)
 expr_stmt|;
-comment|/* 	     * using a rather strange stepping method, 	     * stagger through the possible node addresses 	     * Once again, starting at the (possibly random) 	     * initial node address. 	     */
+comment|/* 			 * using a rather strange stepping method, 			 * stagger through the possible node addresses 			 * Once again, starting at the (possibly random) 			 * initial node address. 			 */
 for|for
 control|(
 name|j
@@ -2043,16 +1995,14 @@ name|s_node
 operator|<
 literal|1
 condition|)
-block|{
 continue|continue;
-block|}
 name|aa
 operator|->
 name|aa_probcnt
 operator|=
 literal|10
 expr_stmt|;
-comment|/* 		 * start off the probes as an asynchronous activity. 		 * though why wait 200mSec? 		 */
+comment|/* 				 * start off the probes as an asynchronous 				 * activity.  though why wait 200mSec? 				 */
 name|aa
 operator|->
 name|aa_ch
@@ -2087,10 +2037,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/* 		     * theoretically we shouldn't time out here 		     * so if we returned with an error.. 		     */
+comment|/* 					 * theoretically we shouldn't time 					 * out here so if we returned with an 					 * error.. 					 */
 name|printf
 argument_list|(
-literal|"at_ifinit: why did this happen?!\n"
+literal|"at_ifinit: why did this "
+literal|"happen?!\n"
 argument_list|)
 expr_stmt|;
 name|aa
@@ -2121,7 +2072,7 @@ name|EINTR
 operator|)
 return|;
 block|}
-comment|/*  		 * The async activity should have woken us up. 		 * We need to see if it was successful in finding 		 * a free spot, or if we need to iterate to the next  		 * address to try. 		 */
+comment|/*  				 * The async activity should have woken us 				 * up.  We need to see if it was successful 				 * in finding a free spot, or if we need to 				 * iterate to the next address to try. 				 */
 if|if
 condition|(
 operator|(
@@ -2134,11 +2085,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
 block|}
-block|}
-comment|/* 	     * of course we need to break out through two loops... 	     */
+comment|/* 			 * of course we need to break out through two loops... 			 */
 if|if
 condition|(
 operator|(
@@ -2151,9 +2100,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 comment|/* reset node for next network */
 name|AA_SAT
 argument_list|(
@@ -2167,7 +2114,7 @@ operator|=
 name|time_second
 expr_stmt|;
 block|}
-comment|/* 	 * if we are still trying to probe, then we have finished all 	 * the possible addresses, so we need to give up 	 */
+comment|/* 		 * if we are still trying to probe, then we have finished all 		 * the possible addresses, so we need to give up 		 */
 if|if
 condition|(
 name|aa
@@ -2206,7 +2153,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*       * Now that we have selected an address, we need to tell the interface      * about it, just in case it needs to adjust something.      */
+comment|/*  	 * Now that we have selected an address, we need to tell the interface 	 * about it, just in case it needs to adjust something. 	 */
 if|if
 condition|(
 name|ifp
@@ -2237,7 +2184,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 	 * of course this could mean that it objects violently 	 * so if it does, we back out again.. 	 */
+comment|/* 		 * of course this could mean that it objects violently 		 * so if it does, we back out again.. 		 */
 name|aa
 operator|->
 name|aa_addr
@@ -2266,7 +2213,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*       * set up the netmask part of the at_ifaddr      * and point the appropriate pointer in the ifaddr to it.      * probably pointless, but what the heck.. XXX      */
+comment|/*  	 * set up the netmask part of the at_ifaddr 	 * and point the appropriate pointer in the ifaddr to it. 	 * probably pointless, but what the heck.. XXX 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -2341,7 +2288,7 @@ name|aa_netmask
 operator|)
 expr_stmt|;
 comment|/* XXX */
-comment|/*      * Initialize broadcast (or remote p2p) address      */
+comment|/* 	 * Initialize broadcast (or remote p2p) address 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -2605,13 +2552,13 @@ name|s_net
 operator|=
 literal|0xffff
 expr_stmt|;
+comment|/* XXX should not be so.. should be HOST route */
 name|rtmask
 operator|.
 name|s_node
 operator|=
 literal|0x0
 expr_stmt|;
-comment|/* XXX should not be so.. should be HOST route */
 name|error
 operator|=
 name|aa_addsingleroute
@@ -2629,7 +2576,7 @@ name|rtmask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * set the address of our "check if this addr is ours" routine.      */
+comment|/* 	 * set the address of our "check if this addr is ours" routine. 	 */
 name|aa
 operator|->
 name|aa_ifa
@@ -2638,7 +2585,7 @@ name|ifa_claim_addr
 operator|=
 name|aa_claim_addr
 expr_stmt|;
-comment|/*      * of course if we can't add these routes we back out, but it's getting      * risky by now XXX      */
+comment|/* 	 * of course if we can't add these routes we back out, but it's 	 * getting risky by now XXX 	 */
 if|if
 condition|(
 name|error
@@ -2679,7 +2626,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*      * note that the address has a route associated with it....      */
+comment|/* 	 * note that the address has a route associated with it.... 	 */
 name|aa
 operator|->
 name|aa_ifa
@@ -2710,20 +2657,18 @@ begin_function
 name|int
 name|at_broadcast
 parameter_list|(
-name|sat
-parameter_list|)
 name|struct
 name|sockaddr_at
 modifier|*
 name|sat
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|at_ifaddr
 modifier|*
 name|aa
 decl_stmt|;
-comment|/*      * If the node is not right, it can't be a broadcast       */
+comment|/* 	 * If the node is not right, it can't be a broadcast  	 */
 if|if
 condition|(
 name|sat
@@ -2734,14 +2679,12 @@ name|s_node
 operator|!=
 name|ATADDR_BCAST
 condition|)
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-comment|/*      * If the node was right then if the net is right, it's a broadcast      */
+comment|/* 	 * If the node was right then if the net is right, it's a broadcast 	 */
 if|if
 condition|(
 name|sat
@@ -2752,14 +2695,12 @@ name|s_net
 operator|==
 name|ATADDR_ANYNET
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
-comment|/*      * failing that, if the net is one we have, it's a broadcast as well.      */
+comment|/* 	 * failing that, if the net is one we have, it's a broadcast as well. 	 */
 for|for
 control|(
 name|aa
@@ -2823,13 +2764,11 @@ name|aa_lastnet
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 block|}
 return|return
 operator|(
@@ -3003,7 +2942,6 @@ return|;
 block|}
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|aa_delsingleroute
@@ -3017,7 +2955,6 @@ operator|&
 name|mask
 argument_list|)
 expr_stmt|;
-block|}
 name|bot
 operator|=
 operator|(
@@ -3064,7 +3001,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("aa_addsingleroute: %x.%x mask %x.%x ...\n",     ntohs(addr->s_net), addr->s_node,     ntohs(mask->s_net), mask->s_node);
+block|printf("aa_addsingleroute: %x.%x mask %x.%x ...\n", 	    ntohs(addr->s_net), addr->s_node, ntohs(mask->s_net), 	    mask->s_node);
 endif|#
 directive|endif
 name|error
@@ -3352,7 +3289,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void aa_clean(void) {     struct at_ifaddr	*aa;     struct ifaddr	*ifa;     struct ifnet	*ifp;      while ((aa = at_ifaddr_list) != NULL) { 	ifp = aa->aa_ifp; 	at_scrub(ifp, aa); 	at_ifaddr_list = aa->aa_next; 	if ((ifa = ifp->if_addrlist) == (struct ifaddr *)aa) { 	    ifp->if_addrlist = ifa->ifa_next; 	} else { 	    while (ifa->ifa_next&& 		    (ifa->ifa_next != (struct ifaddr *)aa)) { 		ifa = ifa->ifa_next; 	    } 	    if (ifa->ifa_next) { 		ifa->ifa_next = ((struct ifaddr *)aa)->ifa_next; 	    } else { 		panic("at_entry"); 	    } 	}     } }
+unit|static void aa_clean(void) { 	struct at_ifaddr *aa; 	struct ifaddr *ifa; 	struct ifnet *ifp;  	while ((aa = at_ifaddr_list) != NULL) { 		ifp = aa->aa_ifp; 		at_scrub(ifp, aa); 		at_ifaddr_list = aa->aa_next; 		if ((ifa = ifp->if_addrlist) == (struct ifaddr *)aa) 			ifp->if_addrlist = ifa->ifa_next; 		else { 			while (ifa->ifa_next&& 			    (ifa->ifa_next != (struct ifaddr *)aa)) 				ifa = ifa->ifa_next; 			if (ifa->ifa_next) 				ifa->ifa_next = 				    ((struct ifaddr *)aa)->ifa_next; 			else 				panic("at_entry"); 		} 	} }
 endif|#
 directive|endif
 end_endif
@@ -3509,13 +3446,11 @@ argument_list|)
 operator|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 break|break;
 default|default:
 name|printf
