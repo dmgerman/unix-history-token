@@ -15,15 +15,11 @@ directive|define
 name|_LIMITS_H_
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_ANSI_SOURCE
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -184,7 +180,6 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 operator|!
 name|defined
 argument_list|(
@@ -196,7 +191,6 @@ name|defined
 argument_list|(
 name|_POSIX_SOURCE
 argument_list|)
-operator|)
 operator|||
 name|defined
 argument_list|(
