@@ -456,7 +456,7 @@ begin_define
 define|#
 directive|define
 name|EC_POLL_TIMEOUT
-value|50
+value|100
 end_define
 
 begin_define
