@@ -343,6 +343,19 @@ directive|include
 file|<dev/ray/if_rayvar.h>
 end_include
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_RAYCOM
+argument_list|,
+literal|"raycom"
+argument_list|,
+literal|"Raylink command queue entry"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Prototyping  */
 end_comment

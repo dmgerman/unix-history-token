@@ -281,6 +281,7 @@ value|\ 			IF_CLONE_UNLOCK(ifc);				\ 		}							\ 	} while (0)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_CLONE

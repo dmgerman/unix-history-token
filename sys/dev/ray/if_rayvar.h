@@ -296,26 +296,6 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_RAYCOM
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_RAYCOM
-argument_list|,
-literal|"raycom"
-argument_list|,
-literal|"Raylink command queue entry"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
 struct|struct
 name|ray_comq_entry
