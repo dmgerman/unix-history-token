@@ -489,6 +489,11 @@ argument|ccb_hdr
 argument_list|)
 name|amr_cam_ccbq
 expr_stmt|;
+name|struct
+name|cam_devq
+modifier|*
+name|amr_cam_devq
+decl_stmt|;
 comment|/* control device */
 name|struct
 name|cdev
