@@ -766,10 +766,6 @@ begin_struct
 struct|struct
 name|com_s
 block|{
-name|u_int
-name|flags
-decl_stmt|;
-comment|/* Copy isa device flags */
 name|u_char
 name|state
 decl_stmt|;
@@ -849,6 +845,10 @@ name|int
 name|dtr_wait
 decl_stmt|;
 comment|/* time to hold DTR down on close (* 1/hz) */
+name|u_int
+name|flags
+decl_stmt|;
+comment|/* copy of device flags */
 name|u_int
 name|tx_fifo_size
 decl_stmt|;
@@ -934,6 +934,9 @@ decl_stmt|;
 endif|#
 directive|endif
 name|Port_t
+name|int_ctl_port
+decl_stmt|;
+name|Port_t
 name|int_id_port
 decl_stmt|;
 name|Port_t
@@ -945,10 +948,6 @@ decl_stmt|;
 name|Port_t
 name|modem_status_port
 decl_stmt|;
-name|Port_t
-name|intr_ctl_port
-decl_stmt|;
-comment|/* Ports of IIR register */
 name|struct
 name|tty
 modifier|*
@@ -3009,13 +3008,13 @@ argument_list|,
 name|CFCR_8BITS
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some pcmcia cards have the "TXRDY bug", so we check everyone 	 * for IIR_TXRDY implementation ( Palido 321s, DC-1S... ) 	 */
+comment|/* 	 * Some PCMCIA cards (Palido 321s, DC-1S, ...) have the "TXRDY bug", 	 * so we probe for a buggy IIR_TXRDY implementation even in the 	 * noprobe case.  We don't probe for it in the !noprobe case because 	 * noprobe is always set for PCMCIA cards and the problem is not 	 * known to affect any other cards. 	 */
 if|if
 condition|(
 name|noprobe
 condition|)
 block|{
-comment|/* Reading IIR register twice */
+comment|/* Read IIR a few times. */
 for|for
 control|(
 name|fn
@@ -3048,7 +3047,7 @@ name|com_iir
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check IIR_TXRDY clear ? */
+comment|/* IIR_TXRDY should be clear.  Is it? */
 name|result
 operator|=
 literal|0
@@ -3063,7 +3062,7 @@ operator|&
 name|IIR_TXRDY
 condition|)
 block|{
-comment|/* No, Double check with clearing IER */
+comment|/* 			 * No.  We seem to have the bug.  Does our fix for 			 * it work? 			 */
 name|sio_setreg
 argument_list|(
 name|com
@@ -3085,7 +3084,7 @@ operator|&
 name|IIR_NOPEND
 condition|)
 block|{
-comment|/* Ok. We discovered TXRDY bug! */
+comment|/* Yes.  We discovered the TXRDY bug! */
 name|SET_FLAG
 argument_list|(
 name|dev
@@ -3096,7 +3095,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Unknown, Just omit this chip.. XXX */
+comment|/* No.  Just fail.  XXX */
 name|result
 operator|=
 name|ENXIO
@@ -3114,7 +3113,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* OK. this is well-known guys */
+comment|/* Yes.  No bug. */
 name|CLR_FLAG
 argument_list|(
 name|dev
@@ -4107,6 +4106,14 @@ name|com_data
 expr_stmt|;
 name|com
 operator|->
+name|int_ctl_port
+operator|=
+name|iobase
+operator|+
+name|com_ier
+expr_stmt|;
+name|com
+operator|->
 name|int_id_port
 operator|=
 name|iobase
@@ -4147,14 +4154,6 @@ operator|=
 name|iobase
 operator|+
 name|com_msr
-expr_stmt|;
-name|com
-operator|->
-name|intr_ctl_port
-operator|=
-name|iobase
-operator|+
-name|com_ier
 expr_stmt|;
 if|if
 condition|(
@@ -4969,7 +4968,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" with a bogus IIR_TXRDY register"
+literal|" with a buggy IIR_TXRDY implementation"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5999,48 +5998,32 @@ operator|->
 name|modem_status_port
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|outb
+argument_list|(
+name|com
+operator|->
+name|int_ctl_port
+argument_list|,
+name|IER_ERXRDY
+operator||
+name|IER_ERLS
+operator||
+name|IER_EMSC
+operator||
+operator|(
 name|COM_IIR_TXRDYBUG
 argument_list|(
 name|com
 operator|->
 name|flags
 argument_list|)
-condition|)
-block|{
-name|outb
-argument_list|(
-name|com
-operator|->
-name|intr_ctl_port
-argument_list|,
-name|IER_ERXRDY
-operator||
-name|IER_ERLS
-operator||
-name|IER_EMSC
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|outb
-argument_list|(
-name|com
-operator|->
-name|intr_ctl_port
-argument_list|,
-name|IER_ERXRDY
-operator||
+condition|?
+literal|0
+else|:
 name|IER_ETXRDY
-operator||
-name|IER_ERLS
-operator||
-name|IER_EMSC
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -8138,6 +8121,12 @@ name|com
 decl_stmt|;
 block|{
 name|u_char
+name|int_ctl
+decl_stmt|;
+name|u_char
+name|int_ctl_new
+decl_stmt|;
+name|u_char
 name|line_status
 decl_stmt|;
 name|u_char
@@ -8149,12 +8138,6 @@ name|ioptr
 decl_stmt|;
 name|u_char
 name|recv_data
-decl_stmt|;
-name|u_char
-name|int_ctl
-decl_stmt|;
-name|u_char
-name|int_ctl_new
 decl_stmt|;
 if|if
 condition|(
@@ -8172,7 +8155,7 @@ name|inb
 argument_list|(
 name|com
 operator|->
-name|intr_ctl_port
+name|int_ctl_port
 argument_list|)
 expr_stmt|;
 name|int_ctl_new
@@ -8913,14 +8896,12 @@ operator|->
 name|flags
 argument_list|)
 condition|)
-block|{
 name|int_ctl_new
 operator|=
 name|int_ctl
 operator||
 name|IER_ETXRDY
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ioptr
@@ -9005,7 +8986,6 @@ operator|->
 name|flags
 argument_list|)
 condition|)
-block|{
 name|int_ctl_new
 operator|=
 name|int_ctl
@@ -9013,7 +8993,6 @@ operator|&
 operator|~
 name|IER_ETXRDY
 expr_stmt|;
-block|}
 name|com
 operator|->
 name|state
@@ -9063,23 +9042,19 @@ operator|->
 name|flags
 argument_list|)
 operator|&&
-operator|(
 name|int_ctl
 operator|!=
 name|int_ctl_new
-operator|)
 condition|)
-block|{
 name|outb
 argument_list|(
 name|com
 operator|->
-name|intr_ctl_port
+name|int_ctl_port
 argument_list|,
 name|int_ctl_new
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* finished? */
 ifndef|#
