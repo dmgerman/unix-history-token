@@ -15,6 +15,12 @@ directive|define
 name|_I386_ISA_ISA_DEVICE_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -253,6 +259,30 @@ end_endif
 
 begin_comment
 comment|/* COMPAT_OLDISA */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* BURN_BRIDGES */
+end_comment
+
+begin_error
+error|#
+directive|error
+literal|"cvs rm sys/i386/isa/isa_device.h"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BURN_BRIDGES */
 end_comment
 
 begin_endif
