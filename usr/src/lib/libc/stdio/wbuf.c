@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)wbuf.c	4.5 (Berkeley) %G% */
+comment|/* @(#)wbuf.c	4.6 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -90,7 +90,11 @@ operator|->
 name|_flag
 operator|&=
 operator|~
+operator|(
 name|_IOEOF
+operator||
+name|_IOREAD
+operator|)
 expr_stmt|;
 block|}
 if|if

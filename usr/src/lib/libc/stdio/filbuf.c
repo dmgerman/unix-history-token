@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)filbuf.c	4.5 (Berkeley) %G% */
+comment|/* @(#)filbuf.c	4.6 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -99,7 +99,11 @@ name|iop
 operator|->
 name|_flag
 operator|&
+operator|(
 name|_IOSTRG
+operator||
+name|_IOEOF
+operator|)
 condition|)
 return|return
 operator|(
