@@ -2038,12 +2038,8 @@ condition|(
 name|num
 operator|>
 name|QUAD_MAX
-operator|||
-name|num
-operator|<
-literal|0
 condition|)
-comment|/* XXX quad_t != off_t */
+comment|/* XXX can't happen&& quad_t != off_t */
 name|errx
 argument_list|(
 literal|1
@@ -2053,7 +2049,7 @@ argument_list|,
 name|oper
 argument_list|)
 expr_stmt|;
-comment|/* Too big/negative. */
+comment|/* Too big. */
 return|return
 operator|(
 operator|(
