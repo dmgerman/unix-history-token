@@ -828,12 +828,6 @@ goto|goto
 name|dopanic
 goto|;
 case|case
-name|IA64_VEC_BREAK
-case|:
-goto|goto
-name|dopanic
-goto|;
-case|case
 name|IA64_VEC_DISABLED_FP
 case|:
 comment|/* 		 * on exit from the kernel, if thread == fpcurthread, 		 * FP is enabled. 		 */
@@ -1299,6 +1293,59 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
+case|case
+name|IA64_VEC_SINGLE_STEP_TRAP
+case|:
+comment|/* 		 * Clear single-step bit. 		 */
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|&=
+name|IA64_PSR_SS
+expr_stmt|;
+comment|/* FALLTHROUTH */
+case|case
+name|IA64_VEC_DEBUG
+case|:
+case|case
+name|IA64_VEC_TAKEN_BRANCH_TRAP
+case|:
+case|case
+name|IA64_VEC_BREAK
+case|:
+comment|/* 		 * These are always fatal in kernel, and should never happen. 		 */
+if|if
+condition|(
+operator|!
+name|user
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DDB
+comment|/* 			 * ...unless, of course, DDB is configured. 			 */
+if|if
+condition|(
+name|kdb_trap
+argument_list|(
+name|vector
+argument_list|,
+name|framep
+argument_list|)
+condition|)
+return|return;
+comment|/* 			 * If we get here, DDB did _not_ handle the 			 * trap, and we need to PANIC! 			 */
+endif|#
+directive|endif
+goto|goto
+name|dopanic
+goto|;
+block|}
+name|i
+operator|=
+name|SIGTRAP
+expr_stmt|;
 break|break;
 block|}
 default|default:

@@ -325,13 +325,8 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|__i386__
-comment|/* XXx */
-name|ddb_regs
-operator|.
-name|tf_eip
-operator|+=
-literal|1
+name|BKPT_SKIP
+name|BKPT_SKIP
 expr_stmt|;
 endif|#
 directive|endif

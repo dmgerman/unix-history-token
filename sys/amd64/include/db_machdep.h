@@ -133,6 +133,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BKPT_SKIP
+value|ddb_regs.tf_eip += 1
+end_define
+
+begin_define
+define|#
+directive|define
 name|FIXUP_PC_AFTER_BREAK
 value|ddb_regs.tf_eip -= 1;
 end_define

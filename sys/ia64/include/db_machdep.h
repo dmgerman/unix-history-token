@@ -51,6 +51,23 @@ directive|define
 name|DB_NO_AOUT
 end_define
 
+begin_struct
+struct|struct
+name|ia64_bundle
+block|{
+name|u_int64_t
+name|slot
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int
+name|template
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|vm_offset_t
@@ -111,39 +128,39 @@ end_define
 begin_define
 define|#
 directive|define
-name|BKPT_INST
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* breakpoint instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BKPT_SIZE
-value|(4)
-end_define
-
-begin_comment
-comment|/* size of breakpoint inst */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BKPT_SET
+name|BKPT_WRITE
 parameter_list|(
-name|inst
+name|addr
+parameter_list|,
+name|storage
 parameter_list|)
-value|(BKPT_INST)
+value|db_write_breakpoint(addr, storage)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIXUP_PC_AFTER_BREAK
+name|BKPT_CLEAR
+parameter_list|(
+name|addr
+parameter_list|,
+name|storage
+parameter_list|)
+value|db_clear_breakpoint(addr, storage)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BKPT_INST_TYPE
+value|u_int64_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|BKPT_SKIP
+value|db_skip_breakpoint()
 end_define
 
 begin_define
@@ -153,7 +170,7 @@ name|db_clear_single_step
 parameter_list|(
 name|regs
 parameter_list|)
-value|0
+value|ddb_regs.tf_cr_ipsr&= ~IA64_PSR_SS
 end_define
 
 begin_define
@@ -163,7 +180,7 @@ name|db_set_single_step
 parameter_list|(
 name|regs
 parameter_list|)
-value|0
+value|ddb_regs.tf_cr_ipsr |= IA64_PSR_SS
 end_define
 
 begin_define
@@ -175,7 +192,7 @@ name|type
 parameter_list|,
 name|code
 parameter_list|)
-value|0
+value|(type == IA64_VEC_BREAK)
 end_define
 
 begin_define
@@ -357,6 +374,73 @@ name|bsp
 parameter_list|,
 name|int
 name|regno
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_read_bundle
+parameter_list|(
+name|db_addr_t
+name|addr
+parameter_list|,
+name|struct
+name|ia64_bundle
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_write_bundle
+parameter_list|(
+name|db_addr_t
+name|addr
+parameter_list|,
+name|struct
+name|ia64_bundle
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_write_breakpoint
+parameter_list|(
+name|db_addr_t
+name|addr
+parameter_list|,
+name|u_int64_t
+modifier|*
+name|storage
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_clear_breakpoint
+parameter_list|(
+name|db_addr_t
+name|addr
+parameter_list|,
+name|u_int64_t
+modifier|*
+name|storage
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|db_skip_breakpoint
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

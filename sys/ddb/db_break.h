@@ -23,6 +23,24 @@ begin_comment
 comment|/*  * Breakpoint.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BKPT_INST_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BKPT_INST_TYPE
+value|int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|db_breakpoint
@@ -57,7 +75,7 @@ directive|define
 name|BKPT_TEMP
 value|0x4
 comment|/* temporary */
-name|int
+name|BKPT_INST_TYPE
 name|bkpt_inst
 decl_stmt|;
 comment|/* saved instruction at bkpt */
