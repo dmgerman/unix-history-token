@@ -54,12 +54,17 @@ if|if
 condition|(
 name|storage
 operator|>=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|0xa0000
 condition|)
 block|{
 name|putstr
 argument_list|(
-literal|"warning: malloc wrapped\n\r"
+literal|"warning: malloc wrapped\n"
 argument_list|)
 expr_stmt|;
 name|p
