@@ -783,12 +783,6 @@ name|flags
 operator||=
 name|FDC_ISPNP
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
 name|error
 operator|=
 name|fdc_isa_alloc_resources
