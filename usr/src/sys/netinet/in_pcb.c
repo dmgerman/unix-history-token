@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -525,7 +525,7 @@ name|lport
 argument_list|,
 name|wild
 argument_list|)
-block|)
+expr_stmt|;
 if|if
 condition|(
 name|t
@@ -553,9 +553,6 @@ name|EADDRINUSE
 operator|)
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 name|inp
 operator|->
 name|inp_laddr
@@ -564,14 +561,8 @@ name|sin
 operator|->
 name|sin_addr
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|noname
 label|:
-end_label
-
-begin_if
 if|if
 condition|(
 name|lport
@@ -631,37 +622,31 @@ literal|0
 argument_list|)
 condition|)
 do|;
-end_if
-
-begin_expr_stmt
 name|inp
 operator|->
 name|inp_lport
 operator|=
 name|lport
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Connect from a socket to a specified address.  * Both address and port must be specified in argument sin.  * If don't have a local address for this socket yet,  * then pick one.  */
 end_comment
 
 begin_expr_stmt
-unit|in_pcbconnect
-operator|(
+name|in_pcbconnect
+argument_list|(
 name|inp
-operator|,
+argument_list|,
 name|nam
-operator|)
+argument_list|)
 specifier|register
 expr|struct
 name|inpcb
