@@ -69,6 +69,11 @@ directive|define
 name|UQ_ASSUME_CM_OVER_DATA
 value|0x0200
 comment|/* modem device breaks on cm over data */
+define|#
+directive|define
+name|UQ_BROKEN_BIDIR
+value|0x2000
+comment|/* printer has broken bidir mode */
 block|}
 struct|;
 end_struct

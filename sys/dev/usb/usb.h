@@ -1569,6 +1569,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UPROTO_PRINTER_1284
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|UCLASS_MASS
 value|8
 end_define
