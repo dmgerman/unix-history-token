@@ -44,6 +44,13 @@ name|KSE_STACKSIZE
 value|16384
 end_define
 
+begin_define
+define|#
+directive|define
+name|DTV_OFFSET
+value|offsetof(struct tcb, tcb_tp.tp_dtv)
+end_define
+
 begin_function_decl
 name|int
 name|_thr_setcontext

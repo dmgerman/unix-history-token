@@ -93,6 +93,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DTV_OFFSET
+value|offsetof(struct tcb, tcb.tcb_tp.tp_dtv)
+end_define
+
+begin_define
+define|#
+directive|define
 name|THR_GETCONTEXT
 parameter_list|(
 name|ucp

@@ -22,6 +22,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kse.h>
 end_include
 
@@ -63,6 +69,13 @@ define|#
 directive|define
 name|KSE_STACKSIZE
 value|16384
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTV_OFFSET
+value|offsetof(struct tcb, tcb_dtv)
 end_define
 
 begin_define
