@@ -252,6 +252,14 @@ operator|->
 name|hotspot
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gsp
+operator|->
+name|softc
+operator|!=
+name|NULL
+condition|)
 name|g_free
 argument_list|(
 name|gsp
