@@ -15967,6 +15967,25 @@ decl_stmt|;
 name|long
 name|loff
 decl_stmt|;
+comment|/* XXX arbitrary sanity limit on `count'. */
+if|if
+condition|(
+name|SCARG
+argument_list|(
+name|uap
+argument_list|,
+name|count
+argument_list|)
+operator|>
+literal|64
+operator|*
+literal|1024
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 operator|(
