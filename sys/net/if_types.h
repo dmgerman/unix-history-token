@@ -16,7 +16,7 @@ name|_NET_IF_TYPES_H_
 end_define
 
 begin_comment
-comment|/*  * Interface types for benefit of parsing media address headers.  * This list is derived from the SNMP list of ifTypes, currently  * documented in RFC1573.  */
+comment|/*  * Interface types for benefit of parsing media address headers.  * This list is derived from the SNMP list of ifTypes, currently  * documented in RFC1573, now maintained as:  *  * 	ftp.isi.edu/in-notes/iana/assignments/smi-numbers  */
 end_comment
 
 begin_define
@@ -533,25 +533,36 @@ begin_comment
 comment|/* Proprietary Multiplexing */
 end_comment
 
+begin_comment
+comment|/* not based on IANA assignments */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IFT_GIF
-value|0x37
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFT_PVC
+value|0xf1
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFT_FAITH
-value|0x38
+value|0xf2
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFT_STF
-value|0x39
+value|0xf3
 end_define
 
 begin_endif
