@@ -1198,7 +1198,43 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
-comment|/* 		 * SanDisk ImageMate II compact flash 		 * PR: kern/47877 		 */
+comment|/* 		 * Casio QV-R3 USB camera (uses Pentax chip as above) 		 * PR: kern/46545 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"CASIO"
+block|,
+literal|"DIGITAL_CAMERA"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * M-Systems DiskOnKey USB flash key 		 * PR: kern/47793 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"M-Sys"
+block|,
+literal|"DiskOnKey"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * SanDisk ImageMate (I, II, ...) compact flash 		 * PR: kern/47877 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -1213,6 +1249,44 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * Feiya "slider" dual-slot flash reader. The vendor field 		 * is blank so this may match other devices. 		 * PR: kern/50020 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|""
+block|,
+literal|"USB CARD READER"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* 		 * SmartDisk (Mitsumi) USB floppy drive 		 * PR: kern/50226 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"MITSUMI"
+block|,
+literal|"USB FDD"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
 block|}
 block|}
 decl_stmt|;
