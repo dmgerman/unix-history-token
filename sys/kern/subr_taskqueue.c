@@ -1145,7 +1145,7 @@ argument_list|,
 operator|&
 name|taskqueue_thread_proc
 argument_list|,
-name|RFNOWAIT
+literal|0
 argument_list|,
 literal|0
 argument_list|,
