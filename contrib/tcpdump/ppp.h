@@ -4,8 +4,14 @@ comment|/* @(#) $Header: ppp.h,v 1.7 95/05/04 17:52:46 mccanne Exp $ (LBL) */
 end_comment
 
 begin_comment
-comment|/*  * Point to Point Protocol (PPP) RFC1331  *  * Copyright 1989 by Carnegie Mellon.  *  * Permission to use, copy, modify, and distribute this program for any  * purpose and without fee is hereby granted, provided that this copyright  * and permission notice appear on all copies and supporting documentation,  * the name of Carnegie Mellon not be used in advertising or publicity  * pertaining to distribution of the program without specific prior  * permission, and notice be given in supporting documentation that copying  * and distribution is by permission of Carnegie Mellon and Stanford  * University.  Carnegie Mellon makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  */
+comment|/*  * Point to Point Protocol (PPP) RFC1331  *  * Copyright 1989 by Carnegie Mellon.  *  * Permission to use, copy, modify, and distribute this program for any  * purpose and without fee is hereby granted, provided that this copyright  * and permission notice appear on all copies and supporting documentation,  * the name of Carnegie Mellon not be used in advertising or publicity  * pertaining to distribution of the program without specific prior  * permission, and notice be given in supporting documentation that copying  * and distribution is by permission of Carnegie Mellon and Stanford  * University.  Carnegie Mellon makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $FreeBSD$  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PPP_ADDRESS
+end_undef
 
 begin_define
 define|#
@@ -17,6 +23,12 @@ end_define
 begin_comment
 comment|/* The address byte value */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PPP_CONTROL
+end_undef
 
 begin_define
 define|#
@@ -33,6 +45,12 @@ begin_comment
 comment|/* Protocol numbers */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PPP_IP
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -43,6 +61,11 @@ end_define
 begin_comment
 comment|/* Raw IP */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -88,6 +111,12 @@ begin_comment
 comment|/* Appletalk */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PPP_IPX
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -98,6 +127,11 @@ end_define
 begin_comment
 comment|/* Novell IPX */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
