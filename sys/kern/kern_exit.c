@@ -282,7 +282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * exit --  *	Death of process.  */
+comment|/*  * exit --  *	Death of process.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -305,6 +305,12 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|exit1
 argument_list|(
 name|p
@@ -1356,6 +1362,10 @@ directive|ifdef
 name|COMPAT_43
 end_ifdef
 
+begin_comment
+comment|/*  * MPSAFE, the dirty work is handled by wait1().  */
+end_comment
+
 begin_function
 name|int
 name|owait
@@ -1430,6 +1440,10 @@ begin_comment
 comment|/* COMPAT_43 */
 end_comment
 
+begin_comment
+comment|/*  * MPSAFE, the dirty work is handled by wait1().  */
+end_comment
+
 begin_function
 name|int
 name|wait4
@@ -1463,6 +1477,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 specifier|static
@@ -1510,6 +1528,12 @@ name|status
 decl_stmt|,
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -1542,11 +1566,15 @@ operator||
 name|WLINUXCLONE
 operator|)
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|loop
 label|:
 name|nfound
@@ -1764,11 +1792,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -1803,11 +1831,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+block|{
+goto|goto
+name|done2
+goto|;
+block|}
 comment|/* 			 * If we got the child via a ptrace 'attach', 			 * we need to give it back to the old parent. 			 */
 name|sx_xlock
 argument_list|(
@@ -1887,11 +1915,13 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 block|}
 name|sx_xunlock
@@ -2135,11 +2165,13 @@ expr_stmt|;
 name|nprocs
 operator|--
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -2283,11 +2315,9 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 name|mtx_unlock_spin
 argument_list|(
@@ -2313,11 +2343,15 @@ name|nfound
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ECHILD
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 name|uap
@@ -2336,11 +2370,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
 block|}
 if|if
 condition|(
@@ -2363,15 +2399,28 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
+operator|!=
+literal|0
 condition|)
+goto|goto
+name|done2
+goto|;
+goto|goto
+name|loop
+goto|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-goto|goto
-name|loop
-goto|;
 block|}
 end_function
 
