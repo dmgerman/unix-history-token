@@ -471,8 +471,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: calendar [-a] [-A days] [-W days] [-F friday] [-B days]\n"
-literal|"\t[-f calendarfile] [-t dd[.mm[.year]]]\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: calendar [-a] [-A days] [-B days] [-F friday] "
+literal|"[-f calendarfile]"
+argument_list|,
+literal|"                [-t dd[.mm[.year]]] [-W days]"
 argument_list|)
 expr_stmt|;
 name|exit
