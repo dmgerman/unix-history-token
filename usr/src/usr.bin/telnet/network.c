@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)network.c	8.1 (Berkeley) %G%"
+literal|"@(#)network.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,6 +379,10 @@ name|send
 argument_list|(
 name|net
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|netoring
 operator|.
 name|consume
@@ -399,6 +403,10 @@ name|send
 argument_list|(
 name|net
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|netoring
 operator|.
 name|consume

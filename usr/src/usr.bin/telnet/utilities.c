@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	8.1 (Berkeley) %G%"
+literal|"@(#)utilities.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,6 +813,7 @@ name|NetTrace
 operator|==
 name|stdout
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|NetTrace
@@ -820,7 +821,14 @@ argument_list|,
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|NetTrace
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|fprintf
 argument_list|(
 name|NetTrace
@@ -828,6 +836,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -1560,7 +1569,18 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"(Empty suboption???)"
+literal|"(Empty suboption??\?)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|NetTrace
+operator|==
+name|stdout
+condition|)
+name|fflush
+argument_list|(
+name|NetTrace
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1666,7 +1686,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1788,7 +1808,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1906,7 +1926,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2102,7 +2122,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2190,7 +2210,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"(partial suboption???)"
+literal|"(partial suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2337,7 +2357,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"(partial suboption???)"
+literal|"(partial suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2482,7 +2502,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2576,7 +2596,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (partial suboption???)"
+literal|" (partial suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2806,7 +2826,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (empty suboption???)"
+literal|" (empty suboption??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2881,7 +2901,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"(no option???)"
+literal|"(no option??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3267,7 +3287,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"(no mode???)"
+literal|"(no mode??\?)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3938,15 +3958,35 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|TELOPT_ENVIRON
+name|TELOPT_NEW_ENVIRON
 case|:
 name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"ENVIRON "
+literal|"NEW-ENVIRON "
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+goto|goto
+name|env_common1
+goto|;
+case|case
+name|TELOPT_OLD_ENVIRON
+case|:
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|"OLD-ENVIRON"
+argument_list|)
+expr_stmt|;
+name|env_common1
+label|:
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|pointer
@@ -4000,14 +4040,22 @@ name|noquote
 init|=
 literal|2
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ENV_HACK
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|OLD_ENVIRON
+argument_list|)
 specifier|extern
 name|int
-name|env_var
+name|old_env_var
 decl_stmt|,
-name|env_value
+name|old_env_value
 decl_stmt|;
 endif|#
 directive|endif
@@ -4034,16 +4082,30 @@ index|]
 condition|)
 block|{
 case|case
-name|ENV_VAR
+name|NEW_ENV_VALUE
 case|:
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+comment|/*	case NEW_ENV_OVAR: */
+if|if
+condition|(
+name|pointer
+index|[
+literal|0
+index|]
+operator|==
+name|TELOPT_OLD_ENVIRON
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|ENV_HACK
 if|if
 condition|(
-name|env_var
+name|old_env_var
 operator|==
-name|ENV_VALUE
+name|OLD_ENV_VALUE
 condition|)
 name|fprintf
 argument_list|(
@@ -4066,22 +4128,50 @@ operator|+
 name|noquote
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* OLD_ENVIRON */
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|"\" VALUE "
+operator|+
+name|noquote
+argument_list|)
+expr_stmt|;
 name|noquote
 operator|=
 literal|2
 expr_stmt|;
 break|break;
 case|case
-name|ENV_VALUE
+name|NEW_ENV_VAR
 case|:
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+comment|/* case OLD_ENV_VALUE: */
+if|if
+condition|(
+name|pointer
+index|[
+literal|0
+index|]
+operator|==
+name|TELOPT_OLD_ENVIRON
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|ENV_HACK
 if|if
 condition|(
-name|env_value
+name|old_env_value
 operator|==
-name|ENV_VAR
+name|OLD_ENV_VAR
 condition|)
 name|fprintf
 argument_list|(
@@ -4100,6 +4190,20 @@ argument_list|(
 name|NetTrace
 argument_list|,
 literal|"\" VALUE "
+operator|+
+name|noquote
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
+comment|/* OLD_ENVIRON */
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|"\" VAR "
 operator|+
 name|noquote
 argument_list|)
@@ -4325,6 +4429,17 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|NetTrace
+operator|==
+name|stdout
+condition|)
+name|fflush
+argument_list|(
+name|NetTrace
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

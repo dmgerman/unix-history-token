@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,45 @@ include|#
 directive|include
 file|"defines.h"
 end_include
+
+begin_comment
+comment|/* These values need to be the same as defined in libtelnet/kerberos5.c */
+end_comment
+
+begin_comment
+comment|/* Either define them in both places, or put in some common header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPTS_FORWARD_CREDS
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTS_FORWARDABLE_CREDS
+value|0x00000001
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|FORWARD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize variables.  */
@@ -130,7 +169,7 @@ directive|ifdef
 name|AUTHENTICATION
 literal|"[-8] [-E] [-K] [-L] [-S tos] [-X atype] [-a] [-c] [-d] [-e char]"
 argument_list|,
-literal|"\n\t[-k realm] [-l user] [-n tracefile] "
+literal|"\n\t[-k realm] [-l user] [-f/-F] [-n tracefile] "
 argument_list|,
 else|#
 directive|else
@@ -229,6 +268,16 @@ modifier|*
 name|strrchr
 argument_list|()
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FORWARD
+specifier|extern
+name|int
+name|forward_flags
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* FORWARD */
 name|tninit
 argument_list|()
 expr_stmt|;
@@ -318,7 +367,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"8EKLS:X:acde:k:l:n:rt:x"
+literal|"8EKLS:X:acde:fFk:l:n:rt:x"
 argument_list|)
 operator|)
 operator|!=
@@ -473,6 +522,124 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|FORWARD
+argument_list|)
+if|if
+condition|(
+name|forward_flags
+operator|&
+name|OPTS_FORWARD_CREDS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Only one of -f and -F allowed.\n"
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+name|forward_flags
+operator||=
+name|OPTS_FORWARD_CREDS
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Warning: -f ignored, no Kerberos V5 support.\n"
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+literal|'F'
+case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|FORWARD
+argument_list|)
+if|if
+condition|(
+name|forward_flags
+operator|&
+name|OPTS_FORWARD_CREDS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Only one of -f and -F allowed.\n"
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+name|forward_flags
+operator||=
+name|OPTS_FORWARD_CREDS
+expr_stmt|;
+name|forward_flags
+operator||=
+name|OPTS_FORWARDABLE_CREDS
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Warning: -F ignored, no Kerberos V5 support.\n"
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'k'

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	8.1 (Berkeley) %G%"
+literal|"@(#)telnet.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,6 +445,38 @@ name|int
 name|telrcv_state
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+end_ifdef
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|telopt_environ
+init|=
+name|TELOPT_NEW_ENVIRON
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|telopt_environ
+value|TELOPT_NEW_ENVIRON
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|jmp_buf
@@ -1776,10 +1808,6 @@ case|case
 name|TELOPT_SGA
 case|:
 comment|/* no big deal */
-case|case
-name|TELOPT_ENVIRON
-case|:
-comment|/* environment variable option */
 ifdef|#
 directive|ifdef
 name|ENCRYPTION
@@ -1790,6 +1818,57 @@ comment|/* encryption variable option */
 endif|#
 directive|endif
 comment|/* ENCRYPTION */
+name|new_state_ok
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|TELOPT_NEW_ENVIRON
+case|:
+comment|/* New environment variable option */
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+if|if
+condition|(
+name|my_state_is_will
+argument_list|(
+name|TELOPT_OLD_ENVIRON
+argument_list|)
+condition|)
+name|send_wont
+argument_list|(
+name|TELOPT_OLD_ENVIRON
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* turn off the old */
+goto|goto
+name|env_common
+goto|;
+case|case
+name|TELOPT_OLD_ENVIRON
+case|:
+comment|/* Old environment variable option */
+if|if
+condition|(
+name|my_state_is_will
+argument_list|(
+name|TELOPT_NEW_ENVIRON
+argument_list|)
+condition|)
+break|break;
+comment|/* Don't enable if new one is in use! */
+name|env_common
+label|:
+name|telopt_environ
+operator|=
+name|option
+expr_stmt|;
+endif|#
+directive|endif
 name|new_state_ok
 operator|=
 literal|1
@@ -2053,6 +2132,27 @@ literal|0
 expr_stmt|;
 comment|/* put us back to the default state */
 break|break;
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+case|case
+name|TELOPT_NEW_ENVIRON
+case|:
+comment|/* 		 * The new environ option wasn't recognized, try 		 * the old one. 		 */
+name|send_will
+argument_list|(
+name|TELOPT_OLD_ENVIRON
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|telopt_environ
+operator|=
+name|TELOPT_OLD_ENVIRON
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 block|}
 comment|/* we always accept a DONT */
 name|set_my_want_state_wont
@@ -2997,6 +3097,10 @@ name|void
 name|suboption
 parameter_list|()
 block|{
+name|unsigned
+name|char
+name|subchar
+decl_stmt|;
 name|printsub
 argument_list|(
 literal|'<'
@@ -3011,6 +3115,8 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|subchar
+operator|=
 name|SB_GET
 argument_list|()
 condition|)
@@ -3461,8 +3567,16 @@ default|default:
 break|break;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
 case|case
-name|TELOPT_ENVIRON
+name|TELOPT_OLD_ENVIRON
+case|:
+endif|#
+directive|endif
+case|case
+name|TELOPT_NEW_ENVIRON
 case|:
 if|if
 condition|(
@@ -3486,7 +3600,7 @@ if|if
 condition|(
 name|my_want_state_is_dont
 argument_list|(
-name|TELOPT_ENVIRON
+name|subchar
 argument_list|)
 condition|)
 return|return;
@@ -3498,7 +3612,7 @@ if|if
 condition|(
 name|my_want_state_is_wont
 argument_list|(
-name|TELOPT_ENVIRON
+name|subchar
 argument_list|)
 condition|)
 block|{
@@ -5955,6 +6069,12 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|OLD_ENVIRON
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ENV_HACK
 end_ifdef
 
@@ -5972,17 +6092,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|env_var
+name|old_env_var
 init|=
-name|ENV_VALUE
+name|OLD_ENV_VAR
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|env_value
+name|old_env_value
 init|=
-name|ENV_VAR
+name|OLD_ENV_VALUE
 decl_stmt|;
 end_decl_stmt
 
@@ -5994,16 +6114,21 @@ end_else
 begin_define
 define|#
 directive|define
-name|env_var
-value|ENV_VAR
+name|old_env_var
+value|OLD_ENV_VAR
 end_define
 
 begin_define
 define|#
 directive|define
-name|env_value
-value|ENV_VALUE
+name|old_env_value
+value|OLD_ENV_VALUE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -6100,35 +6225,49 @@ operator|&
 literal|0xff
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
 case|case
-name|ENV_VAR
+name|OLD_ENV_VAR
 case|:
 ifdef|#
 directive|ifdef
 name|ENV_HACK
 if|if
 condition|(
+name|telopt_environ
+operator|==
+name|TELOPT_OLD_ENVIRON
+operator|&&
 name|env_auto
 condition|)
 block|{
-comment|/* The server has correct definitions */
-name|env_var
+comment|/* Server has the same definitions */
+name|old_env_var
 operator|=
-name|ENV_VAR
+name|OLD_ENV_VAR
 expr_stmt|;
-name|env_value
+name|old_env_value
 operator|=
-name|ENV_VALUE
+name|OLD_ENV_VALUE
 expr_stmt|;
 block|}
 comment|/* FALL THROUGH */
 endif|#
 directive|endif
 case|case
-name|ENV_VALUE
+name|OLD_ENV_VALUE
 case|:
-comment|/* 				 * Although ENV_VALUE is not legal, we will 				 * still recognize it, just in case it is an 				 * old server that has VAR& VALUE mixed up... 				 */
+comment|/* 				 * Although OLD_ENV_VALUE is not legal, we will 				 * still recognize it, just in case it is an 				 * old server that has VAR& VALUE mixed up... 				 */
 comment|/* FALL THROUGH */
+else|#
+directive|else
+case|case
+name|NEW_ENV_VAR
+case|:
+endif|#
+directive|endif
 case|case
 name|ENV_USERVAR
 case|:
@@ -6337,7 +6476,7 @@ operator|*
 name|opt_replyp
 operator|++
 operator|=
-name|TELOPT_ENVIRON
+name|telopt_environ
 expr_stmt|;
 operator|*
 name|opt_replyp
@@ -6580,11 +6719,29 @@ argument_list|(
 name|ep
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+if|if
+condition|(
+name|telopt_environ
+operator|==
+name|TELOPT_OLD_ENVIRON
+condition|)
 operator|*
 name|opt_replyp
 operator|++
 operator|=
-name|env_var
+name|old_env_var
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+operator|*
+name|opt_replyp
+operator|++
+operator|=
+name|NEW_ENV_VAR
 expr_stmt|;
 else|else
 operator|*
@@ -6626,10 +6783,10 @@ name|IAC
 expr_stmt|;
 break|break;
 case|case
-name|ENV_VALUE
+name|NEW_ENV_VAR
 case|:
 case|case
-name|ENV_VAR
+name|NEW_ENV_VALUE
 case|:
 case|case
 name|ENV_ESC
@@ -6659,11 +6816,29 @@ operator|=
 name|vp
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|OLD_ENVIRON
+if|if
+condition|(
+name|telopt_environ
+operator|==
+name|TELOPT_OLD_ENVIRON
+condition|)
 operator|*
 name|opt_replyp
 operator|++
 operator|=
-name|env_value
+name|old_env_value
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+operator|*
+name|opt_replyp
+operator|++
+operator|=
+name|NEW_ENV_VALUE
 expr_stmt|;
 name|vp
 operator|=
@@ -9011,7 +9186,7 @@ argument_list|)
 expr_stmt|;
 name|send_will
 argument_list|(
-name|TELOPT_ENVIRON
+name|TELOPT_NEW_ENVIRON
 argument_list|,
 literal|1
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	8.1 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,7 +167,6 @@ end_function_decl
 begin_endif
 endif|#
 directive|endif
-endif|SIGINFO
 end_endif
 
 begin_decl_stmt
@@ -2398,7 +2397,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SIGTSTP
-specifier|static
 name|SIG_FUNC_RET
 name|susp
 parameter_list|()
@@ -2409,14 +2407,12 @@ comment|/* SIGTSTP */
 ifdef|#
 directive|ifdef
 name|SIGINFO
-specifier|static
 name|SIG_FUNC_RET
 name|ayt
 parameter_list|()
 function_decl|;
 endif|#
 directive|endif
-endif|SIGINFO
 ifdef|#
 directive|ifdef
 name|SIGTSTP
@@ -2448,7 +2444,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SIGINFO
 if|#
 directive|if
 name|defined
@@ -2649,7 +2644,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SIGINFO
 ifdef|#
 directive|ifdef
 name|SIGTSTP
@@ -3405,7 +3399,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|SIG_FUNC_RET
 name|deadpeer
 parameter_list|(
@@ -3434,7 +3427,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|SIG_FUNC_RET
 name|intr
 parameter_list|(
@@ -3473,7 +3465,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|SIG_FUNC_RET
 name|intr2
 parameter_list|(
@@ -3520,7 +3511,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|SIG_FUNC_RET
 name|susp
 parameter_list|(
@@ -3568,7 +3558,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|SIG_FUNC_RET
 name|sendwin
 parameter_list|(
@@ -3606,7 +3595,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|SIG_FUNC_RET
 name|ayt
 parameter_list|(
@@ -4434,6 +4422,10 @@ name|recv
 argument_list|(
 name|net
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|netiring
 operator|.
 name|supply
