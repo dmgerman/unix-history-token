@@ -902,6 +902,10 @@ name|msgConfirm
 argument_list|(
 literal|"Unable to find an old /etc/%s file!  That is decidedly non-standard and\n"
 literal|"your upgraded system may function a little strangely as a result."
+argument_list|,
+name|h
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1655,6 +1659,8 @@ literal|"Unable to go to your saved /etc directory in %s?!  Argh!\n"
 literal|"Something went seriously wrong!  It's quite possible that\n"
 literal|"your former /etc is toast.  I hope you didn't have any\n"
 literal|"important customizations you wanted to keep in there.. :("
+argument_list|,
+name|saved_etc
 argument_list|)
 expr_stmt|;
 block|}
