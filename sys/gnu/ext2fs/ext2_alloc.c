@@ -2009,6 +2009,10 @@ name|inode
 modifier|*
 name|pip
 decl_stmt|;
+specifier|register
+name|mode_t
+name|save_i_mode
+decl_stmt|;
 name|pip
 operator|=
 name|VTOI
@@ -2059,7 +2063,7 @@ name|pip
 argument_list|)
 expr_stmt|;
 comment|/* we need to make sure that ext2_free_inode can adjust the 	   used_dir_counts in the group summary information - I'd 	   really like to know what the rationale behind this 	   'set i_mode to zero to denote an unused inode' is 	 */
-name|mode
+name|save_i_mode
 operator|=
 name|pip
 operator|->
@@ -2080,7 +2084,7 @@ name|pip
 operator|->
 name|i_mode
 operator|=
-name|mode
+name|save_i_mode
 expr_stmt|;
 return|return
 operator|(
