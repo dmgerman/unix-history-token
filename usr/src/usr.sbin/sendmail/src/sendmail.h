@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.13		%G%"
+literal|"@(#)sendmail.h	8.14		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -800,8 +800,15 @@ begin_comment
 comment|/* preserve host case distinction */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_PREHEAD
+value|'H'
+end_define
+
 begin_comment
-comment|/*	'H'	/* UIUC: MAIL11V3: preview headers */
+comment|/* MAIL11V3: preview headers */
 end_comment
 
 begin_define
@@ -863,8 +870,15 @@ begin_comment
 comment|/* don't insert From line */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_MANYSTATUS
+value|'N'
+end_define
+
 begin_comment
-comment|/*	'N'	/* UIUC: MAIL11V3: DATA returns multi-status */
+comment|/* MAIL11V3: DATA returns multi-status */
 end_comment
 
 begin_define
@@ -2195,6 +2209,17 @@ end_define
 
 begin_comment
 comment|/* BODY=8BITMIME supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_MULTSTAT
+value|000200
+end_define
+
+begin_comment
+comment|/* MAIL11V3: handles MULT status */
 end_comment
 
 begin_comment
