@@ -224,13 +224,6 @@ name|MAXWSPCSZ
 value|PAGE_SIZE
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXCTLDMASZ
-value|(2 * (MAXTABSZ + MAXPHYS))
-end_define
-
 begin_struct
 struct|struct
 name|ata_dc_cb_args
@@ -429,7 +422,11 @@ name|bus_dma_tag_create
 argument_list|(
 name|NULL
 argument_list|,
-literal|1
+name|ch
+operator|->
+name|dma
+operator|->
+name|alignment
 argument_list|,
 literal|0
 argument_list|,
@@ -441,11 +438,19 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|MAXCTLDMASZ
+literal|16
+operator|*
+literal|1024
+operator|*
+literal|1024
 argument_list|,
 name|ATA_DMA_ENTRIES
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|ch
+operator|->
+name|dma
+operator|->
+name|max_iosize
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
@@ -539,11 +544,11 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|ch
-operator|->
-name|dma
-operator|->
-name|max_iosize
+literal|16
+operator|*
+literal|1024
+operator|*
+literal|1024
 argument_list|,
 name|ATA_DMA_ENTRIES
 argument_list|,
@@ -551,7 +556,7 @@ name|ch
 operator|->
 name|dma
 operator|->
-name|boundary
+name|max_iosize
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
