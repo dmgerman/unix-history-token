@@ -379,6 +379,14 @@ comment|/* system is dumping */
 end_comment
 
 begin_decl_stmt
+name|dev_t
+name|dumpdev
+init|=
+name|NODEV
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|boot

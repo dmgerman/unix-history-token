@@ -246,6 +246,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|dev_t
+name|rootdev
+init|=
+name|NODEV
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Find and mount the root filesystem  */
 end_comment

@@ -382,22 +382,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|dev_t
-name|rootdev
-init|=
-name|NODEV
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dev_t
-name|dumpdev
-init|=
-name|NODEV
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|device_t
 name|nexus_dev
 decl_stmt|;

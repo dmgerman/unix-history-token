@@ -213,22 +213,6 @@ begin_comment
 comment|/* XXX use include file */
 end_comment
 
-begin_decl_stmt
-name|dev_t
-name|rootdev
-init|=
-name|NODEV
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|dev_t
-name|dumpdev
-init|=
-name|NODEV
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Determine i/o configuration for a machine.  */
 end_comment
