@@ -1070,7 +1070,7 @@ name|pam_cookie
 operator|=
 name|ipam_start_auth
 argument_list|(
-literal|"csshd"
+literal|"sshd"
 argument_list|,
 name|pw
 operator|->
