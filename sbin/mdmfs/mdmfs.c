@@ -111,12 +111,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
-
 begin_typedef
 typedef|typedef
 enum|enum
