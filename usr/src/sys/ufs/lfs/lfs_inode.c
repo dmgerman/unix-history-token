@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_inode.c	4.25	82/10/10	*/
+comment|/*	lfs_inode.c	4.26	82/10/17	*/
 end_comment
 
 begin_include
@@ -1097,18 +1097,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|x
-decl_stmt|;
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|jp
-decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
@@ -1723,12 +1711,6 @@ name|ICHG
 operator|)
 expr_stmt|;
 comment|/* 	 * Now return blocks to free list... if machine 	 * crashes, they will be harmless MISSING blocks. 	 */
-name|dev
-operator|=
-name|ip
-operator|->
-name|i_dev
-expr_stmt|;
 name|fs
 operator|=
 name|ip
@@ -1905,6 +1887,30 @@ name|daddr_t
 operator|)
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|QUOTA
+name|fre
+argument_list|(
+name|ip
+argument_list|,
+name|bn
+argument_list|,
+operator|(
+name|off_t
+operator|)
+name|blksize
+argument_list|(
+name|fs
+argument_list|,
+name|ip
+argument_list|,
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fre
 argument_list|(
 name|ip
@@ -1926,9 +1932,6 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
 name|cnt
 operator|+=
 name|size

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_bk.c	4.6	82/10/17	*/
+comment|/*	tty_bk.c	4.7	82/10/17	*/
 end_comment
 
 begin_include
@@ -327,8 +327,6 @@ begin_block
 block|{
 specifier|register
 name|int
-name|i
-decl_stmt|,
 name|s
 decl_stmt|;
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_cluster.c	4.36	82/09/04	*/
+comment|/*	vfs_cluster.c	4.37	82/10/17	*/
 end_comment
 
 begin_include
@@ -214,7 +214,7 @@ name|size
 parameter_list|,
 name|rablkno
 parameter_list|,
-name|rasize
+name|rabsize
 parameter_list|)
 name|dev_t
 name|dev
@@ -229,7 +229,7 @@ name|daddr_t
 name|rablkno
 decl_stmt|;
 name|int
-name|rasize
+name|rabsize
 decl_stmt|;
 block|{
 specifier|register
@@ -354,7 +354,7 @@ name|dev
 argument_list|,
 name|rablkno
 argument_list|,
-name|rasize
+name|rabsize
 argument_list|)
 expr_stmt|;
 if|if

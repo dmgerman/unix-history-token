@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.77	82/10/16	*/
+comment|/*	tcp_input.c	1.78	82/10/17	*/
 end_comment
 
 begin_include
@@ -426,6 +426,8 @@ directive|if
 name|vax
 operator|||
 name|pdp11
+operator|||
+name|ns16032
 name|ti
 operator|->
 name|ti_len
@@ -707,6 +709,8 @@ directive|if
 name|vax
 operator|||
 name|pdp11
+operator|||
+name|ns16032
 comment|/* 	 * Convert TCP protocol specific fields to host format. 	 */
 name|ti
 operator|->
@@ -976,7 +980,7 @@ block|{
 name|struct
 name|mbuf
 modifier|*
-name|m
+name|am
 init|=
 name|m_get
 argument_list|(
@@ -991,14 +995,14 @@ name|sin
 decl_stmt|;
 if|if
 condition|(
-name|m
+name|am
 operator|==
 literal|0
 condition|)
 goto|goto
 name|drop
 goto|;
-name|m
+name|am
 operator|->
 name|m_len
 operator|=
@@ -1043,7 +1047,7 @@ name|sin
 operator|=
 name|mtod
 argument_list|(
-name|m
+name|am
 argument_list|,
 expr|struct
 name|sockaddr_in
@@ -1102,7 +1106,7 @@ name|in_pcbconnect
 argument_list|(
 name|inp
 argument_list|,
-name|m
+name|am
 argument_list|)
 condition|)
 block|{
@@ -1114,7 +1118,7 @@ name|laddr
 expr_stmt|;
 name|m_free
 argument_list|(
-name|m
+name|am
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1123,7 +1127,7 @@ goto|;
 block|}
 name|m_free
 argument_list|(
-name|m
+name|am
 argument_list|)
 expr_stmt|;
 name|tp
@@ -2496,7 +2500,7 @@ condition|(
 name|tp
 operator|->
 name|snd_wnd
-operator|>
+operator|!=
 literal|0
 condition|)
 name|tp
@@ -3192,6 +3196,8 @@ directive|if
 name|vax
 operator|||
 name|pdp11
+operator|||
+name|ns16032
 name|tp
 operator|->
 name|t_maxseg

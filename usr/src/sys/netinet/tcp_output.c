@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.46	82/10/09	*/
+comment|/*	tcp_output.c	4.47	82/10/17	*/
 end_comment
 
 begin_include
@@ -677,6 +677,10 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|ti
 operator|->
 name|ti_seq
@@ -760,6 +764,10 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 operator|*
 operator|(
 name|u_short
@@ -1012,6 +1020,10 @@ condition|)
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|ti
 operator|->
 name|ti_win
@@ -1063,6 +1075,10 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|ti
 operator|->
 name|ti_urp
@@ -1140,6 +1156,10 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|ti
 operator|->
 name|ti_len

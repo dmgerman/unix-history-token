@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.51	82/10/09	*/
+comment|/*	ip_input.c	1.52	82/10/17	*/
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"../netinet/in.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in_pcb.h"
 end_include
 
 begin_include
@@ -321,9 +327,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
-decl_stmt|,
-modifier|*
-name|mopt
 decl_stmt|;
 specifier|register
 name|int
@@ -502,6 +505,10 @@ block|}
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 comment|/* 	 * Convert fields to host representation. 	 */
 name|ip
 operator|->
@@ -2826,6 +2833,7 @@ name|icmp_ip
 operator|.
 name|ip_dst
 expr_stmt|;
+comment|/* THIS IS VERY QUESTIONABLE, SHOULD HIT ALL PROTOCOLS */
 name|in_pcbnotify
 argument_list|(
 operator|&

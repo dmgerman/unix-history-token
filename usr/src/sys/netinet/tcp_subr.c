@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.30	82/10/09	*/
+comment|/*	tcp_subr.c	4.31	82/10/17	*/
 end_comment
 
 begin_include
@@ -691,6 +691,10 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|ti
 operator|->
 name|ti_len
@@ -762,6 +766,10 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|ti
 operator|->
 name|ti_win

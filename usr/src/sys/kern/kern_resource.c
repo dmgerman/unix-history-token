@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_resource.c	4.14	82/09/12	*/
+comment|/*	kern_resource.c	4.15	82/10/17	*/
 end_comment
 
 begin_include
@@ -1151,7 +1151,7 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|u_int
 modifier|*
 name|ip
 decl_stmt|,

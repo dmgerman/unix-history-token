@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.19	82/10/09	*/
+comment|/*	ip_icmp.c	4.20	82/10/17	*/
 end_comment
 
 begin_include
@@ -295,6 +295,8 @@ directive|if
 name|vax
 operator|||
 name|pdp11
+operator|||
+name|ns16032
 name|nip
 operator|->
 name|ip_len
@@ -681,6 +683,8 @@ directive|if
 name|vax
 operator|||
 name|pdp11
+operator|||
+name|ns16032
 name|icp
 operator|->
 name|icmp_ip

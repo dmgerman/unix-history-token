@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.34	82/10/16	*/
+comment|/*	udp_usrreq.c	4.35	82/10/17	*/
 end_comment
 
 begin_include
@@ -484,11 +484,14 @@ name|broadcastaddr
 operator|=
 name|if_makeaddr
 argument_list|(
+name|in_netof
+argument_list|(
 name|ui
 operator|->
 name|ui_dst
 operator|.
 name|s_net
+argument_list|)
 argument_list|,
 name|INADDR_ANY
 argument_list|)
@@ -1093,6 +1096,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|udp_usrreq

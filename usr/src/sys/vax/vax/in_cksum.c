@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.13 82/10/09 */
+comment|/*	in_cksum.c	1.14	82/10/17	*/
 end_comment
 
 begin_include
@@ -35,6 +35,10 @@ begin_if
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 end_if
 
 begin_expr_stmt

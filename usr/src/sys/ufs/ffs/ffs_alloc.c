@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.13	82/10/16	*/
+comment|/*	ffs_alloc.c	2.14	82/10/17	*/
 end_comment
 
 begin_include
@@ -5106,16 +5106,8 @@ end_comment
 
 begin_macro
 name|update
-argument_list|(
-argument|flag
-argument_list|)
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|int
-name|flag
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -5131,21 +5123,10 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
 name|struct
 name|fs
 modifier|*
 name|fs
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|blks
 decl_stmt|;
 if|if
 condition|(
@@ -5215,7 +5196,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* ### */
+comment|/* XXX */
 name|printf
 argument_list|(
 literal|"fs = %s\n"

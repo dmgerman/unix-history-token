@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.12	82/10/17	*/
+comment|/*	tty_tty.c	4.13	82/10/17	*/
 end_comment
 
 begin_comment
@@ -384,6 +384,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|syselect
 argument_list|(
@@ -392,6 +396,18 @@ argument_list|,
 argument|flag
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.11	82/10/10	*/
+comment|/*	kern_descrip.c	5.12	82/10/17	*/
 end_comment
 
 begin_include
@@ -870,11 +870,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|,
-name|tsel
-decl_stmt|,
 name|ncoll
-decl_stmt|,
-name|rem
 decl_stmt|;
 name|label_t
 name|lqsave

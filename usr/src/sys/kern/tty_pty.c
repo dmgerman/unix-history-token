@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.27	82/10/17	*/
+comment|/*	tty_pty.c	4.28	82/10/17	*/
 end_comment
 
 begin_comment
@@ -1314,7 +1314,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 name|pti
 operator|=
 operator|&

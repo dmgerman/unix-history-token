@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_time.c	5.8	82/10/10	*/
+comment|/*	kern_time.c	5.9	82/10/17	*/
 end_comment
 
 begin_include
@@ -326,10 +326,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|delta
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -1597,10 +1593,6 @@ init|=
 name|u
 operator|.
 name|u_procp
-decl_stmt|;
-name|struct
-name|timeval
-name|atv
 decl_stmt|;
 name|int
 name|s

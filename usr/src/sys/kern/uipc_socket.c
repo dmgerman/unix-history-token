@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.55	82/10/17	*/
+comment|/*	uipc_socket.c	4.56	82/10/17	*/
 end_comment
 
 begin_include
@@ -101,6 +101,10 @@ end_include
 
 begin_comment
 comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -2062,12 +2066,6 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|iovec
-modifier|*
-name|iov
-decl_stmt|;
-specifier|register
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -2098,16 +2096,15 @@ operator|&
 name|SOF_OOB
 condition|)
 block|{
-name|struct
-name|mbuf
-modifier|*
 name|m
-init|=
+operator|=
 name|m_get
 argument_list|(
 name|M_WAIT
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|error
+operator|=
 call|(
 modifier|*
 name|so
@@ -2138,6 +2135,11 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return;
 name|len
 operator|=
 name|uio
@@ -2160,6 +2162,8 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
+name|error
+operator|=
 name|uiomove
 argument_list|(
 name|mtod
@@ -2193,9 +2197,7 @@ name|uio
 operator|->
 name|uio_resid
 operator|&&
-name|u
-operator|.
-name|u_error
+name|error
 operator|==
 literal|0
 operator|&&
@@ -2214,7 +2216,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 name|restart
 label|:
@@ -2630,6 +2636,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|uiomove
 argument_list|(
 name|mtod
@@ -2829,6 +2837,10 @@ block|}
 do|while
 condition|(
 name|m
+operator|&&
+name|error
+operator|==
+literal|0
 operator|&&
 operator|!
 name|eor
@@ -3145,11 +3157,7 @@ operator|&=
 operator|~
 name|SS_NBIO
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|FIOASYNC
 case|:
@@ -3176,11 +3184,7 @@ operator|&=
 operator|~
 name|SS_ASYNC
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCSKEEP
 case|:
@@ -3207,11 +3211,7 @@ name|so_options
 operator||=
 name|SO_KEEPALIVE
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCGKEEP
 case|:
@@ -3232,11 +3232,7 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCSLINGER
 case|:
@@ -3271,11 +3267,7 @@ name|so_options
 operator||=
 name|SO_DONTLINGER
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCGLINGER
 case|:
@@ -3290,11 +3282,7 @@ name|so
 operator|->
 name|so_linger
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCSPGRP
 case|:
@@ -3309,11 +3297,7 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCGPGRP
 case|:
@@ -3328,11 +3312,7 @@ name|so
 operator|->
 name|so_pgrp
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCDONE
 case|:
@@ -3426,11 +3406,7 @@ literal|0
 argument_list|)
 operator|)
 return|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 case|case
 name|SIOCSENDOOB
@@ -3462,15 +3438,11 @@ name|m
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENOBUFS
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|m
 operator|->
 name|m_len
@@ -3542,19 +3514,11 @@ name|m
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENOBUFS
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
-block|}
 operator|*
 name|mtod
 argument_list|(
@@ -3619,11 +3583,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 block|}
 case|case
 name|SIOCATMARK
@@ -3645,11 +3605,7 @@ operator|)
 operator|!=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 comment|/* routing table update calls */
 case|case
 name|SIOCADDRT
@@ -3687,10 +3643,16 @@ argument_list|)
 operator|)
 return|;
 comment|/* type/protocol specific ioctls */
+default|default:
+return|return
+operator|(
+name|ENOTTY
+operator|)
+return|;
 block|}
 return|return
 operator|(
-name|EOPNOTSUPP
+literal|0
 operator|)
 return|;
 block|}

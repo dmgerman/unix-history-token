@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.32	82/10/09	*/
+comment|/*	in_pcb.c	4.33	82/10/17	*/
 end_comment
 
 begin_include
@@ -473,6 +473,10 @@ decl_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|aport
 operator|=
 name|htons

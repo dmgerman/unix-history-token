@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.37	82/10/13	*/
+comment|/*	ip_output.c	1.38	82/10/17	*/
 end_comment
 
 begin_include
@@ -486,6 +486,10 @@ block|{
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|ip
 operator|->
 name|ip_len
@@ -803,6 +807,10 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|mhip
 operator|->
 name|ip_len
@@ -861,6 +869,10 @@ block|}
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
+operator|||
+name|ns16032
 name|mhip
 operator|->
 name|ip_off

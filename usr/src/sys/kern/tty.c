@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.31	82/10/17	*/
+comment|/*	tty.c	4.32	82/10/17	*/
 end_comment
 
 begin_comment
@@ -2487,13 +2487,11 @@ break|break;
 case|case
 name|TIOCSTOP
 case|:
-block|{
-name|int
 name|s
-init|=
+operator|=
 name|spl5
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2540,17 +2538,14 @@ name|s
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|TIOCSTART
 case|:
-block|{
-name|int
 name|s
-init|=
+operator|=
 name|spl5
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2596,7 +2591,6 @@ name|s
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 default|default:
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.65	82/10/09	*/
+comment|/*	tcp_usrreq.c	1.66	82/10/17	*/
 end_comment
 
 begin_include
@@ -153,6 +153,10 @@ end_function_decl
 
 begin_comment
 comment|/*  * Process a TCP user request for TCP tb.  If this is a send request  * then m is the mbuf chain of send data.  If this is a timer expiration  * (called from the software clock routine), then timertype tells which timer.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
