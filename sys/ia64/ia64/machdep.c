@@ -294,6 +294,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucontext.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/sigframe.h>
 end_include
 
@@ -1145,10 +1151,15 @@ expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SKI
 comment|/* 	 * Traverse the MADT to discover IOSAPIC and Local SAPIC 	 * information. 	 */
 name|ia64_probe_sapics
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2256,45 +2267,6 @@ literal|": no I/O memory region"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ia64_pal_base
-operator|!=
-literal|0
-condition|)
-block|{
-name|ia64_pal_base
-operator|&=
-operator|~
-operator|(
-operator|(
-literal|1
-operator|<<
-literal|28
-operator|)
-operator|-
-literal|1
-operator|)
-expr_stmt|;
-comment|/* 		 * We use a TR to map the first 256M of memory - this might 		 * cover the palcode too. 		 */
-if|if
-condition|(
-name|ia64_pal_base
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"PAL code mapped by the kernel's TR\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|printf
-argument_list|(
-literal|"PAL code not found\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
 operator|=
@@ -2368,6 +2340,45 @@ name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* OUTPUT NOW ALLOWED */
+if|if
+condition|(
+name|ia64_pal_base
+operator|!=
+literal|0
+condition|)
+block|{
+name|ia64_pal_base
+operator|&=
+operator|~
+operator|(
+operator|(
+literal|1
+operator|<<
+literal|28
+operator|)
+operator|-
+literal|1
+operator|)
+expr_stmt|;
+comment|/* 		 * We use a TR to map the first 256M of memory - this might 		 * cover the palcode too. 		 */
+if|if
+condition|(
+name|ia64_pal_base
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"PAL code mapped by the kernel's TR\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"PAL code not found\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Wire things up so we can call the firmware. 	 */
 name|map_pal_code
 argument_list|()
