@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1073,6 +1073,12 @@ name|defined
 argument_list|(
 name|hp300
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|luna68k
+argument_list|)
 operator|)
 expr|\
 operator|||
@@ -1194,6 +1200,12 @@ operator|!
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|luna68k
 argument_list|)
 end_if
 

@@ -95,6 +95,8 @@ name|i386
 operator|||
 name|tahoe
 operator|||
+name|luna68k
+operator|||
 name|hp300
 operator|||
 name|mips
