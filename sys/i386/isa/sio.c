@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.47 1994/05/30 14:35:41 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.48 1994/05/30 15:44:10 ache Exp $  */
 end_comment
 
 begin_include
@@ -1517,6 +1517,42 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|FAIL
+parameter_list|(
+name|x
+parameter_list|)
+value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FAIL
+parameter_list|(
+name|x
+parameter_list|)
+value|(printf("sioprobe flunked test %d\n", (x)), 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -1739,7 +1775,7 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Enable the interrupt gate and disable device interupts.  This 	 * should leave the device driving the interrupt line low and 	 * guarantee an edge trigger if an interrupt can be generated. 	 * Attempt to set loopback mode so that we can send a null byte 	 * without annoying any external device. 	 */
+comment|/*  	 * Enable the interrupt gate and disable device interupts.  This 	 * should leave the device driving the interrupt line low and 	 * guarantee an edge trigger if an interrupt can be generated. 	 */
 name|outb
 argument_list|(
 name|iobase
@@ -1747,7 +1783,6 @@ operator|+
 name|com_mcr
 argument_list|,
 name|mcr_image
-comment|/* | MCR_LOOPBACK */
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1757,6 +1792,18 @@ operator|+
 name|com_ier
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Attempt to set loopback mode so that we can send a null byte 	 * without annoying any external device. 	 */
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_mcr
+argument_list|,
+name|mcr_image
+operator||
+name|MCR_LOOPBACK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attempt to generate an output interrupt.  On 8250's, setting 	 * IER_ETXRDY generates an interrupt independent of the current 	 * setting and independent of whether the THR is empty.  On 16450's, 	 * setting IER_ETXRDY generates an interrupt independent of the 	 * current setting.  On 16550A's, setting IER_ETXRDY only 	 * generates an interrupt when IER_ETXRDY is not already set. 	 */
@@ -1792,7 +1839,7 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Turn off loopback mode so that the interrupt gate works again 	 * (MCR_IENABLE was hidden).  This should leave the device driving 	 * an interrupt line high.  It doesn't matter if the interrupt 	 * line oscillates while we are not looking at it, since interrupts 	 * are disabled. 	 * XXX interrupts are NOT disabled for the multiport shared 	 * interrupt case!  isa_configure() enables them after the probe 	 * of the first device on a shared interrupt succeeds. 	 */
+comment|/* 	 * Turn off loopback mode so that the interrupt gate works again 	 * (MCR_IENABLE was hidden).  This should leave the device driving 	 * an interrupt line high.  It doesn't matter if the interrupt 	 * line oscillates while we are not looking at it, since interrupts 	 * are disabled. 	 * XXX interrupts are NOT disabled for the multiport shared 	 * interrupt case!  DELAY() reenables them for the CPU. 	 * config_isadev() enables for the ICU them after the probe of the 	 * first device on a shared interrupt succeeds. 	 */
 name|outb
 argument_list|(
 name|iobase
@@ -1813,6 +1860,11 @@ name|com_cfcr
 argument_list|)
 operator|!=
 name|CFCR_8BITS
+operator|&&
+name|FAIL
+argument_list|(
+literal|0
+argument_list|)
 operator|||
 name|inb
 argument_list|(
@@ -1822,6 +1874,11 @@ name|com_ier
 argument_list|)
 operator|!=
 name|IER_ETXRDY
+operator|&&
+name|FAIL
+argument_list|(
+literal|1
+argument_list|)
 operator|||
 name|inb
 argument_list|(
@@ -1831,11 +1888,21 @@ name|com_mcr
 argument_list|)
 operator|!=
 name|mcr_image
+operator|&&
+name|FAIL
+argument_list|(
+literal|2
+argument_list|)
 operator|||
 operator|!
 name|isa_irq_pending
 argument_list|(
 name|dev
+argument_list|)
+operator|&&
+name|FAIL
+argument_list|(
+literal|3
 argument_list|)
 operator|||
 operator|(
@@ -1850,10 +1917,20 @@ name|IIR_IMASK
 operator|)
 operator|!=
 name|IIR_TXRDY
+operator|&&
+name|FAIL
+argument_list|(
+literal|4
+argument_list|)
 operator|||
 name|isa_irq_pending
 argument_list|(
 name|dev
+argument_list|)
+operator|&&
+name|FAIL
+argument_list|(
+literal|5
 argument_list|)
 operator|||
 operator|(
@@ -1868,6 +1945,11 @@ name|IIR_IMASK
 operator|)
 operator|!=
 name|IIR_NOPEND
+operator|&&
+name|FAIL
+argument_list|(
+literal|6
+argument_list|)
 condition|)
 name|result
 operator|=
@@ -1903,10 +1985,20 @@ name|com_ier
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|FAIL
+argument_list|(
+literal|7
+argument_list|)
 operator|||
 name|isa_irq_pending
 argument_list|(
 name|dev
+argument_list|)
+operator|&&
+name|FAIL
+argument_list|(
+literal|8
 argument_list|)
 operator|||
 operator|(
@@ -1921,6 +2013,11 @@ name|IIR_IMASK
 operator|)
 operator|!=
 name|IIR_NOPEND
+operator|&&
+name|FAIL
+argument_list|(
+literal|9
+argument_list|)
 condition|)
 name|result
 operator|=
@@ -6726,6 +6823,10 @@ name|divisor
 operator|<
 literal|0
 operator|||
+name|divisor
+operator|>
+literal|0
+operator|&&
 name|t
 operator|->
 name|c_ispeed
