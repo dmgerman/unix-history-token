@@ -2289,11 +2289,6 @@ name|p_lock
 decl_stmt|;
 comment|/* (c) Proclock (prevent swap) count. */
 name|struct
-name|klist
-name|p_klist
-decl_stmt|;
-comment|/* (c) Knotes attached to this proc. */
-name|struct
 name|sigiolst
 name|p_sigiolst
 decl_stmt|;
@@ -2412,6 +2407,11 @@ name|u_short
 name|p_xstat
 decl_stmt|;
 comment|/* (c) Exit status; also stop sig. */
+name|struct
+name|knlist
+name|p_klist
+decl_stmt|;
+comment|/* (c) Knotes attached to this proc. */
 name|int
 name|p_numthreads
 decl_stmt|;

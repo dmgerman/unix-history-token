@@ -1604,8 +1604,14 @@ operator|->
 name|p_cru
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Notify interested parties of our demise. 	 */
-name|KNOTE
+name|KNOTE_LOCKED
 argument_list|(
 operator|&
 name|p
@@ -1615,31 +1621,15 @@ argument_list|,
 name|NOTE_EXIT
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Just delete all entries in the p_klist. At this point we won't 	 * report any more events, and there are nasty race conditions that 	 * can beat us if we don't. 	 */
-while|while
-condition|(
-name|SLIST_FIRST
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_klist
-argument_list|)
-condition|)
-name|SLIST_REMOVE_HEAD
+name|knlist_clear
 argument_list|(
 operator|&
 name|p
 operator|->
 name|p_klist
 argument_list|,
-name|kn_selnext
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, or if the handler is set to SIG_IGN, notify process 	 * 1 instead (and hope it will handle this situation). 	 */
@@ -1960,6 +1950,15 @@ operator|->
 name|p_pptr
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+comment|/* 	 * hopefully no one will try to deliver a signal to the process this 	 * late in the game. 	 */
+name|knlist_destroy
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_klist
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure the scheduler takes this thread out of its tables etc. 	 * This will also release this thread's reference to the ucred. 	 * Other thread parts to release include pcb bits and such. 	 */

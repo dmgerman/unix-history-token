@@ -1267,7 +1267,7 @@ operator||=
 name|IN_CHANGE
 expr_stmt|;
 block|}
-name|VN_KNOTE
+name|VN_KNOTE_UNLOCKED
 argument_list|(
 name|ap
 operator|->

@@ -47,7 +47,7 @@ name|si_thread
 decl_stmt|;
 comment|/* thread waiting */
 name|struct
-name|klist
+name|knlist
 name|si_note
 decl_stmt|;
 comment|/* kernel note list */

@@ -3374,7 +3374,7 @@ name|uio
 operator|->
 name|uio_resid
 condition|)
-name|VN_KNOTE
+name|VN_KNOTE_UNLOCKED
 argument_list|(
 name|vp
 argument_list|,

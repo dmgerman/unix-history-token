@@ -1504,7 +1504,7 @@ operator|=
 name|fd
 expr_stmt|;
 comment|/* connection has been removed from the listen queue */
-name|KNOTE
+name|KNOTE_UNLOCKED
 argument_list|(
 operator|&
 name|head

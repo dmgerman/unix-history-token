@@ -8367,7 +8367,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|KNOTE
+name|KNOTE_LOCKED
 argument_list|(
 operator|&
 name|p
@@ -12668,12 +12668,7 @@ operator||=
 name|EV_CLEAR
 expr_stmt|;
 comment|/* automatically set */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|knlist_add
 argument_list|(
 operator|&
 name|p
@@ -12682,12 +12677,7 @@ name|p_klist
 argument_list|,
 name|kn
 argument_list|,
-name|kn_selnext
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -12720,12 +12710,7 @@ name|kn_ptr
 operator|.
 name|p_proc
 decl_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|SLIST_REMOVE
+name|knlist_remove
 argument_list|(
 operator|&
 name|p
@@ -12734,14 +12719,7 @@ name|p_klist
 argument_list|,
 name|kn
 argument_list|,
-name|knote
-argument_list|,
-name|kn_selnext
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -757,31 +757,12 @@ name|no_mmap
 value|(d_mmap_t *)enodev
 end_define
 
-begin_function
-specifier|static
-name|int
+begin_define
+define|#
+directive|define
 name|no_kqfilter
-parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-name|__unused
-parameter_list|,
-name|struct
-name|knote
-modifier|*
-name|kn
-name|__unused
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
+value|(d_kqfilter_t *)enodev
+end_define
 
 begin_function
 specifier|static

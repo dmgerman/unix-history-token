@@ -15,6 +15,29 @@ directive|define
 name|_SYS_EVENTVAR_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-servicable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/_task.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -41,9 +64,21 @@ begin_struct
 struct|struct
 name|kqueue
 block|{
+name|struct
+name|mtx
+name|kq_lock
+decl_stmt|;
+name|int
+name|kq_refcnt
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|kqueue
+argument_list|)
+name|kq_list
+expr_stmt|;
 name|TAILQ_HEAD
 argument_list|(
-argument|kqlist
 argument_list|,
 argument|knote
 argument_list|)
@@ -81,14 +116,50 @@ name|KQ_SLEEP
 value|0x02
 define|#
 directive|define
-name|KQ_ASYNC
+name|KQ_FLUXWAIT
 value|0x04
+comment|/* waiting for a in flux kn */
+define|#
+directive|define
+name|KQ_ASYNC
+value|0x08
+define|#
+directive|define
+name|KQ_CLOSING
+value|0x10
+define|#
+directive|define
+name|KQ_TASKSCHED
+value|0x20
+comment|/* task scheduled */
+define|#
+directive|define
+name|KQ_TASKDRAIN
+value|0x40
+comment|/* waiting for task to drain */
+name|int
+name|kq_knlistsize
+decl_stmt|;
+comment|/* size of knlist */
 name|struct
-name|kevent
-name|kq_kev
-index|[
-name|KQ_NEVENTS
-index|]
+name|klist
+modifier|*
+name|kq_knlist
+decl_stmt|;
+comment|/* list of knotes */
+name|u_long
+name|kq_knhashmask
+decl_stmt|;
+comment|/* size of knhash */
+name|struct
+name|klist
+modifier|*
+name|kq_knhash
+decl_stmt|;
+comment|/* hash table for knotes */
+name|struct
+name|task
+name|kq_task
 decl_stmt|;
 block|}
 struct|;

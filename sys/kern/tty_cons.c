@@ -2535,7 +2535,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|1
+name|EINVAL
 operator|)
 return|;
 name|dev
@@ -2572,7 +2572,7 @@ operator|)
 return|;
 return|return
 operator|(
-literal|1
+name|ENXIO
 operator|)
 return|;
 block|}

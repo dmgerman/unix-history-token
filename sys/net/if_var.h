@@ -302,7 +302,7 @@ decl_stmt|;
 comment|/* linked list of addresses per if */
 comment|/* 		 * if_addrhead is the list of all addresses associated to 		 * an interface. 		 * Some code in the kernel assumes that first element 		 * of the list has type AF_LINK, and contains sockaddr_dl 		 * addresses which store the link-level address and the name 		 * of the interface. 		 * However, access to the AF_LINK address through this 		 * field is deprecated. Use ifaddr_byindex() instead. 		 */
 name|struct
-name|klist
+name|knlist
 name|if_klist
 decl_stmt|;
 comment|/* events attached to this if */

@@ -2499,7 +2499,7 @@ operator|->
 name|ni_vp
 expr_stmt|;
 comment|/* 	 * Notify others that we exec'd, and clear the P_INEXEC flag 	 * as we're now a bona fide freshly-execed process. 	 */
-name|KNOTE
+name|KNOTE_LOCKED
 argument_list|(
 operator|&
 name|p

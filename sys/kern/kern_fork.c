@@ -1109,6 +1109,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|knlist_init
+argument_list|(
+operator|&
+name|newproc
+operator|->
+name|p_klist
+argument_list|,
+operator|&
+name|newproc
+operator|->
+name|p_mtx
+argument_list|)
+expr_stmt|;
 comment|/* We have to lock the process tree while we look for a pid. */
 name|sx_slock
 argument_list|(
@@ -2882,7 +2895,7 @@ name|p1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Tell any interested parties about the new process. 	 */
-name|KNOTE
+name|KNOTE_LOCKED
 argument_list|(
 operator|&
 name|p1

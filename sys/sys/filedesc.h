@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/event.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -160,31 +166,16 @@ name|u_short
 name|fd_refcnt
 decl_stmt|;
 comment|/* reference count */
-name|int
-name|fd_knlistsize
-decl_stmt|;
-comment|/* size of knlist */
-name|struct
-name|klist
-modifier|*
-name|fd_knlist
-decl_stmt|;
-comment|/* list of attached knotes */
-name|u_long
-name|fd_knhashmask
-decl_stmt|;
-comment|/* size of knhash */
-name|struct
-name|klist
-modifier|*
-name|fd_knhash
-decl_stmt|;
-comment|/* hash table for attached knotes */
 name|struct
 name|mtx
 name|fd_mtx
 decl_stmt|;
 comment|/* protects members of this struct */
+name|struct
+name|kqlist
+name|fd_kqlist
+decl_stmt|;
+comment|/* list of kqueues on this filedesc */
 name|int
 name|fd_holdleaderscount
 decl_stmt|;

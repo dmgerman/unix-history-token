@@ -915,7 +915,7 @@ name|uuaiocb
 decl_stmt|;
 comment|/* Pointer in userspace of aiocb */
 name|struct
-name|klist
+name|knlist
 name|klist
 decl_stmt|;
 comment|/* list of knotes */
@@ -1954,6 +1954,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * XXX: no unloads by default, it's too dangerous. 	 * perhaps we could do it if locked out callers and then 	 * did an aio_proc_rundown() on each process. 	 */
 if|if
 condition|(
@@ -1964,6 +1967,20 @@ return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
+return|;
+name|error
+operator|=
+name|kqueue_del_filteropts
+argument_list|(
+name|EVFILT_AIO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
 return|;
 name|async_io_version
 operator|=
@@ -1985,11 +2002,6 @@ argument_list|(
 name|process_exec
 argument_list|,
 name|exec_tag
-argument_list|)
-expr_stmt|;
-name|kqueue_del_filteropts
-argument_list|(
-name|EVFILT_AIO
 argument_list|)
 expr_stmt|;
 name|p31b_setcfg
@@ -2417,17 +2429,14 @@ expr_stmt|;
 block|}
 comment|/* aiocbe is going away, we need to destroy any knotes */
 comment|/* XXXKSE Note the thread here is used to eventually find the 	 * owning process again, but it is also used to do a fo_close 	 * and that requires the thread. (but does it require the 	 * OWNING thread? (or maybe the running thread?) 	 * There is a semantic problem here... 	 */
-name|knote_remove
+name|knlist_clear
 argument_list|(
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
 operator|&
 name|aiocbe
 operator|->
 name|klist
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
@@ -4558,7 +4567,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|KNOTE
+name|KNOTE_UNLOCKED
 argument_list|(
 operator|&
 name|aiocbe
@@ -5525,7 +5534,7 @@ if|if
 condition|(
 name|notify
 condition|)
-name|KNOTE
+name|KNOTE_UNLOCKED
 argument_list|(
 operator|&
 name|aiocbe
@@ -6144,12 +6153,15 @@ operator|->
 name|timeouthandle
 argument_list|)
 expr_stmt|;
-name|SLIST_INIT
+comment|/* XXX - need a lock */
+name|knlist_init
 argument_list|(
 operator|&
 name|aiocbe
 operator|->
 name|klist
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|suword
@@ -6867,6 +6879,8 @@ operator|&
 name|kev
 argument_list|,
 name|td
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|aqueue_fail
@@ -10820,7 +10834,7 @@ argument_list|,
 name|plist
 argument_list|)
 expr_stmt|;
-name|KNOTE
+name|KNOTE_UNLOCKED
 argument_list|(
 operator|&
 name|aiocbe
@@ -11397,7 +11411,7 @@ operator|&=
 operator|~
 name|EV_FLAG1
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|knlist_add
 argument_list|(
 operator|&
 name|aiocbe
@@ -11406,7 +11420,7 @@ name|klist
 argument_list|,
 name|kn
 argument_list|,
-name|kn_selnext
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -11446,7 +11460,7 @@ name|kn
 operator|->
 name|kn_sdata
 decl_stmt|;
-name|SLIST_REMOVE
+name|knlist_remove
 argument_list|(
 operator|&
 name|aiocbe
@@ -11455,9 +11469,7 @@ name|klist
 argument_list|,
 name|kn
 argument_list|,
-name|knote
-argument_list|,
-name|kn_selnext
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -3558,7 +3558,7 @@ name|ifv_if
 operator|)
 argument_list|)
 expr_stmt|;
-name|KNOTE
+name|KNOTE_UNLOCKED
 argument_list|(
 operator|&
 name|ifp

@@ -616,9 +616,35 @@ parameter_list|(
 name|vp
 parameter_list|,
 name|b
+parameter_list|,
+name|a
 parameter_list|)
 define|\
-value|do {							\ 		if ((vp)->v_pollinfo != NULL)			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b)); \ 	} while (0)
+value|do {							\ 		if ((vp)->v_pollinfo != NULL)			\ 			KNOTE(&vp->v_pollinfo->vpi_selinfo.si_note, (b), (a)); \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_KNOTE_LOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|b
+parameter_list|)
+value|VN_KNOTE(vp, b, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_KNOTE_UNLOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|b
+parameter_list|)
+value|VN_KNOTE(vp, b, 0)
 end_define
 
 begin_comment

@@ -526,6 +526,18 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|knote
@@ -541,6 +553,24 @@ name|knote
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_struct
+struct|struct
+name|knlist
+block|{
+name|struct
+name|mtx
+modifier|*
+name|kl_lock
+decl_stmt|;
+comment|/* lock to protect kll_list */
+name|struct
+name|klist
+name|kl_list
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -567,6 +597,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|kqueue
+struct_decl|;
+end_struct_decl
+
+begin_expr_stmt
+name|SLIST_HEAD
+argument_list|(
+name|kqlist
+argument_list|,
+name|kqueue
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -574,10 +620,55 @@ name|KNOTE
 parameter_list|(
 name|list
 parameter_list|,
+name|hist
+parameter_list|,
+name|lock
+parameter_list|)
+value|knote(list, hist, lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOTE_LOCKED
+parameter_list|(
+name|list
+parameter_list|,
 name|hint
 parameter_list|)
-define|\
-value|do { if ((list) != NULL) knote(list, hint); } while (0)
+value|knote(list, hint, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOTE_UNLOCKED
+parameter_list|(
+name|list
+parameter_list|,
+name|hint
+parameter_list|)
+value|knote(list, hint, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOTE_STATUS_BEGIN
+parameter_list|(
+name|kn
+parameter_list|)
+value|knote_status(kn, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KNOTE_STATUS_END
+parameter_list|(
+name|kn
+parameter_list|)
+value|knote_status(kn, 0)
 end_define
 
 begin_comment
@@ -642,6 +733,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Setting the KN_INFLUX flag enables you to unlock the kq that this knote  * is on, and modify kn_status as if you had the KQ lock.  *  * kn_sfflags, kn_sdata, and kn_kevent are protected by the knlist lock.  */
+end_comment
+
 begin_struct
 struct|struct
 name|knote
@@ -652,7 +747,7 @@ argument|knote
 argument_list|)
 name|kn_link
 expr_stmt|;
-comment|/* for fd */
+comment|/* for kq */
 name|SLIST_ENTRY
 argument_list|(
 argument|knote
@@ -660,6 +755,12 @@ argument_list|)
 name|kn_selnext
 expr_stmt|;
 comment|/* for struct selinfo */
+name|struct
+name|knlist
+modifier|*
+name|kn_knlist
+decl_stmt|;
+comment|/* f_attach populated */
 name|TAILQ_ENTRY
 argument_list|(
 argument|knote
@@ -679,6 +780,47 @@ decl_stmt|;
 name|int
 name|kn_status
 decl_stmt|;
+comment|/* protected by kq lock */
+define|#
+directive|define
+name|KN_ACTIVE
+value|0x01
+comment|/* event has been triggered */
+define|#
+directive|define
+name|KN_QUEUED
+value|0x02
+comment|/* event is on queue */
+define|#
+directive|define
+name|KN_DISABLED
+value|0x04
+comment|/* event is disabled */
+define|#
+directive|define
+name|KN_DETACHED
+value|0x08
+comment|/* knote is detached */
+define|#
+directive|define
+name|KN_INFLUX
+value|0x10
+comment|/* knote is in flux */
+define|#
+directive|define
+name|KN_MARKER
+value|0x20
+comment|/* ignore this knote */
+define|#
+directive|define
+name|KN_KQUEUE
+value|0x40
+comment|/* this knote belongs to a kq */
+define|#
+directive|define
+name|KN_HASKQLOCK
+value|0x80
+comment|/* for _inevent */
 name|int
 name|kn_sfflags
 decl_stmt|;
@@ -713,26 +855,6 @@ name|void
 modifier|*
 name|kn_hook
 decl_stmt|;
-define|#
-directive|define
-name|KN_ACTIVE
-value|0x01
-comment|/* event has been triggered */
-define|#
-directive|define
-name|KN_QUEUED
-value|0x02
-comment|/* event is on queue */
-define|#
-directive|define
-name|KN_DISABLED
-value|0x04
-comment|/* event is disabled */
-define|#
-directive|define
-name|KN_DETACHED
-value|0x08
-comment|/* knote is detached */
 define|#
 directive|define
 name|kn_id
@@ -773,18 +895,27 @@ name|proc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|knlist
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
 name|knote
 parameter_list|(
 name|struct
-name|klist
+name|knlist
 modifier|*
 name|list
 parameter_list|,
 name|long
 name|hint
+parameter_list|,
+name|int
+name|islocked
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -792,17 +923,135 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|knote_remove
+name|knote_status
 parameter_list|(
 name|struct
-name|thread
+name|knote
 modifier|*
-name|p
+name|kn
+parameter_list|,
+name|int
+name|begin
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_add
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
 parameter_list|,
 name|struct
-name|klist
+name|knote
 modifier|*
-name|list
+name|kn
+parameter_list|,
+name|int
+name|islocked
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_remove
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|struct
+name|knote
+modifier|*
+name|kn
+parameter_list|,
+name|int
+name|islocked
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_remove_inevent
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|struct
+name|knote
+modifier|*
+name|kn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|knlist_empty
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_init
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_destroy
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_clear
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|int
+name|islocked
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -842,6 +1091,9 @@ name|struct
 name|thread
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|waitok
 parameter_list|)
 function_decl|;
 end_function_decl
