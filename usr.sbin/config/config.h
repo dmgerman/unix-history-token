@@ -46,10 +46,10 @@ modifier|*
 name|f_fn
 decl_stmt|;
 comment|/* the name */
-name|u_char
+name|int
 name|f_type
 decl_stmt|;
-comment|/* see below */
+comment|/* type or count */
 name|u_char
 name|f_flags
 decl_stmt|;
