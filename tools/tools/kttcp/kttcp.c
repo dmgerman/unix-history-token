@@ -559,16 +559,6 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xmitsize
-operator|>
-name|KTTCP_MAX_XMIT
-condition|)
-name|xmitsize
-operator|=
-name|KTTCP_MAX_XMIT
-expr_stmt|;
 name|xmitset
 operator|=
 literal|1
