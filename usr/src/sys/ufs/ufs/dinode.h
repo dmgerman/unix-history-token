@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.12	82/06/29	*/
+comment|/*	dinode.h	4.13	82/07/16	*/
 end_comment
 
 begin_comment
@@ -49,7 +49,7 @@ comment|/* must be first */
 name|char
 name|i_flag
 decl_stmt|;
-name|char
+name|u_short
 name|i_count
 decl_stmt|;
 comment|/* reference count */
@@ -61,16 +61,18 @@ name|ino_t
 name|i_number
 decl_stmt|;
 comment|/* i number, 1-to-1 with device address */
-name|long
-name|i_hlink
-decl_stmt|;
-comment|/* link in hash chain (iget/iput/ifind) */
 name|struct
 name|fs
 modifier|*
 name|i_fs
 decl_stmt|;
 comment|/* file sys associated with this inode */
+name|struct
+name|dquot
+modifier|*
+name|i_dquot
+decl_stmt|;
+comment|/* quota structure controlling this file */
 union|union
 block|{
 name|daddr_t
