@@ -1295,6 +1295,17 @@ comment|/* XXX */
 end_comment
 
 begin_function_decl
+name|void
+name|auth_sock_cleanup_proc
+parameter_list|(
+name|void
+modifier|*
+name|pw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|channel_connect_to
 parameter_list|(

@@ -8091,16 +8091,7 @@ operator|.
 name|sock
 argument_list|)
 expr_stmt|;
-name|unlink
-argument_list|(
-name|channels
-index|[
-name|i
-index|]
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
+comment|/* auth_sock_cleanup_proc deletes the socket */
 name|channel_free
 argument_list|(
 name|i
@@ -12126,11 +12117,30 @@ end_comment
 
 begin_function
 name|void
-name|cleanup_socket
+name|auth_sock_cleanup_proc
 parameter_list|(
 name|void
+modifier|*
+name|_pw
 parameter_list|)
 block|{
+name|struct
+name|passwd
+modifier|*
+name|pw
+init|=
+name|_pw
+decl_stmt|;
+if|if
+condition|(
+name|channel_forwarded_auth_socket_name
+condition|)
+block|{
+name|temporarily_use_uid
+argument_list|(
+name|pw
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|channel_forwarded_auth_socket_name
@@ -12141,6 +12151,14 @@ argument_list|(
 name|channel_forwarded_auth_socket_dir
 argument_list|)
 expr_stmt|;
+name|channel_forwarded_auth_socket_name
+operator|=
+name|NULL
+expr_stmt|;
+name|restore_uid
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -12272,35 +12290,14 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|atexit
+comment|/* delete agent socket on fatal() */
+name|fatal_add_cleanup
 argument_list|(
-name|cleanup_socket
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|int
-name|saved
-init|=
-name|errno
-decl_stmt|;
-name|cleanup_socket
-argument_list|()
-expr_stmt|;
-name|packet_disconnect
-argument_list|(
-literal|"socket: %.100s"
+name|auth_sock_cleanup_proc
 argument_list|,
-name|strerror
-argument_list|(
-name|saved
-argument_list|)
+name|pw
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Create the socket. */
 name|sock
 operator|=

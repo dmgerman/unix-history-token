@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: session.c,v 1.74 2001/04/17 19:34:25 markus Exp $"
+literal|"$OpenBSD: session.c,v 1.80 2001/06/04 21:59:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -455,6 +455,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|xauthfile_cleanup_proc
+parameter_list|(
+name|void
+modifier|*
+name|pw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|do_authenticated1
 parameter_list|(
 name|Authctxt
@@ -725,6 +736,30 @@ argument_list|(
 name|authctxt
 argument_list|)
 expr_stmt|;
+comment|/* remote user's local Xauthority file and agent socket */
+if|if
+condition|(
+name|xauthfile
+condition|)
+name|xauthfile_cleanup_proc
+argument_list|(
+name|authctxt
+operator|->
+name|pw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|auth_get_socket_name
+argument_list|()
+condition|)
+name|auth_sock_cleanup_proc
+argument_list|(
+name|authctxt
+operator|->
+name|pw
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -738,9 +773,20 @@ name|xauthfile_cleanup_proc
 parameter_list|(
 name|void
 modifier|*
-name|ignore
+name|_pw
 parameter_list|)
 block|{
+name|struct
+name|passwd
+modifier|*
+name|pw
+init|=
+name|_pw
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|debug
 argument_list|(
 literal|"xauthfile_cleanup_proc called"
@@ -753,10 +799,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
+name|temporarily_use_uid
+argument_list|(
+name|pw
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|xauthfile
@@ -797,6 +844,9 @@ expr_stmt|;
 name|xauthfile
 operator|=
 name|NULL
+expr_stmt|;
+name|restore_uid
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -927,6 +977,10 @@ decl_stmt|,
 name|data_len
 decl_stmt|,
 name|dlen
+decl_stmt|;
+name|struct
+name|stat
+name|st
 decl_stmt|;
 name|s
 operator|=
@@ -1289,6 +1343,21 @@ operator|!
 name|options
 operator|.
 name|xauth_location
+operator|||
+operator|(
+name|stat
+argument_list|(
+name|options
+operator|.
+name|xauth_location
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|packet_send_debug
@@ -1557,7 +1626,9 @@ name|fatal_add_cleanup
 argument_list|(
 name|xauthfile_cleanup_proc
 argument_list|,
-name|NULL
+name|s
+operator|->
+name|pw
 argument_list|)
 expr_stmt|;
 name|success
@@ -1777,16 +1848,6 @@ condition|)
 name|xfree
 argument_list|(
 name|command
-argument_list|)
-expr_stmt|;
-comment|/* Cleanup user's local Xauthority file. */
-if|if
-condition|(
-name|xauthfile
-condition|)
-name|xauthfile_cleanup_proc
-argument_list|(
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6072,6 +6133,22 @@ literal|0
 operator|)
 condition|)
 block|{
+name|snprintf
+argument_list|(
+name|cmd
+argument_list|,
+sizeof|sizeof
+name|cmd
+argument_list|,
+literal|"%s -c '%s %s'"
+argument_list|,
+name|shell
+argument_list|,
+name|_PATH_BSHELL
+argument_list|,
+name|_PATH_SSH_USER_RC
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|debug_flag
@@ -6080,20 +6157,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Running %s %s\n"
+literal|"Running %s\n"
 argument_list|,
-name|_PATH_BSHELL
-argument_list|,
-name|_PATH_SSH_USER_RC
+name|cmd
 argument_list|)
 expr_stmt|;
 name|f
 operator|=
 name|popen
 argument_list|(
-name|_PATH_BSHELL
-literal|" "
-name|_PATH_SSH_USER_RC
+name|cmd
 argument_list|,
 literal|"w"
 argument_list|)
@@ -7657,6 +7730,10 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 if|if
 condition|(
 name|no_x11_forwarding_flag
@@ -7682,6 +7759,38 @@ block|{
 name|debug
 argument_list|(
 literal|"X11 forwarding disabled in server configuration file."
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|xauth_location
+operator|||
+operator|(
+name|stat
+argument_list|(
+name|options
+operator|.
+name|xauth_location
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|packet_send_debug
+argument_list|(
+literal|"No xauth program; cannot forward with spoofing."
 argument_list|)
 expr_stmt|;
 return|return
@@ -7918,6 +8027,8 @@ argument_list|(
 name|xauthfile_cleanup_proc
 argument_list|,
 name|s
+operator|->
+name|pw
 argument_list|)
 expr_stmt|;
 return|return
@@ -9285,15 +9396,6 @@ parameter_list|)
 block|{
 name|server_loop2
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|xauthfile
-condition|)
-name|xauthfile_cleanup_proc
-argument_list|(
-name|NULL
-argument_list|)
 expr_stmt|;
 block|}
 end_function
