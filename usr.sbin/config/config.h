@@ -66,6 +66,11 @@ name|char
 modifier|*
 name|f_needs
 decl_stmt|;
+name|char
+modifier|*
+name|f_warn
+decl_stmt|;
+comment|/* warning message */
 block|}
 struct|;
 end_struct
