@@ -308,7 +308,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -339,9 +339,9 @@ typedef|,
 name|int
 name|devtype
 typedef|, struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 typedef|));
 end_typedef
 
@@ -360,9 +360,9 @@ typedef|,
 name|int
 name|devtype
 typedef|, struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 typedef|));
 end_typedef
 
@@ -396,9 +396,9 @@ typedef|,
 name|int
 name|fflag
 typedef|, struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 typedef|));
 end_typedef
 
@@ -472,9 +472,9 @@ typedef|,
 name|int
 name|events
 typedef|, struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 typedef|));
 end_typedef
 
@@ -597,9 +597,9 @@ typedef|,
 name|int
 name|flag
 typedef|, struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 typedef|));
 end_typedef
 

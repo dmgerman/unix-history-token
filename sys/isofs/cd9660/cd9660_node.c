@@ -251,11 +251,11 @@ name|inum
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -345,7 +345,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -388,14 +388,6 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
 name|struct
 name|iso_node
 modifier|*
@@ -489,7 +481,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -590,7 +582,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -605,13 +597,13 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 specifier|register
 name|struct
@@ -658,7 +650,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
@@ -678,7 +670,7 @@ name|vp
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -699,7 +691,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_reclaim_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;

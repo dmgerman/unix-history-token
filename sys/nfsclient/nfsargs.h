@@ -1549,9 +1549,9 @@ name|r_rtt
 decl_stmt|;
 comment|/* RTT for rpc */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|r_procp
+name|r_td
 decl_stmt|;
 comment|/* Proc that did I/O system call */
 block|}
@@ -2164,11 +2164,11 @@ name|RPCVERF_MAXSIZ
 index|]
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|nfsd_procp
+name|nfsd_td
 decl_stmt|;
-comment|/* Proc ptr */
+comment|/* daemon thread ptr */
 name|struct
 name|nfsrv_descript
 modifier|*
@@ -2833,7 +2833,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|int
@@ -2915,9 +2915,8 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2960,7 +2959,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2982,7 +2981,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -3203,7 +3202,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -3293,7 +3292,7 @@ operator|*
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|int
@@ -3810,7 +3809,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -3862,7 +3861,7 @@ name|nfssvc_sock
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -3893,7 +3892,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -3918,9 +3917,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -3949,9 +3948,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -3980,9 +3979,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4085,9 +4084,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4116,9 +4115,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4147,9 +4146,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4178,9 +4177,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4209,9 +4208,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4240,9 +4239,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4271,9 +4270,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4302,9 +4301,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4333,9 +4332,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4364,9 +4363,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4395,9 +4394,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4426,9 +4425,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4457,9 +4456,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4488,9 +4487,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4519,9 +4518,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4550,9 +4549,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4581,9 +4580,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4612,9 +4611,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4643,9 +4642,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf
@@ -4674,9 +4673,9 @@ operator|*
 name|slp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|procp
+name|td
 operator|,
 expr|struct
 name|mbuf

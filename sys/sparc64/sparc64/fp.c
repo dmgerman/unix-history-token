@@ -59,7 +59,7 @@ end_include
 
 begin_function
 name|void
-name|fp_init_proc
+name|fp_init_thread
 parameter_list|(
 name|struct
 name|pcb
@@ -108,12 +108,12 @@ end_function
 
 begin_function
 name|int
-name|fp_enable_proc
+name|fp_enable_thread
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -123,19 +123,16 @@ name|pcb
 decl_stmt|;
 name|pcb
 operator|=
-operator|&
-name|p
+name|td
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
+name|td_pcb
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_tstate
 operator|&
@@ -179,9 +176,9 @@ block|}
 if|if
 condition|(
 operator|(
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_tstate
 operator|&
@@ -201,9 +198,9 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_tstate
 operator||=

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bio.h>
 end_include
 
@@ -3392,9 +3398,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3521,9 +3527,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3629,9 +3635,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3843,7 +3849,9 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if

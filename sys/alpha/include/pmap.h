@@ -749,6 +749,12 @@ name|virtual_end
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|vmspace
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|vm_offset_t
 name|pmap_steal_memory
@@ -894,9 +900,9 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -909,9 +915,9 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|vmspace
 operator|*
-name|p
+name|vm
 operator|,
 name|vm_offset_t
 name|v

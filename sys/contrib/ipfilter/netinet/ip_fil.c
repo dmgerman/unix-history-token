@@ -2788,12 +2788,12 @@ argument_list|)
 operator|)
 operator|)
 argument_list|,
-name|p
+name|td
 argument_list|)
 decl|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 end_decl_stmt
 
@@ -5406,7 +5406,7 @@ argument_list|)
 argument_list|,
 name|devtype
 argument_list|,
-name|p
+name|td
 argument_list|)
 name|int
 name|devtype
@@ -5415,9 +5415,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 end_decl_stmt
 
@@ -5586,7 +5586,7 @@ argument_list|)
 argument_list|,
 name|devtype
 argument_list|,
-name|p
+name|td
 argument_list|)
 name|int
 name|devtype
@@ -5595,9 +5595,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 end_decl_stmt
 

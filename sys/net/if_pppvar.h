@@ -341,9 +341,9 @@ name|int
 name|flag
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;

@@ -616,30 +616,35 @@ begin_function
 name|void
 name|vm_forkproc
 parameter_list|(
-name|p1
+name|td
 parameter_list|,
 name|p2
 parameter_list|,
 name|flags
 parameter_list|)
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
-name|p1
-decl_stmt|,
-decl|*
 name|p2
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p1
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|user
 modifier|*
@@ -690,7 +695,7 @@ block|}
 block|}
 name|cpu_fork
 argument_list|(
-name|p1
+name|td
 argument_list|,
 name|p2
 argument_list|,
@@ -784,11 +789,21 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
+name|pmap_new_thread
+argument_list|(
+operator|&
+name|p2
+operator|->
+name|p_thread
+argument_list|)
+expr_stmt|;
+comment|/* Initial thread */
+comment|/* XXXKSE this is unsatisfactory but should be adequate */
 name|up
 operator|=
 name|p2
 operator|->
-name|p_addr
+name|p_uarea
 expr_stmt|;
 comment|/* 	 * p_stats currently points at fields in the user struct 	 * but not at&u, instead at p_addr. Copy parts of 	 * p_stats; zero the rest of p_stats (statistics). 	 * 	 * If procsig->ps_refcnt is 1 and p2->p_sigacts is NULL we dont' need 	 * to share sigacts, so we use the up->u_sigacts. 	 */
 name|p2
@@ -924,7 +939,7 @@ expr_stmt|;
 comment|/* 	 * cpu_fork will copy and update the pcb, set up the kernel stack, 	 * and make the child ready to run. 	 */
 name|cpu_fork
 argument_list|(
-name|p1
+name|td
 argument_list|,
 name|p2
 argument_list|,
@@ -932,7 +947,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Called after process has been wait(2)'ed apon and is being reaped.  * The idea is to reclaim resources that we could not reclaim while  * the process was still executing.  */
@@ -950,6 +965,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|cpu_wait
@@ -963,6 +983,17 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* drop per-process resources */
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
+name|pmap_dispose_thread
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|vmspace_free
 argument_list|(
 name|p
@@ -1101,6 +1132,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|PROC_LOCK_ASSERT
@@ -1150,6 +1186,17 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
+name|pmap_swapin_thread
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1161,21 +1208,28 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
 if|if
 condition|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_stat
 operator|==
 name|SRUN
 condition|)
-block|{
+comment|/* XXXKSE */
 name|setrunqueue
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
-block|}
 name|p
 operator|->
 name|p_sflag
@@ -1199,7 +1253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  * Giant is still held at this point, to be released in tsleep.  */
+comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  *  XXXKSE - KSEGRP with highest priority counts..  *  * Giant is still held at this point, to be released in tsleep.  */
 end_comment
 
 begin_comment
@@ -1273,15 +1327,16 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1311,15 +1366,23 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Find the minimum sleeptime for the process */
+name|FOREACH_KSEGRP_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|kg
+argument_list|)
+block|{
 name|pri
 operator|=
 name|p
 operator|->
 name|p_swtime
 operator|+
-name|p
+name|kg
 operator|->
-name|p_slptime
+name|kg_slptime
 expr_stmt|;
 if|if
 condition|(
@@ -1336,14 +1399,14 @@ condition|)
 block|{
 name|pri
 operator|-=
-name|p
+name|kg
 operator|->
-name|p_nice
+name|kg_nice
 operator|*
 literal|8
 expr_stmt|;
 block|}
-comment|/* 			 * if this process is higher priority and there is 			 * enough space, then select this process instead of 			 * the previous selection. 			 */
+comment|/* 				 * if this ksegrp is higher priority 				 * and there is enough space, then select 				 * this process instead of the previous 				 * selection. 				 */
 if|if
 condition|(
 name|pri
@@ -1359,6 +1422,7 @@ name|ppri
 operator|=
 name|pri
 expr_stmt|;
+block|}
 block|}
 block|}
 name|mtx_unlock_spin
@@ -1559,6 +1623,11 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|outp
@@ -1611,6 +1680,11 @@ name|struct
 name|vmspace
 modifier|*
 name|vm
+decl_stmt|;
+name|int
+name|minslptime
+init|=
+literal|100000
 decl_stmt|;
 name|PROC_LOCK
 argument_list|(
@@ -1718,14 +1792,21 @@ case|:
 case|case
 name|SSTOP
 case|:
-comment|/* 			 * do not swapout a realtime process 			 */
+comment|/* 			 * do not swapout a realtime process 			 * Check all the thread groups.. 			 */
+name|FOREACH_KSEGRP_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|kg
+argument_list|)
+block|{
 if|if
 condition|(
 name|PRI_IS_REALTIME
 argument_list|(
-name|p
+name|kg
 operator|->
-name|p_pri
+name|kg_pri
 operator|.
 name|pri_class
 argument_list|)
@@ -1742,16 +1823,18 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|nextproc
+goto|;
 block|}
-comment|/* 			 * Do not swapout a process waiting on a critical 			 * event of some kind.  Also guarantee swap_idle_threshold1 			 * time in memory. 			 */
+comment|/* 				 * Do not swapout a process waiting 				 * on a critical event of some kind.  				 * Also guarantee swap_idle_threshold1 				 * time in memory. 				 */
 if|if
 condition|(
 operator|(
 operator|(
-name|p
+name|kg
 operator|->
-name|p_pri
+name|kg_pri
 operator|.
 name|pri_level
 operator|)
@@ -1760,9 +1843,9 @@ name|PSOCK
 operator|)
 operator|||
 operator|(
-name|p
+name|kg
 operator|->
-name|p_slptime
+name|kg_slptime
 operator|<
 name|swap_idle_threshold1
 operator|)
@@ -1779,9 +1862,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|nextproc
+goto|;
 block|}
-comment|/* 			 * If the system is under memory stress, or if we are swapping 			 * idle processes>= swap_idle_threshold2, then swap the process 			 * out. 			 */
+comment|/* 				 * If the system is under memory stress, 				 * or if we are swapping 				 * idle processes>= swap_idle_threshold2, 				 * then swap the process out. 				 */
 if|if
 condition|(
 operator|(
@@ -1806,9 +1891,9 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|p
+name|kg
 operator|->
-name|p_slptime
+name|kg_slptime
 operator|<
 name|swap_idle_threshold2
 operator|)
@@ -1826,7 +1911,24 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|nextproc
+goto|;
+block|}
+if|if
+condition|(
+name|minslptime
+operator|>
+name|kg
+operator|->
+name|kg_slptime
+condition|)
+name|minslptime
+operator|=
+name|kg
+operator|->
+name|kg_slptime
+expr_stmt|;
 block|}
 name|mtx_unlock_spin
 argument_list|(
@@ -1839,7 +1941,7 @@ name|vm
 operator|->
 name|vm_refcnt
 expr_stmt|;
-comment|/* 			 * do not swapout a process that is waiting for VM 			 * data structures there is a possible deadlock. 			 */
+comment|/* 			 * do not swapout a process that 			 * is waiting for VM 			 * data structures there is a 			 * possible deadlock. 			 */
 if|if
 condition|(
 name|lockmgr
@@ -1857,7 +1959,7 @@ name|LK_NOWAIT
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 condition|)
 block|{
@@ -1871,7 +1973,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-continue|continue;
+goto|goto
+name|nextproc
+goto|;
 block|}
 name|vm_map_unlock
 argument_list|(
@@ -1898,9 +2002,7 @@ name|VM_SWAP_IDLE
 operator|)
 operator|&&
 operator|(
-name|p
-operator|->
-name|p_slptime
+name|minslptime
 operator|>
 name|swap_idle_threshold2
 operator|)
@@ -1941,6 +2043,8 @@ name|vm
 argument_list|)
 expr_stmt|;
 block|}
+name|nextproc
+label|:
 block|}
 name|sx_sunlock
 argument_list|(
@@ -1975,6 +2079,11 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -2046,19 +2155,29 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
 if|if
 condition|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_stat
 operator|==
 name|SRUN
 condition|)
+comment|/* XXXKSE */
 name|remrunqueue
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -2068,6 +2187,17 @@ expr_stmt|;
 name|pmap_swapout_proc
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|p
+argument_list|,
+argument|td
+argument_list|)
+name|pmap_swapout_thread
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin

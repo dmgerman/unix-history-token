@@ -13478,9 +13478,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -13539,9 +13539,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -13604,9 +13604,9 @@ name|int32_t
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct

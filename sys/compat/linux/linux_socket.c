@@ -560,9 +560,9 @@ name|int
 name|linux_check_hdrincl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 name|s
@@ -688,7 +688,7 @@ name|error
 operator|=
 name|getsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -744,9 +744,9 @@ name|int
 name|linux_sendto_hdrincl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|sendto_args
@@ -1033,7 +1033,7 @@ return|return
 operator|(
 name|sendmsg
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sendmsg_args
@@ -1066,9 +1066,9 @@ name|int
 name|linux_socket
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_socket_args
@@ -1160,7 +1160,7 @@ name|retval_socket
 operator|=
 name|socket
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -1244,9 +1244,9 @@ name|bsd_setsockopt_args
 operator|.
 name|s
 operator|=
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -1285,16 +1285,16 @@ expr_stmt|;
 comment|/* We ignore any error returned by setsockopt() */
 name|setsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_setsockopt_args
 argument_list|)
 expr_stmt|;
 comment|/* Copy back the return value from socket() */
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -1337,9 +1337,9 @@ name|int
 name|linux_bind
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_bind_args
@@ -1414,7 +1414,7 @@ return|return
 operator|(
 name|bind
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -1448,7 +1448,7 @@ name|int
 name|linux_connect
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct
@@ -1472,9 +1472,9 @@ name|int
 name|linux_connect
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_connect_args
@@ -1580,7 +1580,7 @@ name|error
 operator|=
 name|connect
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -1602,7 +1602,9 @@ name|error
 operator|=
 name|holdsock
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 argument_list|,
@@ -1676,7 +1678,7 @@ name|fdrop
 argument_list|(
 name|fp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1713,9 +1715,9 @@ name|int
 name|linux_listen
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_listen_args
@@ -1779,7 +1781,7 @@ return|return
 operator|(
 name|listen
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -1815,9 +1817,9 @@ name|int
 name|linux_accept
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_accept_args
@@ -1897,7 +1899,7 @@ name|error
 operator|=
 name|oaccept
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -1917,9 +1919,9 @@ name|f_args
 operator|.
 name|fd
 operator|=
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -1941,15 +1943,15 @@ name|void
 operator|)
 name|fcntl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|f_args
 argument_list|)
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -1992,9 +1994,9 @@ name|int
 name|linux_getsockname
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_getsockname_args
@@ -2069,7 +2071,7 @@ return|return
 operator|(
 name|ogetsockname
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2105,9 +2107,9 @@ name|int
 name|linux_getpeername
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_getpeername_args
@@ -2182,7 +2184,7 @@ return|return
 operator|(
 name|ogetpeername
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2219,9 +2221,9 @@ name|int
 name|linux_socketpair
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_socketpair_args
@@ -2318,7 +2320,7 @@ return|return
 operator|(
 name|socketpair
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2355,9 +2357,9 @@ name|int
 name|linux_send
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_send_args
@@ -2437,7 +2439,7 @@ return|return
 operator|(
 name|osend
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2474,9 +2476,9 @@ name|int
 name|linux_recv
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_recv_args
@@ -2556,7 +2558,7 @@ return|return
 operator|(
 name|orecv
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2599,9 +2601,9 @@ name|int
 name|linux_sendto
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_sendto_args
@@ -2697,7 +2699,7 @@ if|if
 condition|(
 name|linux_check_hdrincl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|linux_args
 operator|.
@@ -2711,7 +2713,7 @@ return|return
 operator|(
 name|linux_sendto_hdrincl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2722,7 +2724,7 @@ return|return
 operator|(
 name|sendto
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2766,9 +2768,9 @@ name|int
 name|linux_recvfrom
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_recvfrom_args
@@ -2867,7 +2869,7 @@ return|return
 operator|(
 name|orecvfrom
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -2902,9 +2904,9 @@ name|int
 name|linux_recvmsg
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_recvmsg_args
@@ -2979,7 +2981,7 @@ return|return
 operator|(
 name|recvmsg
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -3009,9 +3011,9 @@ name|int
 name|linux_shutdown
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_shutdown_args
@@ -3075,7 +3077,7 @@ return|return
 operator|(
 name|shutdown
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -3115,9 +3117,9 @@ name|int
 name|linux_setsockopt
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setsockopt_args
@@ -3272,7 +3274,7 @@ return|return
 operator|(
 name|setsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -3313,9 +3315,9 @@ name|int
 name|linux_getsockopt
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_getsockopt_args
@@ -3470,7 +3472,7 @@ return|return
 operator|(
 name|getsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd_args
@@ -3485,9 +3487,9 @@ name|int
 name|linux_socketcall
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_socketcall_args
@@ -3521,7 +3523,7 @@ return|return
 operator|(
 name|linux_socket
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3534,7 +3536,7 @@ return|return
 operator|(
 name|linux_bind
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3547,7 +3549,7 @@ return|return
 operator|(
 name|linux_connect
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3560,7 +3562,7 @@ return|return
 operator|(
 name|linux_listen
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3573,7 +3575,7 @@ return|return
 operator|(
 name|linux_accept
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3586,7 +3588,7 @@ return|return
 operator|(
 name|linux_getsockname
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3599,7 +3601,7 @@ return|return
 operator|(
 name|linux_getpeername
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3612,7 +3614,7 @@ return|return
 operator|(
 name|linux_socketpair
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3625,7 +3627,7 @@ return|return
 operator|(
 name|linux_send
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3638,7 +3640,7 @@ return|return
 operator|(
 name|linux_recv
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3651,7 +3653,7 @@ return|return
 operator|(
 name|linux_sendto
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3664,7 +3666,7 @@ return|return
 operator|(
 name|linux_recvfrom
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3677,7 +3679,7 @@ return|return
 operator|(
 name|linux_shutdown
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3690,7 +3692,7 @@ return|return
 operator|(
 name|linux_setsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3703,7 +3705,7 @@ return|return
 operator|(
 name|linux_getsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3868,7 +3870,7 @@ return|return
 operator|(
 name|sendmsg
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)
@@ -3887,7 +3889,7 @@ return|return
 operator|(
 name|linux_recvmsg
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|arg
 argument_list|)

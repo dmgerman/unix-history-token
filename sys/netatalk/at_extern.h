@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -123,7 +127,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -170,9 +174,9 @@ operator|*
 name|ifp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;

@@ -176,7 +176,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Compute a tenex style load average of a quantity on  * 1, 5 and 15 minute intervals.  */
+comment|/*  * Compute a tenex style load average of a quantity on  * 1, 5 and 15 minute intervals.  * XXXKSE   Needs complete rewrite when correct info is available.  * Completely Bogus.. only works with 1:1 (but compiles ok now :-)  */
 end_comment
 
 begin_function
@@ -200,39 +200,32 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
 name|sx_slock
 argument_list|(
 operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|nrun
 operator|=
 literal|0
-operator|,
-name|p
-operator|=
-name|LIST_FIRST
+expr_stmt|;
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
-operator|&
-name|allproc
+argument|p
 argument_list|)
-init|;
-name|p
-operator|!=
-literal|0
-condition|;
-name|p
-operator|=
-name|LIST_NEXT
+block|{
+name|FOREACH_KSEGRP_IN_PROC
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|p_list
+argument|kg
 argument_list|)
-control|)
 block|{
 switch|switch
 condition|(
@@ -246,21 +239,24 @@ name|SSLEEP
 case|:
 if|if
 condition|(
-name|p
+name|kg
 operator|->
-name|p_pri
+name|kg_pri
 operator|.
 name|pri_level
 operator|>
 name|PZERO
 operator|||
-name|p
+name|kg
 operator|->
-name|p_slptime
+name|kg_slptime
 operator|!=
 literal|0
 condition|)
-continue|continue;
+comment|/* ke? */
+goto|goto
+name|nextproc
+goto|;
 comment|/* FALLTHROUGH */
 case|case
 name|SRUN
@@ -277,7 +273,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-continue|continue;
+goto|goto
+name|nextproc
+goto|;
 comment|/* FALLTHROUGH */
 case|case
 name|SIDL
@@ -285,6 +283,9 @@ case|:
 name|nrun
 operator|++
 expr_stmt|;
+block|}
+name|nextproc
+label|:
 block|}
 block|}
 name|sx_sunlock
@@ -604,6 +605,11 @@ decl_stmt|;
 name|int
 name|paging
 decl_stmt|;
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
 name|totalp
 operator|=
 operator|&
@@ -643,13 +649,9 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
 if|if
@@ -693,6 +695,14 @@ case|:
 case|case
 name|SSTOP
 case|:
+name|kg
+operator|=
+operator|&
+name|p
+operator|->
+name|p_ksegrp
+expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|p
@@ -704,9 +714,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|p
+name|kg
 operator|->
-name|p_pri
+name|kg_pri
 operator|.
 name|pri_level
 operator|<=
@@ -720,9 +730,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|p
+name|kg
 operator|->
-name|p_slptime
+name|kg_slptime
 operator|<
 name|maxslp
 condition|)
@@ -735,9 +745,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|p
+name|kg
 operator|->
-name|p_slptime
+name|kg_slptime
 operator|<
 name|maxslp
 condition|)
@@ -748,9 +758,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|kg
 operator|->
-name|p_slptime
+name|kg_slptime
 operator|>=
 name|maxslp
 condition|)

@@ -1153,7 +1153,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1466,7 +1466,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1528,7 +1528,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1570,7 +1570,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1610,7 +1610,7 @@ name|lowervp
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -1623,7 +1623,7 @@ literal|0
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 return|return

@@ -231,7 +231,7 @@ operator|*
 name|head
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -256,7 +256,7 @@ operator|*
 name|nam
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -281,7 +281,7 @@ operator|*
 name|nam
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)

@@ -322,11 +322,11 @@ name|sync_parm
 decl_stmt|;
 comment|/* AIOSYNC parameter set */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|sync_proc
+name|sync_thread
 decl_stmt|;
-comment|/* AIOSYNCing process */
+comment|/* AIOSYNCing thread */
 block|}
 struct|;
 end_struct
@@ -789,7 +789,7 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -815,7 +815,7 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -1279,9 +1279,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1527,9 +1527,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -2695,9 +2695,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -3285,7 +3285,7 @@ name|arg2
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3403,7 +3403,7 @@ name|arg2
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3950,7 +3950,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4061,7 +4061,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4136,7 +4136,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4217,7 +4217,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4338,7 +4338,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4419,7 +4419,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4500,7 +4500,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4660,7 +4660,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4684,9 +4684,9 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -4865,7 +4865,7 @@ condition|)
 comment|/* No enough space, record select. */
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sd
@@ -4958,7 +4958,7 @@ condition|)
 comment|/* No data ready, record select. */
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sd
@@ -9885,9 +9885,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -9942,7 +9942,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -10117,9 +10117,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -10197,7 +10197,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -11496,7 +11496,7 @@ name|fflags
 argument_list|,
 name|MIDIDEV_MODE
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 return|;
 return|return
@@ -11557,7 +11557,7 @@ name|fflags
 argument_list|,
 name|MIDIDEV_MODE
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -11590,9 +11590,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 switch|switch
@@ -11615,7 +11615,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -11642,9 +11642,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 switch|switch
@@ -11667,7 +11667,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -11791,9 +11791,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 switch|switch
@@ -11818,7 +11818,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -11842,9 +11842,9 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 switch|switch
@@ -11865,7 +11865,7 @@ name|i_dev
 argument_list|,
 name|events
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}

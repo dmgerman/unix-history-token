@@ -241,9 +241,9 @@ modifier|*
 name|cr
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,9 +266,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 name|intrflg

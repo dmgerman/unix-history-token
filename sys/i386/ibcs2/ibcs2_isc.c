@@ -71,9 +71,9 @@ name|int
 name|ibcs2_isc
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ibcs2_isc_args
@@ -86,9 +86,9 @@ name|trapframe
 modifier|*
 name|tf
 init|=
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 decl_stmt|;
 name|struct
 name|sysent
@@ -133,7 +133,7 @@ operator|->
 name|sy_call
 call|)
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 name|void

@@ -517,23 +517,31 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPAGES
+name|KSTACK_PAGES
 value|4
+end_define
+
+begin_comment
+comment|/* pages of kernel stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UAREA_PAGES
+value|1
 end_define
 
 begin_comment
 comment|/* pages of u-area */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USPACE
-value|(UPAGES * PAGE_SIZE)
-end_define
+begin_comment
+comment|/* #define KSTACK_GUARD */
+end_comment
 
 begin_comment
-comment|/* total size of u-area */
+comment|/* compile in kstack guard page */
 end_comment
 
 begin_comment

@@ -316,7 +316,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -328,9 +328,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 comment|/* NetBSD only */
 block|{
@@ -473,7 +473,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -485,9 +485,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -840,7 +840,7 @@ name|mi_vfsp
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1667,7 +1667,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1682,9 +1682,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|ENTRY
@@ -1858,7 +1858,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1867,9 +1867,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -1962,7 +1962,7 @@ operator|)
 return|;
 name|selrecord
 argument_list|(
-name|p
+name|curthread
 argument_list|,
 operator|&
 operator|(
@@ -2040,11 +2040,20 @@ ifdef|#
 directive|ifdef
 name|CTL_C
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
 name|sigset_t
 name|psig_omask

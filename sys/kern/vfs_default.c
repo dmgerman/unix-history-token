@@ -857,7 +857,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -894,7 +894,7 @@ name|v_interlock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 return|;
@@ -920,7 +920,7 @@ name|v_interlock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 literal|"vop_stdlock"
 argument_list|,
@@ -947,7 +947,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -983,7 +983,7 @@ name|v_interlock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 return|;
@@ -998,7 +998,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1016,7 +1016,7 @@ name|v_lock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 return|;
@@ -1031,7 +1031,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1046,7 +1046,7 @@ literal|0
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1069,7 +1069,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_poll_args
-comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1121,7 +1121,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_poll_args
-comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1145,7 +1145,7 @@ name|a_vp
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 name|ap
 operator|->
@@ -1185,7 +1185,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1305,7 +1305,7 @@ name|v_interlock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 return|;
@@ -1329,7 +1329,7 @@ name|v_interlock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 literal|"vop_sharedlock"
 argument_list|,
@@ -1360,7 +1360,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1469,7 +1469,7 @@ name|v_interlock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 return|;
@@ -1517,7 +1517,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1561,7 +1561,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1620,7 +1620,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_createvobject_args
-comment|/* { 		struct vnode *vp; 		struct ucred *cred; 		struct proc *p; 	} */
+comment|/* { 		struct vnode *vp; 		struct ucred *cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1644,13 +1644,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|vattr
@@ -1732,7 +1732,7 @@ name|vat
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1823,7 +1823,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|tsleep
@@ -1845,7 +1845,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2206,7 +2206,7 @@ name|data
 parameter_list|,
 name|ndp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2226,9 +2226,9 @@ modifier|*
 name|ndp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -2247,7 +2247,7 @@ name|mp
 parameter_list|,
 name|mntflags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2258,9 +2258,9 @@ name|int
 name|mntflags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -2307,7 +2307,7 @@ name|mp
 parameter_list|,
 name|sbp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2320,9 +2320,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -2368,7 +2368,7 @@ name|mp
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2379,9 +2379,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -2404,7 +2404,7 @@ name|uid
 parameter_list|,
 name|arg
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2421,9 +2421,9 @@ name|caddr_t
 name|arg
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -2444,7 +2444,7 @@ name|waitfor
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2460,9 +2460,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -2595,7 +2595,7 @@ name|attrnamespace
 parameter_list|,
 name|attrname
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2619,9 +2619,9 @@ modifier|*
 name|attrname
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return

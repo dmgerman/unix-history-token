@@ -650,9 +650,24 @@ name|ki_pri
 decl_stmt|;
 comment|/* process priority */
 name|long
+name|ki_tdflags
+decl_stmt|;
+comment|/* XXXKSE kthread flag */
+name|struct
+name|pcb
+modifier|*
+name|ki_pcb
+decl_stmt|;
+comment|/* kernel virtual addr of pcb */
+name|void
+modifier|*
+name|ki_kstack
+decl_stmt|;
+comment|/* kernel virtual addr of stack */
+name|long
 name|ki_spare
 index|[
-literal|25
+literal|22
 index|]
 decl_stmt|;
 comment|/* spare constants */
@@ -724,30 +739,26 @@ struct|struct
 name|user
 block|{
 name|struct
-name|pcb
-name|u_pcb
-decl_stmt|;
-name|struct
 name|sigacts
 name|u_sigacts
 decl_stmt|;
-comment|/* p_sigacts points here (use it!) */
+comment|/* *p_sigacts */
 name|struct
 name|pstats
 name|u_stats
 decl_stmt|;
-comment|/* p_stats points here (use it!) */
-comment|/* 	 * Remaining fields only for core dump and/or ptrace-- 	 * not valid at other times! 	 */
+comment|/* *p_stats */
+comment|/* 	 * Remaining fields only for 	 * core dump and/or ptrace-- 	 * not valid at other times! 	 */
 name|struct
 name|kinfo_proc
 name|u_kproc
 decl_stmt|;
-comment|/* proc + eproc */
+comment|/* eproc */
 name|struct
 name|md_coredump
 name|u_md
 decl_stmt|;
-comment|/* machine dependent glop */
+comment|/* glop */
 block|}
 struct|;
 end_struct

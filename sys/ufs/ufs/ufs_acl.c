@@ -661,7 +661,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getacl_args
-comment|/* { 		struct vnode *vp; 		struct acl_type_t type; 		struct acl *aclp; 		struct ucred *cred; 		struct proc *p; 	} */
+comment|/* { 		struct vnode *vp; 		struct acl_type_t type; 		struct acl *aclp; 		struct ucred *cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -747,7 +747,7 @@ name|a_aclp
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -991,7 +991,7 @@ name|a_aclp
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Unlike ACL_TYPE_ACCESS, there is no relationship between 		 * the inode contents and the ACL, and it is therefore 		 * possible for the request for the ACL to fail since the 		 * ACL is undefined.  In this situation, return success 		 * and an empty ACL, as required by POSIX.1e. 		 */
@@ -1152,7 +1152,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1254,7 +1254,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 condition|)
@@ -1305,7 +1305,7 @@ name|a_aclp
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1337,7 +1337,7 @@ name|POSIX1E_ACL_DEFAULT_EXTATTR_NAME
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Attempting to delete a non-present default ACL 			 * will return success for portability purposes. 			 * (TRIX) 		 	 */
@@ -1386,7 +1386,7 @@ name|a_aclp
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1491,7 +1491,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_aclcheck_args
-comment|/* { 		struct vnode *vp; 		acl_type_t type; 		struct acl *aclp; 		struct ucred *cred; 		struct proc *p; 	} */
+comment|/* { 		struct vnode *vp; 		acl_type_t type; 		struct acl *aclp; 		struct ucred *cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;

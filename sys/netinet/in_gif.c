@@ -1382,11 +1382,6 @@ expr_stmt|;
 comment|/* LINTED const cast */
 name|m_copydata
 argument_list|(
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
 name|m
 argument_list|,
 literal|0

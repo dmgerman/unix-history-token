@@ -1292,6 +1292,7 @@ name|left
 expr_stmt|;
 block|}
 else|else
+block|{
 name|panic
 argument_list|(
 literal|"%s: no hook!"
@@ -1299,6 +1300,17 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RESTARTABLE_PANICS
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
 comment|/* Update stats on incoming hook */
 name|hinfo
 operator|->

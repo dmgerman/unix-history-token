@@ -29,17 +29,16 @@ end_comment
 
 begin_struct
 struct|struct
-name|mdproc
+name|mdthread
 block|{
 name|u_long
 name|md_flags
 decl_stmt|;
-name|struct
-name|user
+name|void
 modifier|*
-name|md_uservirt
+name|md_kstackvirt
 decl_stmt|;
-comment|/* virtual address of p_addr */
+comment|/* virtual address of td_kstack */
 name|vm_offset_t
 name|md_bspstore
 decl_stmt|;
@@ -98,6 +97,20 @@ directive|define
 name|MDP_UAC_MASK
 value|(MDP_UAC_NOPRINT | MDP_UAC_NOFIX | MDP_UAC_SIGBUS)
 end_define
+
+begin_struct
+struct|struct
+name|mdproc
+block|{
+name|struct
+name|user
+modifier|*
+name|md_uservirt
+decl_stmt|;
+comment|/* virtual address of p_addr */
+block|}
+struct|;
+end_struct
 
 end_unit
 

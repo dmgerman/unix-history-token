@@ -766,7 +766,7 @@ if|if
 condition|(
 name|cn_is_open
 condition|)
-comment|/* XXX curproc is not what we want really */
+comment|/* XXX curthread is not what we want really */
 name|error
 operator|=
 name|cnopen
@@ -777,7 +777,7 @@ name|openflag
 argument_list|,
 name|openmode
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* if it failed, back it out */
@@ -815,7 +815,7 @@ name|openflag
 argument_list|,
 name|openmode
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -888,7 +888,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -899,9 +899,9 @@ decl_stmt|,
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|dev_t
@@ -972,7 +972,7 @@ name|flag
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1042,7 +1042,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1053,9 +1053,9 @@ decl_stmt|,
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|dev_t
@@ -1188,7 +1188,7 @@ name|flag
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -1372,7 +1372,7 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1387,9 +1387,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1422,9 +1422,9 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1472,7 +1472,7 @@ name|data
 operator|,
 name|flag
 operator|,
-name|p
+name|td
 operator|)
 operator|)
 return|;
@@ -1488,7 +1488,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1497,9 +1497,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 if|if
@@ -1539,7 +1539,7 @@ name|dev
 operator|,
 name|events
 operator|,
-name|p
+name|td
 operator|)
 operator|)
 return|;

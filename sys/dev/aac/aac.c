@@ -8908,9 +8908,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -8970,9 +8970,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -9023,9 +9023,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|union
@@ -10306,9 +10306,9 @@ name|int
 name|aac_linux_ioctl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -10331,7 +10331,9 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -10364,7 +10366,7 @@ name|args
 operator|->
 name|arg
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;

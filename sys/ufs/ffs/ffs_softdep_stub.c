@@ -83,7 +83,7 @@ name|oldmnt
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -94,9 +94,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|panic
@@ -694,7 +694,7 @@ name|oldmnt
 parameter_list|,
 name|countp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -706,9 +706,9 @@ modifier|*
 name|countp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 operator|*
@@ -732,7 +732,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;

@@ -300,7 +300,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*static int	ng_internalize(struct mbuf *m, struct proc *p); */
+comment|/*static int	ng_internalize(struct mbuf *m, struct thread *p); */
 end_comment
 
 begin_function_decl
@@ -525,9 +525,9 @@ name|int
 name|proto
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -543,9 +543,9 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 return|return
@@ -652,9 +652,9 @@ modifier|*
 name|control
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -733,7 +733,7 @@ name|ng_internalize
 argument_list|(
 name|control
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -1174,9 +1174,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1230,9 +1230,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|printf
@@ -1267,9 +1267,9 @@ name|int
 name|proto
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1382,9 +1382,9 @@ modifier|*
 name|control
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1674,9 +1674,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2395,9 +2395,9 @@ modifier|*
 name|control
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2405,7 +2405,9 @@ name|filedesc
 modifier|*
 name|fdp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 decl_stmt|;

@@ -778,7 +778,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -790,9 +790,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1197,7 +1197,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1209,9 +1209,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2104,9 +2104,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct

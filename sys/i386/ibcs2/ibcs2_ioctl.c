@@ -208,9 +208,9 @@ name|int
 name|ibcs2_gtty
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ibcs2_gtty_args
@@ -250,7 +250,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|ioctl_arg
@@ -264,9 +264,9 @@ name|int
 name|ibcs2_stty
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ibcs2_stty_args
@@ -306,7 +306,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|ioctl_arg
@@ -2182,14 +2182,14 @@ begin_function
 name|int
 name|ibcs2_ioctl
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ibcs2_ioctl_args
@@ -2197,6 +2197,15 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|filedesc
 modifier|*
@@ -2358,7 +2367,7 @@ operator|)
 operator|&
 name|bts
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2554,7 +2563,7 @@ operator|)
 operator|&
 name|bts
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2633,7 +2642,7 @@ operator|)
 operator|&
 name|bts
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -2720,7 +2729,7 @@ operator|)
 operator|&
 name|bts
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -2807,7 +2816,7 @@ operator|)
 operator|&
 name|bts
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -2880,7 +2889,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 case|case
@@ -2898,7 +2907,7 @@ name|caddr_t
 operator|)
 literal|1
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 default|default:
@@ -2971,7 +2980,7 @@ operator|)
 operator|&
 name|arg
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -2990,7 +2999,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3015,7 +3024,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3116,7 +3125,7 @@ name|error
 operator|=
 name|setpgid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sa
@@ -3262,7 +3271,7 @@ comment|/* printf("ioctl KDGKBMODE = %x\n", SCARG(uap, cmd));*/
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3288,7 +3297,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3314,7 +3323,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3340,7 +3349,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3366,7 +3375,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3392,7 +3401,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3417,7 +3426,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3442,7 +3451,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3468,7 +3477,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3494,7 +3503,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3520,7 +3529,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3546,7 +3555,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3572,7 +3581,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3598,7 +3607,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3625,7 +3634,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3651,7 +3660,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3677,7 +3686,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3703,7 +3712,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3729,7 +3738,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3755,7 +3764,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3772,7 +3781,7 @@ case|:
 return|return
 name|ibcs2_socksys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3798,7 +3807,7 @@ expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3814,7 +3823,9 @@ argument_list|(
 operator|(
 literal|"ibcs2_ioctl(%d): unknown cmd 0x%lx "
 operator|,
-name|p
+name|td
+operator|->
+name|proc
 operator|->
 name|p_pid
 operator|,

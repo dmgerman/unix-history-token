@@ -6621,7 +6621,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -6633,9 +6633,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -6910,9 +6910,9 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -7421,7 +7421,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -7433,9 +7433,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -9925,7 +9925,7 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -9940,9 +9940,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -10093,9 +10093,9 @@ name|TIOCSETA
 case|:
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -10499,7 +10499,7 @@ name|data
 operator|,
 name|flag
 operator|,
-name|p
+name|td
 operator|)
 expr_stmt|;
 if|if
@@ -10723,9 +10723,9 @@ case|:
 comment|/* must be root since the wait applies to following logins */
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

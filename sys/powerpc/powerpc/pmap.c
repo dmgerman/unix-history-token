@@ -6015,9 +6015,9 @@ name|void
 name|pmap_activate
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -6042,16 +6042,15 @@ name|seg
 decl_stmt|;
 name|pcb
 operator|=
-operator|&
-name|p
+name|td
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
+name|td_pcb
 expr_stmt|;
 name|pmap
 operator|=
-name|p
+name|td
+operator|->
+name|td_pric
 operator|->
 name|p_vmspace
 operator|->
@@ -6097,9 +6096,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|p
+name|td
 operator|==
-name|curproc
+name|curthread
 condition|)
 block|{
 comment|/* Disable interrupts while switching. */

@@ -998,7 +998,7 @@ expr_stmt|;
 comment|/* note that we want to stop */
 name|sync
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 operator|&
 name|dummyarg
@@ -1260,9 +1260,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1572,9 +1572,9 @@ name|VINUM_SUPERDEV_TYPE
 case|:
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* are we root? */
@@ -1655,9 +1655,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|unsigned

@@ -230,8 +230,9 @@ name|int
 name|flag
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -589,11 +590,11 @@ name|tp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 specifier|register
@@ -612,9 +613,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -686,7 +687,9 @@ name|sc
 operator|=
 name|pppalloc
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|)
@@ -1911,7 +1914,7 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|tty
@@ -1928,9 +1931,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1991,9 +1994,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2041,9 +2044,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2085,9 +2088,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2185,7 +2188,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

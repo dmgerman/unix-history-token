@@ -37,7 +37,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -260,7 +260,7 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -886,9 +886,9 @@ name|int
 name|proto
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -910,9 +910,9 @@ operator|*
 name|nam
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -934,9 +934,9 @@ operator|*
 name|nam
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -983,9 +983,9 @@ operator|*
 name|ifp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1030,9 +1030,9 @@ operator|*
 name|so
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1126,9 +1126,9 @@ operator|*
 name|control
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1234,9 +1234,9 @@ name|int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1302,9 +1302,9 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1350,9 +1350,9 @@ operator|*
 name|nam
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1401,9 +1401,9 @@ operator|*
 name|ifp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1421,9 +1421,9 @@ operator|*
 name|so
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;

@@ -358,7 +358,7 @@ name|vp
 argument_list|,
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|,
 name|cred
 argument_list|)
@@ -522,7 +522,7 @@ name|fattr
 argument_list|,
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|,
 name|cred
 argument_list|)
@@ -808,9 +808,9 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|vattr
@@ -870,11 +870,11 @@ return|return
 name|EINVAL
 return|;
 comment|/*	if (uiop->uio_offset + uiop->uio_resid> nmp->nm_maxfilesize) 		return (EFBIG);*/
-name|p
+name|td
 operator|=
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 expr_stmt|;
 if|if
 condition|(
@@ -934,7 +934,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -970,7 +970,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1005,7 +1005,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1110,9 +1110,9 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 comment|/*	struct vattr vattr;*/
 name|int
@@ -1168,11 +1168,11 @@ return|return
 name|EINVAL
 return|;
 comment|/*	if (uiop->uio_offset + uiop->uio_resid> nmp->nm_maxfilesize) 		return (EFBIG);*/
-name|p
+name|td
 operator|=
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 expr_stmt|;
 if|if
 condition|(
@@ -1209,7 +1209,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1251,7 +1251,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1288,7 +1288,7 @@ literal|0
 return|;
 if|if
 condition|(
-name|p
+name|td
 operator|&&
 name|uiop
 operator|->
@@ -1298,7 +1298,9 @@ name|uiop
 operator|->
 name|uio_resid
 operator|>
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_rlimit
 index|[
@@ -1310,19 +1312,25 @@ condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|psignal
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|SIGXFSZ
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1428,7 +1436,7 @@ name|bp
 parameter_list|,
 name|cr
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|buf
@@ -1441,9 +1449,9 @@ modifier|*
 name|cr
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1527,9 +1535,9 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 if|if
 condition|(
@@ -2089,9 +2097,9 @@ name|vnode
 operator|*
 name|vp
 expr|; 	struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 expr|; 	struct
 name|ucred
 operator|*
@@ -2115,9 +2123,9 @@ name|ap
 operator|->
 name|a_vp
 expr|;
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr|;
 comment|/* XXX */
 name|cred
@@ -2268,9 +2276,9 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|error
 operator|=
@@ -2560,9 +2568,9 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ucred
@@ -2572,14 +2580,16 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NWFS_RWCACHE
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX */
 name|cred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -2592,7 +2602,7 @@ name|FWRITE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2610,7 +2620,7 @@ name|FWRITE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2659,19 +2669,21 @@ name|vm_page_t
 modifier|*
 name|pages
 decl_stmt|;
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX */
 name|cred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
 comment|/* XXX */
-comment|/*	VOP_OPEN(vp, FWRITE, cred, p);*/
+comment|/*	VOP_OPEN(vp, FWRITE, cred, td);*/
 name|np
 operator|=
 name|VTONW
@@ -2823,9 +2835,9 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|NCPVNDEBUG
 argument_list|(
@@ -2863,7 +2875,7 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
-comment|/*	VOP_CLOSE(vp, FWRITE, cred, p);*/
+comment|/*	VOP_CLOSE(vp, FWRITE, cred, td);*/
 name|NCPVNDEBUG
 argument_list|(
 literal|"paged write done: %d\n"
@@ -2964,7 +2976,7 @@ name|flags
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|intrflg
 parameter_list|)
@@ -2982,9 +2994,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|intrflg
@@ -3100,7 +3112,9 @@ name|vp
 argument_list|)
 argument_list|)
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3131,7 +3145,7 @@ name|flags
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|slpflag
 argument_list|,
@@ -3207,7 +3221,7 @@ name|flags
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|slpflag
 argument_list|,

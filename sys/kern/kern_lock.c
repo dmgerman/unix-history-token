@@ -761,7 +761,7 @@ name|flags
 parameter_list|,
 name|interlkp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 else|#
 directive|else
@@ -773,7 +773,7 @@ name|flags
 parameter_list|,
 name|interlkp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|name
 parameter_list|,
@@ -797,9 +797,9 @@ modifier|*
 name|interlkp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -839,7 +839,7 @@ argument_list|(
 name|KTR_LOCKMGR
 argument_list|,
 literal|"lockmgr(): lkp == %p (lk_wmesg == \"%s\"), flags == 0x%x, "
-literal|"interlkp == %p, p == %p"
+literal|"interlkp == %p, td == %p"
 argument_list|,
 name|lkp
 argument_list|,
@@ -851,7 +851,7 @@ name|flags
 argument_list|,
 name|interlkp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -860,7 +860,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|td
 operator|==
 name|NULL
 condition|)
@@ -871,7 +871,9 @@ expr_stmt|;
 else|else
 name|pid
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -946,7 +948,7 @@ block|{
 case|case
 name|LK_SHARED
 case|:
-comment|/* 		 * If we are not the exclusive lock holder, we have to block 		 * while there is an exclusive lock holder or while an 		 * exclusive lock request or upgrade request is in progress. 		 * 		 * However, if P_DEADLKTREAT is set, we override exclusive 		 * lock requests or upgrade requests ( but not the exclusive 		 * lock itself ). 		 */
+comment|/* 		 * If we are not the exclusive lock holder, we have to block 		 * while there is an exclusive lock holder or while an 		 * exclusive lock request or upgrade request is in progress. 		 * 		 * However, if TDF_DEADLKTREAT is set, we override exclusive 		 * lock requests or upgrade requests ( but not the exclusive 		 * lock itself ). 		 */
 if|if
 condition|(
 name|lkp
@@ -962,23 +964,25 @@ name|LK_HAVE_EXCL
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|td
 condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
-name|p
+name|td
 operator|->
-name|p_flag
+name|td_flags
 operator|&
-name|P_DEADLKTREAT
+name|TDF_DEADLKTREAT
 operator|)
 condition|)
 block|{
@@ -991,7 +995,9 @@ expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
@@ -2153,7 +2159,7 @@ name|lockstatus
 parameter_list|(
 name|lkp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|lock
@@ -2161,9 +2167,9 @@ modifier|*
 name|lkp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -2189,7 +2195,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|p
+name|td
 operator|==
 name|NULL
 operator|||
@@ -2197,7 +2203,9 @@ name|lkp
 operator|->
 name|lk_lockholder
 operator|==
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 condition|)

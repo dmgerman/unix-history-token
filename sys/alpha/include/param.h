@@ -429,8 +429,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UPAGES
+name|KSTACK_PAGES
 value|2
+end_define
+
+begin_comment
+comment|/* pages of kstack (with pcb) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UAREA_PAGES
+value|1
 end_define
 
 begin_comment
@@ -440,12 +451,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USPACE
-value|(UPAGES * PAGE_SIZE)
+name|KSTACK_GUARD
 end_define
 
 begin_comment
-comment|/* total size of u-area */
+comment|/* compile in kstack guard page */
 end_comment
 
 begin_comment

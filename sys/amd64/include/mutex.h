@@ -358,7 +358,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|pushl %eax ;							\ 	pushl %ecx ;							\ 	pushl %ebx ;							\ 	movl $(MTX_UNOWNED) , %eax ;					\ 	movl PCPU(CURPROC), %ebx ;					\ 	pushfl ;							\ 	popl %ecx ;							\ 	cli ;								\ 	MPLOCKED cmpxchgl %ebx, lck+MTX_LOCK ;				\ 	jz 2f ;								\ 	cmpl lck+MTX_LOCK, %ebx ;					\ 	je 3f ;								\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl %ecx ;							\ 	pushl $flags ;							\ 	pushl $lck ;							\ 	call _mtx_lock_spin ;						\ 	addl $0x14, %esp ;						\ 	jmp 1f ;							\ 3:	movl lck+MTX_RECURSECNT, %ebx ;					\ 	incl %ebx ;							\ 	movl %ebx, lck+MTX_RECURSECNT ;					\ 	jmp 1f ;							\ 2:	movl %ecx, lck+MTX_SAVECRIT ;					\ 1:	popl %ebx ;							\ 	popl %ecx ;							\ 	popl %eax
+value|pushl %eax ;							\ 	pushl %ecx ;							\ 	pushl %ebx ;							\ 	movl $(MTX_UNOWNED) , %eax ;					\ 	movl PCPU(CURTHREAD), %ebx ;					\ 	pushfl ;							\ 	popl %ecx ;							\ 	cli ;								\ 	MPLOCKED cmpxchgl %ebx, lck+MTX_LOCK ;				\ 	jz 2f ;								\ 	cmpl lck+MTX_LOCK, %ebx ;					\ 	je 3f ;								\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl %ecx ;							\ 	pushl $flags ;							\ 	pushl $lck ;							\ 	call _mtx_lock_spin ;						\ 	addl $0x14, %esp ;						\ 	jmp 1f ;							\ 3:	movl lck+MTX_RECURSECNT, %ebx ;					\ 	incl %ebx ;							\ 	movl %ebx, lck+MTX_RECURSECNT ;					\ 	jmp 1f ;							\ 2:	movl %ecx, lck+MTX_SAVECRIT ;					\ 1:	popl %ebx ;							\ 	popl %ecx ;							\ 	popl %eax
 end_define
 
 begin_define

@@ -1925,7 +1925,7 @@ begin_function
 name|int
 name|quotaon
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|mp
 parameter_list|,
@@ -1934,9 +1934,9 @@ parameter_list|,
 name|fname
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|mount
@@ -2012,7 +2012,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|fname
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|flags
@@ -2063,7 +2063,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2086,11 +2086,13 @@ name|FREAD
 operator||
 name|FWRITE
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2108,7 +2110,7 @@ name|vp
 condition|)
 name|quotaoff
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|mp
 argument_list|,
@@ -2144,7 +2146,9 @@ expr_stmt|;
 comment|/* 	 * Save the credential of the process that turned on quotas. 	 * Set up the time limits for this quota. 	 */
 name|crhold
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -2156,7 +2160,9 @@ index|[
 name|type
 index|]
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -2348,7 +2354,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -2425,7 +2431,7 @@ name|error
 condition|)
 name|quotaoff
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|mp
 argument_list|,
@@ -2448,16 +2454,16 @@ begin_function
 name|int
 name|quotaoff
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|mp
 parameter_list|,
 name|type
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|mount
@@ -2633,7 +2639,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -2733,11 +2739,13 @@ name|FREAD
 operator||
 name|FWRITE
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|ump
@@ -3628,11 +3636,11 @@ name|mp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -3791,7 +3799,7 @@ name|LK_NOWAIT
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4054,11 +4062,11 @@ name|dqp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -4338,7 +4346,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -4455,11 +4463,11 @@ name|UIO_READ
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -4528,7 +4536,7 @@ name|dqvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4831,11 +4839,11 @@ name|dq
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -4932,7 +4940,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 while|while
@@ -4994,7 +5002,7 @@ name|dqvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5088,11 +5096,11 @@ name|UIO_WRITE
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -5175,7 +5183,7 @@ name|dqvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

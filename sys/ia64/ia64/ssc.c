@@ -507,9 +507,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -654,7 +654,9 @@ operator|)
 operator|&&
 name|suser
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 condition|)
 block|{
@@ -749,9 +751,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -833,9 +835,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -887,7 +889,7 @@ name|data
 operator|,
 name|flag
 operator|,
-name|p
+name|td
 operator|)
 expr_stmt|;
 if|if

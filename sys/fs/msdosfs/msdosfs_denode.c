@@ -371,11 +371,11 @@ name|diroff
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -476,7 +476,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -746,11 +746,11 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -974,7 +974,7 @@ name|nvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -1548,7 +1548,7 @@ name|flags
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|denode
@@ -1567,9 +1567,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1965,7 +1965,7 @@ argument_list|)
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|length
 argument_list|,
@@ -2516,7 +2516,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2541,13 +2541,13 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|int
 name|error
@@ -2666,7 +2666,7 @@ literal|0
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|dep
@@ -2700,7 +2700,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are done with the denode, reclaim it 	 * so that it can be reused immediately. 	 */
@@ -2742,7 +2742,7 @@ name|vp
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

@@ -344,7 +344,7 @@ name|pv_vnode
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 operator|==
 literal|0

@@ -980,9 +980,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 specifier|register
@@ -1170,9 +1170,9 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -1295,9 +1295,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 specifier|register
@@ -1414,9 +1414,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 specifier|register
@@ -1473,7 +1473,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|>=
@@ -1554,7 +1554,7 @@ name|data
 operator|,
 name|flag
 operator|,
-name|p
+name|td
 operator|)
 operator|)
 operator|!=

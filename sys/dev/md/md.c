@@ -561,9 +561,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -593,7 +593,9 @@ name|flag
 argument_list|,
 name|fmt
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|sc
@@ -712,9 +714,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -757,9 +759,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 if|if
@@ -781,7 +783,7 @@ name|addr
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1619,9 +1621,9 @@ name|bio_bcount
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -1662,7 +1664,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -1711,7 +1713,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -1746,7 +1748,7 @@ name|vnode
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2877,7 +2879,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -2906,7 +2908,7 @@ name|vnode
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|free
@@ -2936,11 +2938,20 @@ modifier|*
 name|mdio
 parameter_list|,
 name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|struct
 name|proc
 modifier|*
 name|p
-parameter_list|)
-block|{
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|md_s
 modifier|*
@@ -3045,7 +3056,7 @@ name|mdio
 operator|->
 name|md_file
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3111,7 +3122,7 @@ name|mdio
 operator|->
 name|md_file
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -3171,7 +3182,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -3184,7 +3195,7 @@ name|ni_vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3202,7 +3213,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3223,7 +3234,7 @@ name|ni_vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3293,7 +3304,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3333,7 +3344,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3366,9 +3377,9 @@ modifier|*
 name|sc
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|unsigned
@@ -3436,7 +3447,7 @@ name|sc
 operator|->
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3566,9 +3577,9 @@ modifier|*
 name|mdio
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -3650,7 +3661,7 @@ name|mddestroy
 argument_list|(
 name|sc
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3760,7 +3771,7 @@ name|mddestroy
 argument_list|(
 name|sc
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3776,7 +3787,9 @@ name|mdsetcred
 argument_list|(
 name|sc
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -3789,7 +3802,7 @@ name|mddestroy
 argument_list|(
 name|sc
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -3815,9 +3828,9 @@ name|int
 name|unit
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3890,7 +3903,7 @@ name|mddestroy
 argument_list|(
 name|sc
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -3922,9 +3935,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3956,7 +3969,7 @@ name|addr
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|mdio
@@ -4014,7 +4027,7 @@ name|mdcreate_vnode
 argument_list|(
 name|mdio
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -4027,7 +4040,7 @@ name|mdcreate_swap
 argument_list|(
 name|mdio
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -4074,7 +4087,7 @@ name|mdio
 operator|->
 name|md_unit
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -4564,7 +4577,7 @@ name|sc
 operator|->
 name|unit
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if

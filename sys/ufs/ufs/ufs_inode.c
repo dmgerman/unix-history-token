@@ -110,7 +110,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -135,13 +135,13 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|int
 name|mode
@@ -269,7 +269,7 @@ name|a_vp
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -289,7 +289,7 @@ literal|0
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Setting the mode to zero needs to wait for the inode 		 * to be written just as does a change to the link count. 		 * So, rather than creating a new entry point to do the 		 * same thing, we just use softdep_change_linkcnt(). 		 */
@@ -427,7 +427,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
@@ -445,7 +445,7 @@ name|vp
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -468,7 +468,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_reclaim_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;

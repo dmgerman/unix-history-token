@@ -3637,9 +3637,9 @@ name|int
 name|kernel_sysctl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 modifier|*
@@ -3690,7 +3690,9 @@ name|req
 operator|.
 name|p
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 if|if
 condition|(
@@ -3924,9 +3926,9 @@ name|int
 name|kernel_sysctlbyname
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|char
 modifier|*
@@ -3993,7 +3995,7 @@ name|error
 operator|=
 name|kernel_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|oid
 argument_list|,
@@ -4032,7 +4034,7 @@ name|error
 operator|=
 name|kernel_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|oid
 argument_list|,
@@ -4816,9 +4818,9 @@ name|int
 name|__sysctl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|sysctl_args
@@ -4896,7 +4898,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -4996,9 +4998,9 @@ name|int
 name|userland_sysctl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 modifier|*
@@ -5054,7 +5056,9 @@ name|req
 operator|.
 name|p
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 if|if
 condition|(
@@ -5599,9 +5603,9 @@ name|int
 name|ogetkerninfo
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|getkerninfo_args
@@ -5703,7 +5707,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -5749,7 +5753,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -5815,7 +5819,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -5861,7 +5865,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -5907,7 +5911,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -5953,7 +5957,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -5999,7 +6003,7 @@ name|error
 operator|=
 name|userland_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|name
 argument_list|,
@@ -6320,9 +6324,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]

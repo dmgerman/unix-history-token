@@ -178,7 +178,7 @@ name|sockaddr_un
 modifier|*
 name|svr4_find_socket
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|fp
 parameter_list|,
@@ -187,9 +187,9 @@ parameter_list|,
 name|ino
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|file
@@ -250,7 +250,7 @@ argument_list|(
 operator|(
 literal|"svr4_find_socket: uninitialized [%p,%d,%d]\n"
 operator|,
-name|p
+name|td
 operator|,
 name|dev
 operator|,
@@ -282,7 +282,7 @@ argument_list|(
 operator|(
 literal|"svr4_find_socket: [%p,%d,%d]: "
 operator|,
-name|p
+name|td
 operator|,
 name|dev
 operator|,
@@ -304,7 +304,9 @@ name|e
 operator|->
 name|p
 operator|==
-name|p
+name|td
+operator|->
+name|td_proc
 operator|&&
 name|e
 operator|->
@@ -390,16 +392,16 @@ begin_function
 name|int
 name|svr4_add_socket
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|path
 parameter_list|,
 name|st
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 specifier|const
 name|char
@@ -498,7 +500,9 @@ name|e
 operator|->
 name|p
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 if|if
 condition|(
@@ -589,7 +593,9 @@ name|sock
 operator|.
 name|sun_path
 operator|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|,
 name|e
 operator|->
@@ -611,14 +617,14 @@ begin_function
 name|int
 name|svr4_sys_socket
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_sys_socket_args
@@ -709,7 +715,7 @@ block|}
 return|return
 name|socket
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct

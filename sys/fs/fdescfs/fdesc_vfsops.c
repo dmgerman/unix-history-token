@@ -117,9 +117,9 @@ operator|*
 name|ndp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -141,9 +141,9 @@ name|int
 name|mntflags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -167,9 +167,9 @@ operator|*
 name|sbp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -192,7 +192,7 @@ name|data
 parameter_list|,
 name|ndp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -212,9 +212,9 @@ modifier|*
 name|ndp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -259,7 +259,7 @@ argument_list|,
 operator|&
 name|rvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -364,7 +364,7 @@ name|mp
 operator|->
 name|mnt_stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -384,7 +384,7 @@ name|mp
 parameter_list|,
 name|mntflags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -395,9 +395,9 @@ name|int
 name|mntflags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -487,11 +487,11 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -522,7 +522,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -547,7 +547,7 @@ name|mp
 parameter_list|,
 name|sbp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -560,9 +560,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -585,7 +585,9 @@ decl_stmt|;
 comment|/* 	 * Compute number of free file descriptors. 	 * [ Strange results will ensue if the open file 	 * limit is ever reduced below the current number 	 * of open files... ] 	 */
 name|lim
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_rlimit
 index|[
@@ -596,7 +598,9 @@ name|rlim_cur
 expr_stmt|;
 name|fdp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;

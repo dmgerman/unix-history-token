@@ -565,7 +565,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|tty
@@ -583,9 +583,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return

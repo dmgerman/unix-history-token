@@ -67,7 +67,7 @@ name|int
 name|syscall_not_present
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 specifier|const
@@ -89,7 +89,7 @@ parameter_list|(
 name|SC
 parameter_list|)
 define|\
-value|int SC (struct proc *p, struct SC##_args *uap) \ { \ 	return syscall_not_present(p, #SC , (struct nosys_args *)uap); \ }
+value|int SC (struct thread *td, struct SC##_args *uap) \ { \ 	return syscall_not_present(td, #SC , (struct nosys_args *)uap); \ }
 end_define
 
 begin_expr_stmt
@@ -235,7 +235,7 @@ name|ksched
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 specifier|const
@@ -258,7 +258,7 @@ name|ksched
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct
@@ -280,7 +280,7 @@ name|ksched
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|int
@@ -305,7 +305,7 @@ name|ksched
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -369,7 +369,7 @@ name|ksched
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct

@@ -496,9 +496,9 @@ name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|curproc
+name|curthread
 operator|->
-name|p_intr_nesting_level
+name|td_intr_nesting_level
 operator|==
 literal|0
 condition|?

@@ -35,7 +35,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -44,7 +44,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|cv_waitq
 argument_list|,
-name|proc
+name|thread
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -215,9 +215,9 @@ name|void
 name|cv_waitq_remove
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

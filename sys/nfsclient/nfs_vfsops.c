@@ -482,7 +482,7 @@ operator|*
 name|ndp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -506,7 +506,7 @@ name|int
 name|mntflags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -554,7 +554,7 @@ operator|*
 name|sbp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -583,7 +583,7 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -848,7 +848,7 @@ name|nfs_args
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -1349,7 +1349,7 @@ name|mp
 parameter_list|,
 name|sbp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1363,9 +1363,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -1529,11 +1529,13 @@ name|nmp
 argument_list|,
 name|vp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|nfsstats
@@ -1569,9 +1571,11 @@ name|vp
 argument_list|,
 name|NFSPROC_FSSTAT
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -1925,7 +1929,7 @@ name|vp
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -1945,9 +1949,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -2042,7 +2046,7 @@ name|vp
 argument_list|,
 name|NFSPROC_FSINFO
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2427,11 +2431,11 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|int
@@ -2622,7 +2626,7 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2649,7 +2653,7 @@ directive|if
 literal|0
 comment|/* XXX Bad idea */
 comment|/* 	 * We might not have been told the right interface, so we pass 	 * over the first ten interfaces of the same kind, until we get 	 * one of them configured. 	 */
-block|for (i = strlen(nd->myif.ifra_name) - 1; 		nd->myif.ifra_name[i]>= '0'&& 		nd->myif.ifra_name[i]<= '9'; 		nd->myif.ifra_name[i] ++) { 		error = ifioctl(so, SIOCAIFADDR, (caddr_t)&nd->myif, p); 		if(!error) 			break; 	}
+block|for (i = strlen(nd->myif.ifra_name) - 1; 		nd->myif.ifra_name[i]>= '0'&& 		nd->myif.ifra_name[i]<= '9'; 		nd->myif.ifra_name[i] ++) { 		error = ifioctl(so, SIOCAIFADDR, (caddr_t)&nd->myif, td); 		if(!error) 			break; 	}
 endif|#
 directive|endif
 name|error
@@ -2668,7 +2672,7 @@ name|nd
 operator|->
 name|myif
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2907,7 +2911,7 @@ name|nd
 operator|->
 name|root_args
 argument_list|,
-name|p
+name|td
 argument_list|,
 operator|&
 name|vp
@@ -3076,7 +3080,7 @@ name|nd
 operator|->
 name|swap_args
 argument_list|,
-name|p
+name|td
 argument_list|,
 operator|&
 name|vp
@@ -3097,7 +3101,7 @@ name|vfs_unbusy
 argument_list|(
 name|swap_mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VTONFS
@@ -3142,7 +3146,7 @@ argument_list|)
 expr_stmt|;
 name|swaponvp
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|vp
 argument_list|,
@@ -3174,7 +3178,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This is not really an nfs issue, but it is much easier to 	 * set hostname here and then let the "/etc/rc.xxx" files 	 * mount the right /var based upon its preset value. 	 */
@@ -3258,7 +3262,7 @@ name|sin
 parameter_list|,
 name|args
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|vpp
 parameter_list|,
@@ -3286,9 +3290,9 @@ modifier|*
 name|args
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|vnode
@@ -3424,7 +3428,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|free
@@ -4412,7 +4416,7 @@ name|data
 parameter_list|,
 name|ndp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -4432,9 +4436,9 @@ modifier|*
 name|ndp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -5263,11 +5267,13 @@ argument_list|,
 operator|&
 name|attrs
 argument_list|,
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Lose the lock but keep the ref. 	 */
@@ -5278,7 +5284,7 @@ name|vpp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -5328,7 +5334,7 @@ name|mp
 parameter_list|,
 name|mntflags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -5339,9 +5345,9 @@ name|int
 name|mntflags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -5650,7 +5656,7 @@ name|waitfor
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -5666,9 +5672,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -5799,7 +5805,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -5823,7 +5829,7 @@ name|cred
 argument_list|,
 name|waitfor
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

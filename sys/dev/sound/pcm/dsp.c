@@ -701,9 +701,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -904,7 +904,9 @@ name|d
 argument_list|,
 name|PCMDIR_REC
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -923,7 +925,9 @@ name|d
 argument_list|,
 name|PCMDIR_REC
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -996,7 +1000,9 @@ name|d
 argument_list|,
 name|PCMDIR_PLAY
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -1234,9 +1240,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1833,9 +1839,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1917,7 +1923,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -4554,9 +4560,9 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -4632,7 +4638,7 @@ name|wrch
 argument_list|,
 name|e
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4665,7 +4671,7 @@ name|rdch
 argument_list|,
 name|e
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}

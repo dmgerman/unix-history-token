@@ -90,7 +90,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -102,9 +102,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -125,7 +125,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -137,9 +137,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -222,7 +222,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -237,9 +237,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -341,7 +341,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -353,9 +353,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -376,7 +376,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -388,9 +388,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return

@@ -4881,11 +4881,11 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|int
@@ -5299,9 +5299,9 @@ comment|/* work out if they're root */
 name|isroot
 operator|=
 operator|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -5379,9 +5379,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5614,9 +5614,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5710,9 +5710,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5835,9 +5835,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)

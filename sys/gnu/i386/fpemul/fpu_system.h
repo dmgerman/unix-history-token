@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|I387
-value|(*(union i387_union *)&(((struct pcb *)curproc->p_addr)->pcb_save.sv_87))
+value|(*(union i387_union *)&(curthread->td_pcb->pcb_save.sv_87))
 end_define
 
 begin_define

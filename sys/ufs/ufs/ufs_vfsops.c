@@ -121,7 +121,7 @@ name|mp
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -132,9 +132,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -230,7 +230,7 @@ name|uid
 parameter_list|,
 name|arg
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -247,9 +247,9 @@ name|caddr_t
 name|arg
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 ifndef|#
@@ -278,7 +278,9 @@ literal|1
 condition|)
 name|uid
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -306,7 +308,9 @@ if|if
 condition|(
 name|uid
 operator|==
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -324,7 +328,9 @@ name|suser_xxx
 argument_list|(
 literal|0
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -368,7 +374,7 @@ name|LK_NOWAIT
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 return|return
@@ -388,7 +394,7 @@ name|error
 operator|=
 name|quotaon
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|mp
 argument_list|,
@@ -405,7 +411,7 @@ name|error
 operator|=
 name|quotaoff
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|mp
 argument_list|,
@@ -486,7 +492,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

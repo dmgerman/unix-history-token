@@ -801,7 +801,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_close_args
-comment|/* { 		struct vnode *a_vp; 		int a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_fflag; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -890,7 +890,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1064,7 +1064,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1498,7 +1498,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1573,7 +1573,7 @@ name|cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1760,7 +1760,9 @@ name|cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -1972,7 +1974,9 @@ name|cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -2066,7 +2070,7 @@ name|cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2130,7 +2134,9 @@ name|cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -2162,7 +2168,7 @@ name|cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 operator|)
@@ -2309,7 +2315,9 @@ name|cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -2927,13 +2935,13 @@ operator|->
 name|a_uio
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -3083,7 +3091,7 @@ return|;
 comment|/* 	 * If they've exceeded their filesize limit, tell them about it. 	 */
 if|if
 condition|(
-name|p
+name|td
 operator|&&
 operator|(
 operator|(
@@ -3097,7 +3105,9 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_rlimit
 index|[
@@ -3110,19 +3120,25 @@ condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|psignal
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|SIGXFSZ
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 return|return
@@ -3764,7 +3780,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4155,13 +4171,13 @@ operator|->
 name|a_fcnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|fcnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|denode
@@ -4438,7 +4454,7 @@ name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4527,7 +4543,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4595,7 +4611,7 @@ name|cn_cred
 argument_list|,
 name|tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -4604,7 +4620,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4885,7 +4901,7 @@ name|tdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4941,7 +4957,7 @@ name|tdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -5003,7 +5019,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5016,7 +5032,7 @@ name|fdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|xp
@@ -5116,7 +5132,7 @@ name|fdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5125,7 +5141,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5168,7 +5184,7 @@ name|fdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5177,7 +5193,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5229,7 +5245,7 @@ name|fdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5238,7 +5254,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5286,7 +5302,7 @@ name|fdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5365,7 +5381,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5435,7 +5451,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5449,7 +5465,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|bad
@@ -6360,13 +6376,13 @@ modifier|*
 name|dp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|int
 name|error
@@ -6442,7 +6458,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Truncate the directory that is being deleted. 	 */
@@ -6463,7 +6479,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|cache_purge
@@ -6479,7 +6495,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|out

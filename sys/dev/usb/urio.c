@@ -1363,7 +1363,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1375,9 +1375,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 if|#
@@ -1577,7 +1577,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1589,9 +1589,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 if|#
@@ -2441,7 +2441,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2456,9 +2456,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 if|#
@@ -2823,9 +2823,9 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|ptr
 operator|=

@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_upages.h"
+file|"opt_kstack_pages.h"
 end_include
 
 begin_ifdef
@@ -8479,11 +8479,12 @@ name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
-name|UPAGES
+name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 for|for
 control|(
 name|i
@@ -8492,7 +8493,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|UPAGES
+name|KSTACK_PAGES
 condition|;
 name|i
 operator|++
@@ -8593,9 +8594,9 @@ index|[
 name|x
 index|]
 operator|.
-name|idlestack
+name|idlekstack
 index|[
-name|UPAGES
+name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 index|]
@@ -8755,7 +8756,7 @@ name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
-name|UPAGES
+name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|)
@@ -8768,7 +8769,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|UPAGES
+name|KSTACK_PAGES
 condition|;
 name|i
 operator|++
@@ -9462,11 +9463,11 @@ empty_stmt|;
 comment|/* 	 * Set curproc to our per-cpu idleproc so that mutexes have 	 * something unique to lock with. 	 */
 name|PCPU_SET
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|PCPU_GET
 argument_list|(
-name|idleproc
+name|idlethread
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9717,7 +9718,9 @@ argument_list|)
 expr_stmt|;
 name|statclock_process
 argument_list|(
-name|curproc
+name|curthread
+operator|->
+name|td_kse
 argument_list|,
 name|TRAPF_PC
 argument_list|(
@@ -9809,7 +9812,7 @@ argument_list|)
 expr_stmt|;
 name|hardclock_process
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|TRAPF_USERMODE
 argument_list|(

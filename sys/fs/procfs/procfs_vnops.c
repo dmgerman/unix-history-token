@@ -341,7 +341,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -613,7 +613,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -673,7 +673,9 @@ name|p_cansee
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|,
 name|p2
 argument_list|)
@@ -748,7 +750,9 @@ name|p1
 operator|=
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 expr_stmt|;
 name|error
 operator|=
@@ -821,7 +825,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_close_args
-comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1014,7 +1018,9 @@ name|p
 operator|=
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 expr_stmt|;
 name|procp
 operator|=
@@ -1604,7 +1610,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1704,7 +1710,9 @@ name|p_cansee
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|,
 name|procp
 argument_list|)
@@ -2278,7 +2286,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2320,7 +2328,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2404,7 +2412,9 @@ name|p_cansee
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|,
 name|procp
 argument_list|)
@@ -2446,7 +2456,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2554,7 +2564,9 @@ name|curp
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
+operator|->
+name|td_proc
 decl_stmt|;
 name|struct
 name|proc_target
@@ -2576,6 +2588,11 @@ name|p
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 operator|*
 name|vpp
@@ -2797,6 +2814,14 @@ operator|->
 name|pfs_pid
 argument_list|)
 expr_stmt|;
+name|td
+operator|=
+operator|&
+name|p
+operator|->
+name|p_thread
+expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|p
@@ -2864,7 +2889,7 @@ operator|->
 name|pt_valid
 call|)
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -2936,19 +2961,21 @@ begin_function
 name|int
 name|procfs_validfile
 parameter_list|(
-name|p
+name|td
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
 operator|(
 name|procfs_findtextvp
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 operator|!=
 name|NULLVP
@@ -3013,6 +3040,11 @@ decl_stmt|;
 specifier|static
 name|u_int
 name|delen
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
 decl_stmt|;
 if|if
 condition|(
@@ -3127,6 +3159,14 @@ operator|->
 name|pfs_pid
 argument_list|)
 expr_stmt|;
+name|td
+operator|=
+operator|&
+name|p
+operator|->
+name|p_thread
+expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|p
@@ -3138,7 +3178,9 @@ if|if
 condition|(
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 argument_list|,
 name|p
 argument_list|)
@@ -3191,7 +3233,7 @@ operator|->
 name|pt_valid
 call|)
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -3485,7 +3527,9 @@ if|if
 condition|(
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 argument_list|,
 name|p
 argument_list|)
@@ -3499,7 +3543,9 @@ while|while
 condition|(
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 argument_list|,
 name|p
 argument_list|)

@@ -2252,6 +2252,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -2297,9 +2302,15 @@ name|lock
 operator|->
 name|lo_class
 expr_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|p
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 comment|/* 	 * We have to hold a spinlock to keep lock_list valid across the check 	 * in the LC_SLEEPLOCK case.  In the LC_SPINLOCK case, it is already 	 * protected by the spinlock we are currently performing the witness 	 * checks on, so it is ok to release the lock after performing this 	 * check.  All we have to protect is the LC_SLEEPLOCK case when no 	 * spinlocks are held as we may get preempted during this check and 	 * lock_list could end up pointing to some other CPU's spinlock list. 	 */
 name|mtx_lock_spin
@@ -2367,9 +2378,9 @@ block|}
 name|lock_list
 operator|=
 operator|&
-name|p
+name|td
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 expr_stmt|;
 block|}
 name|mtx_unlock_spin
@@ -3599,9 +3610,9 @@ name|instance
 operator|=
 name|find_instance
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 argument_list|,
 name|lock
 argument_list|)
@@ -3830,9 +3841,9 @@ name|instance
 operator|=
 name|find_instance
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 argument_list|,
 name|lock
 argument_list|)
@@ -3979,6 +3990,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|critical_t
 name|s
 decl_stmt|;
@@ -4004,9 +4020,15 @@ operator|!=
 name|NULL
 condition|)
 return|return;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|p
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|class
 operator|=
@@ -4025,9 +4047,9 @@ condition|)
 name|lock_list
 operator|=
 operator|&
-name|p
+name|td
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 expr_stmt|;
 else|else
 name|lock_list
@@ -4500,6 +4522,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|critical_t
 name|savecrit
 decl_stmt|;
@@ -4543,16 +4570,22 @@ operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|p
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|lock_list
 operator|=
 operator|&
-name|p
+name|td
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 expr_stmt|;
 name|again
 label|:
@@ -4713,9 +4746,9 @@ condition|(
 name|lock_list
 operator|==
 operator|&
-name|p
+name|td
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 condition|)
 block|{
 name|lock_list
@@ -6813,7 +6846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calling this on p != curproc is bad unless we are in ddb.  */
+comment|/*  * Calling this on td != curthread is bad unless we are in ddb.  */
 end_comment
 
 begin_function
@@ -6821,9 +6854,9 @@ name|int
 name|witness_list
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|critical_t
@@ -6849,14 +6882,14 @@ directive|ifdef
 name|DDB
 name|KASSERT
 argument_list|(
-name|p
+name|td
 operator|==
-name|curproc
+name|curthread
 operator|||
 name|db_active
 argument_list|,
 operator|(
-literal|"%s: p != curproc and we aren't in the debugger"
+literal|"%s: td != curthread and we aren't in the debugger"
 operator|,
 name|__func__
 operator|)
@@ -6878,12 +6911,12 @@ else|#
 directive|else
 name|KASSERT
 argument_list|(
-name|p
+name|td
 operator|==
-name|curproc
+name|curthread
 argument_list|,
 operator|(
-literal|"%s: p != curproc"
+literal|"%s: p != curthread"
 operator|,
 name|__func__
 operator|)
@@ -6905,17 +6938,17 @@ operator|=
 name|witness_list_locks
 argument_list|(
 operator|&
-name|p
+name|td
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We only handle spinlocks if p == curproc.  This is somewhat broken 	 * if p is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use p->p_oncpu to 	 * get the list of spinlocks for this process and "fix" this. 	 */
+comment|/* 	 * We only handle spinlocks if td == curthread.  This is somewhat broken 	 * if p is currently executing on some other CPU and holds spin locks 	 * as we won't display those locks.  If we had a MI way of getting 	 * the per-cpu data for a given cpu then we could use p->p_oncpu to 	 * get the list of spinlocks for this process and "fix" this. 	 */
 if|if
 condition|(
-name|p
+name|td
 operator|==
-name|curproc
+name|curthread
 condition|)
 block|{
 comment|/* 		 * Preemption bad because we need PCPU_PTR(spinlocks) to not 		 * change. 		 */
@@ -7035,9 +7068,9 @@ name|instance
 operator|=
 name|find_instance
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 argument_list|,
 name|lock
 argument_list|)
@@ -7167,9 +7200,9 @@ name|instance
 operator|=
 name|find_instance
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 argument_list|,
 name|lock
 argument_list|)
@@ -7290,9 +7323,9 @@ name|instance
 operator|=
 name|find_instance
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_sleeplocks
+name|td_sleeplocks
 argument_list|,
 name|lock
 argument_list|)
@@ -7630,12 +7663,17 @@ end_macro
 begin_block
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|pid_t
 name|pid
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 if|if
 condition|(
@@ -7699,13 +7737,9 @@ operator|*
 literal|10000
 expr_stmt|;
 comment|/* sx_slock(&allproc_lock); */
-name|LIST_FOREACH
+name|FOREACH_PROC_IN_SYSTEM
 argument_list|(
 argument|p
-argument_list|,
-argument|&allproc
-argument_list|,
-argument|p_list
 argument_list|)
 block|{
 if|if
@@ -7735,15 +7769,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|td
+operator|=
+operator|&
+name|p
+operator|->
+name|p_thread
+expr_stmt|;
+comment|/* XXXKSE */
 block|}
 else|else
-name|p
+block|{
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
+block|}
 name|witness_list
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}

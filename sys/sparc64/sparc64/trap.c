@@ -206,9 +206,9 @@ name|int
 name|trap_mmu_fault
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|trapframe
@@ -223,9 +223,9 @@ name|void
 name|syscall
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|trapframe
@@ -355,6 +355,11 @@ name|u_int
 name|sticks
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
@@ -378,13 +383,13 @@ name|KASSERT
 argument_list|(
 name|PCPU_GET
 argument_list|(
-name|curproc
+name|curthread
 argument_list|)
 operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"trap: curproc NULL"
+literal|"trap: curthread NULL"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -406,12 +411,18 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|p
+name|td
 operator|=
 name|PCPU_GET
 argument_list|(
-name|curproc
+name|curthread
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|type
 operator|=
@@ -540,13 +551,15 @@ condition|)
 block|{
 name|sticks
 operator|=
-name|p
+name|td
 operator|->
-name|p_sticks
+name|td_kse
+operator|->
+name|ke_sticks
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|=
 name|tf
 expr_stmt|;
@@ -597,9 +610,9 @@ name|T_FP_DISABLED
 case|:
 if|if
 condition|(
-name|fp_enable_proc
+name|fp_enable_thread
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -652,7 +665,7 @@ name|error
 operator|=
 name|trap_mmu_fault
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|tf
 argument_list|)
@@ -680,7 +693,7 @@ if|if
 condition|(
 name|rwindow_load
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|tf
 argument_list|,
@@ -689,7 +702,7 @@ argument_list|)
 condition|)
 name|sigexit
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGILL
 argument_list|)
@@ -704,7 +717,7 @@ if|if
 condition|(
 name|rwindow_load
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|tf
 argument_list|,
@@ -713,7 +726,7 @@ argument_list|)
 condition|)
 name|sigexit
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGILL
 argument_list|)
@@ -776,12 +789,12 @@ if|if
 condition|(
 name|rwindow_save
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 name|sigexit
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGILL
 argument_list|)
@@ -795,7 +808,7 @@ case|:
 comment|/* syscall() calls userret(), so we need goto out; */
 name|syscall
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|tf
 argument_list|,
@@ -852,7 +865,7 @@ name|error
 operator|=
 name|trap_mmu_fault
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|tf
 argument_list|)
@@ -1118,7 +1131,7 @@ name|user
 label|:
 name|userret
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|tf
 argument_list|,
@@ -1169,9 +1182,9 @@ name|int
 name|trap_mmu_fault
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|trapframe
@@ -1203,6 +1216,11 @@ name|struct
 name|tte
 name|tte
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -1224,6 +1242,12 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|p
@@ -1290,9 +1314,9 @@ name|CTR4
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"trap_mmu_fault: p=%p pm_ctx=%#lx va=%#lx ctx=%#lx"
+literal|"trap_mmu_fault: td=%p pm_ctx=%#lx va=%#lx ctx=%#lx"
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|p
 operator|->
@@ -1442,9 +1466,9 @@ operator|&
 name|T_KERNEL
 operator|&&
 operator|(
-name|p
+name|td
 operator|->
-name|p_intr_nesting_level
+name|td_intr_nesting_level
 operator|!=
 literal|0
 operator|||
@@ -1767,9 +1791,9 @@ name|void
 name|syscall
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|trapframe
@@ -1784,6 +1808,11 @@ name|struct
 name|sysent
 modifier|*
 name|callp
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|u_long
 name|code
@@ -1837,6 +1866,12 @@ name|tf_global
 index|[
 literal|1
 index|]
+expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 comment|/* 	 * For syscalls, we don't want to retry the faulting instruction 	 * (usually), instead we need to advance one instruction. 	 */
 name|tpc
@@ -2095,9 +2130,9 @@ name|CTR5
 argument_list|(
 name|KTR_SYSC
 argument_list|,
-literal|"syscall: p=%p %s(%#lx, %#lx, %#lx)"
+literal|"syscall: td=%p %s(%#lx, %#lx, %#lx)"
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|syscallnames
 index|[
@@ -2169,18 +2204,18 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
 operator|=
 literal|0
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
@@ -2211,7 +2246,7 @@ operator|->
 name|sy_call
 call|)
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|argp
 argument_list|)
@@ -2231,16 +2266,16 @@ index|[
 name|code
 index|]
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
@@ -2262,9 +2297,9 @@ index|[
 literal|0
 index|]
 operator|=
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -2276,9 +2311,9 @@ index|[
 literal|1
 index|]
 operator|=
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
@@ -2373,7 +2408,7 @@ block|}
 comment|/* 	 * Handle reschedule and other end-of-syscall issues 	 */
 name|userret
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|tf
 argument_list|,
@@ -2403,9 +2438,9 @@ name|code
 argument_list|,
 name|error
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -2450,7 +2485,7 @@ if|if
 condition|(
 name|witness_list
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{

@@ -132,7 +132,7 @@ name|file
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|register_t
@@ -159,7 +159,7 @@ name|file
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|register_t
@@ -186,7 +186,7 @@ name|file
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|register_t
@@ -213,7 +213,7 @@ name|file
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|register_t
@@ -240,7 +240,7 @@ name|file
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|register_t
@@ -267,7 +267,7 @@ name|file
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|register_t

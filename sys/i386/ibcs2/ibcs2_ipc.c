@@ -555,14 +555,14 @@ begin_function
 name|int
 name|ibcs2_msgsys
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ibcs2_msgsys_args
@@ -596,7 +596,7 @@ expr_stmt|;
 return|return
 name|msgsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -705,7 +705,7 @@ name|error
 operator|=
 name|msgsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|margs
@@ -781,7 +781,7 @@ expr_stmt|;
 return|return
 name|msgsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|margs
@@ -793,7 +793,7 @@ case|:
 return|return
 name|msgsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|margs
@@ -820,7 +820,7 @@ expr_stmt|;
 return|return
 name|msgsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -846,7 +846,7 @@ expr_stmt|;
 return|return
 name|msgsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1301,14 +1301,14 @@ begin_function
 name|int
 name|ibcs2_semsys
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ibcs2_semsys_args
@@ -1433,7 +1433,7 @@ name|error
 operator|=
 name|semsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1615,7 +1615,7 @@ expr_stmt|;
 return|return
 name|semsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1684,7 +1684,7 @@ expr_stmt|;
 return|return
 name|semsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1699,7 +1699,7 @@ block|}
 return|return
 name|semsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1716,7 +1716,7 @@ comment|/* semget */
 return|return
 name|semsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1733,7 +1733,7 @@ comment|/* semop */
 return|return
 name|semsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1962,14 +1962,14 @@ begin_function
 name|int
 name|ibcs2_shmsys
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ibcs2_shmsys_args
@@ -1997,7 +1997,7 @@ comment|/* shmat */
 return|return
 name|shmsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -2085,7 +2085,7 @@ name|error
 operator|=
 name|shmsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -2268,7 +2268,7 @@ expr_stmt|;
 return|return
 name|shmsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -2283,7 +2283,7 @@ block|}
 return|return
 name|shmsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -2300,7 +2300,7 @@ comment|/* shmdt */
 return|return
 name|shmsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -2317,7 +2317,7 @@ comment|/* shmget */
 return|return
 name|shmsys
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct

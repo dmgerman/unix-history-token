@@ -111,11 +111,11 @@ name|cn_flags
 decl_stmt|;
 comment|/* flags to namei */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|cn_proc
+name|cn_thread
 decl_stmt|;
-comment|/* process requesting lookup */
+comment|/* thread requesting lookup */
 name|struct
 name|ucred
 modifier|*
@@ -501,7 +501,7 @@ name|char
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -524,7 +524,7 @@ name|segflg
 parameter_list|,
 name|namep
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|nameidata
@@ -546,9 +546,9 @@ modifier|*
 name|namep
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|ndp
@@ -583,9 +583,9 @@ name|ndp
 operator|->
 name|ni_cnd
 operator|.
-name|cn_proc
+name|cn_thread
 operator|=
-name|p
+name|td
 expr_stmt|;
 block|}
 end_function

@@ -220,8 +220,7 @@ name|error
 operator|=
 name|fork1
 argument_list|(
-operator|&
-name|proc0
+name|thread0
 argument_list|,
 name|RFMEM
 operator||
@@ -322,13 +321,17 @@ expr_stmt|;
 comment|/* call the processes' main()... */
 name|cpu_set_fork_handler
 argument_list|(
+operator|&
 name|p2
+operator|->
+name|p_thread
 argument_list|,
 name|func
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 comment|/* Delay putting it on the run queue until now. */
 name|mtx_lock_spin
 argument_list|(
@@ -360,9 +363,13 @@ name|SRUN
 expr_stmt|;
 name|setrunqueue
 argument_list|(
+operator|&
 name|p2
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 block|}
 name|mtx_unlock_spin
 argument_list|(
@@ -415,7 +422,7 @@ argument_list|)
 expr_stmt|;
 name|exit1
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|W_EXITCODE
 argument_list|(

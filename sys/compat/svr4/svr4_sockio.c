@@ -190,7 +190,7 @@ name|svr4_sock_ioctl
 parameter_list|(
 name|fp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|retval
 parameter_list|,
@@ -206,9 +206,9 @@ modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|register_t
 modifier|*
@@ -390,7 +390,7 @@ operator|)
 operator|&
 name|br
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -531,7 +531,7 @@ operator|)
 operator|&
 name|sc
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=

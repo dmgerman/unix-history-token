@@ -226,13 +226,13 @@ operator|->
 name|cn_nameiop
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|bp
 operator|=
@@ -1170,7 +1170,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* race to get the inode */
@@ -1216,7 +1216,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1247,7 +1247,7 @@ name|pdp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1379,7 +1379,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}

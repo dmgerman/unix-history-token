@@ -396,7 +396,7 @@ name|func
 function_decl|)
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct
@@ -437,9 +437,9 @@ name|int
 name|linux_ioctl_disk
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -452,7 +452,9 @@ name|file
 modifier|*
 name|fp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -496,7 +498,7 @@ operator|)
 operator|&
 name|dl
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3214,9 +3216,9 @@ name|int
 name|linux_ioctl_termio
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -3241,7 +3243,9 @@ name|file
 modifier|*
 name|fp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -3281,7 +3285,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3376,7 +3380,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -3435,7 +3439,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -3494,7 +3498,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -3515,7 +3519,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3612,7 +3616,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -3671,7 +3675,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -3730,7 +3734,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -3794,7 +3798,7 @@ operator|)
 operator|&
 name|bios
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3864,7 +3868,7 @@ return|return
 operator|(
 name|write
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|wr
@@ -3896,7 +3900,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3968,7 +3972,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -3993,7 +3997,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4017,7 +4021,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4042,7 +4046,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4066,7 +4070,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4092,7 +4096,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4116,7 +4120,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4140,7 +4144,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4164,7 +4168,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4188,7 +4192,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4212,7 +4216,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4239,7 +4243,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4264,7 +4268,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4379,7 +4383,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4403,7 +4407,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4473,7 +4477,7 @@ operator|)
 operator|&
 name|line
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -4504,7 +4508,7 @@ operator|)
 operator|&
 name|bsd_line
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4589,7 +4593,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4613,7 +4617,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4637,7 +4641,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -4954,9 +4958,9 @@ name|int
 name|linux_ioctl_cdrom
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -4969,7 +4973,9 @@ name|file
 modifier|*
 name|fp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -5005,7 +5011,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5029,7 +5035,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5053,7 +5059,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5077,7 +5083,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5114,7 +5120,7 @@ operator|)
 operator|&
 name|th
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5218,7 +5224,7 @@ operator|)
 operator|&
 name|irtse
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5309,7 +5315,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5333,7 +5339,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5357,7 +5363,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5459,7 +5465,7 @@ operator|)
 operator|&
 name|bsdsc
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5649,7 +5655,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5717,9 +5723,9 @@ name|int
 name|linux_ioctl_sound
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -5752,7 +5758,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5779,7 +5785,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5806,7 +5812,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5833,7 +5839,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5860,7 +5866,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5887,7 +5893,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5914,7 +5920,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5941,7 +5947,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5968,7 +5974,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -5995,7 +6001,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6022,7 +6028,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6049,7 +6055,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6076,7 +6082,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6103,7 +6109,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6130,7 +6136,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6157,7 +6163,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6184,7 +6190,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6204,7 +6210,9 @@ name|version
 init|=
 name|linux_get_oss_version
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 decl_stmt|;
 return|return
@@ -6242,7 +6250,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6266,7 +6274,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6290,7 +6298,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6314,7 +6322,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6338,7 +6346,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6363,7 +6371,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6387,7 +6395,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6411,7 +6419,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6435,7 +6443,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6459,7 +6467,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6483,7 +6491,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6507,7 +6515,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6531,7 +6539,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6555,7 +6563,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6579,7 +6587,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6603,7 +6611,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6627,7 +6635,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6652,7 +6660,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6676,7 +6684,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6700,7 +6708,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6724,7 +6732,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6748,7 +6756,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6772,7 +6780,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6796,7 +6804,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6820,7 +6828,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6844,7 +6852,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6868,7 +6876,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6892,7 +6900,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6916,7 +6924,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6940,7 +6948,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6964,7 +6972,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -6988,7 +6996,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7012,7 +7020,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7036,7 +7044,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7060,7 +7068,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7084,7 +7092,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7124,9 +7132,9 @@ name|int
 name|linux_ioctl_console
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -7139,7 +7147,9 @@ name|file
 modifier|*
 name|fp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -7172,7 +7182,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7196,7 +7206,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7220,7 +7230,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7244,7 +7254,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7268,7 +7278,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7292,7 +7302,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7316,7 +7326,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7386,7 +7396,7 @@ operator|)
 operator|&
 name|kbdmode
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -7404,7 +7414,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7428,7 +7438,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7494,7 +7504,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7519,7 +7529,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7543,7 +7553,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7567,7 +7577,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7591,7 +7601,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7621,9 +7631,9 @@ name|int
 name|linux_ioctl_socket
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -7653,7 +7663,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7677,7 +7687,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7701,7 +7711,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7725,7 +7735,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7749,7 +7759,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7774,7 +7784,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7798,7 +7808,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7822,7 +7832,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7846,7 +7856,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7870,7 +7880,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -7894,7 +7904,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -8073,7 +8083,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -8097,7 +8107,7 @@ return|return
 operator|(
 name|ioctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -8126,9 +8136,9 @@ name|int
 name|linux_ioctl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -8188,7 +8198,9 @@ endif|#
 directive|endif
 name|fdp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
@@ -8288,7 +8300,7 @@ operator|->
 name|func
 call|)
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|args
 argument_list|)

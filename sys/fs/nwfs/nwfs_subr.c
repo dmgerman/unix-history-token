@@ -245,9 +245,9 @@ modifier|*
 name|dvp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -326,7 +326,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -471,9 +471,9 @@ modifier|*
 name|target
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -507,7 +507,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -742,9 +742,9 @@ modifier|*
 name|target
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -824,7 +824,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -978,9 +978,9 @@ modifier|*
 name|fap
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1089,7 +1089,7 @@ name|NULL
 argument_list|,
 name|fap
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1119,7 +1119,7 @@ name|n_name
 argument_list|,
 name|fap
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1182,7 +1182,7 @@ name|name
 argument_list|,
 name|fap
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1280,9 +1280,9 @@ modifier|*
 name|nop
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1332,7 +1332,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -1590,9 +1590,9 @@ modifier|*
 name|fh
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1616,7 +1616,7 @@ literal|66
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -1703,9 +1703,9 @@ modifier|*
 name|name
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1739,7 +1739,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -1888,9 +1888,9 @@ name|int
 name|newlen
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -1914,7 +1914,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -2144,9 +2144,9 @@ modifier|*
 name|info
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -2206,7 +2206,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -2345,7 +2345,7 @@ name|vap
 parameter_list|,
 name|cred
 parameter_list|,
-name|procp
+name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -2363,9 +2363,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2450,7 +2450,7 @@ argument_list|,
 operator|&
 name|nwn
 argument_list|,
-name|procp
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2470,7 +2470,7 @@ literal|73
 argument_list|,
 name|conn
 argument_list|,
-name|procp
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -2492,7 +2492,7 @@ name|nwn
 operator|.
 name|fh
 argument_list|,
-name|procp
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2593,7 +2593,7 @@ name|nwn
 operator|.
 name|fh
 argument_list|,
-name|procp
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2726,7 +2726,7 @@ argument_list|,
 operator|&
 name|info
 argument_list|,
-name|procp
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2758,9 +2758,9 @@ modifier|*
 name|target
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -2792,7 +2792,7 @@ literal|44
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -3022,9 +3022,9 @@ modifier|*
 name|nsf
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -3054,7 +3054,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -3191,9 +3191,9 @@ modifier|*
 name|dirEnt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -3227,7 +3227,7 @@ literal|87
 argument_list|,
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,

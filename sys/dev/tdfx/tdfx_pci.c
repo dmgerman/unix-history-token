@@ -1485,9 +1485,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 comment|/*  	 *	The open cdev method handles open(2) calls to /dev/3dfx[n]  	 * We can pretty much allow any opening of the device. 	 */
@@ -1527,7 +1527,9 @@ name|printf
 argument_list|(
 literal|"3dfx: Opened by #%d\n"
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|)
@@ -1561,9 +1563,9 @@ name|int
 name|devtype
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 comment|/*  	 *	The close cdev method handles close(2) calls to /dev/3dfx[n]  	 * We'll always want to close the device when it's called. 	 */
@@ -1609,7 +1611,9 @@ name|printf
 argument_list|(
 literal|"Closed by #%d\n"
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|)
@@ -3112,7 +3116,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Calls to ioctl(2) eventually end up here. Unhandled ioctls return an ENXIO,  * normally, you would read in the data pointed to by data, then write your  * output to it. The ioctl *should* normally return zero if everything is  * alright, but 3dfx didn't make it that way...  *  * For all of the ioctl code, in the event of a real error,  * we return -Exxxx rather than simply Exxxx. The reason for this  * is that the ioctls actually RET information back to the program  * sometimes, rather than filling it in the passed structure. We  * want to distinguish errors from useful data, and maintain compatibility.  *  * There is this portion of the proc struct called p_retval[], we can store a  * return value in p->p_retval[0] and place the return value if it is positive  * in there, then we can return 0 (good). If the return value is negative, we  * can return -retval and the error should be properly handled.  */
+comment|/* Calls to ioctl(2) eventually end up here. Unhandled ioctls return an ENXIO,  * normally, you would read in the data pointed to by data, then write your  * output to it. The ioctl *should* normally return zero if everything is  * alright, but 3dfx didn't make it that way...  *  * For all of the ioctl code, in the event of a real error,  * we return -Exxxx rather than simply Exxxx. The reason for this  * is that the ioctls actually RET information back to the program  * sometimes, rather than filling it in the passed structure. We  * want to distinguish errors from useful data, and maintain compatibility.  *  * There is this portion of the proc struct called p_retval[], we can store a  * return value in td->td_retval[0] and place the return value if it is positive  * in there, then we can return 0 (good). If the return value is negative, we  * can return -retval and the error should be properly handled.  */
 end_comment
 
 begin_function
@@ -3133,9 +3137,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -3162,7 +3166,9 @@ name|printf
 argument_list|(
 literal|"IOCTL'd by #%d, cmd: 0x%x, data: 0x%x\n"
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -3188,7 +3194,7 @@ name|cmd
 argument_list|)
 condition|)
 block|{
-comment|/* Return the real error if negative, or simply stick the valid return 		 * in p->p_retval */
+comment|/* Return the real error if negative, or simply stick the valid return 		 * in td->td_retval */
 case|case
 literal|0x33
 case|:
@@ -3208,9 +3214,9 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -3240,9 +3246,9 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -3264,7 +3270,9 @@ name|printf
 argument_list|(
 literal|"Bad IOCTL from #%d\n"
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|)
@@ -3297,9 +3305,9 @@ name|int
 name|linux_ioctl_tdfx
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ioctl_args
@@ -3349,7 +3357,9 @@ name|file
 modifier|*
 name|fp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -3393,7 +3403,7 @@ operator|)
 operator|&
 name|d_pio
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

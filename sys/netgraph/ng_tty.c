@@ -352,7 +352,7 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -614,12 +614,12 @@ name|tp
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
 specifier|const
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|char
@@ -647,9 +647,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -1177,9 +1177,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 specifier|const

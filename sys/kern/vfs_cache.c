@@ -2735,13 +2735,13 @@ operator|->
 name|cn_flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|u_long
 name|vpid
@@ -2824,7 +2824,7 @@ name|VEXEC
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2925,7 +2925,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -2942,7 +2942,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2970,7 +2970,7 @@ name|dvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|==
@@ -2995,7 +2995,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3019,7 +3019,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -3076,7 +3076,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -3104,7 +3104,7 @@ name|dvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3317,14 +3317,14 @@ begin_function
 name|int
 name|__getcwd
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|__getcwd_args
@@ -3430,7 +3430,9 @@ literal|'\0'
 expr_stmt|;
 name|fdp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;

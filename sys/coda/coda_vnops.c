@@ -1057,13 +1057,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -1155,7 +1155,9 @@ name|flag
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 operator|&
 name|dev
@@ -1217,7 +1219,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* Keep a reference until the close comes in. */
@@ -1310,7 +1312,7 @@ name|flag
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1347,7 +1349,7 @@ name|vfs_object_create
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1440,13 +1442,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -1536,7 +1538,7 @@ name|flag
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* Do errors matter here? */
@@ -1583,7 +1585,7 @@ name|flag
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* Do errors matter here? */
@@ -1640,7 +1642,9 @@ name|flag
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -1713,7 +1717,7 @@ name|ap
 operator|->
 name|a_uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|)
 operator|)
 return|;
@@ -1766,7 +1770,7 @@ name|ap
 operator|->
 name|a_uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|)
 operator|)
 return|;
@@ -1787,7 +1791,7 @@ name|ioflag
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -1812,9 +1816,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 comment|/* upcall decl */
@@ -1842,9 +1846,18 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|lp
-init|=
 name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|ltd
+init|=
+name|td
 decl_stmt|;
 name|int
 name|igot_internally
@@ -1935,9 +1948,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|lp
+name|ltd
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -1987,14 +2000,14 @@ name|error
 operator|)
 return|;
 block|}
-comment|/*  	     * We get the vnode back locked by curproc in both Mach and 	     * NetBSD.  Needs unlocked  	     */
+comment|/*  	     * We get the vnode back locked by curthread in both Mach and 	     * NetBSD.  Needs unlocked  	     */
 name|VOP_UNLOCK
 argument_list|(
 name|cfvp
 argument_list|,
 literal|0
 argument_list|,
-name|lp
+name|ltd
 argument_list|)
 expr_stmt|;
 block|}
@@ -2027,7 +2040,7 @@ operator|)
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2070,7 +2083,7 @@ name|vfs_object_create
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2182,7 +2195,7 @@ name|attr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -2245,7 +2258,7 @@ operator|)
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2330,13 +2343,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -2431,7 +2444,7 @@ name|iap
 operator|->
 name|path
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2568,7 +2581,9 @@ name|data
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2671,13 +2686,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -2777,7 +2792,9 @@ name|c_fid
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|vap
 argument_list|)
@@ -2939,13 +2956,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -3010,7 +3027,9 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3138,13 +3157,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -3266,7 +3285,9 @@ name|mode
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 return|return
@@ -3334,15 +3355,15 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
 name|a_uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -3456,7 +3477,9 @@ name|c_fid
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 operator|&
 name|str
@@ -3585,13 +3608,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* locals */
 name|struct
@@ -3659,7 +3682,7 @@ name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/*      * We see fsyncs with usecount == 1 then usecount == 0.      * For now we ignore them.      */
@@ -3700,7 +3723,9 @@ name|c_fid
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|CODADEBUG
@@ -3773,9 +3798,9 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 name|__attribute__
 argument_list|(
 operator|(
@@ -3783,7 +3808,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
@@ -3971,7 +3996,7 @@ name|vp
 operator|->
 name|v_interlock
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4019,7 +4044,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vgone
@@ -4117,13 +4142,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* locals */
 name|struct
@@ -4312,7 +4337,9 @@ name|len
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 operator|&
 name|VFid
@@ -4551,7 +4578,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -4583,7 +4610,7 @@ name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -4636,7 +4663,7 @@ name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -4769,13 +4796,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -4876,7 +4903,9 @@ name|va
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 operator|&
 name|VFid
@@ -5066,7 +5095,7 @@ name|a_vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5162,13 +5191,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -5332,7 +5361,9 @@ name|len
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|CODADEBUG
@@ -5427,13 +5458,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -5636,7 +5667,9 @@ name|len
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/* Invalidate the parent's attr cache, the modification time has changed */
@@ -5761,13 +5794,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|fcnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* true args */
 name|int
@@ -5829,11 +5862,11 @@ operator|||
 operator|(
 name|fcnp
 operator|->
-name|cn_proc
+name|cn_thread
 operator|!=
 name|tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 operator|)
 condition|)
 block|{
@@ -6068,7 +6101,9 @@ name|tlen
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6228,13 +6263,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* locals */
 name|int
@@ -6359,7 +6394,9 @@ name|va
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 operator|&
 name|VFid
@@ -6610,13 +6647,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* true args */
 name|int
@@ -6741,7 +6778,9 @@ name|len
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|CODADEBUG
@@ -6834,13 +6873,13 @@ operator|->
 name|cn_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -6978,7 +7017,9 @@ name|tva
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/* Invalidate the parent's attr cache, the modification time has changed */
@@ -7111,15 +7152,15 @@ operator|->
 name|a_ncookies
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
 name|a_uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
@@ -7196,7 +7237,7 @@ name|FREAD
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|printf
@@ -7239,7 +7280,7 @@ name|vfs_object_create
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -7340,7 +7381,7 @@ name|FREAD
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -7434,9 +7475,9 @@ name|a_bnp
 decl_stmt|;
 comment|/* RETURN device block number */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 name|__attribute__
 argument_list|(
 operator|(
@@ -7444,7 +7485,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
@@ -7565,9 +7606,9 @@ operator|->
 name|a_bp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 name|__attribute__
 argument_list|(
 operator|(
@@ -7575,7 +7616,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
@@ -7795,13 +7836,13 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
@@ -7859,7 +7900,7 @@ name|vp
 operator|->
 name|v_interlock
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -7883,7 +7924,7 @@ name|vp
 operator|->
 name|v_interlock
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|"coda_lock"
 argument_list|,
@@ -7941,13 +7982,13 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 comment|/* upcall decl */
 comment|/* locals */
@@ -8004,7 +8045,7 @@ name|vp
 operator|->
 name|v_interlock
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -8055,7 +8096,7 @@ name|c_lock
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 return|;

@@ -412,11 +412,11 @@ block|}
 name|v_pollinfo
 struct|;
 name|struct
-name|proc
+name|thread
 modifier|*
 name|v_vxproc
 decl_stmt|;
-comment|/* proc owning VXLOCK */
+comment|/* thread owning VXLOCK */
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
@@ -551,7 +551,7 @@ value|0x00200
 end_define
 
 begin_comment
-comment|/* process is waiting for vnode */
+comment|/* thread is waiting for vnode */
 end_comment
 
 begin_define
@@ -632,7 +632,7 @@ value|0x20000
 end_define
 
 begin_comment
-comment|/* a process is waiting for VOLOCK */
+comment|/* a thread is waiting for VOLOCK */
 end_comment
 
 begin_define
@@ -1563,9 +1563,9 @@ name|vdesc_cred_offset
 decl_stmt|;
 comment|/* cred location, if any */
 name|int
-name|vdesc_proc_offset
+name|vdesc_thread_offset
 decl_stmt|;
-comment|/* proc location, if any */
+comment|/* thread location, if any */
 name|int
 name|vdesc_componentname_offset
 decl_stmt|;
@@ -1725,7 +1725,7 @@ name|DEBUG_VFS_LOCKS
 end_ifdef
 
 begin_comment
-comment|/*  * Macros to aid in tracing VFS locking problems.  Not totally  * reliable since if the process sleeps between changing the lock  * state and checking it with the assert, some other process could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  I find that 'cvs co src'  * is a pretty good test.  */
+comment|/*  * Macros to aid in tracing VFS locking problems.  Not totally  * reliable since if the thread sleeps between changing the lock  * state and checking it with the assert, some other thread could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  I find that 'cvs co src'  * is a pretty good test.  */
 end_comment
 
 begin_comment
@@ -1765,7 +1765,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curproc);			\ 		if (lockstate == LK_EXCLUSIVE)				\ 			panic("%s: %p is locked but should not be",	\ 			    str, _vp);					\ 	}								\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curthread);		\ 		if (lockstate == LK_EXCLUSIVE)				\ 			panic("%s: %p is locked but should not be",	\ 			    str, _vp);					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1778,7 +1778,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curproc) != LK_EXCLUSIVE)			\ 		panic("%s: %p is not exclusive locked but should be",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLUSIVE)			\ 		panic("%s: %p is not exclusive locked but should be",	\ 		    str, _vp);						\ } while (0)
 end_define
 
 begin_define
@@ -1791,7 +1791,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curproc) != LK_EXCLOTHER)			\ 		panic("%s: %p is not exclusive locked by another proc",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLOTHER)			\ 		panic("%s: %p is not exclusive locked by another thread",	\ 		    str, _vp);						\ } while (0)
 end_define
 
 begin_define
@@ -1994,6 +1994,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|ostat
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -2532,9 +2538,9 @@ name|int
 name|lockflag
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2567,9 +2573,9 @@ operator|*
 name|vp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2609,9 +2615,9 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|,
 name|int
 name|slpflag
@@ -2640,9 +2646,9 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|,
 name|off_t
 name|length
@@ -2690,9 +2696,9 @@ operator|*
 name|inter_lkp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2718,9 +2724,9 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2775,9 +2781,9 @@ name|int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2804,7 +2810,7 @@ name|int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|,
@@ -2838,6 +2844,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|vn_mkdir
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|path
+operator|,
+name|int
+name|mode
+operator|,
+expr|enum
+name|uio_seg
+name|segflg
+operator|,
+expr|struct
+name|thread
+operator|*
+name|td
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2906,7 +2938,7 @@ operator|*
 name|vp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|,
@@ -2958,9 +2990,9 @@ operator|*
 name|aresid
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3007,9 +3039,9 @@ operator|*
 name|aresid
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3032,9 +3064,9 @@ operator|*
 name|sb
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3148,9 +3180,9 @@ operator|*
 name|buf
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3186,9 +3218,9 @@ operator|*
 name|buf
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3215,9 +3247,9 @@ modifier|*
 name|attrname
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3249,9 +3281,9 @@ operator|*
 name|vp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|,
 expr|struct
 name|ucred

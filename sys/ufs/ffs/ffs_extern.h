@@ -59,7 +59,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -314,7 +314,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -414,7 +414,7 @@ name|mount
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -457,7 +457,7 @@ name|nameidata
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -628,7 +628,7 @@ name|statfs
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -652,7 +652,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -678,7 +678,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -698,7 +698,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -886,7 +886,7 @@ name|int
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -906,7 +906,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)

@@ -371,7 +371,7 @@ name|mp
 parameter_list|,
 name|vpp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|fdntype
 name|ftype
@@ -391,9 +391,9 @@ modifier|*
 name|vpp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -456,7 +456,7 @@ name|fd_vnode
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -699,13 +699,13 @@ operator|->
 name|cn_nameptr
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|int
 name|nlen
@@ -717,7 +717,9 @@ decl_stmt|;
 name|int
 name|nfiles
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -763,7 +765,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -798,7 +800,7 @@ name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -898,7 +900,9 @@ name|fd
 operator|>=
 name|nfiles
 operator|||
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -935,7 +939,7 @@ argument_list|,
 operator|&
 name|fvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -962,7 +966,7 @@ name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -985,7 +989,7 @@ name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1010,7 +1014,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1040,12 +1044,12 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * XXX Kludge: set p->p_dupfd to contain the value of the the file 	 * descriptor being sought for duplication. The error return ensures 	 * that the vnode for this device will be released by vn_open. Open 	 * will detect this special error and take the actions in dupfdopen. 	 * Other callers of vn_open or VOP_OPEN will simply report the 	 * error. 	 */
+comment|/* 	 * XXX Kludge: set td->td_proc->p_dupfd to contain the value of the the file 	 * descriptor being sought for duplication. The error return ensures 	 * that the vnode for this device will be released by vn_open. Open 	 * will detect this special error and take the actions in dupfdopen. 	 * Other callers of vn_open or VOP_OPEN will simply report the 	 * error. 	 */
 name|ap
 operator|->
-name|a_p
+name|a_td
 operator|->
-name|p_dupfd
+name|td_dupfd
 operator|=
 name|VTOFDESC
 argument_list|(
@@ -1072,7 +1076,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1102,7 +1106,9 @@ name|fdp
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 decl_stmt|;
@@ -1323,7 +1329,7 @@ name|stb
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1614,7 +1620,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1686,7 +1692,9 @@ name|getvnode
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 argument_list|,
@@ -1785,7 +1793,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -1941,7 +1949,9 @@ name|fdp
 operator|=
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
@@ -2165,7 +2175,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_poll_args
-comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2181,7 +2191,7 @@ name|a_events
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 return|;
 block|}
@@ -2196,7 +2206,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2219,7 +2229,7 @@ literal|0
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 name|vp

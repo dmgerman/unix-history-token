@@ -1048,7 +1048,7 @@ comment|/* 	 * Set up proc0's PCB. 	 */
 if|#
 directive|if
 literal|0
-block|proc0.p_addr->u_pcb.pcb_hw.apcb_asn = 0;
+block|thread0->td_pcb->pcb_hw.apcb_asn = 0;
 endif|#
 directive|endif
 block|}
@@ -1694,7 +1694,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create the UPAGES for a new process.  * This routine directly affects the fork perf for a process.  */
+comment|/*  * Create the U area for a new process.  * This routine directly affects the fork perf for a process.  */
 end_comment
 
 begin_function
@@ -1717,7 +1717,7 @@ name|up
 operator|=
 name|contigmalloc
 argument_list|(
-name|UPAGES
+name|UAREA_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -1754,7 +1754,7 @@ name|up
 expr_stmt|;
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|=
 operator|(
 expr|struct
@@ -1776,7 +1776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dispose the UPAGES for a process that has exited.  * This routine directly impacts the exit perf of a process.  */
+comment|/*  * Dispose the U area for a process that has exited.  * This routine directly impacts the exit perf of a process.  */
 end_comment
 
 begin_function
@@ -1799,7 +1799,7 @@ name|p_md
 operator|.
 name|md_uservirt
 argument_list|,
-name|UPAGES
+name|UAREA_PAGES
 operator|*
 name|PAGE_SIZE
 argument_list|,
@@ -1816,7 +1816,7 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|=
 literal|0
 expr_stmt|;
@@ -1824,7 +1824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allow the UPAGES for a process to be prejudicially paged out.  */
+comment|/*  * Allow the U area for a process to be prejudicially paged out.  */
 end_comment
 
 begin_function
@@ -1838,20 +1838,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-block|{
-if|#
-directive|if
-literal|0
-block|int i; 	vm_object_t upobj; 	vm_offset_t up; 	vm_page_t m;
-comment|/* 	 * Make sure we aren't fpcurproc. 	 */
-block|ia64_fpstate_save(p, 1);  	upobj = p->p_upages_obj; 	up = (vm_offset_t)p->p_addr; 	for (i = 0; i< UPAGES; i++) { 		m = vm_page_lookup(upobj, i); 		if (m == NULL) 			panic("pmap_swapout_proc: upage already missing?"); 		vm_page_dirty(m); 		vm_page_unwire(m, 0); 		pmap_kremove(up + i * PAGE_SIZE); 	}
-endif|#
-directive|endif
-block|}
+block|{ }
 end_function
 
 begin_comment
-comment|/*  * Bring the UPAGES for a specified process back in.  */
+comment|/*  * Bring the U area for a specified process back in.  */
 end_comment
 
 begin_function
@@ -1865,14 +1856,167 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|/*  * Create the KSTACK for a new thread.  * This routine directly affects the fork perf for a process/thread.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_new_thread
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|int i, rv; 	vm_object_t upobj; 	vm_offset_t up; 	vm_page_t m;  	upobj = p->p_upages_obj; 	up = (vm_offset_t)p->p_addr; 	for (i = 0; i< UPAGES; i++) { 		m = vm_page_grab(upobj, i, VM_ALLOC_NORMAL | VM_ALLOC_RETRY); 		pmap_kenter(up + i * PAGE_SIZE, VM_PAGE_TO_PHYS(m)); 		if (m->valid != VM_PAGE_BITS_ALL) { 			rv = vm_pager_get_pages(upobj,&m, 1, 0); 			if (rv != VM_PAGER_OK) 				panic("pmap_swapin_proc: cannot get upages for proc: %d\n", p->p_pid); 			m = vm_page_lookup(upobj, i); 			m->valid = VM_PAGE_BITS_ALL; 		} 		vm_page_wire(m); 		vm_page_wakeup(m); 		vm_page_flag_set(m, PG_MAPPED | PG_WRITEABLE); 	}
-endif|#
-directive|endif
+name|vm_offset_t
+modifier|*
+name|ks
+decl_stmt|;
+comment|/* 	 * Use contigmalloc for user area so that we can use a region 	 * 7 address for it which makes it impossible to accidentally 	 * lose when recording a trapframe. 	 */
+name|ks
+operator|=
+name|contigmalloc
+argument_list|(
+name|KSTACK_PAGES
+operator|*
+name|PAGE_SIZE
+argument_list|,
+name|M_PMAP
+argument_list|,
+name|M_WAITOK
+argument_list|,
+literal|0ul
+argument_list|,
+literal|256
+operator|*
+literal|1024
+operator|*
+literal|1024
+operator|-
+literal|1
+argument_list|,
+name|PAGE_SIZE
+argument_list|,
+literal|256
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_kstackvirt
+operator|=
+name|ks
+expr_stmt|;
+name|td
+operator|->
+name|td_kstack
+operator|=
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|ia64_tpa
+argument_list|(
+operator|(
+name|u_int64_t
+operator|)
+name|ks
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * Dispose the KSTACK for a thread that has exited.  * This routine directly impacts the exit perf of a process/thread.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_dispose_thread
+parameter_list|(
+name|td
+parameter_list|)
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+block|{
+name|contigfree
+argument_list|(
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_kstackvirt
+argument_list|,
+name|KSTACK_PAGES
+operator|*
+name|PAGE_SIZE
+argument_list|,
+name|M_PMAP
+argument_list|)
+expr_stmt|;
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_kstackvirt
+operator|=
+literal|0
+expr_stmt|;
+name|td
+operator|->
+name|td_kstack
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Allow the KSTACK for a thread to be prejudicially paged out.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_swapout_thread
+parameter_list|(
+name|td
+parameter_list|)
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|/*  * Bring the KSTACK for a specified thread back in.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_swapin_thread
+parameter_list|(
+name|td
+parameter_list|)
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+block|{ }
 end_function
 
 begin_comment
@@ -7639,16 +7783,18 @@ name|void
 name|pmap_activate
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|pmap_install
 argument_list|(
 name|vmspace_pmap
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_vmspace
 argument_list|)
@@ -8054,7 +8200,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index;  	sx_slock(&allproc_lock); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for(i=0;i<1024;i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				unsigned base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for(j=0;j<1024;j++) { 						unsigned va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							sx_sunlock(&allproc_lock); 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	sx_sunlock(&allproc_lock); 	return npte; }
+unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index;  	sx_slock(&allproc_lock); 	LIST_FOREACH(p,&allproc, p_list) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for(i = 0; i< 1024; i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				unsigned base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for(j = 0; j< 1024; j++) { 						unsigned va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							sx_sunlock(&allproc_lock); 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE(pa); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	sx_sunlock(&allproc_lock); 	return npte; }
 endif|#
 directive|endif
 end_endif

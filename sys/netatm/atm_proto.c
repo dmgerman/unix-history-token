@@ -386,7 +386,7 @@ name|so
 parameter_list|,
 name|addr
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|socket
@@ -399,9 +399,9 @@ modifier|*
 name|addr
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return
@@ -462,7 +462,7 @@ name|addr
 parameter_list|,
 name|m2
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|socket
@@ -486,9 +486,9 @@ modifier|*
 name|m2
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 return|return

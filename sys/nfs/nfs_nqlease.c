@@ -567,7 +567,7 @@ name|flags
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|nam
 parameter_list|,
@@ -595,9 +595,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -715,7 +715,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1538,7 +1538,7 @@ name|nqnfs_lease_check
 parameter_list|(
 name|vp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|cred
 parameter_list|,
@@ -1550,9 +1550,9 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ucred
@@ -1590,7 +1590,7 @@ name|flag
 argument_list|,
 name|NQLOCALSLP
 argument_list|,
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -1619,7 +1619,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lease_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 		struct ucred *a_cred; 		int a_flag; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 		struct ucred *a_cred; 		int a_flag; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1657,7 +1657,7 @@ name|NQLOCALSLP
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 operator|(
 expr|struct
@@ -3445,7 +3445,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -3460,9 +3460,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -3718,7 +3718,7 @@ name|flags
 argument_list|,
 name|slp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 name|nam
 argument_list|,
@@ -3741,7 +3741,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3832,7 +3832,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -3847,9 +3847,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -4267,7 +4267,7 @@ name|rwflag
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -4284,9 +4284,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -4436,7 +4436,7 @@ name|vp
 argument_list|,
 name|NQNFSPROC_GETLEASE
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -5195,7 +5195,7 @@ name|flag
 parameter_list|,
 name|argp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -5220,9 +5220,9 @@ name|caddr_t
 name|argp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -5505,11 +5505,11 @@ literal|0
 expr_stmt|;
 name|myrep
 operator|.
-name|r_procp
+name|r_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -5581,7 +5581,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -5674,7 +5674,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -5718,7 +5718,7 @@ name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|np
@@ -5789,7 +5789,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -5817,7 +5817,7 @@ name|ND_WRITE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -5976,7 +5976,7 @@ name|nm_mountp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -6089,11 +6089,11 @@ name|deltat
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -6193,7 +6193,7 @@ argument_list|,
 operator|&
 name|mountlist_mtx
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -6272,7 +6272,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}

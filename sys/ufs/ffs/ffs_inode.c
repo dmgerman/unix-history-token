@@ -523,7 +523,7 @@ name|flags
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -542,9 +542,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -879,7 +879,7 @@ name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -946,7 +946,7 @@ literal|0
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -1499,7 +1499,7 @@ name|ovp
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|length
 argument_list|,

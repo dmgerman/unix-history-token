@@ -671,9 +671,13 @@ name|FIX_SSTEP
 comment|/* 	 * do single-step fixup if needed 	 */
 name|FIX_SSTEP
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 endif|#
 directive|endif
 comment|/* 	 * Don't deliver any signal by default. 	 * To continue with a signal, just send 	 * the signal name to the ctl file 	 */
@@ -855,9 +859,13 @@ name|error
 operator|=
 name|procfs_sstep
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 name|PRELE
 argument_list|(
 name|p
@@ -1091,9 +1099,13 @@ name|SSTOP
 condition|)
 name|setrunnable
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1284,16 +1296,24 @@ directive|ifdef
 name|FIX_SSTEP
 name|FIX_SSTEP
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 endif|#
 directive|endif
 name|setrunnable
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 name|mtx_unlock_spin
 argument_list|(
 operator|&

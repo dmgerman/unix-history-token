@@ -2916,7 +2916,7 @@ name|svr4_term_ioctl
 parameter_list|(
 name|fp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|retval
 parameter_list|,
@@ -2932,9 +2932,9 @@ modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|register_t
 modifier|*
@@ -3024,7 +3024,7 @@ operator|)
 operator|&
 name|bt
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3164,7 +3164,7 @@ operator|)
 operator|&
 name|bt
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3370,7 +3370,7 @@ operator|)
 operator|&
 name|bt
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 case|case
@@ -3402,7 +3402,7 @@ operator|)
 operator|&
 name|ws
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3479,7 +3479,7 @@ operator|)
 operator|&
 name|ws
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -3496,7 +3496,7 @@ name|svr4_stream_ti_ioctl
 argument_list|(
 name|fp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|retval
 argument_list|,

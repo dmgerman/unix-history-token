@@ -15,6 +15,12 @@ directive|define
 name|_RUNQ_H_
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|kse
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Run queue parameters.  */
 end_comment
@@ -124,7 +130,7 @@ name|TAILQ_HEAD
 argument_list|(
 name|rqhead
 argument_list|,
-name|proc
+name|kse
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -179,7 +185,7 @@ name|runq
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|kse
 modifier|*
 parameter_list|)
 function_decl|;
@@ -198,7 +204,7 @@ end_function_decl
 
 begin_function_decl
 name|struct
-name|proc
+name|kse
 modifier|*
 name|runq_choose
 parameter_list|(
@@ -229,7 +235,7 @@ name|runq
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|kse
 modifier|*
 parameter_list|)
 function_decl|;

@@ -88,9 +88,9 @@ name|int
 name|linux_chown16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_chown16_args
@@ -112,7 +112,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -184,7 +184,7 @@ return|return
 operator|(
 name|chown
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -199,9 +199,9 @@ name|int
 name|linux_lchown16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_lchown16_args
@@ -223,7 +223,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -295,7 +295,7 @@ return|return
 operator|(
 name|lchown
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -310,9 +310,9 @@ name|int
 name|linux_setgroups16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setgroups16_args
@@ -377,7 +377,9 @@ name|gidsetsize
 expr_stmt|;
 name|oldcred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -509,10 +511,14 @@ literal|1
 expr_stmt|;
 name|setsugid
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|=
@@ -536,9 +542,9 @@ name|int
 name|linux_getgroups16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_getgroups16_args
@@ -596,7 +602,9 @@ endif|#
 directive|endif
 name|cred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -628,9 +636,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -711,9 +719,9 @@ operator|(
 name|error
 operator|)
 return|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -729,7 +737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The FreeBSD native getgid(2) and getuid(2) also modify p->p_retval[1]  * when COMPAT_43 or COMPAT_SUNOS is defined. This globbers registers that  * are assumed to be preserved. The following lightweight syscalls fixes  * this. See also linux_getpid(2), linux_getgid(2) and linux_getuid(2) in  * linux_misc.c  *  * linux_getgid16() - MP SAFE  * linux_getuid16() - MP SAFE  */
+comment|/*  * The FreeBSD native getgid(2) and getuid(2) also modify td->td_retval[1]  * when COMPAT_43 or COMPAT_SUNOS is defined. This globbers registers that  * are assumed to be preserved. The following lightweight syscalls fixes  * this. See also linux_getpid(2), linux_getgid(2) and linux_getuid(2) in  * linux_misc.c  *  * linux_getgid16() - MP SAFE  * linux_getuid16() - MP SAFE  */
 end_comment
 
 begin_function
@@ -737,9 +745,9 @@ name|int
 name|linux_getgid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_getgid16_args
@@ -747,14 +755,16 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -773,9 +783,9 @@ name|int
 name|linux_getuid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_getuid16_args
@@ -783,14 +793,16 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -809,9 +821,9 @@ name|int
 name|linux_getegid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_getegid16_args
@@ -827,7 +839,7 @@ return|return
 operator|(
 name|getegid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -842,9 +854,9 @@ name|int
 name|linux_geteuid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_geteuid16_args
@@ -860,7 +872,7 @@ return|return
 operator|(
 name|geteuid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -875,9 +887,9 @@ name|int
 name|linux_setgid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setgid16_args
@@ -901,7 +913,7 @@ return|return
 operator|(
 name|setgid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -916,9 +928,9 @@ name|int
 name|linux_setuid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setuid16_args
@@ -942,7 +954,7 @@ return|return
 operator|(
 name|setuid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -957,9 +969,9 @@ name|int
 name|linux_setregid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setregid16_args
@@ -991,7 +1003,7 @@ return|return
 operator|(
 name|setregid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -1006,9 +1018,9 @@ name|int
 name|linux_setreuid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setreuid16_args
@@ -1040,7 +1052,7 @@ return|return
 operator|(
 name|setreuid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -1055,9 +1067,9 @@ name|int
 name|linux_setresgid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setresgid16_args
@@ -1097,7 +1109,7 @@ return|return
 operator|(
 name|setresgid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd
@@ -1112,9 +1124,9 @@ name|int
 name|linux_setresuid16
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_setresuid16_args
@@ -1154,7 +1166,7 @@ return|return
 operator|(
 name|setresuid
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|bsd

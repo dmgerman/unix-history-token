@@ -350,9 +350,9 @@ name|int
 name|linux_newstat
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_newstat_args
@@ -381,7 +381,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -436,7 +436,7 @@ name|args
 operator|->
 name|path
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -475,7 +475,7 @@ argument_list|,
 operator|&
 name|buf
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -515,9 +515,9 @@ name|int
 name|linux_newlstat
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_newlstat_args
@@ -546,7 +546,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -601,7 +601,7 @@ name|args
 operator|->
 name|path
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -640,7 +640,7 @@ argument_list|,
 operator|&
 name|sb
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -680,9 +680,9 @@ name|int
 name|linux_newfstat
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_newfstat_args
@@ -735,7 +735,9 @@ endif|#
 directive|endif
 name|fdp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
@@ -781,7 +783,7 @@ argument_list|,
 operator|&
 name|buf
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1054,9 +1056,9 @@ name|int
 name|linux_statfs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_statfs_args
@@ -1100,7 +1102,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -1155,7 +1157,7 @@ name|args
 operator|->
 name|path
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|error
@@ -1209,7 +1211,7 @@ name|mp
 argument_list|,
 name|bsd_statfs
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1360,9 +1362,9 @@ name|int
 name|linux_fstatfs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_fstatfs_args
@@ -1422,7 +1424,9 @@ name|error
 operator|=
 name|getvnode
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 argument_list|,
@@ -1471,7 +1475,7 @@ name|mp
 argument_list|,
 name|bsd_statfs
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1648,9 +1652,9 @@ name|int
 name|linux_ustat
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_ustat_args
@@ -1781,7 +1785,7 @@ name|v_mount
 argument_list|,
 name|stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2021,9 +2025,9 @@ name|int
 name|linux_stat64
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_stat64_args
@@ -2052,7 +2056,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -2107,7 +2111,7 @@ name|args
 operator|->
 name|filename
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2146,7 +2150,7 @@ argument_list|,
 operator|&
 name|buf
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -2186,9 +2190,9 @@ name|int
 name|linux_lstat64
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_lstat64_args
@@ -2217,7 +2221,7 @@ argument_list|()
 expr_stmt|;
 name|CHECKALTEXIST
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sg
@@ -2272,7 +2276,7 @@ name|args
 operator|->
 name|filename
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2311,7 +2315,7 @@ argument_list|,
 operator|&
 name|sb
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -2351,9 +2355,9 @@ name|int
 name|linux_fstat64
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|linux_fstat64_args
@@ -2406,7 +2410,9 @@ endif|#
 directive|endif
 name|fdp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
@@ -2452,7 +2458,7 @@ argument_list|,
 operator|&
 name|buf
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

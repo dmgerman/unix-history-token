@@ -151,9 +151,9 @@ define|#
 directive|define
 name|cttyvp
 parameter_list|(
-name|p
+name|td
 parameter_list|)
-value|((p)->p_flag& P_CONTROLT ? (p)->p_session->s_ttyvp : NULL)
+value|((td)->td_proc->p_flag& P_CONTROLT ? (td)->td_proc->p_session->s_ttyvp : NULL)
 end_define
 
 begin_comment
@@ -171,7 +171,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -182,9 +182,9 @@ decl_stmt|,
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -194,7 +194,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|p
+name|td
 argument_list|)
 decl_stmt|;
 name|int
@@ -219,7 +219,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -232,7 +232,7 @@ name|flag
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -241,7 +241,7 @@ name|ttyvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -280,13 +280,13 @@ name|flag
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 specifier|register
 name|struct
@@ -296,7 +296,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|p
+name|td
 argument_list|)
 decl_stmt|;
 name|int
@@ -321,7 +321,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -343,7 +343,7 @@ name|ttyvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -382,13 +382,13 @@ name|flag
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -399,7 +399,7 @@ name|cttyvp
 argument_list|(
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|)
 decl_stmt|;
 name|struct
@@ -464,7 +464,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -486,7 +486,7 @@ name|ttyvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -519,7 +519,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -534,9 +534,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -546,7 +546,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|p
+name|td
 argument_list|)
 decl_stmt|;
 if|if
@@ -583,11 +583,15 @@ condition|(
 operator|!
 name|SESS_LEADER
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 condition|)
 block|{
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_flag
 operator|&=
@@ -621,7 +625,7 @@ name|flag
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -641,7 +645,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -650,9 +654,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -662,7 +666,7 @@ name|ttyvp
 init|=
 name|cttyvp
 argument_list|(
-name|p
+name|td
 argument_list|)
 decl_stmt|;
 if|if
@@ -680,7 +684,7 @@ name|dev
 argument_list|,
 name|events
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -692,11 +696,13 @@ name|ttyvp
 argument_list|,
 name|events
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -784,7 +790,7 @@ name|vp
 operator|=
 name|cttyvp
 argument_list|(
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if

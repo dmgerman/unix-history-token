@@ -681,11 +681,11 @@ name|npp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -839,7 +839,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -1201,7 +1201,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1220,7 +1220,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1238,11 +1238,11 @@ modifier|*
 name|sp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|np
@@ -1345,7 +1345,7 @@ name|sp
 operator|->
 name|s_cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1361,7 +1361,7 @@ name|a_vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 name|panic
@@ -1386,7 +1386,7 @@ name|sp
 operator|->
 name|s_cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1458,7 +1458,7 @@ literal|0
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1778,7 +1778,7 @@ end_comment
 
 begin_comment
 unit|int nfs_islocked(ap) 	struct vop_islocked_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 end_comment
 
 begin_endif

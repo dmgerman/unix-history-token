@@ -730,7 +730,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|done
@@ -779,7 +779,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|free
@@ -835,7 +835,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}

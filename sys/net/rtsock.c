@@ -442,9 +442,9 @@ name|int
 name|proto
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -653,9 +653,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -678,7 +678,7 @@ name|so
 argument_list|,
 name|nam
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* xxx just EINVAL */
@@ -709,9 +709,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -734,7 +734,7 @@ name|so
 argument_list|,
 name|nam
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXX just EINVAL */
@@ -998,9 +998,9 @@ modifier|*
 name|control
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1029,7 +1029,7 @@ name|nam
 argument_list|,
 name|control
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx

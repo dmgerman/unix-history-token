@@ -481,7 +481,7 @@ name|type
 parameter_list|,
 name|proto
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|int
 name|dom
@@ -500,9 +500,9 @@ name|int
 name|proto
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -569,7 +569,9 @@ if|if
 condition|(
 name|jailed
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -624,7 +626,7 @@ name|so
 operator|=
 name|soalloc
 argument_list|(
-name|p
+name|td
 operator|!=
 literal|0
 argument_list|)
@@ -666,7 +668,9 @@ name|so
 operator|->
 name|so_cred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -698,7 +702,7 @@ name|so
 argument_list|,
 name|proto
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -744,7 +748,7 @@ name|so
 parameter_list|,
 name|nam
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|socket
@@ -757,9 +761,9 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -788,7 +792,7 @@ name|so
 argument_list|,
 name|nam
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -990,7 +994,7 @@ name|so
 parameter_list|,
 name|backlog
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -1002,9 +1006,9 @@ name|int
 name|backlog
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1032,7 +1036,7 @@ call|)
 argument_list|(
 name|so
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1746,7 +1750,7 @@ name|so
 parameter_list|,
 name|nam
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -1760,9 +1764,9 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1845,7 +1849,7 @@ name|so
 argument_list|,
 name|nam
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2042,7 +2046,7 @@ name|control
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -2074,9 +2078,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2201,9 +2205,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|td
 condition|)
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_stats
 operator|->
@@ -2913,7 +2919,7 @@ name|addr
 argument_list|,
 name|control
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -3672,11 +3678,13 @@ if|if
 condition|(
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 condition|)
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
+operator|->
+name|td_proc
 operator|->
 name|p_stats
 operator|->
@@ -5476,7 +5484,7 @@ if|if
 condition|(
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 operator|!=
 literal|0
 condition|)
@@ -5846,7 +5854,7 @@ name|optval
 argument_list|,
 name|so
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 operator|==
 literal|0
@@ -6179,7 +6187,7 @@ if|if
 condition|(
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 operator|!=
 literal|0
 condition|)
@@ -6731,7 +6739,7 @@ name|m
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 condition|?
 name|M_TRYWAIT
 else|:
@@ -6762,7 +6770,7 @@ name|m
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 condition|?
 name|M_TRYWAIT
 else|:
@@ -6843,7 +6851,7 @@ name|m
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 condition|?
 name|M_TRYWAIT
 else|:
@@ -6882,7 +6890,7 @@ name|m
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 condition|?
 name|M_TRYWAIT
 else|:
@@ -7017,7 +7025,7 @@ if|if
 condition|(
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 operator|!=
 name|NULL
 condition|)
@@ -7190,7 +7198,7 @@ if|if
 condition|(
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 operator|!=
 name|NULL
 condition|)
@@ -7384,9 +7392,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -7512,7 +7520,7 @@ condition|)
 block|{
 name|selrecord
 argument_list|(
-name|p
+name|curthread
 argument_list|,
 operator|&
 name|so
@@ -7544,7 +7552,7 @@ condition|)
 block|{
 name|selrecord
 argument_list|(
-name|p
+name|curthread
 argument_list|,
 operator|&
 name|so

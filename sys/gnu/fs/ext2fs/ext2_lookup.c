@@ -1069,13 +1069,13 @@ operator|->
 name|cn_nameiop
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|int
 name|DIRBLKSIZ
@@ -1794,7 +1794,7 @@ name|cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 operator|)
 operator|!=
@@ -1905,7 +1905,7 @@ name|vdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2065,7 +2065,7 @@ name|cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 operator|)
 operator|!=
@@ -2228,7 +2228,7 @@ name|vdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2268,7 +2268,7 @@ name|cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 operator|)
 operator|!=
@@ -2344,7 +2344,7 @@ name|vdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2371,7 +2371,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* race to get the inode */
@@ -2406,7 +2406,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2434,7 +2434,7 @@ name|pdp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -2527,7 +2527,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3015,11 +3015,11 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -3438,7 +3438,7 @@ name|cn_cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 return|return
@@ -3915,7 +3915,7 @@ name|count
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -4188,7 +4188,7 @@ literal|0
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0

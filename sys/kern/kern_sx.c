@@ -328,7 +328,7 @@ name|sx
 operator|->
 name|sx_xholder
 operator|!=
-name|curproc
+name|curthread
 argument_list|,
 operator|(
 literal|"%s (%s): slock while xlock is held @ %s:%d\n"
@@ -586,7 +586,7 @@ name|sx
 operator|->
 name|sx_xholder
 operator|!=
-name|curproc
+name|curthread
 argument_list|,
 operator|(
 literal|"%s (%s): xlock already held @ %s:%d"
@@ -658,7 +658,7 @@ name|sx
 operator|->
 name|sx_xholder
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 name|LOCK_LOG_LOCK
 argument_list|(
@@ -747,7 +747,7 @@ name|sx
 operator|->
 name|sx_xholder
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 name|LOCK_LOG_TRY
 argument_list|(
@@ -1151,7 +1151,7 @@ name|sx
 operator|->
 name|sx_xholder
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 name|LOCK_LOG_TRY
 argument_list|(

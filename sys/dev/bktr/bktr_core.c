@@ -5449,9 +5449,9 @@ name|caddr_t
 name|arg
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|pr
+name|td
 parameter_list|)
 block|{
 specifier|volatile
@@ -7143,7 +7143,9 @@ name|bktr
 operator|->
 name|proc
 operator|=
-name|pr
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 break|break;
 case|case
@@ -8496,9 +8498,9 @@ name|caddr_t
 name|arg
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|pr
+name|td
 parameter_list|)
 block|{
 name|int

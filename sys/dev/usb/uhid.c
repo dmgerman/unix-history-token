@@ -631,7 +631,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1741,7 +1741,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1753,9 +1753,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1990,7 +1990,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2002,9 +2002,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2833,7 +2833,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|uhid_softc
@@ -2850,9 +2850,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2935,14 +2935,19 @@ name|sc
 operator|->
 name|sc_async
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
+comment|/* XXXKSE */
 name|DPRINTF
 argument_list|(
 operator|(
 literal|"uhid_do_ioctl: FIOASYNC %p\n"
 operator|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3338,7 +3343,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -3353,9 +3358,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -3395,7 +3400,7 @@ name|addr
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3433,7 +3438,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -3442,9 +3447,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -3542,7 +3547,7 @@ expr_stmt|;
 else|else
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|sc

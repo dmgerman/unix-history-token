@@ -44,9 +44,9 @@ name|int
 name|rwindow_load
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|trapframe
@@ -78,7 +78,7 @@ name|error
 operator|=
 name|rwindow_save
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -102,11 +102,13 @@ name|CTR3
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"rwindow_load: p=%p (%s) n=%d"
+literal|"rwindow_load: td=%p (%s) n=%d"
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_comm
 argument_list|,
@@ -189,9 +191,9 @@ name|int
 name|rwindow_save
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -222,12 +224,9 @@ argument_list|()
 expr_stmt|;
 name|pcb
 operator|=
-operator|&
-name|p
+name|td
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
+name|td_pcb
 expr_stmt|;
 name|i
 operator|=
@@ -239,11 +238,13 @@ name|CTR3
 argument_list|(
 name|KTR_TRAP
 argument_list|,
-literal|"rwindow_save: p=%p (%s) nsaved=%d"
+literal|"rwindow_save: td=%p (%s) nsaved=%d"
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_comm
 argument_list|,

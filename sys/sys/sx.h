@@ -80,7 +80,7 @@ name|sx_excl_wcnt
 decl_stmt|;
 comment|/* Number of xlock waiters. */
 name|struct
-name|proc
+name|thread
 modifier|*
 name|sx_xholder
 decl_stmt|;
@@ -426,7 +426,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	KASSERT(((sx)->sx_cnt> 0 || (sx)->sx_xholder == curproc),	\ 	    ("Lock %s not locked @ %s:%d", (sx)->sx_object.lo_name,	\ 	    file, line));						\ } while (0)
+value|do {				\ 	KASSERT(((sx)->sx_cnt> 0 || (sx)->sx_xholder == curthread),	\ 	    ("Lock %s not locked @ %s:%d", (sx)->sx_object.lo_name,	\ 	    file, line));						\ } while (0)
 end_define
 
 begin_define
@@ -483,7 +483,7 @@ name|file
 parameter_list|,
 name|line
 parameter_list|)
-value|do {				\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("Lock %s not exclusively locked @ %s:%d",			\ 	    (sx)->sx_object.lo_name, file, line));			\ } while (0)
+value|do {				\ 	KASSERT(((sx)->sx_xholder == curthread),				\ 	    ("Lock %s not exclusively locked @ %s:%d",			\ 	    (sx)->sx_object.lo_name, file, line));			\ } while (0)
 end_define
 
 begin_define

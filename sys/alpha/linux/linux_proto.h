@@ -33,6 +33,12 @@ name|proc
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -7027,7 +7033,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7045,7 +7051,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7063,7 +7069,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7081,7 +7087,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7099,7 +7105,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7117,7 +7123,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7135,7 +7141,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7153,7 +7159,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7171,7 +7177,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7189,7 +7195,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7207,7 +7213,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7225,7 +7231,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7243,7 +7249,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7261,7 +7267,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7279,7 +7285,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7297,7 +7303,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7315,7 +7321,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7333,7 +7339,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7351,7 +7357,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7369,7 +7375,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7387,7 +7393,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7405,7 +7411,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7423,7 +7429,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7441,7 +7447,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7459,7 +7465,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7477,7 +7483,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7495,7 +7501,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7513,7 +7519,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7531,7 +7537,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7549,7 +7555,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7567,7 +7573,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7585,7 +7591,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7603,7 +7609,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7621,7 +7627,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7639,7 +7645,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7657,7 +7663,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7675,7 +7681,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7693,7 +7699,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7711,7 +7717,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7729,7 +7735,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7747,7 +7753,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7765,7 +7771,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7783,7 +7789,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7801,7 +7807,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7819,7 +7825,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7837,7 +7843,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7855,7 +7861,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7873,7 +7879,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7891,7 +7897,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7909,7 +7915,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7927,7 +7933,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7945,7 +7951,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7963,7 +7969,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7981,7 +7987,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -7999,7 +8005,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8017,7 +8023,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8035,7 +8041,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8053,7 +8059,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8071,7 +8077,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8089,7 +8095,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8107,7 +8113,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8125,7 +8131,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8143,7 +8149,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8161,7 +8167,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8179,7 +8185,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8197,7 +8203,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8215,7 +8221,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8233,7 +8239,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8251,7 +8257,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8269,7 +8275,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8287,7 +8293,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8305,7 +8311,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8323,7 +8329,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8341,7 +8347,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8359,7 +8365,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8377,7 +8383,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8395,7 +8401,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8413,7 +8419,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8431,7 +8437,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8449,7 +8455,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8467,7 +8473,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8485,7 +8491,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8503,7 +8509,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8521,7 +8527,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8539,7 +8545,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8557,7 +8563,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8575,7 +8581,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8593,7 +8599,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8611,7 +8617,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8629,7 +8635,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8647,7 +8653,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8665,7 +8671,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8683,7 +8689,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8701,7 +8707,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8719,7 +8725,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8737,7 +8743,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8755,7 +8761,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8773,7 +8779,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8791,7 +8797,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8809,7 +8815,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8827,7 +8833,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8845,7 +8851,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8863,7 +8869,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8881,7 +8887,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8899,7 +8905,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8917,7 +8923,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8935,7 +8941,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8953,7 +8959,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8971,7 +8977,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -8989,7 +8995,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9007,7 +9013,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9025,7 +9031,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9043,7 +9049,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9061,7 +9067,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9079,7 +9085,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9097,7 +9103,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9115,7 +9121,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9133,7 +9139,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9151,7 +9157,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9169,7 +9175,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9187,7 +9193,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9205,7 +9211,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9223,7 +9229,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9241,7 +9247,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9259,7 +9265,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9277,7 +9283,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9295,7 +9301,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9313,7 +9319,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9331,7 +9337,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9349,7 +9355,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9367,7 +9373,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9385,7 +9391,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9403,7 +9409,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9421,7 +9427,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9439,7 +9445,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9457,7 +9463,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9475,7 +9481,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -9493,7 +9499,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct

@@ -1316,6 +1316,20 @@ name|i
 decl_stmt|,
 name|numsegs
 decl_stmt|;
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_proc
+operator|!=
+name|p
+condition|)
+name|panic
+argument_list|(
+literal|"elf_load_file - thread"
+argument_list|)
+expr_stmt|;
+comment|/* XXXKSE DIAGNOSTIC */
 name|tempdata
 operator|=
 name|malloc
@@ -1415,6 +1429,7 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* XXXKSE */
 name|NDINIT
 argument_list|(
 name|nd
@@ -1429,7 +1444,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|file
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1492,9 +1507,10 @@ name|ni_vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 goto|goto
 name|fail
 goto|;
@@ -1529,9 +1545,10 @@ name|ni_vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|error
@@ -3342,7 +3359,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -3439,17 +3456,16 @@ begin_function
 name|int
 name|elf_coredump
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|vp
 parameter_list|,
 name|limit
 parameter_list|)
-specifier|register
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 specifier|register
 name|struct
@@ -3461,6 +3477,16 @@ name|off_t
 name|limit
 decl_stmt|;
 block|{
+specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 specifier|register
 name|struct
 name|ucred
@@ -3601,7 +3627,7 @@ name|error
 operator|=
 name|elf_corehdr
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|vp
 argument_list|,
@@ -3708,9 +3734,10 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|error
@@ -4143,7 +4170,7 @@ specifier|static
 name|int
 name|elf_corehdr
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|vp
 parameter_list|,
@@ -4156,9 +4183,9 @@ parameter_list|,
 name|hdrsize
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|vnode
@@ -4196,6 +4223,15 @@ block|}
 modifier|*
 name|tempdata
 struct|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|size_t
 name|off
 decl_stmt|;
@@ -4307,7 +4343,7 @@ name|p_pid
 expr_stmt|;
 name|fill_regs
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|status
@@ -4317,7 +4353,7 @@ argument_list|)
 expr_stmt|;
 name|fill_fpregs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|fpregset
 argument_list|)
@@ -4433,9 +4469,10 @@ name|cred
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
+comment|/* XXXKSE */
 block|}
 end_function
 

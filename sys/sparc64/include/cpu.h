@@ -72,9 +72,9 @@ define|#
 directive|define
 name|cpu_getstack
 parameter_list|(
-name|p
+name|td
 parameter_list|)
-value|((p)->p_frame->tf_sp)
+value|((td)->td_frame->tf_sp)
 end_define
 
 begin_define
@@ -82,11 +82,11 @@ define|#
 directive|define
 name|cpu_setstack
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|sp
 parameter_list|)
-value|((p)->p_frame->tf_sp = (sp))
+value|((td)->td_frame->tf_sp = (sp))
 end_define
 
 begin_comment

@@ -233,7 +233,7 @@ name|caddr_t
 name|arg
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|pr
 parameter_list|)
@@ -277,7 +277,7 @@ name|caddr_t
 name|arg
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|pr
 parameter_list|)

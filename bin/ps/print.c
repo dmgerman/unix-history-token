@@ -798,6 +798,8 @@ name|int
 name|flag
 decl_stmt|,
 name|sflag
+decl_stmt|,
+name|tdflags
 decl_stmt|;
 name|char
 modifier|*
@@ -835,6 +837,15 @@ name|ki_p
 operator|->
 name|ki_sflag
 expr_stmt|;
+name|tdflags
+operator|=
+name|k
+operator|->
+name|ki_p
+operator|->
+name|ki_tdflags
+expr_stmt|;
+comment|/* XXXKSE */
 name|cp
 operator|=
 name|buf
@@ -862,9 +873,9 @@ name|SSLEEP
 case|:
 if|if
 condition|(
-name|sflag
+name|tdflags
 operator|&
-name|PS_SINTR
+name|TDF_SINTR
 condition|)
 comment|/* interruptable (long) */
 operator|*

@@ -605,7 +605,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -620,7 +620,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -1487,6 +1487,13 @@ begin_comment
 comment|/* DEBUG */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOHOLDER
+value|((struct thread *)-1)
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -1495,7 +1502,9 @@ block|{
 name|int
 name|lkt_spl
 decl_stmt|;
-name|pid_t
+name|struct
+name|thread
+modifier|*
 name|lkt_held
 decl_stmt|;
 block|}
@@ -1504,8 +1513,7 @@ init|=
 block|{
 literal|0
 block|,
-operator|-
-literal|1
+name|NOHOLDER
 block|}
 struct|;
 end_struct
@@ -1630,7 +1638,9 @@ modifier|*
 name|lk
 decl_stmt|;
 block|{
-name|pid_t
+name|struct
+name|thread
+modifier|*
 name|holder
 decl_stmt|;
 if|if
@@ -1639,8 +1649,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|!=
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 block|{
 name|holder
@@ -1658,9 +1667,7 @@ if|if
 condition|(
 name|holder
 operator|==
-name|CURPROC
-operator|->
-name|p_pid
+name|curthread
 condition|)
 name|panic
 argument_list|(
@@ -1670,7 +1677,7 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"softdep_lock: lock held by %d"
+literal|"softdep_lock: lock held by %p"
 argument_list|,
 name|holder
 argument_list|)
@@ -1687,9 +1694,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|=
-name|CURPROC
-operator|->
-name|p_pid
+name|curthread
 expr_stmt|;
 name|lockcnt
 operator|++
@@ -1716,8 +1721,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -1728,8 +1732,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|splx
 argument_list|(
@@ -1754,7 +1757,9 @@ modifier|*
 name|lk
 decl_stmt|;
 block|{
-name|pid_t
+name|struct
+name|thread
+modifier|*
 name|holder
 decl_stmt|;
 if|if
@@ -1763,8 +1768,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|!=
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 block|{
 name|holder
@@ -1782,9 +1786,7 @@ if|if
 condition|(
 name|holder
 operator|==
-name|CURPROC
-operator|->
-name|p_pid
+name|curthread
 condition|)
 name|panic
 argument_list|(
@@ -1794,7 +1796,7 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
-literal|"softdep_lock_interlocked: lock held by %d"
+literal|"softdep_lock_interlocked: lock held by %p"
 argument_list|,
 name|holder
 argument_list|)
@@ -1804,9 +1806,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|=
-name|CURPROC
-operator|->
-name|p_pid
+name|curthread
 expr_stmt|;
 name|lockcnt
 operator|++
@@ -1833,8 +1833,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -1845,8 +1844,7 @@ name|lk
 operator|->
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 block|}
 end_function
@@ -1871,7 +1869,9 @@ block|{
 name|int
 name|value
 decl_stmt|;
-name|pid_t
+name|struct
+name|thread
+modifier|*
 name|holder
 decl_stmt|;
 name|char
@@ -1976,8 +1976,7 @@ name|semap
 operator|->
 name|holder
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|semap
 operator|->
@@ -2095,9 +2094,7 @@ name|semap
 operator|->
 name|holder
 operator|=
-name|CURPROC
-operator|->
-name|p_pid
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -2143,9 +2140,7 @@ name|semap
 operator|->
 name|holder
 operator|!=
-name|CURPROC
-operator|->
-name|p_pid
+name|curthread
 condition|)
 block|{
 if|if
@@ -2154,8 +2149,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|!=
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|FREE_LOCK
 argument_list|(
@@ -2195,8 +2189,7 @@ name|semap
 operator|->
 name|holder
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 block|}
 end_function
@@ -2366,8 +2359,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -2432,8 +2424,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -2515,8 +2506,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|!=
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|FREE_LOCK
 argument_list|(
@@ -2545,8 +2535,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|!=
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|FREE_LOCK
 argument_list|(
@@ -2689,7 +2678,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|proc
+name|thread
 modifier|*
 name|filesys_syncer
 decl_stmt|;
@@ -3166,8 +3155,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|!=
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|FREE_LOCK
 argument_list|(
@@ -3245,11 +3233,11 @@ name|matchmnt
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|CURPROC
+name|curthread
 decl_stmt|;
 name|int
 name|matchcnt
@@ -3262,7 +3250,7 @@ decl_stmt|;
 comment|/* 	 * Record the process identifier of our caller so that we can give 	 * this process preferential treatment in request_cleanup below. 	 */
 name|filesys_syncer
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|matchcnt
 operator|=
@@ -3301,7 +3289,7 @@ condition|)
 block|{
 name|clear_inodedeps
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|req_clear_inodedeps
@@ -3322,7 +3310,7 @@ condition|)
 block|{
 name|clear_remove
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|req_clear_remove
@@ -3385,7 +3373,7 @@ condition|)
 block|{
 name|clear_inodedeps
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|req_clear_inodedeps
@@ -3406,7 +3394,7 @@ condition|)
 block|{
 name|clear_remove
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|req_clear_remove
@@ -3603,7 +3591,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
-name|CURPROC
+name|curthread
 argument_list|)
 condition|)
 break|break;
@@ -4015,7 +4003,7 @@ name|oldmnt
 parameter_list|,
 name|countp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -4027,9 +4015,9 @@ modifier|*
 name|countp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -4118,7 +4106,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4127,13 +4115,15 @@ name|VOP_FSYNC
 argument_list|(
 name|devvp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -4142,7 +4132,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4185,7 +4175,7 @@ name|oldmnt
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -4196,9 +4186,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -4235,7 +4225,7 @@ name|oldmnt
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -4254,7 +4244,7 @@ argument_list|,
 operator|&
 name|count
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -4437,8 +4427,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -4803,8 +4792,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -6000,8 +5988,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -6737,8 +6724,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -9339,8 +9325,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -9563,8 +9548,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -11155,8 +11139,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -12346,8 +12329,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|==
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -13806,13 +13788,12 @@ name|dirrem
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|CURPROC
+name|curthread
 decl_stmt|;
-comment|/* XXX */
 name|struct
 name|inodedep
 modifier|*
@@ -14068,11 +14049,13 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -15679,14 +15662,17 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+define|#
+directive|define
+name|SPECIAL_FLAG
+value|NOHOLDER-1
 if|if
 condition|(
 name|lk
 operator|.
 name|lkt_held
 operator|!=
-operator|-
-literal|1
+name|NOHOLDER
 condition|)
 name|panic
 argument_list|(
@@ -15697,8 +15683,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|2
+name|SPECIAL_FLAG
 expr_stmt|;
 endif|#
 directive|endif
@@ -16036,8 +16021,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16127,8 +16111,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16171,8 +16154,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16230,8 +16212,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|!=
-operator|-
-literal|2
+name|SPECIAL_FLAG
 condition|)
 name|panic
 argument_list|(
@@ -16242,8 +16223,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 endif|#
 directive|endif
@@ -16309,8 +16289,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16407,8 +16386,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16529,8 +16507,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16696,8 +16673,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16845,8 +16821,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16883,8 +16858,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -16949,8 +16923,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -17045,8 +17018,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -17166,8 +17138,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -17240,8 +17211,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -17279,8 +17249,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -17482,8 +17451,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -17664,8 +17632,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -17819,8 +17786,7 @@ name|lk
 operator|.
 name|lkt_held
 operator|=
-operator|-
-literal|1
+name|NOHOLDER
 expr_stmt|;
 name|panic
 argument_list|(
@@ -18641,13 +18607,12 @@ modifier|*
 name|fs
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|CURPROC
+name|curthread
 decl_stmt|;
-comment|/* XXX */
 name|int
 name|error
 decl_stmt|,
@@ -18950,7 +18915,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -18973,7 +18938,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -19037,13 +19002,15 @@ name|VOP_FSYNC
 argument_list|(
 name|pvp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -19081,7 +19048,9 @@ argument_list|,
 name|lbn
 argument_list|)
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -19378,7 +19347,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -20322,7 +20291,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 operator|)
 operator|!=
@@ -20718,13 +20687,12 @@ name|diraddhdp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|CURPROC
+name|curthread
 decl_stmt|;
-comment|/* XXX */
 name|struct
 name|inodedep
 modifier|*
@@ -20902,13 +20870,15 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_NOWAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|||
@@ -20919,13 +20889,15 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_NOWAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -21279,16 +21251,16 @@ name|islocked
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|CURPROC
+name|curthread
 decl_stmt|;
 comment|/* 	 * We never hold up the filesystem syncer process. 	 */
 if|if
 condition|(
-name|p
+name|td
 operator|==
 name|filesys_syncer
 condition|)
@@ -21583,12 +21555,12 @@ specifier|static
 name|void
 name|clear_remove
 parameter_list|(
-name|p
+name|td
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -21761,13 +21733,15 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_NOWAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -21816,12 +21790,12 @@ specifier|static
 name|void
 name|clear_inodedeps
 parameter_list|(
-name|p
+name|td
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -22120,13 +22094,15 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -22149,13 +22125,15 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_NOWAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)

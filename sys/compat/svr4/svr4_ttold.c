@@ -872,7 +872,7 @@ name|svr4_ttold_ioctl
 parameter_list|(
 name|fp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|retval
 parameter_list|,
@@ -888,9 +888,9 @@ modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|register_t
 modifier|*
@@ -943,7 +943,7 @@ operator|)
 operator|&
 name|pid
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1039,7 +1039,7 @@ operator|)
 operator|&
 name|pid
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -1073,7 +1073,7 @@ operator|)
 operator|&
 name|pid
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1111,7 +1111,9 @@ name|uprintf
 argument_list|(
 literal|"ioctl(TIOCGSID) for pid %d unsupported\n"
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|)
@@ -1148,7 +1150,7 @@ operator|)
 operator|&
 name|bs
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1283,7 +1285,7 @@ operator|)
 operator|&
 name|bs
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -1313,7 +1315,7 @@ operator|)
 operator|&
 name|bt
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1433,7 +1435,7 @@ operator|)
 operator|&
 name|bt
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -1463,7 +1465,7 @@ operator|)
 operator|&
 name|bl
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1583,7 +1585,7 @@ operator|)
 operator|&
 name|bl
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -1611,7 +1613,7 @@ operator|)
 operator|&
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1733,7 +1735,7 @@ operator|)
 operator|&
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}

@@ -541,9 +541,9 @@ modifier|*
 name|vpp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -559,13 +559,13 @@ name|dev
 decl_stmt|;
 if|if
 condition|(
-name|p
+name|td
 operator|==
 name|NULL
 condition|)
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX */
 name|loop
@@ -591,11 +591,11 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 condition|?
-name|p
+name|td
 else|:
-name|curproc
+name|curthread
 argument_list|)
 condition|)
 goto|goto
@@ -786,7 +786,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -811,7 +811,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -894,7 +894,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1228,9 +1228,9 @@ modifier|*
 name|vpp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|devfs_dirent
@@ -1295,11 +1295,11 @@ name|cnp
 operator|->
 name|cn_nameptr
 expr_stmt|;
-name|p
+name|td
 operator|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 expr_stmt|;
 name|flags
 operator|=
@@ -1394,9 +1394,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|cnp
-operator|->
-name|cn_proc
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1473,7 +1471,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|de
@@ -1515,7 +1513,7 @@ name|v_mount
 argument_list|,
 name|vpp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1531,7 +1529,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1562,7 +1560,7 @@ name|dvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1808,7 +1806,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1853,7 +1851,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1901,7 +1899,7 @@ name|v_mount
 argument_list|,
 name|vpp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1928,7 +1926,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1949,7 +1947,7 @@ name|v_mount
 argument_list|,
 name|vpp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1983,7 +1981,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2035,7 +2033,7 @@ name|LK_SHARED
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|j
@@ -2056,7 +2054,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2094,9 +2092,9 @@ modifier|*
 name|vpp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|devfs_dirent
@@ -2147,7 +2145,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -2162,11 +2160,11 @@ name|ap
 operator|->
 name|a_vpp
 expr_stmt|;
-name|p
+name|td
 operator|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 expr_stmt|;
 name|flags
 operator|=
@@ -2281,7 +2279,7 @@ name|v_mount
 argument_list|,
 name|vpp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|notfound
@@ -2297,7 +2295,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2518,7 +2516,7 @@ name|LK_SHARED
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|devfs_populate
@@ -2801,7 +2799,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|uio
@@ -3051,7 +3049,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|dd
@@ -3085,7 +3083,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -3424,7 +3422,9 @@ name|suser
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|)
 operator|)
 operator|!=
@@ -3485,7 +3485,9 @@ name|suser
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|)
 operator|)
 condition|)
@@ -3539,7 +3541,9 @@ name|suser
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|)
 operator|)
 condition|)
@@ -3593,7 +3597,9 @@ name|suser
 argument_list|(
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 argument_list|)
 operator|)
 condition|)
@@ -3677,7 +3683,9 @@ name|ap
 operator|->
 name|a_cnp
 operator|->
-name|cn_proc
+name|cn_thread
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
@@ -3811,7 +3819,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -3854,7 +3862,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return

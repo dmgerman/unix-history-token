@@ -330,13 +330,13 @@ decl_stmt|,
 name|wantparent
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|ufs_daddr_t
 name|inodenum
@@ -413,7 +413,7 @@ operator|)
 return|;
 block|}
 comment|/* Deal with the '.' directory */
-comment|/* VOP_UNLOCK(vdp, 0, p); */
+comment|/* VOP_UNLOCK(vdp, 0, td); */
 if|if
 condition|(
 name|cnp
@@ -443,7 +443,7 @@ argument_list|(
 name|vdp
 argument_list|)
 expr_stmt|;
-comment|/* vn_lock(vdp, LK_SHARED | LK_RETRY, p); */
+comment|/* vn_lock(vdp, LK_SHARED | LK_RETRY, td); */
 return|return
 operator|(
 literal|0
@@ -497,7 +497,7 @@ name|cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -532,7 +532,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|cnp
@@ -869,7 +869,7 @@ name|pdp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 end_if

@@ -280,16 +280,16 @@ begin_function
 name|void
 name|svr4_setregs
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|epp
 parameter_list|,
 name|stack
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|exec_package
@@ -306,12 +306,9 @@ name|pcb
 modifier|*
 name|pcb
 init|=
-operator|&
-name|p
+name|td
 operator|->
-name|p_addr
-operator|->
-name|u_pcb
+name|td_pcb
 decl_stmt|;
 name|pcb
 operator|->
@@ -325,7 +322,7 @@ name|__SVR4_NPXCW__
 expr_stmt|;
 name|setregs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|epp
 argument_list|,
@@ -350,7 +347,7 @@ begin_function
 name|void
 name|svr4_getcontext
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uc
 parameter_list|,
@@ -359,9 +356,9 @@ parameter_list|,
 name|oonstack
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_ucontext
@@ -377,13 +374,22 @@ name|oonstack
 decl_stmt|;
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
+name|struct
 name|trapframe
 modifier|*
 name|tf
 init|=
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 decl_stmt|;
 name|svr4_greg_t
 modifier|*
@@ -425,7 +431,9 @@ endif|#
 directive|endif
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|#
@@ -526,7 +534,7 @@ index|]
 operator|=
 name|get_vflags
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -773,7 +781,9 @@ endif|#
 directive|endif
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the signal mask 	 */
@@ -809,14 +819,14 @@ begin_function
 name|int
 name|svr4_setcontext
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uc
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_ucontext
@@ -837,6 +847,15 @@ name|psp
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 specifier|register
 name|struct
 name|trapframe
@@ -873,7 +892,9 @@ name|mask
 decl_stmt|;
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|#
@@ -884,7 +905,9 @@ name|DONE_MORE_SIGALTSTACK_WORK
 argument_list|)
 name|psp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_sigacts
 expr_stmt|;
@@ -893,7 +916,9 @@ directive|endif
 name|sf
 operator|=
 operator|&
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_sigstk
 expr_stmt|;
@@ -926,9 +951,9 @@ argument_list|)
 expr_stmt|;
 name|tf
 operator|=
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 expr_stmt|;
 comment|/* 	 * Restore register context. 	 */
 ifdef|#
@@ -985,7 +1010,7 @@ index|]
 expr_stmt|;
 name|set_vflags
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|r
 index|[
@@ -1308,7 +1333,9 @@ expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1664,11 +1691,20 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
 specifier|register
 name|struct
@@ -1721,9 +1757,9 @@ name|p_sigacts
 expr_stmt|;
 name|tf
 operator|=
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 expr_stmt|;
 name|oonstack
 operator|=
@@ -1812,13 +1848,15 @@ expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Build the argument list for the signal handler. 	 * Notes: 	 * 	- we always build the whole argument list, even when we 	 *	  don't need to [when SA_SIGINFO is not set, we don't need 	 *	  to pass all sf_si and sf_uc] 	 *	- we don't pass the correct signal address [we need to 	 *	  modify many kernel files to enable that] 	 */
 name|svr4_getcontext
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|frame
@@ -1959,12 +1997,14 @@ block|{
 comment|/* 		 * Process has trashed its stack; give it an illegal 		 * instruction to halt it in its tracks. 		 */
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|sigexit
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|SIGILL
 argument_list|)
@@ -2149,14 +2189,14 @@ begin_function
 name|int
 name|svr4_sys_sysarch
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|v
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_sys_sysarch_args
@@ -2217,7 +2257,7 @@ block|{ 			struct i386_set_ldt_args sa, *sap; 			struct sys_sysarch_args ua;  		
 comment|/* We can only set ldt's for now. */
 block|if (!ISLDT(ssd.selector)) { 				printf("Not an ldt\n"); 				return EPERM; 			}
 comment|/* Oh, well we don't cleanup either */
-block|if (ssd.access1 == 0) 				return 0;  			bsd.sd.sd_lobase = ssd.base& 0xffffff; 			bsd.sd.sd_hibase = (ssd.base>> 24)& 0xff;  			bsd.sd.sd_lolimit = ssd.limit& 0xffff; 			bsd.sd.sd_hilimit = (ssd.limit>> 16)& 0xf;  			bsd.sd.sd_type = ssd.access1& 0x1f; 			bsd.sd.sd_dpl =  (ssd.access1>> 5)& 0x3; 			bsd.sd.sd_p = (ssd.access1>> 7)& 0x1;  			bsd.sd.sd_xx = ssd.access2& 0x3; 			bsd.sd.sd_def32 = (ssd.access2>> 2)& 0x1; 			bsd.sd.sd_gran = (ssd.access2>> 3)& 0x1;  			sa.start = IDXSEL(ssd.selector); 			sa.desc = stackgap_alloc(&sg, sizeof(union descriptor)); 			sa.num = 1; 			sap = stackgap_alloc(&sg, 					     sizeof(struct i386_set_ldt_args));  			if ((error = copyout(&sa, sap, sizeof(sa))) != 0) { 				printf("Cannot copyout args\n"); 				return error; 			}  			SCARG(&ua, op) = I386_SET_LDT; 			SCARG(&ua, parms) = (char *) sap;  			if ((error = copyout(&bsd, sa.desc, sizeof(bsd))) != 0) { 				printf("Cannot copyout desc\n"); 				return error; 			}  			return sys_sysarch(p,&ua, retval); 		}
+block|if (ssd.access1 == 0) 				return 0;  			bsd.sd.sd_lobase = ssd.base& 0xffffff; 			bsd.sd.sd_hibase = (ssd.base>> 24)& 0xff;  			bsd.sd.sd_lolimit = ssd.limit& 0xffff; 			bsd.sd.sd_hilimit = (ssd.limit>> 16)& 0xf;  			bsd.sd.sd_type = ssd.access1& 0x1f; 			bsd.sd.sd_dpl =  (ssd.access1>> 5)& 0x3; 			bsd.sd.sd_p = (ssd.access1>> 7)& 0x1;  			bsd.sd.sd_xx = ssd.access2& 0x3; 			bsd.sd.sd_def32 = (ssd.access2>> 2)& 0x1; 			bsd.sd.sd_gran = (ssd.access2>> 3)& 0x1;  			sa.start = IDXSEL(ssd.selector); 			sa.desc = stackgap_alloc(&sg, sizeof(union descriptor)); 			sa.num = 1; 			sap = stackgap_alloc(&sg, 					     sizeof(struct i386_set_ldt_args));  			if ((error = copyout(&sa, sap, sizeof(sa))) != 0) { 				printf("Cannot copyout args\n"); 				return error; 			}  			SCARG(&ua, op) = I386_SET_LDT; 			SCARG(&ua, parms) = (char *) sap;  			if ((error = copyout(&bsd, sa.desc, sizeof(bsd))) != 0) { 				printf("Cannot copyout desc\n"); 				return error; 			}  			return sys_sysarch(td,&ua, retval); 		}
 endif|#
 directive|endif
 default|default:

@@ -198,7 +198,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -311,7 +311,7 @@ name|data
 parameter_list|,
 name|ndp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -335,9 +335,9 @@ name|ndp
 decl_stmt|;
 comment|/* mount point credentials*/
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 comment|/* process requesting mount*/
 block|{
@@ -419,7 +419,7 @@ name|rootvp
 argument_list|,
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|M_FFSNODE
 argument_list|)
@@ -444,7 +444,7 @@ name|mp
 operator|->
 name|mnt_stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -586,7 +586,7 @@ name|mp
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -600,7 +600,7 @@ name|mp
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -761,7 +761,7 @@ name|ni_cnd
 operator|.
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -790,7 +790,9 @@ block|{
 comment|/* 			 * If upgrade to read-write by non-root, then verify 			 * that user has necessary permissions on the device. 			 */
 if|if
 condition|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -807,7 +809,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -823,11 +825,13 @@ name|VREAD
 operator||
 name|VWRITE
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -840,7 +844,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -855,7 +859,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1026,7 +1030,9 @@ name|mp
 argument_list|,
 name|fs
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -1141,7 +1147,7 @@ name|args
 operator|.
 name|fspec
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1201,7 +1207,9 @@ block|}
 comment|/* 	 * If mount by non-root, then verify that user has necessary 	 * permissions on the device. 	 */
 if|if
 condition|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -1238,7 +1246,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1252,11 +1260,13 @@ name|devvp
 argument_list|,
 name|accessmode
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1280,7 +1290,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1346,7 +1356,7 @@ name|devvp
 argument_list|,
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|M_FFSNODE
 argument_list|)
@@ -1416,7 +1426,7 @@ name|mp
 operator|->
 name|mnt_stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1439,7 +1449,7 @@ name|mp
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -1453,9 +1463,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -1547,7 +1557,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1560,7 +1570,7 @@ literal|0
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -1573,7 +1583,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1610,16 +1620,18 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vfs_object_create
 argument_list|(
 name|devvp
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -1638,7 +1650,7 @@ name|devvp
 argument_list|,
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1661,7 +1673,7 @@ name|FREAD
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -2162,7 +2174,7 @@ name|vp
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -2187,7 +2199,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -2205,7 +2217,7 @@ literal|0
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -2385,7 +2397,7 @@ name|devvp
 parameter_list|,
 name|mp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|malloctype
 parameter_list|)
@@ -2401,9 +2413,9 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|malloc_type
@@ -2477,9 +2489,11 @@ name|v_rdev
 expr_stmt|;
 name|cred
 operator|=
-name|p
+name|td
 condition|?
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 else|:
@@ -2532,7 +2546,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2545,7 +2559,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -2558,7 +2572,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2589,14 +2603,14 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vfs_object_create
 argument_list|(
 name|devvp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2615,7 +2629,7 @@ name|devvp
 argument_list|,
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2639,7 +2653,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2658,7 +2672,7 @@ name|FWRITE
 argument_list|,
 name|FSCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2667,7 +2681,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2733,7 +2747,7 @@ name|FREAD
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -3894,7 +3908,7 @@ name|ufs_extattr_autostart
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3944,7 +3958,7 @@ name|FWRITE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4132,7 +4146,7 @@ name|mp
 parameter_list|,
 name|mntflags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -4143,9 +4157,9 @@ name|int
 name|mntflags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -4198,7 +4212,7 @@ name|ufs_extattr_stop
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -4250,7 +4264,7 @@ name|mp
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -4275,7 +4289,7 @@ name|mp
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -4438,7 +4452,7 @@ name|V_SAVE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -4465,7 +4479,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -4534,7 +4548,7 @@ name|mp
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -4546,9 +4560,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -4632,7 +4646,7 @@ condition|)
 continue|continue;
 name|quotaoff
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|mp
 argument_list|,
@@ -4720,7 +4734,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -4731,13 +4745,15 @@ name|ump
 operator|->
 name|um_devvp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -4748,7 +4764,7 @@ name|um_devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4771,7 +4787,7 @@ name|mp
 parameter_list|,
 name|sbp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -4785,9 +4801,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -5024,7 +5040,7 @@ name|waitfor
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -5040,9 +5056,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -5301,7 +5317,7 @@ name|vp
 argument_list|,
 name|lockreq
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5338,7 +5354,7 @@ name|cred
 argument_list|,
 name|waitfor
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5354,7 +5370,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -5416,7 +5432,7 @@ argument_list|,
 operator|&
 name|count
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5504,7 +5520,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5520,7 +5536,7 @@ name|cred
 argument_list|,
 name|waitfor
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5536,7 +5552,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

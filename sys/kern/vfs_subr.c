@@ -226,9 +226,9 @@ name|int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1308,7 +1308,7 @@ name|flags
 parameter_list|,
 name|interlkp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1324,9 +1324,9 @@ modifier|*
 name|interlkp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1408,7 +1408,7 @@ name|lkflags
 argument_list|,
 name|interlkp
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 name|panic
@@ -1434,7 +1434,7 @@ name|vfs_unbusy
 parameter_list|(
 name|mp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1442,9 +1442,9 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|lockmgr
@@ -1458,7 +1458,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1494,11 +1494,11 @@ name|mpp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -1607,7 +1607,7 @@ name|LK_NOWAIT
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
@@ -2472,11 +2472,11 @@ decl_stmt|,
 name|count
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -2736,7 +2736,7 @@ name|vgonel
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3021,9 +3021,11 @@ name|vfs_object_create
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -3269,7 +3271,7 @@ name|flags
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|slpflag
 parameter_list|,
@@ -3290,9 +3292,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|slpflag
@@ -3421,7 +3423,7 @@ name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3831,7 +3833,7 @@ name|vp
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|length
 parameter_list|,
@@ -3849,9 +3851,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|off_t
 name|length
@@ -4819,12 +4821,16 @@ name|int
 name|s
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
+operator|&
 name|updateproc
+operator|->
+name|p_thread
 decl_stmt|;
+comment|/* XXXKSE */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4837,7 +4843,9 @@ name|shutdown_pre_sync
 argument_list|,
 name|kproc_shutdown
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|SHUTDOWN_PRI_LAST
 argument_list|)
@@ -4850,7 +4858,9 @@ control|)
 block|{
 name|kthread_suspend_check
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|starttime
@@ -4936,7 +4946,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4946,13 +4956,15 @@ name|VOP_FSYNC
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
 name|MNT_LAZY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -4961,7 +4973,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write
@@ -5079,7 +5091,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Request the syncer daemon to speed up its work.  * We never push it to speed up more than half of its  * normal turn time, otherwise it could take over the cpu.  */
+comment|/*  * Request the syncer daemon to speed up its work.  * We never push it to speed up more than half of its  * normal turn time, otherwise it could take over the cpu.  * XXXKSE  only one update?  */
 end_comment
 
 begin_function
@@ -5097,14 +5109,20 @@ if|if
 condition|(
 name|updateproc
 operator|->
-name|p_wchan
+name|p_thread
+operator|.
+name|td_wchan
 operator|==
 operator|&
 name|lbolt
 condition|)
+comment|/* XXXKSE */
 name|setrunnable
 argument_list|(
+operator|&
 name|updateproc
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
@@ -6244,7 +6262,7 @@ name|VOP_ISLOCKED
 argument_list|(
 name|nvp
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 condition|)
 block|{
@@ -6254,7 +6272,7 @@ name|nvp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -6265,7 +6283,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -6382,7 +6400,7 @@ name|vp
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -6394,9 +6412,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -6436,7 +6454,7 @@ name|vp
 operator|->
 name|v_vxproc
 operator|==
-name|curproc
+name|curthread
 condition|)
 block|{
 name|printf
@@ -6518,7 +6536,7 @@ name|flags
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -6637,11 +6655,11 @@ name|vp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|KASSERT
@@ -6746,7 +6764,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -6756,7 +6774,7 @@ name|VOP_INACTIVE
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -6809,11 +6827,11 @@ name|vp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|GIANT_REQUIRED
@@ -6879,7 +6897,7 @@ name|vp
 argument_list|,
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6923,7 +6941,7 @@ name|VOP_INACTIVE
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -7135,11 +7153,11 @@ name|flags
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -7366,7 +7384,7 @@ name|vgonel
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -7398,7 +7416,7 @@ name|vgonel
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -7410,7 +7428,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vp
@@ -7545,7 +7563,7 @@ name|vgonel
 argument_list|(
 name|rootvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|busy
@@ -7608,7 +7626,7 @@ name|vp
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -7619,9 +7637,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -7667,7 +7685,7 @@ name|vp
 operator|->
 name|v_vxproc
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* 	 * Even if the count is zero, the VOP_INACTIVE routine may still 	 * have the object locked while it cleans it out. The VOP_LOCK 	 * ensures that the VOP_INACTIVE routine is done with its work. 	 * For active vnodes, it ensures that no other activity can 	 * occur while the underlying object is being cleaned out. 	 */
 name|VOP_LOCK
@@ -7678,7 +7696,7 @@ name|LK_DRAIN
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clean out any buffers associated with the vnode. 	 * If the flush fails, just toss the buffers. 	 */
@@ -7723,7 +7741,7 @@ name|V_SAVE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -7740,7 +7758,7 @@ literal|0
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -7773,14 +7791,14 @@ name|FNONBLOCK
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_INACTIVE
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -7793,7 +7811,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -7804,7 +7822,7 @@ name|VOP_RECLAIM
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 name|panic
@@ -8134,7 +8152,7 @@ name|vp
 parameter_list|,
 name|inter_lkp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -8147,9 +8165,9 @@ modifier|*
 name|inter_lkp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|mtx_lock
@@ -8184,7 +8202,7 @@ name|vgonel
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -8227,11 +8245,11 @@ name|vp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|mtx_lock
@@ -8246,7 +8264,7 @@ name|vgonel
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -8262,7 +8280,7 @@ name|vgonel
 parameter_list|(
 name|vp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|vnode
@@ -8270,9 +8288,9 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -8324,7 +8342,7 @@ name|vp
 argument_list|,
 name|DOCLOSE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -9052,11 +9070,11 @@ end_macro
 begin_block
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -9113,7 +9131,7 @@ argument_list|,
 operator|&
 name|mountlist_mtx
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -9189,7 +9207,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9382,7 +9400,7 @@ name|newp
 argument_list|,
 name|newlen
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -9676,11 +9694,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -9782,7 +9800,7 @@ argument_list|,
 operator|&
 name|mountlist_mtx
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -9919,7 +9937,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -10026,27 +10044,30 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|error
 decl_stmt|;
 if|if
 condition|(
-name|curproc
+name|curthread
 operator|!=
 name|NULL
 condition|)
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 else|else
-name|p
+name|td
 operator|=
+operator|&
 name|initproc
+operator|->
+name|p_thread
 expr_stmt|;
 comment|/* XXX XXX should this be proc0? */
 comment|/* 	 * Since this only runs when rebooting, it is not interlocked. 	 */
@@ -10078,7 +10099,7 @@ name|mp
 argument_list|,
 name|MNT_FORCE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -10348,7 +10369,7 @@ name|LK_RETRY
 operator||
 name|LK_NOOBJ
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 condition|)
 block|{
@@ -10445,7 +10466,7 @@ name|vfs_object_create
 parameter_list|(
 name|vp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|cred
 parameter_list|)
@@ -10455,9 +10476,9 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|ucred
@@ -10475,7 +10496,7 @@ name|vp
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -10687,7 +10708,7 @@ name|vn_pollrecord
 parameter_list|(
 name|vp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|events
 parameter_list|)
@@ -10697,9 +10718,9 @@ modifier|*
 name|vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|short
 name|events
@@ -10768,7 +10789,7 @@ name|events
 expr_stmt|;
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|vp
@@ -11374,7 +11395,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -11398,13 +11419,13 @@ operator|->
 name|v_mount
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|int
 name|asyncflag
@@ -11451,7 +11472,7 @@ argument_list|,
 operator|&
 name|mountlist_mtx
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -11488,7 +11509,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -11529,7 +11550,7 @@ name|ap
 operator|->
 name|a_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -11551,7 +11572,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -11575,7 +11596,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -12036,7 +12057,7 @@ name|ndp
 operator|->
 name|ni_cnd
 operator|.
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -12112,7 +12133,7 @@ name|ndp
 operator|->
 name|ni_cnd
 operator|.
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if

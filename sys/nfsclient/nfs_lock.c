@@ -229,9 +229,9 @@ name|nameidata
 name|nd
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|uid_t
 name|saved_uid
@@ -259,9 +259,20 @@ name|fmode
 decl_stmt|,
 name|ioflg
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|p
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|vp
 operator|=
@@ -570,7 +581,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|_PATH_LCKFIFO
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX Hack to temporarily allow this process (regardless of it's creds) 	 * to open the fifo we need to write to. vn_open() really should 	 * take a ucred (and once it does, this code should be fixed to use 	 * proc0's ucred. 	 */
@@ -650,7 +661,7 @@ name|wvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* vn_open leaves it locked */
@@ -668,7 +679,7 @@ name|VOP_LEASE
 argument_list|(
 name|wvp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|proc0
 operator|.
@@ -708,7 +719,7 @@ name|p_ucred
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -862,7 +873,7 @@ name|proc0
 operator|.
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|&&

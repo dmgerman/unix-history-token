@@ -690,9 +690,9 @@ modifier|*
 name|bp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|daddr_t
 name|lbn
@@ -866,11 +866,11 @@ block|if (uio->uio_offset< 0 || 	    (u_quad_t)uio->uio_offset + uio->uio_resid>
 endif|#
 directive|endif
 comment|/* 	 * Maybe this should be above the vnode op call, but so long as 	 * file servers have no limits, I don't think it matters. 	 */
-name|p
+name|td
 operator|=
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 expr_stmt|;
 comment|/* For p_rlimit. */
 name|mtx_assert
@@ -889,7 +889,7 @@ name|v_type
 operator|==
 name|VREG
 operator|&&
-name|p
+name|td
 operator|&&
 name|uio
 operator|->
@@ -899,7 +899,9 @@ name|uio
 operator|->
 name|uio_resid
 operator|>
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_rlimit
 index|[
@@ -911,19 +913,25 @@ condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|psignal
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|SIGXFSZ
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1336,7 +1344,7 @@ name|a_cred
 argument_list|,
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|)
 expr_stmt|;
 name|uio

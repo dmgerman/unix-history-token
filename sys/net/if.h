@@ -1040,7 +1040,7 @@ end_ifdef
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 

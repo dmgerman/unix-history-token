@@ -130,7 +130,7 @@ name|cred
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|file
@@ -148,9 +148,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|flags
@@ -211,7 +211,7 @@ name|cred
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|file
@@ -229,9 +229,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|flags
@@ -274,7 +274,7 @@ literal|0
 argument_list|,
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 argument_list|)
 return|;
 block|}
@@ -290,7 +290,7 @@ name|cmd
 parameter_list|,
 name|data
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|file
@@ -305,9 +305,9 @@ name|caddr_t
 name|data
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -587,7 +587,7 @@ name|cmd
 argument_list|,
 name|data
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -631,7 +631,7 @@ name|data
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -648,7 +648,7 @@ name|events
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|file
@@ -664,9 +664,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -698,7 +698,7 @@ name|events
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -712,7 +712,7 @@ name|fp
 parameter_list|,
 name|ub
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|file
@@ -725,9 +725,9 @@ modifier|*
 name|ub
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -879,7 +879,7 @@ name|soo_close
 parameter_list|(
 name|fp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|file
@@ -887,9 +887,9 @@ modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int

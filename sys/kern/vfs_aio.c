@@ -782,23 +782,23 @@ end_comment
 
 begin_struct
 struct|struct
-name|aioproclist
+name|aiothreadlist
 block|{
 name|int
-name|aioprocflags
+name|aiothreadflags
 decl_stmt|;
 comment|/* AIO proc flags */
 name|TAILQ_ENTRY
 argument_list|(
-argument|aioproclist
+argument|aiothreadlist
 argument_list|)
 name|list
 expr_stmt|;
 comment|/* List of processes */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|aioproc
+name|aiothread
 decl_stmt|;
 comment|/* The AIO thread */
 name|TAILQ_HEAD
@@ -1007,7 +1007,7 @@ specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|aioproclist
+argument|aiothreadlist
 argument_list|)
 name|aio_freeproc
 operator|,
@@ -1111,9 +1111,9 @@ name|int
 name|aio_aqueue
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aiocb
@@ -1311,7 +1311,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|aioproclist
+name|aiothreadlist
 argument_list|)
 argument_list|,
 literal|0
@@ -1574,7 +1574,7 @@ modifier|*
 name|ki
 decl_stmt|;
 name|struct
-name|aioproclist
+name|aiothreadlist
 modifier|*
 name|aiop
 decl_stmt|;
@@ -1811,7 +1811,10 @@ block|}
 comment|/* aiocbe is going away, we need to destroy any knotes */
 name|knote_remove
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|,
 operator|&
 name|aiocbe
@@ -1819,6 +1822,8 @@ operator|->
 name|klist
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
+comment|/* XXXKSE Note the thread here is used to eventually find the  	 * owning process again, but it is also used to do a fo_close 	 * and that requires the thread. (but does it require the 	 * OWNING thread? (or maby the running thread?) 	 * There is a semantic problem here...  	 */
 if|if
 condition|(
 operator|(
@@ -1948,7 +1953,7 @@ name|aiop
 operator|=
 name|aiocbe
 operator|->
-name|jobaioproc
+name|jobaiothread
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
@@ -2826,7 +2831,7 @@ modifier|*
 name|aio_selectjob
 parameter_list|(
 name|struct
-name|aioproclist
+name|aiothreadlist
 modifier|*
 name|aiop
 parameter_list|)
@@ -2982,10 +2987,17 @@ modifier|*
 name|fdp
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|userp
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|proc
 modifier|*
 name|mycp
 decl_stmt|;
@@ -3036,16 +3048,22 @@ name|aiocbe
 operator|->
 name|userproc
 expr_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|mycp
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|cb
 operator|=
 operator|&
 name|aiocbe
 operator|->
 name|uaiocb
-expr_stmt|;
-name|mycp
-operator|=
-name|curproc
 expr_stmt|;
 name|fdp
 operator|=
@@ -3108,10 +3126,6 @@ name|aiov
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|cb
 operator|->
 name|aio_buf
@@ -3169,9 +3183,9 @@ name|UIO_USERSPACE
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|mycp
+name|td
 expr_stmt|;
 name|inblock_st
 operator|=
@@ -3229,7 +3243,7 @@ name|f_cred
 argument_list|,
 name|FOF_OFFSET
 argument_list|,
-name|mycp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3256,7 +3270,7 @@ name|f_cred
 argument_list|,
 name|FOF_OFFSET
 argument_list|,
-name|mycp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3264,7 +3278,7 @@ name|fdrop
 argument_list|(
 name|fp
 argument_list|,
-name|mycp
+name|td
 argument_list|)
 expr_stmt|;
 name|inblock_end
@@ -3430,7 +3444,7 @@ modifier|*
 name|aiocbe
 decl_stmt|;
 name|struct
-name|aioproclist
+name|aiothreadlist
 modifier|*
 name|aiop
 decl_stmt|;
@@ -3458,6 +3472,13 @@ decl_stmt|,
 modifier|*
 name|tmpvm
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3467,7 +3488,9 @@ expr_stmt|;
 comment|/* 	 * Local copies of curproc (cp) and vmspace (myvm) 	 */
 name|mycp
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|myvm
 operator|=
@@ -3506,13 +3529,13 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aioproc
+name|aiothread
 operator|=
-name|mycp
+name|td
 expr_stmt|;
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator||=
 name|AIOP_FREE
 expr_stmt|;
@@ -3562,7 +3585,7 @@ expr_stmt|;
 comment|/* 	 * Get rid of our current filedescriptors.  AIOD's don't need any 	 * filedescriptors, except as temporarily inherited from the client. 	 * Credentials are also cloned, and made equivalent to "root". 	 */
 name|fdfree
 argument_list|(
-name|mycp
+name|td
 argument_list|)
 expr_stmt|;
 name|mycp
@@ -3648,7 +3671,7 @@ name|p_flag
 operator||=
 name|P_SYSTEM
 expr_stmt|;
-comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * creating to many daemons.) 	 */
+comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * and creating too many daemons.) 	 */
 name|wakeup
 argument_list|(
 name|mycp
@@ -3670,7 +3693,7 @@ if|if
 condition|(
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator|&
 name|AIOP_FREE
 condition|)
@@ -3702,7 +3725,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -3715,7 +3738,7 @@ expr_stmt|;
 block|}
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator|&=
 operator|~
 name|AIOP_SCHED
@@ -3788,7 +3811,10 @@ expr_stmt|;
 comment|/* Activate the new mapping. */
 name|pmap_activate
 argument_list|(
+operator|&
 name|mycp
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
 comment|/* 				 * If the old address space wasn't the daemons 				 * own address space, then we need to remove the 				 * daemon's reference from the other process 				 * that it was acting on behalf of. 				 */
@@ -3814,7 +3840,7 @@ name|p_fd
 condition|)
 name|fdfree
 argument_list|(
-name|mycp
+name|td
 argument_list|)
 expr_stmt|;
 name|mycp
@@ -3852,7 +3878,7 @@ expr_stmt|;
 comment|/* Do the I/O function. */
 name|aiocbe
 operator|->
-name|jobaioproc
+name|jobaiothread
 operator|=
 name|aiop
 expr_stmt|;
@@ -4170,7 +4196,10 @@ expr_stmt|;
 comment|/* Activate the daemon's address space. */
 name|pmap_activate
 argument_list|(
+operator|&
 name|mycp
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4210,7 +4239,7 @@ name|p_fd
 condition|)
 name|fdfree
 argument_list|(
-name|mycp
+name|td
 argument_list|)
 expr_stmt|;
 name|mycp
@@ -4266,7 +4295,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator||=
 name|AIOP_FREE
 expr_stmt|;
@@ -4282,7 +4311,7 @@ operator|(
 operator|(
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator|&
 name|AIOP_SCHED
 operator|)
@@ -4337,7 +4366,7 @@ condition|(
 operator|(
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator|&
 name|AIOP_FREE
 operator|)
@@ -4806,10 +4835,6 @@ name|bp
 operator|->
 name|b_data
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|cb
 operator|->
 name|aio_buf
@@ -5400,7 +5425,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|aioproclist
+name|aiothreadlist
 modifier|*
 name|aiop
 decl_stmt|;
@@ -5602,7 +5627,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -5611,7 +5636,7 @@ name|wakeup
 argument_list|(
 name|aiop
 operator|->
-name|aioproc
+name|aiothread
 argument_list|)
 expr_stmt|;
 block|}
@@ -5638,9 +5663,9 @@ name|int
 name|_aio_aqueue
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aiocb
@@ -5656,6 +5681,15 @@ name|int
 name|type
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|filedesc
 modifier|*
@@ -5690,7 +5724,7 @@ modifier|*
 name|aiocbe
 decl_stmt|;
 name|struct
-name|aioproclist
+name|aiothreadlist
 modifier|*
 name|aiop
 decl_stmt|;
@@ -6450,7 +6484,7 @@ argument_list|,
 operator|&
 name|kev
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|aqueue_fail
@@ -6853,7 +6887,7 @@ argument_list|)
 expr_stmt|;
 name|aiop
 operator|->
-name|aioprocflags
+name|aiothreadflags
 operator|&=
 operator|~
 name|AIOP_FREE
@@ -6862,7 +6896,7 @@ name|wakeup
 argument_list|(
 name|aiop
 operator|->
-name|aioproc
+name|aiothread
 argument_list|)
 expr_stmt|;
 block|}
@@ -6912,9 +6946,9 @@ block|{
 name|num_aio_resv_start
 operator|--
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -6940,7 +6974,7 @@ name|fdrop
 argument_list|(
 name|fp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -6959,9 +6993,9 @@ name|int
 name|aio_aqueue
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aiocb
@@ -6972,6 +7006,15 @@ name|int
 name|type
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|kaioinfo
 modifier|*
@@ -7021,7 +7064,7 @@ return|;
 return|return
 name|_aio_aqueue
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|job
 argument_list|,
@@ -7051,9 +7094,9 @@ name|int
 name|aio_return
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aio_return_args
@@ -7069,6 +7112,15 @@ name|ENOSYS
 return|;
 else|#
 directive|else
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -7201,9 +7253,9 @@ operator|->
 name|uuaiocb
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -7218,9 +7270,9 @@ name|status
 expr_stmt|;
 block|}
 else|else
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -7368,9 +7420,9 @@ operator|->
 name|uuaiocb
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -7385,9 +7437,9 @@ name|status
 expr_stmt|;
 block|}
 else|else
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -7429,9 +7481,9 @@ name|int
 name|aio_suspend
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aio_suspend_args
@@ -7447,6 +7499,15 @@ name|ENOSYS
 return|;
 else|#
 directive|else
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|timeval
 name|atv
@@ -8041,9 +8102,9 @@ name|int
 name|aio_cancel
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aio_cancel_args
@@ -8059,6 +8120,15 @@ name|ENOSYS
 return|;
 else|#
 directive|else
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|kaioinfo
 modifier|*
@@ -8171,9 +8241,9 @@ name|error
 argument_list|)
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -8424,9 +8494,9 @@ name|aiocbp
 operator|)
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -8653,9 +8723,9 @@ condition|(
 name|notcancelled
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -8671,9 +8741,9 @@ condition|(
 name|cancelled
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -8684,9 +8754,9 @@ return|return
 literal|0
 return|;
 block|}
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -8711,9 +8781,9 @@ name|int
 name|aio_error
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aio_error_args
@@ -8729,6 +8799,15 @@ name|ENOSYS
 return|;
 else|#
 directive|else
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -8834,9 +8913,9 @@ operator|==
 name|jobref
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -8901,9 +8980,9 @@ operator|==
 name|jobref
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -8962,9 +9041,9 @@ operator|==
 name|jobref
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -9033,9 +9112,9 @@ operator|==
 name|jobref
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -9100,9 +9179,9 @@ operator|==
 name|jobref
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -9180,9 +9259,9 @@ name|int
 name|aio_read
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aio_read_args
@@ -9201,7 +9280,7 @@ directive|else
 return|return
 name|aio_aqueue
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|uap
 operator|->
@@ -9221,9 +9300,9 @@ name|int
 name|aio_write
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aio_write_args
@@ -9242,7 +9321,7 @@ directive|else
 return|return
 name|aio_aqueue
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|uap
 operator|->
@@ -9262,9 +9341,9 @@ name|int
 name|lio_listio
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|lio_listio_args
@@ -9280,6 +9359,15 @@ name|ENOSYS
 return|;
 else|#
 directive|else
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|int
 name|nent
 decl_stmt|,
@@ -9650,7 +9738,7 @@ name|error
 operator|=
 name|_aio_aqueue
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|iocb
 argument_list|,
@@ -10488,9 +10576,9 @@ name|int
 name|aio_waitcomplete
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|aio_waitcomplete_args
@@ -10506,6 +10594,15 @@ name|ENOSYS
 return|;
 else|#
 directive|else
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|timeval
 name|atv
@@ -10699,9 +10796,9 @@ operator|->
 name|uuaiocb
 argument_list|)
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -10831,9 +10928,9 @@ operator|->
 name|uuaiocb
 argument_list|)
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]

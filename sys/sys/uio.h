@@ -103,10 +103,11 @@ name|uio_rw
 name|uio_rw
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|uio_procp
+name|uio_td
 decl_stmt|;
+empty_stmt|;
 block|}
 struct|;
 end_struct

@@ -17,7 +17,7 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -38,7 +38,7 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -98,7 +98,7 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)
@@ -116,7 +116,7 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)

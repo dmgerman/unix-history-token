@@ -50,7 +50,7 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|(0x12000000LL - (UPAGES*PAGE_SIZE))
+value|(0x12000000LL)
 end_define
 
 begin_comment

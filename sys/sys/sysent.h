@@ -17,7 +17,7 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -27,7 +27,7 @@ name|int
 name|sy_call_t
 name|__P
 typedef|((struct
-name|proc
+name|thread
 modifier|*
 typedef|,
 name|void
@@ -250,7 +250,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct

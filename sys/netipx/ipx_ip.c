@@ -1755,7 +1755,7 @@ name|ifn
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 argument_list|)
 expr_stmt|;
 comment|/* use any of our addresses */
@@ -1802,7 +1802,7 @@ name|ifn
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 argument_list|)
 operator|)
 return|;

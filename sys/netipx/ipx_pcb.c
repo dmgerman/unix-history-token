@@ -85,7 +85,7 @@ name|so
 parameter_list|,
 name|head
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|socket
@@ -98,9 +98,9 @@ modifier|*
 name|head
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -187,7 +187,7 @@ name|ipxp
 parameter_list|,
 name|nam
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -201,9 +201,9 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -333,16 +333,16 @@ name|aport
 operator|<
 name|IPXPORT_RESERVED
 operator|&&
-name|p
+name|td
 operator|!=
 name|NULL
 operator|&&
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -467,7 +467,7 @@ name|ipxp
 parameter_list|,
 name|nam
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|ipxpcb
@@ -480,9 +480,9 @@ modifier|*
 name|nam
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1122,7 +1122,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXX just leave it zero if we can't find a route */

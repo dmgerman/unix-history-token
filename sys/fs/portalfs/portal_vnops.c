@@ -146,9 +146,9 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|,
 name|int
 name|fd
@@ -295,14 +295,14 @@ specifier|static
 name|void
 name|portal_closefd
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|fd
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|fd
@@ -325,7 +325,7 @@ name|error
 operator|=
 name|close
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|ua
@@ -813,7 +813,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -831,13 +831,13 @@ modifier|*
 name|pt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -924,9 +924,9 @@ return|;
 comment|/* 	 * Can't be opened unless the caller is set up 	 * to deal with the side effects.  Check for this 	 * by testing whether the p_dupfd has been set. 	 */
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_dupfd
+name|td_dupfd
 operator|>=
 literal|0
 condition|)
@@ -967,7 +967,7 @@ literal|0
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1283,9 +1283,9 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|auio
 operator|.
@@ -1343,7 +1343,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1636,7 +1636,7 @@ control|)
 block|{
 name|portal_closefd
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|*
 name|ip
@@ -1650,7 +1650,9 @@ block|}
 comment|/* 	 * Check that the mode the file is being opened for is a subset 	 * of the mode of the existing descriptor. 	 */
 name|fp
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -1686,7 +1688,7 @@ condition|)
 block|{
 name|portal_closefd
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|fd
 argument_list|)
@@ -1700,9 +1702,9 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Save the dup fd in the proc structure then return the 	 * special error code (ENXIO) which causes magic things to 	 * happen in vn_open.  The whole concept is, well, hmmm. 	 */
-name|p
+name|td
 operator|->
-name|p_dupfd
+name|td_dupfd
 operator|=
 name|fd
 expr_stmt|;
@@ -1760,7 +1762,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1982,7 +1984,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;

@@ -249,7 +249,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -353,7 +353,7 @@ name|data
 parameter_list|,
 name|ndp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -377,9 +377,9 @@ name|ndp
 decl_stmt|;
 comment|/* Clobber this to lookup the device name */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 comment|/* The ever-famous proc pointer */
 block|{
@@ -460,7 +460,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|data
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -806,7 +806,7 @@ name|vfsp
 parameter_list|,
 name|mntflags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -817,9 +817,9 @@ name|int
 name|mntflags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1055,16 +1055,27 @@ name|int
 name|error
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+comment|/* XXX - bnoble */
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
-comment|/* XXX - bnoble */
 name|ViceFid
 name|VFid
 decl_stmt|;
+name|ENTRY
+expr_stmt|;
 name|ENTRY
 expr_stmt|;
 name|MARK_ENTRY
@@ -1158,7 +1169,7 @@ name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -1170,7 +1181,7 @@ name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1267,7 +1278,7 @@ name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -1279,7 +1290,7 @@ name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1330,7 +1341,7 @@ name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -1342,7 +1353,7 @@ name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1402,7 +1413,7 @@ name|vfsp
 parameter_list|,
 name|sbp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -1416,9 +1427,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|ENTRY
@@ -1597,7 +1608,7 @@ name|waitfor
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1613,9 +1624,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|ENTRY
@@ -1714,13 +1725,22 @@ name|int
 name|error
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+comment|/* XXX -mach */
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
-comment|/* XXX -mach */
 name|ViceFid
 name|VFid
 decl_stmt|;

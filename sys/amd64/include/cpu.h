@@ -88,9 +88,9 @@ define|#
 directive|define
 name|cpu_getstack
 parameter_list|(
-name|p
+name|td
 parameter_list|)
-value|((p)->p_frame->tf_esp)
+value|((td)->td_frame->tf_esp)
 end_define
 
 begin_define
@@ -98,11 +98,11 @@ define|#
 directive|define
 name|cpu_setstack
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|ap
 parameter_list|)
-value|((p)->p_frame->tf_esp = (ap))
+value|((td)->td_frame->tf_esp = (ap))
 end_define
 
 begin_define

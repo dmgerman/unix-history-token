@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|szsigcode
-value|(*(curproc->p_sysent->sv_szsigcode))
+value|(*(curthread->td_proc->p_sysent->sv_szsigcode))
 end_define
 
 begin_function
@@ -205,7 +205,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|caddr_t
@@ -281,7 +281,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|int									\ linux_ ## s(struct proc *p, struct linux_ ## s ## _args *args)		\ {									\ 	return (unsupported_msg(p, #s));				\ }									\ struct __hack
+value|int									\ linux_ ## s(struct thread *p, struct linux_ ## s ## _args *args)		\ {									\ 	return (unsupported_msg(p, #s));				\ }									\ struct __hack
 end_define
 
 begin_function
@@ -291,9 +291,9 @@ name|int
 name|unsupported_msg
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 specifier|const
 name|char
@@ -310,7 +310,9 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|)

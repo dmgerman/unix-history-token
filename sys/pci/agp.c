@@ -1089,7 +1089,7 @@ name|LK_DRAIN
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|lockdestroy
@@ -1704,7 +1704,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1969,7 +1969,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2016,7 +2016,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2065,7 +2065,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -2185,7 +2185,7 @@ name|LK_RELEASE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return
@@ -2790,9 +2790,9 @@ name|int
 name|devtype
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|device_t
@@ -2854,9 +2854,9 @@ name|int
 name|devtype
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|device_t
@@ -2928,9 +2928,9 @@ name|int
 name|fflag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|device_t

@@ -1420,7 +1420,7 @@ name|LK_UPGRADE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1922,7 +1922,7 @@ name|LK_DOWNGRADE
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 return|return

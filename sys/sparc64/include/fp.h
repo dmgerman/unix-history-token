@@ -315,7 +315,7 @@ end_struct
 
 begin_function_decl
 name|void
-name|fp_init_proc
+name|fp_init_thread
 parameter_list|(
 name|struct
 name|pcb
@@ -326,10 +326,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fp_enable_proc
+name|fp_enable_thread
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;

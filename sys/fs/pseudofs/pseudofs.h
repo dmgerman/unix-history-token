@@ -86,7 +86,7 @@ define|#
 directive|define
 name|PFS_FILL_ARGS
 define|\
-value|struct proc *curp, struct proc *p, struct pfs_node *pn, struct sbuf *sb
+value|struct thread *td, struct proc *p, struct pfs_node *pn, struct sbuf *sb
 end_define
 
 begin_define
@@ -399,9 +399,9 @@ modifier|*
 name|ndp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -419,9 +419,9 @@ name|int
 name|mntflags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -459,9 +459,9 @@ modifier|*
 name|sbp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -514,7 +514,7 @@ parameter_list|,
 name|root
 parameter_list|)
 define|\ 									\
-value|static struct pfs_info name##_info = {					\ 	#name,								\&(root)								\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, char *path, caddr_t data,		\ 	     struct nameidata *ndp, struct proc *p) {			\         return pfs_mount(&name##_info, mp, path, data, ndp, p);		\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\         return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\         return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	_##name##_mount,						\ 	vfs_stdstart,							\ 	pfs_unmount,							\ 	pfs_root,							\ 	vfs_stdquotactl,						\ 	pfs_statfs,							\ 	vfs_stdsync,							\ 	vfs_stdvget,							\ 	vfs_stdfhtovp,							\ 	vfs_stdcheckexp,						\ 	vfs_stdvptofh,							\ 	_##name##_init,							\ 	_##name##_uninit,						\ 	vfs_stdextattrctl,						\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_DEPEND(name, pseudofs, 1, 1, 1);
+value|static struct pfs_info name##_info = {					\ 	#name,								\&(root)								\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, char *path, caddr_t data,		\ 	     struct nameidata *ndp, struct thread *td) {		\         return pfs_mount(&name##_info, mp, path, data, ndp, td);		\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\         return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\         return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	_##name##_mount,						\ 	vfs_stdstart,							\ 	pfs_unmount,							\ 	pfs_root,							\ 	vfs_stdquotactl,						\ 	pfs_statfs,							\ 	vfs_stdsync,							\ 	vfs_stdvget,							\ 	vfs_stdfhtovp,							\ 	vfs_stdcheckexp,						\ 	vfs_stdvptofh,							\ 	_##name##_init,							\ 	_##name##_uninit,						\ 	vfs_stdextattrctl,						\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_DEPEND(name, pseudofs, 1, 1, 1);
 end_define
 
 begin_endif

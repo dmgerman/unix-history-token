@@ -230,6 +230,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|thread
+modifier|*
+name|thread0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|procsig
@@ -274,15 +282,6 @@ name|int
 name|cmask
 init|=
 name|CMASK
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|user
-modifier|*
-name|proc0paddr
 decl_stmt|;
 end_decl_stmt
 
@@ -1019,12 +1018,34 @@ specifier|register
 name|unsigned
 name|i
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
+comment|/* 	 * This assumes the proc0 struct has already been linked 	 * using proc_linkup() in the machine specific initialisation 	 * e.g. i386_init() 	 */
 name|p
 operator|=
 operator|&
 name|proc0
+expr_stmt|;
+name|td
+operator|=
+name|thread0
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_mtx
+argument_list|,
+literal|"process lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize magic number. 	 */
 name|p
@@ -1168,13 +1189,17 @@ name|SRUN
 expr_stmt|;
 name|p
 operator|->
-name|p_nice
+name|p_ksegrp
+operator|.
+name|kg_nice
 operator|=
 name|NZERO
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_ksegrp
+operator|.
+name|kg_pri
 operator|.
 name|pri_class
 operator|=
@@ -1182,7 +1207,9 @@ name|PRI_TIMESHARE
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_ksegrp
+operator|.
+name|kg_pri
 operator|.
 name|pri_level
 operator|=
@@ -1190,7 +1217,9 @@ name|PVM
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_ksegrp
+operator|.
+name|kg_pri
 operator|.
 name|pri_native
 operator|=
@@ -1198,7 +1227,9 @@ name|PUSER
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_ksegrp
+operator|.
+name|kg_pri
 operator|.
 name|pri_user
 operator|=
@@ -1243,9 +1274,9 @@ expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&
-name|p
+name|td
 operator|->
-name|p_slpcallout
+name|td_slpcallout
 argument_list|,
 literal|1
 argument_list|)
@@ -1585,13 +1616,6 @@ operator|&
 name|vmspace0
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_addr
-operator|=
-name|proc0paddr
-expr_stmt|;
-comment|/* XXX */
 comment|/* 	 * We continue to place resource usage info and signal 	 * actions in the user struct so they're pageable. 	 */
 name|p
 operator|->
@@ -1600,7 +1624,7 @@ operator|=
 operator|&
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|->
 name|u_stats
 expr_stmt|;
@@ -1611,7 +1635,7 @@ operator|=
 operator|&
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|->
 name|u_sigacts
 expr_stmt|;
@@ -1883,6 +1907,11 @@ modifier|*
 name|arg1
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
@@ -1895,9 +1924,15 @@ argument_list|)
 expr_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|p
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 comment|/* Get the vnode for '/'.  Set p->p_fd->fd_cdir to reference it. */
 if|if
@@ -1959,7 +1994,7 @@ name|rootvnode
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Need just enough stack to hold the faked-up "execve()" arguments. 	 */
@@ -2464,7 +2499,7 @@ name|error
 operator|=
 name|execve
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|args
@@ -2545,8 +2580,7 @@ name|error
 operator|=
 name|fork1
 argument_list|(
-operator|&
-name|proc0
+name|thread0
 argument_list|,
 name|RFFDG
 operator||
@@ -2605,7 +2639,10 @@ argument_list|)
 expr_stmt|;
 name|cpu_set_fork_handler
 argument_list|(
+operator|&
 name|initproc
+operator|->
+name|p_thread
 argument_list|,
 name|start_init
 argument_list|,
@@ -2660,9 +2697,13 @@ name|SRUN
 expr_stmt|;
 name|setrunqueue
 argument_list|(
+operator|&
 name|initproc
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 name|mtx_unlock_spin
 argument_list|(
 operator|&

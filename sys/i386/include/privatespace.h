@@ -40,16 +40,16 @@ name|globaldata
 argument_list|)
 index|]
 decl_stmt|;
-comment|/* page 1 - idle stack (UPAGES pages) */
+comment|/* page 1 - idle stack (KSTACK_PAGES pages) */
 name|char
-name|idlestack
+name|idlekstack
 index|[
-name|UPAGES
+name|KSTACK_PAGES
 operator|*
 name|PAGE_SIZE
 index|]
 decl_stmt|;
-comment|/* page 1+UPAGES... */
+comment|/* page 1+KSTACK_PAGES... */
 block|}
 struct|;
 end_struct

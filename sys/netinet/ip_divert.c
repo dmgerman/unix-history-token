@@ -1180,9 +1180,9 @@ name|int
 name|proto
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1213,14 +1213,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|td
 operator|&&
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1261,7 +1261,7 @@ argument_list|,
 operator|&
 name|divcbinfo
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1439,9 +1439,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1507,7 +1507,7 @@ name|inp
 argument_list|,
 name|nam
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1573,9 +1573,9 @@ modifier|*
 name|control
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 comment|/* Packet must have a header (but that's about it) */

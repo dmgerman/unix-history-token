@@ -55,7 +55,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|mdproc
+name|mdthread
 block|{
 name|u_long
 name|md_flags
@@ -174,6 +174,13 @@ directive|define
 name|MDP_UAC_MASK
 value|(MDP_UAC_NOPRINT | MDP_UAC_NOFIX | MDP_UAC_SIGBUS)
 end_define
+
+begin_struct
+struct|struct
+name|mdproc
+block|{ }
+struct|;
+end_struct
 
 begin_endif
 endif|#

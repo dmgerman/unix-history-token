@@ -68,7 +68,7 @@ name|int
 name|ptrace_clear_single_step
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 name|_p
 parameter_list|)

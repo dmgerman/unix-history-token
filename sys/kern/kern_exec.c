@@ -419,14 +419,14 @@ begin_function
 name|int
 name|execve
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 specifier|register
 name|struct
@@ -435,6 +435,15 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|nameidata
 name|nd
@@ -495,6 +504,9 @@ operator|=
 operator|&
 name|image_params
 expr_stmt|;
+comment|/* XXXKSE */
+comment|/* !!!!!!!! we need abort all the other threads of this process before we */
+comment|/* proceed beyond his point! */
 comment|/* 	 * Initialize part of the common data 	 */
 name|imgp
 operator|->
@@ -677,7 +689,7 @@ name|uap
 operator|->
 name|fname
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|interpret
@@ -751,7 +763,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -773,7 +785,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -939,7 +951,7 @@ name|imgp
 operator|->
 name|interpreter_name
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1022,12 +1034,12 @@ name|tmp
 operator|=
 name|fdcopy
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|fdfree
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|p
@@ -1118,7 +1130,7 @@ operator|==
 operator|&
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|->
 name|u_sigacts
 condition|)
@@ -1129,7 +1141,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|->
 name|u_sigacts
 operator|=
@@ -1145,7 +1157,7 @@ operator|=
 operator|&
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|->
 name|u_sigacts
 expr_stmt|;
@@ -1159,7 +1171,7 @@ expr_stmt|;
 comment|/* close files on exec */
 name|fdcloseexec
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* reset caught signals */
@@ -1419,7 +1431,7 @@ argument_list|)
 expr_stmt|;
 name|setugidsafety
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1642,7 +1654,7 @@ expr_stmt|;
 comment|/* Set values passed into the program in registers. */
 name|setregs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|imgp
 operator|->
@@ -1867,7 +1879,7 @@ block|{
 comment|/* sorry, no more process anymore. exit gracefully */
 name|exit1
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|W_EXITCODE
 argument_list|(
@@ -2506,7 +2518,9 @@ name|imgp
 operator|->
 name|proc
 operator|->
-name|p_md
+name|p_thread
+operator|.
+name|td_md
 operator|.
 name|md_bspstore
 operator|=
@@ -3346,9 +3360,10 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|error
@@ -3425,9 +3440,10 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|error
@@ -3462,9 +3478,10 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 if|if
 condition|(
 name|error

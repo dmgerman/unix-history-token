@@ -69,28 +69,25 @@ name|gd_prvspace
 decl_stmt|;
 comment|/* self-reference */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|gd_curproc
+name|gd_curthread
 decl_stmt|;
-comment|/* current process */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|gd_idleproc
-decl_stmt|;
-comment|/* idle process */
-name|struct
-name|proc
-modifier|*
-name|gd_npxproc
+name|gd_npxthread
 decl_stmt|;
 name|struct
 name|pcb
 modifier|*
 name|gd_curpcb
 decl_stmt|;
-comment|/* current pcb */
+name|struct
+name|thread
+modifier|*
+name|gd_idlethread
+decl_stmt|;
 name|struct
 name|timeval
 name|gd_switchtime
@@ -117,11 +114,9 @@ decl_stmt|;
 name|u_int
 name|gd_cpuid
 decl_stmt|;
-comment|/* this cpu number */
 name|u_int
 name|gd_other_cpus
 decl_stmt|;
-comment|/* all other cpus */
 name|SLIST_ENTRY
 argument_list|(
 argument|globaldata

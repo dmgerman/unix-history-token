@@ -27,6 +27,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Definitions for sysctl call.  The sysctl call uses a hierarchical name  * for objects that can be examined or modified.  The name is expressed as  * a sequence of integers.  Like a file path name, the meaning of each  * component depends on its place in the hierarchy.  The top-level and kern  * identifiers are defined here, and other identifiers are defined in the  * respective subsystem header files.  */
 end_comment
@@ -305,6 +311,7 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+comment|/* used for access checking */
 name|int
 name|lock
 decl_stmt|;
@@ -2835,9 +2842,9 @@ name|int
 name|kernel_sysctl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 modifier|*
@@ -2873,9 +2880,9 @@ name|int
 name|kernel_sysctlbyname
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|char
 modifier|*
@@ -2908,9 +2915,9 @@ name|int
 name|userland_sysctl
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 modifier|*

@@ -1053,9 +1053,9 @@ name|int
 name|ntp_adjtime
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ntp_adjtime_args
@@ -1134,9 +1134,9 @@ name|modes
 condition|)
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1739,9 +1739,9 @@ operator|)
 operator|)
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -1751,9 +1751,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]

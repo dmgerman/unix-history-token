@@ -771,11 +771,11 @@ name|sopt_valsize
 decl_stmt|;
 comment|/* (almost) fifth arg of [gs]etsockopt */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|sopt_p
+name|sopt_td
 decl_stmt|;
-comment|/* calling process or null if kernel */
+comment|/* calling thread or null if kernel */
 block|}
 struct|;
 end_struct
@@ -1023,9 +1023,9 @@ name|int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1056,9 +1056,9 @@ name|int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1076,9 +1076,9 @@ operator|*
 name|fp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1102,9 +1102,9 @@ name|caddr_t
 name|data
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1130,9 +1130,9 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1155,9 +1155,9 @@ operator|*
 name|ub
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1545,9 +1545,9 @@ operator|*
 name|so
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1671,9 +1671,9 @@ operator|*
 name|nam
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1741,9 +1741,9 @@ operator|*
 name|nam
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1791,9 +1791,9 @@ name|int
 name|proto
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1954,9 +1954,9 @@ name|int
 name|backlog
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2016,9 +2016,9 @@ name|int
 name|connstatus
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2156,9 +2156,9 @@ operator|*
 name|cred
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2277,9 +2277,9 @@ name|int
 name|flags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;

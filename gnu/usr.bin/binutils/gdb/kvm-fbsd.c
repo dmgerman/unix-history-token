@@ -1041,6 +1041,11 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 name|CORE_ADDR
 name|addr
 init|=
@@ -1048,9 +1053,35 @@ name|pcpu
 operator|+
 name|PCPU_OFFSET
 argument_list|(
-name|curproc
+name|curthread
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|kvread
+argument_list|(
+name|addr
+argument_list|,
+operator|&
+name|td
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"cannot read thread pointer at %x\n"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+name|addr
+operator|=
+operator|(
+name|CORE_ADDR
+operator|)
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 if|if
 condition|(
 name|kvread
@@ -1706,9 +1737,9 @@ name|regno
 decl_stmt|;
 block|{
 name|struct
-name|user
+name|pcb
 modifier|*
-name|uaddr
+name|pcbaddr
 decl_stmt|;
 comment|/* find the pcb for the current process */
 if|if
@@ -1722,12 +1753,15 @@ argument_list|(
 operator|&
 name|cur_proc
 operator|->
-name|p_addr
+name|p_thread
+operator|.
+name|td_pcb
 argument_list|,
 operator|&
-name|uaddr
+name|pcbaddr
 argument_list|)
 condition|)
+comment|/* XXXKSE */
 name|error
 argument_list|(
 literal|"cannot read u area ptr for proc at %#x"
@@ -1744,10 +1778,7 @@ argument_list|,
 operator|(
 name|CORE_ADDR
 operator|)
-operator|&
-name|uaddr
-operator|->
-name|u_pcb
+name|pcbaddr
 argument_list|)
 operator|<
 literal|0
@@ -1756,10 +1787,7 @@ name|error
 argument_list|(
 literal|"cannot read pcb at %#x"
 argument_list|,
-operator|&
-name|uaddr
-operator|->
-name|u_pcb
+name|pcbaddr
 argument_list|)
 expr_stmt|;
 block|}

@@ -3925,6 +3925,13 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* reject unsupported modes */
+define|#
+directive|define
+name|DOTHIS
+value|1
+ifdef|#
+directive|ifdef
+name|DOTHIS
 if|#
 directive|if
 literal|0
@@ -3986,6 +3993,9 @@ continue|continue;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* DOTHIS */
 comment|/* expand the array if necessary */
 if|if
 condition|(

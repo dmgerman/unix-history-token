@@ -308,11 +308,11 @@ name|lowervp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -349,7 +349,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -395,7 +395,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 			 * We need vget for the VXLOCK 			 * stuff, but we don't want to lock 			 * the lower node. 			 */
@@ -409,7 +409,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_CANRECURSE
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -430,7 +430,7 @@ name|lowervp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -449,7 +449,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -491,11 +491,11 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -661,7 +661,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vp
@@ -682,7 +682,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_THISLAYER
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -724,7 +724,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

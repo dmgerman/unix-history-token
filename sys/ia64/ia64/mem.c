@@ -274,9 +274,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 switch|switch
@@ -302,7 +302,7 @@ name|flags
 argument_list|,
 name|fmt
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 endif|#
@@ -333,9 +333,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 switch|switch
@@ -385,7 +385,7 @@ name|flags
 argument_list|,
 name|fmt
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 else|#
@@ -871,9 +871,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 switch|switch
@@ -901,7 +901,7 @@ name|cmdarg
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 endif|#

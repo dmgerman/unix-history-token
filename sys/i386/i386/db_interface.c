@@ -1249,14 +1249,14 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"curproc  = "
+literal|"curthread  = "
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|gd
 operator|->
-name|gd_curproc
+name|gd_curthread
 operator|!=
 name|NULL
 condition|)
@@ -1266,17 +1266,21 @@ literal|"%p: pid %d \"%s\"\n"
 argument_list|,
 name|gd
 operator|->
-name|gd_curproc
+name|gd_curthread
 argument_list|,
 name|gd
 operator|->
-name|gd_curproc
+name|gd_curthread
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
 name|gd
 operator|->
-name|gd_curproc
+name|gd_curthread
+operator|->
+name|td_proc
 operator|->
 name|p_comm
 argument_list|)
@@ -1298,14 +1302,14 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"npxproc  = "
+literal|"npxthread  = "
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|gd
 operator|->
-name|gd_npxproc
+name|gd_npxthread
 operator|!=
 name|NULL
 condition|)
@@ -1315,17 +1319,21 @@ literal|"%p: pid %d \"%s\"\n"
 argument_list|,
 name|gd
 operator|->
-name|gd_npxproc
+name|gd_npxthread
 argument_list|,
 name|gd
 operator|->
-name|gd_npxproc
+name|gd_npxthread
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
 name|gd
 operator|->
-name|gd_npxproc
+name|gd_npxthread
+operator|->
+name|td_proc
 operator|->
 name|p_comm
 argument_list|)
@@ -1338,14 +1346,14 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"idleproc = "
+literal|"idlethread = "
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|gd
 operator|->
-name|gd_idleproc
+name|gd_idlethread
 operator|!=
 name|NULL
 condition|)
@@ -1355,17 +1363,21 @@ literal|"%p: pid %d \"%s\"\n"
 argument_list|,
 name|gd
 operator|->
-name|gd_idleproc
+name|gd_idlethread
 argument_list|,
 name|gd
 operator|->
-name|gd_idleproc
+name|gd_idlethread
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
 name|gd
 operator|->
-name|gd_idleproc
+name|gd_idlethread
+operator|->
+name|td_proc
 operator|->
 name|p_comm
 argument_list|)

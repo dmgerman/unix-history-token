@@ -497,7 +497,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|vm_object_page_clean
@@ -523,7 +523,7 @@ name|handle
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -694,7 +694,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|vm_object_page_clean
@@ -720,7 +720,7 @@ name|handle
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 goto|goto

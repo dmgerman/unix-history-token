@@ -25,6 +25,12 @@ begin_comment
 comment|/* for struct klist */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Used to maintain information about processes that wish to be  * notified when I/O becomes possible.  */
 end_comment
@@ -37,6 +43,12 @@ name|pid_t
 name|si_pid
 decl_stmt|;
 comment|/* process to be notified */
+name|struct
+name|thread
+modifier|*
+name|si_thread
+decl_stmt|;
+comment|/* thread in that process XXXKSE */
 name|struct
 name|klist
 name|si_note
@@ -69,7 +81,7 @@ end_ifdef
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -80,7 +92,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|selector
 operator|,

@@ -150,7 +150,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {										\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;		\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (_el->el_flags& EHE_INITTED) {						\ 	lockmgr(&_el->el_lock, LK_EXCLUSIVE, NULL, CURPROC);			\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	lockmgr(&_el->el_lock, LK_RELEASE, NULL, CURPROC);			\     }										\ } while (0)
+value|do {										\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;		\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (_el->el_flags& EHE_INITTED) {						\ 	lockmgr(&_el->el_lock, LK_EXCLUSIVE, NULL, curthread);			\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	lockmgr(&_el->el_lock, LK_RELEASE, NULL, curthread);			\     }										\ } while (0)
 end_define
 
 begin_define
@@ -211,7 +211,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {										\     struct eventhandler_list *_el;						\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (((_el = eventhandler_find_list(#name)) != NULL)&& 			\ 	(_el->el_flags& EHE_INITTED)) {					\ 	lockmgr(&_el->el_lock, LK_EXCLUSIVE, NULL, CURPROC);			\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	lockmgr(&_el->el_lock, LK_RELEASE, NULL, CURPROC);			\     }										\ } while (0)
+value|do {										\     struct eventhandler_list *_el;						\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (((_el = eventhandler_find_list(#name)) != NULL)&& 			\ 	(_el->el_flags& EHE_INITTED)) {					\ 	lockmgr(&_el->el_lock, LK_EXCLUSIVE, NULL, curthread);			\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	lockmgr(&_el->el_lock, LK_RELEASE, NULL, curthread);			\     }										\ } while (0)
 end_define
 
 begin_define

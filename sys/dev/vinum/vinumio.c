@@ -70,9 +70,9 @@ modifier|*
 name|drive
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|int
 name|verbose
@@ -1025,7 +1025,7 @@ name|open_drive
 argument_list|(
 name|drive
 argument_list|,
-name|curproc
+name|curthread
 argument_list|,
 name|verbose
 argument_list|)
@@ -1074,7 +1074,7 @@ name|partinfo
 operator|,
 name|FREAD
 operator|,
-name|curproc
+name|curthread
 operator|)
 expr_stmt|;
 if|if
@@ -3214,7 +3214,7 @@ name|wlabel_on
 operator|,
 name|FWRITE
 operator|,
-name|curproc
+name|curthread
 operator|)
 expr_stmt|;
 if|if
@@ -3322,7 +3322,7 @@ name|wlabel_on
 operator|,
 name|FWRITE
 operator|,
-name|curproc
+name|curthread
 operator|)
 expr_stmt|;
 name|unlockdrive

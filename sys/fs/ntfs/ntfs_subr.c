@@ -1127,7 +1127,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|VG_EXT
 argument_list|,
-name|curproc
+name|curthread
 argument_list|,
 operator|&
 name|newvp

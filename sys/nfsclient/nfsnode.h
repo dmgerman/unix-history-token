@@ -528,9 +528,9 @@ modifier|*
 name|np
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 return|return
@@ -550,7 +550,7 @@ name|LK_SLEEPFAIL
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -569,9 +569,9 @@ modifier|*
 name|np
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 operator|(
@@ -588,7 +588,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}

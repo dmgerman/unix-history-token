@@ -77,7 +77,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_ioctl_args
-comment|/* { 		struct vnode *a_vp; 		u_long a_command; 		caddr_t a_data; 		int fflag; 		struct ucred *cred; 		struct proc *p; 	} */
+comment|/* { 		struct vnode *a_vp; 		u_long a_command; 		caddr_t a_data; 		int fflag; 		struct ucred *cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -86,13 +86,13 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|ucred
@@ -176,7 +176,7 @@ name|ncp_conn_lock
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|,
@@ -194,7 +194,7 @@ name|ncp_conn_gethandle
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
 operator|&
 name|hp
@@ -204,7 +204,7 @@ name|ncp_conn_unlock
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -240,7 +240,7 @@ name|VEXEC
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -269,7 +269,7 @@ name|fap
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 name|ap
 operator|->
@@ -312,7 +312,7 @@ name|VEXEC
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)

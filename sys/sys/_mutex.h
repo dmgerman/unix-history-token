@@ -45,7 +45,7 @@ comment|/* saved flags (for spin locks) */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|proc
+argument|thread
 argument_list|)
 name|mtx_blocked
 expr_stmt|;

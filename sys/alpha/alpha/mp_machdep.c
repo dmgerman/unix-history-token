@@ -523,11 +523,11 @@ expr_stmt|;
 comment|/*          * Set curproc to our per-cpu idleproc so that mutexes have          * something unique to lock with.          */
 name|PCPU_SET
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|PCPU_GET
 argument_list|(
-name|idleproc
+name|idlethread
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -568,9 +568,9 @@ name|alpha_mb
 argument_list|()
 expr_stmt|;
 comment|/* 	 * XXX: doesn't idleproc already have a pcb from when it was 	 * kthread_create'd? 	 * 	 * cache idleproc's physical address. 	 */
-name|curproc
+name|curthread
 operator|->
-name|p_md
+name|td_md
 operator|.
 name|md_pcbpaddr
 operator|=
@@ -585,9 +585,9 @@ name|idlepcbphys
 argument_list|)
 expr_stmt|;
 comment|/* 	 * and make idleproc's trapframe pointer point to its 	 * stack pointer for sanity. 	 */
-name|curproc
+name|curthread
 operator|->
-name|p_frame
+name|td_frame
 operator|=
 operator|(
 expr|struct
@@ -815,7 +815,11 @@ name|sz
 operator|=
 name|round_page
 argument_list|(
-name|UPAGES
+operator|(
+name|UAREA_PAGES
+operator|+
+name|KSTACK_PAGES
+operator|)
 operator|*
 name|PAGE_SIZE
 argument_list|)

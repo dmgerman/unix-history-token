@@ -360,21 +360,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Each time the real-time timer fires, this function is called on all CPUs  * with each CPU passing in its curproc as the first argument.  If possible  * a nice optimization in the future would be to allow the CPU receiving the  * actual real-time timer interrupt to call this function on behalf of the  * other CPUs rather than sending an IPI to all other CPUs so that they  * can call this function.  Note that hardclock() calls hardclock_process()  * for the CPU receiving the timer interrupt, so only the other CPUs in the  * system need to call this function (or have it called on their behalf.  */
+comment|/*  * Each time the real-time timer fires, this function is called on all CPUs  * with each CPU passing in its curthread as the first argument.  If possible  * a nice optimization in the future would be to allow the CPU receiving the  * actual real-time timer interrupt to call this function on behalf of the  * other CPUs rather than sending an IPI to all other CPUs so that they  * can call this function.  Note that hardclock() calls hardclock_process()  * for the CPU receiving the timer interrupt, so only the other CPUs in the  * system need to call this function (or have it called on their behalf.  */
 end_comment
 
 begin_function
 name|void
 name|hardclock_process
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|user
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|user
@@ -385,6 +385,15 @@ name|pstats
 modifier|*
 name|pstats
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 comment|/* 	 * Run current process's virtual and profile time, as needed. 	 */
 name|mtx_assert
 argument_list|(
@@ -394,6 +403,19 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+condition|)
+block|{
+comment|/* XXXKSE What to do? */
+block|}
+else|else
+block|{
 name|pstats
 operator|=
 name|p
@@ -432,14 +454,22 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|p
 operator|->
 name|p_sflag
 operator||=
 name|PS_ALRMPEND
-operator||
-name|PS_ASTPENDING
 expr_stmt|;
+name|td
+operator|->
+name|td_kse
+operator|->
+name|ke_flags
+operator||=
+name|KEF_ASTPENDING
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|timevalisset
@@ -470,14 +500,23 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|p
 operator|->
 name|p_sflag
 operator||=
 name|PS_PROFPEND
-operator||
-name|PS_ASTPENDING
 expr_stmt|;
+name|td
+operator|->
+name|td_kse
+operator|->
+name|ke_flags
+operator||=
+name|KEF_ASTPENDING
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -518,7 +557,7 @@ argument_list|)
 expr_stmt|;
 name|hardclock_process
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|CLKF_USERMODE
 argument_list|(
@@ -976,23 +1015,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * p->p_uticks, p->p_sticks, p->p_iticks, and p->p_estcpu.  This function  * should be called by all CPUs in the system for each statistics clock  * interrupt.  See the description of hardclock_process for more detail on  * this function's relationship to statclock.  */
+comment|/*  * Do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * ke->ke_uticks, p->p_sticks, p->p_iticks, and p->p_estcpu.  This function  * should be called by all CPUs in the system for each statistics clock  * interrupt.  See the description of hardclock_process for more detail on  * this function's relationship to statclock.  */
 end_comment
 
 begin_function
 name|void
 name|statclock_process
 parameter_list|(
-name|p
+name|ke
 parameter_list|,
 name|pc
 parameter_list|,
 name|user
 parameter_list|)
 name|struct
-name|proc
+name|kse
 modifier|*
-name|p
+name|ke
 decl_stmt|;
 name|register_t
 name|pc
@@ -1032,14 +1071,35 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|ke
+operator|->
+name|ke_proc
+decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|ke
+operator|->
+name|ke_thread
+decl_stmt|;
+comment|/* current thread */
 name|KASSERT
 argument_list|(
-name|p
+name|ke
 operator|==
-name|curproc
+name|curthread
+operator|->
+name|td_kse
 argument_list|,
 operator|(
-literal|"statclock_process: p != curproc"
+literal|"statclock_process: td != curthread"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1067,7 +1127,7 @@ name|PS_PROFIL
 condition|)
 name|addupc_intr
 argument_list|(
-name|p
+name|ke
 argument_list|,
 name|pc
 argument_list|,
@@ -1082,16 +1142,18 @@ name|psdiv
 condition|)
 return|return;
 comment|/* 		 * Charge the time as appropriate. 		 */
-name|p
+name|ke
 operator|->
-name|p_uticks
+name|ke_uticks
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|ke
 operator|->
-name|p_nice
+name|ke_ksegrp
+operator|->
+name|kg_nice
 operator|>
 name|NZERO
 condition|)
@@ -1181,23 +1243,23 @@ comment|/* 		 * Came from kernel mode, so we were: 		 * - handling an interrupt,
 if|if
 condition|(
 operator|(
-name|p
+name|td
 operator|->
-name|p_ithd
+name|td_ithd
 operator|!=
 name|NULL
 operator|)
 operator|||
-name|p
+name|td
 operator|->
-name|p_intr_nesting_level
+name|td_intr_nesting_level
 operator|>=
 literal|2
 condition|)
 block|{
-name|p
+name|ke
 operator|->
-name|p_iticks
+name|ke_iticks
 operator|++
 expr_stmt|;
 name|cp_time
@@ -1209,9 +1271,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|p
+name|ke
 operator|->
-name|p_sticks
+name|ke_sticks
 operator|++
 expr_stmt|;
 if|if
@@ -1220,8 +1282,10 @@ name|p
 operator|!=
 name|PCPU_GET
 argument_list|(
-name|idleproc
+name|idlethread
 argument_list|)
+operator|->
+name|td_proc
 condition|)
 name|cp_time
 index|[
@@ -1240,7 +1304,9 @@ block|}
 block|}
 name|schedclock
 argument_list|(
-name|p
+name|ke
+operator|->
+name|ke_thread
 argument_list|)
 expr_stmt|;
 comment|/* Update resource usage integrals and maximums. */
@@ -1340,7 +1406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Statistics clock.  Grab profile sample, and if divider reaches 0,  * do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * p->p_uticks, p->p_sticks, p->p_iticks, and p->p_estcpu.  */
+comment|/*  * Statistics clock.  Grab profile sample, and if divider reaches 0,  * do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * ke->ke_uticks, p->p_sticks, p->p_iticks, and p->p_estcpu.  */
 end_comment
 
 begin_function
@@ -1382,7 +1448,9 @@ name|psdiv
 expr_stmt|;
 name|statclock_process
 argument_list|(
-name|curproc
+name|curthread
+operator|->
+name|td_kse
 argument_list|,
 name|CLKF_PC
 argument_list|(

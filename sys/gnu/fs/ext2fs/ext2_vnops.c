@@ -929,7 +929,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1531,13 +1531,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|inode
@@ -1603,7 +1603,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -1727,7 +1727,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|out2
@@ -1814,13 +1814,13 @@ operator|->
 name|a_fcnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|fcnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|inode
@@ -2195,7 +2195,7 @@ name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2233,7 +2233,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2275,7 +2275,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2350,7 +2350,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2439,7 +2439,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2461,7 +2461,7 @@ name|cn_cred
 argument_list|,
 name|tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -2470,7 +2470,7 @@ name|fvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2975,7 +2975,7 @@ name|cn_cred
 argument_list|,
 name|tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 block|}
@@ -3166,7 +3166,7 @@ literal|0
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -3276,7 +3276,7 @@ literal|0
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -3398,7 +3398,7 @@ name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -4057,7 +4057,7 @@ literal|0
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -4247,13 +4247,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|inode
@@ -4388,7 +4388,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Truncate inode.  The only stuff left 	 * in the directory is "." and "..".  The 	 * "." reference is inconsequential since 	 * we're quashing it.  The ".." reference 	 * has already been adjusted above.  We've 	 * removed the "." reference and the reference 	 * in the parent directory, but there may be 	 * other hard links so decrement by 2 and 	 * worry about them later. 	 */
@@ -4415,7 +4415,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|cache_purge
@@ -4434,7 +4434,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|out
@@ -4624,7 +4624,7 @@ literal|0
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0

@@ -542,9 +542,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -574,7 +574,7 @@ name|flag
 argument_list|,
 name|fmt
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|sc
@@ -679,9 +679,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 if|if
@@ -703,7 +703,7 @@ name|addr
 argument_list|,
 name|flags
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

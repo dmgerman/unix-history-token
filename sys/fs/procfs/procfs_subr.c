@@ -120,11 +120,11 @@ name|pfs_type
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -201,7 +201,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -832,7 +832,9 @@ name|curp
 init|=
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
+operator|->
+name|td_proc
 decl_stmt|;
 name|struct
 name|pfsnode

@@ -131,9 +131,9 @@ name|int
 name|bd_timedout
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|bd_selproc
+name|bd_selthread
 decl_stmt|;
 comment|/* process that last selected us */
 else|#

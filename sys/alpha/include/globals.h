@@ -82,26 +82,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|CURPROC
-value|PCPU_GET(curproc)
+name|curthread
+value|PCPU_GET(curthread)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CURTHD
-value|PCPU_GET(curproc)
+name|CURPROC
+value|(curthread->td_proc)
 end_define
-
-begin_comment
-comment|/* temporary */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|curproc
-value|PCPU_GET(curproc)
+value|(curthread->td_proc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|curksegrp
+value|(curthread->td_ksegrp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|curkse
+value|(curthread->td_kse)
 end_define
 
 begin_endif

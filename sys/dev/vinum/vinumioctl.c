@@ -122,9 +122,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|unsigned
@@ -1259,11 +1259,15 @@ name|LOG_WARNING
 argument_list|,
 literal|"vinumioctl: invalid ioctl from process %d (%s): %lx\n"
 argument_list|,
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_comm
 argument_list|,

@@ -43,17 +43,17 @@ struct|struct
 name|globaldata
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|gd_curproc
+name|gd_curthread
 decl_stmt|;
-comment|/* current process */
+comment|/* current thread */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|gd_idleproc
+name|gd_idlethread
 decl_stmt|;
-comment|/* idle process */
+comment|/* idle thread */
 name|struct
 name|pcb
 modifier|*

@@ -310,24 +310,520 @@ name|trapframe
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Here we define the four structures used for process information.  *  * The first is the thread. It might be though of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of   * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE  when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *   * It is important to remember that a particular thread structure only  * exists as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should threfore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the uer boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) A process  * might keep a cache of threads available to allow it to quickly  * get one when it needs a new one. There would probably also be a system  * cache of free threads.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*   * The second structure is the Kernel Schedulable Entity. (KSE)  * As long as this is scheduled, it will continue to run any threads that  * are assigned to it or the KSEGRP (see later) until either it runs out  * of runnable threads or CPU.  * It runs on one CPU and is assigned a quantum of time. When a thread is  * blocked, The KSE continues to run and will search for another thread  * in a runnable state amongst those it has. It May decide to return to user  * mode with a new 'empty' thread if there are no runnable threads.  * threads are associated with a KSE for cache reasons, but a sheduled KSE with  * no runnable thread will try take a thread from a sibling KSE before  * surrendering its quantum. In some schemes it gets it's quantum from the KSEG  * and contributes to draining that quantum, along withthe other KSEs in  * the group. (undecided)  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|kse
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * Its KSEs, each of which should be running in a different CPU.  * Priority and total available sheduled quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ksegrp
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/*  * A process is the owner of all system resources allocated to a task  * except CPU quanta.  * All KSEGs under one process see, and have the same access to, these  * resources (e.g. files, memory, sockets, permissions kqueues).  * A process may compete for CPU cycles on the same basis as a  * forked process cluster by spawning several KSEGRPs.   */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/***************  * In pictures:  With a single run queue used by all processors:   RUNQ: --->KSE---KSE--...               SLEEPQ:[]---THREAD---THREAD---THREAD 	   |   /                               []---THREAD 	   KSEG---THREAD--THREAD--THREAD       [] 	                                       []---THREAD---THREAD    (processors run THREADs from the KSEG until they are exhausted or   the KSEG exhausts its quantum)   With PER-CPU run queues: KSEs on the separate run queues directly They would be given priorities calculated from the KSEG.   *  *****************/
+end_comment
+
+begin_comment
+comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  */
+end_comment
+
+begin_struct
+struct|struct
+name|thread
+block|{
+name|struct
+name|proc
+modifier|*
+name|td_proc
+decl_stmt|;
+comment|/* Associated process. */
+name|struct
+name|ksegrp
+modifier|*
+name|td_ksegrp
+decl_stmt|;
+comment|/* Associated KSEG. */
+name|struct
+name|kse
+modifier|*
+name|td_last_kse
+decl_stmt|;
+comment|/* Where it wants to be if possible */
+name|struct
+name|kse
+modifier|*
+name|td_kse
+decl_stmt|;
+comment|/* and is now if running */
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_plist
+expr_stmt|;
+comment|/* All threads in this proc */
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_kglist
+expr_stmt|;
+comment|/* All threads in this ksegrp */
+comment|/* The two queues below should someday be merged */
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_slpq
+expr_stmt|;
+comment|/* (j) Sleep queue. XXXKSE */
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_blkq
+expr_stmt|;
+comment|/* (j) mutex queue. XXXKSE */
+name|TAILQ_ENTRY
+argument_list|(
+argument|thread
+argument_list|)
+name|td_runq
+expr_stmt|;
+comment|/* (j) run queue(s). XXXKSE */
+define|#
+directive|define
+name|td_startzero
+value|td_flags
+name|int
+name|td_flags
+decl_stmt|;
+comment|/* (c) P_* flags. */
+name|int
+name|td_dupfd
+decl_stmt|;
+comment|/* (c) ret value from fdopen. XXX */
+name|void
+modifier|*
+name|td_wchan
+decl_stmt|;
+comment|/* (j) Sleep address. */
+specifier|const
+name|char
+modifier|*
+name|td_wmesg
+decl_stmt|;
+comment|/* (j) Reason for sleep. */
+name|u_char
+name|td_lastcpu
+decl_stmt|;
+comment|/* (j) Last cpu we were on. */
+name|short
+name|td_locks
+decl_stmt|;
+comment|/* (*) DEBUG: lockmgr count of locks */
+name|struct
+name|mtx
+modifier|*
+name|td_blocked
+decl_stmt|;
+comment|/* (j) Mutex process is blocked on. */
+name|struct
+name|ithd
+modifier|*
+name|td_ithd
+decl_stmt|;
+comment|/* (b) For interrupt threads only. */
+specifier|const
+name|char
+modifier|*
+name|td_mtxname
+decl_stmt|;
+comment|/* (j) Name of mutex blocked on. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|mtx
+argument_list|)
+name|td_contested
+expr_stmt|;
+comment|/* (j) Contested locks. */
+name|struct
+name|lock_list_entry
+modifier|*
+name|td_sleeplocks
+decl_stmt|;
+comment|/* (k) Held sleep locks. */
+name|int
+name|td_intr_nesting_level
+decl_stmt|;
+comment|/* (k) Interrupt recursion. */
+define|#
+directive|define
+name|td_endzero
+value|td_md
+define|#
+directive|define
+name|td_startcopy
+value|td_endzero
+comment|/* XXXKSE p_md is in the "on your own" section in old struct proc */
+name|struct
+name|mdthread
+name|td_md
+decl_stmt|;
+comment|/* (k) Any machine-dependent fields. */
+name|register_t
+name|td_retval
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* (k) Syscall aux returns. */
+define|#
+directive|define
+name|td_endcopy
+value|td_pcb
+name|struct
+name|pcb
+modifier|*
+name|td_pcb
+decl_stmt|;
+comment|/* (k) Kv addr of pcb and kstack. */
+name|struct
+name|callout
+name|td_slpcallout
+decl_stmt|;
+comment|/* (h) Callout for sleep. */
+name|struct
+name|trapframe
+modifier|*
+name|td_frame
+decl_stmt|;
+comment|/* (k) */
+name|struct
+name|vm_object
+modifier|*
+name|td_kstack_obj
+decl_stmt|;
+comment|/* (a) kstack object. */
+name|vm_offset_t
+name|td_kstack
+decl_stmt|;
+comment|/* kstack mapped address */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TDF_ONRUNQ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* This KE is on a run queue */
+end_comment
+
+begin_comment
+comment|/*  * The schedulable entity that can be given a context to run.  * A process may have several of these. Probably one per processor  * but posibly a few more. In this universe they are grouped  * with a KSEG that contains the priority and niceness  * for the group.  */
+end_comment
+
+begin_struct
+struct|struct
+name|kse
+block|{
+name|struct
+name|proc
+modifier|*
+name|ke_proc
+decl_stmt|;
+comment|/* Associated process. */
+name|struct
+name|ksegrp
+modifier|*
+name|ke_ksegrp
+decl_stmt|;
+comment|/* Associated KSEG. */
+name|struct
+name|thread
+modifier|*
+name|ke_thread
+decl_stmt|;
+comment|/* Associated thread, if running. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|kse
+argument_list|)
+name|ke_kglist
+expr_stmt|;
+comment|/* Queue of all KSEs in ke_ksegrp. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|kse
+argument_list|)
+name|ke_kgrlist
+expr_stmt|;
+comment|/* Queue of all KSEs in this state. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|kse
+argument_list|)
+name|ke_procq
+expr_stmt|;
+comment|/* (j) Run queue. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|ke_runq
+expr_stmt|;
+comment|/* (td_runq) RUNNABLE bound to KSE. */
+define|#
+directive|define
+name|ke_startzero
+value|ke_flags
+name|int
+name|ke_flags
+decl_stmt|;
+comment|/* (c) P_* flags. */
+comment|/*u_int		ke_estcpu; */
+comment|/* (j) Time averaged val of cpticks. */
+name|int
+name|ke_cpticks
+decl_stmt|;
+comment|/* (j) Ticks of cpu time. */
+name|fixpt_t
+name|ke_pctcpu
+decl_stmt|;
+comment|/* (j) %cpu during p_swtime. */
+name|u_int64_t
+name|ke_uu
+decl_stmt|;
+comment|/* (j) Previous user time in usec. */
+name|u_int64_t
+name|ke_su
+decl_stmt|;
+comment|/* (j) Previous system time in usec. */
+name|u_int64_t
+name|ke_iu
+decl_stmt|;
+comment|/* (j) Previous intr time in usec. */
+name|u_int64_t
+name|ke_uticks
+decl_stmt|;
+comment|/* (j) Statclock hits in user mode. */
+name|u_int64_t
+name|ke_sticks
+decl_stmt|;
+comment|/* (j) Statclock hits in system mode. */
+name|u_int64_t
+name|ke_iticks
+decl_stmt|;
+comment|/* (j) Statclock hits in intr. */
+name|u_char
+name|ke_oncpu
+decl_stmt|;
+comment|/* (j) Which cpu we are on. */
+name|u_int
+name|ke_slptime
+decl_stmt|;
+comment|/* (j) Time since last idle. */
+name|char
+name|ke_rqindex
+decl_stmt|;
+comment|/* (j) Run queue index. */
+define|#
+directive|define
+name|ke_endzero
+value|ke_priority
+define|#
+directive|define
+name|ke_startcopy
+value|ke_endzero
+name|u_char
+name|ke_priority
+decl_stmt|;
+comment|/* (j) Process priority. */
+name|u_char
+name|ke_usrpri
+decl_stmt|;
+comment|/* (j) User pri from cpu& nice. */
+define|#
+directive|define
+name|ke_endcopy
+value|ke_end
+name|int
+name|ke_end
+decl_stmt|;
+comment|/* dummy entry */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Kernel-scheduled entity group (KSEG).  The scheduler considers each KSEG to  * be an indivisible unit from a time-sharing perspective, though each KSEG may  * contain multiple KSEs.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ksegrp
+block|{
+name|struct
+name|proc
+modifier|*
+name|kg_proc
+decl_stmt|;
+comment|/* Process that contains this KSEG. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|ksegrp
+argument_list|)
+name|kg_ksegrp
+expr_stmt|;
+comment|/* Queue of KSEGs in kg_proc. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kse
+argument_list|)
+name|kg_kseq
+expr_stmt|;
+comment|/* (ke_kglist) All KSEs */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kse
+argument_list|)
+name|kg_rq
+expr_stmt|;
+comment|/* (ke_kgrlist) Runnable KSEs */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kse
+argument_list|)
+name|kg_iq
+expr_stmt|;
+comment|/* (ke_kgrlist) Idle KSEs */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|kg_threads
+expr_stmt|;
+comment|/* (td_kglist) All threads. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|kg_runq
+expr_stmt|;
+comment|/* (td_runq)unbound RUNNABLE threads */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|kg_slpq
+expr_stmt|;
+comment|/* (td_runq)NONRUNNABLE threads. */
+define|#
+directive|define
+name|kg_startzero
+value|kg_estcpu
+name|u_int
+name|kg_slptime
+decl_stmt|;
+comment|/* (j) how long completely blocked. */
+name|u_int
+name|kg_estcpu
+decl_stmt|;
+comment|/* sum of the same field in kses */
+define|#
+directive|define
+name|kg_endzero
+value|kg_pri
+define|#
+directive|define
+name|kg_startcopy
+value|kg_endzero
+name|struct
+name|priority
+name|kg_pri
+decl_stmt|;
+comment|/* (j) Process priority. */
+name|char
+name|kg_nice
+decl_stmt|;
+comment|/* (j?/k?) Process "nice" value. */
+name|struct
+name|rtprio
+name|kg_rtprio
+decl_stmt|;
+comment|/* (j) Realtime priority. */
+define|#
+directive|define
+name|kg_endcopy
+value|kg_runnable
+name|int
+name|kg_runnable
+decl_stmt|;
+comment|/* # runnable threads on queue */
+name|int
+name|kg_runq_kses
+decl_stmt|;
+comment|/* # kse's on runq. */
+name|int
+name|kg_kses
+decl_stmt|;
+comment|/* # kse's in group. */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The old fashionned process. May have multiple threads, KSEGRPs  * and KSEs. Starts off with a single embedded KSEGRP, KSE and THREAD.  */
+end_comment
+
 begin_struct
 struct|struct
 name|proc
 block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|proc
-argument_list|)
-name|p_procq
-expr_stmt|;
-comment|/* (j) Run/mutex queue. */
-name|TAILQ_ENTRY
-argument_list|(
-argument|proc
-argument_list|)
-name|p_slpq
-expr_stmt|;
-comment|/* (j) Sleep queue. */
 name|LIST_ENTRY
 argument_list|(
 argument|proc
@@ -335,7 +831,22 @@ argument_list|)
 name|p_list
 expr_stmt|;
 comment|/* (d) List of all processes. */
-comment|/* substructures: */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ksegrp
+argument_list|)
+name|p_ksegrps
+expr_stmt|;
+comment|/* (kg_ksegrp) All KSEGs. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|thread
+argument_list|)
+name|p_threads
+expr_stmt|;
+comment|/* (td_plist) threads. (shortcut) */
 name|struct
 name|ucred
 modifier|*
@@ -348,6 +859,7 @@ modifier|*
 name|p_fd
 decl_stmt|;
 comment|/* (b) Ptr to open files structure. */
+comment|/* accumulated stats for all KSEs? */
 name|struct
 name|pstats
 modifier|*
@@ -372,22 +884,19 @@ modifier|*
 name|p_procsig
 decl_stmt|;
 comment|/* (c) Signal actions, state (CPU). */
-define|#
-directive|define
-name|p_sigacts
-value|p_procsig->ps_sigacts
-define|#
-directive|define
-name|p_sigignore
-value|p_procsig->ps_sigignore
-define|#
-directive|define
-name|p_sigcatch
-value|p_procsig->ps_sigcatch
-define|#
-directive|define
-name|p_rlimit
-value|p_limit->pl_rlimit
+name|struct
+name|ksegrp
+name|p_ksegrp
+decl_stmt|;
+name|struct
+name|kse
+name|p_kse
+decl_stmt|;
+name|struct
+name|thread
+name|p_thread
+decl_stmt|;
+comment|/* 	 * The following don't make too much sense.. 	 * See the td_ or ke_ versions of the same flags 	 */
 name|int
 name|p_flag
 decl_stmt|;
@@ -447,59 +956,17 @@ value|p_oppid
 name|pid_t
 name|p_oppid
 decl_stmt|;
-comment|/* (c + e) Save parent pid during ptrace. XXX */
-name|int
-name|p_dupfd
-decl_stmt|;
-comment|/* (c) Sideways ret value from fdopen. XXX */
+comment|/* (c + e) Save ppid in ptrace. XXX */
 name|struct
 name|vmspace
 modifier|*
 name|p_vmspace
 decl_stmt|;
 comment|/* (b) Address space. */
-comment|/* scheduling */
-name|u_int
-name|p_estcpu
-decl_stmt|;
-comment|/* (j) Time averaged value of p_cpticks. */
-name|int
-name|p_cpticks
-decl_stmt|;
-comment|/* (j) Ticks of cpu time. */
-name|fixpt_t
-name|p_pctcpu
-decl_stmt|;
-comment|/* (j) %cpu during p_swtime. */
-name|struct
-name|callout
-name|p_slpcallout
-decl_stmt|;
-comment|/* (h) Callout for sleep. */
-name|void
-modifier|*
-name|p_wchan
-decl_stmt|;
-comment|/* (j) Sleep address. */
-specifier|const
-name|char
-modifier|*
-name|p_wmesg
-decl_stmt|;
-comment|/* (j) Reason for sleep. */
 name|u_int
 name|p_swtime
 decl_stmt|;
 comment|/* (j) Time swapped in or out. */
-name|u_int
-name|p_slptime
-decl_stmt|;
-comment|/* (j) Time since last blocked. */
-name|struct
-name|callout
-name|p_itcallout
-decl_stmt|;
-comment|/* (h) Interval timer callout. */
 name|struct
 name|itimerval
 name|p_realtimer
@@ -509,30 +976,6 @@ name|u_int64_t
 name|p_runtime
 decl_stmt|;
 comment|/* (j) Real time in microsec. */
-name|u_int64_t
-name|p_uu
-decl_stmt|;
-comment|/* (j) Previous user time in microsec. */
-name|u_int64_t
-name|p_su
-decl_stmt|;
-comment|/* (j) Previous system time in microsec. */
-name|u_int64_t
-name|p_iu
-decl_stmt|;
-comment|/* (j) Previous interrupt time in microsec. */
-name|u_int64_t
-name|p_uticks
-decl_stmt|;
-comment|/* (j) Statclock hits in user mode. */
-name|u_int64_t
-name|p_sticks
-decl_stmt|;
-comment|/* (j) Statclock hits in system mode. */
-name|u_int64_t
-name|p_iticks
-decl_stmt|;
-comment|/* (j) Statclock hits processing intr. */
 name|int
 name|p_traceflag
 decl_stmt|;
@@ -546,7 +989,7 @@ comment|/* (j?) Trace to vnode. */
 name|sigset_t
 name|p_siglist
 decl_stmt|;
-comment|/* (c) Signals arrived but not delivered. */
+comment|/* (c) Sigs arrived, not delivered. */
 name|struct
 name|vnode
 modifier|*
@@ -561,23 +1004,33 @@ comment|/* (k) Lock for this struct. */
 name|char
 name|p_lock
 decl_stmt|;
-comment|/* (c) Process lock (prevent swap) count. */
-name|u_char
-name|p_oncpu
+comment|/* (c) Proclock (prevent swap) count. */
+name|struct
+name|klist
+name|p_klist
 decl_stmt|;
-comment|/* (j) Which cpu we are on. */
-name|u_char
-name|p_lastcpu
+comment|/* (c) Knotes attached to this proc. */
+name|struct
+name|sigiolst
+name|p_sigiolst
 decl_stmt|;
-comment|/* (j) Last cpu we were on. */
-name|char
-name|p_rqindex
+comment|/* (c) List of sigio sources. */
+name|int
+name|p_sigparent
 decl_stmt|;
-comment|/* (j) Run queue index. */
-name|short
-name|p_locks
+comment|/* (c) Signal to parent on exit. */
+name|sigset_t
+name|p_oldsigmask
 decl_stmt|;
-comment|/* (*) DEBUG: lockmgr count of held locks */
+comment|/* (c) Saved mask from pre sigpause. */
+name|int
+name|p_sig
+decl_stmt|;
+comment|/* (n) For core dump/debugger XXX. */
+name|u_long
+name|p_code
+decl_stmt|;
+comment|/* (n) For core dump/debugger XXX. */
 name|u_int
 name|p_stops
 decl_stmt|;
@@ -594,72 +1047,6 @@ name|u_char
 name|p_pfsflags
 decl_stmt|;
 comment|/* (c) Procfs flags. */
-name|char
-name|p_pad3
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Alignment. */
-name|register_t
-name|p_retval
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* (k) Syscall aux returns. */
-name|struct
-name|sigiolst
-name|p_sigiolst
-decl_stmt|;
-comment|/* (c) List of sigio sources. */
-name|int
-name|p_sigparent
-decl_stmt|;
-comment|/* (c) Signal to parent on exit. */
-name|sigset_t
-name|p_oldsigmask
-decl_stmt|;
-comment|/* (c) Saved mask from before sigpause. */
-name|int
-name|p_sig
-decl_stmt|;
-comment|/* (n) For core dump/debugger XXX. */
-name|u_long
-name|p_code
-decl_stmt|;
-comment|/* (n) For core dump/debugger XXX. */
-name|struct
-name|klist
-name|p_klist
-decl_stmt|;
-comment|/* (c) Knotes attached to this process. */
-name|struct
-name|lock_list_entry
-modifier|*
-name|p_sleeplocks
-decl_stmt|;
-comment|/* (k) Held sleep locks. */
-name|struct
-name|mtx
-modifier|*
-name|p_blocked
-decl_stmt|;
-comment|/* (j) Mutex process is blocked on. */
-specifier|const
-name|char
-modifier|*
-name|p_mtxname
-decl_stmt|;
-comment|/* (j) Name of mutex blocked on. */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|mtx
-argument_list|)
-name|p_contested
-expr_stmt|;
-comment|/* (j) Contested locks. */
 name|struct
 name|nlminfo
 modifier|*
@@ -671,26 +1058,16 @@ modifier|*
 name|p_aioinfo
 decl_stmt|;
 comment|/* (c) ASYNC I/O info. */
-name|struct
-name|ithd
-modifier|*
-name|p_ithd
-decl_stmt|;
-comment|/* (b) For interrupt threads only. */
-name|int
-name|p_intr_nesting_level
-decl_stmt|;
-comment|/* (k) Interrupt recursion. */
 comment|/* End area that is zeroed on creation. */
-define|#
-directive|define
-name|p_endzero
-value|p_startcopy
-comment|/* The following fields are all copied upon creation in fork. */
 define|#
 directive|define
 name|p_startcopy
 value|p_sigmask
+comment|/* The following fields are all copied upon creation in fork. */
+define|#
+directive|define
+name|p_endzero
+value|p_startcopy
 name|sigset_t
 name|p_sigmask
 decl_stmt|;
@@ -698,20 +1075,11 @@ comment|/* (c) Current signal mask. */
 name|stack_t
 name|p_sigstk
 decl_stmt|;
-comment|/* (c) Stack pointer and on-stack flag. */
+comment|/* (c) Stack ptr and on-stack flag. */
 name|int
 name|p_magic
 decl_stmt|;
 comment|/* (b) Magic number. */
-name|struct
-name|priority
-name|p_pri
-decl_stmt|;
-comment|/* (j) Process priority. */
-name|char
-name|p_nice
-decl_stmt|;
-comment|/* (j?/k?) Process "nice" value. */
 name|char
 name|p_comm
 index|[
@@ -732,7 +1100,7 @@ name|sysentvec
 modifier|*
 name|p_sysent
 decl_stmt|;
-comment|/* (b) System call dispatch information. */
+comment|/* (b) Syscall dispatch info. */
 name|struct
 name|pargs
 modifier|*
@@ -743,22 +1111,27 @@ comment|/* End area that is copied on creation. */
 define|#
 directive|define
 name|p_endcopy
-value|p_addr
-name|struct
-name|user
-modifier|*
-name|p_addr
+value|p_xstat
+name|u_short
+name|p_xstat
 decl_stmt|;
-comment|/* (k) Kernel virtual addr of u-area (CPU). */
+comment|/* (c) Exit status; also stop sig. */
 name|struct
 name|mdproc
 name|p_md
 decl_stmt|;
 comment|/* (k) Any machine-dependent fields. */
-name|u_short
-name|p_xstat
+name|struct
+name|callout
+name|p_itcallout
 decl_stmt|;
-comment|/* (c) Exit status for wait; also stop sig. */
+comment|/* (h) Interval timer callout. */
+name|struct
+name|user
+modifier|*
+name|p_uarea
+decl_stmt|;
+comment|/* was p_addr. changed to break stuff */
 name|u_short
 name|p_acflag
 decl_stmt|;
@@ -786,15 +1159,37 @@ modifier|*
 name|p_emuldata
 decl_stmt|;
 comment|/* (c) Emulator state data. */
-name|struct
-name|trapframe
-modifier|*
-name|p_frame
-decl_stmt|;
-comment|/* (k) */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|p_rlimit
+value|p_limit->pl_rlimit
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_sigacts
+value|p_procsig->ps_sigacts
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_sigignore
+value|p_procsig->ps_sigignore
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_sigcatch
+value|p_procsig->ps_sigcatch
+end_define
 
 begin_define
 define|#
@@ -906,6 +1301,10 @@ begin_comment
 comment|/* These flags are kept in p_flag. */
 end_comment
 
+begin_comment
+comment|/* In a KSE world some go to a thread or a KSE (*)*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -936,7 +1335,7 @@ value|0x00004
 end_define
 
 begin_comment
-comment|/* Kernel thread. */
+comment|/* Kernel thread. (*)*/
 end_comment
 
 begin_define
@@ -959,17 +1358,6 @@ end_define
 
 begin_comment
 comment|/* Parent is waiting for child to exec/exit. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_SELECT
-value|0x00040
-end_define
-
-begin_comment
-comment|/* Selecting; wakeup/waiting danger. */
 end_comment
 
 begin_define
@@ -1038,6 +1426,17 @@ begin_comment
 comment|/* Process called exec. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P_KSES
+value|0x08000
+end_define
+
+begin_comment
+comment|/* Process is using KSEs. */
+end_comment
+
 begin_comment
 comment|/* Should be moved to machine-dependent areas. */
 end_comment
@@ -1062,17 +1461,6 @@ end_define
 
 begin_comment
 comment|/* Snapshot copy-on-write in progress. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_DEADLKTREAT
-value|0x800000
-end_define
-
-begin_comment
-comment|/* Lock aquisition - deadlock treatment. */
 end_comment
 
 begin_define
@@ -1126,45 +1514,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PS_OWEUPC
-value|0x00002
-end_define
-
-begin_comment
-comment|/* Owe process an addupc() call at next ast. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PS_PROFIL
 value|0x00004
 end_define
 
 begin_comment
 comment|/* Has started profiling. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_SINTR
-value|0x00008
-end_define
-
-begin_comment
-comment|/* Sleep is interruptible. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_TIMEOUT
-value|0x00010
-end_define
-
-begin_comment
-comment|/* Timing out during sleep. */
 end_comment
 
 begin_define
@@ -1192,17 +1547,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PS_CVWAITQ
-value|0x00080
-end_define
-
-begin_comment
-comment|/* Proces is on a cv_waitq (not slpq). */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PS_SWAPINREQ
 value|0x00100
 end_define
@@ -1225,18 +1569,84 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PS_ASTPENDING
-value|0x00400
+name|TDF_SINTR
+value|0x00008
 end_define
 
 begin_comment
-comment|/* Process has a pending ast. */
+comment|/* Sleep is interruptible. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PS_NEEDRESCHED
+name|TDF_TIMEOUT
+value|0x00010
+end_define
+
+begin_comment
+comment|/* Timing out during sleep. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_SELECT
+value|0x00040
+end_define
+
+begin_comment
+comment|/* Selecting; wakeup/waiting danger. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_CVWAITQ
+value|0x00080
+end_define
+
+begin_comment
+comment|/* Proces is on a cv_waitq (not slpq). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDF_DEADLKTREAT
+value|0x800000
+end_define
+
+begin_comment
+comment|/* Lock aquisition - deadlock treatment. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_OWEUPC
+value|0x00002
+end_define
+
+begin_comment
+comment|/* Owe process an addupc() call at next ast. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_ASTPENDING
+value|0x00400
+end_define
+
+begin_comment
+comment|/* KSE has a pending ast. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_NEEDRESCHED
 value|0x00800
 end_define
 
@@ -1247,12 +1657,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PS_TIMOFAIL
+name|TDF_TIMOFAIL
 value|0x01000
 end_define
 
 begin_comment
 comment|/* Timeout from sleep after we were awake. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEF_ONRUNQ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* This KE is on a run queue */
 end_comment
 
 begin_define
@@ -1311,6 +1732,69 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|FOREACH_PROC_IN_SYSTEM
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|LIST_FOREACH((p),&allproc, p_list)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOREACH_KSEGRP_IN_PROC
+parameter_list|(
+name|p
+parameter_list|,
+name|kg
+parameter_list|)
+define|\
+value|TAILQ_FOREACH((kg),&(p)->p_ksegrps, kg_ksegrp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOREACH_THREAD_IN_GROUP
+parameter_list|(
+name|kg
+parameter_list|,
+name|td
+parameter_list|)
+define|\
+value|TAILQ_FOREACH((td),&(kg)->kg_threads, td_kglist)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOREACH_KSE_IN_GROUP
+parameter_list|(
+name|kg
+parameter_list|,
+name|ke
+parameter_list|)
+define|\
+value|TAILQ_FOREACH((ke),&(kg)->kg_kseq, ke_kglist)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOREACH_THREAD_IN_PROC
+parameter_list|(
+name|p
+parameter_list|,
+name|td
+parameter_list|)
+define|\
+value|TAILQ_FOREACH((td),&(p)->p_threads, td_plist)
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -1323,11 +1807,20 @@ parameter_list|)
 block|{
 specifier|register
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
 return|return
 operator|(
@@ -1432,9 +1925,9 @@ define|#
 directive|define
 name|signotify
 parameter_list|(
-name|p
+name|ke
 parameter_list|)
-value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_ASTPENDING;					\ } while (0)
+value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(ke)->ke_flags |= KEF_ASTPENDING;				\ } while (0)
 end_define
 
 begin_comment
@@ -1731,6 +2224,19 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|thread
+modifier|*
+name|thread0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Primary thread in proc0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|hogticks
 decl_stmt|;
@@ -1812,6 +2318,16 @@ argument_list|(
 name|procqueue
 argument_list|,
 name|proc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|threadqueue
+argument_list|,
+name|thread
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1993,9 +2509,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|proc
+name|thread
 modifier|*
-name|chooseproc
+name|choosethread
 name|__P
 argument_list|(
 operator|(
@@ -2071,7 +2587,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|int
@@ -2122,7 +2638,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -2292,6 +2808,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|proc_linkup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|proc_reparent
 name|__P
 argument_list|(
@@ -2329,7 +2860,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2343,7 +2874,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|ksegrp
 operator|*
 operator|)
 argument_list|)
@@ -2369,7 +2900,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2383,7 +2914,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2397,7 +2928,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2493,7 +3024,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2507,7 +3038,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2521,7 +3052,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -2541,7 +3072,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|ksegrp
 operator|*
 operator|)
 argument_list|)
@@ -2555,7 +3086,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -2569,7 +3100,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|int
@@ -2586,7 +3117,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -2606,7 +3137,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|void
@@ -2660,7 +3191,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct

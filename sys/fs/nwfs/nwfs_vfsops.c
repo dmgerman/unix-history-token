@@ -276,7 +276,7 @@ name|nameidata
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -298,7 +298,7 @@ parameter_list|,
 name|caddr_t
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -333,7 +333,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -353,7 +353,7 @@ name|statfs
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -375,7 +375,7 @@ name|ucred
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -393,7 +393,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -747,9 +747,9 @@ modifier|*
 name|ndp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -891,9 +891,11 @@ name|args
 operator|.
 name|connRef
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -955,7 +957,7 @@ name|ncp_conn_unlock
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* we keep the ref */
@@ -1296,7 +1298,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|NCPVODEBUG
@@ -1361,9 +1363,9 @@ name|int
 name|mntflags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1452,9 +1454,11 @@ name|ncp_conn_lock
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -1477,7 +1481,7 @@ name|ncp_conn_unlock
 argument_list|(
 name|conn
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1581,18 +1585,20 @@ name|nw_entry_info
 name|fattr
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 name|struct
 name|ucred
 modifier|*
 name|cred
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 decl_stmt|;
@@ -1646,7 +1652,7 @@ name|vpp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 operator|!=
 literal|0
@@ -1678,7 +1684,7 @@ name|n_rootent
 operator|.
 name|f_id
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1707,7 +1713,7 @@ argument_list|,
 operator|&
 name|nsf
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1928,7 +1934,7 @@ argument_list|,
 operator|&
 name|fattr
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1998,7 +2004,7 @@ argument_list|,
 operator|&
 name|fattr
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2049,7 +2055,7 @@ argument_list|,
 operator|&
 name|fattr
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -2163,7 +2169,7 @@ name|n_root
 operator|=
 name|np
 expr_stmt|;
-comment|/*	error = VOP_GETATTR(vp,&vattr, cred, p); 	if (error) { 		vput(vp); 		NCPFATAL("Can't get root directory entry\n"); 		return error; 	}*/
+comment|/*	error = VOP_GETATTR(vp,&vattr, cred, td); 	if (error) { 		vput(vp); 		NCPFATAL("Can't get root directory entry\n"); 		return error; 	}*/
 operator|*
 name|vpp
 operator|=
@@ -2194,7 +2200,7 @@ name|mp
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2205,9 +2211,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|NCPVODEBUG
@@ -2246,7 +2252,7 @@ name|uid
 parameter_list|,
 name|arg
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2263,9 +2269,9 @@ name|caddr_t
 name|arg
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|NCPVODEBUG
@@ -2331,7 +2337,7 @@ name|error
 operator|=
 name|kernel_sysctl
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|name
 argument_list|,
@@ -2434,7 +2440,7 @@ name|mp
 parameter_list|,
 name|sbp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2447,9 +2453,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2507,9 +2513,11 @@ argument_list|,
 operator|&
 name|vi
 argument_list|,
-name|p
+name|td
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -2730,7 +2738,7 @@ name|waitfor
 parameter_list|,
 name|cred
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -2746,9 +2754,9 @@ modifier|*
 name|cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2879,7 +2887,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -2903,7 +2911,7 @@ name|cred
 argument_list|,
 name|waitfor
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

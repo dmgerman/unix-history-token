@@ -4562,8 +4562,7 @@ operator|*
 operator|)
 name|sin6
 argument_list|,
-operator|&
-name|proc0
+name|thread0
 argument_list|)
 condition|)
 block|{
@@ -4708,8 +4707,7 @@ operator|*
 operator|)
 name|sin
 argument_list|,
-operator|&
-name|proc0
+name|thread0
 argument_list|)
 condition|)
 block|{

@@ -38,7 +38,7 @@ define|#
 directive|define
 name|cpu_getstack
 parameter_list|(
-name|p
+name|td
 parameter_list|)
 value|(alpha_pal_rdusp())
 end_define
@@ -235,7 +235,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -451,7 +451,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -466,7 +466,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|,
@@ -484,7 +484,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -499,7 +499,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -777,7 +777,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)

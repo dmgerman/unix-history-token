@@ -229,14 +229,14 @@ begin_function
 name|int
 name|ptrace
 parameter_list|(
-name|curp
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|curp
+name|td
 decl_stmt|;
 name|struct
 name|ptrace_args
@@ -244,6 +244,15 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|curp
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
@@ -595,15 +604,19 @@ name|FIX_SSTEP
 comment|/* 	 * Single step fixup ala procfs 	 */
 name|FIX_SSTEP
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 endif|#
 directive|endif
 comment|/* 	 * Actually do the requests 	 */
-name|curp
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -783,7 +796,7 @@ name|error
 operator|=
 name|ptrace_single_step
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -817,7 +830,7 @@ argument_list|,
 operator|&
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|->
 name|u_kproc
 argument_list|)
@@ -829,7 +842,7 @@ name|error
 operator|=
 name|ptrace_set_pc
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 name|u_long
@@ -1000,9 +1013,13 @@ name|data
 expr_stmt|;
 name|setrunnable
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_thread
 argument_list|)
 expr_stmt|;
+comment|/* XXXKSE */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1077,9 +1094,9 @@ else|:
 operator|(
 name|caddr_t
 operator|)
-name|curp
+name|td
 operator|->
-name|p_retval
+name|td_retval
 expr_stmt|;
 name|iov
 operator|.
@@ -1145,9 +1162,9 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|error
 operator|=
@@ -1251,7 +1268,7 @@ condition|(
 operator|!
 name|procfs_validregs
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 comment|/* no P_SYSTEM procs please */
@@ -1325,9 +1342,9 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|curp
+name|td
 expr_stmt|;
 return|return
 operator|(
@@ -1388,7 +1405,7 @@ condition|(
 operator|!
 name|procfs_validfpregs
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 comment|/* no P_SYSTEM procs please */
@@ -1462,9 +1479,9 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|curp
+name|td
 expr_stmt|;
 return|return
 operator|(
@@ -1525,7 +1542,7 @@ condition|(
 operator|!
 name|procfs_validdbregs
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 comment|/* no P_SYSTEM procs please */
@@ -1599,9 +1616,9 @@ name|UIO_READ
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|curp
+name|td
 expr_stmt|;
 return|return
 operator|(

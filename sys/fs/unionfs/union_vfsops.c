@@ -132,9 +132,9 @@ operator|*
 name|ndp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -180,9 +180,9 @@ operator|*
 name|sbp
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -204,9 +204,9 @@ name|int
 name|mntflags
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -229,7 +229,7 @@ name|data
 parameter_list|,
 name|ndp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -249,9 +249,9 @@ modifier|*
 name|ndp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -385,7 +385,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Unlock lower node to avoid deadlock. 	 */
-block|if (lowerrootvp->v_op == union_vnodeop_p) 		VOP_UNLOCK(lowerrootvp, 0, p);
+block|if (lowerrootvp->v_op == union_vnodeop_p) 		VOP_UNLOCK(lowerrootvp, 0, td);
 endif|#
 directive|endif
 comment|/* 	 * Obtain upper vnode by calling namei() on the path.  The 	 * upperrootvp will be turned referenced but not locked. 	 */
@@ -405,7 +405,7 @@ name|args
 operator|.
 name|target
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -418,7 +418,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (lowerrootvp->v_op == union_vnodeop_p) 		vn_lock(lowerrootvp, LK_EXCLUSIVE | LK_RETRY, p);
+block|if (lowerrootvp->v_op == union_vnodeop_p) 		vn_lock(lowerrootvp, LK_EXCLUSIVE | LK_RETRY, td);
 endif|#
 directive|endif
 if|if
@@ -683,7 +683,9 @@ name|um
 operator|->
 name|um_cred
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -701,7 +703,9 @@ operator|=
 name|UN_DIRMODE
 operator|&
 operator|~
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 operator|->
@@ -901,7 +905,7 @@ name|mp
 operator|->
 name|mnt_stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|UDEBUG
@@ -1018,7 +1022,7 @@ name|mp
 parameter_list|,
 name|mntflags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1029,9 +1033,9 @@ name|int
 name|mntflags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1361,7 +1365,7 @@ name|mp
 parameter_list|,
 name|sbp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -1374,9 +1378,9 @@ modifier|*
 name|sbp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1459,7 +1463,7 @@ argument_list|,
 operator|&
 name|mstat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1538,7 +1542,7 @@ argument_list|,
 operator|&
 name|mstat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

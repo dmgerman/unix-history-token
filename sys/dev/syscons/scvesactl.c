@@ -101,9 +101,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|scr_stat
@@ -385,7 +385,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 else|else

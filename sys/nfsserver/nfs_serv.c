@@ -509,7 +509,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|int
@@ -594,7 +594,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -609,9 +609,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -863,7 +863,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -918,7 +918,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -963,7 +963,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -983,7 +983,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -1061,7 +1061,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -1076,9 +1076,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -1290,7 +1290,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -1384,7 +1384,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -1399,9 +1399,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2004,7 +2004,7 @@ name|preat
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2163,7 +2163,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -2185,7 +2185,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|postat_ret
@@ -2198,7 +2198,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2319,7 +2319,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -2334,9 +2334,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2585,7 +2585,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -2624,7 +2624,7 @@ name|dirattr
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -2697,7 +2697,7 @@ name|ni_vp
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|ind
@@ -2862,7 +2862,7 @@ name|dirattr
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -2995,7 +2995,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3162,7 +3162,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -3177,9 +3177,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -3554,11 +3554,11 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -3683,7 +3683,7 @@ name|attr
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3836,7 +3836,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -3851,9 +3851,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -4260,7 +4260,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -4280,7 +4280,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -4296,7 +4296,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5055,7 +5055,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5253,7 +5253,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -5268,9 +5268,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -5959,7 +5959,7 @@ name|forat
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6020,7 +6020,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -6215,11 +6215,11 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -6269,7 +6269,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -6487,7 +6487,7 @@ name|ndp
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -6503,9 +6503,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -7559,7 +7559,7 @@ name|forat
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -7628,7 +7628,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -7688,11 +7688,11 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|uiop
 operator|->
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -7867,7 +7867,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -7890,7 +7890,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -7957,7 +7957,7 @@ name|va
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -8639,7 +8639,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -8654,9 +8654,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -9019,7 +9019,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -9053,7 +9053,7 @@ name|dirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9450,7 +9450,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9627,9 +9627,9 @@ name|nd
 operator|.
 name|ni_cnd
 operator|.
-name|cn_proc
+name|cn_thread
 operator|=
-name|procp
+name|td
 expr_stmt|;
 name|nd
 operator|.
@@ -9736,7 +9736,7 @@ operator|&
 name|RDONLY
 operator|)
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -9785,7 +9785,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9855,7 +9855,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9901,7 +9901,7 @@ name|diraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -10131,7 +10131,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -10146,9 +10146,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -10469,7 +10469,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -10497,7 +10497,7 @@ name|dirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -10851,9 +10851,9 @@ name|nd
 operator|.
 name|ni_cnd
 operator|.
-name|cn_proc
+name|cn_thread
 operator|=
-name|procp
+name|td
 expr_stmt|;
 name|nd
 operator|.
@@ -10861,7 +10861,9 @@ name|ni_cnd
 operator|.
 name|cn_cred
 operator|=
-name|procp
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -11036,7 +11038,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -11066,7 +11068,7 @@ name|diraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -11249,7 +11251,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -11264,9 +11266,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -11567,7 +11569,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -11601,7 +11603,7 @@ name|dirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -11737,7 +11739,7 @@ name|diraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -11864,7 +11866,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -11879,9 +11881,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -12270,7 +12272,7 @@ argument_list|,
 operator|&
 name|fdirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -12304,7 +12306,7 @@ name|fdirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -12448,7 +12450,7 @@ argument_list|,
 operator|&
 name|tdirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -12482,7 +12484,7 @@ name|tdirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -12902,7 +12904,7 @@ name|fdiraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -12920,7 +12922,7 @@ name|tdiraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|nfsm_reply
@@ -13131,7 +13133,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -13146,9 +13148,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -13582,7 +13584,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -13616,7 +13618,7 @@ name|dirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -13746,7 +13748,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -13764,7 +13766,7 @@ name|diraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|ereply
@@ -13913,7 +13915,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -13928,9 +13930,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -14276,7 +14278,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -14310,7 +14312,7 @@ name|dirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -14421,11 +14423,11 @@ name|UIO_READ
 expr_stmt|;
 name|io
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -14618,9 +14620,9 @@ name|nd
 operator|.
 name|ni_cnd
 operator|.
-name|cn_proc
+name|cn_thread
 operator|=
-name|procp
+name|td
 expr_stmt|;
 name|nd
 operator|.
@@ -14709,7 +14711,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -14764,7 +14766,7 @@ name|diraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -14973,7 +14975,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -14988,9 +14990,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -15320,7 +15322,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -15354,7 +15356,7 @@ name|dirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -15597,7 +15599,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -15618,7 +15620,7 @@ name|diraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|nfsm_reply
@@ -15817,7 +15819,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -15832,9 +15834,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -16140,7 +16142,7 @@ argument_list|,
 operator|&
 name|dirp
 argument_list|,
-name|procp
+name|td
 argument_list|,
 operator|(
 name|nfsd
@@ -16174,7 +16176,7 @@ name|dirfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -16346,7 +16348,7 @@ name|diraft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|nfsm_reply
@@ -16513,7 +16515,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -16528,9 +16530,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -16993,7 +16995,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|#
@@ -17021,7 +17023,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -17070,7 +17072,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * end section.  Allocate rbuf and continue 	 */
@@ -17143,11 +17145,11 @@ name|UIO_READ
 expr_stmt|;
 name|io
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -17164,7 +17166,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -17245,7 +17247,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -17264,7 +17266,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -18056,7 +18058,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -18071,9 +18073,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -18519,7 +18521,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|#
@@ -18554,7 +18556,7 @@ name|cred
 argument_list|,
 name|rdonly
 argument_list|,
-name|procp
+name|td
 argument_list|,
 literal|0
 argument_list|)
@@ -18601,7 +18603,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -18673,11 +18675,11 @@ name|UIO_READ
 expr_stmt|;
 name|io
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -18694,7 +18696,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -18758,7 +18760,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -18767,7 +18769,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -19339,7 +19341,7 @@ name|vap
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 condition|)
 block|{
@@ -19847,7 +19849,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -19862,9 +19864,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -20211,7 +20213,7 @@ name|bfor
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -20263,7 +20265,7 @@ name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -20506,7 +20508,7 @@ name|aft
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -20633,7 +20635,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -20648,9 +20650,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -20895,7 +20897,7 @@ name|v_mount
 argument_list|,
 name|sf
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|getret
@@ -20909,7 +20911,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -21237,7 +21239,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -21252,9 +21254,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -21479,7 +21481,7 @@ argument_list|,
 operator|&
 name|sb
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|maxfsize
@@ -21506,7 +21508,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -21702,7 +21704,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -21717,9 +21719,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -22009,7 +22011,7 @@ name|at
 argument_list|,
 name|cred
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|vput
@@ -22144,7 +22146,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -22159,9 +22161,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -22246,7 +22248,7 @@ name|nfsd
 parameter_list|,
 name|slp
 parameter_list|,
-name|procp
+name|td
 parameter_list|,
 name|mrq
 parameter_list|)
@@ -22261,9 +22263,9 @@ modifier|*
 name|slp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|struct
 name|mbuf
@@ -22364,7 +22366,7 @@ name|cred
 parameter_list|,
 name|rdonly
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|override
 parameter_list|)
@@ -22387,9 +22389,9 @@ name|int
 name|rdonly
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|override
@@ -22488,7 +22490,7 @@ name|vattr
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -22510,7 +22512,7 @@ name|flags
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allow certain operations for the owner (reads and writes 	 * on files that are already open). 	 */

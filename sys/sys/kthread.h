@@ -155,6 +155,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXXKSE */
+end_comment
+
 begin_decl_stmt
 name|int
 name|kthread_suspend
@@ -171,6 +175,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXXKSE */
+end_comment
+
 begin_decl_stmt
 name|void
 name|kthread_suspend_check
@@ -184,6 +192,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXXKSE */
+end_comment
 
 begin_endif
 endif|#

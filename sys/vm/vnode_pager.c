@@ -1604,7 +1604,9 @@ name|bp
 operator|->
 name|b_wcred
 operator|=
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -2029,9 +2031,9 @@ name|size
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 name|error
 operator|=
@@ -2044,7 +2046,9 @@ name|auio
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -3002,7 +3006,9 @@ name|bp
 operator|->
 name|b_wcred
 operator|=
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -3854,11 +3860,11 @@ name|maxsize
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -3874,7 +3880,9 @@ name|auio
 argument_list|,
 name|ioflags
 argument_list|,
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -3974,11 +3982,11 @@ name|object
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|GIANT_REQUIRED
@@ -4036,7 +4044,7 @@ name|LK_RETRY
 operator||
 name|LK_CANRECURSE
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{

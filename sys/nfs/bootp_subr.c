@@ -765,9 +765,9 @@ modifier|*
 name|args
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -800,9 +800,9 @@ modifier|*
 name|args
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -983,9 +983,9 @@ modifier|*
 name|gctx
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1150,9 +1150,9 @@ modifier|*
 name|gctx
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1173,9 +1173,9 @@ modifier|*
 name|gctx
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1196,9 +1196,9 @@ modifier|*
 name|gctx
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2696,9 +2696,9 @@ modifier|*
 name|gctx
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2779,7 +2779,7 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2980,7 +2980,7 @@ operator|*
 operator|)
 name|sin
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3222,7 +3222,7 @@ name|ifctx
 argument_list|,
 name|gctx
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3377,9 +3377,9 @@ argument_list|)
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|procp
+name|td
 expr_stmt|;
 comment|/* Set netmask to 0.0.0.0 */
 name|sin
@@ -3419,7 +3419,7 @@ name|ifctx
 operator|->
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3459,7 +3459,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3548,7 +3548,7 @@ name|ifctx
 operator|->
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3701,9 +3701,9 @@ argument_list|)
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|procp
+name|td
 expr_stmt|;
 name|rcvflg
 operator|=
@@ -4401,9 +4401,9 @@ modifier|*
 name|gctx
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -4449,7 +4449,7 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4492,7 +4492,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4527,7 +4527,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4575,7 +4575,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4646,7 +4646,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4726,7 +4726,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4854,9 +4854,9 @@ modifier|*
 name|gctx
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 block|{
 name|int
@@ -4969,7 +4969,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5006,7 +5006,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5053,7 +5053,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5127,7 +5127,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5194,7 +5194,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5240,7 +5240,7 @@ name|caddr_t
 operator|)
 name|ireq
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6254,7 +6254,7 @@ name|ifctx
 parameter_list|,
 name|gctx
 parameter_list|,
-name|procp
+name|td
 parameter_list|)
 name|struct
 name|bootpc_ifcontext
@@ -6267,9 +6267,9 @@ modifier|*
 name|gctx
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 block|{
 name|unsigned
@@ -8292,18 +8292,18 @@ modifier|*
 name|nd
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 name|nd
 operator|=
 operator|&
 name|nfsv3_diskless
 expr_stmt|;
-name|procp
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* 	 * If already filled in, don't touch it here 	 */
 if|if
@@ -8643,7 +8643,7 @@ name|ifctx
 argument_list|,
 name|gctx
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 for|for
@@ -8670,7 +8670,7 @@ name|ifctx
 argument_list|,
 name|gctx
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|ifctx
@@ -8685,7 +8685,7 @@ name|bootpc_call
 argument_list|(
 name|gctx
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -8826,7 +8826,7 @@ name|ifctx
 argument_list|,
 name|gctx
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 name|soclose
@@ -8945,7 +8945,7 @@ name|nd
 operator|->
 name|root_args
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -8997,7 +8997,7 @@ name|nd
 operator|->
 name|swap_args
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -9040,7 +9040,7 @@ name|nd
 operator|->
 name|swap_args
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -9254,9 +9254,9 @@ modifier|*
 name|args
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -9296,7 +9296,7 @@ name|mdsin
 operator|->
 name|sin_port
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -9336,7 +9336,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -9375,7 +9375,7 @@ name|mdsin
 operator|->
 name|sin_port
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -9417,7 +9417,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -9634,7 +9634,7 @@ name|mdsin
 operator|->
 name|sin_port
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9688,9 +9688,9 @@ modifier|*
 name|args
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -9895,7 +9895,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -9916,7 +9916,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if

@@ -5011,7 +5011,7 @@ name|m
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 condition|?
 name|M_TRYWAIT
 else|:
@@ -5427,15 +5427,15 @@ operator|=
 operator|(
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 operator|!=
 name|NULL
 operator|&&
-name|suser
+name|suser_td
 argument_list|(
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 argument_list|)
 operator|!=
 literal|0

@@ -151,9 +151,9 @@ name|mtx
 name|it_lock
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|it_proc
+name|it_td
 decl_stmt|;
 comment|/* Interrupt process. */
 name|LIST_ENTRY

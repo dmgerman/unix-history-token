@@ -7245,9 +7245,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|fdu_t
@@ -7560,9 +7560,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|fdu_t
@@ -11625,9 +11625,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|fdu_t
@@ -11975,9 +11975,9 @@ comment|/* set drive type */
 comment|/* this is considered harmful; only allow for superuser */
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -12096,9 +12096,9 @@ name|FD_CLRERR
 case|:
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0

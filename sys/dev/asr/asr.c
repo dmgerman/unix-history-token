@@ -654,6 +654,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
@@ -1735,9 +1741,9 @@ name|int
 name|flag
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|proc
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1762,9 +1768,9 @@ name|ifmt
 operator|,
 name|IN
 expr|struct
-name|proc
+name|thread
 operator|*
-name|proc
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1787,9 +1793,9 @@ name|int
 name|ifmt
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
-name|proc
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -16977,9 +16983,9 @@ name|ifmt
 parameter_list|,
 name|IN
 name|struct
-name|proc
+name|thread
 modifier|*
-name|proc
+name|td
 parameter_list|)
 block|{
 name|int
@@ -17042,7 +17048,9 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|proc
+name|td
+operator|->
+name|td_proc
 argument_list|)
 operator|)
 operator|==
@@ -17085,9 +17093,9 @@ name|int
 name|ifmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|proc
+name|td
 parameter_list|)
 block|{
 name|UNREFERENCED_PARAMETER
@@ -17107,7 +17115,7 @@ argument_list|)
 expr_stmt|;
 name|UNREFERENCED_PARAMETER
 argument_list|(
-name|proc
+name|td
 argument_list|)
 expr_stmt|;
 name|ASR_ctlr_held
@@ -19498,9 +19506,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|proc
+name|td
 parameter_list|)
 block|{
 name|int
@@ -19530,7 +19538,7 @@ argument_list|)
 expr_stmt|;
 name|UNREFERENCED_PARAMETER
 argument_list|(
-name|proc
+name|td
 argument_list|)
 expr_stmt|;
 if|if

@@ -145,7 +145,7 @@ name|a_cred
 argument_list|,
 name|va
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1041,7 +1041,7 @@ operator|->
 name|pn_func
 call|)
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|proc
 argument_list|,
@@ -1950,7 +1950,7 @@ operator|->
 name|pn_func
 call|)
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|proc
 argument_list|,

@@ -561,11 +561,11 @@ name|vpp
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -607,7 +607,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|rescan
@@ -651,7 +651,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -664,7 +664,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_INTERLOCK
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 goto|goto
@@ -702,7 +702,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -881,7 +881,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Another process can create vnode while we blocked in malloc() or 	 * getnewvnode(). Rescan list again. 	 */
@@ -956,7 +956,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|lockmgr
@@ -968,7 +968,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1110,9 +1110,9 @@ name|ncpfid
 name|fid
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|nwnode
@@ -1133,7 +1133,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1156,7 +1156,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1177,7 +1177,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_reclaim_args
-comment|/* {     		struct vnode *a_vp; 		struct proc *a_p;         } */
+comment|/* {     		struct vnode *a_vp; 		struct thread *a_td;         } */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1220,13 +1220,13 @@ name|vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|NCPVNDEBUG
 argument_list|(
@@ -1267,7 +1267,7 @@ name|np
 operator|->
 name|n_parent
 argument_list|,
-name|p
+name|td
 argument_list|,
 operator|&
 name|dnp
@@ -1305,7 +1305,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -1324,7 +1324,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|cache_purge
@@ -1388,26 +1388,28 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|ucred
 modifier|*
 name|cred
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 decl_stmt|;
@@ -1466,7 +1468,7 @@ name|V_SAVE
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|1
 argument_list|)
@@ -1488,7 +1490,7 @@ name|np
 operator|->
 name|n_fh
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -1506,7 +1508,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

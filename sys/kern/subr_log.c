@@ -302,9 +302,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 if|if
@@ -332,7 +332,9 @@ argument_list|)
 expr_stmt|;
 name|fsetown
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -386,9 +388,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|log_open
@@ -678,9 +680,9 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -730,7 +732,7 @@ expr_stmt|;
 else|else
 name|selrecord
 argument_list|(
-name|p
+name|curthread
 argument_list|,
 operator|&
 name|logsoftc
@@ -898,9 +900,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|long

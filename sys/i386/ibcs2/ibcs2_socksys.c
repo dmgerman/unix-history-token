@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995 Scott Bartram  * Copyright (c) 1994 Arne H Juul  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1994, 1995 Scott Bartram  * Copyright (c) 1994 Arne H Juul  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -91,7 +91,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -110,7 +110,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -129,15 +129,15 @@ begin_function
 name|int
 name|ibcs2_socksys
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 specifier|register
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 specifier|register
 name|struct
@@ -257,7 +257,7 @@ case|:
 return|return
 name|accept
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -268,7 +268,7 @@ case|:
 return|return
 name|bind
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -279,7 +279,7 @@ case|:
 return|return
 name|connect
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -290,7 +290,7 @@ case|:
 return|return
 name|getpeername
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -301,7 +301,7 @@ case|:
 return|return
 name|getsockname
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -312,7 +312,7 @@ case|:
 return|return
 name|getsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -323,7 +323,7 @@ case|:
 return|return
 name|listen
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -350,7 +350,7 @@ case|:
 return|return
 name|recvfrom
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -377,7 +377,7 @@ case|:
 return|return
 name|sendto
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -388,7 +388,7 @@ case|:
 return|return
 name|setsockopt
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -399,7 +399,7 @@ case|:
 return|return
 name|shutdown
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -410,7 +410,7 @@ case|:
 return|return
 name|socket
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -421,7 +421,7 @@ case|:
 return|return
 name|select
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -432,7 +432,7 @@ case|:
 return|return
 name|ibcs2_getipdomainname
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -443,7 +443,7 @@ case|:
 return|return
 name|ibcs2_setipdomainname
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -454,7 +454,7 @@ case|:
 return|return
 name|adjtime
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -465,7 +465,7 @@ case|:
 return|return
 name|setreuid
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -476,7 +476,7 @@ case|:
 return|return
 name|setregid
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -487,7 +487,7 @@ case|:
 return|return
 name|gettimeofday
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -498,7 +498,7 @@ case|:
 return|return
 name|settimeofday
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -509,7 +509,7 @@ case|:
 return|return
 name|getitimer
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -520,7 +520,7 @@ case|:
 return|return
 name|setitimer
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|passargs
 argument_list|)
@@ -583,14 +583,14 @@ specifier|static
 name|int
 name|ibcs2_getipdomainname
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|getipdomainname_args
@@ -716,14 +716,14 @@ specifier|static
 name|int
 name|ibcs2_setipdomainname
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|setipdomainname_args
@@ -755,9 +755,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -920,7 +920,7 @@ return|return
 operator|(
 name|kernel_sysctl
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|sctl
 argument_list|,

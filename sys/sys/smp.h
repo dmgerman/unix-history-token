@@ -153,7 +153,7 @@ name|void
 name|forward_signal
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;

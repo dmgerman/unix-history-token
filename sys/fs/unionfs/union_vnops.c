@@ -796,7 +796,7 @@ name|union_lock_upper
 argument_list|(
 argument|struct union_node *un
 argument_list|,
-argument|struct proc *p
+argument|struct thread *td
 argument_list|)
 block|{ 	struct
 name|vnode
@@ -831,7 +831,7 @@ name|LK_CANRECURSE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -876,9 +876,9 @@ modifier|*
 name|uppervp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|vput
@@ -899,7 +899,7 @@ name|union_lock_other
 argument_list|(
 argument|struct union_node *un
 argument_list|,
-argument|struct proc *p
+argument|struct thread *td
 argument_list|)
 block|{ 	struct
 name|vnode
@@ -921,7 +921,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -957,7 +957,7 @@ name|LK_CANRECURSE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -983,9 +983,9 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|vput
@@ -1040,13 +1040,13 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -1124,7 +1124,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1219,7 +1219,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Lastly check if the current node is a mount point in 	 * which case walk up the mount hierarchy making sure not to 	 * bump into the root of the mount tree (ie. dvp != udvp). 	 * 	 * We use dvp as a temporary variable here, it is no longer related 	 * to the dvp above.  However, we have to ensure that both *pdvp and 	 * tdvp are locked on return. 	 */
@@ -1265,7 +1265,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 continue|continue;
@@ -1303,7 +1303,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1319,7 +1319,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1421,13 +1421,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|int
 name|lockparent
@@ -1553,7 +1553,7 @@ name|union_lock_upper
 argument_list|(
 name|dun
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * do the lookup in the upper level. 	 * if that level comsumes additional pathnames, 	 * then assume that something special is going 	 * on and just return that vnode. 	 */
@@ -1778,7 +1778,7 @@ name|cn_cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -1876,7 +1876,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|lerror
@@ -2036,7 +2036,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|lerror
@@ -2146,7 +2146,7 @@ name|uppervp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2159,7 +2159,7 @@ name|lowervp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2172,7 +2172,7 @@ name|upperdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2397,7 +2397,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2493,13 +2493,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -2520,7 +2520,7 @@ name|union_lock_upper
 argument_list|(
 name|dun
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2574,7 +2574,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|UDEBUG
@@ -2634,7 +2634,7 @@ name|union_unlock_upper
 argument_list|(
 name|dvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -2702,7 +2702,7 @@ name|un
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 operator|)
 operator|!=
@@ -2730,7 +2730,7 @@ name|uppervp
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 block|}
@@ -2802,7 +2802,7 @@ name|dun
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 operator|)
 operator|!=
@@ -2832,7 +2832,7 @@ name|dvp
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 block|}
@@ -2857,7 +2857,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2896,13 +2896,13 @@ operator|->
 name|a_cred
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|int
 name|error
@@ -2924,7 +2924,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|==
@@ -2977,7 +2977,7 @@ name|docopy
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|tvp
@@ -2986,7 +2986,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3010,7 +3010,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|tvpisupper
@@ -3036,7 +3036,7 @@ name|mode
 argument_list|,
 name|cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Absolutely necessary or UFS will blowup 	 */
@@ -3060,7 +3060,7 @@ name|vfs_object_create
 argument_list|(
 name|tvp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cred
 argument_list|)
@@ -3080,7 +3080,7 @@ name|union_unlock_upper
 argument_list|(
 name|tvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3113,7 +3113,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_close_args
-comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3215,7 +3215,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_vp; 		int a_mode; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3233,13 +3233,13 @@ name|a_vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|int
 name|error
@@ -3311,7 +3311,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3342,7 +3342,7 @@ name|union_unlock_upper
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -3372,7 +3372,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|ap
@@ -3481,7 +3481,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -3506,7 +3506,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3574,7 +3574,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3671,7 +3671,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3743,7 +3743,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3761,13 +3761,13 @@ name|a_vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|vattr
@@ -3901,7 +3901,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3928,7 +3928,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3953,7 +3953,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3993,7 +3993,7 @@ name|union_unlock_upper
 argument_list|(
 name|uppervp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4032,15 +4032,15 @@ name|a_vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
 name|a_uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -4056,7 +4056,7 @@ name|union_lock_other
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -4093,7 +4093,7 @@ name|union_unlock_other
 argument_list|(
 name|uvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX 	 * perhaps the size of the underlying object has changed under 	 * our feet.  take advantage of the offset information present 	 * in the uio structure. 	 */
@@ -4212,15 +4212,15 @@ name|a_vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
 name|a_uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -4239,7 +4239,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|==
@@ -4310,7 +4310,7 @@ name|union_unlock_upper
 argument_list|(
 name|uppervp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4330,7 +4330,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lease_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 		struct ucred *a_cred; 		int a_flag; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 		struct ucred *a_cred; 		int a_flag; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4380,7 +4380,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_ioctl_args
-comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4430,7 +4430,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_poll_args
-comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_events; 		struct ucred *a_cred; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4480,7 +4480,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_revoke_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4554,7 +4554,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int  a_waitfor; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int  a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4565,13 +4565,13 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -4599,7 +4599,7 @@ name|union_lock_other
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -4620,14 +4620,14 @@ name|ap
 operator|->
 name|a_waitfor
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|union_unlock_other
 argument_list|(
 name|targetvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4691,13 +4691,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -4721,7 +4721,7 @@ name|union_lock_upper
 argument_list|(
 name|dun
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|==
@@ -4741,7 +4741,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -4758,7 +4758,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 name|cnp
@@ -4789,7 +4789,7 @@ name|union_unlock_upper
 argument_list|(
 name|uppervp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4824,7 +4824,7 @@ name|union_unlock_upper
 argument_list|(
 name|upperdvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4863,13 +4863,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|union_node
@@ -4953,13 +4953,13 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (dun->un_uppervp == tun->un_dirvp) { 				if (dun->un_flags& UN_ULOCK) { 					dun->un_flags&= ~UN_ULOCK; 					VOP_UNLOCK(dun->un_uppervp, 0, p); 				} 			}
+block|if (dun->un_uppervp == tun->un_dirvp) { 				if (dun->un_flags& UN_ULOCK) { 					dun->un_flags&= ~UN_ULOCK; 					VOP_UNLOCK(dun->un_uppervp, 0, td); 				} 			}
 endif|#
 directive|endif
 name|error
@@ -4974,13 +4974,13 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (dun->un_uppervp == tun->un_dirvp) { 				vn_lock(dun->un_uppervp, 					    LK_EXCLUSIVE | LK_RETRY, p); 				dun->un_flags |= UN_ULOCK; 			}
+block|if (dun->un_uppervp == tun->un_dirvp) { 				vn_lock(dun->un_uppervp, 					    LK_EXCLUSIVE | LK_RETRY, td); 				dun->un_flags |= UN_ULOCK; 			}
 endif|#
 directive|endif
 name|VOP_UNLOCK
@@ -4991,7 +4991,7 @@ name|a_vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5021,7 +5021,7 @@ name|union_lock_upper
 argument_list|(
 name|dun
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|==
@@ -5040,7 +5040,7 @@ name|a_tdvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* unlock calling node */
@@ -5061,7 +5061,7 @@ name|union_unlock_upper
 argument_list|(
 name|tdvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vn_lock
@@ -5074,7 +5074,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5256,7 +5256,7 @@ name|ap
 operator|->
 name|a_fcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 name|error
@@ -5277,7 +5277,7 @@ name|ap
 operator|->
 name|a_fcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK
@@ -5292,7 +5292,7 @@ name|ap
 operator|->
 name|a_fcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -5310,7 +5310,7 @@ comment|/* 				 * XXX not yet. 				 * 				 * There is only one way to rename a d
 if|#
 directive|if
 literal|0
-block|vrele(fvp); 				fvp = NULL; 				vn_lock(fdvp, LK_EXCLUSIVE | LK_RETRY, ap->a_fcnp->cn_proc); 				error = union_mkshadow(um, fdvp,  					    ap->a_fcnp,&un->un_uppervp); 				VOP_UNLOCK(fdvp, 0, ap->a_fcnp->cn_proc); 				if (un->un_uppervp) 					VOP_UNLOCK(un->un_uppervp, 0, ap->a_fcnp->cn_proc); 				if (error) 					goto bad; 				break;
+block|vrele(fvp); 				fvp = NULL; 				vn_lock(fdvp, LK_EXCLUSIVE | LK_RETRY, ap->a_fcnp->cn_thread); 				error = union_mkshadow(um, fdvp,  					    ap->a_fcnp,&un->un_uppervp); 				VOP_UNLOCK(fdvp, 0, ap->a_fcnp->cn_thread); 				if (un->un_uppervp) 					VOP_UNLOCK(un->un_uppervp, 0, ap->a_fcnp->cn_thread); 				if (error) 					goto bad; 				break;
 endif|#
 directive|endif
 default|default:
@@ -5407,7 +5407,7 @@ name|ap
 operator|->
 name|a_tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 name|vput
@@ -5452,7 +5452,7 @@ name|ap
 operator|->
 name|a_tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 name|vput
@@ -5578,13 +5578,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -5605,7 +5605,7 @@ name|union_lock_upper
 argument_list|(
 name|dun
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5637,7 +5637,7 @@ name|union_unlock_upper
 argument_list|(
 name|upperdvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5653,7 +5653,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|UDEBUG
@@ -5772,13 +5772,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -5802,7 +5802,7 @@ name|union_lock_upper
 argument_list|(
 name|dun
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|==
@@ -5822,7 +5822,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -5839,7 +5839,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 name|cnp
@@ -5865,7 +5865,7 @@ name|union_unlock_upper
 argument_list|(
 name|uppervp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -5902,7 +5902,7 @@ name|union_unlock_upper
 argument_list|(
 name|upperdvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5953,13 +5953,13 @@ operator|->
 name|a_cnp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -5980,7 +5980,7 @@ name|union_lock_upper
 argument_list|(
 name|dun
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -6012,7 +6012,7 @@ name|union_unlock_upper
 argument_list|(
 name|dvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -6055,15 +6055,15 @@ name|a_vp
 argument_list|)
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
 name|a_uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -6084,7 +6084,7 @@ name|union_lock_upper
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -6115,7 +6115,7 @@ name|union_unlock_upper
 argument_list|(
 name|uvp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -6166,13 +6166,13 @@ operator|->
 name|a_uio
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|uio
 operator|->
-name|uio_procp
+name|uio_td
 decl_stmt|;
 name|struct
 name|vnode
@@ -6185,7 +6185,7 @@ name|union_lock_other
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6223,7 +6223,7 @@ name|union_unlock_other
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -6338,7 +6338,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
-comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -6353,13 +6353,13 @@ operator|->
 name|a_vp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|ap
 operator|->
-name|a_p
+name|a_td
 decl_stmt|;
 name|struct
 name|union_node
@@ -6428,7 +6428,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((un->un_flags& UN_ULOCK)&& un->un_uppervp) { 		un->un_flags&= ~UN_ULOCK; 		VOP_UNLOCK(un->un_uppervp, 0, p); 	}
+block|if ((un->un_flags& UN_ULOCK)&& un->un_uppervp) { 		un->un_flags&= ~UN_ULOCK; 		VOP_UNLOCK(un->un_uppervp, 0, td); 	}
 endif|#
 directive|endif
 name|VOP_UNLOCK
@@ -6437,7 +6437,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -6510,7 +6510,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|struct vnode *vp = ap->a_vp; 	struct proc *p = ap->a_p; 	int flags = ap->a_flags; 	struct union_node *un;
+block|struct vnode *vp = ap->a_vp; 	struct thread *td = ap->a_td; 	int flags = ap->a_flags; 	struct union_node *un;
 endif|#
 directive|endif
 name|int
@@ -6528,7 +6528,7 @@ directive|if
 literal|0
 block|un = VTOUNION(vp);  	if (error == 0) {
 comment|/* 		 * Lock the upper if it exists and this is an exclusive lock 		 * request. 		 */
-block|if (un->un_uppervp != NULLVP&&  		    (flags& LK_TYPE_MASK) == LK_EXCLUSIVE) { 			if ((un->un_flags& UN_ULOCK) == 0&& vp->v_usecount) { 				error = vn_lock(un->un_uppervp, flags, p); 				if (error) { 					struct vop_unlock_args uap = { 0 }; 					uap.a_vp = ap->a_vp; 					uap.a_flags = ap->a_flags; 					uap.a_p = ap->a_p; 					vop_stdunlock(&uap); 					return (error); 				} 				un->un_flags |= UN_ULOCK; 			} 		} 	}
+block|if (un->un_uppervp != NULLVP&&  		    (flags& LK_TYPE_MASK) == LK_EXCLUSIVE) { 			if ((un->un_flags& UN_ULOCK) == 0&& vp->v_usecount) { 				error = vn_lock(un->un_uppervp, flags, td); 				if (error) { 					struct vop_unlock_args uap = { 0 }; 					uap.a_vp = ap->a_vp; 					uap.a_flags = ap->a_flags; 					uap.a_td = ap->a_td; 					vop_stdunlock(&uap); 					return (error); 				} 				un->un_flags |= UN_ULOCK; 			} 		} 	}
 endif|#
 directive|endif
 return|return
@@ -6552,7 +6552,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_unlock_args
-comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int a_flags; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -6583,7 +6583,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * If no exclusive locks remain and we are holding an uppervp lock, 	 * remove the uppervp lock. 	 */
-block|if ((un->un_flags& UN_ULOCK)&&  	    lockstatus(&un->un_lock, NULL) != LK_EXCLUSIVE) { 		un->un_flags&= ~UN_ULOCK; 		VOP_UNLOCK(un->un_uppervp, LK_EXCLUSIVE, p); 	}
+block|if ((un->un_flags& UN_ULOCK)&&  	    lockstatus(&un->un_lock, NULL) != LK_EXCLUSIVE) { 		un->un_flags&= ~UN_ULOCK; 		VOP_UNLOCK(un->un_uppervp, LK_EXCLUSIVE, td); 	}
 endif|#
 directive|endif
 return|return
@@ -6607,7 +6607,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_createvobject_args
-comment|/* { 		struct vnode *vp; 		struct ucred *cred; 		struct proc *p; 	} */
+comment|/* { 		struct vnode *vp; 		struct ucred *cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -6835,11 +6835,11 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -6865,7 +6865,7 @@ name|union_lock_other
 argument_list|(
 name|un
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -6903,7 +6903,7 @@ name|union_unlock_other
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

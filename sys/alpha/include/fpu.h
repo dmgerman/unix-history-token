@@ -522,7 +522,7 @@ name|u_int64_t
 name|regmask
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)

@@ -203,11 +203,11 @@ operator|-
 literal|1
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 name|vp
@@ -1867,7 +1867,7 @@ name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 for|for
@@ -2099,7 +2099,7 @@ name|cred
 argument_list|,
 name|MNT_WAIT
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

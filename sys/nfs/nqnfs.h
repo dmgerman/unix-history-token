@@ -521,7 +521,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|(void) nqsrv_getlease((v),&nfsd->nd_duration, \ 		 ((nfsd->nd_flag& ND_LEASE) ? (nfsd->nd_flag& ND_LEASE) : \ 		 ((l) | ND_CHECK)), \ 		 slp, procp, nfsd->nd_nam,&cache,&frev, cred)
+value|(void) nqsrv_getlease((v),&nfsd->nd_duration, \ 		 ((nfsd->nd_flag& ND_LEASE) ? (nfsd->nd_flag& ND_LEASE) : \ 		 ((l) | ND_CHECK)), \ 		 slp, td, nfsd->nd_nam,&cache,&frev, cred)
 end_define
 
 begin_comment
@@ -649,7 +649,7 @@ name|vnode
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -694,7 +694,7 @@ name|nfssvc_sock
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -732,7 +732,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -786,7 +786,7 @@ operator|,
 name|caddr_t
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -852,7 +852,7 @@ name|nfssvc_sock
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct
@@ -879,7 +879,7 @@ name|nfssvc_sock
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 expr|struct

@@ -1016,7 +1016,7 @@ name|LK_RETRY
 operator||
 name|LK_NOOBJ
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 condition|)
 block|{

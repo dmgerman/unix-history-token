@@ -66,7 +66,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -96,7 +96,7 @@ parameter_list|,
 name|u_long
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct

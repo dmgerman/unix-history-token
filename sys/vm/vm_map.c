@@ -808,7 +808,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 operator|!=
 literal|0
@@ -854,7 +854,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -888,7 +888,7 @@ name|LK_SHARED
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -922,7 +922,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -938,9 +938,9 @@ name|vm_map_t
 name|map
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -966,7 +966,7 @@ name|LK_EXCLUPGRADE
 argument_list|,
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1000,7 +1000,7 @@ name|_vm_map_lock_upgrade
 argument_list|(
 name|map
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 operator|)
 return|;
@@ -1033,7 +1033,7 @@ name|LK_DOWNGRADE
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -6402,7 +6402,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|flags
@@ -6482,7 +6482,7 @@ name|handle
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
@@ -9236,11 +9236,14 @@ if|if
 condition|(
 name|p
 operator|==
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 condition|)
+comment|/* XXXKSE ? */
 name|pmap_activate
 argument_list|(
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}
@@ -9315,11 +9318,14 @@ if|if
 condition|(
 name|p
 operator|==
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 condition|)
+comment|/* XXXKSE ? */
 name|pmap_activate
 argument_list|(
-name|p
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}

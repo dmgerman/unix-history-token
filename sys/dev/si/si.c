@@ -341,7 +341,7 @@ parameter_list|,
 name|int
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2968,9 +2968,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -3026,9 +3026,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -3238,7 +3238,7 @@ name|flag
 operator|,
 name|mode
 operator|,
-name|p
+name|td
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3390,9 +3390,9 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -3789,9 +3789,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3870,7 +3870,7 @@ name|flag
 operator|,
 name|mode
 operator|,
-name|p
+name|td
 operator|,
 name|pp
 operator|->
@@ -4504,9 +4504,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -4572,7 +4572,7 @@ name|data
 argument_list|,
 name|flag
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;
@@ -4692,9 +4692,9 @@ name|TIOCSETA
 case|:
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5124,7 +5124,7 @@ name|data
 operator|,
 name|flag
 operator|,
-name|p
+name|td
 operator|)
 expr_stmt|;
 if|if
@@ -5340,9 +5340,9 @@ case|:
 comment|/* must be root since the wait applies to following logins */
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5455,9 +5455,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -5623,7 +5623,7 @@ expr_stmt|;
 define|#
 directive|define
 name|SUCHECK
-value|if ((error = suser(p))) goto out
+value|if ((error = suser_td(td))) goto out
 switch|switch
 condition|(
 name|cmd

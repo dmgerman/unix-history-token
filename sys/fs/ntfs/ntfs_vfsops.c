@@ -313,7 +313,7 @@ name|statfs
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -334,7 +334,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -387,7 +387,7 @@ name|ntfs_args
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -465,7 +465,7 @@ operator|,
 name|caddr_t
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -486,7 +486,7 @@ operator|,
 name|int
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -511,7 +511,7 @@ name|ucred
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -559,7 +559,7 @@ name|nameidata
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -613,7 +613,7 @@ name|nameidata
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -670,7 +670,7 @@ operator|,
 name|size_t
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -1024,7 +1024,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1095,7 +1095,7 @@ name|mp
 operator|->
 name|mnt_stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vfs_unbusy
@@ -1232,9 +1232,9 @@ modifier|*
 name|ndp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|size_t
@@ -1305,7 +1305,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1457,7 +1457,7 @@ name|args
 operator|.
 name|fspec
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|err
@@ -1629,7 +1629,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1662,7 +1662,7 @@ name|mp
 operator|->
 name|mnt_stat
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1704,7 +1704,7 @@ name|mp
 parameter_list|,
 name|argsp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -1723,9 +1723,9 @@ modifier|*
 name|argsp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1830,7 +1830,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1841,11 +1841,13 @@ name|devvp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -1858,7 +1860,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -1871,11 +1873,13 @@ name|devvp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -1913,7 +1917,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -1932,7 +1936,7 @@ name|FWRITE
 argument_list|,
 name|FSCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP__UNLOCK
@@ -1941,7 +1945,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2861,7 +2865,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2881,7 +2885,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP__UNLOCK
@@ -2890,7 +2894,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -2912,7 +2916,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2949,9 +2953,9 @@ name|int
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 return|return
@@ -2981,9 +2985,9 @@ name|int
 name|mntflags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 specifier|register
@@ -3199,7 +3203,7 @@ name|V_SAVE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -3242,7 +3246,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|VOP__UNLOCK
@@ -3253,7 +3257,7 @@ name|ntm_devvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 else|#
@@ -3276,7 +3280,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3469,9 +3473,9 @@ name|caddr_t
 name|arg
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|printf
@@ -3672,9 +3676,9 @@ modifier|*
 name|sbp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3965,9 +3969,9 @@ modifier|*
 name|cred
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 comment|/*dprintf(("ntfs_sync():\n"));*/
@@ -4193,9 +4197,9 @@ name|u_long
 name|flags
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|vnode
@@ -4534,7 +4538,7 @@ argument_list|)
 argument_list|,
 name|lkflags
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4675,7 +4679,7 @@ name|vp
 argument_list|,
 name|lkflags
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4745,7 +4749,7 @@ name|LK_RETRY
 argument_list|,
 literal|0
 argument_list|,
-name|curproc
+name|curthread
 argument_list|,
 name|vpp
 argument_list|)

@@ -1252,7 +1252,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1264,9 +1264,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1446,7 +1446,7 @@ name|flags
 parameter_list|,
 name|fmt
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1458,9 +1458,9 @@ name|int
 name|fmt
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -2188,7 +2188,7 @@ name|addr
 parameter_list|,
 name|flags
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2203,9 +2203,9 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -3519,7 +3519,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|dev_t
@@ -3529,9 +3529,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -3621,7 +3621,7 @@ expr_stmt|;
 else|else
 name|selrecord
 argument_list|(
-name|p
+name|curthread
 argument_list|,
 operator|&
 name|d

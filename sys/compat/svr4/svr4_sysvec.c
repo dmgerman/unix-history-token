@@ -776,7 +776,7 @@ begin_function
 name|int
 name|svr4_emul_find
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|sgp
 parameter_list|,
@@ -789,9 +789,9 @@ parameter_list|,
 name|cflag
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|caddr_t
 modifier|*
@@ -816,6 +816,15 @@ name|int
 name|cflag
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 name|struct
 name|nameidata
 name|nd
@@ -1019,7 +1028,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|buf
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1077,7 +1086,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|buf
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1128,7 +1137,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|svr4_emul_path
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1191,7 +1200,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1220,7 +1229,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=

@@ -689,6 +689,12 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|proc
 struct_decl|;
 end_struct_decl
@@ -715,7 +721,7 @@ name|void
 name|knote_remove
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|,
@@ -733,7 +739,7 @@ name|void
 name|knote_fdclose
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|,
@@ -759,7 +765,7 @@ modifier|*
 name|kev
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 name|p
 parameter_list|)

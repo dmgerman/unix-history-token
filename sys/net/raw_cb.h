@@ -108,6 +108,26 @@ name|rawcb_list
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* protosw entries */
+end_comment
+
+begin_decl_stmt
+name|pr_ctlinput_t
+name|raw_ctlinput
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|pr_init_t
+name|raw_init
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* usrreq entries */
+end_comment
+
 begin_decl_stmt
 name|int
 name|raw_attach
@@ -119,25 +139,6 @@ name|socket
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|raw_ctlinput
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|sockaddr
-operator|*
-operator|,
-name|void
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -171,17 +172,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|raw_init
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* what the ??? */
+end_comment
+
+begin_else
+unit|pr_input_t	raw_input;
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 name|void
@@ -208,6 +213,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

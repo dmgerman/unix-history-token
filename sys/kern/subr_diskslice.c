@@ -4043,7 +4043,7 @@ name|S_IFCHR
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 name|NULL
@@ -4072,7 +4072,7 @@ name|S_IFCHR
 argument_list|,
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 name|NULL

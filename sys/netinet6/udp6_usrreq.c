@@ -2128,9 +2128,9 @@ name|int
 name|proto
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2211,7 +2211,7 @@ argument_list|,
 operator|&
 name|udbinfo
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2288,9 +2288,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2431,7 +2431,7 @@ operator|)
 operator|&
 name|sin
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2457,7 +2457,7 @@ name|inp
 argument_list|,
 name|nam
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2487,9 +2487,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2600,7 +2600,7 @@ operator|)
 operator|&
 name|sin
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2666,7 +2666,7 @@ name|inp
 argument_list|,
 name|nam
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2921,9 +2921,9 @@ modifier|*
 name|control
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -3110,7 +3110,7 @@ name|addr
 argument_list|,
 name|control
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 expr_stmt|;
@@ -3131,7 +3131,7 @@ name|addr
 argument_list|,
 name|control
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 name|bad

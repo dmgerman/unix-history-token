@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -5099,9 +5105,9 @@ name|int
 name|optlen
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 if|if
 condition|(
@@ -5132,11 +5138,11 @@ name|sopt
 operator|->
 name|sopt_valsize
 expr_stmt|;
-name|p
+name|td
 operator|=
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 expr_stmt|;
 block|}
 else|else
@@ -5156,13 +5162,13 @@ expr_stmt|;
 name|privileged
 operator|=
 operator|(
-name|p
+name|td
 operator|==
 literal|0
 operator|||
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|?
@@ -5609,7 +5615,7 @@ name|m
 argument_list|,
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 condition|?
 name|M_TRYWAIT
 else|:
@@ -6657,13 +6663,13 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|sopt
 operator|->
-name|sopt_p
+name|sopt_td
 decl_stmt|;
 name|int
 name|priv
@@ -6779,12 +6785,12 @@ block|}
 comment|/*  set options specified by user. */
 if|if
 condition|(
-name|p
+name|td
 operator|&&
 operator|!
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 name|priv
@@ -7607,11 +7613,11 @@ modifier|*
 name|imm
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 if|if
@@ -7994,9 +8000,9 @@ block|{
 comment|/* 			 * We use the unspecified address to specify to accept 			 * all multicast addresses. Only super user is allowed 			 * to do this. 			 */
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -8429,9 +8435,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{

@@ -204,13 +204,22 @@ operator|->
 name|ni_cnd
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|cnp
+operator|->
+name|cn_thread
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|cnp
+name|td
 operator|->
-name|cn_proc
+name|td_proc
 decl_stmt|;
 name|ndp
 operator|->
@@ -222,7 +231,9 @@ name|ndp
 operator|->
 name|ni_cnd
 operator|.
-name|cn_proc
+name|cn_thread
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 expr_stmt|;
@@ -232,9 +243,7 @@ name|cnp
 operator|->
 name|cn_cred
 operator|&&
-name|cnp
-operator|->
-name|cn_proc
+name|p
 argument_list|,
 operator|(
 literal|"namei: bad cred/proc"
@@ -280,9 +289,7 @@ argument_list|)
 expr_stmt|;
 name|fdp
 operator|=
-name|cnp
-operator|->
-name|cn_proc
+name|p
 operator|->
 name|p_fd
 expr_stmt|;
@@ -421,18 +428,14 @@ if|if
 condition|(
 name|KTRPOINT
 argument_list|(
-name|cnp
-operator|->
-name|cn_proc
+name|p
 argument_list|,
 name|KTR_NAMEI
 argument_list|)
 condition|)
 name|ktrnamei
 argument_list|(
-name|cnp
-operator|->
-name|cn_proc
+name|p
 operator|->
 name|p_tracep
 argument_list|,
@@ -658,11 +661,7 @@ name|ndp
 operator|->
 name|ni_vp
 argument_list|,
-name|ndp
-operator|->
-name|ni_cnd
-operator|.
-name|cn_proc
+name|td
 argument_list|,
 name|ndp
 operator|->
@@ -701,7 +700,7 @@ name|ni_dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -787,11 +786,11 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -1096,13 +1095,13 @@ operator|->
 name|ni_cnd
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
 name|wantparent
@@ -1198,7 +1197,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|dirloop
@@ -1548,7 +1547,7 @@ name|dp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXX This should probably move to the top of function. */
@@ -1696,7 +1695,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1853,7 +1852,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2046,7 +2045,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 continue|continue;
@@ -2056,7 +2055,7 @@ name|dp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|error
@@ -2073,7 +2072,7 @@ name|vfs_unbusy
 argument_list|(
 name|mp
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2358,7 +2357,7 @@ name|dp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2399,7 +2398,7 @@ name|ni_dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -2476,13 +2475,13 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|struct
 name|vnode
@@ -2597,7 +2596,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* dirloop: */
@@ -2711,7 +2710,7 @@ name|dp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2936,9 +2935,7 @@ name|vfs_object_create
 argument_list|(
 name|dp
 argument_list|,
-name|cnp
-operator|->
-name|cn_proc
+name|td
 argument_list|,
 name|cnp
 operator|->
@@ -2963,7 +2960,7 @@ name|dp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2997,7 +2994,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vrele

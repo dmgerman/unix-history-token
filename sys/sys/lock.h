@@ -723,7 +723,7 @@ name|int
 name|witness_list
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;

@@ -500,20 +500,11 @@ name|usbioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|d_poll_t
 name|usbpoll
-parameter_list|(
-name|dev_t
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1492,7 +1483,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1503,9 +1494,9 @@ decl_stmt|,
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1762,7 +1753,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1773,9 +1764,9 @@ decl_stmt|,
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -1822,7 +1813,7 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|devt
@@ -1837,9 +1828,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1890,7 +1881,9 @@ name|data
 condition|)
 name|usb_async_proc
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 else|else
 name|usb_async_proc
@@ -2197,9 +2190,9 @@ name|UIO_WRITE
 expr_stmt|;
 name|uio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|ptr
 operator|=
@@ -2455,7 +2448,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2464,9 +2457,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -2551,7 +2544,7 @@ argument_list|)
 expr_stmt|;
 name|selrecord
 argument_list|(
-name|p
+name|curthread
 argument_list|,
 operator|&
 name|usb_selevent

@@ -359,16 +359,9 @@ comment|/* ever used fp? */
 if|if
 condition|(
 operator|(
-operator|(
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-name|curproc
+name|curthread
 operator|->
-name|p_addr
-operator|)
+name|td_pcb
 operator|->
 name|pcb_flags
 operator|&
@@ -378,16 +371,9 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-name|curproc
+name|curthread
 operator|->
-name|p_addr
-operator|)
+name|td_pcb
 operator|->
 name|pcb_flags
 operator||=
@@ -3691,7 +3677,7 @@ name|REG
 parameter_list|(
 name|x
 parameter_list|)
-value|(((int *)curproc->p_frame)[__regoffset[(x)]])
+value|(((int *)curthread->td_frame)[__regoffset[(x)]])
 end_define
 
 begin_function

@@ -2338,6 +2338,15 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RESTARTABLE_PANICS
+comment|/* so we don;t get an error msg in LINT */
+return|return
+name|NULL
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

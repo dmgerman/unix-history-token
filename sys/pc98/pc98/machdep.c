@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_upages.h"
+file|"opt_kstack_pages.h"
 end_include
 
 begin_comment

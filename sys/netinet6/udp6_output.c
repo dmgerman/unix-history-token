@@ -288,7 +288,7 @@ name|addr6
 parameter_list|,
 name|control
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|in6pcb
@@ -311,9 +311,9 @@ modifier|*
 name|addr6
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|u_int32_t
@@ -402,12 +402,12 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|td
 operator|&&
 operator|!
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 name|priv
@@ -678,7 +678,7 @@ name|laddr
 argument_list|,
 name|in6p
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=

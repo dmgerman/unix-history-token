@@ -356,7 +356,7 @@ name|unsigned
 name|long
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -368,9 +368,9 @@ name|int
 name|handle_opdec
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|u_int64_t
 modifier|*
@@ -1168,6 +1168,12 @@ decl_stmt|;
 block|{
 specifier|register
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+specifier|register
+name|struct
 name|proc
 modifier|*
 name|p
@@ -1214,16 +1220,16 @@ operator|)
 name|alpha_pal_rdval
 argument_list|()
 expr_stmt|;
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|p
+name|td
 operator|->
-name|p_md
+name|td_md
 operator|.
 name|md_kernnest
 operator|++
@@ -1235,6 +1241,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 comment|/* 	GIANT_REQUIRED; 	 * Giant hasn't been acquired yet. 	 */
 name|cnt
 operator|.
@@ -1290,13 +1302,15 @@ condition|)
 block|{
 name|sticks
 operator|=
-name|p
+name|td
 operator|->
-name|p_sticks
+name|td_kse
+operator|->
+name|ke_sticks
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -1318,7 +1332,7 @@ name|user
 condition|)
 name|alpha_fpstate_check
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1356,7 +1370,7 @@ name|a1
 argument_list|,
 name|a2
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|==
@@ -1417,7 +1431,7 @@ name|fp_software_completion
 argument_list|(
 name|a1
 argument_list|,
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -1558,9 +1572,9 @@ name|ALPHA_IF_CODE_BUGCHK
 case|:
 if|if
 condition|(
-name|p
+name|td
 operator|->
-name|p_md
+name|td_md
 operator|.
 name|md_flags
 operator|&
@@ -1579,12 +1593,12 @@ argument_list|)
 expr_stmt|;
 name|ptrace_clear_single_step
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_regs
 index|[
@@ -1617,7 +1631,7 @@ name|i
 operator|=
 name|handle_opdec
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|ucode
@@ -1636,22 +1650,22 @@ break|break;
 case|case
 name|ALPHA_IF_CODE_FEN
 case|:
-comment|/* 			 * on exit from the kernel, if proc == fpcurproc, 			 * FP is enabled. 			 */
+comment|/* 			 * on exit from the kernel, if thread == fpcurthread, 			 * FP is enabled. 			 */
 if|if
 condition|(
 name|PCPU_GET
 argument_list|(
-name|fpcurproc
+name|fpcurthread
 argument_list|)
 operator|==
-name|p
+name|td
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"trap: fp disabled for fpcurproc == %p"
+literal|"trap: fp disabled for fpcurthread == %p"
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1660,7 +1674,7 @@ goto|;
 block|}
 name|alpha_fpstate_switch
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1699,6 +1713,8 @@ case|:
 name|pmap_emulate_reference
 argument_list|(
 name|p
+operator|->
+name|p_vmspace
 argument_list|,
 name|a0
 argument_list|,
@@ -1749,16 +1765,14 @@ condition|(
 operator|!
 name|user
 operator|&&
-name|p
+name|td
 operator|!=
 name|NULL
 operator|&&
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_onfault
 operator|==
 operator|(
@@ -1767,12 +1781,10 @@ name|long
 operator|)
 name|fswintrberr
 operator|&&
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_accessaddr
 operator|==
 name|a0
@@ -1785,20 +1797,16 @@ index|[
 name|FRAME_PC
 index|]
 operator|=
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_onfault
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_onfault
 operator|=
 literal|0
@@ -1827,18 +1835,16 @@ name|VM_MIN_KERNEL_ADDRESS
 operator|)
 operator|||
 operator|(
-name|p
+name|td
 operator|==
 name|NULL
 operator|)
 operator|||
 operator|(
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_onfault
 operator|==
 literal|0
@@ -2172,16 +2178,14 @@ block|{
 comment|/* Check for copyin/copyout fault */
 if|if
 condition|(
-name|p
+name|td
 operator|!=
 name|NULL
 operator|&&
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_onfault
 operator|!=
 literal|0
@@ -2194,20 +2198,16 @@ index|[
 name|FRAME_PC
 index|]
 operator|=
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_onfault
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_addr
+name|td_pcb
 operator|->
-name|u_pcb
-operator|.
 name|pcb_onfault
 operator|=
 literal|0
@@ -2347,7 +2347,7 @@ argument_list|()
 expr_stmt|;
 name|userret
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|framep
 argument_list|,
@@ -2443,6 +2443,11 @@ modifier|*
 name|callp
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
@@ -2501,16 +2506,16 @@ operator|)
 name|alpha_pal_rdval
 argument_list|()
 expr_stmt|;
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|p
+name|td
 operator|->
-name|p_md
+name|td_md
 operator|.
 name|md_kernnest
 operator|++
@@ -2522,6 +2527,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|framep
 operator|->
 name|tf_regs
@@ -2580,9 +2591,9 @@ operator|.
 name|v_syscall
 operator|++
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -2599,9 +2610,11 @@ literal|4
 expr_stmt|;
 name|sticks
 operator|=
-name|p
+name|td
 operator|->
-name|p_sticks
+name|td_kse
+operator|->
+name|ke_sticks
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2932,18 +2945,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
 operator|=
 literal|0
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
@@ -2974,7 +2987,7 @@ operator|->
 name|sy_call
 call|)
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|args
 operator|+
@@ -2997,9 +3010,9 @@ index|[
 name|FRAME_V0
 index|]
 operator|=
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -3011,9 +3024,9 @@ index|[
 name|FRAME_A4
 index|]
 operator|=
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|1
 index|]
@@ -3106,7 +3119,7 @@ break|break;
 block|}
 name|userret
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|framep
 argument_list|,
@@ -3136,9 +3149,9 @@ name|code
 argument_list|,
 name|error
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_retval
+name|td_retval
 index|[
 literal|0
 index|]
@@ -3185,7 +3198,7 @@ if|if
 condition|(
 name|witness_list
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{
@@ -3308,12 +3321,12 @@ define|#
 directive|define
 name|irp
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|((reg_to_framereg[(reg)] == -1) ? NULL :			\&(p)->p_frame->tf_regs[reg_to_framereg[(reg)]])
+value|((reg_to_framereg[(reg)] == -1) ? NULL :			\&(td)->td_frame->tf_regs[reg_to_framereg[(reg)]])
 end_define
 
 begin_define
@@ -3321,12 +3334,12 @@ define|#
 directive|define
 name|frp
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|(&(p)->p_addr->u_pcb.pcb_fp.fpr_regs[(reg)])
+value|(&(td)->td_pcb->pcb_fp.fpr_regs[(reg)])
 end_define
 
 begin_define
@@ -3341,7 +3354,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|if (copyin((caddr_t)va,&(storage), sizeof (storage)) == 0&&	\ 	    (regptr = ptrf(p, reg)) != NULL)				\ 		signal = 0;						\ 	else								\ 		break;							\ 	*regptr = mod (storage);
+value|if (copyin((caddr_t)va,&(storage), sizeof (storage)) == 0&&	\ 	    (regptr = ptrf(td, reg)) != NULL)				\ 		signal = 0;						\ 	else								\ 		break;							\ 	*regptr = mod (storage);
 end_define
 
 begin_define
@@ -3356,7 +3369,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|if ((regptr = ptrf(p, reg)) == NULL)				\ 		(storage) = 0;						\ 	else								\ 		(storage) = mod (*regptr);				\ 	if (copyout(&(storage), (caddr_t)va, sizeof (storage)) == 0)	\ 		signal = 0;						\ 	else								\ 		break;
+value|if ((regptr = ptrf(td, reg)) == NULL)				\ 		(storage) = 0;						\ 	else								\ 		(storage) = mod (*regptr);				\ 	if (copyout(&(storage), (caddr_t)va, sizeof (storage)) == 0)	\ 		signal = 0;						\ 	else								\ 		break;
 end_define
 
 begin_define
@@ -3391,7 +3404,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|alpha_fpstate_save(p, 1);					\ 	unaligned_load(storage, frp, mod)
+value|alpha_fpstate_save(td, 1);					\ 	unaligned_load(storage, frp, mod)
 end_define
 
 begin_define
@@ -3404,7 +3417,7 @@ parameter_list|,
 name|mod
 parameter_list|)
 define|\
-value|alpha_fpstate_save(p, 0);					\ 	unaligned_store(storage, frp, mod)
+value|alpha_fpstate_save(td, 0);					\ 	unaligned_store(storage, frp, mod)
 end_define
 
 begin_function
@@ -4101,7 +4114,7 @@ name|opcode
 parameter_list|,
 name|reg
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|unsigned
 name|long
@@ -4112,9 +4125,9 @@ decl_stmt|,
 name|reg
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -4133,6 +4146,11 @@ specifier|const
 name|char
 modifier|*
 name|type
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|unsigned
 name|long
@@ -4307,23 +4325,37 @@ struct|;
 comment|/* 	 * Figure out what actions to take. 	 * 	 */
 if|if
 condition|(
-name|p
+name|td
 condition|)
+block|{
 name|uac
 operator|=
-name|p
+name|td
 operator|->
-name|p_md
+name|td_md
 operator|.
 name|md_flags
 operator|&
 name|MDP_UAC_MASK
 expr_stmt|;
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
+block|}
 else|else
+block|{
 name|uac
 operator|=
 literal|0
 expr_stmt|;
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|doprint
 operator|=
 name|alpha_unaligned_print
@@ -4451,18 +4483,18 @@ name|p_comm
 argument_list|,
 name|va
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_regs
 index|[
 name|FRAME_PC
 index|]
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_regs
 index|[
@@ -4688,14 +4720,14 @@ begin_function
 name|int
 name|handle_opdec
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|ucodep
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|u_int64_t
 modifier|*
@@ -4718,9 +4750,9 @@ name|int
 name|sig
 decl_stmt|;
 comment|/* 	 * Read USP into frame in case it's going to be used or modified. 	 * This keeps us from having to check for it in lots of places 	 * later. 	 */
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_regs
 index|[
@@ -4734,9 +4766,9 @@ name|inst_pc
 operator|=
 name|memaddr
 operator|=
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_regs
 index|[
@@ -4801,7 +4833,7 @@ name|regptr
 operator|=
 name|irp
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|inst
 operator|.
@@ -4838,7 +4870,7 @@ name|regptr
 operator|=
 name|irp
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|inst
 operator|.
@@ -4891,7 +4923,7 @@ name|mem_format
 operator|.
 name|rd
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5174,7 +5206,7 @@ name|regptr
 operator|=
 name|irp
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|inst
 operator|.
@@ -5201,7 +5233,7 @@ name|regptr
 operator|=
 name|irp
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|inst
 operator|.
@@ -5282,7 +5314,7 @@ name|regptr
 operator|=
 name|irp
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|inst
 operator|.
@@ -5309,7 +5341,7 @@ name|regptr
 operator|=
 name|irp
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|inst
 operator|.
@@ -5342,9 +5374,9 @@ block|}
 comment|/* 	 * Write back USP.  Note that in the error cases below, 	 * nothing will have been successfully modified so we don't 	 * have to write it out. 	 */
 name|alpha_pal_wrusp
 argument_list|(
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_regs
 index|[
@@ -5376,9 +5408,9 @@ name|sig
 operator|=
 name|SIGSEGV
 expr_stmt|;
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_regs
 index|[

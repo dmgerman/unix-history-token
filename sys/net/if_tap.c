@@ -1784,7 +1784,7 @@ name|flag
 parameter_list|,
 name|mode
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -1796,9 +1796,9 @@ name|int
 name|mode
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1825,9 +1825,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1992,7 +1992,9 @@ name|tp
 operator|->
 name|tap_pid
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -2047,7 +2049,7 @@ name|foo
 parameter_list|,
 name|bar
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2059,9 +2061,9 @@ name|int
 name|bar
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|int
@@ -2908,7 +2910,7 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -2923,9 +2925,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -4173,7 +4175,7 @@ name|dev
 parameter_list|,
 name|events
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -4182,9 +4184,9 @@ name|int
 name|events
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -4319,7 +4321,7 @@ argument_list|)
 expr_stmt|;
 name|selrecord
 argument_list|(
-name|p
+name|curthread
 argument_list|,
 operator|&
 name|tp

@@ -127,14 +127,14 @@ begin_function
 name|int
 name|sysarch
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 specifier|register
 name|struct

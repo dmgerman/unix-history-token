@@ -484,9 +484,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -547,9 +547,9 @@ argument_list|)
 comment|/* 	 * Don't allow open() unless the process has sufficient privileges, 	 * since mapping the i/o page and granting i/o privilege would 	 * require sufficient privilege soon and nothing much can be done 	 * without them. 	 */
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -611,9 +611,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -731,9 +731,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -785,7 +785,9 @@ name|ss
 operator|->
 name|p
 operator|=
-name|p
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|ss
 operator|->
@@ -814,9 +816,9 @@ name|SPIGOT_UNSECURE
 argument_list|)
 name|error
 operator|=
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -839,9 +841,9 @@ name|EPERM
 return|;
 endif|#
 directive|endif
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_eflags
 operator||=
@@ -852,9 +854,9 @@ case|case
 name|SPIGOT_IOPL_OFF
 case|:
 comment|/* deny access to the IO PAGE */
-name|p
+name|td
 operator|->
-name|p_frame
+name|td_frame
 operator|->
 name|tf_eflags
 operator|&=

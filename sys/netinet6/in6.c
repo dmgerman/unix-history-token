@@ -390,7 +390,7 @@ name|ifnet
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -1343,7 +1343,7 @@ name|data
 parameter_list|,
 name|ifp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|socket
@@ -1362,9 +1362,9 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -1407,14 +1407,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|td
 operator|==
 name|NULL
 operator|||
 operator|!
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 name|privileged
@@ -1656,7 +1656,7 @@ name|data
 argument_list|,
 name|ifp
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -5252,7 +5252,7 @@ name|data
 parameter_list|,
 name|ifp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|socket
@@ -5271,9 +5271,9 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -5840,7 +5840,7 @@ name|ifra
 argument_list|,
 name|ifp
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}
@@ -6597,7 +6597,7 @@ name|ifra
 argument_list|,
 name|ifp
 argument_list|,
-name|p
+name|td
 argument_list|)
 return|;
 block|}

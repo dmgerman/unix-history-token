@@ -750,7 +750,7 @@ name|head
 parameter_list|,
 name|connstatus
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 specifier|register
 name|struct
@@ -762,9 +762,9 @@ name|int
 name|connstatus
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 specifier|register
@@ -883,9 +883,11 @@ name|so
 operator|->
 name|so_cred
 operator|=
-name|p
+name|td
 condition|?
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 else|:
@@ -1426,11 +1428,11 @@ name|rcvcc
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 if|if
 condition|(
@@ -1445,7 +1447,7 @@ name|sndcc
 argument_list|,
 name|so
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -1466,7 +1468,7 @@ name|rcvcc
 argument_list|,
 name|so
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|==
 literal|0
@@ -1577,7 +1579,7 @@ name|cc
 parameter_list|,
 name|so
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|sockbuf
@@ -1593,12 +1595,12 @@ modifier|*
 name|so
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
-comment|/* 	 * p will only be NULL when we're in an interrupt 	 * (e.g. in tcp_input()) 	 */
+comment|/* 	 * td will only be NULL when we're in an interrupt 	 * (e.g. in tcp_input()) 	 */
 if|if
 condition|(
 operator|(
@@ -1642,9 +1644,11 @@ name|sb_hiwat
 argument_list|,
 name|cc
 argument_list|,
-name|p
+name|td
 condition|?
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_rlimit
 index|[
@@ -3678,9 +3682,9 @@ modifier|*
 name|nam
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 return|return
@@ -3731,9 +3735,9 @@ modifier|*
 name|ifp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 return|return
@@ -3752,9 +3756,9 @@ modifier|*
 name|so
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 return|return

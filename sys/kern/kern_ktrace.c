@@ -1200,14 +1200,14 @@ begin_function
 name|int
 name|ktrace
 parameter_list|(
-name|curp
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|curp
+name|td
 decl_stmt|;
 specifier|register
 name|struct
@@ -1219,6 +1219,15 @@ block|{
 ifdef|#
 directive|ifdef
 name|KTRACE
+name|struct
+name|proc
+modifier|*
+name|curp
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1312,7 +1321,7 @@ name|uap
 operator|->
 name|fname
 argument_list|,
-name|curp
+name|td
 argument_list|)
 expr_stmt|;
 name|flags
@@ -1374,7 +1383,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|curp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1401,7 +1410,7 @@ name|curp
 operator|->
 name|p_ucred
 argument_list|,
-name|curp
+name|td
 argument_list|)
 expr_stmt|;
 name|curp
@@ -1487,7 +1496,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1701,7 +1710,7 @@ name|curp
 operator|->
 name|p_ucred
 argument_list|,
-name|curp
+name|td
 argument_list|)
 expr_stmt|;
 name|curp
@@ -1738,14 +1747,14 @@ begin_function
 name|int
 name|utrace
 parameter_list|(
-name|curp
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|curp
+name|td
 decl_stmt|;
 specifier|register
 name|struct
@@ -2310,11 +2319,21 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
 comment|/* XXX */
 name|struct
@@ -2403,9 +2422,9 @@ literal|1
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 if|if
 condition|(
@@ -2484,7 +2503,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2494,7 +2513,7 @@ name|VOP_LEASE
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|p
 operator|->
@@ -2539,7 +2558,7 @@ name|VOP_LEASE
 argument_list|(
 name|vp
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|p
 operator|->
@@ -2572,7 +2591,7 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vn_finished_write

@@ -38,9 +38,9 @@ define|#
 directive|define
 name|cpu_getstack
 parameter_list|(
-name|p
+name|td
 parameter_list|)
-value|((p)->p_frame->tf_r[FRAME_SP])
+value|((td)->td_frame->tf_r[FRAME_SP])
 end_define
 
 begin_comment
@@ -235,7 +235,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -304,21 +304,6 @@ name|size_t
 operator|,
 name|void
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|child_return
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -445,7 +430,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -460,7 +445,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|,
@@ -478,7 +463,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -493,7 +478,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 name|p
 operator|)
@@ -659,24 +644,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|switch_exit
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MAGIC */
-end_comment
 
 begin_decl_stmt
 name|void

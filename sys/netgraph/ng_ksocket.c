@@ -2435,16 +2435,15 @@ name|name0
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 condition|?
-name|curproc
+name|curthread
 else|:
-operator|&
-name|proc0
+name|thread0
 decl_stmt|;
 comment|/* XXX broken */
 specifier|const
@@ -2694,7 +2693,7 @@ name|type
 argument_list|,
 name|protocol
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2862,16 +2861,15 @@ name|lasthook
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 condition|?
-name|curproc
+name|curthread
 else|:
-operator|&
-name|proc0
+name|thread0
 decl_stmt|;
 comment|/* XXX broken */
 specifier|const
@@ -3006,7 +3004,7 @@ name|so
 argument_list|,
 name|sa
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3063,7 +3061,7 @@ operator|->
 name|data
 operator|)
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3275,7 +3273,7 @@ name|so
 argument_list|,
 name|sa
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3654,7 +3652,7 @@ name|name
 expr_stmt|;
 name|sopt
 operator|.
-name|sopt_p
+name|sopt_td
 operator|=
 name|NULL
 expr_stmt|;
@@ -3827,7 +3825,7 @@ name|valsize
 expr_stmt|;
 name|sopt
 operator|.
-name|sopt_p
+name|sopt_td
 operator|=
 name|NULL
 expr_stmt|;
@@ -3901,16 +3899,15 @@ name|item
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 condition|?
-name|curproc
+name|curthread
 else|:
-operator|&
-name|proc0
+name|thread0
 decl_stmt|;
 comment|/* XXX broken */
 specifier|const
@@ -3986,7 +3983,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4574,7 +4571,7 @@ block|}
 comment|/* Read and forward available mbuf's */
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 name|NULL
 expr_stmt|;

@@ -15,6 +15,13 @@ end_comment
 
 begin_struct
 struct|struct
+name|mdthread
+block|{ }
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|mdproc
 block|{ }
 struct|;

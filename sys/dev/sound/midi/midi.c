@@ -940,9 +940,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -969,7 +969,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -986,7 +986,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1020,9 +1020,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1049,7 +1049,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1066,7 +1066,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1234,9 +1234,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1265,7 +1265,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1296,9 +1296,9 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1323,7 +1323,7 @@ name|i_dev
 argument_list|,
 name|events
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1360,9 +1360,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1578,7 +1578,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1603,9 +1603,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1821,7 +1821,7 @@ name|flags
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -2263,9 +2263,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -2334,7 +2334,7 @@ name|arg
 argument_list|,
 name|mode
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3041,9 +3041,9 @@ name|int
 name|events
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -3170,7 +3170,7 @@ condition|)
 comment|/* No enough space, record select. */
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|d
@@ -3263,7 +3263,7 @@ condition|)
 comment|/* No data ready, record select. */
 name|selrecord
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|d
@@ -3551,9 +3551,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 if|if
@@ -3624,9 +3624,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|midistatbusy

@@ -284,9 +284,9 @@ modifier|*
 name|ifp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -462,9 +462,9 @@ case|:
 comment|/*  	 * If we are not superuser, then we don't get to do these ops. 	 */
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 block|{

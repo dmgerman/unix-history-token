@@ -915,6 +915,11 @@ name|proc
 modifier|*
 name|wproc
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 specifier|register
 name|struct
 name|lockf
@@ -927,6 +932,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* The block is waiting on something */
+comment|/* XXXKSE this is not complete under threads */
 name|wproc
 operator|=
 operator|(
@@ -944,16 +950,23 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|FOREACH_THREAD_IN_PROC
+argument_list|(
+argument|wproc
+argument_list|,
+argument|td
+argument_list|)
+block|{
 while|while
 condition|(
-name|wproc
+name|td
 operator|->
-name|p_wchan
+name|td_wchan
 operator|&&
 operator|(
-name|wproc
+name|td
 operator|->
-name|p_wmesg
+name|td_wmesg
 operator|==
 name|lockstr
 operator|)
@@ -973,9 +986,9 @@ expr|struct
 name|lockf
 operator|*
 operator|)
-name|wproc
+name|td
 operator|->
-name|p_wchan
+name|td_wchan
 expr_stmt|;
 comment|/* Get the owner of the blocking lock */
 name|waitblock
@@ -1040,6 +1053,7 @@ operator|(
 name|EDEADLK
 operator|)
 return|;
+block|}
 block|}
 block|}
 name|mtx_unlock_spin

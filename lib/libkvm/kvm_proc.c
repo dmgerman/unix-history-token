@@ -619,8 +619,9 @@ name|ki_addr
 operator|=
 name|proc
 operator|.
-name|p_addr
+name|p_uarea
 expr_stmt|;
+comment|/* kp->ki_kstack = proc.p_thread.td_kstack; XXXKSE */
 name|kp
 operator|->
 name|ki_args
@@ -1290,8 +1291,11 @@ if|if
 condition|(
 name|proc
 operator|.
-name|p_wmesg
+name|p_thread
+operator|.
+name|td_wmesg
 condition|)
+comment|/* XXXKSE */
 operator|(
 name|void
 operator|)
@@ -1304,7 +1308,9 @@ name|u_long
 operator|)
 name|proc
 operator|.
-name|p_wmesg
+name|p_thread
+operator|.
+name|td_wmesg
 argument_list|,
 name|kp
 operator|->
@@ -1556,11 +1562,14 @@ if|if
 condition|(
 name|proc
 operator|.
-name|p_blocked
+name|p_thread
+operator|.
+name|td_blocked
 operator|!=
 literal|0
 condition|)
 block|{
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_kiflag
@@ -1571,8 +1580,11 @@ if|if
 condition|(
 name|proc
 operator|.
-name|p_mtxname
+name|p_thread
+operator|.
+name|td_mtxname
 condition|)
+comment|/* XXXKSE */
 operator|(
 name|void
 operator|)
@@ -1585,7 +1597,9 @@ name|u_long
 operator|)
 name|proc
 operator|.
-name|p_mtxname
+name|p_thread
+operator|.
+name|td_mtxname
 argument_list|,
 name|kp
 operator|->
@@ -1658,24 +1672,33 @@ name|ki_pctcpu
 operator|=
 name|proc
 operator|.
-name|p_pctcpu
+name|p_kse
+operator|.
+name|ke_pctcpu
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_estcpu
 operator|=
 name|proc
 operator|.
-name|p_estcpu
+name|p_ksegrp
+operator|.
+name|kg_estcpu
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_slptime
 operator|=
 name|proc
 operator|.
-name|p_slptime
+name|p_kse
+operator|.
+name|ke_slptime
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_swtime
@@ -1706,8 +1729,11 @@ name|ki_wchan
 operator|=
 name|proc
 operator|.
-name|p_wchan
+name|p_thread
+operator|.
+name|td_wchan
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_traceflag
@@ -1730,16 +1756,22 @@ name|ki_pri
 operator|=
 name|proc
 operator|.
-name|p_pri
+name|p_ksegrp
+operator|.
+name|kg_pri
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_nice
 operator|=
 name|proc
 operator|.
-name|p_nice
+name|p_ksegrp
+operator|.
+name|kg_nice
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_lock
@@ -1754,24 +1786,33 @@ name|ki_rqindex
 operator|=
 name|proc
 operator|.
-name|p_rqindex
+name|p_kse
+operator|.
+name|ke_rqindex
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_oncpu
 operator|=
 name|proc
 operator|.
-name|p_oncpu
+name|p_kse
+operator|.
+name|ke_oncpu
 expr_stmt|;
+comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_lastcpu
 operator|=
 name|proc
 operator|.
-name|p_lastcpu
+name|p_thread
+operator|.
+name|td_lastcpu
 expr_stmt|;
+comment|/* XXXKSE */
 name|bcopy
 argument_list|(
 operator|&

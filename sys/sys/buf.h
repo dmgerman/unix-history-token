@@ -904,7 +904,7 @@ file|<sys/proc.h>
 end_include
 
 begin_comment
-comment|/* XXX for curproc */
+comment|/* XXX for curthread */
 end_comment
 
 begin_include
@@ -1027,7 +1027,7 @@ argument_list|,
 operator|&
 name|buftimelock
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1163,7 +1163,7 @@ argument_list|,
 operator|&
 name|buftimelock
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1230,7 +1230,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|curproc
+name|curthread
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1299,20 +1299,22 @@ name|bp
 parameter_list|)
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 if|if
 condition|(
-name|p
+operator|(
+name|td
 operator|!=
 name|PCPU_GET
 argument_list|(
-name|idleproc
+name|idlethread
 argument_list|)
+operator|)
 operator|&&
 name|bp
 operator|->
@@ -1320,13 +1322,15 @@ name|b_lock
 operator|.
 name|lk_lockholder
 operator|==
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 condition|)
-name|p
+name|td
 operator|->
-name|p_locks
+name|td_locks
 operator|--
 expr_stmt|;
 name|bp

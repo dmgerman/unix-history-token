@@ -136,7 +136,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -749,7 +749,7 @@ name|drive
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|int
@@ -1957,7 +1957,7 @@ name|Malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|malloc((x), M_DEVBUF, \ 	curproc->p_intr_nesting_level == 0? M_WAITOK: M_NOWAIT)
+value|malloc((x), M_DEVBUF, \ 	curthread->td_proc->p_intr_nesting_level == 0? M_WAITOK: M_NOWAIT)
 end_define
 
 begin_define

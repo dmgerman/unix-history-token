@@ -279,7 +279,7 @@ name|vers
 parameter_list|,
 name|portp
 parameter_list|,
-name|procp
+name|td
 parameter_list|)
 name|struct
 name|sockaddr_in
@@ -299,9 +299,9 @@ name|portp
 decl_stmt|;
 comment|/* network order */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 block|{
 struct|struct
@@ -467,7 +467,7 @@ name|m
 argument_list|,
 name|NULL
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -562,7 +562,7 @@ name|data
 parameter_list|,
 name|from_p
 parameter_list|,
-name|procp
+name|td
 parameter_list|)
 name|struct
 name|sockaddr_in
@@ -591,9 +591,9 @@ name|from_p
 decl_stmt|;
 comment|/* output */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|procp
+name|td
 decl_stmt|;
 block|{
 name|struct
@@ -712,7 +712,7 @@ name|SOCK_DGRAM
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -906,7 +906,7 @@ operator|*
 operator|)
 name|sin
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1188,7 +1188,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|procp
+name|td
 argument_list|)
 expr_stmt|;
 if|if

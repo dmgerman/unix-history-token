@@ -92,7 +92,7 @@ name|PROCFS_ACTION
 parameter_list|(
 name|action
 parameter_list|)
-value|do {					\ 	int error;							\ 									\ 	mtx_lock_spin(&sched_lock);					\ 	if ((p->p_sflag& PS_INMEM) == 0)				\ 		error = EIO;						\ 	else								\ 		error = (action);					\ 	mtx_unlock_spin(&sched_lock);					\ 	return (error);							\ } while(0)
+value|do {					\ 	int error;							\ 									\ 	mtx_lock_spin(&sched_lock);					\ 	if ((td->td_proc->p_sflag& PS_INMEM) == 0)			\ 		error = EIO;						\ 	else								\ 		error = (action);					\ 	mtx_unlock_spin(&sched_lock);					\ 	return (error);							\ } while(0)
 end_define
 
 begin_function
@@ -100,9 +100,9 @@ name|int
 name|procfs_read_regs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|reg
@@ -114,7 +114,7 @@ name|PROCFS_ACTION
 argument_list|(
 name|fill_regs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|regs
 argument_list|)
@@ -128,9 +128,9 @@ name|int
 name|procfs_write_regs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|reg
@@ -142,7 +142,7 @@ name|PROCFS_ACTION
 argument_list|(
 name|set_regs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|regs
 argument_list|)
@@ -156,9 +156,9 @@ name|int
 name|procfs_read_dbregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|dbreg
@@ -170,7 +170,7 @@ name|PROCFS_ACTION
 argument_list|(
 name|fill_dbregs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|dbregs
 argument_list|)
@@ -184,9 +184,9 @@ name|int
 name|procfs_write_dbregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|dbreg
@@ -198,7 +198,7 @@ name|PROCFS_ACTION
 argument_list|(
 name|set_dbregs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|dbregs
 argument_list|)
@@ -216,9 +216,9 @@ name|int
 name|procfs_read_fpregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|fpreg
@@ -230,7 +230,7 @@ name|PROCFS_ACTION
 argument_list|(
 name|fill_fpregs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|fpregs
 argument_list|)
@@ -244,9 +244,9 @@ name|int
 name|procfs_write_fpregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|fpreg
@@ -258,7 +258,7 @@ name|PROCFS_ACTION
 argument_list|(
 name|set_fpregs
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|fpregs
 argument_list|)
@@ -272,16 +272,16 @@ name|int
 name|procfs_sstep
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|PROCFS_ACTION
 argument_list|(
 name|ptrace_single_step
 argument_list|(
-name|p
+name|td
 argument_list|)
 argument_list|)
 expr_stmt|;

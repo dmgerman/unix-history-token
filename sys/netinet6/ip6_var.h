@@ -1634,7 +1634,7 @@ name|mbuf
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)

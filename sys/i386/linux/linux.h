@@ -62,7 +62,7 @@ name|nm
 parameter_list|,
 name|fmt
 parameter_list|)
-value|"linux(%ld): "#nm"("fmt")\n", (long)p->p_pid
+value|"linux(%ld): "#nm"("fmt")\n", (long)td->td_proc->p_pid
 end_define
 
 begin_define
@@ -72,7 +72,7 @@ name|LMSG
 parameter_list|(
 name|fmt
 parameter_list|)
-value|"linux(%ld): "fmt"\n", (long)p->p_pid
+value|"linux(%ld): "fmt"\n", (long)td->td_proc->p_pid
 end_define
 
 begin_ifdef
@@ -1824,7 +1824,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|thread
 struct_decl|;
 end_struct_decl
 
@@ -1834,7 +1834,7 @@ name|int
 name|linux_ioctl_function_t
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct

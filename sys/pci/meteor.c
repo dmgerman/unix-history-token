@@ -3856,9 +3856,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|meteor_reg_t
@@ -4075,9 +4075,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|meteor_reg_t
@@ -4679,9 +4679,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|pr
+name|td
 parameter_list|)
 block|{
 name|int
@@ -5006,7 +5006,9 @@ name|mtr
 operator|->
 name|proc
 operator|=
-name|pr
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 block|}
 else|else

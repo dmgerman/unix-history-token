@@ -1665,6 +1665,16 @@ argument_list|,
 name|__FUNCTION__
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RESTARTABLE_PANICS
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 

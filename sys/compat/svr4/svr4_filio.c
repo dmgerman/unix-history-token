@@ -113,14 +113,14 @@ begin_function
 name|int
 name|svr4_sys_poll
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_sys_poll_args
@@ -230,7 +230,7 @@ name|error
 operator|=
 name|poll
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|(
 expr|struct
@@ -384,14 +384,14 @@ begin_function
 name|int
 name|svr4_sys_read
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_sys_read_args
@@ -408,7 +408,9 @@ name|filedesc
 modifier|*
 name|fdp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 decl_stmt|;
@@ -605,7 +607,7 @@ name|rv
 operator|=
 name|read
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|ra
@@ -653,7 +655,9 @@ argument_list|(
 operator|(
 literal|"sigmask = 0x%x\n"
 operator|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_sigmask
 operator|)
@@ -664,7 +668,9 @@ argument_list|(
 operator|(
 literal|"sigignore = 0x%x\n"
 operator|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_sigignore
 operator|)
@@ -675,7 +681,9 @@ argument_list|(
 operator|(
 literal|"sigcaught = 0x%x\n"
 operator|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_sigcatch
 operator|)
@@ -686,7 +694,9 @@ argument_list|(
 operator|(
 literal|"siglist = 0x%x\n"
 operator|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_siglist
 operator|)
@@ -744,14 +754,14 @@ begin_function
 name|int
 name|svr4_sys_write
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|uap
 parameter_list|)
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|struct
 name|svr4_sys_write_args
@@ -825,7 +835,7 @@ name|rv
 operator|=
 name|write
 argument_list|(
-name|p
+name|td
 argument_list|,
 operator|&
 name|wa
@@ -884,7 +894,7 @@ name|svr4_fil_ioctl
 parameter_list|(
 name|fp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|retval
 parameter_list|,
@@ -900,9 +910,9 @@ modifier|*
 name|fp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|register_t
 modifier|*
@@ -929,7 +939,9 @@ name|filedesc
 modifier|*
 name|fdp
 init|=
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_fd
 decl_stmt|;
@@ -1091,7 +1103,7 @@ operator|)
 operator|&
 name|num
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

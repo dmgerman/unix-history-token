@@ -383,11 +383,11 @@ name|nr_cs
 decl_stmt|;
 comment|/* connection state */
 name|struct
-name|proc
+name|thread
 modifier|*
-name|nr_p
+name|nr_td
 decl_stmt|;
-comment|/* proc that did rq */
+comment|/* thread that did rq */
 name|struct
 name|ucred
 modifier|*
@@ -420,9 +420,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -454,9 +454,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -488,9 +488,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred
@@ -527,9 +527,9 @@ modifier|*
 name|ncp
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|ucred

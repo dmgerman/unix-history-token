@@ -519,9 +519,9 @@ name|M_WAITOK
 condition|)
 name|KASSERT
 argument_list|(
-name|curproc
+name|curthread
 operator|->
-name|p_intr_nesting_level
+name|td_intr_nesting_level
 operator|==
 literal|0
 argument_list|,

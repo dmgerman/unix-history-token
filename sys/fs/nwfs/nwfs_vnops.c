@@ -781,7 +781,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_access_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -981,7 +981,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_open_args
-comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1116,7 +1116,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 literal|1
 argument_list|)
@@ -1150,7 +1150,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1190,7 +1190,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1232,7 +1232,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 literal|1
 argument_list|)
@@ -1318,7 +1318,7 @@ name|no
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 name|ap
 operator|->
@@ -1366,7 +1366,7 @@ name|no
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 name|ap
 operator|->
@@ -1425,7 +1425,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_close_args
-comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1462,7 +1462,9 @@ name|n_name
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -1538,7 +1540,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 literal|1
 argument_list|)
@@ -1609,7 +1611,7 @@ name|n_fh
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 name|ap
 operator|->
@@ -1653,7 +1655,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1792,7 +1794,7 @@ name|fattr
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 name|ap
 operator|->
@@ -1827,7 +1829,7 @@ name|fattr
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|,
 name|ap
 operator|->
@@ -1899,7 +1901,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_setattr_args
-comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct thread *td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2114,7 +2116,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 if|if
@@ -2164,7 +2166,7 @@ name|a_cred
 argument_list|,
 name|ap
 operator|->
-name|a_p
+name|a_td
 argument_list|)
 expr_stmt|;
 name|np
@@ -2501,7 +2503,7 @@ name|cn_cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 operator|)
 condition|)
@@ -2550,7 +2552,7 @@ name|no
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|,
 name|cnp
 operator|->
@@ -2579,7 +2581,7 @@ name|fh
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|,
 name|cnp
 operator|->
@@ -2801,7 +2803,7 @@ name|cn_nameptr
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|,
 name|cnp
 operator|->
@@ -3020,7 +3022,7 @@ name|cn_nameptr
 argument_list|,
 name|tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|,
 name|tcnp
 operator|->
@@ -3140,7 +3142,7 @@ name|cn_namelen
 argument_list|,
 name|tcnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|,
 name|tcnp
 operator|->
@@ -3445,7 +3447,7 @@ name|cn_cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 operator|)
 condition|)
@@ -3527,7 +3529,7 @@ name|no
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|,
 name|cnp
 operator|->
@@ -3747,7 +3749,7 @@ name|cn_nameptr
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|,
 name|cnp
 operator|->
@@ -3908,12 +3910,12 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_fsync_args
-comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode * a_vp; 		struct ucred * a_cred; 		int  a_waitfor; 		struct proc * a_p; 	} */
+comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode * a_vp; 		struct ucred * a_cred; 		int  a_waitfor; 		struct thread *a_td; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/*	return (nfs_flush(ap->a_vp, ap->a_cred, ap->a_waitfor, ap->a_p, 1));*/
+comment|/*	return (nfs_flush(ap->a_vp, ap->a_cred, ap->a_waitfor, ap->a_td, 1));*/
 return|return
 operator|(
 literal|0
@@ -4098,9 +4100,9 @@ modifier|*
 name|cr
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|error
@@ -4133,19 +4135,19 @@ name|b_flags
 operator|&
 name|B_ASYNC
 condition|)
-name|p
+name|td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
 expr_stmt|;
 else|else
-name|p
+name|td
 operator|=
-name|curproc
+name|curthread
 expr_stmt|;
 comment|/* XXX */
 if|if
@@ -4190,7 +4192,7 @@ name|bp
 argument_list|,
 name|cr
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -4311,13 +4313,13 @@ decl_stmt|,
 name|notfound
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 decl_stmt|;
 name|char
 name|_name
@@ -4451,7 +4453,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -4630,7 +4632,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* unlock parent */
@@ -4642,7 +4644,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4662,7 +4664,7 @@ name|dvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4676,7 +4678,7 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -4695,7 +4697,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4728,7 +4730,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|&&
 name|vattr
@@ -4797,7 +4799,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -4809,7 +4811,7 @@ name|dvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4891,7 +4893,7 @@ name|dnp
 operator|->
 name|n_parent
 argument_list|,
-name|p
+name|td
 argument_list|,
 operator|&
 name|npp
@@ -4934,7 +4936,7 @@ name|NULL
 argument_list|,
 name|fap
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cnp
 operator|->
@@ -4966,7 +4968,7 @@ name|cn_nameptr
 argument_list|,
 name|fap
 argument_list|,
-name|p
+name|td
 argument_list|,
 name|cnp
 operator|->
@@ -5084,7 +5086,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5123,7 +5125,7 @@ name|cn_cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -5212,7 +5214,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5246,7 +5248,7 @@ name|cn_cred
 argument_list|,
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -5321,7 +5323,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5343,7 +5345,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* race to get the inode */
@@ -5376,7 +5378,7 @@ name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -5400,7 +5402,7 @@ name|dvp
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -5499,7 +5501,7 @@ name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}

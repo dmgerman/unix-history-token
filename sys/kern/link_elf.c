@@ -2442,11 +2442,21 @@ name|nameidata
 name|nd
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
 comment|/* XXX */
 name|Elf_Ehdr
@@ -2566,7 +2576,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|filename
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|flags
@@ -2663,7 +2673,7 @@ argument_list|,
 operator|&
 name|resid
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|nbytes
@@ -3306,7 +3316,7 @@ argument_list|,
 operator|&
 name|resid
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3542,7 +3552,7 @@ argument_list|,
 operator|&
 name|resid
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3719,7 +3729,7 @@ argument_list|,
 operator|&
 name|resid
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3763,7 +3773,7 @@ argument_list|,
 operator|&
 name|resid
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -3940,7 +3950,7 @@ name|ni_vp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|vn_close
@@ -3955,7 +3965,7 @@ name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

@@ -447,7 +447,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|CURPROC
+name|curthread
 argument_list|)
 expr_stmt|;
 for|for
@@ -536,7 +536,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|CURPROC
+name|curthread
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -588,7 +588,7 @@ name|LK_EXCLUSIVE
 argument_list|,
 name|NULL
 argument_list|,
-name|CURPROC
+name|curthread
 argument_list|)
 expr_stmt|;
 if|if
@@ -676,7 +676,7 @@ name|LK_RELEASE
 argument_list|,
 name|NULL
 argument_list|,
-name|CURPROC
+name|curthread
 argument_list|)
 expr_stmt|;
 block|}

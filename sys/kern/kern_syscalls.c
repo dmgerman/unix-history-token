@@ -42,9 +42,9 @@ name|int
 name|lkmnosys
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|nosys_args
@@ -56,7 +56,7 @@ return|return
 operator|(
 name|nosys
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|args
 argument_list|)
@@ -70,9 +70,9 @@ name|int
 name|lkmressys
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|nosys_args
@@ -84,7 +84,7 @@ return|return
 operator|(
 name|nosys
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|args
 argument_list|)

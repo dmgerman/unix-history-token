@@ -47,9 +47,9 @@ name|int
 name|set_fpregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|fpreg
@@ -64,9 +64,9 @@ name|int
 name|set_regs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|reg
@@ -81,9 +81,9 @@ name|void
 name|setregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|u_long
 name|e
@@ -102,9 +102,9 @@ name|int
 name|set_dbregs
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|dbreg

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_upages.h"
+file|"opt_kstack_pages.h"
 end_include
 
 begin_include
@@ -901,7 +901,7 @@ begin_function
 name|int
 name|aout_coredump
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|vp
 parameter_list|,
@@ -909,9 +909,9 @@ name|limit
 parameter_list|)
 specifier|register
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 specifier|register
 name|struct
@@ -923,6 +923,15 @@ name|off_t
 name|limit
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|td
+operator|->
+name|td_proc
+decl_stmt|;
 specifier|register
 name|struct
 name|ucred
@@ -950,7 +959,11 @@ if|if
 condition|(
 name|ctob
 argument_list|(
-name|UPAGES
+operator|(
+name|UAREA_PAGES
+operator|+
+name|KSTACK_PAGES
+operator|)
 operator|+
 name|vm
 operator|->
@@ -975,7 +988,7 @@ argument_list|,
 operator|&
 name|p
 operator|->
-name|p_addr
+name|p_uarea
 operator|->
 name|u_kproc
 argument_list|)
@@ -984,7 +997,7 @@ name|error
 operator|=
 name|cpu_coredump
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|vp
 argument_list|,
@@ -999,7 +1012,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|vn_rdwr_inchunks
+name|vn_rdwr
 argument_list|(
 name|UIO_WRITE
 argument_list|,
@@ -1024,7 +1037,9 @@ name|off_t
 operator|)
 name|ctob
 argument_list|(
-name|UPAGES
+name|UAREA_PAGES
+operator|+
+name|KSTACK_PAGES
 argument_list|)
 argument_list|,
 name|UIO_USERSPACE
@@ -1039,7 +1054,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -1086,7 +1101,9 @@ name|off_t
 operator|)
 name|ctob
 argument_list|(
-name|UPAGES
+name|UAREA_PAGES
+operator|+
+name|KSTACK_PAGES
 argument_list|)
 operator|+
 name|ctob
@@ -1108,7 +1125,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

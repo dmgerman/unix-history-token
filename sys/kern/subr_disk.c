@@ -1184,9 +1184,9 @@ name|int
 name|devtype
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|dev_t
@@ -1320,7 +1320,7 @@ name|oflags
 argument_list|,
 name|devtype
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1384,7 +1384,7 @@ name|oflags
 argument_list|,
 name|devtype
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 name|out
@@ -1441,9 +1441,9 @@ name|int
 name|devtype
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1528,7 +1528,7 @@ name|fflag
 argument_list|,
 name|devtype
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -1720,9 +1720,9 @@ name|int
 name|fflag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1806,7 +1806,7 @@ name|data
 argument_list|,
 name|fflag
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return

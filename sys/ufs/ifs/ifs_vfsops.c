@@ -191,7 +191,7 @@ name|nameidata
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -283,7 +283,7 @@ name|data
 parameter_list|,
 name|ndp
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|struct
 name|mount
@@ -303,9 +303,9 @@ modifier|*
 name|ndp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 comment|/* Clear the softdep flag */
@@ -328,7 +328,7 @@ name|data
 argument_list|,
 name|ndp
 argument_list|,
-name|p
+name|td
 argument_list|)
 operator|)
 return|;

@@ -3526,7 +3526,7 @@ name|KASSERT
 argument_list|(
 name|witness_list
 argument_list|(
-name|curproc
+name|curthread
 argument_list|)
 operator|==
 literal|0

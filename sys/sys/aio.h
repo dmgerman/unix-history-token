@@ -417,6 +417,7 @@ modifier|*
 name|userproc
 decl_stmt|;
 comment|/* User process */
+comment|/* Not td! */
 name|struct
 name|file
 modifier|*
@@ -424,9 +425,9 @@ name|fd_file
 decl_stmt|;
 comment|/* Pointer to file structure */
 name|struct
-name|aioproclist
+name|aiothreadlist
 modifier|*
-name|jobaioproc
+name|jobaiothread
 decl_stmt|;
 comment|/* AIO process descriptor */
 name|struct

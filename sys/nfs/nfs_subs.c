@@ -1607,7 +1607,7 @@ name|int
 name|nfssvc
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|,
 name|struct
@@ -1645,7 +1645,7 @@ name|vnode
 operator|*
 operator|,
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 argument_list|)
@@ -3727,7 +3727,7 @@ name|xfer
 decl_stmt|;
 specifier|register
 name|caddr_t
-name|p
+name|ptr
 decl_stmt|;
 name|mp
 operator|=
@@ -3865,7 +3865,7 @@ expr_stmt|;
 operator|*
 name|cp2
 operator|=
-name|p
+name|ptr
 operator|=
 name|mtod
 argument_list|(
@@ -3879,7 +3879,7 @@ argument_list|(
 operator|*
 name|dposp
 argument_list|,
-name|p
+name|ptr
 argument_list|,
 name|left
 argument_list|)
@@ -3891,7 +3891,7 @@ name|siz
 operator|-
 name|left
 expr_stmt|;
-name|p
+name|ptr
 operator|+=
 name|left
 expr_stmt|;
@@ -3952,7 +3952,7 @@ argument_list|,
 name|caddr_t
 argument_list|)
 argument_list|,
-name|p
+name|ptr
 argument_list|,
 name|xfer
 argument_list|)
@@ -3970,7 +3970,7 @@ name|m_len
 operator|-=
 name|xfer
 expr_stmt|;
-name|p
+name|ptr
 operator|+=
 name|xfer
 expr_stmt|;
@@ -6418,7 +6418,7 @@ name|dposp
 parameter_list|,
 name|retdirp
 parameter_list|,
-name|p
+name|td
 parameter_list|,
 name|kerbflag
 parameter_list|,
@@ -6464,9 +6464,9 @@ modifier|*
 name|retdirp
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 name|int
 name|kerbflag
@@ -7052,9 +7052,9 @@ block|}
 comment|/* 	 * Initialize for scan, set ni_startdir and bump ref on dp again 	 * becuase lookup() will dereference ni_startdir. 	 */
 name|cnp
 operator|->
-name|cn_proc
+name|cn_thread
 operator|=
-name|p
+name|td
 expr_stmt|;
 name|VREF
 argument_list|(
@@ -7170,7 +7170,7 @@ name|ni_dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -7272,11 +7272,11 @@ name|UIO_SYSSPACE
 expr_stmt|;
 name|auio
 operator|.
-name|uio_procp
+name|uio_td
 operator|=
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|)
 literal|0
@@ -8646,11 +8646,11 @@ name|pubflag
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 specifier|register
@@ -9016,7 +9016,7 @@ name|vpp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 return|return
@@ -9954,11 +9954,13 @@ name|vfs_object_create
 argument_list|(
 name|vp
 argument_list|,
-name|curproc
+name|curthread
 argument_list|,
-name|curproc
+name|curthread
 condition|?
-name|curproc
+name|curthread
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 else|:

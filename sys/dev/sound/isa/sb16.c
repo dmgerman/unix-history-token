@@ -652,9 +652,9 @@ operator|>
 literal|500000
 if|if
 condition|(
-name|curproc
+name|curthread
 operator|->
-name|p_intr_nesting_level
+name|td_intr_nesting_level
 operator|==
 literal|0
 condition|)

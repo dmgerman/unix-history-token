@@ -132,7 +132,7 @@ block|{
 define|#
 directive|define
 name|szsigcode
-value|(*(curproc->p_sysent->sv_szsigcode))
+value|(*(curthread->td_proc->p_sysent->sv_szsigcode))
 return|return
 call|(
 name|caddr_t
@@ -213,7 +213,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|thread
 operator|*
 operator|,
 name|caddr_t
