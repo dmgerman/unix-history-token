@@ -3261,6 +3261,13 @@ block|}
 block|,
 comment|/* GVC0505 - GVC 56k Faxmodem */
 block|{
+literal|0x0116c31e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* GVC1601 - Rockwell V.34 Plug& Play Modem */
+block|{
 literal|0x0050c31e
 block|,
 name|NULL
@@ -3281,6 +3288,13 @@ name|NULL
 block|}
 block|,
 comment|/* GWY6290 - Telepath with x2 Technology */
+block|{
+literal|0x8100e425
+block|,
+name|NULL
+block|}
+block|,
+comment|/* IOD0081 - I-O DATA DEVICE,INC. IFML-560 */
 block|{
 literal|0x21002534
 block|,
