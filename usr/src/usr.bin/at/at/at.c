@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	4.9	(Berkeley)	%G%"
+literal|"@(#)at.c	4.10	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2533,6 +2533,9 @@ end_decl_stmt
 begin_block
 block|{
 name|char
+name|ch
+decl_stmt|;
+name|char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -2554,28 +2557,28 @@ operator|*
 name|ptr
 condition|)
 block|{
+name|ch
+operator|=
+operator|*
+name|ptr
+expr_stmt|;
 if|if
 condition|(
 name|isupper
 argument_list|(
-operator|*
-name|ptr
+name|ch
 argument_list|)
 condition|)
-operator|*
-name|ptr
+name|ch
 operator|=
 name|tolower
 argument_list|(
-operator|*
-name|ptr
+name|ch
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|ptr
-operator|++
+name|ch
 operator|!=
 operator|*
 name|ptr1
@@ -2586,6 +2589,9 @@ operator|(
 literal|0
 operator|)
 return|;
+operator|++
+name|ptr
+expr_stmt|;
 block|}
 return|return
 operator|(
