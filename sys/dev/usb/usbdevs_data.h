@@ -800,6 +800,30 @@ literal|"USB to LAN Converter"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_BELKIN
+block|,
+name|USB_PRODUCT_BELKIN_F5U103
+block|,
+literal|0
+block|,
+literal|"Belkin Components"
+block|,
+literal|"F5U103 Serial adapter"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_BELKIN
+block|,
+name|USB_PRODUCT_BELKIN_F5U120
+block|,
+literal|0
+block|,
+literal|"Belkin Components"
+block|,
+literal|"F5U120-PC Hub"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_BILLIONTON
 block|,
 name|USB_PRODUCT_BILLIONTON_USB100
@@ -1733,6 +1757,18 @@ block|,
 literal|"Extended Systems"
 block|,
 literal|"XTNDAccess IrDA"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_GOHUBS
+block|,
+name|USB_PRODUCT_GOHUBS_GOCOM232
+block|,
+literal|0
+block|,
+literal|"GoHubs"
+block|,
+literal|"GoCOM232 Serial converter"
 block|, 	}
 block|,
 block|{
@@ -8103,6 +8139,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Alation Systems"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_GOHUBS
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"GoHubs"
 block|,
 name|NULL
 block|, 	}
