@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* merger - three-way file merge internals */
+comment|/* three-way file merge internals */
 end_comment
 
 begin_comment
-comment|/* Copyright 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
+comment|/* Copyright 1991, 1992, 1993, 1994, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_include
@@ -18,9 +18,30 @@ name|libId
 argument_list|(
 argument|mergerId
 argument_list|,
-literal|"$Id: merger.c,v 1.3 1991/08/20 23:05:00 eggert Exp $"
+literal|"$Id: merger.c,v 1.1.1.1 1993/06/18 04:22:13 jkh Exp $"
 argument_list|)
 end_macro
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+name|normalize_arg
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -43,24 +64,20 @@ modifier|*
 modifier|*
 name|b
 decl_stmt|;
-comment|/*  * If S looks like an option, prepend ./ to it.  Yield the result.  * Set *B to the address of any storage that was allocated..  */
+comment|/*  * If S looks like an option, prepend ./ to it.  Yield the result.  * Set *B to the address of any storage that was allocated.  */
 block|{
 name|char
 modifier|*
 name|t
 decl_stmt|;
-switch|switch
+if|if
 condition|(
 operator|*
 name|s
+operator|==
+literal|'-'
 condition|)
 block|{
-case|case
-literal|'-'
-case|:
-case|case
-literal|'+'
-case|:
 operator|*
 name|b
 operator|=
@@ -91,7 +108,9 @@ decl_stmt|;
 return|return
 name|t
 return|;
-default|default:
+block|}
+else|else
+block|{
 operator|*
 name|b
 operator|=
@@ -110,6 +129,8 @@ name|merge
 parameter_list|(
 name|tostdout
 parameter_list|,
+name|edarg
+parameter_list|,
 name|label
 parameter_list|,
 name|argv
@@ -120,10 +141,15 @@ decl_stmt|;
 name|char
 specifier|const
 modifier|*
+name|edarg
+decl_stmt|;
+name|char
+specifier|const
+modifier|*
 specifier|const
 name|label
 index|[
-literal|2
+literal|3
 index|]
 decl_stmt|;
 name|char
@@ -135,7 +161,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/*  * Do `merge [-p] -L l0 -L l1 a0 a1 a2',  * where TOSTDOUT specifies whether -p is present,  * LABEL gives l0 and l1, and ARGV gives a0, a1, and a2.  * Yield DIFF_SUCCESS or DIFF_FAILURE.  */
+comment|/*  * Do `merge [-p] EDARG -L l0 -L l1 -L l2 a0 a1 a2',  * where TOSTDOUT specifies whether -p is present,  * EDARG gives the editing type (e.g. "-A", or null for the default),  * LABEL gives l0, l1 and l2, and ARGV gives a0, a1 and a2.  * Yield DIFF_SUCCESS or DIFF_FAILURE.  */
 block|{
 specifier|register
 name|int
@@ -215,6 +241,15 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|edarg
+condition|)
+name|edarg
+operator|=
+literal|"-E"
+expr_stmt|;
 if|#
 directive|if
 name|DIFF3_BIN
@@ -238,15 +273,14 @@ name|s
 operator|=
 name|run
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+operator|-
+literal|1
 argument_list|,
 name|t
 argument_list|,
 name|DIFF3
+argument_list|,
+name|edarg
 argument_list|,
 literal|"-am"
 argument_list|,
@@ -262,6 +296,13 @@ argument_list|,
 name|label
 index|[
 literal|1
+index|]
+argument_list|,
+literal|"-L"
+argument_list|,
+name|label
+index|[
+literal|2
 index|]
 argument_list|,
 name|a
@@ -298,14 +339,9 @@ break|break;
 case|case
 name|DIFF_FAILURE
 case|:
-if|if
-condition|(
-operator|!
-name|quietflag
-condition|)
 name|warn
 argument_list|(
-literal|"overlaps during merge"
+literal|"conflicts during merge"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -325,14 +361,14 @@ operator|!
 operator|(
 name|f
 operator|=
-name|fopen
+name|fopenSafer
 argument_list|(
 name|argv
 index|[
 literal|0
 index|]
 argument_list|,
-name|FOPEN_W
+literal|"w"
 argument_list|)
 operator|)
 condition|)
@@ -354,7 +390,7 @@ name|Iopen
 argument_list|(
 name|t
 argument_list|,
-name|FOPEN_R
+literal|"r"
 argument_list|,
 operator|(
 expr|struct
@@ -407,11 +443,8 @@ switch|switch
 condition|(
 name|run
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+operator|-
+literal|1
 argument_list|,
 name|d
 index|[
@@ -451,8 +484,10 @@ name|DIFF_SUCCESS
 case|:
 break|break;
 default|default:
-name|exiterr
-argument_list|()
+name|faterror
+argument_list|(
+literal|"diff failed"
+argument_list|)
 expr_stmt|;
 block|}
 name|t
@@ -466,17 +501,14 @@ name|s
 operator|=
 name|run
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+operator|-
+literal|1
 argument_list|,
 name|t
 argument_list|,
 name|DIFF3
 argument_list|,
-literal|"-E"
+name|edarg
 argument_list|,
 name|d
 index|[
@@ -510,7 +542,7 @@ index|]
 argument_list|,
 name|label
 index|[
-literal|1
+literal|2
 index|]
 argument_list|,
 operator|(
@@ -531,11 +563,6 @@ name|s
 operator|=
 name|DIFF_FAILURE
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|quietflag
-condition|)
 name|warn
 argument_list|(
 literal|"overlaps or other problems during merge"
@@ -548,11 +575,11 @@ operator|!
 operator|(
 name|f
 operator|=
-name|fopen
+name|fopenSafer
 argument_list|(
 name|t
 argument_list|,
-literal|"a"
+literal|"a+"
 argument_list|)
 operator|)
 condition|)
@@ -572,7 +599,12 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
-name|Ofclose
+name|Orewind
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+name|aflush
 argument_list|(
 name|f
 argument_list|)
@@ -581,7 +613,10 @@ if|if
 condition|(
 name|run
 argument_list|(
-name|t
+name|fileno
+argument_list|(
+name|f
+argument_list|)
 argument_list|,
 operator|(
 name|char
@@ -607,6 +642,11 @@ argument_list|)
 condition|)
 name|exiterr
 argument_list|()
+expr_stmt|;
+name|Ofclose
+argument_list|(
+name|f
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

@@ -4,7 +4,7 @@ comment|/* merge - three-way file merge */
 end_comment
 
 begin_comment
-comment|/* Copyright 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
+comment|/* Copyright 1991, 1992, 1993, 1994, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_include
@@ -15,18 +15,32 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|void
+name|badoption
+name|P
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 specifier|const
 name|usage
 index|[]
 init|=
-literal|"\nmerge: usage: merge [-p] [-q] [-L label1 [-L label3]] file1 file2 file3\n"
+literal|"\nmerge: usage: merge [-AeEpqxX3] [-L lab [-L lab [-L lab]]] file1 file2 file3"
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 specifier|static
-name|exiting
 name|void
 name|badoption
 parameter_list|(
@@ -38,13 +52,11 @@ modifier|*
 name|a
 decl_stmt|;
 block|{
-name|faterror
+name|error
 argument_list|(
 literal|"unknown option: %s%s"
 argument_list|,
 name|a
-operator|-
-literal|2
 argument_list|,
 name|usage
 argument_list|)
@@ -59,7 +71,7 @@ argument|mergeId
 argument_list|,
 literal|"merge"
 argument_list|,
-literal|"$Id: merge.c,v 1.2 1991/08/19 03:13:55 eggert Exp $"
+literal|"$Id: merge.c,v 1.1.1.1 1993/06/18 04:22:14 jkh Exp $"
 argument_list|)
 end_macro
 
@@ -74,16 +86,21 @@ decl_stmt|;
 name|char
 specifier|const
 modifier|*
-name|label
-index|[
-literal|2
-index|]
-decl_stmt|,
-modifier|*
 name|arg
 index|[
 literal|3
 index|]
+decl_stmt|,
+modifier|*
+name|label
+index|[
+literal|3
+index|]
+decl_stmt|,
+modifier|*
+name|edarg
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|labels
@@ -98,8 +115,9 @@ name|tostdout
 operator|=
 name|false
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+init|;
 operator|(
 name|a
 operator|=
@@ -113,7 +131,10 @@ name|a
 operator|++
 operator|==
 literal|'-'
-condition|)
+condition|;
+operator|--
+name|argc
+control|)
 block|{
 switch|switch
 condition|(
@@ -122,6 +143,48 @@ name|a
 operator|++
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+case|case
+literal|'E'
+case|:
+case|case
+literal|'e'
+case|:
+if|if
+condition|(
+name|edarg
+operator|&&
+name|edarg
+index|[
+literal|1
+index|]
+operator|!=
+operator|(
+operator|*
+name|argv
+operator|)
+index|[
+literal|1
+index|]
+condition|)
+name|error
+argument_list|(
+literal|"%s and %s are incompatible"
+argument_list|,
+name|edarg
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+name|edarg
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
@@ -143,8 +206,8 @@ literal|'L'
 case|:
 if|if
 condition|(
-literal|1
-operator|<
+literal|3
+operator|<=
 name|labels
 condition|)
 name|faterror
@@ -176,12 +239,30 @@ operator|--
 name|argc
 expr_stmt|;
 break|break;
+case|case
+literal|'V'
+case|:
+name|printf
+argument_list|(
+literal|"RCS version %s\n"
+argument_list|,
+name|RCS_version_string
+argument_list|)
+expr_stmt|;
+name|exitmain
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 default|default:
 name|badoption
 argument_list|(
 name|a
+operator|-
+literal|2
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -191,10 +272,9 @@ condition|)
 name|badoption
 argument_list|(
 name|a
+operator|-
+literal|2
 argument_list|)
-expr_stmt|;
-operator|--
-name|argc
 expr_stmt|;
 block|}
 if|if
@@ -249,44 +329,40 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-switch|switch
-condition|(
+for|for
+control|(
+init|;
 name|labels
+operator|<
+literal|3
+condition|;
+name|labels
+operator|++
+control|)
+name|label
+index|[
+name|labels
+index|]
+operator|=
+name|arg
+index|[
+name|labels
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|nerror
 condition|)
-block|{
-case|case
-literal|0
-case|:
-name|label
-index|[
-literal|0
-index|]
-operator|=
-name|arg
-index|[
-literal|0
-index|]
+name|exiterr
+argument_list|()
 expr_stmt|;
-comment|/* fall into */
-case|case
-literal|1
-case|:
-name|label
-index|[
-literal|1
-index|]
-operator|=
-name|arg
-index|[
-literal|2
-index|]
-expr_stmt|;
-block|}
 name|exitmain
 argument_list|(
 name|merge
 argument_list|(
 name|tostdout
+argument_list|,
+name|edarg
 argument_list|,
 name|label
 argument_list|,
@@ -300,7 +376,7 @@ end_block
 begin_if
 if|#
 directive|if
-name|lint
+name|RCS_lint
 end_if
 
 begin_define
@@ -316,7 +392,6 @@ directive|endif
 end_endif
 
 begin_function
-name|exiting
 name|void
 name|exiterr
 parameter_list|()

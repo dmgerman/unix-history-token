@@ -1,18 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *                       RLOG    operation  */
+comment|/* Print log messages and other information about RCS files.  */
 end_comment
 
 begin_comment
-comment|/*****************************************************************************  *                       print contents of RCS files  *****************************************************************************  */
+comment|/* Copyright 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991, 1992, 1993, 1994, 1995 Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING. If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1982, 1988, 1989 Walter Tichy    Copyright 1990, 1991 by Paul Eggert    Distributed under license by the Free Software Foundation, Inc.  This file is part of RCS.  RCS is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  RCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with RCS; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  Report problems and direct all questions to:      rcs-bugs@cs.purdue.edu  */
-end_comment
-
-begin_comment
-comment|/* $Log: rlog.c,v $  * Revision 1.5  1994/05/12  00:42:59  phk  * typo.  *  * Revision 1.4  1994/05/12  00:37:59  phk  * made -v produce tip-revision, which was what I wanted in the first place...  *  * Revision 1.3  1994/05/11  22:39:44  phk  * Added -v option to rlog.  This gives a quick way to get a list of versions.  *  * Revision 1.2  1993/08/06  16:47:16  nate  * Have rlog output be much easier to parse.  (Added one line which is not  * used by any CVS/RCS commands)  *  * Revision 1.1.1.1  1993/06/18  04:22:17  jkh  * Updated GNU utilities  *  * Revision 5.9  1991/09/17  19:07:40  eggert  * Getscript() didn't uncache partial lines.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Revision separator is `:', not `-'.  * Check for missing and duplicate logs.  Tune.  * Permit log messages that do not end in newline (including empty logs).  *  * Revision 5.7  1991/04/21  11:58:31  eggert  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1991/02/26  17:07:17  eggert  * Survive RCS files with missing logs.  * strsave -> str_save (DG/UX name clash)  *  * Revision 5.5  1990/11/01  05:03:55  eggert  * Permit arbitrary data in logs and comment leaders.  *  * Revision 5.4  1990/10/04  06:30:22  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:16  eggert  * Plug memory leak.  *  * Revision 5.2  1990/09/04  08:02:33  eggert  * Count RCS lines better.  *  * Revision 5.0  1990/08/22  08:13:48  eggert  * Remove compile-time limits; use malloc instead.  Add setuid support.  * Switch to GMT.  * Report dates in long form, to warn about dates past 1999/12/31.  * Change "added/del" message to make room for the longer dates.  * Don't generate trailing white space.  Add -V.  Ansify and Posixate.  *  * Revision 4.7  89/05/01  15:13:48  narten  * changed copyright header to reflect current distribution rules  *  * Revision 4.6  88/08/09  19:13:28  eggert  * Check for memory exhaustion; don't access freed storage.  * Shrink stdio code size; remove lint.  *  * Revision 4.5  87/12/18  11:46:38  narten  * more lint cleanups (Guy Harris)  *  * Revision 4.4  87/10/18  10:41:12  narten  * Updating version numbers  * Changes relative to 1.1 actually relative to 4.2  *  * Revision 1.3  87/09/24  14:01:10  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf  * warnings)  *  * Revision 1.2  87/03/27  14:22:45  jenkins  * Port to suns  *  * Revision 4.2  83/12/05  09:18:09  wft  * changed rewriteflag to external.  *  * Revision 4.1  83/05/11  16:16:55  wft  * Added -b, updated getnumericrev() accordingly.  * Replaced getpwuid() with getcaller().  *  * Revision 3.7  83/05/11  14:24:13  wft  * Added options -L and -R;  * Fixed selection bug with -l on multiple files.  * Fixed error on dates of the form -d'>date' (rewrote getdatepair()).  *  * Revision 3.6  82/12/24  15:57:53  wft  * shortened output format.  *  * Revision 3.5  82/12/08  21:45:26  wft  * removed call to checkaccesslist(); used DATEFORM to format all dates;  * removed unused variables.  *  * Revision 3.4  82/12/04  13:26:25  wft  * Replaced getdelta() with gettree(); removed updating of field lockedby.  *  * Revision 3.3  82/12/03  14:08:20  wft  * Replaced getlogin with getpwuid(), %02d with %.2d, fancydate with PRINTDATE.  * Fixed printing of nil, removed printing of Suffix,  * added shortcut if no revisions are printed, disambiguated struct members.  *  * Revision 3.2  82/10/18  21:09:06  wft  * call to curdir replaced with getfullRCSname(),  * fixed call to getlogin(), cosmetic changes on output,  * changed conflicting long identifiers.  *  * Revision 3.1  82/10/13  16:07:56  wft  * fixed type of variables receiving from getc() (char -> int).  */
+comment|/*  * Revision 5.18  1995/06/16 06:19:24  eggert  * Update FSF address.  *  * Revision 5.17  1995/06/01 16:23:43  eggert  * (struct rcslockers): Renamed from `struct lockers'.  * (getnumericrev): Return error indication instead of ignoring errors.  * (main): Check it.  Don't use dateform.  * (recentdate, extdate): cmpnum -> cmpdate  *  * Revision 5.16  1994/04/13 16:30:34  eggert  * Fix bug; `rlog -lxxx' inverted the sense of -l.  *  * Revision 5.15  1994/03/17 14:05:48  eggert  * -d'<DATE' now excludes DATE; the new syntax -d'<=DATE' includes it.  * Emulate -V4's white space generation more precisely.  * Work around SVR4 stdio performance bug.  Remove lint.  *  * Revision 5.14  1993/11/09 17:40:15  eggert  * -V now prints version on stdout and exits.  *  * Revision 5.13  1993/11/03 17:42:27  eggert  * Add -N, -z.  Ignore -T.  *  * Revision 5.12  1992/07/28  16:12:44  eggert  * Don't miss B.0 when handling branch B.  Diagnose missing `,' in -r.  * Add -V.  Avoid `unsigned'.  Statement macro names now end in _.  *  * Revision 5.11  1992/01/24  18:44:19  eggert  * Don't duplicate unexpected_EOF's function.  lint -> RCS_lint  *  * Revision 5.10  1992/01/06  02:42:34  eggert  * Update usage string.  * while (E) ; -> while (E) continue;  *  * Revision 5.9  1991/09/17  19:07:40  eggert  * Getscript() didn't uncache partial lines.  *  * Revision 5.8  1991/08/19  03:13:55  eggert  * Revision separator is `:', not `-'.  * Check for missing and duplicate logs.  Tune.  * Permit log messages that do not end in newline (including empty logs).  *  * Revision 5.7  1991/04/21  11:58:31  eggert  * Add -x, RCSINIT, MS-DOS support.  *  * Revision 5.6  1991/02/26  17:07:17  eggert  * Survive RCS files with missing logs.  * strsave -> str_save (DG/UX name clash)  *  * Revision 5.5  1990/11/01  05:03:55  eggert  * Permit arbitrary data in logs and comment leaders.  *  * Revision 5.4  1990/10/04  06:30:22  eggert  * Accumulate exit status across files.  *  * Revision 5.3  1990/09/11  02:41:16  eggert  * Plug memory leak.  *  * Revision 5.2  1990/09/04  08:02:33  eggert  * Count RCS lines better.  *  * Revision 5.0  1990/08/22  08:13:48  eggert  * Remove compile-time limits; use malloc instead.  Add setuid support.  * Switch to GMT.  * Report dates in long form, to warn about dates past 1999/12/31.  * Change "added/del" message to make room for the longer dates.  * Don't generate trailing white space.  Add -V.  Ansify and Posixate.  *  * Revision 4.7  89/05/01  15:13:48  narten  * changed copyright header to reflect current distribution rules  *  * Revision 4.6  88/08/09  19:13:28  eggert  * Check for memory exhaustion; don't access freed storage.  * Shrink stdio code size; remove lint.  *  * Revision 4.5  87/12/18  11:46:38  narten  * more lint cleanups (Guy Harris)  *  * Revision 4.4  87/10/18  10:41:12  narten  * Updating version numbers  * Changes relative to 1.1 actually relative to 4.2  *  * Revision 1.3  87/09/24  14:01:10  narten  * Sources now pass through lint (if you ignore printf/sprintf/fprintf  * warnings)  *  * Revision 1.2  87/03/27  14:22:45  jenkins  * Port to suns  *  * Revision 4.2  83/12/05  09:18:09  wft  * changed rewriteflag to external.  *  * Revision 4.1  83/05/11  16:16:55  wft  * Added -b, updated getnumericrev() accordingly.  * Replaced getpwuid() with getcaller().  *  * Revision 3.7  83/05/11  14:24:13  wft  * Added options -L and -R;  * Fixed selection bug with -l on multiple files.  * Fixed error on dates of the form -d'>date' (rewrote getdatepair()).  *  * Revision 3.6  82/12/24  15:57:53  wft  * shortened output format.  *  * Revision 3.5  82/12/08  21:45:26  wft  * removed call to checkaccesslist(); used DATEFORM to format all dates;  * removed unused variables.  *  * Revision 3.4  82/12/04  13:26:25  wft  * Replaced getdelta() with gettree(); removed updating of field lockedby.  *  * Revision 3.3  82/12/03  14:08:20  wft  * Replaced getlogin with getpwuid(), %02d with %.2d, fancydate with PRINTDATE.  * Fixed printing of nil, removed printing of Suffix,  * added shortcut if no revisions are printed, disambiguated struct members.  *  * Revision 3.2  82/10/18  21:09:06  wft  * call to curdir replaced with getfullRCSname(),  * fixed call to getlogin(), cosmetic changes on output,  * changed conflicting long identifiers.  *  * Revision 3.1  82/10/13  16:07:56  wft  * fixed type of variables receiving from getc() (char -> int).  */
 end_comment
 
 begin_include
@@ -23,7 +19,7 @@ end_include
 
 begin_struct
 struct|struct
-name|lockers
+name|rcslockers
 block|{
 comment|/* lockers in locker option; stored   */
 name|char
@@ -33,7 +29,7 @@ name|login
 decl_stmt|;
 comment|/* lockerlist			    */
 name|struct
-name|lockers
+name|rcslockers
 modifier|*
 name|lockerlink
 decl_stmt|;
@@ -86,7 +82,7 @@ struct|struct
 name|Revpairs
 block|{
 comment|/* revision or branch range in -r     */
-name|unsigned
+name|int
 name|numfld
 decl_stmt|;
 comment|/* option; stored in revlist	    */
@@ -114,6 +110,11 @@ struct|struct
 name|Datepairs
 block|{
 comment|/* date range in -d option; stored in */
+name|struct
+name|Datepairs
+modifier|*
+name|dnext
+decl_stmt|;
 name|char
 name|strtdate
 index|[
@@ -127,11 +128,10 @@ index|[
 name|datesize
 index|]
 decl_stmt|;
-name|struct
-name|Datepairs
-modifier|*
-name|dnext
+name|char
+name|ne_date
 decl_stmt|;
+comment|/* datelist only; distinguishes< from<= */
 block|}
 struct|;
 end_struct
@@ -173,11 +173,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
+name|int
+name|extdate
+name|P
+argument_list|(
+operator|(
+expr|struct
 name|hshentry
-specifier|const
-modifier|*
-name|readdeltalog
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|getnumericrev
 name|P
 argument_list|(
 operator|(
@@ -189,14 +201,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|extdate
+name|struct
+name|hshentry
+specifier|const
+modifier|*
+name|readdeltalog
 name|P
 argument_list|(
 operator|(
-expr|struct
-name|hshentry
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -267,19 +280,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|getnumericrev
-name|P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -515,7 +515,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|lockers
+name|rcslockers
 modifier|*
 name|lockerlist
 decl_stmt|;
@@ -537,7 +537,7 @@ argument|rlogId
 argument_list|,
 literal|"rlog"
 argument_list|,
-literal|"$Id: rlog.c,v 1.5 1994/05/12 00:42:59 phk Exp $"
+literal|"$Id: rlog.c,v 1.10 1995/10/29 22:06:48 peter Exp $"
 argument_list|)
 end_macro
 
@@ -549,7 +549,7 @@ specifier|const
 name|cmdusage
 index|[]
 init|=
-literal|"\nrlog usage: rlog -{bhLRt} [-v[string]] -ddates -l[lockers] -rrevs -sstates -w[logins] -Vn file ..."
+literal|"\nrlog usage: rlog -{bhLNRt} -v[string] -ddates -l[lockers] -r[revs] -sstates -Vn -w[logins] -xsuff -zzone file ..."
 decl_stmt|;
 specifier|register
 name|FILE
@@ -576,9 +576,6 @@ name|accessListString
 decl_stmt|,
 modifier|*
 name|accessFormat
-decl_stmt|,
-modifier|*
-name|commentFormat
 decl_stmt|;
 name|char
 specifier|const
@@ -607,7 +604,7 @@ modifier|*
 name|delta
 decl_stmt|;
 name|struct
-name|lock
+name|rcslock
 specifier|const
 modifier|*
 name|currlock
@@ -622,22 +619,30 @@ name|onlylockflag
 decl_stmt|;
 comment|/* print only files with locks */
 name|int
+name|onlyRCSflag
+decl_stmt|;
+comment|/* print only RCS pathname */
+name|int
+name|pre5
+decl_stmt|;
+name|int
+name|shownames
+decl_stmt|;
+name|int
+name|revno
+decl_stmt|;
+name|int
 name|versionlist
 decl_stmt|;
 name|char
 modifier|*
 name|vstring
 decl_stmt|;
-name|int
-name|onlyRCSflag
-decl_stmt|;
-comment|/* print only RCS file name */
-name|unsigned
-name|revno
-decl_stmt|;
 name|descflag
 operator|=
 name|selectflag
+operator|=
+name|shownames
 operator|=
 name|true
 expr_stmt|;
@@ -710,6 +715,14 @@ case|:
 name|onlylockflag
 operator|=
 name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|shownames
+operator|=
+name|false
 expr_stmt|;
 break|break;
 case|case
@@ -811,6 +824,28 @@ name|a
 expr_stmt|;
 break|break;
 case|case
+literal|'z'
+case|:
+name|zone_set
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* Ignore -T, so that RCSINIT can contain -T.  */
+if|if
+condition|(
+operator|*
+name|a
+condition|)
+goto|goto
+name|unknown
+goto|;
+break|break;
+case|case
 literal|'V'
 case|:
 name|setRCSversion
@@ -833,7 +868,9 @@ name|a
 expr_stmt|;
 break|break;
 default|default:
-name|faterror
+name|unknown
+label|:
+name|error
 argument_list|(
 literal|"unknown option: %s%s"
 argument_list|,
@@ -847,19 +884,6 @@ block|}
 empty_stmt|;
 block|}
 comment|/* end of option processing */
-if|if
-condition|(
-name|argc
-operator|<
-literal|1
-condition|)
-name|faterror
-argument_list|(
-literal|"no input file%s"
-argument_list|,
-name|cmdusage
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -880,14 +904,18 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|pre5
+operator|=
 name|RCSversion
 operator|<
 name|VERSION
 argument_list|(
 literal|5
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pre5
 condition|)
 block|{
 name|accessListString
@@ -898,17 +926,13 @@ name|accessFormat
 operator|=
 literal|"  %s"
 expr_stmt|;
-name|commentFormat
-operator|=
-literal|"\ncomment leader:  \""
-expr_stmt|;
 name|headFormat
 operator|=
-literal|"\nRCS file:        %s;   Working file:    %s\nhead:           %s%s\nbranch:         %s%s\nlocks:         "
+literal|"RCS file:        %s;   Working file:    %s\nhead:           %s%s\nbranch:         %s%s\nlocks:         "
 expr_stmt|;
 name|insDelFormat
 operator|=
-literal|"  lines added/del: %lu/%lu"
+literal|"  lines added/del: %ld/%ld"
 expr_stmt|;
 name|symbolFormat
 operator|=
@@ -925,32 +949,65 @@ name|accessFormat
 operator|=
 literal|"\n\t%s"
 expr_stmt|;
-name|commentFormat
-operator|=
-literal|"\ncomment leader: \""
-expr_stmt|;
 name|headFormat
 operator|=
-literal|"\nRCS file: %s\nWorking file: %s\nhead:%s%s\nbranch:%s%s\nlocks:%s"
+literal|"RCS file: %s\nWorking file: %s\nhead:%s%s\nbranch:%s%s\nlocks:%s"
 expr_stmt|;
 name|insDelFormat
 operator|=
-literal|"  lines: +%lu -%lu"
+literal|"  lines: +%ld -%ld"
 expr_stmt|;
 name|symbolFormat
 operator|=
 literal|"\n\t%s: %s"
 expr_stmt|;
 block|}
-comment|/* now handle all filenames */
-do|do
+comment|/* Now handle all pathnames.  */
+if|if
+condition|(
+name|nerror
+condition|)
+name|cleanup
+argument_list|()
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|faterror
+argument_list|(
+literal|"no input file%s"
+argument_list|,
+name|cmdusage
+argument_list|)
+expr_stmt|;
+else|else
+for|for
+control|(
+init|;
+literal|0
+operator|<
+name|argc
+condition|;
+name|cleanup
+argument_list|()
+operator|,
+operator|++
+name|argv
+operator|,
+operator|--
+name|argc
+control|)
 block|{
 name|ffree
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|pairfilenames
+name|pairnames
 argument_list|(
 name|argc
 argument_list|,
@@ -966,7 +1023,7 @@ operator|<=
 literal|0
 condition|)
 continue|continue;
-comment|/* now RCSfilename contains the name of the RCS file, and finptr              * the file descriptor. Workfilename contains the name of the              * working file.              */
+comment|/* 	     * RCSname contains the name of the RCS file, 	     * and finptr the file descriptor; 	     * workname contains the name of the working file.              */
 comment|/* Keep only those locks given by -l.  */
 if|if
 condition|(
@@ -1000,7 +1057,7 @@ literal|"%s%s %s\n"
 argument_list|,
 name|vstring
 argument_list|,
-name|workfilename
+name|workname
 argument_list|,
 name|tiprev
 argument_list|()
@@ -1019,12 +1076,29 @@ name|out
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|RCSfilename
+name|RCSname
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*   print RCS filename , working filename and optional                  administrative information                         */
+name|gettree
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|getnumericrev
+argument_list|()
+condition|)
+continue|continue;
+comment|/* 	    * Output the first character with putc, not printf. 	    * Otherwise, an SVR4 stdio bug buffers output inefficiently. 	    */
+name|aputc_
+argument_list|(
+literal|'\n'
+argument_list|,
+argument|out
+argument_list|)
+comment|/*   print RCS pathname, working pathname and optional                  administrative information                         */
 comment|/* could use getfullRCSname() here, but that is very slow */
 name|aprintf
 argument_list|(
@@ -1032,9 +1106,9 @@ name|out
 argument_list|,
 name|headFormat
 argument_list|,
-name|RCSfilename
+name|RCSname
 argument_list|,
-name|workfilename
+name|workname
 argument_list|,
 name|Head
 condition|?
@@ -1106,16 +1180,19 @@ if|if
 condition|(
 name|StrictLocks
 operator|&&
-name|RCSversion
-operator|<
-name|VERSION
-argument_list|(
-literal|5
-argument_list|)
+name|pre5
 condition|)
 name|aputs
 argument_list|(
-literal|"  strict"
+literal|"  ;  strict"
+operator|+
+operator|(
+name|Locks
+condition|?
+literal|3
+else|:
+literal|0
+operator|)
 argument_list|,
 name|out
 argument_list|)
@@ -1155,6 +1232,11 @@ operator|->
 name|nextaccess
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|shownames
+condition|)
+block|{
 name|aputs
 argument_list|(
 literal|"\nsymbolic names:"
@@ -1192,9 +1274,15 @@ operator|->
 name|num
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|pre5
+condition|)
+block|{
 name|aputs
 argument_list|(
-name|commentFormat
+literal|"\ncomment leader:  \""
 argument_list|,
 name|out
 argument_list|)
@@ -1212,21 +1300,18 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
-name|aputs
+name|afputc
 argument_list|(
-literal|"\"\n"
+literal|'\"'
 argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
-name|VERSION
-argument_list|(
-literal|5
-argument_list|)
-operator|<=
-name|RCSversion
+operator|!
+name|pre5
 operator|||
 name|Expand
 operator|!=
@@ -1236,7 +1321,7 @@ name|aprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"keyword substitution: %s\n"
+literal|"\nkeyword substitution: %s"
 argument_list|,
 name|expand_names
 index|[
@@ -1244,14 +1329,11 @@ name|Expand
 index|]
 argument_list|)
 expr_stmt|;
-name|gettree
-argument_list|()
-expr_stmt|;
 name|aprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"total revisions: %u"
+literal|"\ntotal revisions: %d"
 argument_list|,
 name|TotalDeltas
 argument_list|)
@@ -1269,10 +1351,6 @@ operator|&
 name|descflag
 condition|)
 block|{
-name|getnumericrev
-argument_list|()
-expr_stmt|;
-comment|/* get numeric revision or branch names */
 name|exttree
 argument_list|(
 name|Head
@@ -1289,25 +1367,13 @@ name|currdate
 condition|)
 block|{
 name|VOID
-name|sprintf
+name|strcpy
 argument_list|(
 name|currdate
 operator|->
 name|strtdate
 argument_list|,
-name|DATEFORM
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+literal|"0.0.0.0.0.0"
 argument_list|)
 decl_stmt|;
 name|recentdate
@@ -1335,7 +1401,7 @@ name|aprintf
 argument_list|(
 name|out
 argument_list|,
-literal|";\tselected revisions: %u"
+literal|";\tselected revisions: %d"
 argument_list|,
 name|revno
 argument_list|)
@@ -1386,7 +1452,7 @@ operator|||
 operator|--
 name|revno
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|delta
@@ -1412,7 +1478,7 @@ name|delta
 operator|->
 name|next
 condition|)
-empty_stmt|;
+continue|continue;
 name|putrunk
 argument_list|()
 expr_stmt|;
@@ -1437,20 +1503,6 @@ name|out
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|cleanup
-argument_list|()
-operator|,
-operator|++
-name|argv
-operator|,
-operator|--
-name|argc
-operator|>=
-literal|1
-condition|)
-do|;
 name|Ofclose
 argument_list|(
 name|out
@@ -1490,7 +1542,7 @@ end_function
 begin_if
 if|#
 directive|if
-name|lint
+name|RCS_lint
 end_if
 
 begin_define
@@ -1506,7 +1558,6 @@ directive|endif
 end_endif
 
 begin_function
-name|exiting
 name|void
 name|exiterr
 parameter_list|()
@@ -1578,9 +1629,8 @@ comment|/*   function: print delta tree (not including trunk) in reverse        
 block|{
 if|if
 condition|(
+operator|!
 name|root
-operator|==
-name|nil
 condition|)
 return|return;
 name|putree
@@ -1617,9 +1667,8 @@ comment|/*   function:  print branches that has the same direct ancestor    */
 block|{
 if|if
 condition|(
+operator|!
 name|branchroot
-operator|==
-name|nil
 condition|)
 return|return;
 name|putforest
@@ -1663,9 +1712,8 @@ comment|/*   function  :  print one branch     */
 block|{
 if|if
 condition|(
+operator|!
 name|root
-operator|==
-name|nil
 condition|)
 return|return;
 name|putabranch
@@ -1764,7 +1812,19 @@ name|char
 name|datebuf
 index|[
 name|datesize
+operator|+
+name|zonelenmax
 index|]
+decl_stmt|;
+name|int
+name|pre5
+init|=
+name|RCSversion
+operator|<
+name|VERSION
+argument_list|(
+literal|5
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1782,11 +1842,17 @@ name|aprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"----------------------------\nrevision %s"
+literal|"----------------------------\nrevision %s%s"
 argument_list|,
 name|node
 operator|->
 name|num
+argument_list|,
+name|pre5
+condition|?
+literal|"        "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
@@ -1799,6 +1865,8 @@ name|aprintf
 argument_list|(
 name|out
 argument_list|,
+name|pre5
+operator|+
 literal|"\tlocked by: %s;"
 argument_list|,
 name|node
@@ -2106,26 +2174,10 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-name|nextlex
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
-name|nexttok
-operator|==
-name|ID
-operator|&&
-name|strcmp
+name|ignorephrases
 argument_list|(
-name|NextString
-argument_list|,
 name|Ktext
 argument_list|)
-operator|!=
-literal|0
-condition|)
-name|ignorephrase
-argument_list|()
 expr_stmt|;
 name|getkeystring
 argument_list|(
@@ -2194,7 +2246,6 @@ name|int
 name|c
 decl_stmt|;
 specifier|register
-name|unsigned
 name|long
 name|i
 decl_stmt|;
@@ -2282,11 +2333,10 @@ init|;
 condition|;
 control|)
 block|{
-name|cacheget
+name|cacheget_
 argument_list|(
-name|c
+argument|c
 argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|c
@@ -2297,11 +2347,10 @@ continue|continue;
 case|case
 name|SDELIM
 case|:
-name|cacheget
+name|cacheget_
 argument_list|(
-name|c
+argument|c
 argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|c
@@ -2314,10 +2363,8 @@ condition|(
 operator|--
 name|i
 condition|)
-name|fatserror
-argument_list|(
-literal|"unexpected end to edit script"
-argument_list|)
+name|unexpected_EOF
+argument_list|()
 expr_stmt|;
 name|nextc
 operator|=
@@ -2377,9 +2424,8 @@ name|newbranch
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|root
-operator|==
-name|nil
 condition|)
 return|return;
 name|root
@@ -2397,7 +2443,7 @@ name|log
 operator|.
 name|string
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|exttree
 argument_list|(
@@ -2453,7 +2499,7 @@ name|char
 name|c
 decl_stmt|;
 name|struct
-name|lockers
+name|rcslockers
 modifier|*
 name|newlocker
 decl_stmt|;
@@ -2465,11 +2511,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|','
@@ -2490,7 +2534,7 @@ name|c
 operator|==
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|c
@@ -2500,7 +2544,7 @@ condition|)
 block|{
 name|lockerlist
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -2516,7 +2560,7 @@ operator|=
 name|talloc
 argument_list|(
 expr|struct
-name|lockers
+name|rcslockers
 argument_list|)
 expr_stmt|;
 name|newlocker
@@ -2540,18 +2584,14 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
 operator|)
-operator|)
-operator|!=
-literal|','
 operator|&&
 name|c
 operator|!=
-literal|'\0'
+literal|','
 operator|&&
 name|c
 operator|!=
@@ -2569,7 +2609,7 @@ name|c
 operator|!=
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|argv
 operator|=
@@ -2587,11 +2627,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|','
@@ -2612,7 +2650,7 @@ name|c
 operator|==
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 block|}
 end_function
@@ -2647,11 +2685,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|','
@@ -2672,7 +2708,7 @@ name|c
 operator|==
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|c
@@ -2701,7 +2737,7 @@ name|authorlist
 operator|->
 name|nextauthor
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 return|return;
 block|}
@@ -2745,12 +2781,10 @@ operator|*
 operator|++
 name|argv
 operator|)
-operator|!=
-literal|','
 operator|&&
 name|c
 operator|!=
-literal|'\0'
+literal|','
 operator|&&
 name|c
 operator|!=
@@ -2768,7 +2802,7 @@ name|c
 operator|!=
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|argv
 operator|=
@@ -2786,11 +2820,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|','
@@ -2811,7 +2843,7 @@ name|c
 operator|==
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 block|}
 end_function
@@ -2847,11 +2879,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|','
@@ -2872,7 +2902,7 @@ name|c
 operator|==
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|c
@@ -2880,7 +2910,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|warn
+name|error
 argument_list|(
 literal|"missing state attributes after -s options"
 argument_list|)
@@ -2923,18 +2953,14 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
 operator|)
-operator|)
-operator|!=
-literal|','
 operator|&&
 name|c
 operator|!=
-literal|'\0'
+literal|','
 operator|&&
 name|c
 operator|!=
@@ -2952,7 +2978,7 @@ name|c
 operator|!=
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 operator|*
 name|argv
 operator|=
@@ -2970,11 +2996,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|','
@@ -2995,7 +3019,7 @@ name|c
 operator|==
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 block|}
 end_function
@@ -3009,111 +3033,96 @@ comment|/*  Function:  Truncate the list of locks to those that are held by the 
 comment|/*             id's on lockerlist. Do not truncate if lockerlist empty.  */
 block|{
 name|struct
-name|lockers
+name|rcslockers
 specifier|const
 modifier|*
 name|plocker
 decl_stmt|;
 name|struct
-name|lock
+name|rcslock
 modifier|*
-name|plocked
+name|p
 decl_stmt|,
 modifier|*
-name|nextlocked
+modifier|*
+name|pp
 decl_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
 name|lockerlist
-operator|==
-name|nil
-operator|)
-operator|||
-operator|(
-name|Locks
-operator|==
-name|nil
-operator|)
 condition|)
 return|return;
 comment|/* shorten Locks to those contained in lockerlist */
-name|plocked
+for|for
+control|(
+name|pp
 operator|=
+operator|&
 name|Locks
-expr_stmt|;
-name|Locks
+init|;
+operator|(
+name|p
 operator|=
-name|nil
-expr_stmt|;
-while|while
-condition|(
-name|plocked
-operator|!=
-name|nil
-condition|)
-block|{
+operator|*
+name|pp
+operator|)
+condition|;
+control|)
+for|for
+control|(
 name|plocker
 operator|=
 name|lockerlist
-expr_stmt|;
-while|while
+init|;
+condition|;
+control|)
+if|if
 condition|(
-operator|(
-name|plocker
-operator|!=
-name|nil
-operator|)
-operator|&&
-operator|(
 name|strcmp
 argument_list|(
 name|plocker
 operator|->
 name|login
 argument_list|,
-name|plocked
+name|p
 operator|->
 name|login
 argument_list|)
-operator|!=
+operator|==
 literal|0
-operator|)
 condition|)
+block|{
+name|pp
+operator|=
+operator|&
+name|p
+operator|->
+name|nextlock
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
 name|plocker
 operator|=
 name|plocker
 operator|->
 name|lockerlink
-expr_stmt|;
-name|nextlocked
-operator|=
-name|plocked
-operator|->
-name|nextlock
-expr_stmt|;
-if|if
-condition|(
-name|plocker
-operator|!=
-name|nil
+operator|)
 condition|)
 block|{
-name|plocked
+operator|*
+name|pp
+operator|=
+name|p
 operator|->
 name|nextlock
-operator|=
-name|Locks
 expr_stmt|;
-name|Locks
-operator|=
-name|plocked
-expr_stmt|;
-block|}
-name|plocked
-operator|=
-name|nextlocked
-expr_stmt|;
+break|break;
 block|}
 block|}
 end_function
@@ -3151,9 +3160,8 @@ name|newbranch
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|root
-operator|==
-name|nil
 condition|)
 return|return;
 if|if
@@ -3165,7 +3173,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|cmpnum
+name|cmpdate
 argument_list|(
 name|root
 operator|->
@@ -3178,7 +3186,7 @@ argument_list|)
 operator|>=
 literal|0
 operator|&&
-name|cmpnum
+name|cmpdate
 argument_list|(
 name|root
 operator|->
@@ -3245,7 +3253,7 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
+name|int
 name|extdate
 parameter_list|(
 name|root
@@ -3271,8 +3279,10 @@ specifier|const
 modifier|*
 name|pdate
 decl_stmt|;
-name|unsigned
+name|int
 name|revno
+decl_stmt|,
+name|ne
 decl_stmt|;
 if|if
 condition|(
@@ -3298,20 +3308,26 @@ condition|(
 name|pdate
 condition|)
 block|{
+name|ne
+operator|=
+name|pdate
+operator|->
+name|ne_date
+expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|!
 name|pdate
 operator|->
 name|strtdate
-operator|)
 index|[
 literal|0
 index|]
-operator|==
-literal|'\0'
 operator|||
-name|cmpnum
+name|ne
+operator|<=
+name|cmpdate
 argument_list|(
 name|root
 operator|->
@@ -3321,24 +3337,20 @@ name|pdate
 operator|->
 name|strtdate
 argument_list|)
-operator|>=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
 operator|(
+operator|!
 name|pdate
 operator|->
 name|enddate
-operator|)
 index|[
 literal|0
 index|]
-operator|==
-literal|'\0'
 operator|||
-name|cmpnum
+name|ne
+operator|<=
+name|cmpdate
 argument_list|(
 name|pdate
 operator|->
@@ -3348,11 +3360,9 @@ name|root
 operator|->
 name|date
 argument_list|)
-operator|>=
-literal|0
+operator|)
 condition|)
 break|break;
-block|}
 name|pdate
 operator|=
 name|pdate
@@ -3362,9 +3372,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
 name|pdate
-operator|==
-name|nil
 condition|)
 block|{
 name|pdate
@@ -3393,7 +3402,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|cmpnum
+name|cmpdate
 argument_list|(
 name|root
 operator|->
@@ -3479,7 +3488,7 @@ comment|/*  function:  compare information of pdelta to the authorlist, lockerli
 comment|/*             statelist, revlist and yield true if pdelta is selected.    */
 block|{
 name|struct
-name|lock
+name|rcslock
 specifier|const
 modifier|*
 name|plock
@@ -3502,7 +3511,7 @@ specifier|const
 modifier|*
 name|prevision
 decl_stmt|;
-name|unsigned
+name|int
 name|length
 decl_stmt|;
 if|if
@@ -3746,11 +3755,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|','
@@ -3771,7 +3778,7 @@ name|c
 operator|==
 literal|';'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|c
@@ -3779,7 +3786,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|warn
+name|error
 argument_list|(
 literal|"missing date/time after -d"
 argument_list|)
@@ -3819,6 +3826,25 @@ operator|*
 operator|++
 name|argv
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|nextdate
+operator|->
+name|ne_date
+operator|=
+name|c
+operator|!=
+literal|'='
+operator|)
+condition|)
+name|c
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
 operator|(
 name|nextdate
 operator|->
@@ -3840,6 +3866,25 @@ literal|'>'
 condition|)
 block|{
 comment|/* case: -d'>date' */
+name|c
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|nextdate
+operator|->
+name|ne_date
+operator|=
+name|c
+operator|!=
+literal|'='
+operator|)
+condition|)
 name|c
 operator|=
 operator|*
@@ -3963,6 +4008,27 @@ block|}
 else|else
 block|{
 comment|/*   case:   -d date<  or -d  date>; see switchflag */
+name|int
+name|eq
+init|=
+name|argv
+index|[
+literal|1
+index|]
+operator|==
+literal|'='
+decl_stmt|;
+name|nextdate
+operator|->
+name|ne_date
+operator|=
+operator|!
+name|eq
+expr_stmt|;
+name|argv
+operator|+=
+name|eq
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3983,7 +4049,7 @@ name|c
 operator|==
 literal|'\n'
 condition|)
-empty_stmt|;
+continue|continue;
 if|if
 condition|(
 name|c
@@ -4093,6 +4159,21 @@ name|end
 label|:
 if|if
 condition|(
+name|RCSversion
+operator|<
+name|VERSION
+argument_list|(
+literal|5
+argument_list|)
+condition|)
+name|nextdate
+operator|->
+name|ne_date
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|c
 operator|==
 literal|'\0'
@@ -4122,14 +4203,14 @@ name|c
 operator|==
 literal|'\n'
 condition|)
-empty_stmt|;
+continue|continue;
 block|}
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|getnumericrev
 parameter_list|()
 comment|/*  function:  get the numeric name of revisions which stored in revlist  */
@@ -4144,7 +4225,7 @@ decl_stmt|,
 modifier|*
 name|pt
 decl_stmt|;
-name|unsigned
+name|int
 name|n
 decl_stmt|;
 name|struct
@@ -4169,7 +4250,7 @@ name|rend
 decl_stmt|;
 name|Revlst
 operator|=
-name|nil
+literal|0
 expr_stmt|;
 name|ptr
 operator|=
@@ -4216,9 +4297,10 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* -r rev */
+comment|/* -rREV */
 if|if
 condition|(
+operator|!
 name|expandsym
 argument_list|(
 name|ptr
@@ -4229,7 +4311,9 @@ operator|&
 name|s
 argument_list|)
 condition|)
-block|{
+goto|goto
+name|freebufs
+goto|;
 name|rend
 operator|=
 operator|&
@@ -4273,14 +4357,14 @@ name|lrev
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 break|break;
 case|case
 literal|2
 case|:
-comment|/* -r rev- */
+comment|/* -rREV: */
 if|if
 condition|(
+operator|!
 name|expandsym
 argument_list|(
 name|ptr
@@ -4291,7 +4375,9 @@ operator|&
 name|s
 argument_list|)
 condition|)
-block|{
+goto|goto
+name|freebufs
+goto|;
 name|bufscpy
 argument_list|(
 operator|&
@@ -4335,14 +4421,14 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|3
 case|:
-comment|/* -r -rev */
+comment|/* -r:REV */
 if|if
 condition|(
+operator|!
 name|expandsym
 argument_list|(
 name|ptr
@@ -4353,7 +4439,9 @@ operator|&
 name|e
 argument_list|)
 condition|)
-block|{
+goto|goto
+name|freebufs
+goto|;
 if|if
 condition|(
 operator|(
@@ -4374,7 +4462,7 @@ argument_list|(
 operator|&
 name|s
 argument_list|,
-literal|".1"
+literal|".0"
 argument_list|)
 expr_stmt|;
 else|else
@@ -4401,16 +4489,17 @@ argument_list|,
 literal|'.'
 argument_list|)
 argument_list|,
-literal|".1"
+literal|".0"
 argument_list|)
 decl_stmt|;
 block|}
-block|}
 break|break;
 default|default:
-comment|/* -r rev1-rev2 */
+comment|/* -rREV1:REV2 */
 if|if
 condition|(
+operator|!
+operator|(
 name|expandsym
 argument_list|(
 name|ptr
@@ -4441,8 +4530,11 @@ name|e
 operator|.
 name|string
 argument_list|)
+operator|)
 condition|)
-block|{
+goto|goto
+name|freebufs
+goto|;
 name|n
 operator|=
 name|countnumflds
@@ -4481,7 +4573,6 @@ operator|=
 operator|&
 name|s
 expr_stmt|;
-block|}
 block|}
 break|break;
 block|}
@@ -4613,6 +4704,8 @@ name|strtrev
 argument_list|)
 expr_stmt|;
 block|}
+name|freebufs
+label|:
 name|bufautoend
 argument_list|(
 operator|&
@@ -4625,6 +4718,10 @@ operator|&
 name|e
 argument_list|)
 expr_stmt|;
+return|return
+operator|!
+name|ptr
+return|;
 block|}
 end_function
 
@@ -4653,7 +4750,7 @@ end_comment
 
 begin_block
 block|{
-name|unsigned
+name|int
 name|length
 init|=
 name|countnumflds
@@ -4670,6 +4767,7 @@ argument_list|)
 operator|!=
 name|length
 operator|||
+operator|(
 literal|2
 operator|<
 name|length
@@ -4686,9 +4784,10 @@ literal|1
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
-name|error
+name|rcserror
 argument_list|(
 literal|"invalid branch or revision pair %s : %s"
 argument_list|,
@@ -4930,11 +5029,9 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
 operator|*
 operator|++
 name|argv
-operator|)
 operator|)
 operator|==
 literal|' '
@@ -4947,7 +5044,7 @@ name|c
 operator|==
 literal|'\n'
 condition|)
-empty_stmt|;
+continue|continue;
 name|nextrevpair
 operator|->
 name|endrev
@@ -5003,8 +5100,8 @@ name|c
 operator|==
 name|separator
 condition|)
-continue|continue;
 break|break;
+continue|continue;
 block|}
 break|break;
 block|}
@@ -5046,7 +5143,7 @@ literal|0
 index|]
 condition|?
 literal|2
-comment|/* -rrev- */
+comment|/* -rREV: */
 else|:
 operator|!
 name|nextrevpair
@@ -5057,10 +5154,10 @@ literal|0
 index|]
 condition|?
 literal|3
-comment|/* -r-rev */
+comment|/* -r:REV */
 else|:
 literal|4
-comment|/* -rrev1-rev2 */
+comment|/* -rREV1:REV2 */
 expr_stmt|;
 block|}
 if|if
@@ -5069,16 +5166,24 @@ operator|!
 name|c
 condition|)
 break|break;
+elseif|else
 if|if
 condition|(
 name|c
-operator|!=
+operator|==
 literal|','
-operator|&&
+operator|||
 name|c
-operator|!=
+operator|==
 literal|';'
 condition|)
+name|c
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+else|else
 name|error
 argument_list|(
 literal|"missing `,' near `%c%s'"
