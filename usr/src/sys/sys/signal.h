@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.h	4.1	83/06/02	*/
+comment|/*	signal.h	4.2	83/06/09	*/
 end_comment
 
 begin_ifndef
@@ -477,10 +477,70 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|int
+argument_list|(
+operator|*
+name|sigvec
+argument_list|()
+argument_list|)
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Signal vector "template" used in sigvec call.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sigvec
+block|{
+name|int
+function_decl|(
+modifier|*
+name|sv_handler
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* signal handler */
+name|int
+name|sv_mask
+decl_stmt|;
+comment|/* signal mask to apply */
+name|int
+name|sv_onstack
+decl_stmt|;
+comment|/* if non-zero, take on signal stack */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure used in sigstack call.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sigstack
+block|{
+name|char
+modifier|*
+name|ss_sp
+decl_stmt|;
+comment|/* signal stack pointer */
+name|int
+name|ss_onstack
+decl_stmt|;
+comment|/* current status */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to properly restore state if  * a non-standard exit is performed.  */

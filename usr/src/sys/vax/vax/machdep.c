@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.79	83/06/02	*/
+comment|/*	machdep.c	4.80	83/06/09	*/
 end_comment
 
 begin_include
@@ -1296,7 +1296,7 @@ argument|p
 argument_list|,
 argument|sig
 argument_list|,
-argument|mask
+argument|sigmask
 argument_list|)
 end_macro
 
@@ -1310,7 +1310,7 @@ argument_list|()
 decl_stmt|,
 name|sig
 decl_stmt|,
-name|mask
+name|sigmask
 decl_stmt|;
 end_decl_stmt
 
@@ -1325,7 +1325,7 @@ modifier|*
 name|regs
 decl_stmt|;
 name|int
-name|oonsigstack
+name|oonstack
 decl_stmt|;
 name|regs
 operator|=
@@ -1333,22 +1333,36 @@ name|u
 operator|.
 name|u_ar0
 expr_stmt|;
-name|oonsigstack
+name|oonstack
 operator|=
 name|u
 operator|.
-name|u_onsigstack
+name|u_onstack
 expr_stmt|;
+define|#
+directive|define
+name|mask
+parameter_list|(
+name|s
+parameter_list|)
+value|(1<<((s)-1))
 if|if
 condition|(
 operator|!
 name|u
 operator|.
-name|u_onsigstack
+name|u_onstack
 operator|&&
+operator|(
 name|u
 operator|.
-name|u_sigstack
+name|u_sigonstack
+operator|&
+name|mask
+argument_list|(
+name|sig
+argument_list|)
+operator|)
 condition|)
 block|{
 name|usp
@@ -1359,11 +1373,11 @@ operator|*
 operator|)
 name|u
 operator|.
-name|u_sigstack
+name|u_sigsp
 expr_stmt|;
 name|u
 operator|.
-name|u_onsigstack
+name|u_onstack
 operator|=
 literal|1
 expr_stmt|;
@@ -1386,6 +1400,11 @@ literal|8
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|u
+operator|.
+name|u_onstack
+operator|&&
 operator|(
 name|int
 operator|)
@@ -1505,13 +1524,13 @@ operator|*
 name|usp
 operator|++
 operator|=
-name|oonsigstack
+name|oonstack
 expr_stmt|;
 operator|*
 name|usp
 operator|++
 operator|=
-name|mask
+name|sigmask
 expr_stmt|;
 operator|*
 name|usp
@@ -1587,13 +1606,10 @@ name|SIG_DFL
 expr_stmt|;
 name|sig
 operator|=
-literal|1
-operator|<<
-operator|(
+name|mask
+argument_list|(
 name|SIGILL
-operator|-
-literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 name|u
 operator|.
@@ -1687,7 +1703,7 @@ endif|#
 directive|endif
 name|u
 operator|.
-name|u_onsigstack
+name|u_onstack
 operator|=
 operator|*
 name|usp
@@ -1704,6 +1720,24 @@ operator|=
 operator|*
 name|usp
 operator|++
+operator|&
+operator|~
+operator|(
+name|mask
+argument_list|(
+name|SIGKILL
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|SIGCONT
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|SIGSTOP
+argument_list|)
+operator|)
 expr_stmt|;
 name|u
 operator|.
@@ -1719,6 +1753,12 @@ name|usp
 expr_stmt|;
 block|}
 end_block
+
+begin_undef
+undef|#
+directive|undef
+name|mask
+end_undef
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.27	83/06/02	*/
+comment|/*	user.h	4.28	83/06/09	*/
 end_comment
 
 begin_ifdef
@@ -21,6 +21,18 @@ directive|include
 file|"../h/dmap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/resource.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -38,11 +50,6 @@ directive|include
 file|<sys/dmap.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -54,6 +61,11 @@ include|#
 directive|include
 file|<resource.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Per process structure containing data that  * isn't needed in core when the process is swapped out.  */
@@ -248,6 +260,10 @@ index|]
 decl_stmt|;
 comment|/* signals to be blocked */
 name|int
+name|u_sigonstack
+decl_stmt|;
+comment|/* signals to take on sigstack */
+name|int
 name|u_oldmask
 decl_stmt|;
 comment|/* saved mask from before sigpause */
@@ -255,13 +271,19 @@ name|int
 name|u_code
 decl_stmt|;
 comment|/* ``code'' to trap */
-name|caddr_t
+name|struct
+name|sigstack
 name|u_sigstack
 decl_stmt|;
-comment|/* 0 means no sigstack */
-name|int
-name|u_onsigstack
-decl_stmt|;
+comment|/* sp& on stack state variable */
+define|#
+directive|define
+name|u_onstack
+value|u_sigstack.ss_onstack
+define|#
+directive|define
+name|u_sigsp
+value|u_sigstack.ss_sp
 comment|/* 1.4 - descriptor management */
 name|struct
 name|file
