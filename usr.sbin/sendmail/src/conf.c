@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.89 (Berkeley) 4/18/94"
+literal|"@(#)conf.c	8.89.1.3 (Berkeley) 3/7/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -3174,7 +3174,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: conf.c,v 1.4 1994/08/05 09:14:29 davidg Exp $"
+literal|"@(#)$Id: conf.c,v 1.5 1995/02/23 00:46:30 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4793,6 +4793,8 @@ end_endif
 begin_decl_stmt
 name|int
 name|optopt
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -4804,6 +4806,8 @@ begin_decl_stmt
 name|char
 modifier|*
 name|optarg
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -5546,6 +5550,22 @@ modifier|*
 name|getusershell
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|shell
+operator|==
+name|NULL
+operator|||
+name|shell
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|TRUE
+return|;
 name|setusershell
 argument_list|()
 expr_stmt|;
@@ -5602,6 +5622,22 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|shell
+operator|==
+name|NULL
+operator|||
+name|shell
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+name|TRUE
+return|;
 name|shellf
 operator|=
 name|fopen
@@ -7933,6 +7969,13 @@ ifdef|#
 directive|ifdef
 name|SOLARIS
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct

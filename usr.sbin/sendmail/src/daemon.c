@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.2 (Berkeley) 2/9/95 (with daemon mode)"
+literal|"@(#)daemon.c	8.48.1.4 (Berkeley) 2/28/95 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.2 (Berkeley) 2/9/95 (without daemon mode)"
+literal|"@(#)daemon.c	8.48.1.4 (Berkeley) 2/28/95 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3506,6 +3506,17 @@ name|EVENT
 modifier|*
 name|ev
 decl_stmt|;
+name|int
+name|nleft
+decl_stmt|;
+name|char
+name|ibuf
+index|[
+name|MAXNAME
+operator|+
+literal|1
+index|]
+decl_stmt|;
 endif|#
 directive|endif
 specifier|static
@@ -3686,7 +3697,7 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|hbuf
+name|ibuf
 argument_list|,
 literal|"%d,%d\r\n"
 argument_list|,
@@ -3885,7 +3896,7 @@ name|printf
 argument_list|(
 literal|"getauthinfo: sent %s"
 argument_list|,
-name|hbuf
+name|ibuf
 argument_list|)
 expr_stmt|;
 comment|/* send query */
@@ -3895,11 +3906,11 @@ name|write
 argument_list|(
 name|s
 argument_list|,
-name|hbuf
+name|ibuf
 argument_list|,
 name|strlen
 argument_list|(
-name|hbuf
+name|ibuf
 argument_list|)
 argument_list|)
 operator|<
@@ -3909,18 +3920,50 @@ goto|goto
 name|closeident
 goto|;
 comment|/* get result */
+name|p
+operator|=
+operator|&
+name|ibuf
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|nleft
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ibuf
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
 name|i
 operator|=
 name|read
 argument_list|(
 name|s
 argument_list|,
-name|hbuf
+name|p
 argument_list|,
-sizeof|sizeof
-name|hbuf
+name|nleft
 argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
+name|p
+operator|+=
+name|i
 expr_stmt|;
+name|nleft
+operator|-=
+name|i
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -3937,38 +3980,40 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|<=
+operator|<
 literal|0
+operator|||
+name|p
+operator|==
+operator|&
+name|ibuf
+index|[
+literal|0
+index|]
 condition|)
 goto|goto
 name|noident
 goto|;
 if|if
 condition|(
-name|hbuf
-index|[
+operator|*
 operator|--
-name|i
-index|]
+name|p
 operator|==
 literal|'\n'
 operator|&&
-name|hbuf
-index|[
+operator|*
 operator|--
-name|i
-index|]
+name|p
 operator|==
 literal|'\r'
 condition|)
-name|i
+name|p
 operator|--
 expr_stmt|;
-name|hbuf
-index|[
+operator|*
 operator|++
-name|i
-index|]
+name|p
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -3985,7 +4030,7 @@ name|printf
 argument_list|(
 literal|"getauthinfo:  got %s\n"
 argument_list|,
-name|hbuf
+name|ibuf
 argument_list|)
 expr_stmt|;
 comment|/* parse result */
@@ -3993,7 +4038,7 @@ name|p
 operator|=
 name|strchr
 argument_list|(
-name|hbuf
+name|ibuf
 argument_list|,
 literal|':'
 argument_list|)
