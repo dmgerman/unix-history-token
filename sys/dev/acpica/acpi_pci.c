@@ -353,6 +353,20 @@ argument_list|,
 name|bus_generic_deactivate_resource
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_pnpinfo_str
+argument_list|,
+name|pci_child_pnpinfo_str_method
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_child_location_str
+argument_list|,
+name|pci_child_location_str_method
+argument_list|)
+block|,
 comment|/* PCI interface */
 name|DEVMETHOD
 argument_list|(
