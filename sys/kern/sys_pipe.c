@@ -4053,21 +4053,6 @@ name|error
 operator|)
 return|;
 block|}
-name|KASSERT
-argument_list|(
-name|wpipe
-operator|->
-name|pipe_buffer
-operator|.
-name|buffer
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"pipe buffer gone"
-operator|)
-argument_list|)
-expr_stmt|;
 name|orig_resid
 operator|=
 name|uio
