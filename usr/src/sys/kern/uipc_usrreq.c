@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.6	83/01/04	*/
+comment|/*	uipc_usrreq.c	1.7	83/01/13	*/
 end_comment
 
 begin_include
@@ -87,8 +87,6 @@ argument_list|,
 argument|m
 argument_list|,
 argument|nam
-argument_list|,
-argument|opt
 argument_list|)
 end_macro
 
@@ -114,14 +112,6 @@ name|m
 decl_stmt|,
 modifier|*
 name|nam
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|socketopt
-modifier|*
-name|opt
 decl_stmt|;
 end_decl_stmt
 
