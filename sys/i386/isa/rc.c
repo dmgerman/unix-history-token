@@ -8752,7 +8752,7 @@ for|for
 control|(
 name|rcnt
 operator|=
-literal|100
+literal|50
 init|;
 name|rcnt
 operator|&&
@@ -8766,7 +8766,7 @@ operator|--
 control|)
 name|DELAY
 argument_list|(
-literal|15
+literal|30
 argument_list|)
 expr_stmt|;
 if|if
