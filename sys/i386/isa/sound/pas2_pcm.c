@@ -1489,21 +1489,8 @@ init|=
 block|{
 literal|"Pro Audio Spectrum"
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-literal|0
-block|,
-comment|/* disable automode for now until we get this working right */
-else|#
-directive|else
 name|DMA_AUTOMODE
 block|,
-endif|#
-directive|endif
 name|AFMT_U8
 operator||
 name|AFMT_S16_LE

@@ -2138,21 +2138,8 @@ block|{
 block|{
 literal|"Generic AD1848 codec"
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|NEEDS_RESTART
-block|,
-comment|/* disable automode for now until we get this working right */
-else|#
-directive|else
 name|DMA_AUTOMODE
 block|,
-endif|#
-directive|endif
 name|AFMT_U8
 block|,
 comment|/* Will be set later */
