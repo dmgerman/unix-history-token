@@ -316,7 +316,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:dfm:npy"
+literal|"b:c:dfFm:npy"
 argument_list|)
 operator|)
 operator|!=
@@ -391,6 +391,16 @@ case|:
 name|skipclean
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+comment|/* We can never run in background */
+name|exit
+argument_list|(
+name|EEXIT
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
