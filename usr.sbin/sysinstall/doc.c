@@ -303,7 +303,7 @@ name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"/usr/share/doc/FAQ/FAQ.html"
+literal|"/usr/share/doc/faq/index.html"
 argument_list|)
 expr_stmt|;
 if|if
@@ -342,7 +342,7 @@ name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"/usr/share/doc/handbook/handbook.html"
+literal|"/usr/share/doc/handbook/index.html"
 argument_list|)
 expr_stmt|;
 if|if
