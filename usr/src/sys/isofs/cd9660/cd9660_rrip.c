@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *	@(#)cd9660_rrip.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1506,7 +1506,6 @@ name|high
 operator|==
 literal|0
 condition|)
-block|{
 name|ana
 operator|->
 name|inop
@@ -1528,9 +1527,7 @@ name|low
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ana
 operator|->
 name|inop
@@ -1549,7 +1546,6 @@ name|low
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|ana
 operator|->
 name|fields
@@ -1706,13 +1702,6 @@ modifier|*
 name|ana
 decl_stmt|;
 block|{
-comment|/* stop analyzing */
-name|ana
-operator|->
-name|fields
-operator|=
-literal|0
-expr_stmt|;
 return|return
 name|ISO_SUSP_STOP
 return|;
@@ -2082,6 +2071,37 @@ name|fields
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|result
+operator|&
+name|ISO_SUSP_STOP
+condition|)
+block|{
+name|result
+operator|&=
+operator|~
+name|ISO_SUSP_STOP
+expr_stmt|;
+break|break;
+block|}
+comment|/* plausibility check */
+if|if
+condition|(
+name|isonum_711
+argument_list|(
+name|phead
+operator|->
+name|length
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+operator|*
+name|phead
+argument_list|)
+condition|)
+break|break;
 comment|/* 			 * move to next SUSP 			 * Hopefully this works with newer versions, too 			 */
 name|phead
 operator|=
@@ -2225,7 +2245,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we don't find the Basic SUSP stuffs, just set default value 	 *   ( attribute/time stamp ) 	 */
+comment|/* 	 * If we don't find the Basic SUSP stuffs, just set default value 	 *   (attribute/time stamp) 	 */
 for|for
 control|(
 name|ptable
@@ -2264,6 +2284,10 @@ name|result
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Get Attributes.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2411,7 +2435,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get Alternate Name from 'AL' record   * If either no AL record or 0 length,   *    it will be return the translated ISO9660 name,  */
+comment|/*   * Get Alternate Name.  */
 end_comment
 
 begin_decl_stmt
@@ -2654,7 +2678,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Get Symbolic Name from 'SL' record   *  * Note: isodir should contains SL record!  */
+comment|/*   * Get Symbolic Link.  */
 end_comment
 
 begin_decl_stmt
@@ -2862,7 +2886,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Check for Rock Ridge Extension and return offset of its fields.  * Note: We require the ER field.  */
+comment|/*  * Check for Rock Ridge Extension and return offset of its fields.  * Note: We insist on the ER field.  */
 end_comment
 
 begin_function
