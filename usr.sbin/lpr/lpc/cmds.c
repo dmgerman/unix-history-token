@@ -977,6 +977,11 @@ name|cmdstatus
 argument_list|)
 expr_stmt|;
 block|}
+name|free_printer
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|generic_msg
