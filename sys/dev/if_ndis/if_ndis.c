@@ -5585,7 +5585,7 @@ name|if_flags
 operator|&
 name|IFF_UP
 operator|)
-operator|&&
+operator|||
 name|sc
 operator|->
 name|ndis_block
@@ -6590,11 +6590,14 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|ndis_init_nic
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 comment|/* Init our MAC address */
 comment|/* Program the packet filter */
 name|sc
