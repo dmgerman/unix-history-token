@@ -3756,7 +3756,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"               size: %d, resid: %ld, a_count: %d, valid: 0x%x\n"
+literal|"               size: %d, resid: %ld, a_count: %d, valid: 0x%lx\n"
 argument_list|,
 name|size
 argument_list|,
@@ -3768,6 +3768,9 @@ name|ap
 operator|->
 name|a_count
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|m
 operator|->
 name|valid
