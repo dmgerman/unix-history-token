@@ -3056,11 +3056,6 @@ name|int
 name|save
 parameter_list|,
 name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
 name|thread
 modifier|*
 name|td

@@ -3186,10 +3186,6 @@ argument_list|,
 name|V_SAVE
 argument_list|,
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -5303,10 +5299,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|td
 argument_list|,

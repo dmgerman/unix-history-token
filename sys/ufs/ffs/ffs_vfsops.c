@@ -1946,10 +1946,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
 argument_list|,
 literal|0
 argument_list|,
@@ -2474,10 +2470,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|td
-operator|->
-name|td_ucred
 argument_list|,
 name|td
 argument_list|,
@@ -4111,8 +4103,6 @@ name|devvp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|NOCRED
-argument_list|,
 name|td
 argument_list|,
 literal|0
@@ -4943,8 +4933,6 @@ operator|->
 name|um_devvp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|NOCRED
 argument_list|,
 name|td
 argument_list|,

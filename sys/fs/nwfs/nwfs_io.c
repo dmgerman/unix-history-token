@@ -3158,8 +3158,6 @@ name|vp
 argument_list|,
 name|flags
 argument_list|,
-name|cred
-argument_list|,
 name|td
 argument_list|,
 name|slpflag
@@ -3230,8 +3228,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|flags
-argument_list|,
-name|cred
 argument_list|,
 name|td
 argument_list|,

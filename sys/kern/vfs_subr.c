@@ -3930,8 +3930,6 @@ name|vp
 parameter_list|,
 name|flags
 parameter_list|,
-name|cred
-parameter_list|,
 name|td
 parameter_list|,
 name|slpflag
@@ -3945,11 +3943,6 @@ name|vp
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
 decl_stmt|;
 name|struct
 name|thread
@@ -9315,8 +9308,6 @@ name|vp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|NOCRED
-argument_list|,
 name|td
 argument_list|,
 literal|0
@@ -9331,8 +9322,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|NOCRED
 argument_list|,
 name|td
 argument_list|,

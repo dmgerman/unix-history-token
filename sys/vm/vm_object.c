@@ -2058,8 +2058,6 @@ name|vp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|NOCRED
-argument_list|,
 name|NULL
 argument_list|,
 literal|0

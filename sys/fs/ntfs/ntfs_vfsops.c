@@ -2279,8 +2279,6 @@ name|ntm_devvp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|NOCRED
-argument_list|,
 name|td
 argument_list|,
 literal|0
