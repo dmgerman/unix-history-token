@@ -381,28 +381,6 @@ begin_comment
 comment|/* Special file times changed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NLOCKED
-value|0x0800
-end_define
-
-begin_comment
-comment|/* node is locked */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NWANTED
-value|0x0100
-end_define
-
-begin_comment
-comment|/* someone wants to lock */
-end_comment
-
 begin_comment
 comment|/*  * Convert between nfsnode pointers and vnode pointers  */
 end_comment
