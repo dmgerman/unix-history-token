@@ -1,13 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)code.c	1.2 (Berkeley) %G%"
+literal|"@(#)code.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_include
 include|#
@@ -438,10 +450,6 @@ decl_stmt|;
 specifier|register
 name|TWORD
 name|t
-decl_stmt|;
-specifier|register
-name|int
-name|j
 decl_stmt|;
 name|int
 name|i
@@ -1781,8 +1789,7 @@ name|ULONG
 block|,
 literal|"movl"
 block|,
-operator|-
-literal|1
+literal|0
 block|,
 literal|""
 block|}
@@ -1814,7 +1821,7 @@ init|;
 name|p
 operator|->
 name|fromtype
-operator|>
+operator|!=
 literal|0
 condition|;
 name|p

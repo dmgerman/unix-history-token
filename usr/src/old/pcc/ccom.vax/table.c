@@ -1,13 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)table.c	1.5 (Berkeley) %G%"
+literal|"@(#)table.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|lint
+end_endif
 
 begin_include
 include|#
@@ -158,9 +170,17 @@ name|RLEFT
 block|,
 literal|""
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
 name|SCONV
 block|,
 name|INTAREG
@@ -384,7 +404,9 @@ name|GOTO
 block|,
 name|FOREFF
 block|,
-name|AWD
+name|SNAME
+operator||
+name|SOREG
 block|,
 name|TANY
 block|,
@@ -808,9 +830,17 @@ name|RESC1
 block|,
 literal|"	movl	$1,A1\nZN"
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
 name|UNARY
 name|CALL
 block|,
@@ -1650,9 +1680,17 @@ name|RESC1
 block|,
 literal|"	movZF	AR,A1\n"
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
 name|REG
 block|,
 name|FORARG
@@ -1845,9 +1883,17 @@ name|RNULL
 block|,
 literal|"	cvtfd	AR,-(sp)\n"
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
 name|UNARY
 name|MINUS
 block|,
@@ -3063,9 +3109,17 @@ name|RLEFT
 operator||
 name|RESCC
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
 literal|"	OF2	AR,TAL\n"
 block|,
 else|#
@@ -3256,9 +3310,17 @@ name|RESCC
 block|,
 literal|"	cvtfd	AR,A1\n	OD3	A1,AL,A1\n"
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FORT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SPRECC
+argument_list|)
 name|OPFLOAT
 block|,
 name|INAREG
