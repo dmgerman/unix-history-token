@@ -8609,7 +8609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Dump a process' core.  The main routine does some  * policy checking, and creates the name of the coredump;  * then it passes on a vnode and a size limit to the process-specific  * coredump routine if there is one; if there _is not_ one, it returns  * ENOSYS; otherwise it returns the error from the process-specific routine.  */
+comment|/*  * Dump a process' core.  The main routine does some  * policy checking, and creates the name of the coredump;  * then it passes on a vnode and a size limit to the process-specific  * coredump routine if there is one; if there _is not_ one, it returns  * ENOSYS; otherwise it returns the error from the process-specific routine.  *  * XXX: VOP_GETATTR() here requires holding the vnode lock.  */
 end_comment
 
 begin_function
