@@ -6791,13 +6791,13 @@ name|args
 operator|->
 name|f_id
 operator|.
-name|src_ip
+name|dst_ip
 else|:
 name|args
 operator|->
 name|f_id
 operator|.
-name|dst_ip
+name|src_ip
 decl_stmt|;
 if|if
 condition|(
