@@ -212,32 +212,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * PTEs for system V style shared memory.  * This is basically slop for kmempt which we actually allocate (malloc) from.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SHMMAXPGS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SHMMAXPGS
-value|1024
-end_define
-
-begin_comment
-comment|/* 8mb */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Boundary at which to place first MAPMEM segment if not explicitly  * specified.  Should be a power of two.  This allows some slop for  * the data segment to grow underneath the first mapped segment.  */
 end_comment
 
