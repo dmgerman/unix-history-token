@@ -277,7 +277,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_suspend
 argument_list|,
-name|bus_generic_suspend
+name|pci_suspend
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -320,7 +320,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_driver_added
 argument_list|,
-name|bus_generic_driver_added
+name|pci_driver_added
 argument_list|)
 block|,
 name|DEVMETHOD

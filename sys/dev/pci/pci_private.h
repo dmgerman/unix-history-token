@@ -58,6 +58,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pci_driver_added
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|driver_t
+modifier|*
+name|driver
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pci_print_child
 parameter_list|(
@@ -422,6 +436,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|pci_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pci_suspend
 parameter_list|(
 name|device_t
 name|dev
