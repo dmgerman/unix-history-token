@@ -45,7 +45,7 @@ operator|)
 name|vacation
 operator|.
 name|c
-literal|3.7
+literal|3.8
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ value|(60L*60L*24L*7L)
 end_define
 
 begin_decl_stmt
-name|long
+name|time_t
 name|Timeout
 init|=
 name|ONEWEEK
@@ -175,7 +175,7 @@ name|knows
 parameter_list|()
 function_decl|;
 specifier|extern
-name|long
+name|time_t
 name|convtime
 parameter_list|()
 function_decl|;
@@ -355,11 +355,19 @@ comment|/* mark this person as knowing */
 name|setknows
 argument_list|(
 name|from
-argument_list|,
-name|buf
 argument_list|)
 expr_stmt|;
 comment|/* send the message back */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|homedir
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -367,7 +375,7 @@ name|strcat
 argument_list|(
 name|buf
 argument_list|,
-literal|".msg"
+literal|"/.vacation.msg"
 argument_list|)
 expr_stmt|;
 name|sendmessage
@@ -621,10 +629,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|DATUM
 name|k
 decl_stmt|,
@@ -1060,6 +1064,74 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  NEWSTR -- copy a string ** **	Parameters: **		s -- the string to copy. ** **	Returns: **		A copy of the string. ** **	Side Effects: **		none. */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|newstr
+parameter_list|(
+name|s
+parameter_list|)
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"newstr: cannot alloc memory"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
+name|strcpy
+argument_list|(
+name|p
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|p
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
