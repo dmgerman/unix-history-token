@@ -4,7 +4,7 @@ comment|/* "@(#)param.h 2.1 3/25/82" */
 end_comment
 
 begin_comment
-comment|/*	param.h	4.19	82/07/15	*/
+comment|/*	param.h	4.20	82/08/08	*/
 end_comment
 
 begin_comment
@@ -154,6 +154,13 @@ define|#
 directive|define
 name|PWAIT
 value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|PLOCK
+value|35
 end_define
 
 begin_define
