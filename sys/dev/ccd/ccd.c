@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.17.2.2 1998/02/15 08:15:08 jkh Exp $ */
+comment|/* $Id: ccd.c,v 1.17.2.3 1998/02/15 08:29:27 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -4044,6 +4044,17 @@ operator|=
 name|getccdbuf
 argument_list|()
 expr_stmt|;
+name|bzero
+argument_list|(
+name|cbp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ccdbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|cbp
 operator|->
 name|cb_buf
@@ -4299,6 +4310,17 @@ name|cbp
 operator|=
 name|getccdbuf
 argument_list|()
+expr_stmt|;
+name|bzero
+argument_list|(
+name|cbp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ccdbuf
+argument_list|)
+argument_list|)
 expr_stmt|;
 operator|*
 name|cbp
