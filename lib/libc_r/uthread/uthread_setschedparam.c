@@ -134,6 +134,12 @@ name|base_priority
 condition|)
 block|{
 comment|/* 			 * Remove the thread from its current priority 			 * queue before any adjustments are made to its 			 * active priority: 			 */
+name|old_prio
+operator|=
+name|pthread
+operator|->
+name|active_priority
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -150,12 +156,6 @@ block|{
 name|in_readyq
 operator|=
 literal|1
-expr_stmt|;
-name|old_prio
-operator|=
-name|pthread
-operator|->
-name|active_priority
 expr_stmt|;
 name|PTHREAD_PRIOQ_REMOVE
 argument_list|(

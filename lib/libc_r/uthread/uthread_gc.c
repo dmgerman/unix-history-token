@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -78,12 +84,6 @@ name|pthread
 decl_stmt|;
 name|pthread_t
 name|pthread_cln
-decl_stmt|;
-name|pthread_t
-name|pthread_nxt
-decl_stmt|;
-name|pthread_t
-name|pthread_prv
 decl_stmt|;
 name|struct
 name|timespec

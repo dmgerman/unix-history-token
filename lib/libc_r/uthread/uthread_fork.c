@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -369,6 +375,7 @@ name|stack
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|pthread_save
@@ -380,7 +387,7 @@ operator|==
 name|PTHREAD_STACK_DEFAULT
 condition|)
 block|{
-comment|/* 							 * Default-size stack.  Cache 							 * it: 							 */
+comment|/* 							 * Default-size stack. 							 * Cache it: 							 */
 name|struct
 name|stack
 modifier|*
@@ -422,6 +429,7 @@ operator|->
 name|stack
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|pthread_save

@@ -95,10 +95,6 @@ decl_stmt|,
 name|ret
 init|=
 literal|0
-decl_stmt|,
-name|found
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|pthread_poll_data
