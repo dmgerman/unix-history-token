@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id$  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  *	aic7901 and aic7902 SCSI controllers  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2002 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic79xx_pci.c#73 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -111,6 +111,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_ALL_IROC_MASK
+value|0xFFFFFF7FFFFFFFFFull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_DEV_VENDOR_MASK
 value|0xFFFFFFFF00000000ull
 end_define
@@ -125,22 +132,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_9005_GENERIC_IROC_MASK
+value|0xFFF0FF7F00000000ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AIC7901
 value|0x800F9005FFFF9005ull
-end_define
-
-begin_define
-define|#
-directive|define
-name|ID_AIC7901A
-value|0x801E9005FFFF9005ull
-end_define
-
-begin_define
-define|#
-directive|define
-name|ID_AIC7901A_IROC
-value|0x809E9005FFFF9005ull
 end_define
 
 begin_define
@@ -153,15 +153,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AHA_29320LP
-value|0x8014900500449005ull
+name|ID_AHA_29320ALP
+value|0x8017900500449005ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|ID_AHA_29320LP_IROC
-value|0x8094900500449005ull
+name|ID_AIC7901A
+value|0x801E9005FFFF9005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AHA_29320
+value|0x8012900500429005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AHA_29320B
+value|0x8013900500439005ull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AHA_29320LP
+value|0x8014900500449005ull
 end_define
 
 begin_define
@@ -174,13 +195,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AIC7902_IROC
-value|0x809F9005FFFF9005ull
-end_define
-
-begin_define
-define|#
-directive|define
 name|ID_AIC7902_B
 value|0x801D9005FFFF9005ull
 end_define
@@ -188,15 +202,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AIC7902_B_IROC
-value|0x809D9005FFFF9005ull
+name|ID_AHA_39320
+value|0x8010900500409005ull
 end_define
 
 begin_define
 define|#
 directive|define
-name|ID_AHA_39320
-value|0x8010900500409005ull
+name|ID_AHA_39320_B
+value|0x8015900500409005ull
 end_define
 
 begin_define
@@ -232,20 +246,6 @@ define|#
 directive|define
 name|ID_AHA_39320D_B_HP
 value|0x801C900500AC0E11ull
-end_define
-
-begin_define
-define|#
-directive|define
-name|ID_AHA_29320
-value|0x8012900500429005ull
-end_define
-
-begin_define
-define|#
-directive|define
-name|ID_AHA_29320B
-value|0x8013900500439005ull
 end_define
 
 begin_define
@@ -422,6 +422,13 @@ end_define
 begin_decl_stmt
 specifier|static
 name|ahd_device_setup_t
+name|ahd_aic7901_setup
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ahd_device_setup_t
 name|ahd_aic7901A_setup
 decl_stmt|;
 end_decl_stmt
@@ -440,7 +447,48 @@ name|ahd_pci_ident_table
 index|[]
 init|=
 block|{
+comment|/* aic7901 based controllers */
+block|{
+name|ID_AHA_29320A
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 29320A Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7901_setup
+block|}
+block|,
+block|{
+name|ID_AHA_29320ALP
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 29320ALP Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7901_setup
+block|}
+block|,
 comment|/* aic7901A based controllers */
+block|{
+name|ID_AHA_29320
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 29320 Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7901A_setup
+block|}
+block|,
+block|{
+name|ID_AHA_29320B
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 29320B Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7901A_setup
+block|}
+block|,
 block|{
 name|ID_AHA_29320LP
 block|,
@@ -451,19 +499,19 @@ block|,
 name|ahd_aic7901A_setup
 block|}
 block|,
-block|{
-name|ID_AHA_29320A
-block|,
-name|ID_ALL_MASK
-block|,
-literal|"Adaptec 29320A Ultra320 SCSI adapter"
-block|,
-name|ahd_aic7901A_setup
-block|}
-block|,
 comment|/* aic7902 based controllers */
 block|{
 name|ID_AHA_39320
+block|,
+name|ID_ALL_MASK
+block|,
+literal|"Adaptec 39320 Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7902_setup
+block|}
+block|,
+block|{
+name|ID_AHA_39320_B
 block|,
 name|ID_ALL_MASK
 block|,
@@ -543,6 +591,18 @@ name|ahd_aic7902_setup
 block|}
 block|,
 comment|/* Generic chip probes for devices we don't know 'exactly' */
+block|{
+name|ID_AIC7901
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec AIC7901 Ultra320 SCSI adapter"
+block|,
+name|ahd_aic7901_setup
+block|}
+block|,
 block|{
 name|ID_AIC7901A
 operator|&
@@ -3753,6 +3813,52 @@ argument_list|,
 name|saved_modes
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|ahd_aic7901_setup
+parameter_list|(
+name|struct
+name|ahd_softc
+modifier|*
+name|ahd
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
+name|ahd_aic7902_setup
+argument_list|(
+name|ahd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|ahd
+operator|->
+name|chip
+operator|=
+name|AHD_AIC7901
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
