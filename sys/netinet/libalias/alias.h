@@ -193,17 +193,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|PacketAliasPptp
-parameter_list|(
-name|struct
-name|in_addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|struct
 name|alias_link
 modifier|*

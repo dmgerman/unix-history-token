@@ -7370,47 +7370,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Translate PPTP packets to a machine on the inside  * XXX This function is made obsolete by PacketAliasRedirectProto().  */
-end_comment
-
-begin_function
-name|int
-name|PacketAliasPptp
-parameter_list|(
-name|struct
-name|in_addr
-name|src_addr
-parameter_list|)
-block|{
-if|if
-condition|(
-name|src_addr
-operator|.
-name|s_addr
-operator|!=
-name|INADDR_NONE
-condition|)
-operator|(
-name|void
-operator|)
-name|PacketAliasRedirectProto
-argument_list|(
-name|src_addr
-argument_list|,
-name|nullAddress
-argument_list|,
-name|nullAddress
-argument_list|,
-name|IPPROTO_GRE
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Redirect packets of a given IP protocol from a specific    public address to a private address */
 end_comment
 
