@@ -1952,17 +1952,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|td
-operator|!=
-name|NULL
-condition|)
-name|td
-operator|->
-name|td_locks
-operator|++
-expr_stmt|;
 if|#
 directive|if
 name|defined
