@@ -2015,6 +2015,15 @@ condition|(
 name|writes_todo
 operator|||
 operator|(
+operator|!
+operator|(
+name|nd
+operator|->
+name|nd_flag
+operator|&
+name|ND_NFSV3
+operator|)
+operator|&&
 name|nd
 operator|->
 name|nd_procnum
