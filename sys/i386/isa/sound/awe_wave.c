@@ -2564,7 +2564,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"AWE32: not detected\n"
+literal|"AWE32: not detected"
 argument_list|)
 expr_stmt|;
 return|return ;
@@ -2578,7 +2578,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"AWE32: I/O area already used.\n"
+literal|"AWE32: I/O area already used."
 argument_list|)
 expr_stmt|;
 return|return ;
@@ -2627,7 +2627,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"AWE32: can't allocate sample tables\n"
+literal|"AWE32: can't allocate sample tables"
 argument_list|)
 expr_stmt|;
 return|return ;
@@ -2680,13 +2680,6 @@ comment|/* intialize AWE32 hardware */
 name|awe_initialize
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Drivers shouldn't be this chatty by default */
-block|printk("<AWE32 SynthCard (%dk)>\n", (int)awe_mem_size/1024);
-endif|#
-directive|endif
 name|sprintf
 argument_list|(
 name|awe_info
@@ -2701,6 +2694,15 @@ operator|)
 name|awe_mem_size
 operator|/
 literal|1024
+argument_list|)
+expr_stmt|;
+name|conf_printf
+argument_list|(
+name|awe_info
+operator|.
+name|name
+argument_list|,
+name|hw_config
 argument_list|)
 expr_stmt|;
 comment|/* set reverb& chorus modes */
