@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.47 (Berkeley) %G%"
+literal|"@(#)main.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,13 +528,45 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|setenv
+block|{
+name|p
+operator|=
+name|xalloc
 argument_list|(
-literal|"TZ"
+name|strlen
+argument_list|(
+name|TimeZoneSpec
+argument_list|)
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|p
+argument_list|,
+literal|"TZ="
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|p
 argument_list|,
 name|TimeZoneSpec
 argument_list|)
 expr_stmt|;
+name|putenv
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 end_if
 
 begin_else
