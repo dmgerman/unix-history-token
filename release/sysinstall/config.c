@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.15.2.11 1995/06/01 23:09:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.15.2.12 1995/06/02 01:07:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -478,6 +478,10 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Record all the chunks */
+name|nchunks
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -689,6 +693,40 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|chunk_list
+index|[
+name|i
+index|]
+operator|->
+name|private
+operator|&&
+name|chunk_list
+index|[
+name|i
+index|]
+operator|->
+name|subtype
+operator|!=
+name|FS_SWAP
+condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"Warning: %s has no private struct and is not swap!\n"
+argument_list|,
+name|chunk_list
+index|[
+name|i
+index|]
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|fprintf
 argument_list|(
 name|fstab
@@ -744,7 +782,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|Mkdir
 argument_list|(
 literal|"/proc"
@@ -864,13 +901,7 @@ name|fstab
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * This sucks in /etc/sysconfig, substitutes anything needing substitution, then  * writes it all back out.  It's pretty gross and needs re-writing at some point.  */
-end_comment
-
-begin_function
 name|void
 name|configSysconfig
 parameter_list|(
@@ -1338,9 +1369,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configSaverTimeout
 parameter_list|(
@@ -1377,9 +1405,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|configResolv
 parameter_list|(
@@ -1579,9 +1604,6 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|int
 name|configPackages
 parameter_list|(
@@ -1833,9 +1855,6 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|configPorts
 parameter_list|(
