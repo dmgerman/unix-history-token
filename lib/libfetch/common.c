@@ -2702,6 +2702,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|conn
+operator|->
+name|buf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|conn
 argument_list|)
 expr_stmt|;
 return|return
