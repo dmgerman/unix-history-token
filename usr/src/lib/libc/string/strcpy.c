@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcpy.c	5.3 (Berkeley) %G%"
+literal|"@(#)strcpy.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,10 +68,10 @@ for|for
 control|(
 init|;
 operator|*
-name|from
+name|to
 operator|=
 operator|*
-name|to
+name|from
 condition|;
 operator|++
 name|from
