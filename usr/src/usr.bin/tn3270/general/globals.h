@@ -362,17 +362,6 @@ name|AidByte
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|EXTERN
-name|int
-name|Initialized
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* are we initialized? */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
