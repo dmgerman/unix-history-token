@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pte.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.noredist.c%  *  *	@(#)pte.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -334,6 +334,43 @@ directive|define
 name|PG_UW
 value|0x00000006
 end_define
+
+begin_comment
+comment|/*  * Page Protection Exception bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_P
+value|0x01
+end_define
+
+begin_comment
+comment|/* Protection violation vs. not present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_W
+value|0x02
+end_define
+
+begin_comment
+comment|/* during a Write cycle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_U
+value|0x04
+end_define
+
+begin_comment
+comment|/* access from User mode (UPL) */
+end_comment
 
 begin_comment
 comment|/*  * Pte related macros  */
