@@ -1261,7 +1261,9 @@ operator|)
 literal|0
 operator|)
 operator|->
-name|p_addr
+name|p_thread
+operator|.
+name|td_pcb
 expr_stmt|;
 if|if
 condition|(
@@ -1275,7 +1277,7 @@ argument_list|)
 condition|)
 name|error
 argument_list|(
-literal|"cannot read u area ptr"
+literal|"cannot read pcb ptr"
 argument_list|)
 expr_stmt|;
 if|if
