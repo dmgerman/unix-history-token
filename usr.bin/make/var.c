@@ -2209,20 +2209,20 @@ else|else
 block|{
 name|char
 modifier|*
-name|cp
+name|rval
 decl_stmt|;
 name|size_t
-name|len
+name|rlen
 decl_stmt|;
 name|Boolean
-name|freeIt
+name|rfree
 decl_stmt|;
 comment|/* 				 * If unescaped dollar sign not 				 * before the delimiter, assume it's 				 * a variable substitution and 				 * recurse. 				 */
-name|len
+name|rlen
 operator|=
 literal|0
 expr_stmt|;
-name|cp
+name|rval
 operator|=
 name|Var_Parse
 argument_list|(
@@ -2239,33 +2239,33 @@ operator|->
 name|err
 argument_list|,
 operator|&
-name|len
+name|rlen
 argument_list|,
 operator|&
-name|freeIt
+name|rfree
 argument_list|)
 expr_stmt|;
 name|Buf_Append
 argument_list|(
 name|buf
 argument_list|,
-name|cp
+name|rval
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|freeIt
+name|rfree
 condition|)
 name|free
 argument_list|(
-name|cp
+name|rval
 argument_list|)
 expr_stmt|;
 name|vp
 operator|->
 name|ptr
 operator|+=
-name|len
+name|rlen
 expr_stmt|;
 block|}
 block|}
@@ -6156,7 +6156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Subst  --  *	Substitute for all variables in the given string in the given context  *	If undefErr is TRUE, Parse_Error will be called when an undefined  *	variable is encountered.  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Subst  --  *	Substitute for all variables in the given string in the given context  *	If err is TRUE, Parse_Error will be called when an undefined  *	variable is encountered.  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -6179,7 +6179,7 @@ modifier|*
 name|ctxt
 parameter_list|,
 name|Boolean
-name|undefErr
+name|err
 parameter_list|)
 block|{
 name|Boolean
@@ -6265,17 +6265,14 @@ condition|)
 block|{
 name|char
 modifier|*
-name|val
+name|rval
 decl_stmt|;
-comment|/* Value to substitute for a variable */
 name|size_t
-name|length
+name|rlen
 decl_stmt|;
-comment|/* Length of the variable invocation */
 name|Boolean
-name|doFree
+name|rfree
 decl_stmt|;
-comment|/* Set true if val should be freed */
 comment|/* 			 * Variable invocation. 			 */
 if|if
 condition|(
@@ -6517,11 +6514,11 @@ name|expand
 condition|)
 continue|continue;
 block|}
-name|length
+name|rlen
 operator|=
 literal|0
 expr_stmt|;
-name|val
+name|rval
 operator|=
 name|Var_Parse
 argument_list|(
@@ -6529,23 +6526,23 @@ name|str
 argument_list|,
 name|ctxt
 argument_list|,
-name|undefErr
+name|err
 argument_list|,
 operator|&
-name|length
+name|rlen
 argument_list|,
 operator|&
-name|doFree
+name|rfree
 argument_list|)
 expr_stmt|;
 comment|/* 			 * When we come down here, val should either point to 			 * the value of this variable, suitably modified, or 			 * be NULL. Length should be the total length of the 			 * potential variable invocation (from $ to end 			 * character...) 			 */
 if|if
 condition|(
-name|val
+name|rval
 operator|==
 name|var_Error
 operator|||
-name|val
+name|rval
 operator|==
 name|varNoError
 condition|)
@@ -6558,13 +6555,13 @@ condition|)
 block|{
 name|str
 operator|+=
-name|length
+name|rlen
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|undefErr
+name|err
 condition|)
 block|{
 comment|/* 					 * If variable is undefined, complain 					 * and skip the variable. The 					 * complaint will stop us from doing 					 * anything when the file is parsed. 					 */
@@ -6580,7 +6577,7 @@ name|PARSE_FATAL
 argument_list|,
 literal|"Undefined variable \"%.*s\""
 argument_list|,
-name|length
+name|rlen
 argument_list|,
 name|str
 argument_list|)
@@ -6588,7 +6585,7 @@ expr_stmt|;
 block|}
 name|str
 operator|+=
-name|length
+name|rlen
 expr_stmt|;
 name|errorReported
 operator|=
@@ -6619,24 +6616,24 @@ block|{
 comment|/* 				 * We've now got a variable structure to 				 * store in. But first, advance the string 				 * pointer. 				 */
 name|str
 operator|+=
-name|length
+name|rlen
 expr_stmt|;
 comment|/* 				 * Copy all the characters from the variable 				 * value straight into the new string. 				 */
 name|Buf_Append
 argument_list|(
 name|buf
 argument_list|,
-name|val
+name|rval
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|doFree
+name|rfree
 condition|)
 block|{
 name|free
 argument_list|(
-name|val
+name|rval
 argument_list|)
 expr_stmt|;
 block|}
