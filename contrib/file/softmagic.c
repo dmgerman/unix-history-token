@@ -48,7 +48,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: softmagic.c,v 1.52 2003/02/08 18:33:53 christos Exp $"
+literal|"@(#)$Id: softmagic.c,v 1.54 2003/02/25 13:04:32 christos Exp $"
 argument_list|)
 end_macro
 
@@ -340,9 +340,17 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
 name|tmplen
 operator|=
 literal|20
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tmpoff
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -493,9 +501,17 @@ name|realloc
 argument_list|(
 name|tmpoff
 argument_list|,
+operator|(
 name|tmplen
 operator|+=
 literal|20
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tmpoff
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -726,9 +742,17 @@ name|realloc
 argument_list|(
 name|tmpoff
 argument_list|,
+operator|(
 name|tmplen
 operator|+=
 literal|20
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tmpoff
+argument_list|)
 argument_list|)
 operator|)
 operator|==

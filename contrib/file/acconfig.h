@@ -140,6 +140,16 @@ name|uint64_t
 end_undef
 
 begin_comment
+comment|/* Define to `int' if standard headers don't define.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|int32_t
+end_undef
+
+begin_comment
 comment|/* FIXME: These have to be added manually because autoheader doesn't know    about AC_CHECK_SIZEOF_INCLUDES.  */
 end_comment
 

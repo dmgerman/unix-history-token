@@ -196,7 +196,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.68 2003/02/08 18:33:53 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.69 2003/02/27 20:47:46 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1778,7 +1778,7 @@ literal|0002
 condition|)
 name|ckfputs
 argument_list|(
-literal|"writeable, "
+literal|"writable, "
 argument_list|,
 name|stdout
 argument_list|)

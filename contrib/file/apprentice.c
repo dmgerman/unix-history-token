@@ -76,7 +76,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: apprentice.c,v 1.49 2002/07/03 19:00:41 christos Exp $"
+literal|"@(#)$Id: apprentice.c,v 1.50 2003/02/27 20:47:46 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1161,13 +1161,13 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+name|maxmagic
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|magic
 argument_list|)
-argument_list|,
-name|maxmagic
 argument_list|)
 expr_stmt|;
 if|if

@@ -61,7 +61,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: readelf.c,v 1.23 2003/02/08 18:33:53 christos Exp $"
+literal|"@(#)$Id: readelf.c,v 1.26 2003/02/25 15:30:00 christos Exp $"
 argument_list|)
 end_macro
 
@@ -539,6 +539,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|sh_size
+value|(class == ELFCLASS32		\ 			 ? sizeof sh32			\ 			 : sizeof sh64)
+end_define
+
+begin_define
+define|#
+directive|define
 name|shs_type
 value|(class == ELFCLASS32		\ 			 ? getu32(swap, sh32.sh_type)	\ 			 : getu32(swap, sh64.sh_type))
 end_define
@@ -548,6 +555,13 @@ define|#
 directive|define
 name|ph_addr
 value|(class == ELFCLASS32		\ 			 ? (void *)&ph32		\ 			 : (void *)&ph64)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ph_size
+value|(class == ELFCLASS32		\ 			 ? sizeof ph32			\ 			 : sizeof ph64)
 end_define
 
 begin_define
@@ -641,6 +655,17 @@ name|sh64
 decl_stmt|;
 if|if
 condition|(
+name|size
+operator|!=
+name|sh_size
+condition|)
+name|error
+argument_list|(
+literal|"corrupted section header size.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|fd
@@ -680,7 +705,7 @@ name|fd
 argument_list|,
 name|sh_addr
 argument_list|,
-name|size
+name|sh_size
 argument_list|)
 operator|==
 operator|-
@@ -803,6 +828,17 @@ name|savedoffset
 decl_stmt|;
 if|if
 condition|(
+name|size
+operator|!=
+name|ph_size
+condition|)
+name|error
+argument_list|(
+literal|"corrupted program header size.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|fd
@@ -842,7 +878,7 @@ name|fd
 argument_list|,
 name|ph_addr
 argument_list|,
-name|size
+name|ph_size
 argument_list|)
 operator|==
 operator|-
@@ -1599,6 +1635,17 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|!=
+name|ph_size
+condition|)
+name|error
+argument_list|(
+literal|"corrupted program header size.\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Loop through all the program headers. 	 */
 for|for
 control|(
@@ -1641,7 +1688,7 @@ name|fd
 argument_list|,
 name|ph_addr
 argument_list|,
-name|size
+name|ph_size
 argument_list|)
 operator|==
 operator|-
