@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)vacation.c	3.3	%G%"
+literal|"@(#)vacation.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -967,110 +967,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  CONVTIME -- convert time ** **	Parameters: **		p -- pointer to ascii time. ** **	Returns: **		time in seconds. ** **	Side Effects: **		none. */
-end_comment
-
-begin_function
-name|long
-name|convtime
-parameter_list|(
-name|p
-parameter_list|)
-name|char
-modifier|*
-name|p
-decl_stmt|;
-block|{
-specifier|register
-name|long
-name|t
-decl_stmt|;
-name|t
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|isdigit
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
-name|t
-operator|=
-name|t
-operator|*
-literal|10
-operator|+
-operator|(
-operator|*
-name|p
-operator|++
-operator|-
-literal|'0'
-operator|)
-expr_stmt|;
-switch|switch
-condition|(
-operator|*
-name|p
-condition|)
-block|{
-case|case
-literal|'w'
-case|:
-comment|/* weeks */
-name|t
-operator|*=
-literal|7
-expr_stmt|;
-case|case
-literal|'d'
-case|:
-comment|/* days */
-case|case
-literal|'\0'
-case|:
-default|default:
-name|t
-operator|*=
-literal|24
-expr_stmt|;
-case|case
-literal|'h'
-case|:
-comment|/* hours */
-name|t
-operator|*=
-literal|60
-expr_stmt|;
-case|case
-literal|'m'
-case|:
-comment|/* minutes */
-name|t
-operator|*=
-literal|60
-expr_stmt|;
-case|case
-literal|'s'
-case|:
-comment|/* seconds */
-break|break;
-block|}
-return|return
-operator|(
-name|t
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 
