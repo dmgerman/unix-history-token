@@ -962,11 +962,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
-end_if
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -3196,8 +3196,8 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 else|else
 block|{
@@ -17244,8 +17244,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 name|int
 name|j
@@ -17312,8 +17312,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 if|if
 condition|(
@@ -22771,8 +22771,8 @@ name|EBUSY
 operator|)
 return|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 comment|/* 	 * XXX What about ATIOs that have not yet been serviced? 	 * Perhaps we should just refuse to be suspended if we 	 * are acting in a target role. 	 */
 if|if
@@ -23287,8 +23287,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 name|int
 name|group
@@ -26377,8 +26377,8 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 comment|/* 	 * XXX - In Twin mode, the tqinfifo may have commands 	 *	 for an unaffected channel in it.  However, if 	 *	 we have run out of ATIO resources to drain that 	 *	 queue, we may not get them all out here.  Further, 	 *	 the blocked transactions for the reset channel 	 *	 should just be killed off, irrespecitve of whether 	 *	 we are blocked on ATIO resources.  Write a routine 	 *	 to compact the tqinfifo appropriately. 	 */
 if|if
@@ -26489,8 +26489,8 @@ operator||
 name|ENSCSIRST
 operator|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 comment|/* 		 * Bus resets clear ENSELI, so we cannot 		 * defer re-enabling bus reset interrupts 		 * if we are in target mode. 		 */
 if|if
@@ -26584,8 +26584,8 @@ operator||
 name|ENSCSIRST
 operator|)
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|AHC_TARGET_MODE
 comment|/* 		 * Bus resets clear ENSELI, so we cannot 		 * defer re-enabling bus reset interrupts 		 * if we are in target mode. 		 */
 if|if
