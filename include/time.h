@@ -35,6 +35,10 @@ begin_if
 if|#
 directive|if
 name|__POSIX_VISIBLE
+operator|>
+literal|0
+operator|&&
+name|__POSIX_VISIBLE
 operator|<
 literal|200112
 operator|||
