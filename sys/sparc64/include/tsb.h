@@ -18,15 +18,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TSB_KERNEL_MIN_ADDRESS
-value|(0xa0000000)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TSB_USER_MIN_ADDRESS
-value|(0xb0000000)
+value|(UPT_MIN_ADDRESS)
 end_define
 
 begin_define
@@ -126,23 +119,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|TSB_KERNEL_PAGES
-value|(1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSB_KERNEL_SIZE
-value|(TSB_KERNEL_PAGES * PAGE_SIZE_4M)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TSB_KERNEL_MASK
-value|((TSB_KERNEL_SIZE>> STTE_SHIFT) - 1)
+define|\
+value|(((KVA_PAGES * PAGE_SIZE_4M)>> STTE_SHIFT) - 1)
 end_define
+
+begin_define
+define|#
+directive|define
+name|TSB_KERNEL_VA_MASK
+value|(TSB_KERNEL_MASK<< STTE_SHIFT)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|stte
+modifier|*
+name|tsb_kernel
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -404,7 +400,10 @@ operator|+
 operator|(
 name|va
 operator|-
-name|TSB_KERNEL_MIN_ADDRESS
+operator|(
+name|vm_offset_t
+operator|)
+name|tsb_kernel
 operator|)
 operator|)
 return|;
@@ -545,35 +544,16 @@ name|tsb_kvpntostte
 argument_list|(
 argument|vm_offset_t vpn
 argument_list|)
-block|{ 	struct
-name|stte
-operator|*
-name|stp
-block|;
-name|stp
-operator|=
+block|{
+return|return
 operator|(
-expr|struct
-name|stte
-operator|*
-operator|)
-operator|(
-name|TSB_KERNEL_MIN_ADDRESS
-operator|+
-operator|(
-operator|(
+operator|&
+name|tsb_kernel
+index|[
 name|vpn
 operator|&
 name|TSB_KERNEL_MASK
-operator|)
-operator|<<
-name|STTE_SHIFT
-operator|)
-operator|)
-block|;
-return|return
-operator|(
-name|stp
+index|]
 operator|)
 return|;
 block|}
