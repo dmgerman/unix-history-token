@@ -33,16 +33,10 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -98,6 +92,76 @@ name|socket
 struct_decl|;
 end_struct_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTYPE_VNODE
+value|1
+end_define
+
+begin_comment
+comment|/* file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTYPE_SOCKET
+value|2
+end_define
+
+begin_comment
+comment|/* communications endpoint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTYPE_PIPE
+value|3
+end_define
+
+begin_comment
+comment|/* pipe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTYPE_FIFO
+value|4
+end_define
+
+begin_comment
+comment|/* fifo (named pipe) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTYPE_KQUEUE
+value|5
+end_define
+
+begin_comment
+comment|/* event queue */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Kernel descriptor table.  * One entry for each open kernel vnode and socket.  *  * Below is the list of locks that protects members in struct file.  *  * (fl)	filelist_lock  * (f)	f_mtx in struct file  * none	not locked  */
 end_comment
@@ -117,31 +181,6 @@ name|short
 name|f_gcflag
 decl_stmt|;
 comment|/* used by thread doing fd garbage collection */
-define|#
-directive|define
-name|DTYPE_VNODE
-value|1
-comment|/* file */
-define|#
-directive|define
-name|DTYPE_SOCKET
-value|2
-comment|/* communications endpoint */
-define|#
-directive|define
-name|DTYPE_PIPE
-value|3
-comment|/* pipe */
-define|#
-directive|define
-name|DTYPE_FIFO
-value|4
-comment|/* fifo (named pipe) */
-define|#
-directive|define
-name|DTYPE_KQUEUE
-value|5
-comment|/* event queue */
 name|short
 name|f_type
 decl_stmt|;
@@ -365,6 +404,79 @@ comment|/* mutex to protect data */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_comment
+comment|/*  * Userland version of struct file, for sysctl  */
+end_comment
+
+begin_struct
+struct|struct
+name|xfile
+block|{
+name|size_t
+name|xf_size
+decl_stmt|;
+comment|/* size of struct xfile */
+name|pid_t
+name|xf_pid
+decl_stmt|;
+comment|/* owning process */
+name|uid_t
+name|xf_uid
+decl_stmt|;
+comment|/* effective uid of owning process */
+name|int
+name|xf_fd
+decl_stmt|;
+comment|/* descriptor number */
+name|void
+modifier|*
+name|xf_file
+decl_stmt|;
+comment|/* address of struct file */
+name|short
+name|xf_type
+decl_stmt|;
+comment|/* descriptor type */
+name|int
+name|xf_count
+decl_stmt|;
+comment|/* reference count */
+name|int
+name|xf_msgcount
+decl_stmt|;
+comment|/* references from message queue */
+name|off_t
+name|xf_offset
+decl_stmt|;
+comment|/* file offset */
+name|void
+modifier|*
+name|xf_data
+decl_stmt|;
+comment|/* pointer to vnode or socket */
+name|u_int
+name|xf_flag
+decl_stmt|;
+comment|/* flags (see fcntl.h) */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_ifdef
 ifdef|#
