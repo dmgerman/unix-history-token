@@ -4222,23 +4222,5 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
-name|void
-name|foo
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-name|void
-name|foo
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
 end_unit
 
