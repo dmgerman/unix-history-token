@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	6.3	84/01/09	*/
+comment|/*	param.c	6.4	84/06/06	*/
 end_comment
 
 begin_include
@@ -156,40 +156,6 @@ name|NPROC
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NETSLOP
-value|20
-end_define
-
-begin_comment
-comment|/* for all the lousy servers*/
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NETSLOP
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -212,8 +178,6 @@ init|=
 literal|24
 operator|+
 name|MAXUSERS
-operator|+
-name|NETSLOP
 decl_stmt|;
 end_decl_stmt
 
@@ -258,10 +222,6 @@ operator|/
 literal|10
 operator|+
 literal|32
-operator|+
-literal|2
-operator|*
-name|NETSLOP
 decl_stmt|;
 end_decl_stmt
 
