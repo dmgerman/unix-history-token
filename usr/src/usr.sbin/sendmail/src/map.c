@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.42 (Berkeley) %G%"
+literal|"@(#)map.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6277,7 +6277,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  HESIOD Modules ** **	Only works for aliases (for now). */
+comment|/* **  HESIOD Modules */
 end_comment
 
 begin_ifdef
@@ -6402,7 +6402,10 @@ literal|"  %d %s\n"
 argument_list|,
 name|i
 argument_list|,
-name|p
+name|hp
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 if|if
