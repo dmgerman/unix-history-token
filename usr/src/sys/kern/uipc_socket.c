@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	6.1	83/07/29	*/
+comment|/*	uipc_socket.c	4.77	83/08/20	*/
 end_comment
 
 begin_include
@@ -2049,9 +2049,8 @@ name|iov_len
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|uiomove
 argument_list|(
 name|mtod
@@ -2079,6 +2078,13 @@ name|mp
 operator|=
 name|m
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|release
+goto|;
 name|mp
 operator|=
 operator|&
