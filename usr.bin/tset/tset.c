@@ -181,7 +181,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|erasechar
+name|erasech
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +211,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|killchar
+name|killch
 decl_stmt|;
 end_decl_stmt
 
@@ -454,7 +454,7 @@ case|case
 literal|'e'
 case|:
 comment|/* erase character */
-name|erasechar
+name|erasech
 operator|=
 name|optarg
 index|[
@@ -549,7 +549,7 @@ case|case
 literal|'k'
 case|:
 comment|/* kill character */
-name|killchar
+name|killch
 operator|=
 name|optarg
 index|[
