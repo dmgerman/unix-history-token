@@ -489,7 +489,7 @@ name|pc
 operator|+
 name|PQ_FREE
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|vm_page_queues
