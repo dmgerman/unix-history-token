@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"cdefs.h"
 end_include
 
 begin_comment
