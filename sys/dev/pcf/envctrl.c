@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resource.h>
 end_include
 
@@ -809,7 +815,7 @@ end_function
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|pcf
+name|envctrl
 argument_list|,
 name|ebus
 argument_list|,
@@ -827,7 +833,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|pcf
+name|envctrl
 argument_list|,
 name|iicbus
 argument_list|,
@@ -843,7 +849,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|pcf
+name|envctrl
 argument_list|,
 name|PCF_MODVER
 argument_list|)
