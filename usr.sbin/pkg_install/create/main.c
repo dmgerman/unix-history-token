@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.4 1993/09/12 20:45:29 jkh Exp $"
+literal|"$Id: main.c,v 1.5 1994/04/05 14:05:38 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvf:p:c:d:i:k:r:t:X:"
+literal|"YNhvf:p:c:d:i:k:r:t:X:"
 decl_stmt|;
 end_decl_stmt
 
