@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_proto.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_proto.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,15 +43,12 @@ begin_comment
 comment|/*  * NS protocol family: IDP, ERR, PE, SPP, ROUTE.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ns_init
-argument_list|()
-decl_stmt|,
-name|ns_ctlinput
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -69,22 +66,9 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|idp_raw_usrreq
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
-name|idp_init
-argument_list|()
-decl_stmt|,
-name|idp_slowtimo
-argument_list|()
-decl_stmt|,
-name|idp_drain
+name|idp_raw_usrreq
 argument_list|()
 decl_stmt|,
 name|idp_ctloutput
@@ -124,9 +108,6 @@ name|spp_fasttimo
 argument_list|()
 decl_stmt|,
 name|spp_slowtimo
-argument_list|()
-decl_stmt|,
-name|spp_drain
 argument_list|()
 decl_stmt|;
 end_decl_stmt
