@@ -572,8 +572,10 @@ argument_list|(
 name|_PATH_LASTLOG
 argument_list|,
 name|O_RDWR
+operator||
+name|O_CREAT
 argument_list|,
-literal|0
+literal|0644
 argument_list|)
 expr_stmt|;
 if|if
