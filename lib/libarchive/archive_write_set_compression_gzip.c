@@ -138,7 +138,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|ssize_t
+name|int
 name|archive_compressor_gzip_write
 parameter_list|(
 name|struct

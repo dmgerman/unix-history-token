@@ -225,7 +225,7 @@ name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-name|ssize_t
+name|int
 function_decl|(
 modifier|*
 name|compression_write
