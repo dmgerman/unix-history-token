@@ -338,7 +338,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|ieee80211_hdrsize
 parameter_list|(
@@ -433,7 +433,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|ieee80211_anyhdrsize
 parameter_list|(
