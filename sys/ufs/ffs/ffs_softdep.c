@@ -25017,12 +25017,6 @@ name|pagedep
 operator|->
 name|pd_ino
 expr_stmt|;
-name|FREE_LOCK
-argument_list|(
-operator|&
-name|lk
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vn_start_write
@@ -25038,6 +25032,12 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+name|FREE_LOCK
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
