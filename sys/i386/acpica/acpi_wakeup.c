@@ -900,7 +900,7 @@ name|acpi_printcpu
 argument_list|()
 expr_stmt|;
 block|}
-name|wbinvd
+name|ACPI_FLUSH_CPU_CACHE
 argument_list|()
 expr_stmt|;
 if|if
