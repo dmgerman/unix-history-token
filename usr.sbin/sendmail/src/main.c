@@ -3134,6 +3134,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ALERT
@@ -3156,11 +3162,6 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-name|vendor_daemon_setup
-argument_list|(
-name|CurEnv
-argument_list|)
-expr_stmt|;
 comment|/* remove things that don't make sense in daemon mode */
 name|FullName
 operator|=
