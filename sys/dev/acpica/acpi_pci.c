@@ -137,6 +137,16 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|ACPI_SERIAL_DECL
+argument_list|(
+name|pci_powerstate
+argument_list|,
+literal|"ACPI PCI power methods"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -876,6 +886,10 @@ name|old_state
 decl_stmt|,
 name|error
 decl_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|state
@@ -921,6 +935,11 @@ operator|)
 return|;
 block|}
 comment|/* 	 * We set the state using PCI Power Management outside of setting 	 * the ACPI state.  This means that when powering down a device, we 	 * first shut it down using PCI, and then using ACPI, which lets ACPI 	 * try to power down any Power Resources that are now no longer used. 	 * When powering up a device, we let ACPI set the state first so that 	 * it can enable any needed Power Resources before changing the PCI 	 * power state. 	 */
+name|ACPI_SERIAL_BEGIN
+argument_list|(
+name|pci_powerstate
+argument_list|)
+expr_stmt|;
 name|old_state
 operator|=
 name|pci_get_powerstate
@@ -950,11 +969,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|h
 operator|=
@@ -1008,8 +1025,8 @@ name|old_state
 operator|>
 name|state
 condition|)
-return|return
-operator|(
+name|error
+operator|=
 name|pci_set_powerstate_method
 argument_list|(
 name|dev
@@ -1018,12 +1035,17 @@ name|child
 argument_list|,
 name|state
 argument_list|)
-operator|)
-return|;
-else|else
+expr_stmt|;
+name|out
+label|:
+name|ACPI_SERIAL_END
+argument_list|(
+name|pci_powerstate
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
