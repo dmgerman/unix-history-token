@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.26 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -279,6 +279,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|ksprintn
+name|__P
+argument_list|(
+operator|(
+name|u_long
+name|num
+operator|,
+name|int
+name|base
+operator|,
+name|int
+operator|*
+name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|kprintf
 name|__P
@@ -298,28 +319,6 @@ operator|*
 name|tp
 operator|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|ksprintn
-name|__P
-argument_list|(
-operator|(
-name|u_long
-name|num
-operator|,
-name|int
-name|base
-operator|,
-name|int
-operator|*
-name|len
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1252,7 +1251,6 @@ comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|kprintf
 parameter_list|(
