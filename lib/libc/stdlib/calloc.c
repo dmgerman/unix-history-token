@@ -101,7 +101,7 @@ name|size
 operator|!=
 literal|0
 operator|&&
-name|SIZE_MAX
+name|SIZE_T_MAX
 operator|/
 name|size
 operator|<
