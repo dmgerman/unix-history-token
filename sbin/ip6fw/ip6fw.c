@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: ip6fw.c,v 1.13 2001/06/22 05:51:16 itojun Exp $	*/
+comment|/*	$KAME: ip6fw.c,v 1.14 2003/10/02 19:36:25 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -2457,6 +2457,9 @@ name|r
 decl_stmt|,
 modifier|*
 name|rules
+decl_stmt|,
+modifier|*
+name|n
 decl_stmt|;
 name|int
 name|l
@@ -2504,28 +2507,20 @@ operator|>=
 name|nalloc
 condition|)
 block|{
-name|nalloc
-operator|=
-name|nalloc
-operator|*
-literal|2
-operator|+
-literal|200
-expr_stmt|;
-name|bytes
-operator|=
-name|nalloc
-expr_stmt|;
 if|if
 condition|(
 operator|(
-name|rules
+name|n
 operator|=
 name|realloc
 argument_list|(
 name|rules
 argument_list|,
-name|bytes
+name|nalloc
+operator|*
+literal|2
+operator|+
+literal|200
 argument_list|)
 operator|)
 operator|==
@@ -2537,6 +2532,20 @@ name|EX_OSERR
 argument_list|,
 literal|"realloc"
 argument_list|)
+expr_stmt|;
+name|bytes
+operator|=
+name|nalloc
+operator|=
+name|nalloc
+operator|*
+literal|2
+operator|+
+literal|200
+expr_stmt|;
+name|rules
+operator|=
+name|n
 expr_stmt|;
 name|i
 operator|=
