@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_iio[] = "@(#)iio.c	1.4";  *  * internal (character array) i/o  */
+comment|/* char id_iio[] = "@(#)iio.c	1.5";  *  * internal (character array) i/o  */
 end_comment
 
 begin_include
@@ -106,17 +106,11 @@ name|formatted
 operator|==
 name|LISTDIRECTED
 condition|)
-block|{
-name|leof
-operator|=
-name|EOF
-expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|' '
