@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -8,15 +8,15 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  */
+comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -201,61 +201,83 @@ name|if_result
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|init_reg_vif
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|start_all_vifs
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|start_vif
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|vifi_t
 name|vifi
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|stop_vif
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|vifi_t
 name|vivi
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|update_reg_vif
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|vifi_t
 name|register_vifi
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|cfparse
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
-parameter_list|,
+operator|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -1149,7 +1171,7 @@ name|MIFF_REGISTER
 operator|)
 condition|)
 block|{
-comment|/*      * Join the PIM multicast group on the interface.      */
+comment|/* 	     * Join the PIM multicast group on the interface. 	     */
 name|k_join
 argument_list|(
 name|mld6_socket
@@ -1164,7 +1186,7 @@ operator|->
 name|uv_ifindex
 argument_list|)
 expr_stmt|;
-comment|/*      * Join the ALL-ROUTERS multicast group on the interface.      * This allows mtrace requests to loop back if they are run      * on the multicast router.this allow receiving mld6 messages too.      */
+comment|/* 	     * Join the ALL-ROUTERS multicast group on the interface. 	     * This allows mtrace requests to loop back if they are run 	     * on the multicast router.this allow receiving mld6 messages too. 	     */
 name|k_join
 argument_list|(
 name|mld6_socket
@@ -1179,19 +1201,92 @@ operator|->
 name|uv_ifindex
 argument_list|)
 expr_stmt|;
-comment|/*      * Until neighbors are discovered, assume responsibility for sending      * periodic group membership queries to the subnet.  Send the first      * query.      */
+comment|/* 	     * Until neighbors are discovered, assume responsibility for sending 	     * periodic group membership queries to the subnet.  Send the first 	     * query. 	     */
 name|v
 operator|->
 name|uv_flags
 operator||=
 name|VIFF_QUERIER
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|v
+operator|->
+name|uv_querier
+condition|)
+block|{
+name|v
+operator|->
+name|uv_querier
+operator|=
+operator|(
+expr|struct
+name|listaddr
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|listaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|v
+operator|->
+name|uv_querier
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|listaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_addr
+operator|=
+name|v
+operator|->
+name|uv_linklocal
+operator|->
+name|pa_addr
+expr_stmt|;
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_timer
+operator|=
+name|MLD6_OTHER_QUERIER_PRESENT_INTERVAL
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_ctime
+argument_list|)
+expr_stmt|;
+comment|/* reset timestamp */
 name|query_groups
 argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-comment|/*      * Send a probe via the new vif to look for neighbors.      */
+comment|/* 	     * Send a probe via the new vif to look for neighbors. 	     */
 name|send_pim6_hello
 argument_list|(
 name|v
@@ -1912,7 +2007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if the interface exists in the mif table. If true  * return the highest address of the interface else return NULL.  */
+comment|/*  * Check if the interface exists in the mif table. If true   * return the highest address of the interface else return NULL.  */
 end_comment
 
 begin_function
@@ -2086,7 +2181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * See if any interfaces have changed from up state to down, or vice versa,  * including any non-multicast-capable interfaces that are in use as local  * tunnel end-points.  Ignore interfaces that have been administratively  * disabled.  */
+comment|/*    * See if any interfaces have changed from up state to down, or vice versa,  * including any non-multicast-capable interfaces that are in use as local  * tunnel end-points.  Ignore interfaces that have been administratively  * disabled.  */
 end_comment
 
 begin_function
@@ -2671,7 +2766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If the source is directly connected, or is local address,  * find the vif number for the corresponding physical interface  * (tunnels excluded).  * Return the vif number or NO_VIF if not found.  */
+comment|/*    * If the source is directly connected, or is local address,  * find the vif number for the corresponding physical interface  * (tunnels excluded).  * Return the vif number or NO_VIF if not found.  */
 end_comment
 
 begin_function
@@ -3027,7 +3122,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * stop all vifs  */
+comment|/*    * stop all vifs  */
 end_comment
 
 begin_function

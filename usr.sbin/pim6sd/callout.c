@@ -45,6 +45,12 @@ directive|include
 file|"defs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"callout.h"
+end_include
+
 begin_comment
 comment|/* the code below implements a callout queue */
 end_comment

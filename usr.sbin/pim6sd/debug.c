@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  * This program has been derived from pimd.  * The pimd program is co
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  */
+comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -229,6 +229,179 @@ init|=
 name|_PATH_PIM6D_STAT
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sec2str
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|sec2str
+parameter_list|(
+name|total
+parameter_list|)
+name|time_t
+name|total
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|result
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|int
+name|days
+decl_stmt|,
+name|hours
+decl_stmt|,
+name|mins
+decl_stmt|,
+name|secs
+decl_stmt|;
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+name|result
+decl_stmt|;
+name|days
+operator|=
+name|total
+operator|/
+literal|3600
+operator|/
+literal|24
+expr_stmt|;
+name|hours
+operator|=
+operator|(
+name|total
+operator|/
+literal|3600
+operator|)
+operator|%
+literal|24
+expr_stmt|;
+name|mins
+operator|=
+operator|(
+name|total
+operator|/
+literal|60
+operator|)
+operator|%
+literal|60
+expr_stmt|;
+name|secs
+operator|=
+name|total
+operator|%
+literal|60
+expr_stmt|;
+if|if
+condition|(
+name|days
+condition|)
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|+=
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%dd"
+argument_list|,
+name|days
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|first
+operator|||
+name|hours
+condition|)
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|+=
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%dh"
+argument_list|,
+name|hours
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|first
+operator|||
+name|mins
+condition|)
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|+=
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%dm"
+argument_list|,
+name|mins
+argument_list|)
+expr_stmt|;
+block|}
+name|sprintf
+argument_list|(
+name|p
+argument_list|,
+literal|"%ds"
+argument_list|,
+name|secs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|char
@@ -652,6 +825,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|dump_mldqueriers
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|dump_pim_mrt
 argument_list|(
 name|fp
@@ -826,6 +1004,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 hello received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_in_pim6_hello
@@ -837,6 +1020,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 join-prune received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_in_pim6_join_prune
@@ -848,6 +1036,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 bootstrap received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_in_pim6_bootsrap
@@ -859,6 +1052,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 assert received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_in_pim6_assert
@@ -870,6 +1068,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 hello sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_out_pim6_hello
@@ -881,6 +1084,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 join-prune sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_out_pim6_join_prune
@@ -892,6 +1100,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 bootstrap sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_out_pim6_bootsrap
@@ -903,6 +1116,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 assert sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_out_pim6_assert
@@ -914,6 +1132,11 @@ name|fp
 argument_list|,
 literal|"\t%qu MLD query received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_in_mld_query
@@ -925,6 +1148,11 @@ name|fp
 argument_list|,
 literal|"\t%qu MLD report received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_in_mld_report
@@ -936,6 +1164,11 @@ name|fp
 argument_list|,
 literal|"\t%qu MLD done received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_in_mld_done
@@ -947,6 +1180,11 @@ name|fp
 argument_list|,
 literal|"\t%qu MLD query sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_out_mld_query
@@ -958,6 +1196,11 @@ name|fp
 argument_list|,
 literal|"\t%qu MLD report sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_out_mld_report
@@ -969,6 +1212,11 @@ name|fp
 argument_list|,
 literal|"\t%qu MLD done sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_out_mld_done
@@ -980,6 +1228,11 @@ name|fp
 argument_list|,
 literal|"\t%qu forwarding cache miss\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_cache_miss
@@ -991,6 +1244,11 @@ name|fp
 argument_list|,
 literal|"\t%qu forwarding cache miss and not created\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_cache_notcreated
@@ -1002,6 +1260,11 @@ name|fp
 argument_list|,
 literal|"\t%qu PIM neighbor timeouts\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_pim6_nbr_timo
@@ -1013,6 +1276,11 @@ name|fp
 argument_list|,
 literal|"\t%qu MLD listener timeouts\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_listener_timo
@@ -1022,8 +1290,29 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+literal|"\t%qu MLD querier timeouts\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|v
+operator|->
+name|uv_querier_timo
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
 literal|"\t%qu out-I/F timeouts\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|v
 operator|->
 name|uv_outif_timo
@@ -1043,6 +1332,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 register received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|in_pim6_register
@@ -1054,6 +1348,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 register-stop received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|in_pim6_register_stop
@@ -1065,6 +1364,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 cand-RP received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|in_pim6_cand_rp
@@ -1076,6 +1380,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 graft received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|in_pim6_graft
@@ -1087,6 +1396,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 graft ack received\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|in_pim6_graft_ack
@@ -1098,6 +1412,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 register sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|out_pim6_register
@@ -1109,6 +1428,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 register-stop sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|out_pim6_register_stop
@@ -1120,6 +1444,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 cand-RP sent\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|out_pim6_cand_rp
@@ -1131,6 +1460,11 @@ name|fp
 argument_list|,
 literal|"\t%qu transitions of forwarder initiated SPT\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|pim6_trans_spt_forward
@@ -1142,6 +1476,11 @@ name|fp
 argument_list|,
 literal|"\t%qu transitions of RP initiated SPT\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|pim6_trans_spt_rp
@@ -1153,6 +1492,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 bootstrap timeouts\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|pim6_bootstrap_timo
@@ -1164,6 +1508,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 RP group entry timeouts\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|pim6_rpgrp_timo
@@ -1175,6 +1524,11 @@ name|fp
 argument_list|,
 literal|"\t%qu pim6 routing entry timeouts\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|pim6_rtentry_timo
@@ -1186,6 +1540,11 @@ name|fp
 argument_list|,
 literal|"\t%qu kernel cache additions\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|kern_add_cache
@@ -1197,6 +1556,11 @@ name|fp
 argument_list|,
 literal|"\t%qu kernel cache addition failures\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|kern_add_cache_fail
@@ -1208,6 +1572,11 @@ name|fp
 argument_list|,
 literal|"\t%qu kernel cache deletions\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|kern_del_cache
@@ -1219,6 +1588,11 @@ name|fp
 argument_list|,
 literal|"\t%qu kernel cache deletion failures\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|kern_del_cache_fail
@@ -1230,6 +1604,11 @@ name|fp
 argument_list|,
 literal|"\t%qu failures of getting kernel cache\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pim6dstat
 operator|.
 name|kern_sgcnt_fail
@@ -1520,6 +1899,21 @@ argument_list|,
 literal|" PIM"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|v
+operator|->
+name|uv_flags
+operator|&
+name|VIFF_QUERIER
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" QRY"
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -1539,9 +1933,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|" %-12s"
-argument_list|,
-literal|"NO-NBR"
+literal|" NO-NBR"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1768,6 +2160,161 @@ name|timer
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|dump_mldqueriers
+parameter_list|(
+name|fp
+parameter_list|)
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+block|{
+name|struct
+name|uvif
+modifier|*
+name|v
+decl_stmt|;
+name|vifi_t
+name|vifi
+decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"MLD Querier List\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %-3s %6s %-40s %-5s %15s\n"
+argument_list|,
+literal|"Mif"
+argument_list|,
+literal|"PhyIF"
+argument_list|,
+literal|"Address"
+argument_list|,
+literal|"Timer"
+argument_list|,
+literal|"Last"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|vifi
+operator|=
+literal|0
+operator|,
+name|v
+operator|=
+name|uvifs
+init|;
+name|vifi
+operator|<
+name|numvifs
+condition|;
+operator|++
+name|vifi
+operator|,
+operator|++
+name|v
+control|)
+block|{
+if|if
+condition|(
+name|v
+operator|->
+name|uv_querier
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %-3u %6s"
+argument_list|,
+name|vifi
+argument_list|,
+operator|(
+name|v
+operator|->
+name|uv_flags
+operator|&
+name|MIFF_REGISTER
+operator|)
+condition|?
+literal|"regist"
+else|:
+name|v
+operator|->
+name|uv_name
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" %-40s %5lu %15s\n"
+argument_list|,
+name|sa6_fmt
+argument_list|(
+operator|&
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_addr
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_timer
+argument_list|,
+name|sec2str
+argument_list|(
+name|now
+operator|-
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_ctime
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|fprintf
@@ -2016,6 +2563,10 @@ name|thyme
 operator|->
 name|tm_sec
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|now
 operator|.
 name|tv_usec

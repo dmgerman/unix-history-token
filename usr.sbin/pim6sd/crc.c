@@ -15,6 +15,18 @@ begin_comment
 comment|/* CRC implantation : stolen from RFC 2083 section 15.*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crc.h"
+end_include
+
 begin_comment
 comment|/* Table of CRCs of all 8-bit messages. */
 end_comment
@@ -45,7 +57,42 @@ begin_comment
 comment|/* Make the table for a fast CRC. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|make_crc_table
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|update_crc
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+specifier|static
 name|void
 name|make_crc_table
 parameter_list|(
@@ -141,6 +188,7 @@ comment|/* Update a running CRC with the bytes buf[0..len-1]--the CRC    should 
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 name|long
 name|update_crc

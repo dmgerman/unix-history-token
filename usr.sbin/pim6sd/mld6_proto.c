@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -12,19 +12,19 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
-end_comment
-
-begin_comment
-comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
 end_comment
 
 begin_comment
 comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  */
+end_comment
+
+begin_comment
+comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -127,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|"timer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mld6_proto.h"
 end_include
 
 begin_decl_stmt
@@ -442,7 +448,7 @@ block|,
 name|AF_INET6
 block|}
 decl_stmt|;
-comment|/* Ignore my own membership query */
+comment|/* Ignore my own listener query */
 if|if
 condition|(
 name|local_address
@@ -482,6 +488,19 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|v
+operator|=
+operator|&
+name|uvifs
+index|[
+name|mifi
+index|]
+expr_stmt|;
+name|v
+operator|->
+name|uv_in_mld_query
+operator|++
+expr_stmt|;
 name|IF_DEBUG
 argument_list|(
 argument|DEBUG_MLD
@@ -492,8 +511,12 @@ name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
-literal|"accepting multicast listener query: "
+literal|"accepting multicast listener query on %s: "
 literal|"src %s, dst %s, grp %s"
+argument_list|,
+name|v
+operator|->
+name|uv_name
 argument_list|,
 name|inet6_fmt
 argument_list|(
@@ -514,19 +537,6 @@ name|group
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|v
-operator|=
-operator|&
-name|uvifs
-index|[
-name|mifi
-index|]
-expr_stmt|;
-name|v
-operator|->
-name|uv_in_mld_query
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|v
@@ -535,6 +545,7 @@ name|uv_querier
 operator|==
 name|NULL
 operator|||
+operator|!
 name|inet6_equal
 argument_list|(
 operator|&
@@ -548,7 +559,7 @@ name|src
 argument_list|)
 condition|)
 block|{
-comment|/* 	 * This might be: - A query from a new querier, with a lower source 	 * address than the current querier (who might be me) - A query from 	 * a new router that just started up and doesn't know who the querier 	 * is. - A query from the current querier 	 */
+comment|/* 	 * This might be: 	 * - A query from a new querier, with a lower source address than 	 *   the current querier (who might be me). 	 * - A query from a new router that just started up and doesn't know 	 *   who the querier is. 	 */
 if|if
 condition|(
 name|inet6_lessthan
@@ -627,6 +638,7 @@ operator|->
 name|uv_querier
 condition|)
 block|{
+comment|/* this should be impossible... */
 name|v
 operator|->
 name|uv_querier
@@ -645,91 +657,22 @@ name|listaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|memset
+argument_list|(
 name|v
 operator|->
 name|uv_querier
-operator|->
-name|al_next
-operator|=
-operator|(
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
 expr|struct
 name|listaddr
-operator|*
-operator|)
-name|NULL
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_timer
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_genid
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_pv
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_mv
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_old
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_index
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_timerid
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_query
-operator|=
-literal|0
-expr_stmt|;
-name|v
-operator|->
-name|uv_querier
-operator|->
-name|al_flags
-operator|=
-literal|0
-expr_stmt|;
+block|}
 name|v
 operator|->
 name|uv_flags
@@ -737,7 +680,6 @@ operator|&=
 operator|~
 name|VIFF_QUERIER
 expr_stmt|;
-block|}
 name|v
 operator|->
 name|uv_querier
@@ -784,7 +726,7 @@ name|uv_querier
 operator|->
 name|al_timer
 operator|=
-literal|0
+name|MLD6_OTHER_QUERIER_PRESENT_INTERVAL
 expr_stmt|;
 comment|/*      * If this is a Group-Specific query which we did not source, we must set      * our membership timer to [Last Member Query Count] * the [Max Response      * Time] in the packet.      */
 if|if
