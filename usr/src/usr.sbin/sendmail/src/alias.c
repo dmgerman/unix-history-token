@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.33 (Berkeley) %G%"
+literal|"@(#)alias.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,6 +683,12 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+specifier|static
+name|bool
+name|first_unqual
+init|=
+name|TRUE
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -743,6 +749,8 @@ literal|0
 index|]
 operator|==
 literal|'/'
+operator|&&
+name|first_unqual
 condition|)
 block|{
 name|s
@@ -762,6 +770,10 @@ operator|&
 name|s
 operator|->
 name|s_map
+expr_stmt|;
+name|first_unqual
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 else|else
