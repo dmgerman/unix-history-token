@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_proc.c	5.23 (Berkeley) %G%"
+literal|"@(#)kvm_proc.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndbm.h>
+file|<db.h>
 end_include
 
 begin_include
@@ -2286,7 +2286,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 modifier|*
 name|_kvm_realloc
@@ -2305,7 +2304,7 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|n
 decl_stmt|;
 block|{
@@ -2560,6 +2559,18 @@ argument_list|,
 name|kd
 operator|->
 name|argv
+argument_list|,
+name|kd
+operator|->
+name|argc
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|kd
+operator|->
+name|argv
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
