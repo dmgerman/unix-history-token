@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)predicates.c 1.2 %G%"
+literal|"@(#)predicates.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,43 @@ return|return
 operator|(
 name|BOOLEAN
 operator|)
+name|s
+operator|->
+name|class
+operator|==
+name|REF
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Test if a symbol is a variable (actually any addressible quantity  * with do).  */
+end_comment
+
+begin_function
+name|BOOLEAN
+name|isvariable
+parameter_list|(
+name|s
+parameter_list|)
+name|SYM
+modifier|*
+name|s
+decl_stmt|;
+block|{
+return|return
+name|s
+operator|->
+name|class
+operator|==
+name|VAR
+operator|||
+name|s
+operator|->
+name|class
+operator|==
+name|FVAR
+operator|||
 name|s
 operator|->
 name|class
