@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audio.c	7.1 (Berkeley) %G%  *  * from: $Header: bsd_audio.c,v 1.14 92/07/03 23:21:23 mccanne Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audio.c	7.2 (Berkeley) %G%  *  * from: $Header: bsd_audio.c,v 1.14 92/07/03 23:21:23 mccanne Exp $ (LBL)  */
 end_comment
 
 begin_include
