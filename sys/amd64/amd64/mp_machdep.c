@@ -2756,7 +2756,7 @@ comment|/* no other cpus */
 name|mtx_assert
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
@@ -3014,7 +3014,7 @@ block|}
 name|mtx_assert
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)

@@ -2302,7 +2302,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -2391,7 +2391,7 @@ condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 else|else
@@ -2449,7 +2449,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -2570,7 +2570,7 @@ condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 else|else
@@ -2619,7 +2619,7 @@ expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -2700,7 +2700,7 @@ condition|)
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 else|else
@@ -5126,7 +5126,7 @@ comment|/* Find least significant set bit */
 name|mtx_lock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5232,7 +5232,7 @@ block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
-name|smp_rv_mtx
+name|smp_ipi_mtx
 argument_list|)
 expr_stmt|;
 if|if
