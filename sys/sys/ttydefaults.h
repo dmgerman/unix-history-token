@@ -100,6 +100,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CERASE2
+value|CTRL('h')
+end_define
+
+begin_define
+define|#
+directive|define
 name|CINTR
 value|CTRL('c')
 end_define
@@ -277,7 +284,7 @@ name|CKILL
 block|,
 name|CREPRINT
 block|,
-name|_POSIX_VDISABLE
+name|CERASE2
 block|,
 name|CINTR
 block|,
