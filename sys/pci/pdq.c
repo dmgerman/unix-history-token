@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pdq.c,v 1.2 1995/03/21 22:43:04 se Exp $  *  * $Log: pdq.c,v $  * Revision 1.2  1995/03/21  22:43:04  se  * Silence "gcc -Wall".  *  * Submitted by:	Wolfgang Stanglmeier<wolf@kintaro.cologne.de>  *  * Revision 1.1  1995/03/14  09:16:06  davidg  * Added support for generic FDDI and the DEC DEFEA and DEFPA FDDI adapters.  *  * Submitted by:	Matt Thomas  *  * Revision 1.8  1995/03/14  01:52:52  thomas  * Update for new FreeBSD PCI Interrupt interface  *  * Revision 1.7  1995/03/07  23:03:16  thomas  * Fix SMT queue processing  *  * Revision 1.6  1995/03/06  18:03:47  thomas  * restart trasmitter once link is available  *  * Revision 1.5  1995/03/06  17:07:56  thomas  * Add copyright/disclaimer  * Add error recovery code.  * Add BPF SMT support  *  * Revision 1.3  1995/03/03  13:48:35  thomas  * more fixes  *  *  */
+comment|/*-  * Copyright (c) 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pdq.c,v 1.3 1995/03/25 22:40:48 bde Exp $  *  * $Log: pdq.c,v $  * Revision 1.3  1995/03/25  22:40:48  bde  * Remove wrong redeclarations of printf() and bzero().  Include the correct  * header to declare DELAY().  *  * Revision 1.2  1995/03/21  22:43:04  se  * Silence "gcc -Wall".  *  * Submitted by:	Wolfgang Stanglmeier<wolf@kintaro.cologne.de>  *  * Revision 1.1  1995/03/14  09:16:06  davidg  * Added support for generic FDDI and the DEC DEFEA and DEFPA FDDI adapters.  *  * Submitted by:	Matt Thomas  *  * Revision 1.8  1995/03/14  01:52:52  thomas  * Update for new FreeBSD PCI Interrupt interface  *  * Revision 1.7  1995/03/07  23:03:16  thomas  * Fix SMT queue processing  *  * Revision 1.6  1995/03/06  18:03:47  thomas  * restart trasmitter once link is available  *  * Revision 1.5  1995/03/06  17:07:56  thomas  * Add copyright/disclaimer  * Add error recovery code.  * Add BPF SMT support  *  * Revision 1.3  1995/03/03  13:48:35  thomas  * more fixes  *  *  */
 end_comment
 
 begin_comment
@@ -3270,6 +3270,13 @@ name|rx
 operator|->
 name|rx_completion
 decl_stmt|;
+name|pdq_uint32_t
+name|producer
+init|=
+name|rx
+operator|->
+name|rx_producer
+decl_stmt|;
 name|PDQ_OS_DATABUF_T
 modifier|*
 modifier|*
@@ -3623,9 +3630,7 @@ block|{
 name|buffers
 index|[
 operator|(
-name|rx
-operator|->
-name|rx_producer
+name|producer
 operator|+
 name|idx
 operator|)
@@ -3722,6 +3727,15 @@ operator|->
 name|rx_free
 operator|+=
 name|PDQ_RX_SEGCNT
+expr_stmt|;
+name|PDQ_ADVANCE
+argument_list|(
+name|producer
+argument_list|,
+name|PDQ_RX_SEGCNT
+argument_list|,
+name|ring_mask
+argument_list|)
 expr_stmt|;
 name|PDQ_ADVANCE
 argument_list|(
@@ -3836,9 +3850,7 @@ control|)
 block|{
 name|buffers
 index|[
-name|rx
-operator|->
-name|rx_producer
+name|producer
 index|]
 operator|=
 name|buffers
@@ -3936,6 +3948,15 @@ argument_list|(
 name|rx
 operator|->
 name|rx_producer
+argument_list|,
+literal|1
+argument_list|,
+name|ring_mask
+argument_list|)
+expr_stmt|;
+name|PDQ_ADVANCE
+argument_list|(
+name|producer
 argument_list|,
 literal|1
 argument_list|,
