@@ -1030,7 +1030,7 @@ name|errx
 argument_list|(
 name|ERR_NOMASTER
 argument_list|,
-literal|"can't find master for map %s. reason: %s"
+literal|"can't find master for map %s: reason: %s"
 argument_list|,
 name|map
 argument_list|,
@@ -1167,7 +1167,7 @@ name|errx
 argument_list|(
 name|ERR_NOMASTER
 argument_list|,
-literal|"can't get map list for domain %s. reason: %s"
+literal|"can't get map list for domain %s: reason: %s"
 argument_list|,
 name|domnam
 argument_list|,
