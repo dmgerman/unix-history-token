@@ -200,7 +200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dec_kn8ae_cons_init- not needed right now. XXX hack in SimOS console  *  * Info to retain:  *  *	The AXP 8X00 seems to encode the  *	type of console in the ctb_type field,  *	not the ctb_term_type field.  */
+comment|/*  * Info to retain:  *  *	The AXP 8X00 seems to encode the  *	type of console in the ctb_type field,  *	not the ctb_term_type field.  */
 end_comment
 
 begin_function
