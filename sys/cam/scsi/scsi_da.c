@@ -674,6 +674,26 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Sony Memory Stick adapter for the CLIE series 		 * of PalmOS PDA's 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Sony"
+block|,
+literal|"CLIE*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
 comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 */
 block|{
 name|T_DIRECT
