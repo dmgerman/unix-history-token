@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.4 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,6 +159,8 @@ decl_stmt|,
 name|sawnl
 decl_stmt|,
 name|ignore
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -642,14 +644,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|;
 if|if
 condition|(
 name|s
