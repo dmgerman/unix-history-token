@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: shutdown.c,v 1.16 1998/12/11 11:21:47 bde Exp $"
+literal|"$Id: shutdown.c,v 1.17 1999/06/18 14:26:07 ru Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -649,6 +649,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|killflg
+operator|+
 name|doreboot
 operator|+
 name|dohalt
@@ -660,13 +662,24 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"incompatible switches -h, -p and -r"
+literal|"incompatible switches -h, -k, -p and -r"
 argument_list|)
 expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|killflg
+operator|&&
+name|nosync
+condition|)
+name|warnx
+argument_list|(
+literal|"option -n ignored with -k"
+argument_list|)
+expr_stmt|;
 name|getoffset
 argument_list|(
 operator|*
@@ -1830,6 +1843,15 @@ decl_stmt|;
 name|int
 name|this_year
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1846,17 +1868,12 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
+name|shuttime
+operator|=
+name|now
+expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
