@@ -628,6 +628,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_NODE_CHILDREN
+parameter_list|(
+name|parent
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|sysctl_##parent##_##name##_children
+end_define
+
 begin_comment
 comment|/* This constructs a "raw" MIB oid. */
 end_comment
@@ -710,7 +723,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|struct sysctl_oid_list sysctl_##parent##_##name##_children;	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 		   (void*)&sysctl_##parent##_##name##_children, 0, handler, \ 		   "N", descr)
+value|struct sysctl_oid_list SYSCTL_NODE_CHILDREN(parent, name);	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 		   (void*)&SYSCTL_NODE_CHILDREN(parent, name), 0, handler, \ 		   "N", descr)
 end_define
 
 begin_define
