@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'curFile.fname' and 'curFile.lineno' are used to track  *	the name of the current file and the line number in that file so that  *	error messages can be more meaningful.  *  * Interface:  *	Parse_Init	    	    Initialization function which must be  *	    	  	    	    called before anything else in this module  *	    	  	    	    is used.  *  *	Parse_File	    	    Function used to parse a makefile. It must  *	    	  	    	    be given the name of the file, which should  *	    	  	    	    already have been opened, and a function  *	    	  	    	    to call to read a character from the file.  *  *	Parse_IsVar	    	    Returns TRUE if the given line is a  *	    	  	    	    variable assignment. Used by MainParseArgs  *	    	  	    	    to determine if an argument is a target  *	    	  	    	    or a variable assignment. Used internally  *	    	  	    	    for pretty much the same thing...  *  *	Parse_Error	    	    Function called when an error occurs in  *	    	  	    	    parsing. Used by the variable and  *	    	  	    	    conditional modules.  *	Parse_MainName	    	    Returns a Lst of the main target to create.  */
+comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'curFile.fname' and 'curFile.lineno' are used to track  *	the name of the current file and the line number in that file so that  *	error messages can be more meaningful.  *  * Interface:  *	Parse_Init	Initialization function which must be  *			called before anything else in this module is used.  *  *	Parse_File	Function used to parse a makefile. It must  *			be given the name of the file, which should  *			already have been opened, and a function  *			to call to read a character from the file.  *  *	Parse_IsVar	Returns TRUE if the given line is a  *			variable assignment. Used by MainParseArgs  *			to determine if an argument is a target  *			or a variable assignment. Used internally  *			for pretty much the same thing...  *  *	Parse_Error	Function called when an error occurs in  *			parsing. Used by the variable and  *			conditional modules.  *  *	Parse_MainName	Returns a Lst of the main target to create.  */
 end_comment
 
 begin_include
@@ -193,16 +193,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* true if currently in a dependency line or its commands */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|Boolean
 name|inLine
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* true if currently in a dependency 				 * line or its commands */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -213,6 +213,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The main target to create. This is the first target on the  * first dependency line in the first makefile.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|GNode
@@ -220,10 +224,6 @@ modifier|*
 name|mainNode
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* The main target to create. This is the 				 * first target on the first dependency 				 * line in the first makefile */
-end_comment
 
 begin_decl_stmt
 name|IFile
@@ -284,7 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * specType contains the SPECial TYPE of the current target. It is  * Not if the target is unspecial. If it *is* special, however, the children  * are linked as children of the parent but not vice versa. This variable is  * set in ParseDoDependency  */
+comment|/*  * specType contains the SPECial TYPE of the current target. It is  * Not if the target is unspecial. If it *is* special, however, the children  * are linked as children of the parent but not vice versa. This variable is  * set in ParseDoDependency  */
 end_comment
 
 begin_typedef
@@ -317,7 +317,7 @@ block|,
 comment|/* .MFLAGS or .MAKEFLAGS */
 name|Main
 block|,
-comment|/* .MAIN and we don't have anything user-specified to 		     * make */
+comment|/* .MAIN and we don't have anyth. user-spec. to make */
 name|NoExport
 block|,
 comment|/* .NOEXPORT */
@@ -685,167 +685,9 @@ end_struct
 begin_function_decl
 specifier|static
 name|int
-name|ParseFindKeyword
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseDoSrc
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|Lst
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseDoDependency
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ParseReadc
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseUnreadc
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseHasCommands
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseDoInclude
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseDoError
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseDoWarning
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVINCLUDE
-end_ifdef
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseTraditionalInclude
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|static
-name|int
 name|ParseEOF
 parameter_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|ParseReadLine
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|ParseSkipLine
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|ParseFinishLine
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -866,9 +708,11 @@ parameter_list|)
 block|{
 name|int
 name|start
-decl_stmt|,
+decl_stmt|;
+name|int
 name|end
-decl_stmt|,
+decl_stmt|;
+name|int
 name|cur
 decl_stmt|;
 name|int
@@ -904,14 +748,12 @@ operator|=
 name|start
 operator|+
 operator|(
-operator|(
 name|end
 operator|-
 name|start
 operator|)
 operator|/
 literal|2
-operator|)
 expr_stmt|;
 name|diff
 operator|=
@@ -1453,7 +1295,7 @@ block|{
 case|case
 name|Main
 case|:
-comment|/* 	 * If we have noted the existence of a .MAIN, it means we need 	 * to add the sources of said target to the list of things 	 * to create. The string 'src' is likely to be free, so we 	 * must make a new copy of it. Note that this will only be 	 * invoked if the user didn't specify a target on the command 	 * line. This is to allow #ifmake's to succeed, or something... 	 */
+comment|/* 		 * If we have noted the existence of a .MAIN, it means we need 		 * to add the sources of said target to the list of things 		 * to create. The string 'src' is likely to be free, so we 		 * must make a new copy of it. Note that this will only be 		 * invoked if the user didn't specify a target on the command 		 * line. This is to allow #ifmake's to succeed, or something... 		 */
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -1465,7 +1307,7 @@ name|src
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Add the name to the .TARGETS variable as well, so the user cna 	 * employ that, if desired. 	 */
+comment|/* 		 * Add the name to the .TARGETS variable as well, so the user 		 * can employ that, if desired. 		 */
 name|Var_Append
 argument_list|(
 literal|".TARGETS"
@@ -1479,7 +1321,7 @@ return|return;
 case|case
 name|Order
 case|:
-comment|/* 	 * Create proper predecessor/successor links between the previous 	 * source and the current one. 	 */
+comment|/* 		 * Create proper predecessor/successor links between the 		 * previous source and the current one. 		 */
 name|gn
 operator|=
 name|Targ_FindNode
@@ -1517,14 +1359,14 @@ name|predecessor
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The current source now becomes the predecessor for the next one. 	 */
+comment|/* 		 * The current source now becomes the predecessor for the next 		 * one. 		 */
 name|predecessor
 operator|=
 name|gn
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 	 * If the source is not an attribute, we need to find/create 	 * a node for it. After that we can apply any operator to it 	 * from a special target or link it to its parents, as 	 * appropriate. 	 * 	 * In the case of a source that was the object of a :: operator, 	 * the attribute is applied to all of its instances (as kept in 	 * the 'cohorts' list of the node) or all the cohorts are linked 	 * to all the targets. 	 */
+comment|/* 		 * If the source is not an attribute, we need to find/create 		 * a node for it. After that we can apply any operator to it 		 * from a special target or link it to its parents, as 		 * appropriate. 		 * 		 * In the case of a source that was the object of a :: operator, 		 * the attribute is applied to all of its instances (as kept in 		 * the 'cohorts' list of the node) or all the cohorts are linked 		 * to all the targets. 		 */
 name|gn
 operator|=
 name|Targ_FindNode
@@ -1662,7 +1504,7 @@ name|GNode
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * Check if GNodes needs to be synchronized. 	 * This has to be when two nodes are on different sides of a 	 * .WAIT directive. 	 */
+comment|/* 		 * Check if GNodes needs to be synchronized. 		 * This has to be when two nodes are on different sides of a 		 * .WAIT directive. 		 */
 name|LST_FOREACH
 argument_list|(
 argument|ln
@@ -1688,7 +1530,7 @@ operator|->
 name|order
 condition|)
 break|break;
-comment|/* 		 * XXX: This can cause loops, and loops can cause 		 * unmade targets, but checking is tedious, and the 		 * debugging output can show the problem 		 */
+comment|/* 			 * XXX: This can cause loops, and loops can cause 			 * unmade targets, but checking is tedious, and the 			 * debugging output can show the problem 			 */
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -1715,7 +1557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * ParseDoDependency  --  *	Parse the dependency line in line.  *  * Results:  *	None  *  * Side Effects:  *	The nodes of the sources are linked as children to the nodes of the  *	targets. Some nodes may be created.  *  *	We parse a dependency line by first extracting words from the line and  * finding nodes in the list of all targets with that name. This is done  * until a character is encountered which is an operator character. Currently  * these are only ! and :. At this point the operator is parsed and the  * pointer into the line advanced until the first source is encountered.  * 	The parsed operator is applied to each node in the 'targets' list,  * which is where the nodes found for the targets are kept, by means of  * the ParseDoOp function.  *	The sources are read in much the same way as the targets were except  * that now they are expanded using the wildcarding scheme of the C-Shell  * and all instances of the resulting words in the list of all targets  * are found. Each of the resulting nodes is then linked to each of the  * targets as one of its children.  *	Certain targets are handled specially. These are the ones detailed  * by the specType variable.  *	The storing of transformation rules is also taken care of here.  * A target is recognized as a transformation rule by calling  * Suff_IsTransform. If it is a transformation rule, its node is gotten  * from the suffix module via Suff_AddTransform rather than the standard  * Targ_FindNode in the target module.  *---------------------------------------------------------------------  */
+comment|/*-  *---------------------------------------------------------------------  * ParseDoDependency  --  *	Parse the dependency line in line.  *  * Results:  *	None  *  * Side Effects:  *	The nodes of the sources are linked as children to the nodes of the  *	targets. Some nodes may be created.  *  *	We parse a dependency line by first extracting words from the line and  * finding nodes in the list of all targets with that name. This is done  * until a character is encountered which is an operator character. Currently  * these are only ! and :. At this point the operator is parsed and the  * pointer into the line advanced until the first source is encountered.  *	The parsed operator is applied to each node in the 'targets' list,  * which is where the nodes found for the targets are kept, by means of  * the ParseDoOp function.  *	The sources are read in much the same way as the targets were except  * that now they are expanded using the wildcarding scheme of the C-Shell  * and all instances of the resulting words in the list of all targets  * are found. Each of the resulting nodes is then linked to each of the  * targets as one of its children.  *	Certain targets are handled specially. These are the ones detailed  * by the specType variable.  *	The storing of transformation rules is also taken care of here.  * A target is recognized as a transformation rule by calling  * Suff_IsTransform. If it is a transformation rule, its node is gotten  * from the suffix module via Suff_AddTransform rather than the standard  * Targ_FindNode in the target module.  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1749,7 +1591,7 @@ comment|/* a place to save a character */
 name|Lst
 name|paths
 decl_stmt|;
-comment|/* Search paths to alter when parsing a list of .PATH targets */
+comment|/* Search paths to alter when parsing .PATH targets */
 name|int
 name|tOp
 decl_stmt|;
@@ -1815,7 +1657,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-comment|/* 		 * Must be a dynamic source (would have been expanded 		 * otherwise), so call the Var module to parse the puppy 		 * so we can safely advance beyond it...There should be 		 * no errors in this, as they would have been discovered 		 * in the initial Var_Subst and we wouldn't be here. 		 */
+comment|/* 				 * Must be a dynamic source (would have been 				 * expanded otherwise), so call the Var module 				 * to parse the puppy so we can safely advance 				 * beyond it...There should be no errors in this 				 * as they would have been discovered in the 				 * initial Var_Subst and we wouldn't be here. 				 */
 name|size_t
 name|length
 init|=
@@ -1877,7 +1719,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-comment|/* 		 * We don't want to end a word on ':' or '!' if there is a 		 * better match later on in the string (greedy matching). 		 * This allows the user to have targets like: 		 *    fie::fi:fo: fum 		 *    foo::bar: 		 * where "fie::fi:fo" and "foo::bar" are the targets.  In 		 * real life this is used for perl5 library man pages where 		 * "::" separates an object from its class. 		 * Ie: "File::Spec::Unix".  This behaviour is also consistent 		 * with other versions of make. 		 */
+comment|/* 				 * We don't want to end a word on ':' or '!' if 				 * there is a better match later on in the 				 * string (greedy matching). 				 * This allows the user to have targets like: 				 *    fie::fi:fo: fum 				 *    foo::bar: 				 * where "fie::fi:fo" and "foo::bar" are the 				 * targets. In real life this is used for perl5 				 * library man pages where "::" separates an 				 * object from its class. Ie: 				 * "File::Spec::Unix". This behaviour is also 				 * consistent with other versions of make. 				 */
 name|char
 modifier|*
 name|p
@@ -1945,7 +1787,7 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* 	     * Archives must be handled specially to make sure the OP_ARCHV 	     * flag is set in their 'type' field, for one thing, and because 	     * things like "archive(file1.o file2.o file3.o)" are permissible. 	     * Arch_ParseArchive will set 'line' to be the first non-blank 	     * after the archive-spec. It creates/finds nodes for the members 	     * and places them on the given list, returning SUCCESS if all 	     * went well and FAILURE if there was an error in the 	     * specification. On error, line should remain untouched. 	     */
+comment|/* 			 * Archives must be handled specially to make sure the 			 * OP_ARCHV flag is set in their 'type' field, for one 			 * thing, and because things like "archive(file1.o 			 * file2.o file3.o)" are permissible. Arch_ParseArchive 			 * will set 'line' to be the first non-blank after the 			 * archive-spec. It creates/finds nodes for the members 			 * and places them on the given list, returning SUCCESS 			 * if all went well and FAILURE if there was an error in 			 * the specification. On error, line should remain 			 * untouched. 			 */
 if|if
 condition|(
 name|Arch_ParseArchive
@@ -1994,10 +1836,9 @@ operator|*
 name|cp
 condition|)
 block|{
-comment|/* 	     * Ending a dependency line without an operator is a Bozo 	     * no-no.  As a heuristic, this is also often triggered by 	     * undetected conflicts from cvs/rcs merges. 	     */
+comment|/* 			 * Ending a dependency line without an operator is a				 * Bozo no-no. As a heuristic, this is also often 			 * triggered by undetected conflicts from cvs/rcs 			 * merges. 			 */
 if|if
 condition|(
-operator|(
 name|strncmp
 argument_list|(
 name|line
@@ -2008,9 +1849,7 @@ literal|6
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|||
-operator|(
 name|strncmp
 argument_list|(
 name|line
@@ -2021,9 +1860,7 @@ literal|6
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|||
-operator|(
 name|strncmp
 argument_list|(
 name|line
@@ -2034,15 +1871,18 @@ literal|6
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
+block|{
 name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
-literal|"Makefile appears to contain unresolved cvs/rcs/??? merge conflicts"
+literal|"Makefile appears to "
+literal|"contain unresolved cvs/rcs/??? merge "
+literal|"conflicts"
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|Parse_Error
 argument_list|(
@@ -2058,7 +1898,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Have a word in line. See if it's a special target and set 	 * specType to match it. 	 */
+comment|/* 		 * Have a word in line. See if it's a special target and set 		 * specType to match it. 		 */
 if|if
 condition|(
 operator|*
@@ -2079,7 +1919,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * See if the target is a special target that must have it 	     * or its sources handled specially. 	     */
+comment|/* 			 * See if the target is a special target that must have 			 * it or its sources handled specially. 			 */
 name|int
 name|keywd
 init|=
@@ -2139,7 +1979,7 @@ index|]
 operator|.
 name|op
 expr_stmt|;
-comment|/* 		 * Certain special targets have special semantics: 		 *	.PATH		Have to set the dirSearchPath 		 *			variable too 		 *	.MAIN		Its sources are only used if 		 *			nothing has been specified to 		 *			create. 		 *	.DEFAULT    	Need to create a node to hang 		 *			commands on, but we don't want 		 *			it in the graph, nor do we want 		 *			it to be the Main Target, so we 		 *			create it, set OP_NOTMAIN and 		 *			add it to the list, setting 		 *			DEFAULT to the new node for 		 *			later use. We claim the node is 		 *	    	    	A transformation rule to make 		 *	    	    	life easier later, when we'll 		 *	    	    	use Make_HandleUse to actually 		 *	    	    	apply the .DEFAULT commands. 		 *	.PHONY		The list of targets 		 *	.BEGIN 		 *	.END 		 *	.INTERRUPT  	Are not to be considered the 		 *			main target. 		 *  	.NOTPARALLEL	Make only one target at a time. 		 *  	.SINGLESHELL	Create a shell for each command. 		 *  	.ORDER	    	Must set initial predecessor to NULL 		 */
+comment|/* 				 * Certain special targets have special 				 * semantics: 				 *  .PATH	Have to set the dirSearchPath 				 *		variable too 				 *  .MAIN	Its sources are only used if 				 *		nothing has been specified to 				 *		create. 				 *  .DEFAULT    Need to create a node to hang 				 *		commands on, but we don't want 				 *		it in the graph, nor do we want 				 *		it to be the Main Target, so we 				 *		create it, set OP_NOTMAIN and 				 *		add it to the list, setting 				 *		DEFAULT to the new node for 				 *		later use. We claim the node is 				 *		A transformation rule to make 				 *		life easier later, when we'll 				 *		use Make_HandleUse to actually 				 *		apply the .DEFAULT commands. 				 *  .PHONY	The list of targets 				 *  .BEGIN 				 *  .END 				 *  .INTERRUPT	Are not to be considered the 				 *		main target. 				 *  .NOTPARALLEL Make only one target at a time. 				 *  .SINGLESHELL Create a shell for each 				 *		command. 				 *  .ORDER	Must set initial predecessor 				 *		to NULL 				 */
 switch|switch
 condition|(
 name|specType
@@ -2246,13 +2086,11 @@ break|break;
 case|case
 name|NotParallel
 case|:
-block|{
 name|maxJobs
 operator|=
 literal|1
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|SingleShell
 case|:
@@ -2288,7 +2126,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * .PATH<suffix> has to be handled specially. 		 * Call on the suffix module to give us a path to 		 * modify. 		 */
+comment|/* 				 * .PATH<suffix> has to be handled specially. 				 * Call on the suffix module to give us a path 				 * to modify. 				 */
 name|struct
 name|Path
 modifier|*
@@ -2320,7 +2158,8 @@ name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
-literal|"Suffix '%s' not defined (yet)"
+literal|"Suffix '%s' "
+literal|"not defined (yet)"
 argument_list|,
 operator|&
 name|line
@@ -2342,7 +2181,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Have word in line. Get or create its node and stick it at 	 * the end of the targets list 	 */
+comment|/* 		 * Have word in line. Get or create its node and stick it at 		 * the end of the targets list 		 */
 if|if
 condition|(
 operator|(
@@ -2376,7 +2215,7 @@ name|line
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Targets are to be sought only in the current directory, 		 * so create an empty path for the thing. Note we need to 		 * use Dir_Destroy in the destruction of the path as the 		 * Dir module could have added a directory to the path... 		 */
+comment|/* 				 * Targets are to be sought only in the current 				 * directory, so create an empty path for the 				 * thing. Note we need to use Path_Clear in the 				 * destruction of the path as the Dir module 				 * could have added a directory to the path... 				 */
 name|struct
 name|Path
 name|emptyPath
@@ -2406,7 +2245,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * No wildcards, but we want to avoid code duplication, 		 * so create a list with the word on it. 		 */
+comment|/* 				 * No wildcards, but we want to avoid code 				 * duplication, so create a list with the word 				 * on it. 				 */
 name|Lst_AtEnd
 argument_list|(
 operator|&
@@ -2508,7 +2347,7 @@ name|cp
 operator|=
 name|savec
 expr_stmt|;
-comment|/* 	 * If it is a special type and not .PATH, it's the only target we 	 * allow on this line... 	 */
+comment|/* 		 * If it is a special type and not .PATH, it's the only 		 * target we allow on this line... 		 */
 if|if
 condition|(
 name|specType
@@ -2649,7 +2488,8 @@ name|Parse_Error
 argument_list|(
 name|PARSE_WARNING
 argument_list|,
-literal|"Special and mundane targets don't mix. Mundane ones ignored"
+literal|"Special and mundane "
+literal|"targets don't mix. Mundane ones ignored"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2665,15 +2505,15 @@ case|:
 case|case
 name|Interrupt
 case|:
-comment|/* 		 * These four create nodes on which to hang commands, so 		 * targets shouldn't be empty... 		 */
+comment|/* 			 * These four create nodes on which to hang commands, so 			 * targets shouldn't be empty... 			 */
 case|case
 name|Not
 case|:
-comment|/* 		 * Nothing special here -- targets can be empty if it wants. 		 */
+comment|/* 			 * Nothing special here -- targets can be empty if it 			 * wants. 			 */
 break|break;
 block|}
 block|}
-comment|/*      * Have now parsed all the target names. Must parse the operator next. The      * result is left in  op .      */
+comment|/* 	 * Have now parsed all the target names. Must parse the operator next. 	 * The result is left in op. 	 */
 if|if
 condition|(
 operator|*
@@ -2742,7 +2582,7 @@ argument_list|(
 name|op
 argument_list|)
 expr_stmt|;
-comment|/*      * Get to the first source      */
+comment|/* 	 * Get to the first source 	 */
 while|while
 condition|(
 operator|*
@@ -2767,7 +2607,7 @@ name|line
 operator|=
 name|cp
 expr_stmt|;
-comment|/*      * Several special targets take different actions if present with no      * sources:      *	a .SUFFIXES line with no sources clears out all old suffixes      *	a .PRECIOUS line makes all targets precious      *	a .IGNORE line ignores errors for all targets      *	a .SILENT line creates silence when making all targets      *	a .PATH removes all directories from the search path(s).      */
+comment|/* 	 * Several special targets take different actions if present with no 	 * sources: 	 *	a .SUFFIXES line with no sources clears out all old suffixes 	 *	a .PRECIOUS line makes all targets precious 	 *	a .IGNORE line ignores errors for all targets 	 *	a .SILENT line creates silence when making all targets 	 *	a .PATH removes all directories from the search path(s). 	 */
 if|if
 condition|(
 operator|!
@@ -2854,7 +2694,7 @@ operator|==
 name|MFlags
 condition|)
 block|{
-comment|/* 	 * Call on functions in main.c to deal with these arguments and 	 * set the initial character to a null-character so the loop to 	 * get sources won't get anything 	 */
+comment|/* 		 * Call on functions in main.c to deal with these arguments and 		 * set the initial character to a null-character so the loop to 		 * get sources won't get anything 		 */
 name|Main_ParseArgLine
 argument_list|(
 name|line
@@ -2923,7 +2763,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/*      * NOW GO FOR THE SOURCES      */
+comment|/* 	* NOW GO FOR THE SOURCES 	*/
 if|if
 condition|(
 operator|(
@@ -2963,7 +2803,7 @@ operator|*
 name|line
 condition|)
 block|{
-comment|/* 	     * If the target was one that doesn't take files as its sources 	     * but takes something like suffixes, we take each 	     * space-separated word on the line as a something and deal 	     * with it accordingly. 	     * 	     * If the target was .SUFFIXES, we take each source as a 	     * suffix and add it to the list of suffixes maintained by the 	     * Suff module. 	     * 	     * If the target was a .PATH, we add the source as a directory 	     * to search on the search path. 	     * 	     * If it was .INCLUDES, the source is taken to be the suffix of 	     * files which will be #included and whose search path should 	     * be present in the .INCLUDES variable. 	     * 	     * If it was .LIBS, the source is taken to be the suffix of 	     * files which are considered libraries and whose search path 	     * should be present in the .LIBS variable. 	     * 	     * If it was .NULL, the source is the suffix to use when a file 	     * has no valid suffix. 	     */
+comment|/* 			 * If the target was one that doesn't take files as its 			 * sources but takes something like suffixes, we take 			 * each space-separated word on the line as a something 			 * and deal with it accordingly. 			 * 			 * If the target was .SUFFIXES, we take each source as 			 * a suffix and add it to the list of suffixes 			 * maintained by the Suff module. 			 * 			 * If the target was a .PATH, we add the source as a 			 * directory to search on the search path. 			 * 			 * If it was .INCLUDES, the source is taken to be the 			 * suffix of files which will be #included and whose 			 * search path should be present in the .INCLUDES 			 * variable. 			 * 			 * If it was .LIBS, the source is taken to be the 			 * suffix of files which are considered libraries and 			 * whose search path should be present in the .LIBS 			 * variable. 			 * 			 * If it was .NULL, the source is the suffix to use 			 * when a file has no valid suffix. 			 */
 name|char
 name|savech
 decl_stmt|;
@@ -3114,6 +2954,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* list of sources in order */
 name|Lst
 name|curSrcs
 init|=
@@ -3122,14 +2963,13 @@ argument_list|(
 name|curSrc
 argument_list|)
 decl_stmt|;
-comment|/* list of sources in order */
 while|while
 condition|(
 operator|*
 name|line
 condition|)
 block|{
-comment|/* 	     * The targets take real sources, so we must beware of archive 	     * specifications (i.e. things with left parentheses in them) 	     * and handle them accordingly. 	     */
+comment|/* 			 * The targets take real sources, so we must beware of 			 * archive specifications (i.e. things with left 			 * parentheses in them) and handle them accordingly. 			 */
 while|while
 condition|(
 operator|*
@@ -3149,20 +2989,15 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 operator|*
 name|cp
 operator|==
 literal|'('
-operator|)
 operator|&&
-operator|(
 name|cp
 operator|>
 name|line
-operator|)
 operator|&&
-operator|(
 name|cp
 index|[
 operator|-
@@ -3170,10 +3005,9 @@ literal|1
 index|]
 operator|!=
 literal|'$'
-operator|)
 condition|)
 block|{
-comment|/* 		     * Only stop for a left parenthesis if it isn't at the 		     * start of a word (that'll be for variable changes 		     * later) and isn't preceded by a dollar sign (a dynamic 		     * source). 		     */
+comment|/* 					 * Only stop for a left parenthesis if 					 * it isn't at the start of a word 					 * (that'll be for variable changes 					 * later) and isn't preceded by a dollar 					 * sign (a dynamic source). 					 */
 break|break;
 block|}
 else|else
@@ -3195,7 +3029,7 @@ name|GNode
 modifier|*
 name|gnp
 decl_stmt|;
-comment|/* list of archive source names after expansion */
+comment|/* list of archive source names after exp. */
 name|Lst
 name|sources
 init|=
@@ -3224,7 +3058,8 @@ name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
-literal|"Error in source archive spec \"%s\""
+literal|"Error in "
+literal|"source archive spec \"%s\""
 argument_list|,
 name|line
 argument_list|)
@@ -3337,7 +3172,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * If we have yet to decide on a main target to make, in the 	 * absence of any user input, we want the first target on 	 * the first dependency line that is actually a real target 	 * (i.e. isn't a .USE or .EXEC rule) to be made. 	 */
+comment|/* 		 * If we have yet to decide on a main target to make, in the 		 * absence of any user input, we want the first target on 		 * the first dependency line that is actually a real target 		 * (i.e. isn't a .USE or .EXEC rule) to be made. 		 */
 name|LST_FOREACH
 argument_list|(
 argument|ln
@@ -3427,7 +3262,7 @@ name|c
 parameter_list|)
 define|\
 value|(((c) == '+') || ((c) == ':') || ((c) == '?') || ((c) == '!'))
-comment|/*      * Skip to variable name      */
+comment|/* 	 * Skip to variable name 	 */
 for|for
 control|(
 init|;
@@ -3464,6 +3299,7 @@ condition|;
 name|line
 operator|++
 control|)
+block|{
 switch|switch
 condition|(
 operator|*
@@ -3473,7 +3309,7 @@ block|{
 case|case
 literal|'\0'
 case|:
-comment|/* 	     * end-of-line -- can't be a variable assignment. 	     */
+comment|/* 			 * end-of-line -- can't be a variable assignment. 			 */
 return|return
 operator|(
 name|FALSE
@@ -3485,7 +3321,7 @@ case|:
 case|case
 literal|'\t'
 case|:
-comment|/* 	     * there can be as much white space as desired so long as there is 	     * only one word before the operator 	     */
+comment|/* 			 * there can be as much white space as desired so long 			 * as there is only one word before the operator 			*/
 name|wasSpace
 operator|=
 name|TRUE
@@ -3528,7 +3364,7 @@ name|line
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * We must have a finished word 			 */
+comment|/* 					 * We must have a finished word 					 */
 if|if
 condition|(
 name|level
@@ -3540,7 +3376,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* 			 * When an = operator [+?!:] is found, the next 			 * character must be an = or it ain't a valid 			 * assignment. 			 */
+comment|/* 					 * When an = operator [+?!:] is found, 					 * the next character must be an = or 					 * it ain't a valid assignment. 					 */
 if|if
 condition|(
 name|line
@@ -3558,7 +3394,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|SUNSHCMD
-comment|/* 			 * This is a shell command 			 */
+comment|/* 					 * This is a shell command 					 */
 if|if
 condition|(
 name|strncmp
@@ -3580,7 +3416,7 @@ return|;
 endif|#
 directive|endif
 block|}
-comment|/* 		     * This is the start of another word, so not assignment. 		     */
+comment|/* 				 * This is the start of another word, so not 				 * assignment. 				 */
 return|return
 operator|(
 name|FALSE
@@ -3599,6 +3435,7 @@ name|FALSE
 expr_stmt|;
 block|}
 break|break;
+block|}
 block|}
 return|return
 operator|(
@@ -3647,8 +3484,8 @@ name|char
 modifier|*
 name|opc
 decl_stmt|;
-comment|/* ptr to operator character to 				 * null-terminate the variable name */
-comment|/*      * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
+comment|/* ptr to operator character to 			 * null-terminate the variable name */
+comment|/* 	 * Avoid clobbered variable warnings by forcing the compiler 	 * to ``unregister'' variables 	 */
 if|#
 directive|if
 name|__GNUC__
@@ -3666,7 +3503,7 @@ name|line
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * Skip to variable name      */
+comment|/* 	 * Skip to variable name 	 */
 while|while
 condition|(
 operator|(
@@ -3688,7 +3525,7 @@ name|line
 operator|++
 expr_stmt|;
 block|}
-comment|/*      * Skip to operator character, nulling out whitespace as we go      */
+comment|/* 	 * Skip to operator character, nulling out whitespace as we go 	 */
 for|for
 control|(
 name|cp
@@ -3740,7 +3577,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* nuke the = */
-comment|/*      * Check operator type      */
+comment|/* 	 * Check operator type 	 */
 switch|switch
 condition|(
 operator|*
@@ -3763,7 +3600,7 @@ break|break;
 case|case
 literal|'?'
 case|:
-comment|/* 	     * If the variable already has a value, we don't do anything. 	     */
+comment|/* 		 * If the variable already has a value, we don't do anything. 		 */
 operator|*
 name|opc
 operator|=
@@ -3826,6 +3663,7 @@ name|opc
 operator|!=
 literal|':'
 condition|)
+block|{
 if|if
 condition|(
 name|opc
@@ -3837,6 +3675,7 @@ else|else
 operator|--
 name|opc
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strncmp
@@ -3912,7 +3751,7 @@ operator|==
 name|VAR_SUBST
 condition|)
 block|{
-comment|/* 	 * Allow variables in the old value to be undefined, but leave their 	 * invocation alone -- this is done by forcing oldVars to be false. 	 * XXX: This can cause recursive variables, but that's not hard to do, 	 * and this allows someone to do something like 	 * 	 *  CFLAGS = $(.INCLUDES) 	 *  CFLAGS := -I.. $(CFLAGS) 	 * 	 * And not get an error. 	 */
+comment|/* 		 * Allow variables in the old value to be undefined, but leave 		 * their invocation alone -- this is done by forcing oldVars 		 * to be false. 		 * XXX: This can cause recursive variables, but that's not 		 * hard to do, and this allows someone to do something like 		 * 		 *  CFLAGS = $(.INCLUDES) 		 *  CFLAGS := -I.. $(CFLAGS) 		 * 		 * And not get an error. 		 */
 name|Boolean
 name|oldOldVars
 init|=
@@ -3922,7 +3761,7 @@ name|oldVars
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 	 * make sure that we set the variable the first time to nothing 	 * so that it gets substituted! 	 */
+comment|/* 		 * make sure that we set the variable the first time to nothing 		 * so that it gets substituted! 		 */
 if|if
 condition|(
 operator|!
@@ -3985,12 +3824,12 @@ operator|==
 name|VAR_SHELL
 condition|)
 block|{
+comment|/* 		 * TRUE if the command needs to be freed, i.e. 		 * if any variable expansion was performed 		 */
 name|Boolean
 name|freeCmd
 init|=
 name|FALSE
 decl_stmt|;
-comment|/* TRUE if the command needs to be freed, i.e. 				  * if any variable expansion was performed */
 name|Buffer
 modifier|*
 name|buf
@@ -4012,7 +3851,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	     * There's a dollar sign in the command, so perform variable 	     * expansion on the whole thing. The resulting string will need 	     * freeing when we're done, so set freeCmd to TRUE. 	     */
+comment|/* 			 * There's a dollar sign in the command, so perform 			 * variable expansion on the whole thing. The 			 * resulting string will need freeing when we're done, 			 * so set freeCmd to TRUE. 			 */
 name|cp
 operator|=
 name|Buf_Peel
@@ -4088,7 +3927,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	 * Normal assignment -- just do it. 	 */
+comment|/* 		 * Normal assignment -- just do it. 		 */
 name|Var_Set
 argument_list|(
 name|line
@@ -4401,7 +4240,7 @@ name|Buffer
 modifier|*
 name|buf
 decl_stmt|;
-comment|/*      * Skip to delimiter character so we know where to look      */
+comment|/* 	 * Skip to delimiter character so we know where to look 	 */
 while|while
 condition|(
 operator|(
@@ -4449,7 +4288,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * Set the search path on which to find the include file based on the      * characters which bracket its name. Angle-brackets imply it's      * a system Makefile while double-quotes imply it's a user makefile      */
+comment|/* 	 * Set the search path on which to find the include file based on the 	 * characters which bracket its name. Angle-brackets imply it's 	 * a system Makefile while double-quotes imply it's a user makefile 	 */
 if|if
 condition|(
 operator|*
@@ -4478,7 +4317,7 @@ operator|=
 literal|'"'
 expr_stmt|;
 block|}
-comment|/*      * Skip to matching delimiter      */
+comment|/* 	* Skip to matching delimiter 	*/
 for|for
 control|(
 name|cp
@@ -4526,7 +4365,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/*      * Substitute for any variables in the file name before trying to      * find the thing.      */
+comment|/* 	 * Substitute for any variables in the file name before trying to 	 * find the thing. 	 */
 name|buf
 operator|=
 name|Var_Subst
@@ -4547,14 +4386,14 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/*      * Now we know the file's name and its search path, we attempt to      * find the durn thing. A return of NULL indicates the file don't      * exist.      */
+comment|/* 	 * Now we know the file's name and its search path, we attempt to 	 * find the durn thing. A return of NULL indicates the file don't 	 * exist. 	 */
 if|if
 condition|(
 operator|!
 name|isSystem
 condition|)
 block|{
-comment|/* 	 * Include files contained in double-quotes are first searched for 	 * relative to the including file's location. We don't want to 	 * cd there, of course, so we just tack on the old file's 	 * leading path components and call Dir_FindFile to see if 	 * we can locate the beast. 	 */
+comment|/* 		 * Include files contained in double-quotes are first searched 		 * for relative to the including file's location. We don't want 		 * to cd there, of course, so we just tack on the old file's 		 * leading path components and call Dir_FindFile to see if 		 * we can locate the beast. 		 */
 name|char
 modifier|*
 name|prefEnd
@@ -4695,7 +4534,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * System makefile or makefile wasn't found in same directory as 	 * included makefile. Search for it first on the -I search path, 	 * then on the .PATH search path, if not found in a -I directory. 	 * XXX: Suffix specific? 	 */
+comment|/* 		 * System makefile or makefile wasn't found in same directory as 		 * included makefile. Search for it first on the -I search path, 		 * then on the .PATH search path, if not found in a -I 		 * directory. 		 * XXX: Suffix specific? 		 */
 name|fullname
 operator|=
 name|Path_FindFile
@@ -4732,7 +4571,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Still haven't found the makefile. Look for it on the system 	 * path as a last resort. 	 */
+comment|/* 		 * Still haven't found the makefile. Look for it on the system 		 * path as a last resort. 		 */
 name|fullname
 operator|=
 name|Path_FindFile
@@ -4773,7 +4612,7 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-comment|/*      * Once we find the absolute path to the file, we get to save all the      * state from the current file before we can start reading this      * include file. The state is stored in an IFile structure which      * is placed on a list with other IFile structures. The list makes      * a very nice stack to track how we got here...      */
+comment|/* 	* Once we find the absolute path to the file, we get to save all the 	* state from the current file before we can start reading this 	* include file. The state is stored in an IFile structure which 	* is placed on a list with other IFile structures. The list makes 	* a very nice stack to track how we got here... 	*/
 name|oldFile
 operator|=
 name|emalloc
@@ -4805,7 +4644,7 @@ argument_list|,
 name|oldFile
 argument_list|)
 expr_stmt|;
-comment|/*      * Once the previous state has been saved, we can get down to reading      * the new file. We set up the name of the file to be the absolute      * name of the include file so error messages refer to the right      * place. Naturally enough, we start reading at line number 0.      */
+comment|/* 	 * Once the previous state has been saved, we can get down to reading 	 * the new file. We set up the name of the file to be the absolute 	 * name of the include file so error messages refer to the right 	 * place. Naturally enough, we start reading at line number 0. 	 */
 name|curFile
 operator|.
 name|fname
@@ -4853,7 +4692,7 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Pop to previous file 	 */
+comment|/* 		 * Pop to previous file 		 */
 name|ParseEOF
 argument_list|(
 literal|0
@@ -5031,7 +4870,7 @@ name|Buffer
 modifier|*
 name|buf
 decl_stmt|;
-comment|/*      * Skip over whitespace      */
+comment|/* 	 * Skip over whitespace 	 */
 while|while
 condition|(
 operator|(
@@ -5070,7 +4909,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * Skip to end of line or next whitespace      */
+comment|/* 	* Skip to end of line or next whitespace 	*/
 for|for
 control|(
 name|cp
@@ -5106,7 +4945,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/*      * Substitute for any variables in the file name before trying to      * find the thing.      */
+comment|/* 	 * Substitute for any variables in the file name before trying to 	 * find the thing. 	 */
 name|buf
 operator|=
 name|Var_Subst
@@ -5127,7 +4966,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/*      * Now we know the file's name, we attempt to find the durn thing.      * Search for it first on the -I search path, then on the .PATH      * search path, if not found in a -I directory.      */
+comment|/* 	 * Now we know the file's name, we attempt to find the durn thing. 	 * Search for it first on the -I search path, then on the .PATH 	 * search path, if not found in a -I directory. 	 */
 name|fullname
 operator|=
 name|Path_FindFile
@@ -5163,7 +5002,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Still haven't found the makefile. Look for it on the system 	 * path as a last resort. 	 */
+comment|/* 		 * Still haven't found the makefile. Look for it on the system 		 * path as a last resort. 		 */
 name|fullname
 operator|=
 name|Path_FindFile
@@ -5195,7 +5034,7 @@ comment|/* XXXHB free(file) */
 return|return;
 block|}
 comment|/* XXXHB free(file) */
-comment|/*      * Once we find the absolute path to the file, we get to save all the      * state from the current file before we can start reading this      * include file. The state is stored in an IFile structure which      * is placed on a list with other IFile structures. The list makes      * a very nice stack to track how we got here...      */
+comment|/* 	 * Once we find the absolute path to the file, we get to save all the 	 * state from the current file before we can start reading this 	 * include file. The state is stored in an IFile structure which 	 * is placed on a list with other IFile structures. The list makes 	 * a very nice stack to track how we got here... 	 */
 name|oldFile
 operator|=
 name|emalloc
@@ -5227,7 +5066,7 @@ argument_list|,
 name|oldFile
 argument_list|)
 expr_stmt|;
-comment|/*      * Once the previous state has been saved, we can get down to reading      * the new file. We set up the name of the file to be the absolute      * name of the include file so error messages refer to the right      * place. Naturally enough, we start reading at line number 0.      */
+comment|/* 	 * Once the previous state has been saved, we can get down to reading 	 * the new file. We set up the name of the file to be the absolute 	 * name of the include file so error messages refer to the right 	 * place. Naturally enough, we start reading at line number 0. 	 */
 name|curFile
 operator|.
 name|fname
@@ -5275,7 +5114,7 @@ argument_list|,
 name|fullname
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Pop to previous file 	 */
+comment|/* 		 * Pop to previous file 		 */
 name|ParseEOF
 argument_list|(
 literal|1
@@ -5633,7 +5472,7 @@ operator|!=
 literal|'\\'
 condition|)
 block|{
-comment|/* let a comment be terminated even by an escaped \n. 		 * This is consistent to comment handling in ParseReadLine */
+comment|/* 				 * let a comment be terminated even by an 				 * escaped \n. This is consistent to comment 				 * handling in ParseReadLine 				 */
 while|while
 condition|(
 operator|(
@@ -5871,7 +5710,7 @@ name|ignComment
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/*      * Handle special-characters at the beginning of the line. Either a      * leading tab (shell command) or pound-sign (possible conditional)      * forces us to ignore comments and dependency operators and treat      * semi-colons as semi-colons (by leaving semiNL FALSE). This also      * discards completely blank lines.      */
+comment|/* 	 * Handle special-characters at the beginning of the line. Either a 	 * leading tab (shell command) or pound-sign (possible conditional) 	 * forces us to ignore comments and dependency operators and treat 	 * semi-colons as semi-colons (by leaving semiNL FALSE). This also 	 * discards completely blank lines. 	 */
 for|for
 control|(
 init|;
@@ -5929,7 +5768,7 @@ break|break;
 block|}
 else|else
 block|{
-comment|/* 	     * Anything else breaks out without doing anything 	     */
+comment|/* 			 * Anything else breaks out without doing anything 			 */
 break|break;
 block|}
 block|}
@@ -5987,7 +5826,7 @@ block|{
 case|case
 literal|'\n'
 case|:
-comment|/* 		 * Escaped newline: read characters until a non-space or an 		 * unescaped newline and replace them all by a single space. 		 * This is done by storing the space over the backslash and 		 * dropping through with the next nonspace. If it is a 		 * semi-colon and semiNL is TRUE, it will be recognized as a 		 * newline in the code below this... 		 */
+comment|/* 				 * Escaped newline: read characters until a 				 * non-space or an unescaped newline and 				 * replace them all by a single space. This is 				 * done by storing the space over the backslash 				 * and dropping through with the next nonspace. 				 * If it is a semi-colon and semiNL is TRUE, 				 * it will be recognized as a newline in the 				 * code below this... 				 */
 name|curFile
 operator|.
 name|lineno
@@ -6032,7 +5871,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 		     * Check for comments, semiNL's, etc. -- easier than 		     * ParseUnreadc(c); continue; 		     */
+comment|/* 					 * Check for comments, semiNL's, etc. -- 					 * easier than ParseUnreadc(c); 					 * continue; 					 */
 goto|goto
 name|test_char
 goto|;
@@ -6042,13 +5881,13 @@ break|break;
 case|case
 literal|';'
 case|:
-comment|/* 		 * Semi-colon: Need to see if it should be interpreted as a 		 * newline 		 */
+comment|/* 				 * Semi-colon: Need to see if it should be 				 * interpreted as a newline 				 */
 if|if
 condition|(
 name|semiNL
 condition|)
 block|{
-comment|/* 		     * To make sure the command that may be following this 		     * semi-colon begins with a tab, we push one back into the 		     * input stream. This will overwrite the semi-colon in the 		     * buffer. If there is no command following, this does no 		     * harm, since the newline remains in the buffer and the 		     * whole line is ignored. 		     */
+comment|/* 					 * To make sure the command that may 					 * be following this semi-colon begins 					 * with a tab, we push one back into the 					 * input stream. This will overwrite the 					 * semi-colon in the buffer. If there is 					 * no command following, this does no 					 * harm, since the newline remains in 					 * the buffer and the 					 * whole line is ignored. 					 */
 name|ParseUnreadc
 argument_list|(
 literal|'\t'
@@ -6068,7 +5907,7 @@ operator|!
 name|semiNL
 condition|)
 block|{
-comment|/* 		     * Haven't seen a dependency operator before this, so this 		     * must be a variable assignment -- don't pay attention to 		     * dependency operators after this. 		     */
+comment|/* 					 * Haven't seen a dependency operator 					 * before this, so this must be a 					 * variable assignment -- don't pay 					 * attention to dependency operators 					 * after this. 					 */
 name|ignDepOp
 operator|=
 name|TRUE
@@ -6086,7 +5925,7 @@ operator|==
 literal|'!'
 condition|)
 block|{
-comment|/* 		     * Well, we've seen a dependency operator already, but it 		     * was the previous character, so this is really just an 		     * expanded variable assignment. Revert semi-colons to 		     * being just semi-colons again and ignore any more 		     * dependency operators. 		     * 		     * XXX: Note that a line like "foo : a:=b" will blow up, 		     * but who'd write a line like that anyway? 		     */
+comment|/* 					 * Well, we've seen a dependency 					 * operator already, but it was the 					 * previous character, so this is really 					 * just an expanded variable assignment. 					 * Revert semi-colons to being just 					 * semi-colons again and ignore any more 					 * dependency operators. 					 * 					 * XXX: Note that a line like 					 * "foo : a:=b" will blow up, but who'd 					 * write a line like that anyway? 					 */
 name|ignDepOp
 operator|=
 name|TRUE
@@ -6113,7 +5952,7 @@ operator|!=
 literal|'\\'
 condition|)
 block|{
-comment|/* 			 * If the character is a hash mark and it isn't escaped 			 * (or we're being compatible), the thing is a comment. 			 * Skip to the end of the line. 			 */
+comment|/* 						 * If the character is a hash 						 * mark and it isn't escaped 						 * (or we're being compatible), 						 * the thing is a comment. 						 * Skip to the end of the line. 						 */
 do|do
 block|{
 name|c
@@ -6124,17 +5963,13 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-operator|(
 name|c
 operator|!=
 literal|'\n'
-operator|)
 operator|&&
-operator|(
 name|c
 operator|!=
 name|EOF
-operator|)
 condition|)
 do|;
 goto|goto
@@ -6143,7 +5978,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 			 * Don't add the backslash. Just let the # get copied 			 * over. 			 */
+comment|/* 						 * Don't add the backslash. 						 * Just let the # get copied 						 * over. 						 */
 name|lastc
 operator|=
 name|c
@@ -6174,7 +6009,7 @@ literal|'!'
 operator|)
 condition|)
 block|{
-comment|/* 		     * A semi-colon is recognized as a newline only on 		     * dependency lines. Dependency lines are lines with a 		     * colon or an exclamation point. Ergo... 		     */
+comment|/* 					 * A semi-colon is recognized as a 					 * newline only on dependency lines. 					 * Dependency lines are lines with a 					 * colon or an exclamation point. 					 * Ergo... 					 */
 name|semiNL
 operator|=
 name|TRUE
@@ -6184,7 +6019,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* 	     * Copy in the previous character and save this one in lastc. 	     */
+comment|/* 			 * Copy in the previous character and save this one in 			 * lastc. 			 */
 name|Buf_AddByte
 argument_list|(
 name|buf
@@ -6242,7 +6077,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Strip trailing blanks and tabs from the line. 	 * Do not strip a blank or tab that is preceded by 	 * a '\' 	 */
+comment|/* 		 * Strip trailing blanks and tabs from the line. 		 * Do not strip a blank or tab that is preceded by 		 * a '\' 		 */
 name|ep
 operator|=
 name|line
@@ -6318,7 +6153,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* 	     * The line might be a conditional. Ask the conditional module 	     * about it and act accordingly 	     */
+comment|/* 			 * The line might be a conditional. Ask the 			 * conditional module about it and act accordingly 			 */
 switch|switch
 condition|(
 name|Cond_Eval
@@ -6330,7 +6165,7 @@ block|{
 case|case
 name|COND_SKIP
 case|:
-comment|/* 		 * Skip to next conditional that evaluates to COND_PARSE. 		 */
+comment|/* 				 * Skip to next conditional that evaluates to 				 * COND_PARSE. 				 */
 do|do
 block|{
 name|free
@@ -6409,7 +6244,7 @@ name|lineno
 expr_stmt|;
 do|do
 block|{
-comment|/* 			 * Skip after the matching end 			 */
+comment|/* 						 * Skip after the matching end 						 */
 name|line
 operator|=
 name|ParseSkipLine
@@ -6430,7 +6265,9 @@ name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
 argument_list|,
-literal|"Unexpected end of file in for loop.\n"
+literal|"Unexpected end of"
+literal|" file in for "
+literal|"loop.\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6483,7 +6320,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 	 * Hit end-of-file, so return a NULL line to indicate this. 	 */
+comment|/* 		 * Hit end-of-file, so return a NULL line to indicate this. 		 */
 return|return
 operator|(
 name|NULL
@@ -6585,8 +6422,9 @@ block|{
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
 comment|/* pointer into the line */
+name|char
 modifier|*
 name|line
 decl_stmt|;
@@ -6652,7 +6490,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* 		 * Lines that begin with the special character are either 		 * include or undef directives. 		 */
+comment|/* 				 * Lines that begin with the special character 				 * are either include or undef directives. 				 */
 for|for
 control|(
 name|cp
@@ -6870,7 +6708,7 @@ operator|==
 literal|'#'
 condition|)
 block|{
-comment|/* If we're this far, the line must be a comment. */
+comment|/* 				 * If we're this far, the line must be 				 * a comment. 				 */
 goto|goto
 name|nextLine
 goto|;
@@ -6883,7 +6721,7 @@ operator|==
 literal|'\t'
 condition|)
 block|{
-comment|/* 		 * If a line starts with a tab, it can only hope to be 		 * a creation command. 		 */
+comment|/* 				 * If a line starts with a tab, it can only 				 * hope to be a creation command. 				 */
 for|for
 control|(
 name|cp
@@ -6927,7 +6765,7 @@ name|GNode
 modifier|*
 name|gn
 decl_stmt|;
-comment|/* 			 * So long as it's not a blank line and we're actually 			 * in a dependency spec, add the command to the list of 			 * commands of all targets in the dependency spec 			 */
+comment|/* 						 * So long as it's not a blank 						 * line and we're actually in a 						 * dependency spec, add the 						 * command to the list of 						 * commands of all targets in 						 * the dependency spec. 						 */
 name|LST_FOREACH
 argument_list|(
 argument|ln
@@ -6942,7 +6780,7 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-comment|/* if target already supplied, ignore commands */
+comment|/* 							 * if target already 							 * supplied, ignore 							 * commands 							 */
 if|if
 condition|(
 operator|!
@@ -7033,7 +6871,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * It's an S3/S5-style "include". 		 */
+comment|/* 				 * It's an S3/S5-style "include". 				 */
 name|ParseTraditionalInclude
 argument_list|(
 name|line
@@ -7069,7 +6907,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * We now know it's a dependency line so it needs to have all 		 * variables expanded before being parsed. Tell the variable 		 * module to complain if some variable is undefined... 		 * To make life easier on novices, if the line is indented we 		 * first make sure the line has a dependency operator in it. 		 * If it doesn't have an operator and we're in a dependency 		 * line's script, we assume it's actually a shell command 		 * and add it to the current list of targets. 		 */
+comment|/* 				 * We now know it's a dependency line so it 				 * needs to have all variables expanded before 				 * being parsed. Tell the variable module to 				 * complain if some variable is undefined... 				 * To make life easier on novices, if the line 				 * is indented we first make sure the line has 				 * a dependency operator in it. If it doesn't 				 * have an operator and we're in a dependency 				 * line's script, we assume it's actually a 				 * shell command and add it to the current 				 * list of targets. 				 */
 name|cp
 operator|=
 name|line
@@ -7158,7 +6996,7 @@ name|line
 operator|=
 name|cp
 expr_stmt|;
-comment|/* 		 * Need a non-circular list for the target nodes 		 */
+comment|/* 				 * Need a non-circular list for the target nodes 				 */
 name|Lst_Destroy
 argument_list|(
 operator|&
@@ -7185,7 +7023,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Reached EOF, but it may be just EOF of an include file... 	 */
+comment|/* 		 * Reached EOF, but it may be just EOF of an include file... 		 */
 block|}
 do|while
 condition|(
@@ -7200,7 +7038,7 @@ do|;
 name|ParseFinishLine
 argument_list|()
 expr_stmt|;
-comment|/*      * Make sure conditionals are clean      */
+comment|/* 	 * Make sure conditionals are clean 	 */
 name|Cond_End
 argument_list|()
 expr_stmt|;
