@@ -3505,6 +3505,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|realpath
+argument_list|(
+name|path
+argument_list|,
+name|path
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
 operator|(
 name|stream
 operator|=
@@ -3531,6 +3540,22 @@ block|}
 elseif|else
 if|if
 condition|(
+name|realpath
+argument_list|(
+name|fname
+argument_list|,
+name|path
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fname
+operator|=
+name|path
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|stream
 operator|=
@@ -3547,6 +3572,7 @@ condition|)
 goto|goto
 name|found
 goto|;
+block|}
 comment|/* look in -I and system include directories. */
 name|name
 operator|=
