@@ -1514,7 +1514,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tMinimul Tick=%d\n"
+literal|"\tMinimal Tick=%d\n"
 argument_list|,
 name|hpetp
 operator|->
