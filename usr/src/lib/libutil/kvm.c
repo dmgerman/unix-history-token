@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00032  * --------------------         -----   ----------------------  *  * 05 Aug 92    David Greenman          Fix kernel namelist db create/use  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00052  * --------------------         -----   ----------------------  *  * 08 Sep 92	Greenman& Kranenburg	Change vaddr calc, move bogus #endif  * 05 Aug 92    David Greenman          Fix kernel namelist db create/use  */
 end_comment
 
 begin_if
@@ -35,6 +35,10 @@ end_endif
 
 begin_comment
 comment|/* LIBC_SCCS and not lint */
+end_comment
+
+begin_comment
+comment|/*  *  Updated for 386BSD 0.1 by David Greenman (davidg%implode@percy.rain.com)  *     and Paul Kranenburg (pk@cs.few.eur.nl)  *  20-Aug-1992  */
 end_comment
 
 begin_include
@@ -3638,6 +3642,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* 08 Sep 92*/
 name|kp
 operator|->
 name|kp_eproc
@@ -3659,8 +3666,6 @@ operator|.
 name|resident_count
 expr_stmt|;
 comment|/* XXX */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|i386
@@ -3681,15 +3686,11 @@ name|struct
 name|pde
 name|pde
 decl_stmt|;
+comment|/* u_int vaddr = USRSTACK-ARGSIZE;*/
+comment|/* 08 Sep 92*/
 name|u_int
 name|vaddr
 init|=
-name|USRSTACK
-operator|-
-name|ARGSIZE
-decl_stmt|;
-if|if
-condition|(
 operator|(
 name|u_int
 operator|)
@@ -3702,13 +3703,10 @@ operator|.
 name|vm_maxsaddr
 operator|+
 name|MAXSSIZ
-operator|<
-name|USRSTACK
-condition|)
-name|vaddr
-operator|-=
-name|MAXSSIZ
-expr_stmt|;
+operator|-
+name|ARGSIZE
+decl_stmt|;
+comment|/* 08 Sep 92 --------- 		if ((u_int)kp->kp_eproc.e_vm.vm_maxsaddr + MAXSSIZ< USRSTACK) 			vaddr -= MAXSSIZ; 		 */
 if|#
 directive|if
 literal|0
