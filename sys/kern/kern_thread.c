@@ -6836,6 +6836,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|kg
 operator|->
 name|kg_completed
@@ -6848,6 +6850,7 @@ operator|->
 name|ku_flags
 operator|&
 name|KUF_DOUPCALL
+operator|)
 operator|)
 condition|)
 block|{
