@@ -2892,13 +2892,10 @@ argument_list|,
 name|TS_XCLUDE
 argument_list|)
 operator|&&
+name|suser
+argument_list|(
 name|p
-operator|->
-name|p_ucred
-operator|->
-name|cr_uid
-operator|!=
-literal|0
+argument_list|)
 condition|)
 return|return
 operator|(
