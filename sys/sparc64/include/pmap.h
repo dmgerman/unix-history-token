@@ -103,6 +103,9 @@ name|DCACHE_COLORS
 index|]
 decl_stmt|;
 name|int
+name|color
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 block|}
