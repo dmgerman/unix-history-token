@@ -11269,6 +11269,22 @@ literal|"Enclosure Services"
 expr_stmt|;
 break|break;
 case|case
+name|T_RBC
+case|:
+name|dtype
+operator|=
+literal|"Simplified Direct Access"
+expr_stmt|;
+break|break;
+case|case
+name|T_OCRW
+case|:
+name|dtype
+operator|=
+literal|"Optical Card Read/Write"
+expr_stmt|;
+break|break;
+case|case
 name|T_NODEVICE
 case|:
 name|dtype
