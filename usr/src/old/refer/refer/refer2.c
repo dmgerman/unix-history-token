@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer2.c	4.1 (Berkeley) %G%"
+literal|"@(#)refer2.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -801,6 +801,8 @@ argument_list|,
 name|line1
 argument_list|,
 name|line
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -912,6 +914,8 @@ argument_list|,
 name|line1
 argument_list|,
 name|line
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 else|else

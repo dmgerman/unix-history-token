@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer5.c	4.3 (Berkeley) %G%"
+literal|"@(#)refer5.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,8 @@ argument_list|,
 argument|nstline
 argument_list|,
 argument|endline
+argument_list|,
+argument|toindex
 argument_list|)
 end_macro
 
@@ -869,6 +871,8 @@ condition|(
 name|nf
 operator|>
 literal|0
+operator|&&
+name|toindex
 condition|)
 name|fprintf
 argument_list|(
