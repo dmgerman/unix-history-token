@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.25 1997/05/04 06:00:27 peter Exp $"
+literal|"$Id: ifconfig.c,v 1.26 1997/05/04 06:14:47 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,6 +297,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ifconfig.h"
 end_include
 
 begin_decl_stmt
@@ -968,6 +974,35 @@ block|,
 name|setifflags
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|USE_IF_MEDIA
+block|{
+literal|"media"
+block|,
+name|NEXTARG
+block|,
+name|setmedia
+block|}
+block|,
+block|{
+literal|"mediaopt"
+block|,
+name|NEXTARG
+block|,
+name|setmediaopt
+block|}
+block|,
+block|{
+literal|"-mediaopt"
+block|,
+name|NEXTARG
+block|,
+name|unsetmediaopt
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"normal"
 block|,
@@ -1544,6 +1579,32 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_IF_MEDIA
+name|fputs
+argument_list|(
+literal|"        [ media mtype ]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"        [ mediaopt mopts ]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"        [ -mediaopt mopts ]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|1
@@ -1624,7 +1685,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adlu"
+literal|"adlmu"
 argument_list|)
 operator|)
 operator|!=
@@ -1668,6 +1729,31 @@ comment|/* restrict scan to "down" interfaces */
 name|uponly
 operator|++
 expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+comment|/* show media choices in status */
+ifdef|#
+directive|ifdef
+name|USE_IF_MEDIA
+name|allmedia
+operator|++
+expr_stmt|;
+else|#
+directive|else
+name|fputs
+argument_list|(
+literal|"WARNING: if_media not compiled in!\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|usage
@@ -2450,6 +2536,16 @@ block|{
 name|status
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_IF_MEDIA
+name|media_status
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|s
