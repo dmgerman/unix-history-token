@@ -1711,6 +1711,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PROC_LOCKED
+parameter_list|(
+name|p
+parameter_list|)
+value|mtx_owned(&(p)->p_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PROC_LOCK_ASSERT
 parameter_list|(
 name|p
