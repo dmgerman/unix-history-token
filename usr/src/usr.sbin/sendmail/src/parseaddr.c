@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.22 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,6 +499,8 @@ name|pvp
 argument_list|,
 literal|3
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 operator|==
@@ -513,6 +515,8 @@ condition|(
 name|rewrite
 argument_list|(
 name|pvp
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -2336,7 +2340,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS, MATCHNCLASS) then the address in avp **	matched is saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over MATCHONE, MATCHCLASS, or MATCHNCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. **		ruleset -- the ruleset to use for rewriting. **		e -- the current envelope. ** **	Returns: **		A status code.  If EX_TEMPFAIL, higher level code should **			attempt recovery. ** **	Side Effects: **		pvp is modified. */
+comment|/* **  REWRITE -- apply rewrite rules to token vector. ** **	This routine is an ordered production system.  Each rewrite **	rule has a LHS (called the pattern) and a RHS (called the **	rewrite); 'rwr' points the the current rewrite rule. ** **	For each rewrite rule, 'avp' points the address vector we **	are trying to match against, and 'pvp' points to the pattern. **	If pvp points to a special match value (MATCHZANY, MATCHANY, **	MATCHONE, MATCHCLASS, MATCHNCLASS) then the address in avp **	matched is saved away in the match vector (pointed to by 'mvp'). ** **	When a match between avp& pvp does not match, we try to **	back out.  If we back up over MATCHONE, MATCHCLASS, or MATCHNCLASS **	we must also back out the match in mvp.  If we reach a **	MATCHANY or MATCHZANY we just extend the match and start **	over again. ** **	When we finally match, we rewrite the address vector **	and try over again. ** **	Parameters: **		pvp -- pointer to token vector. **		ruleset -- the ruleset to use for rewriting. **		reclevel -- recursion level (to catch loops). **		e -- the current envelope. ** **	Returns: **		A status code.  If EX_TEMPFAIL, higher level code should **			attempt recovery. ** **	Side Effects: **		pvp is modified. */
 end_comment
 
 begin_define
@@ -2493,6 +2497,8 @@ name|pvp
 parameter_list|,
 name|ruleset
 parameter_list|,
+name|reclevel
+parameter_list|,
 name|e
 parameter_list|)
 name|char
@@ -2502,6 +2508,9 @@ name|pvp
 decl_stmt|;
 name|int
 name|ruleset
+decl_stmt|;
+name|int
+name|reclevel
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -2696,6 +2705,25 @@ block|{
 name|syserr
 argument_list|(
 literal|"554 rewrite: illegal ruleset number %d"
+argument_list|,
+name|ruleset
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_CONFIG
+return|;
+block|}
+if|if
+condition|(
+name|reclevel
+operator|++
+operator|>
+literal|50
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"rewrite: infinite recursion, ruleset %d"
 argument_list|,
 name|ruleset
 argument_list|)
@@ -6221,6 +6249,8 @@ name|tv
 argument_list|,
 literal|4
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -7040,6 +7070,8 @@ name|pvp
 argument_list|,
 literal|3
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 operator|==
@@ -7138,6 +7170,8 @@ name|pvp
 argument_list|,
 literal|3
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 operator|==
@@ -7168,6 +7202,8 @@ name|pvp
 argument_list|,
 name|rwset
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 operator|==
@@ -7187,6 +7223,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|4
+argument_list|,
+literal|0
 argument_list|,
 name|e
 argument_list|)
@@ -7649,6 +7687,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|5
+argument_list|,
+literal|0
 argument_list|,
 name|e
 argument_list|)

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.42 (Berkeley) %G%"
+literal|"@(#)main.c	8.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4202,6 +4202,8 @@ name|atoi
 argument_list|(
 name|p
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 name|CurEnv
 argument_list|)
