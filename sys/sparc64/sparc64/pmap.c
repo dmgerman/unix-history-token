@@ -8170,6 +8170,13 @@ argument_list|(
 name|cpumask
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|vmspace
+argument_list|,
+name|vm
+argument_list|)
+expr_stmt|;
 name|stxa
 argument_list|(
 name|AA_DMMU_PCXR
