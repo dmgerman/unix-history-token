@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.46 2002/06/27 14:39:40 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.26.2.47 2002/10/26 06:24:42 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -3444,6 +3444,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kmem_alloc.h>
 end_include
 
@@ -4681,6 +4687,12 @@ name|d
 parameter_list|)
 value|ipfuiomove(a,b,c,d)
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_decl_stmt
 specifier|extern

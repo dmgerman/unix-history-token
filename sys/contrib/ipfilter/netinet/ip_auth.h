@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.3.2.5 2001/11/04 13:15:51 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed& Guido Van Rooij.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_auth.h,v 2.3.2.6 2002/10/26 07:03:00 darrenr Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -256,14 +256,10 @@ end_if
 begin_decl_stmt
 specifier|extern
 name|int
-name|fr_auth_ioctl
+name|fr_preauthcmd
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
-operator|,
-name|int
-operator|,
 name|u_long
 operator|,
 name|frentry_t
@@ -277,10 +273,47 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_auth_ioctl
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|int
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_preauthcmd
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|frentry_t
+operator|*
+operator|,
+name|frentry_t
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -294,13 +327,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|,
-name|frentry_t
-operator|*
-operator|,
-name|frentry_t
-operator|*
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
