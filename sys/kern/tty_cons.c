@@ -550,8 +550,6 @@ operator||
 name|RB_VERBOSE
 operator||
 name|RB_ASKNAME
-operator||
-name|RB_CONFIG
 operator|)
 operator|)
 operator|==

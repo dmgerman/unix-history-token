@@ -143,17 +143,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RB_CONFIG
-value|0x400
-end_define
-
-begin_comment
-comment|/* invoke user configuration routing */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RB_VERBOSE
 value|0x800
 end_define

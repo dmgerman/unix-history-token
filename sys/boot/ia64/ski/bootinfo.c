@@ -99,12 +99,6 @@ name|RB_CDROM
 block|}
 block|,
 block|{
-literal|"boot_userconfig"
-block|,
-name|RB_CONFIG
-block|}
-block|,
-block|{
 literal|"boot_ddb"
 block|,
 name|RB_KDB
@@ -259,14 +253,6 @@ case|:
 name|howto
 operator||=
 name|RB_ASKNAME
-expr_stmt|;
-break|break;
-case|case
-literal|'c'
-case|:
-name|howto
-operator||=
-name|RB_CONFIG
 expr_stmt|;
 break|break;
 case|case

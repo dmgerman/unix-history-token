@@ -10400,11 +10400,7 @@ operator|!
 operator|(
 name|boothowto
 operator|&
-operator|(
 name|RB_VERBOSE
-operator||
-name|RB_CONFIG
-operator|)
 operator|)
 condition|)
 block|{
