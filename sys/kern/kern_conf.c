@@ -201,31 +201,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_GEOM
-end_ifdef
-
-begin_comment
-comment|/* XXX: This is a hack */
-end_comment
-
-begin_function_decl
-name|void
-name|disk_dev_synth
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|struct
 name|cdevsw
@@ -249,17 +224,6 @@ operator|->
 name|si_devsw
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|NO_GEOM
-comment|/* XXX: Hack around our backwards disk code */
-name|disk_dev_synth
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|dev
