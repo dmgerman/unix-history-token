@@ -2297,19 +2297,8 @@ argument_list|,
 name|rdevmajor
 argument_list|)
 expr_stmt|;
-name|archive_entry_set_rdevmajor
-argument_list|(
-name|entry_main
-argument_list|,
-operator|(
-literal|1
-operator|<<
-literal|18
-operator|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Non-strict formatting below means we don't 			 * have to truncate here.  Not truncating improves 			 * the chance that some more modern tar archivers 			 * (such as GNU tar 1.13) can restore the full 			 * value even if they don't understand the pax 			 * extended attributes.  See my rant below about 			 * file size fields for additional details. 			 */
+comment|/* archive_entry_set_rdevmajor(entry_main, 			   rdevmajor& ((1<< 18) - 1)); */
 name|need_extension
 operator|=
 literal|1
@@ -2341,19 +2330,8 @@ argument_list|,
 name|rdevminor
 argument_list|)
 expr_stmt|;
-name|archive_entry_set_rdevminor
-argument_list|(
-name|entry_main
-argument_list|,
-operator|(
-literal|1
-operator|<<
-literal|18
-operator|)
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* Truncation is not necessary here, either. */
+comment|/* archive_entry_set_rdevminor(entry_main, 			   rdevminor& ((1<< 18) - 1)); */
 name|need_extension
 operator|=
 literal|1
@@ -2452,7 +2430,7 @@ name|need_extension
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * The following items are handled differently in "pax 	 * restricted" format.  In particular, in "pax restricted" 	 * format they won't be added unless need_extension is 	 * already set (we're already generated an extended header, so 	 * may as well include these). 	 */
+comment|/* 	 * The following items are handled differently in "pax 	 * restricted" format.  In particular, in "pax restricted" 	 * format they won't be added unless need_extension is 	 * already set (we're already generating an extended header, so 	 * may as well include these). 	 */
 if|if
 condition|(
 name|a
