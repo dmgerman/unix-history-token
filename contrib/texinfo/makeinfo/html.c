@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* html.c -- html-related utilities.    $Id: html.c,v 1.19 2002/02/23 19:12:15 karl Exp $     Copyright (C) 1999, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* html.c -- html-related utilities.    $Id: html.c,v 1.26 2002/03/23 20:39:49 karl Exp $     Copyright (C) 1999, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -165,9 +165,31 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<link href=\"http://texinfo.org/\" rel=generator-home>\n"
+literal|"<link href=\"http://www.gnu.org/software/texinfo/\" rel=generator-home>\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|copying_text
+condition|)
+block|{
+comment|/* copying_text has already been fully expanded in          begin_insertion (by full_expansion), so use insert_ rather than          add_.  It is not ideal that we include the html markup here within<head>, but the alternative is to have yet more and different          expansions of the copying text.  Yuck.  */
+name|insert_string
+argument_list|(
+literal|"<!--\n"
+argument_list|)
+expr_stmt|;
+name|insert_string
+argument_list|(
+name|copying_text
+argument_list|)
+expr_stmt|;
+name|insert_string
+argument_list|(
+literal|"-->\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|add_word
 argument_list|(
 literal|"</head>\n<body>\n"

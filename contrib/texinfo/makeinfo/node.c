@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* node.c -- nodes for Texinfo.    $Id: node.c,v 1.31 2002/02/23 19:12:15 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* node.c -- nodes for Texinfo.    $Id: node.c,v 1.34 2002/03/26 16:16:29 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -2149,7 +2149,9 @@ name|xml
 condition|)
 block|{
 name|xml_begin_document
-argument_list|()
+argument_list|(
+name|current_output_filename
+argument_list|)
 expr_stmt|;
 name|xml_begin_node
 argument_list|()
@@ -3528,7 +3530,7 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<a rel=next href=\""
+literal|"<a rel=next accesskey=n href=\""
 argument_list|)
 expr_stmt|;
 name|add_anchor_name
@@ -3580,7 +3582,7 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<a rel=previous href=\""
+literal|"<a rel=previous accesskey=p href=\""
 argument_list|)
 expr_stmt|;
 name|add_anchor_name
@@ -3632,7 +3634,7 @@ argument_list|)
 expr_stmt|;
 name|add_word
 argument_list|(
-literal|"<a rel=up href=\""
+literal|"<a rel=up accesskey=u href=\""
 argument_list|)
 expr_stmt|;
 name|add_anchor_name
@@ -4360,7 +4362,7 @@ name|NULL
 argument_list|,
 name|output_position
 operator|+
-name|output_column
+name|output_paragraph_offset
 argument_list|,
 name|line_number
 argument_list|,

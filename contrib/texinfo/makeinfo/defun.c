@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* defun.c -- @defun and friends.    $Id: defun.c,v 1.18 2002/01/22 18:01:24 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* defun.c -- @defun and friends.    $Id: defun.c,v 1.19 2002/03/18 16:54:54 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -213,6 +213,11 @@ name|level
 init|=
 literal|1
 decl_stmt|;
+name|int
+name|started_command
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -253,8 +258,7 @@ condition|)
 block|{
 comment|/* Tweak line_number to compensate for fact that              we gobbled the whole line before coming here. */
 name|line_number
-operator|-=
-literal|1
+operator|--
 expr_stmt|;
 name|line_error
 argument_list|(
@@ -265,8 +269,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|line_number
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 operator|*
 name|string_pointer
@@ -284,20 +287,36 @@ condition|(
 name|c
 operator|==
 literal|'{'
+operator|&&
+operator|!
+name|started_command
 condition|)
 name|level
-operator|+=
-literal|1
+operator|++
 expr_stmt|;
 if|if
 condition|(
 name|c
 operator|==
 literal|'}'
+operator|&&
+operator|!
+name|started_command
 condition|)
 name|level
-operator|-=
-literal|1
+operator|--
+expr_stmt|;
+comment|/* remember if at @.  */
+name|started_command
+operator|=
+operator|(
+name|c
+operator|==
+literal|'@'
+operator|&&
+operator|!
+name|started_command
+operator|)
 expr_stmt|;
 block|}
 block|}

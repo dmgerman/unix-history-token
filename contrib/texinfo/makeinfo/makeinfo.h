@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.31 2001/09/11 16:37:51 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2000, 01 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* makeinfo.h -- declarations for Makeinfo.    $Id: makeinfo.h,v 1.37 2002/03/28 16:33:48 karl Exp $     Copyright (C) 1996, 97, 98, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_ifndef
@@ -140,6 +140,10 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|text_expansion
+argument_list|()
+decl_stmt|,
+modifier|*
+name|full_expansion
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -580,6 +584,22 @@ comment|/* do HTML escapes */
 end_comment
 
 begin_comment
+comment|/* Access key number for next menu entry to be generated (1 to 9, or 10 to    mean no access key)  */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|next_menu_item_number
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Nonzero means that the use of paragraph_start_indent is inhibited.    @example uses this to line up the left columns of the example text.    A negative value for this variable is incremented each time it is used.    @noindent uses this to inhibit indentation for a single paragraph.  */
 end_comment
 
@@ -639,6 +659,23 @@ name|char
 operator|*
 argument_list|,
 name|command
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* @copying ... @end copying. */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|char
+operator|*
+argument_list|,
+name|copying_text
 argument_list|,
 name|NULL
 argument_list|)
@@ -846,7 +883,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Nonzero means that we process @ifinfo even when generating HTML.    (--ifinfo) */
+comment|/* Positive means process @ifinfo (even if not generating Info);    zero means don't process @ifinfo (even if we are);    -1 means we don't know yet.  (--ifinfo) */
 end_comment
 
 begin_expr_stmt
@@ -856,6 +893,24 @@ name|int
 argument_list|,
 name|process_info
 argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Positive means process @ifplaintext (even if not generating plain text);    zero means we don't process @ifplaintext (even if we are);    -1 means we don't know yet.  (--ifplaintext) */
+end_comment
+
+begin_expr_stmt
+name|DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|process_plaintext
+argument_list|,
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makeinfo -- convert Texinfo source into other formats.    $Id: makeinfo.c,v 1.195 2002/02/11 17:12:49 karl Exp $     Copyright (C) 1987, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Makeinfo was authored by Brian Fox (bfox@ai.mit.edu). */
+comment|/* makeinfo -- convert Texinfo source into other formats.    $Id: makeinfo.c,v 1.205 2002/03/28 16:33:48 karl Exp $     Copyright (C) 1987, 92, 93, 94, 95, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Makeinfo was authored by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -149,6 +149,16 @@ begin_decl_stmt
 name|char
 modifier|*
 name|command_output_filename
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|save_command_output_filename
 init|=
 name|NULL
 decl_stmt|;
@@ -1562,7 +1572,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
 name|puts
 argument_list|(
 name|_
@@ -1571,7 +1580,6 @@ literal|"\ Translate Texinfo source documentation to various other formats, by d
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
 name|printf
 argument_list|(
 name|_
@@ -1594,7 +1602,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Output format selection (default is to produce Info):\n\       --docbook             output DocBook rather than Info.\n\       --html                output HTML rather than Info.\n\       --no-headers          output plain text, suppressing Info node\n\                               separators and Node: lines; also, write to\n\                               standard output without --output.\n\       --xml                 output XML (TexinfoML) rather than Info.\n\ "
+literal|"\ Output format selection (default is to produce Info):\n\       --docbook             output DocBook rather than Info.\n\       --html                output HTML rather than Info.\n\       --xml                 output XML (TexinfoML) rather than Info.\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1602,11 +1610,10 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\ General output options:\n\   -E, --macro-expand FILE   output macro-expanded source to FILE.\n\                             ignoring any @setfilename.\n\       --no-split            suppress splitting of Info or HTML output,\n\                             generate only one output file.\n\       --number-sections     output chapter and sectioning numbers.\n\   -o, --output=FILE         output to FILE (directory if split HTML),\n\ "
+literal|"\ General output options:\n\   -E, --macro-expand FILE   output macro-expanded source to FILE.\n\                             ignoring any @setfilename.\n\       --no-headers          suppress node separators, Node: lines, and menus\n\                               from Info output (thus producing plain text)\n\                               or from HTML (thus producing shorter output);\n\                               also, write to standard output by default.\n\       --no-split            suppress splitting of Info or HTML output,\n\                             generate only one output file.\n\       --number-sections     output chapter and sectioning numbers.\n\   -o, --output=FILE         output to FILE (directory if split HTML),\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
 name|printf
 argument_list|(
 name|_
@@ -1627,7 +1634,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
 name|puts
 argument_list|(
 name|_
@@ -1636,39 +1642,37 @@ literal|"\ Input file options:\n\       --commands-in-node-names   allow @ comma
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
 name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Conditional processing in input:\n\      --ifhtml      process @ifhtml and @html even if not generating HTML.\n\      --ifinfo      process @ifinfo text even when generating HTML.\n\      --iftex       process @iftex and @tex text; implies --no-split.\n\      --no-ifhtml   do not process @ifhtml and @html text.\n\      --no-ifinfo   do not process @ifinfo text.\n\      --no-iftex    do not process @iftex and @tex text.\n\ "
+literal|"\ Conditional processing in input:\n\   --ifhtml          process @ifhtml and @html even if not generating HTML.\n\   --ifinfo          process @ifinfo even if not generating Info.\n\   --ifplaintext     process @ifplaintext even if not generating plain text.\n\   --iftex           process @iftex and @tex; implies --no-split.\n\   --no-ifhtml       do not process @ifhtml and @html text.\n\   --no-ifinfo       do not process @ifinfo text.\n\   --no-ifplaintext  do not process @ifplaintext text.\n\   --no-iftex        do not process @iftex and @tex text.\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
 name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\   The defaults for the @if... conditionals depend on the output format:\n\   if generating HTML, --ifhtml is on and the others are off;\n\   if generating Info or plain text, --ifinfo is on and the others are off.\n\ "
+literal|"\   The defaults for the @if... conditionals depend on the output format:\n\   if generating HTML, --ifhtml is on and the others are off;\n\   if generating Info, --ifinfo is on and the others are off;\n\   if generating plain text, --ifplaintext is on and the others are off;\n\ "
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
-name|puts
+name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Examples:\n\   makeinfo foo.texi                     write Info to foo's @setfilename\n\   makeinfo --html foo.texi              write HTML to foo's @setfilename\n\   makeinfo --no-headers -o - foo.texi   write plain text to standard output\n\   makeinfo --number-sections foo.texi   write Info with numbered sections\n\   makeinfo --no-split foo.texi          write one Info file however big\n\ "
+literal|"\ Examples:\n\   makeinfo foo.texi                     write Info to foo's @setfilename\n\   makeinfo --html foo.texi              write HTML to @setfilename\n\   makeinfo --xml foo.texi               write XML to @setfilename\n\   makeinfo --docbook foo.texi           write DocBook XML to @setfilename\n\   makeinfo --no-headers foo.texi        write plain text to standard output\n\ \n\   makeinfo --html --no-headers foo.texi write html without node lines, menus\n\   makeinfo --number-sections foo.texi   write Info with numbered sections\n\   makeinfo --no-split foo.texi          write one Info file however big\n\ "
 argument_list|)
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
-comment|/* xgettext: no-wrap */
 name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Email bug reports to bug-texinfo@gnu.org,\n\ general questions and discussion to help-texinfo@gnu.org."
+literal|"\n\ Email bug reports to bug-texinfo@gnu.org,\n\ general questions and discussion to help-texinfo@gnu.org.\n\ Texinfo home page: http://www.gnu.org/software/texinfo/"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1803,6 +1807,17 @@ literal|1
 block|}
 block|,
 block|{
+literal|"ifplaintext"
+block|,
+literal|0
+block|,
+operator|&
+name|process_plaintext
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"iftex"
 block|,
 literal|0
@@ -1852,6 +1867,17 @@ literal|0
 block|,
 operator|&
 name|process_info
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"no-ifplaintext"
+block|,
+literal|0
+block|,
+operator|&
+name|process_plaintext
 block|,
 literal|0
 block|}
@@ -2433,6 +2459,10 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+name|save_command_output_filename
+operator|=
+name|command_output_filename
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -2743,10 +2773,6 @@ name|process_html
 operator|=
 literal|1
 expr_stmt|;
-name|process_info
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|'x'
@@ -2870,6 +2896,44 @@ name|xstrdup
 argument_list|(
 literal|"-"
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|process_info
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* no explicit --[no-]ifinfo option, so we'll do @ifinfo          if we're generating info or (for compatibility) plain text.  */
+name|process_info
+operator|=
+operator|!
+name|html
+operator|&&
+operator|!
+name|xml
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|process_plaintext
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* no explicit --[no-]ifplaintext option, so we'll do @ifplaintext          if we're generating plain text.  */
+name|process_plaintext
+operator|=
+name|no_headers
+operator|&&
+operator|!
+name|html
+operator|&&
+operator|!
+name|xml
 expr_stmt|;
 block|}
 if|if
@@ -4770,7 +4834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given OUTPUT_FILENAME == ``/foo/bar/baz.html'', return    ``/foo/bar/baz/baz.html''.       Split html output goes into the subdirectory of the toplevel   filename, without extension.  For example:        @setfilename foo.info    produces output in files foo/index.html, foo/second-node.html, .... */
+comment|/* Given OUTPUT_FILENAME == ``/foo/bar/baz.html'', return    "/foo/bar/baz/baz.html".  This routine is called only if html&& splitting.       Split html output goes into the subdirectory of the toplevel   filename, without extension.  For example:       @setfilename foo.info   produces output in files foo/index.html, foo/second-node.html, ...      But if the user said -o foo.whatever on the cmd line, then use   foo.whatever unchanged.  */
 end_comment
 
 begin_function
@@ -4808,8 +4872,9 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
-name|int
-name|max_name_len
+name|struct
+name|stat
+name|st
 decl_stmt|;
 specifier|static
 specifier|const
@@ -4924,27 +4989,30 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|save_command_output_filename
+operator|&&
+name|STREQ
+argument_list|(
+name|output_filename
+argument_list|,
+name|save_command_output_filename
+argument_list|)
+condition|)
+name|subdir
+operator|=
+name|basename
+expr_stmt|;
+comment|/* from user, use unchanged */
+else|else
 name|subdir
 operator|=
 name|base
 expr_stmt|;
-name|max_name_len
-operator|=
-name|strlen
-argument_list|(
-name|basename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|index_len
-operator|>
-name|max_name_len
-condition|)
-name|max_name_len
-operator|=
-name|index_len
-expr_stmt|;
+comment|/* implicit, omit suffix */
+block|}
 name|free
 argument_list|(
 name|output_filename
@@ -4963,12 +5031,12 @@ literal|1
 operator|+
 name|strlen
 argument_list|(
-name|subdir
+name|basename
 argument_list|)
 operator|+
 literal|1
 operator|+
-name|max_name_len
+name|index_len
 operator|+
 literal|1
 argument_list|)
@@ -5016,6 +5084,27 @@ operator|&&
 name|errno
 operator|!=
 name|EEXIST
+comment|/* output_filename might exist, but be a non-directory.  */
+operator|||
+operator|(
+name|stat
+argument_list|(
+name|output_filename
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|!
+name|S_ISDIR
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* that failed, try subdir name with .html */
@@ -5058,12 +5147,61 @@ argument_list|)
 operator|==
 operator|-
 literal|1
-operator|&&
-name|errno
-operator|!=
-name|EEXIST
 condition|)
 block|{
+name|char
+modifier|*
+name|errmsg
+init|=
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|errno
+operator|==
+name|EEXIST
+ifdef|#
+directive|ifdef
+name|__MSDOS__
+operator|||
+name|errno
+operator|==
+name|EACCES
+endif|#
+directive|endif
+operator|)
+operator|&&
+operator|(
+name|stat
+argument_list|(
+name|output_filename
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|!
+name|S_ISDIR
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+condition|)
+name|errmsg
+operator|=
+name|_
+argument_list|(
+literal|"File exists, but is not a directory"
+argument_list|)
+expr_stmt|;
 name|line_error
 argument_list|(
 name|_
@@ -5073,10 +5211,7 @@ argument_list|)
 argument_list|,
 name|output_filename
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|errmsg
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5531,6 +5666,7 @@ name|command_output_filename
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* for included files or whatever */
 block|}
 name|canon_white
 argument_list|(
@@ -6375,7 +6511,35 @@ expr_stmt|;
 block|}
 name|add_word
 argument_list|(
-literal|"<li><a href=\""
+literal|"<li><a"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|next_menu_item_number
+operator|<=
+literal|9
+condition|)
+block|{
+name|add_word
+argument_list|(
+literal|" accesskey="
+argument_list|)
+expr_stmt|;
+name|add_word_args
+argument_list|(
+literal|"%d"
+argument_list|,
+name|next_menu_item_number
+argument_list|)
+expr_stmt|;
+name|next_menu_item_number
+operator|++
+expr_stmt|;
+block|}
+name|add_word
+argument_list|(
+literal|" href=\""
 argument_list|)
 expr_stmt|;
 name|string
@@ -14042,6 +14206,17 @@ block|}
 end_function
 
 begin_comment
+comment|/* FIXME: this is an arbitrary limit.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXECUTE_STRING_MAX
+value|16*1024
+end_define
+
+begin_comment
 comment|/* Execute the string produced by formatting the ARGs with FORMAT.  This    is like submitting a new file with @include. */
 end_comment
 
@@ -14099,7 +14274,7 @@ name|es
 operator|=
 name|get_execution_string
 argument_list|(
-literal|4000
+name|EXECUTE_STRING_MAX
 argument_list|)
 expr_stmt|;
 name|temp_string
@@ -14218,13 +14393,106 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return what would be output for STR (in newly-malloced memory), i.e.,    expand Texinfo commands.  If IMPLICIT_CODE is set, expand @code{STR}.  */
+comment|/* Return what would be output for STR (in newly-malloced memory), i.e.,    expand Texinfo commands.  If IMPLICIT_CODE is set, expand @code{STR}.    This is generally used for short texts; filling, indentation, and    html escapes are disabled.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
 name|expansion
+parameter_list|(
+name|str
+parameter_list|,
+name|implicit_code
+parameter_list|)
+name|char
+modifier|*
+name|str
+decl_stmt|;
+name|int
+name|implicit_code
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|result
+decl_stmt|;
+comment|/* Inhibit indentation and filling, so that extra newlines      are not added to the expansion.  (This is undesirable if      we write the expanded text to macro_expansion_output_stream.)  */
+name|int
+name|saved_filling_enabled
+init|=
+name|filling_enabled
+decl_stmt|;
+name|int
+name|saved_indented_fill
+init|=
+name|indented_fill
+decl_stmt|;
+name|int
+name|saved_no_indent
+init|=
+name|no_indent
+decl_stmt|;
+name|int
+name|saved_escape_html
+init|=
+name|escape_html
+decl_stmt|;
+name|filling_enabled
+operator|=
+literal|0
+expr_stmt|;
+name|indented_fill
+operator|=
+literal|0
+expr_stmt|;
+name|no_indent
+operator|=
+literal|1
+expr_stmt|;
+name|escape_html
+operator|=
+literal|0
+expr_stmt|;
+name|result
+operator|=
+name|full_expansion
+argument_list|(
+name|str
+argument_list|,
+name|implicit_code
+argument_list|)
+expr_stmt|;
+name|filling_enabled
+operator|=
+name|saved_filling_enabled
+expr_stmt|;
+name|indented_fill
+operator|=
+name|saved_indented_fill
+expr_stmt|;
+name|no_indent
+operator|=
+name|saved_no_indent
+expr_stmt|;
+name|escape_html
+operator|=
+name|saved_escape_html
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Expand STR (or @code{STR} if IMPLICIT_CODE is nonzero).  No change to    any formatting parameters -- filling, indentation, html escapes,    etc., are not reset.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|full_expansion
 parameter_list|(
 name|str
 parameter_list|,
@@ -14261,27 +14529,7 @@ name|saved_output_column
 init|=
 name|output_column
 decl_stmt|;
-comment|/* Inhibit indentation and filling, so that extra newlines      are not added to the expansion.  (This is undesirable if      we write the expanded text to macro_expansion_output_stream.)  */
-name|int
-name|saved_filling_enabled
-init|=
-name|filling_enabled
-decl_stmt|;
-name|int
-name|saved_indented_fill
-init|=
-name|indented_fill
-decl_stmt|;
-name|int
-name|saved_no_indent
-init|=
-name|no_indent
-decl_stmt|;
-name|int
-name|saved_escape_html
-init|=
-name|escape_html
-decl_stmt|;
+comment|/* More output state to save.  */
 name|int
 name|saved_meta_pos
 init|=
@@ -14311,22 +14559,6 @@ argument_list|)
 else|:
 name|NULL
 decl_stmt|;
-name|filling_enabled
-operator|=
-literal|0
-expr_stmt|;
-name|indented_fill
-operator|=
-literal|0
-expr_stmt|;
-name|no_indent
-operator|=
-literal|1
-expr_stmt|;
-name|escape_html
-operator|=
-literal|0
-expr_stmt|;
 name|inhibit_output_flushing
 argument_list|()
 expr_stmt|;
@@ -14334,6 +14566,41 @@ name|paragraph_is_open
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+operator|>
+operator|(
+name|implicit_code
+condition|?
+name|EXECUTE_STRING_MAX
+operator|-
+literal|1
+operator|-
+sizeof|sizeof
+argument_list|(
+literal|"@code{}"
+argument_list|)
+else|:
+name|EXECUTE_STRING_MAX
+operator|-
+literal|1
+operator|)
+condition|)
+name|line_error
+argument_list|(
+name|_
+argument_list|(
+literal|"`%.40s...' is too long for expansion; not expanded"
+argument_list|)
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+else|else
 name|execute_string
 argument_list|(
 name|implicit_code
@@ -14411,22 +14678,6 @@ name|output_column
 operator|=
 name|saved_output_column
 expr_stmt|;
-name|filling_enabled
-operator|=
-name|saved_filling_enabled
-expr_stmt|;
-name|indented_fill
-operator|=
-name|saved_indented_fill
-expr_stmt|;
-name|no_indent
-operator|=
-name|saved_no_indent
-expr_stmt|;
-name|escape_html
-operator|=
-name|saved_escape_html
-expr_stmt|;
 name|meta_char_pos
 operator|=
 name|saved_meta_pos
@@ -14470,7 +14721,16 @@ name|save_html
 init|=
 name|html
 decl_stmt|;
+name|int
+name|save_xml
+init|=
+name|xml
+decl_stmt|;
 name|html
+operator|=
+literal|0
+expr_stmt|;
+name|xml
 operator|=
 literal|0
 expr_stmt|;
@@ -14486,6 +14746,10 @@ expr_stmt|;
 name|html
 operator|=
 name|save_html
+expr_stmt|;
+name|xml
+operator|=
+name|save_xml
 expr_stmt|;
 return|return
 name|ret

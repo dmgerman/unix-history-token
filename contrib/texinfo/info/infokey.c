@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infokey.c -- compile ~/.infokey to ~/.info.    $Id: infokey.c,v 1.5 2002/02/26 16:17:57 karl Exp $     Copyright (C) 1999, 2001, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Andrew Bettison<andrewb@zip.com.au>. */
+comment|/* infokey.c -- compile ~/.infokey to ~/.info.    $Id: infokey.c,v 1.10 2002/03/19 14:36:49 karl Exp $     Copyright (C) 1999, 2001, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Andrew Bettison<andrewb@zip.com.au>. */
 end_comment
 
 begin_include
@@ -195,7 +195,7 @@ block|,
 name|var
 init|=
 literal|2
-block|,   }
+block|}
 enum|;
 end_enum
 
@@ -958,7 +958,7 @@ block|,
 name|got_equals
 block|,
 name|get_value
-block|,     }
+block|}
 name|state
 init|=
 name|start_of_line
@@ -980,7 +980,7 @@ block|,
 name|octal
 block|,
 name|special_key
-block|,     }
+block|}
 name|seqstate
 enum|;
 comment|/* used if state == get_keyseq */
@@ -3133,10 +3133,18 @@ name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"\ Usage: %s [OPTION]... [INPUT-FILE]\n\ \n\ Compile infokey source file to infokey file.  Reads INPUT-FILE (default\n\ $HOME/.infokey) and writes compiled key file to (by default) $HOME/.info.\n\ \n\ Options:\n\   --output FILE        output to FILE instead of $HOME/.info\n\   --help               display this help and exit.\n\   --version            display version information and exit.\n\ \n\ Email bug reports to bug-texinfo@gnu.org,\n\ general questions and discussion to help-texinfo@gnu.org.\n\ "
+literal|"\ Usage: %s [OPTION]... [INPUT-FILE]\n\ \n\ Compile infokey source file to infokey file.  Reads INPUT-FILE (default\n\ $HOME/.infokey) and writes compiled key file to (by default) $HOME/.info.\n\ \n\ Options:\n\   --output FILE        output to FILE instead of $HOME/.info\n\   --help               display this help and exit.\n\   --version            display version information and exit.\n\ "
 argument_list|)
 argument_list|,
 name|program_name
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"\n\ Email bug reports to bug-texinfo@gnu.org,\n\ general questions and discussion to help-texinfo@gnu.org.\n\ Texinfo home page: http://www.gnu.org/software/texinfo/"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xexit
