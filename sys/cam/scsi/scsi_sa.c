@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.12 1998/12/28 19:21:12 mjacob Exp $  */
+comment|/*  * Implementation of SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.c,v 1.13 1999/01/11 18:26:25 mjacob Exp $  */
 end_comment
 
 begin_include
@@ -617,9 +617,15 @@ name|struct
 name|scsi_inquiry_pattern
 name|inq_pat
 decl_stmt|;
+comment|/* matching pattern */
 name|sa_quirks
 name|quirks
 decl_stmt|;
+comment|/* specific quirk type */
+name|u_int32_t
+name|prefblk
+decl_stmt|;
+comment|/* preferred blocksize when in fixed mode */
 block|}
 struct|;
 end_struct
@@ -646,6 +652,8 @@ literal|"*"
 block|}
 block|,
 name|SA_QUIRK_NOCOMP
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -656,12 +664,32 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"ARCHIVE"
 block|,
-literal|"VIPER"
+literal|"VIPER 150*"
 block|,
-literal|""
+literal|"*"
 block|}
 block|,
 name|SA_QUIRK_FIXED
+block|,
+literal|512
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"ARCHIVE"
+block|,
+literal|"VIPER 2525*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_FIXED
+block|,
+literal|512
 block|}
 block|,
 block|{
@@ -672,12 +700,14 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"HP"
 block|,
-literal|"T4000S"
+literal|"T4000S*"
 block|,
-literal|""
+literal|"*"
 block|}
 block|,
 name|SA_QUIRK_FIXED
+block|,
+literal|512
 block|}
 block|,
 block|{
@@ -694,6 +724,44 @@ literal|"U07:"
 block|}
 block|,
 name|SA_QUIRK_NOCOMP
+block|,
+literal|512
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"TANDBERG"
+block|,
+literal|" TDC 4200"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_NOCOMP
+block|,
+literal|512
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"WANGTEK"
+block|,
+literal|"5525ES*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_FIXED
+block|,
+literal|512
 block|}
 block|}
 decl_stmt|;
@@ -928,6 +996,9 @@ name|density
 parameter_list|,
 name|u_int32_t
 name|comp_algorithm
+parameter_list|,
+name|u_int32_t
+name|sense_flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3413,6 +3484,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3616,6 +3689,8 @@ argument_list|,
 name|count
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3663,6 +3738,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|count
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4557,6 +4634,7 @@ name|match
 operator|!=
 name|NULL
 condition|)
+block|{
 name|softc
 operator|->
 name|quirks
@@ -4572,6 +4650,50 @@ operator|)
 operator|->
 name|quirks
 expr_stmt|;
+name|softc
+operator|->
+name|last_media_blksize
+operator|=
+operator|(
+operator|(
+expr|struct
+name|sa_quirk_entry
+operator|*
+operator|)
+name|match
+operator|)
+operator|->
+name|prefblk
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CAMDEBUG
+name|xpt_print_path
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"found quirk entry %d\n"
+argument_list|,
+operator|(
+operator|(
+expr|struct
+name|sa_quirk_entry
+operator|*
+operator|)
+name|match
+operator|)
+operator|-
+name|sa_quirk_table
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 else|else
 name|softc
 operator|->
@@ -5929,8 +6051,7 @@ name|scsi_read_block_limits
 argument_list|(
 name|csio
 argument_list|,
-comment|/*retries*/
-literal|1
+literal|5
 argument_list|,
 name|sadone
 argument_list|,
@@ -5940,7 +6061,6 @@ name|rblim
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-comment|/*timeout*/
 literal|5000
 argument_list|)
 expr_stmt|;
@@ -5952,10 +6072,8 @@ name|ccb
 argument_list|,
 name|saerror
 argument_list|,
-comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
 operator|&
@@ -6307,6 +6425,7 @@ block|}
 comment|/* 		 * Now put ourselves into the right frame of mind based 		 * upon quirks... 		 */
 name|tryagain
 label|:
+comment|/* 		 * If we want to be in FIXED mode and our current blocksize 		 * is not equal to our last blocksize (if nonzero), try and 		 * set ourselves to this last blocksize (as the 'preferred' 		 * block size).  The initial quirkmatch at registry sets the 		 * initial 'last' blocksize. If, for whatever reason, this 		 * 'last' blocksize is zero, set the blocksize to 512, 		 * or min_blk if that's larger. 		 */
 if|if
 condition|(
 operator|(
@@ -6321,8 +6440,10 @@ operator|(
 name|softc
 operator|->
 name|media_blksize
-operator|==
-literal|0
+operator|!=
+name|softc
+operator|->
+name|last_media_blksize
 operator|)
 condition|)
 block|{
@@ -6347,7 +6468,7 @@ name|softc
 operator|->
 name|media_blksize
 operator|=
-name|BLKDEV_IOSIZE
+literal|512
 expr_stmt|;
 if|if
 condition|(
@@ -6385,6 +6506,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|SF_NO_PRINT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6461,6 +6584,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|SF_NO_PRINT
 argument_list|)
 expr_stmt|;
 if|if
@@ -6468,25 +6593,10 @@ condition|(
 name|error
 condition|)
 block|{
-comment|/* 				 * If this fails and we were guessing, just 				 * assume that we got it wrong and go try 				 * fixed block mode... 				 */
-name|xpt_print_path
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|)
-expr_stmt|;
+comment|/* 				 * If this fails and we were guessing, just 				 * assume that we got it wrong and go try 				 * fixed block mode. Don't even check against 				 * density code at this point. 				 */
 if|if
 condition|(
 name|guessing
-operator|&&
-name|softc
-operator|->
-name|media_density
-operator|==
-name|SCSI_DEFAULT_DENSITY
 condition|)
 block|{
 name|softc
@@ -6520,6 +6630,15 @@ goto|goto
 name|tryagain
 goto|;
 block|}
+name|xpt_print_path
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"unable to set variable blocksize\n"
@@ -6724,6 +6843,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|SF_NO_PRINT
 argument_list|)
 expr_stmt|;
 if|if
@@ -8390,6 +8511,9 @@ name|density
 parameter_list|,
 name|u_int32_t
 name|comp_algorithm
+parameter_list|,
+name|u_int32_t
+name|sense_flags
 parameter_list|)
 block|{
 name|struct
@@ -8985,8 +9109,7 @@ argument_list|,
 comment|/*cam_flags*/
 literal|0
 argument_list|,
-comment|/*sense_flags*/
-literal|0
+name|sense_flags
 argument_list|,
 operator|&
 name|softc
