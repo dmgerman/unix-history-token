@@ -303,6 +303,14 @@ name|current_umask
 operator|=
 name|newdir_umask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|same_permissions_option
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -451,6 +459,9 @@ argument_list|(
 name|file_name
 argument_list|,
 name|mode
+operator|&
+operator|~
+name|current_umask
 argument_list|)
 operator|!=
 literal|0
