@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.14 1996/06/14 22:11:38 nate Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.15 1996/07/19 13:20:05 amurai Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -192,27 +192,6 @@ end_struct
 begin_comment
 comment|/*  * Some global constants  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_MIN_LEN
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_MAX_LEN
-value|1518
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ADDR_LEN
-value|6
-end_define
 
 begin_define
 define|#
@@ -1555,20 +1534,6 @@ define|#
 directive|define
 name|UTP
 value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ADDR_LEN
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_MAX
-value|1536
 end_define
 
 begin_define

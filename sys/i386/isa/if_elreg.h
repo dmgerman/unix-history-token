@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * $Id: if_elreg.h,v 1.2 1994/08/02 07:39:34 davidg Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * $Id: if_elreg.h,v 1.3 1996/01/30 22:55:41 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -594,13 +594,6 @@ define|#
 directive|define
 name|EL_BUFSIZ
 value|2048
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ADDR_LEN
-value|6
 end_define
 
 end_unit

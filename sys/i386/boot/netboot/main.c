@@ -2408,7 +2408,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 condition|;
 name|i
 operator|++
@@ -2430,7 +2430,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 condition|)
 block|{
 comment|/* Need to do arp request */
@@ -2456,7 +2456,7 @@ name|arpreq
 operator|.
 name|hwlen
 operator|=
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 expr_stmt|;
 name|arpreq
 operator|.
@@ -2486,7 +2486,7 @@ name|arpreq
 operator|.
 name|shwaddr
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|convert_ipaddr
@@ -2510,7 +2510,7 @@ name|arpreq
 operator|.
 name|thwaddr
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|convert_ipaddr
@@ -2762,7 +2762,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3004,7 +3004,7 @@ name|bp
 operator|.
 name|bp_hlen
 operator|=
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 expr_stmt|;
 name|bp
 operator|.
@@ -3028,7 +3028,7 @@ name|bp
 operator|.
 name|bp_hwaddr
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 while|while
@@ -3160,7 +3160,7 @@ decl_stmt|;
 name|int
 name|protohdrlen
 init|=
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3211,7 +3211,7 @@ operator|&&
 operator|(
 name|packetlen
 operator|>=
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3251,7 +3251,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3292,7 +3292,7 @@ index|]
 operator|.
 name|node
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 return|return
@@ -3343,7 +3343,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3386,7 +3386,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3406,7 +3406,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -3421,7 +3421,7 @@ operator|(
 name|packetlen
 operator|>=
 operator|(
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 operator|+
 sizeof|sizeof
 argument_list|(
@@ -3493,7 +3493,7 @@ index|]
 operator|.
 name|node
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Kill arp */
@@ -3521,7 +3521,7 @@ index|]
 operator|.
 name|node
 argument_list|,
-name|ETHER_ADDR_SIZE
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Kill arp */
@@ -3600,7 +3600,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if

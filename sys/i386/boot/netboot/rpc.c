@@ -177,7 +177,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -420,7 +420,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -708,7 +708,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -1006,7 +1006,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if

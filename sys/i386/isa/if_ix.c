@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.20 1996/06/12 05:03:41 gpalmer Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.21 1996/06/25 20:30:18 bde Exp $  */
 end_comment
 
 begin_include
@@ -2816,13 +2816,13 @@ name|ifp
 operator|->
 name|if_addrlen
 operator|=
-name|ETHER_ADDRESS_LENGTH
+name|ETHER_ADDR_LEN
 expr_stmt|;
 name|ifp
 operator|->
 name|if_hdrlen
 operator|=
-name|ETHER_HEADER_LENGTH
+name|ETHER_HDR_LEN
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3566,7 +3566,7 @@ name|cb_ias
 operator|->
 name|source
 argument_list|,
-name|ETHER_ADDRESS_LENGTH
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 name|scb
@@ -6615,11 +6615,11 @@ if|if
 condition|(
 name|length
 operator|<
-name|ETHER_MIN_LENGTH
+name|ETHER_MIN_LEN
 condition|)
 name|length
 operator|=
-name|ETHER_MIN_LENGTH
+name|ETHER_MIN_LEN
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6628,7 +6628,7 @@ if|if
 condition|(
 name|length
 operator|>
-name|ETHER_MAX_LENGTH
+name|ETHER_MAX_LEN
 condition|)
 block|{
 comment|/* XXX  			 * This should never ever happen, if it does 			 * we probable screwed up all sorts of board data 			 * in the above bcopy's and should probably shut 			 * down, but for now just issue a warning that 			 * something is real wrong 			 */
@@ -6640,7 +6640,7 @@ name|unit
 argument_list|,
 name|length
 argument_list|,
-name|ETHER_MAX_LENGTH
+name|ETHER_MAX_LEN
 argument_list|)
 expr_stmt|;
 block|}

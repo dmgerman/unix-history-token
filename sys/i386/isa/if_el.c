@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.23 1996/02/06 18:50:40 wollman Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.24 1996/06/18 01:22:20 bde Exp $  */
 end_comment
 
 begin_comment
@@ -232,20 +232,6 @@ include|#
 directive|include
 file|<i386/isa/if_elreg.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ETHER_MIN_LEN
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_MAX_LEN
-value|1518
-end_define
 
 begin_comment
 comment|/* For debugging convenience */

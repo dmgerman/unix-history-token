@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.15 1996/06/12 05:03:40 gpalmer Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.16 1996/06/18 01:22:21 bde Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -961,76 +961,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Ethernet constants.  To be defined in if_ehter.h?  FIXME.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_MIN_LEN
-value|60
-end_define
-
-begin_comment
-comment|/* with header, without CRC. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_MAX_LEN
-value|1514
-end_define
-
-begin_comment
-comment|/* with header, without CRC. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_ADDR_LEN
-value|6
-end_define
-
-begin_comment
-comment|/* number of bytes in an address.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_TYPE_LEN
-value|2
-end_define
-
-begin_comment
-comment|/* number of bytes in a data type field.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_HDR_SIZE
-value|14
-end_define
-
-begin_comment
-comment|/* src addr, dst addr, and data type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_CRC_LEN
-value|4
-end_define
-
-begin_comment
-comment|/* number of bytes in CRC field.  */
-end_comment
 
 begin_comment
 comment|/* Driver struct used in the config code.  This must be public (external.)  */
@@ -7120,6 +7050,8 @@ operator|->
 name|txb_free
 operator|<
 name|ETHER_MAX_LEN
+operator|-
+name|ETHER_CRC_LEN
 operator|+
 name|FE_DATA_LEN_LEN
 condition|)
@@ -7837,10 +7769,14 @@ condition|(
 name|len
 operator|>
 name|ETHER_MAX_LEN
+operator|-
+name|ETHER_CRC_LEN
 operator|||
 name|len
 operator|<
-name|ETHER_HDR_SIZE
+name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
 condition|)
 block|{
 if|#
@@ -7860,7 +7796,9 @@ name|sc_unit
 argument_list|,
 name|len
 operator|<
-name|ETHER_HDR_SIZE
+name|ETHER_MIN_SIZE
+operator|-
+name|ETHER_CRC_SIZE
 condition|?
 literal|"partial"
 else|:
@@ -7896,6 +7834,8 @@ condition|(
 name|len
 operator|<
 name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
 condition|)
 block|{
 name|log
@@ -8977,6 +8917,8 @@ operator|(
 name|MCLBYTES
 operator|<
 name|ETHER_MAX_LEN
+operator|-
+name|ETHER_CRC_LEN
 operator|+
 name|NFS_MAGIC_OFFSET
 operator|)
@@ -9448,32 +9390,23 @@ literal|1
 comment|/* 	 * Should never send big packets.  If such a packet is passed, 	 * it should be a bug of upper layer.  We just ignore it. 	 * ... Partial (too short) packets, neither. 	 */
 if|if
 condition|(
+name|ETHER_IS_VALID_LEN
+argument_list|(
 name|length
-operator|>
-name|ETHER_MAX_LEN
-operator|||
-name|length
-operator|<
-name|ETHER_HDR_SIZE
+operator|+
+name|ETHER_CRC_LEN
+argument_list|)
 condition|)
 block|{
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"fe%d: got a %s packet (%u bytes) to send\n"
+literal|"fe%d: got a out-of-spes packet (%u bytes) to send\n"
 argument_list|,
 name|sc
 operator|->
 name|sc_unit
-argument_list|,
-name|length
-operator|<
-name|ETHER_HDR_SIZE
-condition|?
-literal|"partial"
-else|:
-literal|"big"
 argument_list|,
 name|length
 argument_list|)
@@ -9499,6 +9432,8 @@ argument_list|(
 name|length
 argument_list|,
 name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9525,6 +9460,8 @@ argument_list|(
 name|length
 argument_list|,
 name|ETHER_MIN_LEN
+operator|-
+name|ETHER_CRC_LEN
 argument_list|)
 expr_stmt|;
 name|sc

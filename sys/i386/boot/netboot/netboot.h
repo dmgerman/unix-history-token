@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -230,42 +236,6 @@ define|#
 directive|define
 name|FALSE
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ADDR_SIZE
-value|6
-end_define
-
-begin_comment
-comment|/* Size of Ethernet address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_HDR_SIZE
-value|14
-end_define
-
-begin_comment
-comment|/* Size of ethernet header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETH_MIN_PACKET
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETH_MAX_PACKET
-value|1518
 end_define
 
 begin_define

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.31 1996/06/25 20:30:30 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.32 1996/07/12 04:11:23 bde Exp $  */
 end_comment
 
 begin_include
@@ -764,34 +764,6 @@ literal|"ze"
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|ETHER_MIN_LEN
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_MAX_LEN
-value|1518
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ADDR_LEN
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_HDR_SIZE
-value|14
-end_define
 
 begin_decl_stmt
 specifier|static

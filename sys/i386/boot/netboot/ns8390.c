@@ -137,7 +137,7 @@ begin_decl_stmt
 name|char
 name|packet
 index|[
-name|ETH_MAX_PACKET
+name|ETHER_MAX_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -2220,7 +2220,7 @@ while|while
 condition|(
 name|s
 operator|<
-name|ETH_MIN_PACKET
+name|ETHER_MIN_LAN
 condition|)
 operator|*
 operator|(
@@ -2361,7 +2361,7 @@ while|while
 condition|(
 name|s
 operator|<
-name|ETH_MIN_PACKET
+name|ETHER_MIN_LAN
 condition|)
 operator|*
 operator|(
@@ -2519,11 +2519,11 @@ if|if
 condition|(
 name|s
 operator|<
-name|ETH_MIN_PACKET
+name|ETHER_MIN_LEN
 condition|)
 name|s
 operator|=
-name|ETH_MIN_PACKET
+name|ETHER_MIN_LEN
 expr_stmt|;
 block|}
 endif|#
@@ -3177,7 +3177,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 name|convert_ipaddr

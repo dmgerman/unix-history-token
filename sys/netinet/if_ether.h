@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.h	8.3 (Berkeley) 5/2/95  *	$Id: if_ether.h,v 1.13 1995/12/09 16:06:54 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.h	8.3 (Berkeley) 5/2/95  *	$Id: if_ether.h,v 1.14 1996/03/23 01:32:30 fenner Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,50 +15,11 @@ directive|define
 name|_NETINET_IF_ETHER_H_
 end_define
 
-begin_comment
-comment|/*  * Structure of a 10Mb/s Ethernet header.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ether_header
-block|{
-name|u_char
-name|ether_dhost
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_char
-name|ether_shost
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|u_short
-name|ether_type
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Structure of a 48-bit Ethernet address.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ether_addr
-block|{
-name|u_char
-name|octet
-index|[
-literal|6
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
 
 begin_define
 define|#
@@ -130,14 +91,14 @@ begin_define
 define|#
 directive|define
 name|ETHERMTU
-value|1500
+value|(ETHER_MAX_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ETHERMIN
-value|(60-14)
+value|(ETHER_MIN_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
 end_define
 
 begin_ifdef
@@ -162,7 +123,7 @@ parameter_list|)
 define|\
 comment|/* struct in_addr *ipaddr; */
 define|\
-comment|/* u_char enaddr[6];	   */
+comment|/* u_char enaddr[ETHER_ADDR_LEN];	   */
 define|\
 value|{ \ 	(enaddr)[0] = 0x01; \ 	(enaddr)[1] = 0x00; \ 	(enaddr)[2] = 0x5e; \ 	(enaddr)[3] = ((u_char *)ipaddr)[1]& 0x7f; \ 	(enaddr)[4] = ((u_char *)ipaddr)[2]; \ 	(enaddr)[5] = ((u_char *)ipaddr)[3]; \ }
 end_define
@@ -188,7 +149,7 @@ comment|/* fixed-size header */
 name|u_char
 name|arp_sha
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* sender hardware address */
@@ -202,7 +163,7 @@ comment|/* sender protocol address */
 name|u_char
 name|arp_tha
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* target hardware address */
@@ -269,7 +230,7 @@ comment|/* network-visible interface */
 name|u_char
 name|ac_enaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* ethernet hardware address */
@@ -359,7 +320,7 @@ specifier|extern
 name|u_char
 name|etherbroadcastaddr
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -369,7 +330,7 @@ specifier|extern
 name|u_char
 name|ether_ipmulticast_min
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -379,7 +340,7 @@ specifier|extern
 name|u_char
 name|ether_ipmulticast_max
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -490,14 +451,14 @@ block|{
 name|u_char
 name|enm_addrlo
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* low  or only address of range */
 name|u_char
 name|enm_addrhi
 index|[
-literal|6
+name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
 comment|/* high or only address of range */
@@ -556,15 +517,15 @@ parameter_list|,
 name|enm
 parameter_list|)
 define|\
-comment|/* u_char addrlo[6]; */
+comment|/* u_char addrlo[ETHER_ADDR_LEN]; */
 define|\
-comment|/* u_char addrhi[6]; */
+comment|/* u_char addrhi[ETHER_ADDR_LEN]; */
 define|\
 comment|/* struct arpcom *ac; */
 define|\
 comment|/* struct ether_multi *enm; */
 define|\
-value|{ \ 	for ((enm) = (ac)->ac_multiaddrs; \ 	    (enm) != NULL&& \ 	    (bcmp((enm)->enm_addrlo, (addrlo), 6) != 0 || \ 	     bcmp((enm)->enm_addrhi, (addrhi), 6) != 0); \ 		(enm) = (enm)->enm_next); \ }
+value|{ \ 	for ((enm) = (ac)->ac_multiaddrs; \ 	    (enm) != NULL&& \ 	    (bcmp((enm)->enm_addrlo, (addrlo), ETHER_ADDR_LEN) != 0 || \ 	     bcmp((enm)->enm_addrhi, (addrhi), ETHER_ADDR_LEN) != 0); \ 		(enm) = (enm)->enm_next); \ }
 end_define
 
 begin_comment
