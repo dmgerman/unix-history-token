@@ -907,6 +907,9 @@ directive|define
 name|SBP_DEV_RESET
 value|0
 comment|/* accept login */
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|SBP_DEV_LOGIN
@@ -917,6 +920,8 @@ directive|define
 name|SBP_DEV_RECONN
 value|2
 comment|/* to reconnect */
+endif|#
+directive|endif
 define|#
 directive|define
 name|SBP_DEV_TOATTACH
@@ -944,6 +949,16 @@ value|7
 comment|/* unavailable unit */
 name|u_int8_t
 name|status
+range|:
+literal|4
+decl_stmt|,
+define|#
+directive|define
+name|SBP_DEV_TIMEOUT
+value|1
+name|flags
+range|:
+literal|4
 decl_stmt|;
 name|u_int8_t
 name|type
@@ -1347,6 +1362,10 @@ name|sbp_dev
 operator|*
 operator|,
 name|int
+operator|,
+name|u_int16_t
+operator|,
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3069,33 +3088,8 @@ name|status
 condition|)
 block|{
 case|case
-name|SBP_DEV_ATTACHED
+name|SBP_DEV_RESET
 case|:
-name|sbp_mgm_orb
-argument_list|(
-name|sdev
-argument_list|,
-name|ORB_FUN_RCN
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SBP_DEV_RETRY
-case|:
-name|sbp_probe_lun
-argument_list|(
-name|sdev
-argument_list|)
-expr_stmt|;
-name|sbp_mgm_orb
-argument_list|(
-name|sdev
-argument_list|,
-name|ORB_FUN_LGI
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
 comment|/* new or revived target */
 name|sbp_probe_lun
 argument_list|(
@@ -3118,9 +3112,34 @@ argument_list|(
 name|sdev
 argument_list|,
 name|ORB_FUN_LGI
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|SBP_DEV_RETRY
+case|:
+name|sbp_probe_lun
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+default|default:
+name|sbp_mgm_orb
+argument_list|(
+name|sdev
+argument_list|,
+name|ORB_FUN_RCN
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|SBP_DEBUG
@@ -4020,7 +4039,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbp_tur_callback: retry count exceeded\n"
+literal|"sbp_ping_unit_callback: "
+literal|"retry count exceeded\n"
 argument_list|)
 expr_stmt|;
 name|sdev
@@ -4239,6 +4259,26 @@ argument_list|(
 name|ccb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|->
+name|status
+operator|==
+name|SBP_DEV_RETRY
+condition|)
+comment|/* freezed twice */
+name|xpt_release_devq
+argument_list|(
+name|sdev
+operator|->
+name|path
+argument_list|,
+literal|1
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4339,28 +4379,16 @@ operator|==
 name|SBP_DEV_RETRY
 condition|)
 block|{
-name|sdev
-operator|->
-name|status
-operator|=
-name|SBP_DEV_PROBE
-expr_stmt|;
 name|sbp_ping_unit
 argument_list|(
 name|sdev
 argument_list|)
 expr_stmt|;
-comment|/* freezed twice */
-name|xpt_release_devq
-argument_list|(
 name|sdev
 operator|->
-name|path
-argument_list|,
-literal|1
-argument_list|,
-name|TRUE
-argument_list|)
+name|status
+operator|=
+name|SBP_DEV_PROBE
 expr_stmt|;
 block|}
 else|else
@@ -4477,9 +4505,6 @@ name|struct
 name|sbp_dev
 modifier|*
 name|sdev
-parameter_list|,
-name|int
-name|attach
 parameter_list|)
 block|{
 name|struct
@@ -4529,7 +4554,11 @@ condition|)
 return|return;
 if|if
 condition|(
-name|attach
+name|sdev
+operator|->
+name|status
+operator|==
+name|SBP_DEV_ATTACHED
 condition|)
 name|xfer
 operator|->
@@ -4537,7 +4566,7 @@ name|act
 operator|.
 name|hand
 operator|=
-name|sbp_do_attach
+name|sbp_agent_reset_callback
 expr_stmt|;
 else|else
 name|xfer
@@ -4546,7 +4575,7 @@ name|act
 operator|.
 name|hand
 operator|=
-name|sbp_agent_reset_callback
+name|sbp_do_attach
 expr_stmt|;
 name|fp
 operator|=
@@ -4629,7 +4658,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbp_but_timeout_callback\n"
+literal|"sbp_busy_timeout_callback\n"
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
@@ -4641,8 +4670,6 @@ decl_stmt|;
 name|sbp_agent_reset
 argument_list|(
 name|sdev
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -5397,6 +5424,12 @@ name|sdev
 parameter_list|,
 name|int
 name|func
+parameter_list|,
+name|u_int16_t
+name|orb_hi
+parameter_list|,
+name|u_int32_t
+name|orb_lo
 parameter_list|)
 block|{
 name|struct
@@ -5677,6 +5710,40 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ORB_FUN_ATA
+case|:
+name|ocb
+operator|->
+name|orb
+index|[
+literal|0
+index|]
+operator|=
+name|htonl
+argument_list|(
+operator|(
+literal|0
+operator|<<
+literal|16
+operator|)
+operator||
+name|orb_hi
+argument_list|)
+expr_stmt|;
+name|ocb
+operator|->
+name|orb
+index|[
+literal|1
+index|]
+operator|=
+name|htonl
+argument_list|(
+name|orb_lo
+argument_list|)
+expr_stmt|;
+comment|/* fall through */
+case|case
 name|ORB_FUN_RCN
 case|:
 case|case
@@ -5687,9 +5754,6 @@ name|ORB_FUN_LUR
 case|:
 case|case
 name|ORB_FUN_RST
-case|:
-case|case
-name|ORB_FUN_ATA
 case|:
 case|case
 name|ORB_FUN_ATS
@@ -7329,7 +7393,7 @@ literal|1
 case|:
 name|printf
 argument_list|(
-literal|"Object: %s, Serial Bus Error: %s\n"
+literal|"Obj: %s, Error: %s\n"
 argument_list|,
 name|orb_status1_object
 index|[
@@ -7407,8 +7471,6 @@ expr_stmt|;
 name|sbp_agent_reset
 argument_list|(
 name|sdev
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7426,6 +7488,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|sdev
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SBP_DEV_TIMEOUT
+expr_stmt|;
 switch|switch
 condition|(
 name|ntohl
@@ -7597,6 +7666,10 @@ argument_list|(
 name|sdev
 argument_list|,
 name|ORB_FUN_ATS
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7604,7 +7677,14 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* forgot logout ? */
+comment|/* forgot logout? */
+name|sbp_show_sdev_info
+argument_list|(
+name|sdev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"login failed\n"
@@ -7633,12 +7713,6 @@ condition|(
 name|status_valid
 condition|)
 block|{
-name|sdev
-operator|->
-name|status
-operator|=
-name|SBP_DEV_ATTACHED
-expr_stmt|;
 name|SBP_DEBUG
 argument_list|(
 literal|0
@@ -7680,6 +7754,12 @@ argument_list|(
 name|sdev
 argument_list|)
 decl_stmt|;
+name|sdev
+operator|->
+name|status
+operator|=
+name|SBP_DEV_ATTACHED
+expr_stmt|;
 name|xpt_release_devq
 argument_list|(
 name|sdev
@@ -7693,11 +7773,21 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|sdev
+operator|->
+name|status
+operator|=
+name|SBP_DEV_ATTACHED
+expr_stmt|;
 name|sbp_mgm_orb
 argument_list|(
 name|sdev
 argument_list|,
 name|ORB_FUN_ATS
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7706,18 +7796,34 @@ block|}
 else|else
 block|{
 comment|/* reconnection hold time exceed? */
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
+name|sbp_show_sdev_info
+argument_list|(
+name|sdev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"reconnect failed\n"
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 name|sbp_mgm_orb
 argument_list|(
 name|sdev
 argument_list|,
 name|ORB_FUN_LGI
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 block|}
 break|break;
 case|case
@@ -7731,10 +7837,16 @@ name|SBP_DEV_RESET
 expr_stmt|;
 break|break;
 case|case
-name|ORB_FUN_LUR
-case|:
-case|case
 name|ORB_FUN_RST
+case|:
+name|sbp_busy_timeout
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ORB_FUN_LUR
 case|:
 case|case
 name|ORB_FUN_ATA
@@ -7742,37 +7854,27 @@ case|:
 case|case
 name|ORB_FUN_ATS
 case|:
-if|if
-condition|(
-name|sdev
-operator|->
-name|status
-operator|==
-name|SBP_DEV_ATTACHED
-condition|)
-block|{
-name|xpt_release_devq
-argument_list|(
-name|sdev
-operator|->
-name|path
-argument_list|,
-literal|1
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sbp_busy_timeout
+name|sbp_agent_reset
 argument_list|(
 name|sdev
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
+name|sbp_show_sdev_info
+argument_list|(
+name|sdev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"unknown function %d\n"
+argument_list|,
+name|orb_fun
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 break|break;
@@ -8763,7 +8865,13 @@ condition|(
 name|sdev
 operator|->
 name|status
-operator|==
+operator|>=
+name|SBP_DEV_TOATTACH
+operator|&&
+name|sdev
+operator|->
+name|status
+operator|<=
 name|SBP_DEV_ATTACHED
 condition|)
 name|sbp_mgm_orb
@@ -8771,6 +8879,10 @@ argument_list|(
 name|sdev
 argument_list|,
 name|ORB_FUN_LGO
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -9102,6 +9214,7 @@ name|sdev
 operator|->
 name|path
 condition|)
+block|{
 name|xpt_async
 argument_list|(
 name|AC_LOST_DEVICE
@@ -9126,6 +9239,7 @@ name|path
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|sbp_abort_all_ocbs
 argument_list|(
 name|sdev
@@ -9169,12 +9283,6 @@ name|ocb
 operator|->
 name|sdev
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int s;
-endif|#
-directive|endif
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -9184,25 +9292,85 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"request timeout ... requeue\n"
+literal|"request timeout ... "
 argument_list|)
 expr_stmt|;
-comment|/* XXX need bus reset? */
+name|xpt_freeze_devq
+argument_list|(
+name|sdev
+operator|->
+name|path
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|sbp_abort_all_ocbs
+argument_list|(
+name|sdev
+argument_list|,
+name|CAM_CMD_TIMEOUT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sdev
+operator|->
+name|flags
+operator|&
+name|SBP_DEV_TIMEOUT
+condition|)
+block|{
 if|#
 directive|if
 literal|0
-block|s = splfw(); 	sbp_abort_all_ocbs(sdev, CAM_CMD_TIMEOUT); 	splx(s);
+block|struct firewire_comm *fc;  		printf("bus reset\n"); 		fc = sdev->target->sbp->fd.fc; 		fc->ibr(fc); 		sdev->status == SBP_DEV_RETRY;
 else|#
 directive|else
-name|sbp_agent_reset
+name|printf
+argument_list|(
+literal|"target reset\n"
+argument_list|)
+expr_stmt|;
+name|sbp_mgm_orb
 argument_list|(
 name|sdev
+argument_list|,
+name|ORB_FUN_RST
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sdev
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SBP_DEV_TIMEOUT
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"agent reset\n"
+argument_list|)
+expr_stmt|;
+name|sdev
+operator|->
+name|flags
+operator||=
+name|SBP_DEV_TIMEOUT
+expr_stmt|;
+name|sbp_agent_reset
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -10890,7 +11058,9 @@ argument|order =
 literal|0
 argument|; 	int flags;  	for (ocb = STAILQ_FIRST(&sdev->ocbs); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		flags = ocb->flags; SBP_DEBUG(
 literal|1
-argument|)
+argument|) 		sbp_show_sdev_info(sdev,
+literal|2
+argument|);
 if|#
 directive|if
 name|__FreeBSD_version
@@ -11005,7 +11175,7 @@ argument|) 	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(
 literal|"sbp_abort_ocb 0x%x\n"
-argument|, status); 	if (ocb->ccb != NULL) 		sbp_print_scsi_cmd(ocb); END_DEBUG 	if (ocb->ccb != NULL&& !(ocb->flags& OCB_DONE)) { 		if (status != CAM_CMD_TIMEOUT) 			untimeout(sbp_timeout, (caddr_t)ocb, 						ocb->ccb->ccb_h.timeout_ch); 		ocb->ccb->ccb_h.status = status; 		xpt_done(ocb->ccb); 	} 	if (ocb->dmamap != NULL) { 		bus_dmamap_destroy(sdev->target->sbp->dmat, ocb->dmamap); 		ocb->dmamap = NULL; 	} 	sbp_free_ocb(sdev->target->sbp, ocb); }  static void sbp_abort_all_ocbs(struct sbp_dev *sdev, int status) { 	int s; 	struct sbp_ocb *ocb, *next; 	STAILQ_HEAD(, sbp_ocb) temp;  	s = splfw();  	bcopy(&sdev->ocbs,&temp, sizeof(temp)); 	STAILQ_INIT(&sdev->ocbs); 	for (ocb = STAILQ_FIRST(&temp); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		sbp_abort_ocb(ocb, status); 	}  	splx(s); }  static devclass_t sbp_devclass;  static device_method_t sbp_methods[] = {
+argument|, status); 	if (ocb->ccb != NULL) 		sbp_print_scsi_cmd(ocb); END_DEBUG 	if (ocb->ccb != NULL&& !(ocb->flags& OCB_DONE)) { 		untimeout(sbp_timeout, (caddr_t)ocb, 					ocb->ccb->ccb_h.timeout_ch); 		ocb->ccb->ccb_h.status = status; 		xpt_done(ocb->ccb); 	} 	if (ocb->dmamap != NULL) { 		bus_dmamap_destroy(sdev->target->sbp->dmat, ocb->dmamap); 		ocb->dmamap = NULL; 	} 	sbp_free_ocb(sdev->target->sbp, ocb); }  static void sbp_abort_all_ocbs(struct sbp_dev *sdev, int status) { 	int s; 	struct sbp_ocb *ocb, *next; 	STAILQ_HEAD(, sbp_ocb) temp;  	s = splfw();  	bcopy(&sdev->ocbs,&temp, sizeof(temp)); 	STAILQ_INIT(&sdev->ocbs); 	for (ocb = STAILQ_FIRST(&temp); ocb != NULL; ocb = next) { 		next = STAILQ_NEXT(ocb, ocb); 		sbp_abort_ocb(ocb, status); 	}  	splx(s); }  static devclass_t sbp_devclass;  static device_method_t sbp_methods[] = {
 comment|/* device interface */
 argument|DEVMETHOD(device_identify,	sbp_identify), 	DEVMETHOD(device_probe,		sbp_probe), 	DEVMETHOD(device_attach,	sbp_attach), 	DEVMETHOD(device_detach,	sbp_detach), 	DEVMETHOD(device_shutdown,	sbp_shutdown),  	{
 literal|0
