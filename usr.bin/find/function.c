@@ -2866,10 +2866,8 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|puts
 argument_list|(
-literal|"%s\n"
-argument_list|,
 name|entry
 operator|->
 name|fts_path
