@@ -178,7 +178,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|dec_kn300_cons_init
 name|__P
@@ -354,12 +353,6 @@ name|iobus
 operator|=
 literal|"mcbus"
 expr_stmt|;
-name|platform
-operator|.
-name|cons_init
-operator|=
-name|dec_kn300_cons_init
-expr_stmt|;
 block|}
 end_function
 
@@ -375,35 +368,131 @@ name|void
 name|dec_kn300_cons_init
 parameter_list|()
 block|{
-if|#
-directive|if
-literal|0
-block|struct ctb *ctb;
-comment|/*	mcpcia_init(); */
+name|struct
+name|ctb
+modifier|*
+name|ctb
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
-block|siogdbattach(0x2f8, 57600);
+name|siogdbattach
+argument_list|(
+literal|0x2f8
+argument_list|,
+literal|57600
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-block|ctb = (struct ctb *)(((caddr_t)hwrpb) + hwrpb->rpb_ctb_off);  	switch (ctb->ctb_term_type) { 	case 2:
+name|ctb
+operator|=
+operator|(
+expr|struct
+name|ctb
+operator|*
+operator|)
+operator|(
+operator|(
+operator|(
+name|caddr_t
+operator|)
+name|hwrpb
+operator|)
+operator|+
+name|hwrpb
+operator|->
+name|rpb_ctb_off
+operator|)
+expr_stmt|;
+switch|switch
+condition|(
+name|ctb
+operator|->
+name|ctb_term_type
+condition|)
+block|{
+case|case
+literal|2
+case|:
 comment|/* serial console ... */
 comment|/* 		 * Delay to allow PROM putchars to complete. 		 * FIFO depth * character time, 		 * character time = (1000000 / (defaultrate / 10)) 		 */
-block|DELAY(160000000 / comcnrate); 		comconsole = 0; 		if (siocnattach(0x3f8, comcnrate)) 			panic("can't init serial console"); 		break;  	case 3:
+name|DELAY
+argument_list|(
+literal|160000000
+operator|/
+name|comcnrate
+argument_list|)
+expr_stmt|;
+name|comconsole
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|siocnattach
+argument_list|(
+literal|0x3f8
+argument_list|,
+name|comcnrate
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"can't init serial console"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
 if|#
 directive|if
 name|NSC
 operator|>
 literal|0
-block|sccnattach();
+name|sccnattach
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
-block|panic("not configured to use display&& keyboard console");
+name|panic
+argument_list|(
+literal|"not configured to use display&& keyboard console"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-block|break;  	default: 		printf("ctb->ctb_term_type = 0x%lx\n", ctb->ctb_term_type); 		printf("ctb->ctb_turboslot = 0x%lx\n", ctb->ctb_turboslot);  		panic("consinit: unknown console type %ld\n", 		    ctb->ctb_term_type); 	}
-endif|#
-directive|endif
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"ctb->ctb_term_type = 0x%lx\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_term_type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ctb->ctb_turboslot = 0x%lx\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_turboslot
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"consinit: unknown cons type %ld\n"
+argument_list|,
+name|ctb
+operator|->
+name|ctb_term_type
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
