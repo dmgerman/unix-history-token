@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	4.1 (Berkeley) %G%"
+literal|"@(#)system.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,35 +59,8 @@ begin_comment
 comment|/* defined(pyr) */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|pyr
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/inode.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/* !defined(sun) */
+comment|/*  * Wouldn't it be nice if these REALLY were in<sys/inode.h>?  Or,  * equivalently, if<sys/inode.h> REALLY existed?  */
 end_comment
 
 begin_define
@@ -103,15 +76,6 @@ directive|define
 name|IWRITE
 value|00200
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined(sun) */
-end_comment
 
 begin_include
 include|#
@@ -2163,6 +2127,22 @@ argument_list|()
 operator|==
 operator|-
 literal|1
+condition|)
+block|{
+name|kill_connection
+argument_list|()
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|/* At this point, it is possible that we've gone away */
+if|if
+condition|(
+name|shell_active
+operator|==
+literal|0
 condition|)
 block|{
 name|kill_connection
