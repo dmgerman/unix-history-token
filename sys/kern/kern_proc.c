@@ -312,6 +312,20 @@ name|ithread_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|kinfo_proc
+argument_list|)
+operator|==
+name|KINFO_PROC_SIZE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Initialize global process hashing structures.  */
 end_comment
@@ -321,11 +335,6 @@ name|void
 name|procinit
 parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 name|sx_init
 argument_list|(
 operator|&
@@ -430,79 +439,6 @@ expr_stmt|;
 name|uihashinit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * This should really be a compile time warning, but I do 	 * not know of any way to do that... 	 */
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|kinfo_proc
-argument_list|)
-operator|!=
-name|KINFO_PROC_SIZE
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"This message will repeat for the next 20 seconds\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|20
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: size of kinfo_proc (%ld) should be %d!!!\n"
-argument_list|,
-operator|(
-name|long
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|kinfo_proc
-argument_list|)
-argument_list|,
-name|KINFO_PROC_SIZE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"The kinfo_proc structure was changed "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"incorrectly in<sys/user.h>\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-literal|0x7ffffff
-condition|;
-name|j
-operator|++
-control|)
-empty_stmt|;
-block|}
-block|}
 block|}
 end_function
 
