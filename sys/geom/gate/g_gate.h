@@ -190,24 +190,20 @@ name|struct
 name|bio_queue_head
 name|sc_inqueue
 decl_stmt|;
-comment|/* P: sc_inqueue_mtx */
-name|struct
-name|mtx
-name|sc_inqueue_mtx
-decl_stmt|;
+comment|/* P: sc_queue_mtx */
 name|struct
 name|bio_queue_head
 name|sc_outqueue
 decl_stmt|;
-comment|/* P: sc_outqueue_mtx */
+comment|/* P: sc_queue_mtx */
 name|struct
 name|mtx
-name|sc_outqueue_mtx
+name|sc_queue_mtx
 decl_stmt|;
 name|uint32_t
 name|sc_queue_count
 decl_stmt|;
-comment|/* P: (atomic) */
+comment|/* P: sc_queue_mtx */
 name|uint32_t
 name|sc_queue_size
 decl_stmt|;
