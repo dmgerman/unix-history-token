@@ -67,7 +67,27 @@ name|texp
 operator|=
 name|exp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+if|#
+directive|if
+name|__GNUC__
+operator|>=
+literal|2
+asm|asm ("fscale " 		: "=u" (temp2), "=t" (temp) 		: "0" (texp), "1" (value));
+else|#
+directive|else
 asm|asm ("fscale ; fxch %%st(1) ; fstp%L1 %1 " 		: "=f" (temp), "=0" (temp2) 		: "0" (texp), "f" (value));
+endif|#
+directive|endif
+else|#
+directive|else
+name|error
+name|unknown
+name|asm
+endif|#
+directive|endif
 return|return
 operator|(
 name|temp
