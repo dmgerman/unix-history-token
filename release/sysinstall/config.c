@@ -2008,6 +2008,8 @@ expr_stmt|;
 comment|/* Tidy up the resulting file if it's late enough in the installation 	for sort and uniq to be available */
 if|if
 condition|(
+name|RunningAsInit
+operator|&&
 name|file_readable
 argument_list|(
 literal|"/usr/bin/sort"
