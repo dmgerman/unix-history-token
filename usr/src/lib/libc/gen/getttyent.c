@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getttyent.c	5.2 (Berkeley) %G%"
+literal|"@(#)getttyent.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -579,6 +579,13 @@ name|p
 argument_list|)
 control|)
 block|{
+define|#
+directive|define
+name|space
+parameter_list|(
+name|x
+parameter_list|)
+value|((c = p[x]) == ' ' || c == '\t' || c == '\n')
 if|if
 condition|(
 name|strncmp
@@ -591,6 +598,11 @@ literal|2
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|space
+argument_list|(
+literal|2
+argument_list|)
 condition|)
 name|tty
 operator|.
@@ -611,6 +623,11 @@ literal|3
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|space
+argument_list|(
+literal|3
+argument_list|)
 condition|)
 name|tty
 operator|.
@@ -632,6 +649,11 @@ literal|6
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|space
+argument_list|(
+literal|6
+argument_list|)
 condition|)
 name|tty
 operator|.
