@@ -63,8 +63,11 @@ decl_stmt|;
 name|u_short
 name|ipfr_off
 decl_stmt|;
-name|u_short
+name|u_char
 name|ipfr_ttl
+decl_stmt|;
+name|u_char
+name|ipfr_seen0
 decl_stmt|;
 name|frentry_t
 modifier|*
@@ -120,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|IPFR_CMPSZ
-value|(4 + 4 + 2 + 1 + 1)
+value|(offsetof(ipfr_t, ipfr_off) - \ 			 offsetof(ipfr_t, ipfr_src))
 end_define
 
 begin_decl_stmt
