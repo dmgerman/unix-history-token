@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.133 2001/01/21 02:39:52 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.134 2001/03/25 22:52:21 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -3648,6 +3648,16 @@ argument_list|,
 name|UHCI_SOF
 argument_list|)
 expr_stmt|;
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_INTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* disable intrs */
 name|UHCICMD
 argument_list|(
 name|sc
@@ -5966,6 +5976,16 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_STS
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+comment|/* acknowledge the ints */
 return|return
 operator|(
 literal|0
