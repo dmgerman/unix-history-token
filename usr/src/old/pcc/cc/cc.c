@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.15 %G%"
+literal|"@(#)cc.c 4.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,12 +43,18 @@ directive|include
 file|<sys/dir.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
 name|cpp
 init|=
-literal|"/lib/cpp"
+name|_PATH_CPP
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +63,7 @@ name|char
 modifier|*
 name|ccom
 init|=
-literal|"/lib/ccom"
+name|_PATH_CCOM
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +72,7 @@ name|char
 modifier|*
 name|sccom
 init|=
-literal|"/lib/sccom"
+name|_PATH_SCCOM
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +81,7 @@ name|char
 modifier|*
 name|c2
 init|=
-literal|"/lib/c2"
+name|_PATH_C2
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +90,7 @@ name|char
 modifier|*
 name|as
 init|=
-literal|"/bin/as"
+name|_PATH_AS
 decl_stmt|;
 end_decl_stmt
 
@@ -93,7 +99,7 @@ name|char
 modifier|*
 name|ld
 init|=
-literal|"/bin/ld"
+name|_PATH_LD
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +108,7 @@ name|char
 modifier|*
 name|crt0
 init|=
-literal|"/lib/crt0.o"
+name|_PATH_CRT0
 decl_stmt|;
 end_decl_stmt
 
