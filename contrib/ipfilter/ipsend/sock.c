@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * sock.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -380,7 +397,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sock.c,v 2.1.4.3 2001/07/15 22:00:14 darrenr Exp $"
+literal|"@(#)$Id: sock.c,v 2.1.4.5 2002/02/22 15:32:58 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1009,27 +1026,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|printf
-argument_list|(
-literal|"fl %x ty %x cn %d mc %d\n"
-argument_list|,
-name|f
-operator|->
-name|f_flag
-argument_list|,
-name|f
-operator|->
-name|f_type
-argument_list|,
-name|f
-operator|->
-name|f_count
-argument_list|,
-name|f
-operator|->
-name|f_msgcount
-argument_list|)
-expr_stmt|;
 name|up
 operator|=
 operator|(

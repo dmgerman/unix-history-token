@@ -7,6 +7,23 @@ begin_comment
 comment|/*  * ipsend.c (C) 1995-1998 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -519,7 +536,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|static const char sccsid[] = "%W% %G% (C)1995 Darren Reed"; static const char rcsid[] = "@(#)$Id: iptests.c,v 2.1.4.2 2001/07/15 22:00:14 darrenr Exp $";
+unit|static const char sccsid[] = "%W% %G% (C)1995 Darren Reed"; static const char rcsid[] = "@(#)$Id: iptests.c,v 2.1.4.5 2002/02/22 15:32:58 darrenr Exp $";
 endif|#
 directive|endif
 end_endif
@@ -1952,9 +1969,13 @@ argument_list|(
 name|IP_MF
 operator||
 operator|(
+operator|(
 name|i
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2004,9 +2025,13 @@ name|ip_off
 operator|=
 name|htons
 argument_list|(
+operator|(
 name|i
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2180,9 +2205,13 @@ argument_list|(
 name|IP_MF
 operator||
 operator|(
+operator|(
 name|i
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2253,9 +2282,13 @@ name|ip_off
 operator|=
 name|htons
 argument_list|(
+operator|(
 name|i
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 argument_list|)
 expr_stmt|;
 if|if
@@ -2429,9 +2462,13 @@ argument_list|(
 name|IP_MF
 operator||
 operator|(
+operator|(
 name|i
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2481,9 +2518,13 @@ name|ip_off
 operator|=
 name|htons
 argument_list|(
+operator|(
 name|i
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6319,6 +6360,11 @@ name|fd
 decl_stmt|,
 name|slen
 decl_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -7751,9 +7797,13 @@ argument_list|(
 name|IP_MF
 operator||
 operator|(
+operator|(
 name|j
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7828,9 +7878,13 @@ argument_list|(
 name|IP_MF
 operator||
 operator|(
+operator|(
 name|k
 operator|>>
 literal|3
+operator|)
+operator|&
+literal|0x1fff
 operator|)
 argument_list|)
 expr_stmt|;
