@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.70 1998/06/09 13:20:29 dt Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.71 1998/06/10 06:30:31 peter Exp $ */
 end_comment
 
 begin_comment
@@ -2307,7 +2307,7 @@ operator|->
 name|pm_gid
 condition|)
 return|return
-name|EINVAL
+name|EOPNOTSUPP
 return|;
 block|}
 if|if
