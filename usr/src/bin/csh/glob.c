@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	4.7 (Berkeley) %G%"
+literal|"@(#)glob.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2467,11 +2467,13 @@ while|while
 condition|(
 operator|*
 name|p
+condition|)
+operator|*
+name|p
 operator|++
 operator|&=
 name|TRIM
-condition|)
-empty_stmt|;
+expr_stmt|;
 block|}
 end_block
 
