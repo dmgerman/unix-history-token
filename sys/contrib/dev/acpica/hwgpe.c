@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -11,18 +11,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
 end_include
 
 begin_include
@@ -50,7 +38,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|UINT8
 name|AcpiHwGetGpeBitMask
 parameter_list|(
 name|UINT32
@@ -78,7 +66,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwEnableGpe
 parameter_list|(
 name|UINT32
@@ -91,8 +79,11 @@ decl_stmt|;
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|BitMask
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -114,11 +105,14 @@ name|GpeNumber
 argument_list|)
 expr_stmt|;
 comment|/*      * Read the current value of the register, set the appropriate bit      * to enable the GPE, and write out the new register.      */
-name|InByte
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|8
+argument_list|,
+operator|&
+name|InByte
 argument_list|,
 operator|&
 name|AcpiGbl_GpeRegisterInfo
@@ -131,6 +125,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -152,6 +162,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
 end_function
 
@@ -170,7 +185,7 @@ block|{
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|BitMask
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
@@ -210,7 +225,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwDisableGpe
 parameter_list|(
 name|UINT32
@@ -223,8 +238,11 @@ decl_stmt|;
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|BitMask
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -246,11 +264,14 @@ name|GpeNumber
 argument_list|)
 expr_stmt|;
 comment|/*      * Read the current value of the register, clear the appropriate bit,      * and write out the new register value to disable the GPE.      */
-name|InByte
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|8
+argument_list|,
+operator|&
+name|InByte
 argument_list|,
 operator|&
 name|AcpiGbl_GpeRegisterInfo
@@ -263,6 +284,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -285,11 +322,30 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 name|AcpiHwDisableGpeForWakeup
 argument_list|(
 name|GpeNumber
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 
@@ -308,7 +364,7 @@ block|{
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|BitMask
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
@@ -349,7 +405,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwClearGpe
 parameter_list|(
 name|UINT32
@@ -359,8 +415,11 @@ block|{
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|BitMask
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -382,6 +441,8 @@ name|GpeNumber
 argument_list|)
 expr_stmt|;
 comment|/*      * Write a one to the appropriate bit in the status register to      * clear this GPE.      */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -399,6 +460,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
 end_function
 
@@ -407,7 +473,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwGetGpeStatus
 parameter_list|(
 name|UINT32
@@ -428,7 +494,7 @@ name|RegisterIndex
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|UINT8
 name|BitMask
 init|=
 literal|0
@@ -436,6 +502,9 @@ decl_stmt|;
 name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|GpeRegisterInfo
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -446,7 +515,11 @@ operator|!
 name|EventStatus
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|AE_BAD_PARAMETER
+operator|)
+return|;
 block|}
 operator|(
 operator|*
@@ -480,11 +553,14 @@ name|GpeNumber
 argument_list|)
 expr_stmt|;
 comment|/* GPE Enabled? */
-name|InByte
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|8
+argument_list|,
+operator|&
+name|InByte
 argument_list|,
 operator|&
 name|GpeRegisterInfo
@@ -494,6 +570,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|BitMask
@@ -528,11 +618,14 @@ name|ACPI_EVENT_FLAG_WAKE_ENABLED
 expr_stmt|;
 block|}
 comment|/* GPE active (set)? */
-name|InByte
+name|Status
 operator|=
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|8
+argument_list|,
+operator|&
+name|InByte
 argument_list|,
 operator|&
 name|GpeRegisterInfo
@@ -542,6 +635,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|BitMask
@@ -557,6 +664,11 @@ operator||=
 name|ACPI_EVENT_FLAG_SET
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 
@@ -565,7 +677,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwDisableNonWakeupGpes
 parameter_list|(
 name|void
@@ -577,6 +689,12 @@ decl_stmt|;
 name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|GpeRegisterInfo
+decl_stmt|;
+name|UINT32
+name|InValue
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -604,16 +722,14 @@ name|i
 index|]
 expr_stmt|;
 comment|/*          * Read the enabled status of all GPEs. We          * will be using it to restore all the GPEs later.          */
-name|GpeRegisterInfo
-operator|->
-name|Enable
+name|Status
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|8
+argument_list|,
+operator|&
+name|InValue
 argument_list|,
 operator|&
 name|GpeRegisterInfo
@@ -623,7 +739,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|GpeRegisterInfo
+operator|->
+name|Enable
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|InValue
+expr_stmt|;
 comment|/*          * Disable all GPEs except wakeup GPEs.          */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -640,7 +781,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 
@@ -649,7 +809,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|ACPI_STATUS
 name|AcpiHwEnableNonWakeupGpes
 parameter_list|(
 name|void
@@ -661,6 +821,9 @@ decl_stmt|;
 name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|GpeRegisterInfo
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -688,6 +851,8 @@ name|i
 index|]
 expr_stmt|;
 comment|/*          * We previously stored the enabled status of all GPEs.          * Blast them back in.          */
+name|Status
+operator|=
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -704,7 +869,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 

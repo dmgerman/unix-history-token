@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dbhistry - debugger HISTORY command  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dbhistry - debugger HISTORY command  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,55 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acdebug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_ifdef
@@ -128,6 +80,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|HISTORY_INFO
 name|AcpiGbl_HistoryBuffer
 index|[
@@ -137,6 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UINT16
 name|AcpiGbl_LoHistory
 init|=
@@ -145,6 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UINT16
 name|AcpiGbl_NumHistory
 init|=
@@ -153,6 +108,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UINT16
 name|AcpiGbl_NextHistoryIndex
 init|=
@@ -161,6 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UINT32
 name|AcpiGbl_NextCmdNum
 init|=

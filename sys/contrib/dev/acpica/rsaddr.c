@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 24 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 26 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -76,13 +76,13 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
 name|OutputBuffer
 decl_stmt|;
-name|NATIVE_CHAR
+name|UINT8
 modifier|*
 name|TempPtr
 decl_stmt|;
@@ -519,6 +519,10 @@ operator|)
 expr_stmt|;
 name|TempPtr
 operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
 name|OutputStruct
 operator|->
 name|Data
@@ -645,6 +649,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -1187,6 +1194,13 @@ decl_stmt|;
 name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|*
+name|OutputBuffer
 decl_stmt|;
 name|UINT16
 name|Temp16
@@ -1194,7 +1208,7 @@ decl_stmt|;
 name|UINT8
 name|Temp8
 decl_stmt|;
-name|NATIVE_CHAR
+name|UINT8
 modifier|*
 name|TempPtr
 decl_stmt|;
@@ -1212,15 +1226,6 @@ expr_stmt|;
 name|Buffer
 operator|=
 name|ByteStreamBuffer
-expr_stmt|;
-name|OutputStruct
-operator|=
-operator|(
-name|ACPI_RESOURCE
-operator|*
-operator|)
-operator|*
-name|OutputBuffer
 expr_stmt|;
 name|StructSize
 operator|=
@@ -1640,6 +1645,10 @@ operator|)
 expr_stmt|;
 name|TempPtr
 operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
 name|OutputStruct
 operator|->
 name|Data
@@ -1766,6 +1775,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -1842,11 +1854,12 @@ expr_stmt|;
 comment|/*      * Set a pointer to the Length field - to be filled in later      */
 name|LengthField
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT16
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 name|Buffer
 operator|+=
@@ -2306,6 +2319,13 @@ decl_stmt|;
 name|ACPI_RESOURCE
 modifier|*
 name|OutputStruct
+init|=
+operator|(
+name|void
+operator|*
+operator|)
+operator|*
+name|OutputBuffer
 decl_stmt|;
 name|UINT16
 name|Temp16
@@ -2313,7 +2333,7 @@ decl_stmt|;
 name|UINT8
 name|Temp8
 decl_stmt|;
-name|NATIVE_CHAR
+name|UINT8
 modifier|*
 name|TempPtr
 decl_stmt|;
@@ -2331,15 +2351,6 @@ expr_stmt|;
 name|Buffer
 operator|=
 name|ByteStreamBuffer
-expr_stmt|;
-name|OutputStruct
-operator|=
-operator|(
-name|ACPI_RESOURCE
-operator|*
-operator|)
-operator|*
-name|OutputBuffer
 expr_stmt|;
 name|StructSize
 operator|=
@@ -2759,6 +2770,10 @@ operator|)
 expr_stmt|;
 name|TempPtr
 operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
 name|OutputStruct
 operator|->
 name|Data
@@ -2885,6 +2900,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -2961,11 +2979,12 @@ expr_stmt|;
 comment|/*      * Set a pointer to the Length field - to be filled in later      */
 name|LengthField
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT16
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 name|Buffer
 operator|+=

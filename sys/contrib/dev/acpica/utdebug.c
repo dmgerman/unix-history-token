@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 97 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -33,7 +33,14 @@ literal|"utdebug"
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
 begin_decl_stmt
+specifier|static
 name|UINT32
 name|AcpiGbl_PrevThreadId
 init|=
@@ -42,6 +49,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|AcpiGbl_FnEntryStr
@@ -51,6 +59,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|AcpiGbl_FnExitStr
@@ -58,12 +67,6 @@ init|=
 literal|"----Exit-"
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG
-end_ifdef
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtInitStackPtrTrace  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Save the current stack pointer  *  ****************************************************************************/
@@ -235,7 +238,7 @@ block|}
 comment|/*      * Display the module name, current line number, thread ID (if requested),      * current procedure nesting level, and the current procedure name      */
 name|AcpiOsPrintf
 argument_list|(
-literal|"%8s-%04d "
+literal|"%8s-%04ld "
 argument_list|,
 name|DbgInfo
 operator|->
@@ -253,7 +256,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%04X] "
+literal|"[%04lX] "
 argument_list|,
 name|ThreadId
 argument_list|,
@@ -267,7 +270,7 @@ expr_stmt|;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%02d] %-22.22s: "
+literal|"[%02ld] %-22.22s: "
 argument_list|,
 name|AcpiGbl_NestingLevel
 argument_list|,
@@ -753,12 +756,12 @@ name|UINT32
 name|ComponentId
 parameter_list|)
 block|{
-name|UINT32
+name|NATIVE_UINT
 name|i
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT
 name|j
 decl_stmt|;
 name|UINT32

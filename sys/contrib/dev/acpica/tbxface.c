@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -191,8 +185,6 @@ operator|=
 name|AcpiTbGetAllTables
 argument_list|(
 name|NumberOfTables
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -369,8 +361,6 @@ name|Status
 operator|=
 name|AcpiTbInstallTable
 argument_list|(
-name|NULL
-argument_list|,
 operator|&
 name|TableInfo
 argument_list|)
@@ -449,6 +439,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* Uninstall table and free the buffer */
+operator|(
+name|void
+operator|)
 name|AcpiTbUninstallTable
 argument_list|(
 name|TableInfo
@@ -730,7 +723,7 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|TableLength
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -867,6 +860,9 @@ else|else
 block|{
 name|TableLength
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|TblPtr
 operator|->
 name|Length

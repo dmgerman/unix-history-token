@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 105 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 108 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acinterp.h"
 end_include
 
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdispat.h"
 end_include
 
 begin_define
@@ -693,14 +681,13 @@ comment|/* Concatenate (Data1, Data2, Result) */
 comment|/*          * Convert the second operand if necessary.  The first operand          * determines the type of the second operand, (See the Data Types          * section of the ACPI specification.)  Both object types are          * guaranteed to be either Integer/String/Buffer by the operand          * resolution mechanism above.          */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Operand
 index|[
 literal|0
 index|]
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -915,14 +902,13 @@ expr_stmt|;
 comment|/*          * At this point, the Source operand is either a Package or a Buffer          */
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Operand
 index|[
 literal|0
 index|]
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_PACKAGE
 condition|)
@@ -962,16 +948,15 @@ block|}
 if|if
 condition|(
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Operand
 index|[
 literal|2
 index|]
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_INTEGER
 operator|)
 operator|&&
 operator|(
@@ -980,15 +965,15 @@ index|[
 literal|2
 index|]
 operator|->
-name|Reference
+name|Common
 operator|.
-name|Opcode
-operator|==
-name|AML_ZERO_OP
+name|Flags
+operator|&
+name|AOPOBJ_AML_CONSTANT
 operator|)
 condition|)
 block|{
-comment|/*                  * There is no actual result descriptor (the ZeroOp Result                  * descriptor is a placeholder), so just delete the placeholder and                  * return a reference to the package element                  */
+comment|/*                  * There is no actual result descriptor (the ZeroOp/Constant Result                  * descriptor is a placeholder), so just delete the placeholder and                  * return a reference to the package element                  */
 name|AcpiUtRemoveReference
 argument_list|(
 name|Operand
@@ -1029,11 +1014,10 @@ name|Reference
 operator|.
 name|TargetType
 operator|=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|TempDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 expr_stmt|;
 name|ReturnDesc
 operator|->

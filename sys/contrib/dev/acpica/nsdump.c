@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 129 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 136 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,19 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_include
@@ -488,6 +476,9 @@ block|{
 name|DownstreamSiblingMask
 operator||=
 operator|(
+operator|(
+name|UINT32
+operator|)
 literal|1
 operator|<<
 operator|(
@@ -510,6 +501,9 @@ operator|&=
 name|ACPI_UINT32_MAX
 operator|^
 operator|(
+operator|(
+name|UINT32
+operator|)
 literal|1
 operator|<<
 operator|(
@@ -602,6 +596,8 @@ operator|,
 name|ThisNode
 operator|->
 name|Name
+operator|.
+name|Integer
 operator|)
 argument_list|)
 expr_stmt|;
@@ -611,14 +607,11 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" %4.4s %-12s %p"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ThisNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -685,7 +678,7 @@ name|ACPI_TYPE_PROCESSOR
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" ID %d Addr %.4X Len %.4X\n"
+literal|" ID %hd Addr %.4X Len %.4X\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -723,7 +716,7 @@ name|ACPI_TYPE_METHOD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Args %d Len %.4X Aml %p \n"
+literal|" Args %hd Len %.4X Aml %p \n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -875,7 +868,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" %.2X"
+literal|" %.2hX"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1075,11 +1068,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" Buf [%4.4s]"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|BufferField
@@ -1091,6 +1079,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 block|}
@@ -1102,11 +1092,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" Rgn [%4.4s]"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|CommonField
@@ -1118,6 +1103,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1128,11 +1115,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" Rgn [%4.4s] Bnk [%4.4s]"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|CommonField
@@ -1144,12 +1126,9 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|BankField
@@ -1161,6 +1140,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1171,11 +1152,6 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" Idx [%4.4s] Dat [%4.4s]"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|IndexField
@@ -1187,12 +1163,9 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ObjDesc
 operator|->
 name|IndexField
@@ -1204,6 +1177,8 @@ operator|.
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1237,7 +1212,7 @@ name|INTERNAL_TYPE_INDEX_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Off %.2X Len %.2X Acc %.2d\n"
+literal|" Off %.2X Len %.2X Acc %.2hd\n"
 argument_list|,
 operator|(
 name|ObjDesc
@@ -1268,6 +1243,8 @@ operator|.
 name|AccessByteWidth
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 break|break;
@@ -1505,15 +1482,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 case|:
 name|ObjType
 operator|=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1538,14 +1514,14 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"(Ptr to ACPI Object type %2.2X [%s])\n"
-argument_list|,
-name|ObjType
+literal|"(Ptr to ACPI Object type %s, %X)\n"
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
 name|ObjType
 argument_list|)
+argument_list|,
+name|ObjType
 argument_list|)
 expr_stmt|;
 name|BytesToDump
@@ -1584,7 +1560,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|!=
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
 goto|goto
@@ -1603,7 +1579,7 @@ case|:
 name|ObjDesc
 operator|=
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|void
 operator|*
 operator|)
 name|ObjDesc
@@ -1619,7 +1595,7 @@ case|:
 name|ObjDesc
 operator|=
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|void
 operator|*
 operator|)
 name|ObjDesc
@@ -1651,7 +1627,7 @@ case|:
 name|ObjDesc
 operator|=
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|void
 operator|*
 operator|)
 name|ObjDesc
@@ -1667,7 +1643,7 @@ case|:
 name|ObjDesc
 operator|=
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|void
 operator|*
 operator|)
 name|ObjDesc
@@ -1683,7 +1659,7 @@ case|:
 name|ObjDesc
 operator|=
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|void
 operator|*
 operator|)
 name|ObjDesc
@@ -1699,7 +1675,7 @@ case|:
 name|ObjDesc
 operator|=
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|void
 operator|*
 operator|)
 name|ObjDesc
@@ -1715,7 +1691,7 @@ case|:
 name|ObjDesc
 operator|=
 operator|(
-name|ACPI_OPERAND_OBJECT
+name|void
 operator|*
 operator|)
 name|ObjDesc
@@ -1799,6 +1775,9 @@ name|DisplayType
 operator|=
 name|DisplayType
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiNsWalkNamespace
 argument_list|(
 name|Type
@@ -1928,7 +1907,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_TABLES
 operator|,
-literal|"    HID: %s, ADR: %8.8X%8.8X, Status: %x\n"
+literal|"    HID: %s, ADR: %8.8X%8.8X, Status: %X\n"
 operator|,
 name|Info
 operator|.
@@ -1977,6 +1956,9 @@ block|{
 name|ACPI_HANDLE
 name|SysBusHandle
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"NsDumpRootDevices"
@@ -1995,6 +1977,8 @@ condition|)
 block|{
 return|return;
 block|}
+name|Status
+operator|=
 name|AcpiGetHandle
 argument_list|(
 literal|0
@@ -2005,6 +1989,16 @@ operator|&
 name|SysBusHandle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -2014,6 +2008,8 @@ literal|"Display of all devices in the namespace:\n"
 operator|)
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiNsWalkNamespace
 argument_list|(
 name|ACPI_TYPE_DEVICE
@@ -2162,6 +2158,9 @@ name|DisplayType
 operator|=
 name|ACPI_DISPLAY_SUMMARY
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiNsDumpOneObject
 argument_list|(
 name|Handle

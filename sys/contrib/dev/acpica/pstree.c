@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pstree - Parser op tree manipulation/traversal/search  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -83,7 +83,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -127,6 +129,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -145,6 +149,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -200,7 +206,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -220,7 +228,9 @@ literal|"PsAppendArg: Invalid AML Opcode: 0x%2.2X\n"
 operator|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -247,6 +257,8 @@ if|if
 condition|(
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -257,6 +269,8 @@ name|PrevArg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -265,6 +279,8 @@ while|while
 condition|(
 name|PrevArg
 operator|->
+name|Common
+operator|.
 name|Next
 condition|)
 block|{
@@ -272,11 +288,15 @@ name|PrevArg
 operator|=
 name|PrevArg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
 name|PrevArg
 operator|->
+name|Common
+operator|.
 name|Next
 operator|=
 name|Arg
@@ -287,6 +307,8 @@ block|{
 comment|/* No argument list, this will be the first argument */
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -302,6 +324,8 @@ condition|)
 block|{
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|=
 name|Op
@@ -310,6 +334,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -343,7 +369,9 @@ switch|switch
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -431,6 +459,9 @@ literal|3
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+comment|/* All others have no children */
+break|break;
 block|}
 return|return
 operator|(
@@ -513,6 +544,8 @@ name|Next
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 if|if
@@ -531,6 +564,8 @@ name|Parent
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 while|while
@@ -568,6 +603,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -589,6 +626,8 @@ if|if
 condition|(
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Next
 condition|)
 block|{
@@ -597,6 +636,8 @@ return|return
 operator|(
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Next
 operator|)
 return|;
@@ -609,6 +650,8 @@ name|Parent
 operator|=
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}

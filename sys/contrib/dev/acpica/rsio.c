@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsio - IO and DMA resource descriptors  *              $Revision: 17 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsio - IO and DMA resource descriptors  *              $Revision: 20 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -230,6 +230,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -283,7 +286,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -372,6 +375,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -747,7 +753,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -847,6 +853,20 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Zero channels is invalid! */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_DATA
+argument_list|)
+expr_stmt|;
+block|}
 name|OutputStruct
 operator|->
 name|Data
@@ -861,6 +881,9 @@ comment|/*      * Calculate the structure size based upon the number of interrup
 name|StructSize
 operator|+=
 operator|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|OutputStruct
 operator|->
 name|Data
@@ -955,6 +978,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */

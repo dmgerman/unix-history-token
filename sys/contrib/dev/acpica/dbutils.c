@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 52 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 55 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,24 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -561,7 +543,7 @@ name|Op
 init|=
 name|Root
 decl_stmt|;
-name|ACPI_PARSE2_OBJECT
+name|ACPI_PARSE_OBJECT
 modifier|*
 name|Method
 decl_stmt|;
@@ -602,19 +584,18 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_METHOD_OP
 condition|)
 block|{
 name|Method
 operator|=
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
 expr_stmt|;
+comment|/* Create a new walk state for the parse */
 name|WalkState
 operator|=
 name|AcpiDsCreateWalkState
@@ -640,6 +621,7 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
+comment|/* Init the Walk State */
 name|WalkState
 operator|->
 name|ParserState
@@ -654,6 +636,8 @@ name|AmlStart
 operator|=
 name|Method
 operator|->
+name|Named
+operator|.
 name|Data
 expr_stmt|;
 name|WalkState
@@ -670,10 +654,14 @@ name|PkgEnd
 operator|=
 name|Method
 operator|->
+name|Named
+operator|.
 name|Data
 operator|+
 name|Method
 operator|->
+name|Named
+operator|.
 name|Length
 expr_stmt|;
 name|WalkState
@@ -696,6 +684,7 @@ name|AscendingCallback
 operator|=
 name|AcpiDsLoad1EndOp
 expr_stmt|;
+comment|/* Perform the AML parse */
 name|Status
 operator|=
 name|AcpiPsParseAml
@@ -708,11 +697,15 @@ operator|=
 operator|(
 name|Method
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
 operator|)
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|+
 literal|1
@@ -722,11 +715,15 @@ operator|=
 operator|(
 name|Method
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
 operator|)
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|SearchOp
@@ -740,6 +737,8 @@ condition|)
 block|{
 name|SearchOp
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|+=
 name|BaseAmlOffset
@@ -759,7 +758,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_REGION_OP
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 10 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 13 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,24 +23,6 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_define
@@ -566,7 +548,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiExReleaseAllMutexes
 parameter_list|(
 name|ACPI_THREAD_STATE
@@ -585,6 +567,9 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|This
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
@@ -632,11 +617,23 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Release the mutex */
+name|Status
+operator|=
 name|AcpiExSystemReleaseMutex
 argument_list|(
 name|This
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+continue|continue;
+block|}
 comment|/* Mark mutex unowned */
 name|This
 operator|->
@@ -647,11 +644,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,37 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdebug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acexcep.h"
 end_include
 
 begin_include
@@ -71,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"acdispat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdebug.h"
 end_include
 
 begin_define
@@ -215,6 +191,8 @@ block|}
 comment|/* If configured, initialize the AML debugger */
 name|ACPI_DEBUGGER_EXEC
 argument_list|(
+name|Status
+operator|=
 name|AcpiDbInitialize
 argument_list|()
 argument_list|)
@@ -271,7 +249,7 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiEvInstallDefaultAddressSpaceHandlers
+name|AcpiEvInitAddressSpaces
 argument_list|()
 expr_stmt|;
 if|if
@@ -567,6 +545,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiTerminate"
@@ -598,12 +579,14 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Now we can shutdown the OS-dependent layer */
+name|Status
+operator|=
 name|AcpiOsTerminate
 argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -854,6 +837,54 @@ argument_list|(
 name|AE_OK
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiInstallInitializationHandler  *  * PARAMETERS:  Handler             - Callback procedure  *  * RETURN:      Status  *  * DESCRIPTION: Install an initialization handler  *  * TBD: When a second function is added, must save the Function also.  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiInstallInitializationHandler
+parameter_list|(
+name|ACPI_INIT_HANDLER
+name|Handler
+parameter_list|,
+name|UINT32
+name|Function
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|Handler
+condition|)
+block|{
+return|return
+operator|(
+name|AE_BAD_PARAMETER
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|AcpiGbl_InitHandler
+condition|)
+block|{
+return|return
+operator|(
+name|AE_ALREADY_EXISTS
+operator|)
+return|;
+block|}
+name|AcpiGbl_InitHandler
+operator|=
+name|Handler
+expr_stmt|;
+return|return
+name|AE_OK
+return|;
 block|}
 end_function
 

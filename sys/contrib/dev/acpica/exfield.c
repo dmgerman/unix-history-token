@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 108 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 112 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,30 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_define
@@ -101,9 +77,6 @@ decl_stmt|;
 name|UINT32
 name|Length
 decl_stmt|;
-name|UINT32
-name|IntegerSize
-decl_stmt|;
 name|void
 modifier|*
 name|Buffer
@@ -133,11 +106,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_BUFFER_FIELD
 condition|)
@@ -192,39 +164,11 @@ operator|.
 name|BitLength
 argument_list|)
 expr_stmt|;
-comment|/* Handle both ACPI 1.0 and ACPI 2.0 Integer widths */
-name|IntegerSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_INTEGER
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|WalkState
-operator|->
-name|MethodNode
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_DATA_WIDTH_32
-condition|)
-block|{
-comment|/*          * We are running a method that exists in a 32-bit ACPI table.          * Integer size is 4.          */
-name|IntegerSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT32
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|Length
 operator|>
-name|IntegerSize
+name|AcpiGbl_IntegerByteWidth
 condition|)
 block|{
 comment|/* Field is too large for an Integer, create a Buffer instead */
@@ -280,6 +224,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Complete the buffer object initialization */
 name|BufferDesc
 operator|->
 name|Common
@@ -329,7 +274,7 @@ expr_stmt|;
 block|}
 name|Length
 operator|=
-name|IntegerSize
+name|AcpiGbl_IntegerByteWidth
 expr_stmt|;
 name|BufferDesc
 operator|->
@@ -358,11 +303,10 @@ literal|"Obj=%p Type=%X Buf=%p Len=%X\n"
 operator|,
 name|ObjDesc
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|,
 name|Buffer
 operator|,
@@ -522,11 +466,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_BUFFER_FIELD
 condition|)
@@ -572,11 +515,10 @@ block|}
 comment|/*      * Get a pointer to the data to be written      */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -729,11 +671,10 @@ literal|"Obj=%p Type=%X Buf=%p Len=%X\n"
 operator|,
 name|ObjDesc
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|,
 name|Buffer
 operator|,

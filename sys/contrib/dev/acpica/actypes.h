@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 227 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 237 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -24,14 +24,72 @@ comment|/*! [Begin] no source code translation (keep the typedefs) */
 end_comment
 
 begin_comment
-comment|/*  * Data types - Fixed across all compilation models  *  * BOOLEAN      Logical Boolean.  *              1 byte value containing a 0 for FALSE or a 1 for TRUE.  *              Other values are undefined.  *  * INT8         8-bit  (1 byte) signed value  * UINT8        8-bit  (1 byte) unsigned value  * INT16        16-bit (2 byte) signed value  * UINT16       16-bit (2 byte) unsigned value  * INT32        32-bit (4 byte) signed value  * UINT32       32-bit (4 byte) unsigned value  * INT64        64-bit (8 byte) signed value  * UINT64       64-bit (8 byte) unsigned value  * NATIVE_INT   32-bit on IA-32, 64-bit on IA-64 signed value  * NATIVE_UINT  32-bit on IA-32, 64-bit on IA-64 unsigned value  */
+comment|/*  * Data type ranges  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_IA64
-end_ifdef
+begin_define
+define|#
+directive|define
+name|ACPI_UINT8_MAX
+value|(UINT8)  0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_UINT16_MAX
+value|(UINT16) 0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_UINT32_MAX
+value|(UINT32) 0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_UINT64_MAX
+value|(UINT64) 0xFFFFFFFFFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ASCII_MAX
+value|0x7F
+end_define
+
+begin_comment
+comment|/*  * Data types - Fixed across all compilation models  *  * BOOLEAN      Logical Boolean.  * INT8         8-bit  (1 byte) signed value  * UINT8        8-bit  (1 byte) unsigned value  * INT16        16-bit (2 byte) signed value  * UINT16       16-bit (2 byte) unsigned value  * INT32        32-bit (4 byte) signed value  * UINT32       32-bit (4 byte) unsigned value  * INT64        64-bit (8 byte) signed value  * UINT64       64-bit (8 byte) unsigned value  * NATIVE_INT   32-bit on IA-32, 64-bit on IA-64 signed value  * NATIVE_UINT  32-bit on IA-32, 64-bit on IA-64 unsigned value  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_MACHINE_WIDTH
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|ACPI_MACHINE_WIDTH not defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|64
+end_if
 
 begin_comment
 comment|/*  * 64-bit type definitions  */
@@ -92,6 +150,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|INT64
+name|NATIVE_INT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|UINT64
 name|NATIVE_UINT
 typedef|;
@@ -99,8 +164,15 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|UINT32
+name|NATIVE_UINT_MAX32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|UINT64
-name|NATIVE_INT
+name|NATIVE_UINT_MIN32
 typedef|;
 end_typedef
 
@@ -157,13 +229,22 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_PTR
-value|0xFFFFFFFFFFFFFFFF
+value|ACPI_UINT64_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIZE_MAX
+value|ACPI_UINT64_MAX
 end_define
 
 begin_elif
 elif|#
 directive|elif
-name|_IA16
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|16
 end_elif
 
 begin_comment
@@ -247,6 +328,20 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|UINT16
+name|NATIVE_UINT_MAX32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UINT32
+name|NATIVE_UINT_MIN32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|UINT32
 name|ACPI_TBLPTR
 typedef|;
@@ -269,7 +364,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|UINT32
+name|UINT16
 name|ACPI_SIZE
 typedef|;
 end_typedef
@@ -301,7 +396,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_PTR
-value|0xFFFF
+value|ACPI_UINT16_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIZE_MAX
+value|ACPI_UINT16_MAX
 end_define
 
 begin_comment
@@ -314,10 +416,13 @@ directive|define
 name|ACPI_NO_INTEGER64_SUPPORT
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|32
+end_elif
 
 begin_comment
 comment|/*  * 32-bit type definitions (default)  */
@@ -378,6 +483,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|INT32
+name|NATIVE_INT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|UINT32
 name|NATIVE_UINT
 typedef|;
@@ -385,8 +497,15 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|INT32
-name|NATIVE_INT
+name|UINT32
+name|NATIVE_UINT_MAX32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UINT32
+name|NATIVE_UINT_MIN32
 typedef|;
 end_typedef
 
@@ -435,8 +554,26 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_PTR
-value|0xFFFFFFFF
+value|ACPI_UINT32_MAX
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIZE_MAX
+value|ACPI_UINT32_MAX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|unknown ACPI_MACHINE_WIDTH
+end_error
 
 begin_endif
 endif|#
@@ -467,45 +604,6 @@ name|char
 name|NATIVE_CHAR
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Data type ranges  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_UINT8_MAX
-value|(UINT8)  0xFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_UINT16_MAX
-value|(UINT16) 0xFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_UINT32_MAX
-value|(UINT32) 0xFFFFFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_UINT64_MAX
-value|(UINT64) 0xFFFFFFFFFFFFFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ASCII_MAX
-value|0x7F
-end_define
 
 begin_ifdef
 ifdef|#
@@ -568,7 +666,7 @@ end_comment
 begin_typedef
 typedef|typedef
 union|union
-name|AcpiPointers
+name|acpi_ptrs
 block|{
 name|ACPI_PHYSICAL_ADDRESS
 name|Physical
@@ -593,7 +691,8 @@ block|{
 name|UINT32
 name|PointerType
 decl_stmt|;
-name|ACPI_POINTERS
+name|union
+name|acpi_ptrs
 name|Pointer
 decl_stmt|;
 block|}
@@ -769,6 +868,21 @@ name|UINT64_OVERLAY
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT32
+name|Lo
+decl_stmt|;
+name|UINT32
+name|Hi
+decl_stmt|;
+block|}
+name|UINT32_STRUCT
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Acpi integer width. In ACPI version 1, integers are  * 32 bits.  In ACPI version 2, integers are 64 bits.  * Note that this pertains to the ACPI integer type only, not  * other integers used in the implementation of the ACPI CA  * subsystem.  */
 end_comment
@@ -886,11 +1000,13 @@ name|ACPI_MAX_DECIMAL_DIGITS
 value|19
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_IA64
-end_ifdef
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|==
+literal|64
+end_if
 
 begin_define
 define|#
@@ -920,7 +1036,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_ROOT_OBJECT
-value|(ACPI_HANDLE) ACPI_PTR_ADD (char, NULL, ACPI_UINT32_MAX)
+value|(ACPI_HANDLE) ACPI_PTR_ADD (char, NULL, ACPI_MAX_PTR)
 end_define
 
 begin_comment
@@ -2133,6 +2249,164 @@ value|(ACPI_ADR_SPACE_TYPE) 7
 end_define
 
 begin_comment
+comment|/*  * BitRegister IDs  * These are bitfields defined within the full ACPI registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_TIMER_STATUS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_BUS_MASTER_STATUS
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_GLOBAL_LOCK_STATUS
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_POWER_BUTTON_STATUS
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_BUTTON_STATUS
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_RT_CLOCK_STATUS
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_WAKE_STATUS
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_TIMER_ENABLE
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_GLOBAL_LOCK_ENABLE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_POWER_BUTTON_ENABLE
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_BUTTON_ENABLE
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_RT_CLOCK_ENABLE
+value|0x0B
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_WAKE_ENABLE
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SCI_ENABLE
+value|0x0D
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_BUS_MASTER_RLD
+value|0x0E
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_GLOBAL_LOCK_RELEASE
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_TYPE_A
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_TYPE_B
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_SLEEP_ENABLE
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_ARB_DISABLE
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BITREG_MAX
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_BITREG
+value|ACPI_BITREG_MAX + 1
+end_define
+
+begin_comment
 comment|/*  * External ACPI object definition  */
 end_comment
 
@@ -2518,6 +2792,30 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_INIT_HANDLER
+function_decl|)
+parameter_list|(
+name|ACPI_HANDLE
+name|Object
+parameter_list|,
+name|UINT32
+name|Function
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INIT_DEVICE_INI
+value|1
+end_define
+
 begin_comment
 comment|/* Address Spaces (Operation Regions */
 end_comment
@@ -2558,7 +2856,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEFAULT_HANDLER
-value|((ACPI_ADR_SPACE_HANDLER) NULL)
+value|NULL
 end_define
 
 begin_typedef
@@ -2781,7 +3079,7 @@ name|UINT8
 modifier|*
 name|MappedLogicalAddress
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|MappedLength
 decl_stmt|;
 block|}

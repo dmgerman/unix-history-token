@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 39 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 41 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -16,55 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acdebug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_ifdef
@@ -88,6 +40,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|static
 name|ACPI_DB_METHOD_INFO
 name|AcpiGbl_DbMethodInfo
 decl_stmt|;
@@ -816,6 +769,8 @@ block|}
 block|}
 block|}
 comment|/* Signal our completion */
+name|Status
+operator|=
 name|AcpiOsSignalSemaphore
 argument_list|(
 name|Info
@@ -825,6 +780,20 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not signal debugger semaphore\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1003,6 +972,8 @@ name|i
 operator|++
 control|)
 block|{
+name|Status
+operator|=
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_MED
@@ -1013,6 +984,16 @@ operator|&
 name|AcpiGbl_DbMethodInfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+break|break;
+block|}
 block|}
 comment|/* Wait for all threads to complete */
 name|i
@@ -1041,6 +1022,9 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* Cleanup and exit */
+operator|(
+name|void
+operator|)
 name|AcpiOsDeleteSemaphore
 argument_list|(
 name|ThreadGate

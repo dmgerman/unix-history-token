@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 100 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_include
@@ -100,15 +94,14 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 case|:
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|INTERNAL_TYPE_REFERENCE
 condition|)
@@ -160,12 +153,12 @@ name|Offset
 argument_list|,
 name|WalkState
 argument_list|,
-operator|(
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
 name|ACPI_NAMESPACE_NODE
-operator|*
-operator|*
-operator|)
+argument_list|,
 name|ReturnDesc
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -440,7 +433,15 @@ argument_list|,
 name|Length2
 argument_list|)
 expr_stmt|;
-comment|/*      * Point the return object to the new buffer      */
+comment|/* Complete the buffer object initialization */
+name|ReturnDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|AOPOBJ_DATA_VALID
+expr_stmt|;
 name|ReturnDesc
 operator|->
 name|Buffer
@@ -459,9 +460,14 @@ name|Buffer
 operator|.
 name|Length
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|Length1
 operator|+
 name|Length2
+argument_list|)
 expr_stmt|;
 comment|/* Compute the new checksum */
 name|NewBuf
@@ -475,6 +481,9 @@ operator|-
 literal|1
 index|]
 operator|=
+operator|(
+name|NATIVE_CHAR
+operator|)
 name|AcpiUtGenerateChecksum
 argument_list|(
 name|ReturnDesc
@@ -563,52 +572,22 @@ name|NATIVE_CHAR
 modifier|*
 name|NewBuf
 decl_stmt|;
-name|UINT32
-name|IntegerSize
-init|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_INTEGER
-argument_list|)
-decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * There are three cases to handle:      * 1) Two Integers concatenated to produce a buffer      * 2) Two Strings concatenated to produce a string      * 3) Two Buffers concatenated to produce a buffer      */
+comment|/*      * There are three cases to handle:      *       * 1) Two Integers concatenated to produce a new Buffer      * 2) Two Strings concatenated to produce a new String      * 3) Two Buffers concatenated to produce a new Buffer      */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc1
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-comment|/* Handle both ACPI 1.0 and ACPI 2.0 Integer widths */
-if|if
-condition|(
-name|WalkState
-operator|->
-name|MethodNode
-operator|->
-name|Flags
-operator|&
-name|ANOBJ_DATA_WIDTH_32
-condition|)
-block|{
-comment|/*              * We are running a method that exists in a 32-bit ACPI table.              * Truncate the value to 32 bits by zeroing out the upper              * 32-bit field              */
-name|IntegerSize
-operator|=
-sizeof|sizeof
-argument_list|(
-name|UINT32
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Result of two integers is a buffer */
+comment|/* Result of two Integers is a Buffer */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -628,14 +607,14 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
-comment|/* Need enough space for two integers */
+comment|/* Need enough buffer space for two integers */
 name|ReturnDesc
 operator|->
 name|Buffer
 operator|.
 name|Length
 operator|=
-name|IntegerSize
+name|AcpiGbl_IntegerByteWidth
 operator|*
 literal|2
 expr_stmt|;
@@ -671,18 +650,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|ReturnDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
-operator|=
-operator|(
-name|UINT8
-operator|*
-operator|)
-name|NewBuf
-expr_stmt|;
 comment|/* Convert the first integer */
 name|ThisInteger
 operator|=
@@ -700,7 +667,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|IntegerSize
+name|AcpiGbl_IntegerByteWidth
 condition|;
 name|i
 operator|++
@@ -712,7 +679,7 @@ name|i
 index|]
 operator|=
 operator|(
-name|UINT8
+name|NATIVE_CHAR
 operator|)
 name|ThisInteger
 expr_stmt|;
@@ -736,9 +703,10 @@ init|;
 name|i
 operator|<
 operator|(
-name|IntegerSize
-operator|*
-literal|2
+name|ACPI_MUL_2
+argument_list|(
+name|AcpiGbl_IntegerByteWidth
+argument_list|)
 operator|)
 condition|;
 name|i
@@ -751,7 +719,7 @@ name|i
 index|]
 operator|=
 operator|(
-name|UINT8
+name|NATIVE_CHAR
 operator|)
 name|ThisInteger
 expr_stmt|;
@@ -760,10 +728,32 @@ operator|>>=
 literal|8
 expr_stmt|;
 block|}
+comment|/* Complete the buffer object initialization */
+name|ReturnDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|AOPOBJ_DATA_VALID
+expr_stmt|;
+name|ReturnDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
+name|NewBuf
+expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
+comment|/* Result of two Strings is a String */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -788,12 +778,18 @@ name|NewBuf
 operator|=
 name|ACPI_MEM_ALLOCATE
 argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|ObjDesc1
 operator|->
 name|String
 operator|.
 name|Length
 operator|+
+operator|(
+name|ACPI_SIZE
+operator|)
 name|ObjDesc2
 operator|->
 name|String
@@ -824,6 +820,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/* Concatenate the strings */
 name|ACPI_STRCPY
 argument_list|(
 name|NewBuf
@@ -852,7 +849,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-comment|/* Point the return object to the new string */
+comment|/* Complete the String object initialization */
 name|ReturnDesc
 operator|->
 name|String
@@ -883,7 +880,7 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/* Operand0 is a buffer */
+comment|/* Result of two Buffers is a Buffer */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -907,12 +904,18 @@ name|NewBuf
 operator|=
 name|ACPI_MEM_ALLOCATE
 argument_list|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|ObjDesc1
 operator|->
 name|Buffer
 operator|.
 name|Length
 operator|+
+operator|(
+name|ACPI_SIZE
+operator|)
 name|ObjDesc2
 operator|->
 name|Buffer
@@ -941,6 +944,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/* Concatenate the buffers */
 name|ACPI_MEMCPY
 argument_list|(
 name|NewBuf
@@ -981,7 +985,15 @@ operator|.
 name|Length
 argument_list|)
 expr_stmt|;
-comment|/*          * Point the return object to the new buffer          */
+comment|/* Complete the buffer object initialization */
+name|ReturnDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|AOPOBJ_DATA_VALID
+expr_stmt|;
 name|ReturnDesc
 operator|->
 name|Buffer
@@ -1014,6 +1026,7 @@ name|Length
 expr_stmt|;
 break|break;
 default|default:
+comment|/* Invalid object type, should not happen here */
 name|Status
 operator|=
 name|AE_AML_INTERNAL
@@ -1309,6 +1322,8 @@ name|TRUE
 operator|)
 return|;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 return|return

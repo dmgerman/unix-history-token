@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 29 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 32 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -39,11 +39,19 @@ literal|"rsdump"
 argument_list|)
 end_macro
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|ACPI_DEBUG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ENABLE_DEBUGGER
+argument_list|)
+end_if
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIrq  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
@@ -2205,7 +2213,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Resource structure %x.\n"
+literal|"Resource structure %X.\n"
 argument_list|,
 name|Count
 operator|++
@@ -2474,11 +2482,12 @@ condition|)
 block|{
 name|PrtElement
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_PCI_ROUTING_TABLE
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2548,11 +2557,12 @@ name|Length
 expr_stmt|;
 name|PrtElement
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_PCI_ROUTING_TABLE
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

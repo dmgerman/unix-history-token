@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmath - Integer math support routines  *              $Revision: 10 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmath - Integer math support routines  *              $Revision: 11 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -486,6 +486,9 @@ name|Partial3
 operator|.
 name|Full
 operator|=
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|Partial2
 operator|.
 name|Part
@@ -628,6 +631,9 @@ name|Part
 operator|.
 name|Hi
 operator|=
+operator|(
+name|UINT32
+operator|)
 operator|-
 operator|(
 operator|(
@@ -646,6 +652,9 @@ name|Part
 operator|.
 name|Lo
 operator|=
+operator|(
+name|UINT32
+operator|)
 operator|-
 operator|(
 operator|(

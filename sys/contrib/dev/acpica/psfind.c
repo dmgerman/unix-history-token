@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -75,7 +75,9 @@ switch|switch
 condition|(
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
@@ -100,14 +102,20 @@ return|return
 operator|(
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Parent
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 name|Parent
 operator|=
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}
@@ -171,7 +179,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 comment|/* Check AML_CREATE first (since some opcodes have AML_FIELD set also )*/
@@ -188,7 +198,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_CREATE_FIELD_OP
 condition|)
@@ -225,6 +237,8 @@ operator|&&
 operator|(
 name|Field
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -236,6 +250,8 @@ name|ACPI_STRNCMP
 argument_list|(
 name|Field
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -288,7 +304,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Field
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 if|if
@@ -314,7 +332,9 @@ name|Opcode
 operator|||
 name|Field
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|Opcode
 operator|)
@@ -330,6 +350,8 @@ name|Field
 operator|=
 name|Field
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -360,7 +382,9 @@ name|Opcode
 operator|||
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|Opcode
 operator|||
@@ -376,6 +400,8 @@ name|Op
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -497,6 +523,8 @@ while|while
 condition|(
 name|Scope
 operator|->
+name|Common
+operator|.
 name|Parent
 condition|)
 block|{
@@ -504,6 +532,8 @@ name|Scope
 operator|=
 name|Scope
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}
@@ -528,6 +558,9 @@ name|Scope
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
+comment|/* Should not get here */
 break|break;
 block|}
 name|Unprefixed
@@ -628,7 +661,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"Search scope %p Segs=%d Opcode=%4.4X Create=%d\n"
+literal|"Search scope %p Segs=%d Opcode=%4.4hX Create=%d\n"
 operator|,
 name|Scope
 operator|,
@@ -701,7 +734,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"[%4.4s] Found! Op=%p Opcode=%4.4X\n"
+literal|"[%4.4s] Found! Op=%p Opcode=%4.4hX\n"
 operator|,
 operator|(
 name|char
@@ -714,7 +747,9 @@ name|Op
 operator|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -778,7 +813,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"[%4.4s] Not found, created Op=%p Opcode=%4.4X\n"
+literal|"[%4.4s] Not found, created Op=%p Opcode=%4.4hX\n"
 operator|,
 operator|(
 name|char
@@ -809,6 +844,8 @@ name|Op
 operator|&&
 name|Scope
 operator|->
+name|Common
+operator|.
 name|Parent
 condition|)
 block|{
@@ -816,6 +853,8 @@ name|Scope
 operator|=
 name|Scope
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 name|Op
@@ -839,7 +878,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"[%4.4s] Found in parent tree! Op=%p Opcode=%4.4X\n"
+literal|"[%4.4s] Found in parent tree! Op=%p Opcode=%4.4hX\n"
 operator|,
 operator|(
 name|char
@@ -852,7 +891,9 @@ name|Op
 operator|,
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|)
 argument_list|)
 expr_stmt|;

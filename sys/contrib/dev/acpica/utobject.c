@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,19 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_include
@@ -58,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateInternalObjectDbg  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because  *              these objects are cached, and we want them to be  *              one-size-satisifies-any-request.  This in itself may not be  *              the most memory efficient, but the efficiency of the object  *              cache should more than make up for this!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCreateInternalObjectDbg  *  * PARAMETERS:  ModuleName          - Source file name of caller  *              LineNumber          - Line number of caller  *              ComponentId         - Component type of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because  *              these objects are cached, and we want them to be  *              one-size-satisifies-any-request.  This in itself may not be  *              the most memory efficient, but the efficiency of the object  *              cache should more than make up for this!  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -188,6 +176,9 @@ operator|=
 name|SecondObject
 expr_stmt|;
 break|break;
+default|default:
+comment|/* All others have no secondary object */
+break|break;
 block|}
 comment|/* Save the object type in the object descriptor */
 name|Object
@@ -220,7 +211,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidInternalObject  *  * PARAMETERS:  Operand             - Object to be validated  *  * RETURN:      Validate a pointer to be an ACPI_OPERAND_OBJECT  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidInternalObject  *  * PARAMETERS:  Object              - Object to be validated  *  * RETURN:      Validate a pointer to be an ACPI_OPERAND_OBJECT  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -269,7 +260,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 case|:
 comment|/* The object appears to be a valid ACPI_OPERAND_OBJECT  */
 return|return
@@ -330,7 +321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAllocateObjectDescDbg  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAllocateObjectDescDbg  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -395,7 +386,7 @@ name|ACPI_SET_DESCRIPTOR_TYPE
 argument_list|(
 name|Object
 argument_list|,
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
@@ -407,6 +398,9 @@ literal|"%p Size %X\n"
 operator|,
 name|Object
 operator|,
+operator|(
+name|UINT32
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ACPI_OPERAND_OBJECT
@@ -423,7 +417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteObjectDesc  *  * PARAMETERS:  Object          - Acpi internal object to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Free an ACPI object descriptor or add it to the object cache  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteObjectDesc  *  * PARAMETERS:  Object          - An Acpi internal object to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Free an ACPI object descriptor or add it to the object cache  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -450,7 +444,7 @@ argument_list|(
 name|Object
 argument_list|)
 operator|!=
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -480,7 +474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteObjectCache  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteObjectCache  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -506,7 +500,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetSimpleObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a simple object for return to an API user.  *  *              The length includes the object structure plus any additional  *              needed space.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetSimpleObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *ObjLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a simple object for return to an external user.  *  *              The length includes the object structure plus any additional  *              needed space.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -591,11 +585,10 @@ block|}
 comment|/*      * The final length depends on the object type      * Strings and Buffers are packed right up against the parent object and      * must be accessed bytewise or there may be alignment problems on      * certain processors      */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|InternalObject
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -603,6 +596,9 @@ name|ACPI_TYPE_STRING
 case|:
 name|Length
 operator|+=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|InternalObject
 operator|->
 name|String
@@ -617,6 +613,9 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|Length
 operator|+=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|InternalObject
 operator|->
 name|Buffer
@@ -648,20 +647,6 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_ZERO_OP
-case|:
-case|case
-name|AML_ONE_OP
-case|:
-case|case
-name|AML_ONES_OP
-case|:
-case|case
-name|AML_REVISION_OP
-case|:
-comment|/* These Constant opcodes will be resolved to Integers */
-break|break;
-case|case
 name|AML_INT_NAMEPATH_OP
 case|:
 comment|/*              * Get the actual length of the full pathname to this object.              * The reference will be converted to the pathname to the object              */
@@ -681,7 +666,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/*              * No other reference opcodes are supported.              * Notably, Locals and Args are not supported, by this may be              * required eventually.              */
+comment|/*              * No other reference opcodes are supported.              * Notably, Locals and Args are not supported, but this may be              * required eventually.              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -714,11 +699,10 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Unsupported type=%X in object %p\n"
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|InternalObject
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|,
 name|InternalObject
 operator|)
@@ -748,7 +732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetElementLength  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: Get the length of one package element.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetElementLength  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Get the length of one package element.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -847,6 +831,13 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
+default|default:
+comment|/* No other types allowed */
+return|return
+operator|(
+name|AE_BAD_PARAMETER
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -857,7 +848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetPackageObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a package object for return to an API user.  *  *              This is moderately complex since a package contains other  *              objects including packages.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetPackageObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *ObjLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a package object for return to an external user.  *  *              This is moderately complex since a package contains other  *              objects including packages.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -945,6 +936,9 @@ name|ACPI_OBJECT
 argument_list|)
 argument_list|)
 operator|*
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Info
 operator|.
 name|NumPackages
@@ -966,7 +960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length will be returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain an object for return to an API user.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *ObjLength          - Where the length will be returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain an object for return to an API user.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -996,15 +990,14 @@ argument_list|(
 name|InternalObject
 argument_list|)
 operator|==
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 operator|)
 operator|&&
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|InternalObject
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_PACKAGE
 operator|)

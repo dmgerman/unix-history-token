@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -240,12 +240,12 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|RsdtSize
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|TableSize
 decl_stmt|;
 name|UINT32
@@ -446,6 +446,13 @@ name|Cleanup
 goto|;
 block|}
 block|}
+comment|/* Get the RSDT and validate it */
+name|AcpiTbGetRsdtAddress
+argument_list|(
+operator|&
+name|Address
+argument_list|)
+expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -457,25 +464,22 @@ name|AcpiGbl_RSDP
 operator|,
 name|ACPI_HIDWORD
 argument_list|(
-name|AcpiGbl_RSDP
-operator|->
-name|RsdtPhysicalAddress
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
 argument_list|)
 operator|,
 name|ACPI_LODWORD
 argument_list|(
-name|AcpiGbl_RSDP
-operator|->
-name|RsdtPhysicalAddress
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
 argument_list|)
 operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Get the RSDT and validate it */
-name|AcpiTbGetRsdtAddress
-argument_list|(
-operator|&
-name|Address
 argument_list|)
 expr_stmt|;
 name|Status
@@ -748,11 +752,13 @@ begin_comment
 comment|/* TBD: Move to a new file */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IA16
-end_ifndef
+begin_if
+if|#
+directive|if
+name|ACPI_MACHINE_WIDTH
+operator|!=
+literal|16
+end_if
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  **RsdpAddress           - Where to place the RSDP address  *              Flags                   - Logical/Physical addressing  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
@@ -1074,11 +1080,12 @@ name|LO_RSDP_WINDOW_BASE
 expr_stmt|;
 name|PhysAddr
 operator|+=
-operator|(
+name|ACPI_PTR_DIFF
+argument_list|(
 name|MemRover
-operator|-
+argument_list|,
 name|TablePtr
-operator|)
+argument_list|)
 expr_stmt|;
 name|TableInfo
 operator|->
@@ -1155,11 +1162,12 @@ name|HI_RSDP_WINDOW_BASE
 expr_stmt|;
 name|PhysAddr
 operator|+=
-operator|(
+name|ACPI_PTR_DIFF
+argument_list|(
 name|MemRover
-operator|-
+argument_list|,
 name|TablePtr
-operator|)
+argument_list|)
 expr_stmt|;
 name|TableInfo
 operator|->

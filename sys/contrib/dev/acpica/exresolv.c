@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 109 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 114 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acdispat.h"
 end_include
 
@@ -41,24 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_define
@@ -137,7 +113,7 @@ operator|*
 name|StackPtr
 argument_list|)
 operator|==
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 condition|)
 block|{
 name|Status
@@ -180,12 +156,12 @@ name|Status
 operator|=
 name|AcpiExResolveNodeToValue
 argument_list|(
-operator|(
+name|ACPI_CAST_INDIRECT_PTR
+argument_list|(
 name|ACPI_NAMESPACE_NODE
-operator|*
-operator|*
-operator|)
+argument_list|,
 name|StackPtr
+argument_list|)
 argument_list|,
 name|WalkState
 argument_list|)
@@ -276,11 +252,10 @@ expr_stmt|;
 comment|/* This is an ACPI_OPERAND_OBJECT  */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|StackDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -394,113 +369,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*          * For constants, we must change the reference/constant object          * to a real integer object          */
-case|case
-name|AML_ZERO_OP
-case|:
-case|case
-name|AML_ONE_OP
-case|:
-case|case
-name|AML_ONES_OP
-case|:
-case|case
-name|AML_REVISION_OP
-case|:
-comment|/* Create a new integer object */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|ACPI_TYPE_INTEGER
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-switch|switch
-condition|(
-name|Opcode
-condition|)
-block|{
-case|case
-name|AML_ZERO_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONE_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONES_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|ACPI_INTEGER_MAX
-expr_stmt|;
-comment|/* Truncate value if we are executing from a 32-bit ACPI table */
-name|AcpiExTruncateFor32bitTable
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|AML_REVISION_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|ACPI_CA_SUPPORT_LEVEL
-expr_stmt|;
-break|break;
-block|}
-comment|/*              * Remove a reference from the original reference object              * and put the new object in its place              */
-name|AcpiUtRemoveReference
-argument_list|(
-name|StackDesc
-argument_list|)
-expr_stmt|;
-operator|*
-name|StackPtr
-operator|=
-name|ObjDesc
-expr_stmt|;
-break|break;
 case|case
 name|AML_INDEX_OP
 case|:
@@ -609,7 +477,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown Reference object subtype %02X in %p\n"
+literal|"Unknown Reference opcode %X in %p\n"
 operator|,
 name|Opcode
 operator|,
@@ -623,9 +491,7 @@ name|AE_AML_INTERNAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch (Opcode) */
 break|break;
-comment|/* case INTERNAL_TYPE_REFERENCE */
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
@@ -670,11 +536,10 @@ literal|"FieldRead SourceDesc=%p Type=%X\n"
 operator|,
 name|StackDesc
 operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|StackDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

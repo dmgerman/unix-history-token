@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -383,6 +383,8 @@ argument_list|)
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|MethodNode
@@ -495,6 +497,10 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Ignore errors, just do them all */
+operator|(
+name|void
+operator|)
 name|AcpiUtUpdateObjectReference
 argument_list|(
 name|Params

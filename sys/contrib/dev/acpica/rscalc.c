@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 39 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 43 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -52,12 +52,12 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculateByteStreamLength  *  * PARAMETERS:  LinkedList          - Pointer to the resource linked list  *              SizeNeeded          - UINT32 pointer of the size buffer needed  *                                    to properly return the parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetByteStreamLength  *  * PARAMETERS:  LinkedList          - Pointer to the resource linked list  *              SizeNeeded          - UINT32 pointer of the size buffer needed  *                                    to properly return the parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiRsCalculateByteStreamLength
+name|AcpiRsGetByteStreamLength
 parameter_list|(
 name|ACPI_RESOURCE
 modifier|*
@@ -89,7 +89,7 @@ name|FALSE
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsCalculateByteStreamLength"
+literal|"RsGetByteStreamLength"
 argument_list|)
 expr_stmt|;
 while|while
@@ -254,8 +254,6 @@ literal|16
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|!=
 name|LinkedList
 operator|->
 name|Data
@@ -269,9 +267,6 @@ condition|)
 block|{
 name|SegmentSize
 operator|+=
-operator|(
-literal|1
-operator|+
 name|LinkedList
 operator|->
 name|Data
@@ -281,7 +276,9 @@ operator|.
 name|ResourceSource
 operator|.
 name|StringLength
-operator|)
+expr_stmt|;
+name|SegmentSize
+operator|++
 expr_stmt|;
 block|}
 break|break;
@@ -295,8 +292,6 @@ literal|26
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|!=
 name|LinkedList
 operator|->
 name|Data
@@ -310,9 +305,6 @@ condition|)
 block|{
 name|SegmentSize
 operator|+=
-operator|(
-literal|1
-operator|+
 name|LinkedList
 operator|->
 name|Data
@@ -322,7 +314,9 @@ operator|.
 name|ResourceSource
 operator|.
 name|StringLength
-operator|)
+expr_stmt|;
+name|SegmentSize
+operator|++
 expr_stmt|;
 block|}
 break|break;
@@ -336,8 +330,6 @@ literal|46
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|!=
 name|LinkedList
 operator|->
 name|Data
@@ -351,9 +343,6 @@ condition|)
 block|{
 name|SegmentSize
 operator|+=
-operator|(
-literal|1
-operator|+
 name|LinkedList
 operator|->
 name|Data
@@ -363,7 +352,9 @@ operator|.
 name|ResourceSource
 operator|.
 name|StringLength
-operator|)
+expr_stmt|;
+name|SegmentSize
+operator|++
 expr_stmt|;
 block|}
 break|break;
@@ -377,6 +368,9 @@ literal|9
 operator|+
 operator|(
 operator|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|LinkedList
 operator|->
 name|Data
@@ -393,8 +387,8 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|!=
+name|ExIrq
+operator|&&
 name|ExIrq
 operator|->
 name|ResourceSource
@@ -404,9 +398,6 @@ condition|)
 block|{
 name|SegmentSize
 operator|+=
-operator|(
-literal|1
-operator|+
 name|LinkedList
 operator|->
 name|Data
@@ -416,7 +407,9 @@ operator|.
 name|ResourceSource
 operator|.
 name|StringLength
-operator|)
+expr_stmt|;
+name|SegmentSize
+operator|++
 expr_stmt|;
 block|}
 break|break;
@@ -464,12 +457,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculateListLength  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              ByteStreamBufferLength  - Size of ByteStreamBuffer  *              SizeNeeded              - UINT32 pointer of the size buffer  *                                        needed to properly return the  *                                        parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetListLength  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              ByteStreamBufferLength  - Size of ByteStreamBuffer  *              SizeNeeded              - UINT32 pointer of the size buffer  *                                        needed to properly return the  *                                        parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiRsCalculateListLength
+name|AcpiRsGetListLength
 parameter_list|(
 name|UINT8
 modifier|*
@@ -530,7 +523,7 @@ name|AdditionalBytes
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsCalculateListLength"
+literal|"RsGetListLength"
 argument_list|)
 expr_stmt|;
 while|while
@@ -1378,12 +1371,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculatePciRoutingTableLength  *  * PARAMETERS:  PackageObject           - Pointer to the package object  *              BufferSizeNeeded        - UINT32 pointer of the size buffer  *                                        needed to properly return the  *                                        parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Given a package representing a PCI routing table, this  *              calculates the size of the corresponding linked list of  *              descriptions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPciRoutingTableLength  *  * PARAMETERS:  PackageObject           - Pointer to the package object  *              BufferSizeNeeded        - UINT32 pointer of the size buffer  *                                        needed to properly return the  *                                        parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Given a package representing a PCI routing table, this  *              calculates the size of the corresponding linked list of  *              descriptions.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiRsCalculatePciRoutingTableLength
+name|AcpiRsGetPciRoutingTableLength
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1397,7 +1390,7 @@ block|{
 name|UINT32
 name|NumberOfElements
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|TempSizeNeeded
 init|=
 literal|0
@@ -1427,7 +1420,7 @@ name|TableIndex
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"RsCalculatePciRoutingTableLength"
+literal|"RsGetPciRoutingTableLength"
 argument_list|)
 expr_stmt|;
 name|NumberOfElements
@@ -1503,28 +1496,22 @@ condition|(
 operator|(
 name|ACPI_TYPE_STRING
 operator|==
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 operator|||
 operator|(
 operator|(
 name|INTERNAL_TYPE_REFERENCE
 operator|==
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 operator|&&
 operator|(
@@ -1569,23 +1556,18 @@ expr_stmt|;
 comment|/*          * Was a String type found?          */
 if|if
 condition|(
-name|TRUE
-operator|==
 name|NameFound
 condition|)
 block|{
 if|if
 condition|(
-name|ACPI_TYPE_STRING
-operator|==
-operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 operator|*
 name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
+operator|==
+name|ACPI_TYPE_STRING
 condition|)
 block|{
 comment|/*                  * The length String.Length field includes the                  * terminating NULL                  */

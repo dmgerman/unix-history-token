@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 88 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 91 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,18 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_define
@@ -103,11 +91,10 @@ block|}
 comment|/*      * Must delete or free any pointers within the object that are not      * actual ACPI objects (for example, a raw buffer pointer).      */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Object
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -239,6 +226,9 @@ argument_list|(
 name|Object
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiOsDeleteSemaphore
 argument_list|(
 name|Object
@@ -269,6 +259,9 @@ name|Semaphore
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiOsDeleteSemaphore
 argument_list|(
 name|Object
@@ -311,6 +304,9 @@ operator|.
 name|Semaphore
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiOsDeleteSemaphore
 argument_list|(
 name|Object
@@ -468,13 +464,9 @@ literal|"Deleting Object %p [%s]\n"
 operator|,
 name|Object
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|Object
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -490,11 +482,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObjectList  *  * PARAMETERS:  *ObjList        - Pointer to the list to be deleted  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function deletes an internal object list, including both  *              simple objects and package objects  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteInternalObjectList  *  * PARAMETERS:  *ObjList        - Pointer to the list to be deleted  *  * RETURN:      None  *  * DESCRIPTION: This function deletes an internal object list, including both  *              simple objects and package objects  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiUtDeleteInternalObjectList
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
@@ -540,10 +532,7 @@ argument_list|(
 name|ObjList
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
@@ -679,11 +668,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Object
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|ACPI_TYPE_METHOD
 condition|)
@@ -924,11 +912,10 @@ expr_stmt|;
 comment|/*          * All sub-objects must have their reference count incremented also.          * Different object types have different subobjects.          */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|Object
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -958,11 +945,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|AcpiUtUpdateRefCount
 argument_list|(
@@ -1075,11 +1060,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 block|}
 break|break;
@@ -1110,11 +1093,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 break|break;
 case|case
@@ -1144,11 +1125,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 break|break;
 case|case
@@ -1178,11 +1157,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|Status
 operator|=
@@ -1208,11 +1185,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 break|break;
 case|case
@@ -1242,11 +1217,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 name|Status
 operator|=
@@ -1272,11 +1245,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 break|break;
 case|case
@@ -1285,6 +1256,7 @@ case|:
 case|case
 name|INTERNAL_TYPE_REFERENCE
 case|:
+default|default:
 comment|/* No subobjects */
 break|break;
 block|}
@@ -1309,6 +1281,25 @@ block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
+argument_list|)
+expr_stmt|;
+name|ErrorExit
+label|:
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not update object reference count, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -1348,6 +1339,9 @@ name|return_VOID
 expr_stmt|;
 block|}
 comment|/*      * We have a valid ACPI internal object, now increment the reference count      */
+operator|(
+name|void
+operator|)
 name|AcpiUtUpdateObjectReference
 argument_list|(
 name|Object
@@ -1430,6 +1424,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Decrement the reference count, and only actually delete the object      * if the reference count becomes 0.  (Must also decrement the ref count      * of all subobjects!)      */
+operator|(
+name|void
+operator|)
 name|AcpiUtUpdateObjectReference
 argument_list|(
 name|Object

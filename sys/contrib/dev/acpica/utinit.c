@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 109 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 112 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
 end_include
 
 begin_include
@@ -74,7 +68,7 @@ block|{
 name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Invalid FADT value %s=%lX at offset %lX FADT=%p\n"
+literal|"Invalid FADT value %s=%X at offset %X FADT=%p\n"
 operator|,
 name|RegisterName
 operator|,
@@ -410,7 +404,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiUtSubsystemShutdown
 parameter_list|(
 name|void
@@ -436,10 +430,7 @@ literal|"ACPI Subsystem is already terminated\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 comment|/* Subsystem appears active, go ahead and shut it down */
@@ -469,6 +460,9 @@ name|AcpiUtTerminate
 argument_list|()
 expr_stmt|;
 comment|/* Purge the local caches */
+operator|(
+name|void
+operator|)
 name|AcpiPurgeCachedObjects
 argument_list|()
 expr_stmt|;
@@ -485,10 +479,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -408,8 +408,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_INVALID_TABLE_LENGTH
+value|(ACPI_STATUS) (0x0006 | AE_CODE_ACPI_TABLES)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_TBL_MAX
-value|0x0005
+value|0x0006
 end_define
 
 begin_comment
@@ -615,8 +622,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_ALIGNMENT
+value|(ACPI_STATUS) (0x001D | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_AML_NO_RESOURCE_END_TAG
+value|(ACPI_STATUS) (0x001E | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_AML_BAD_RESOURCE_VALUE
+value|(ACPI_STATUS) (0x001F | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
-value|0x001C
+value|0x001F
 end_define
 
 begin_comment
@@ -823,6 +851,8 @@ block|,
 literal|"AE_BAD_VALUE"
 block|,
 literal|"AE_TABLE_NOT_SUPPORTED"
+block|,
+literal|"AE_INVALID_TABLE_LENGTH"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -890,6 +920,12 @@ block|,
 literal|"AE_AML_REGISTER_LIMIT"
 block|,
 literal|"AE_AML_NO_WHILE"
+block|,
+literal|"AE_AML_ALIGNMENT"
+block|,
+literal|"AE_AML_NO_RESOURCE_END_TAG"
+block|,
+literal|"AE_AML_BAD_RESOURCE_VALUE"
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -154,17 +154,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTable  *  * PARAMETERS:  TablePtr            - Input buffer pointer, optional  *              TableInfo           - Return value from AcpiTbGetTable  *  * RETURN:      Status  *  * DESCRIPTION: Load and validate all tables other than the RSDT.  The RSDT must  *              already be loaded and validated.  *              Install the table into the global data structs.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbInstallTable  *  * PARAMETERS:  TableInfo           - Return value from AcpiTbGetTable  *  * RETURN:      Status  *  * DESCRIPTION: Load and validate all tables other than the RSDT.  The RSDT must  *              already be loaded and validated.  *              Install the table into the global data structs.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiTbInstallTable
 parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
-parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
@@ -183,8 +179,6 @@ name|Status
 operator|=
 name|AcpiTbRecognizeTable
 argument_list|(
-name|TablePtr
-argument_list|,
 name|TableInfo
 argument_list|)
 expr_stmt|;
@@ -275,17 +269,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbRecognizeTable  *  * PARAMETERS:  TablePtr            - Input buffer pointer, optional  *              TableInfo           - Return value from AcpiTbGetTable  *  * RETURN:      Status  *  * DESCRIPTION: Check a table signature for a match against known table types  *  * NOTE:  All table pointers are validated as follows:  *          1) Table pointer must point to valid physical memory  *          2) Signature must be 4 ASCII chars, even if we don't recognize the  *             name  *          3) Table must be readable for length specified in the header  *          4) Table checksum must be valid (with the exception of the FACS  *             which has no checksum for some odd reason)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbRecognizeTable  *  * PARAMETERS:  TableInfo           - Return value from AcpiTbGetTable  *  * RETURN:      Status  *  * DESCRIPTION: Check a table signature for a match against known table types  *  * NOTE:  All table pointers are validated as follows:  *          1) Table pointer must point to valid physical memory  *          2) Signature must be 4 ASCII chars, even if we don't recognize the  *             name  *          3) Table must be readable for length specified in the header  *          4) Table checksum must be valid (with the exception of the FACS  *             which has no checksum for some odd reason)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiTbRecognizeTable
 parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
-parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
@@ -378,6 +368,9 @@ name|TableInfo
 operator|->
 name|Length
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|TableHeader
 operator|->
 name|Length
@@ -399,17 +392,18 @@ argument_list|(
 name|TableHeader
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_CHECKSUM_ABORT
+operator|)
 if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
-operator|&&
-operator|(
-operator|!
-name|ACPI_CHECKSUM_ABORT
-operator|)
 condition|)
 block|{
 comment|/* Ignore the error if configuration says so */
@@ -418,6 +412,8 @@ operator|=
 name|AE_OK
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -1032,13 +1028,15 @@ name|Length
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbUninstallTable  *  * PARAMETERS:  TableInfo           - A table info struct  *  * RETURN:      None.  *  * DESCRIPTION: Free the memory associated with an internal ACPI table that  *              is either installed or has never been installed.  *              Table mutex should be locked.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbUninstallTable  *  * PARAMETERS:  TableInfo           - A table info struct  *  * RETURN:      Pointer to the next table in the list (of same type)  *  * DESCRIPTION: Free the memory associated with an internal ACPI table that  *              is either installed or has never been installed.  *              Table mutex should be locked.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1057,7 +1055,7 @@ name|NextDesc
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-literal|"TbDeleteSingleTable"
+literal|"AcpiTbUninstallTable"
 argument_list|,
 name|TableDesc
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 163 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 167 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_include
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_define
@@ -166,25 +154,49 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Destination object must be an object of type Reference */
+comment|/* Destination object must be a Reference or a Constant object */
+switch|switch
+condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|DestDesc
+argument_list|)
+condition|)
+block|{
+case|case
+name|INTERNAL_TYPE_REFERENCE
+case|:
+break|break;
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+comment|/* Allow stores to Constants -- a Noop as per ACPI spec */
 if|if
 condition|(
 name|DestDesc
 operator|->
 name|Common
 operator|.
-name|Type
-operator|!=
-name|INTERNAL_TYPE_REFERENCE
+name|Flags
+operator|&
+name|AOPOBJ_AML_CONSTANT
 condition|)
 block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*lint: -fallthrough */
+default|default:
 comment|/* Destination is not an Reference */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Destination is not a ReferenceObj [%p]\n"
+literal|"Destination is not a Reference or Constant object [%p]\n"
 operator|,
 name|DestDesc
 operator|)
@@ -211,7 +223,7 @@ literal|"ExStore"
 argument_list|,
 literal|2
 argument_list|,
-literal|"Target is not a ReferenceObj"
+literal|"Target is not a Reference or Constant object"
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -220,7 +232,7 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Examine the Reference opcode.  These cases are handled:      *      * 1) Store to Name (Change the object associated with a name)      * 2) Store to an indexed area of a Buffer or Package      * 3) Store to a Method Local or Arg      * 4) Store to the debug object      * 5) Store to a constant -- a noop      */
+comment|/*      * Examine the Reference opcode.  These cases are handled:      *      * 1) Store to Name (Change the object associated with a name)      * 2) Store to an indexed area of a Buffer or Package      * 3) Store to a Method Local or Arg      * 4) Store to the debug object      */
 switch|switch
 condition|(
 name|RefDesc
@@ -315,24 +327,19 @@ name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"[ACPI Debug] %s: "
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -434,13 +441,9 @@ name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"Type %s %p\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 name|SourceDesc
@@ -459,27 +462,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|AML_ZERO_OP
-case|:
-case|case
-name|AML_ONE_OP
-case|:
-case|case
-name|AML_ONES_OP
-case|:
-case|case
-name|AML_REVISION_OP
-case|:
-comment|/*          * Storing to a constant is a no-op according to the  ACPI          * Specification. (Delete the reference descriptor, however.)          */
-break|break;
 default|default:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown Reference subtype %02x\n"
+literal|"Unknown Reference opcode %X\n"
 operator|,
 name|RefDesc
 operator|->
@@ -502,7 +491,6 @@ name|AE_AML_INTERNAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch (RefDesc->Reference.Opcode) */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -660,11 +648,10 @@ name|Object
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_BUFFER
 condition|)
@@ -678,11 +665,10 @@ block|}
 comment|/*          * The assignment of the individual elements will be slightly          * different for each source type.          */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -723,6 +709,9 @@ name|ACPI_TYPE_STRING
 case|:
 name|Value
 operator|=
+operator|(
+name|UINT8
+operator|)
 name|SourceDesc
 operator|->
 name|String
@@ -742,13 +731,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Source must be Integer/Buffer/String type, not %s\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -868,13 +853,9 @@ literal|"Storing %p(%s) into node %p(%s)\n"
 operator|,
 name|SourceDesc
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 name|Node
@@ -1006,22 +987,14 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"Store %s into %s via Convert/Attach\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|NewDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -1036,13 +1009,9 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"Storing %s (%p) directly into node (%p), no implicit conversion\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 name|SourceDesc
@@ -1060,11 +1029,10 @@ name|Node
 argument_list|,
 name|SourceDesc
 argument_list|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

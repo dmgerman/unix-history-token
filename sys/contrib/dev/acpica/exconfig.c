@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 60 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 66 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
 end_include
 
 begin_include
@@ -53,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdispat.h"
 end_include
 
 begin_define
@@ -143,6 +131,9 @@ name|TableInfo
 operator|.
 name|Length
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Table
 operator|->
 name|Length
@@ -163,8 +154,6 @@ name|Status
 operator|=
 name|AcpiTbInstallTable
 argument_list|(
-name|NULL
-argument_list|,
 operator|&
 name|TableInfo
 argument_list|)
@@ -202,6 +191,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* Uninstall table on error */
+operator|(
+name|void
+operator|)
 name|AcpiTbUninstallTable
 argument_list|(
 name|TableInfo
@@ -648,11 +640,12 @@ index|[
 literal|5
 index|]
 argument_list|,
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
+argument_list|,
 name|ParameterNode
+argument_list|)
 argument_list|,
 name|WalkState
 argument_list|)
@@ -665,6 +658,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiExUnloadTable
 argument_list|(
 name|DdbHandle
@@ -756,13 +752,9 @@ literal|"Load from Region %p %s\n"
 operator|,
 name|ObjDesc
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -807,19 +799,15 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|ACPI_INTEGER
-operator|*
-operator|)
-operator|(
 operator|(
 name|UINT8
 operator|*
 operator|)
 operator|&
 name|TableHeader
+operator|)
 operator|+
 name|i
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -920,10 +908,10 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|ACPI_INTEGER
+operator|(
+name|UINT8
 operator|*
 operator|)
-operator|(
 name|TableDataPtr
 operator|+
 name|i
@@ -965,13 +953,9 @@ literal|"Load from Field %p %s\n"
 operator|,
 name|ObjDesc
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -1003,15 +987,16 @@ goto|;
 block|}
 name|TablePtr
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_TABLE_HEADER
-operator|*
-operator|)
+argument_list|,
 name|BufferDesc
 operator|->
 name|Buffer
 operator|.
 name|Pointer
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -1080,11 +1065,6 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Table has invalid signature [%4.4s], must be SSDT or PSDT\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|TablePtr
 operator|->
 name|Signature
@@ -1144,6 +1124,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiExUnloadTable
 argument_list|(
 name|DdbHandle
@@ -1231,21 +1214,14 @@ argument_list|(
 name|DdbHandle
 argument_list|)
 operator|!=
-name|ACPI_DESC_TYPE_INTERNAL
+name|ACPI_DESC_TYPE_OPERAND
 operator|)
 operator|||
 operator|(
-operator|(
-operator|(
-name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|DdbHandle
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|INTERNAL_TYPE_REFERENCE
 operator|)
@@ -1271,8 +1247,6 @@ operator|.
 name|Object
 expr_stmt|;
 comment|/*      * Delete the entire namespace under this table Node      * (Offset contains the TableId)      */
-name|Status
-operator|=
 name|AcpiNsDeleteNamespaceByOwner
 argument_list|(
 name|TableInfo
@@ -1280,21 +1254,10 @@ operator|->
 name|TableId
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Delete the table itself */
+operator|(
+name|void
+operator|)
 name|AcpiTbUninstallTable
 argument_list|(
 name|TableInfo

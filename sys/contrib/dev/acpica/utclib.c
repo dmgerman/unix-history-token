@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -19,36 +19,6 @@ directive|include
 file|"acpi.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
 begin_comment
 comment|/*  * These implementations of standard C Library routines can optionally be  * used if a C library is not available.  In general, they are less efficient  * than an inline or assembly implementation  */
 end_comment
@@ -57,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
@@ -328,7 +298,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|int
 name|AcpiUtStrncmp
 parameter_list|(
 specifier|const
@@ -708,118 +678,7 @@ name|POSITIVE
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|_ACPI_XA
-value|0x00
-end_define
-
-begin_comment
-comment|/* extra alphabetic - not supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_XS
-value|0x40
-end_define
-
-begin_comment
-comment|/* extra space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_BB
-value|0x00
-end_define
-
-begin_comment
-comment|/* BEL, BS, etc. - not supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_CN
-value|0x20
-end_define
-
-begin_comment
-comment|/* CR, FF, HT, NL, VT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_DI
-value|0x04
-end_define
-
-begin_comment
-comment|/* '0'-'9' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_LO
-value|0x02
-end_define
-
-begin_comment
-comment|/* 'a'-'z' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_PU
-value|0x10
-end_define
-
-begin_comment
-comment|/* punctuation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_SP
-value|0x08
-end_define
-
-begin_comment
-comment|/* space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_UP
-value|0x01
-end_define
-
-begin_comment
-comment|/* 'A'-'Z' */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ACPI_XD
-value|0x80
-end_define
-
-begin_comment
-comment|/* '0'-'9', 'A'-'F', 'a'-'f' */
-end_comment
-
 begin_decl_stmt
-specifier|static
 specifier|const
 name|UINT8
 name|_acpi_ctype
@@ -1592,10 +1451,10 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|int
 name|AcpiUtToUpper
 parameter_list|(
-name|UINT32
+name|int
 name|c
 parameter_list|)
 block|{
@@ -1627,10 +1486,10 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|UINT32
+name|int
 name|AcpiUtToLower
 parameter_list|(
-name|UINT32
+name|int
 name|c
 parameter_list|)
 block|{
@@ -1985,16 +1844,27 @@ condition|)
 block|{
 name|index
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
+operator|(
+name|UINT8
+operator|)
 operator|*
 name|String
 operator|-
 literal|'0'
+argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 name|index
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|AcpiUtToUpper
 argument_list|(
 operator|*

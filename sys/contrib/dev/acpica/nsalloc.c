@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 72 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 74 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_define
@@ -422,14 +416,11 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"[%4.4s] is a forward reference\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -494,14 +485,11 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"%4.4s added to %p at %p\n"
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|Node
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|ParentNode
 operator|,
@@ -698,7 +686,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiNsDeleteNamespaceSubtree
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
@@ -728,10 +716,7 @@ operator|!
 name|ParentNode
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 comment|/*      * Traverse the tree of objects until we bubble back up      * to where we started.      */
@@ -819,10 +804,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function
@@ -910,7 +892,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiNsDeleteNamespaceByOwner
 parameter_list|(
 name|UINT16
@@ -1096,10 +1078,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
+name|return_VOID
 expr_stmt|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acnamesp.h"
 end_include
 
@@ -35,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
 end_include
 
 begin_include
@@ -866,7 +854,7 @@ name|RegionObj
 condition|)
 block|{
 comment|/*                  * First disassociate the handler from the region.                  *                  * NOTE: this doesn't mean that the region goes away                  * The region is just inaccessible as indicated to                  * the _REG method                  */
-name|AcpiEvDisassociateRegionFromHandler
+name|AcpiEvDetachRegion
 argument_list|(
 name|RegionObj
 argument_list|,

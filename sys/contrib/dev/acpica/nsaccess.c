@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 153 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 156 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -446,17 +440,18 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* Store pointer to value descriptor in the Node */
+name|Status
+operator|=
 name|AcpiNsAttachObject
 argument_list|(
 name|NewNode
 argument_list|,
 name|ObjDesc
 argument_list|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Remove local reference to the object */
@@ -692,12 +687,16 @@ name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
+name|Pathname
+operator|=
+literal|""
+expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Null Pathname (Zero segments), Flags=%x\n"
+literal|"Null Pathname (Zero segments), Flags=%X\n"
 operator|,
 name|Flags
 operator|)
@@ -712,6 +711,9 @@ condition|(
 operator|*
 name|Pathname
 operator|==
+operator|(
+name|UINT8
+operator|)
 name|AML_ROOT_PREFIX
 condition|)
 block|{
@@ -760,6 +762,9 @@ condition|(
 operator|*
 name|Pathname
 operator|==
+operator|(
+name|UINT8
+operator|)
 name|AML_PARENT_PREFIX
 condition|)
 block|{
@@ -817,7 +822,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Prefix-only Pathname (Zero name segments), Flags=%x\n"
+literal|"Prefix-only Pathname (Zero name segments), Flags=%X\n"
 operator|,
 name|Flags
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 105 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 110 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -222,7 +216,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|ACPI_STATUS
+name|void
 name|AcpiNsGetInternalNameLength
 parameter_list|(
 name|ACPI_NAMESTRING_INFO
@@ -378,11 +372,6 @@ name|NextExternalChar
 operator|=
 name|NextExternalChar
 expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 block|}
 end_function
 
@@ -428,7 +417,7 @@ name|Result
 init|=
 name|NULL
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT
 name|i
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -696,6 +685,9 @@ name|char
 operator|)
 name|ACPI_TOUPPER
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|*
 name|ExternalName
 argument_list|)
@@ -955,32 +947,32 @@ modifier|*
 name|ConvertedName
 parameter_list|)
 block|{
-name|UINT32
+name|NATIVE_UINT_MIN32
 name|PrefixLength
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT_MIN32
 name|NamesIndex
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT_MIN32
 name|NumSegments
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT_MIN32
 name|i
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT_MIN32
 name|j
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|NATIVE_UINT_MIN32
 name|RequiredLength
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
@@ -1070,6 +1062,8 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 comment|/*      * Check for object names.  Note that there could be 0-255 of these      * 4-byte elements.      */
@@ -1372,6 +1366,9 @@ block|{
 operator|*
 name|ConvertedNameLength
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|RequiredLength
 expr_stmt|;
 block|}
@@ -1865,25 +1862,19 @@ literal|"Parent of %p [%4.4s] is %p [%4.4s]\n"
 operator|,
 name|ChildNode
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ChildNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|,
 name|ParentNode
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ParentNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1898,6 +1889,9 @@ condition|)
 block|{
 name|return_VALUE
 argument_list|(
+operator|(
+name|ACPI_NAME
+operator|)
 name|ParentNode
 operator|->
 name|Name
@@ -1916,14 +1910,11 @@ literal|"unable to find parent of %p (%4.4s)\n"
 operator|,
 name|ChildNode
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|ChildNode
 operator|->
 name|Name
+operator|.
+name|Ascii
 operator|)
 argument_list|)
 expr_stmt|;

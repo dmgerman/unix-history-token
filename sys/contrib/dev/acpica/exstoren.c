@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,37 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acinterp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"actables.h"
 end_include
 
 begin_define
@@ -138,11 +108,10 @@ case|:
 comment|/*          * Stores into a Field/Region or into a Integer/Buffer/String          * are all essentially the same.  This case handles the          * "interchangeable" types Integer, String, and Buffer.          */
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|==
 name|INTERNAL_TYPE_REFERENCE
 condition|)
@@ -172,31 +141,28 @@ comment|/*          * Must have a Integer, Buffer, or String          */
 if|if
 condition|(
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_INTEGER
 operator|)
 operator|&&
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_BUFFER
 operator|)
 operator|&&
 operator|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
 name|ACPI_TYPE_STRING
 operator|)
@@ -210,13 +176,9 @@ name|ACPI_DB_ERROR
 operator|,
 literal|"Cannot assign type %s to %s (must be type Int/Str/Buf)\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|,
 name|AcpiUtGetTypeName
@@ -337,17 +299,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|!=
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|DestDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 comment|/*          * The source type does not match the type of the destination.          * Perform the "implicit conversion" of the source to the current type          * of the target as per the ACPI specification.          *          * If no conversion performed, ActualSrcDesc = SourceDesc.          * Otherwise, ActualSrcDesc is a temporary object to hold the          * converted object.          */
@@ -355,11 +315,10 @@ name|Status
 operator|=
 name|AcpiExConvertToTargetType
 argument_list|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|DestDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 argument_list|,
 name|SourceDesc
 argument_list|,
@@ -387,11 +346,10 @@ block|}
 comment|/*      * We now have two objects of identical types, and we can perform a      * copy of the *value* of the source object.      */
 switch|switch
 condition|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
 name|DestDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 condition|)
 block|{
 case|case
@@ -413,8 +371,6 @@ comment|/* Truncate value if we are executing from a 32-bit ACPI table */
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|DestDesc
-argument_list|,
-name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
@@ -469,13 +425,9 @@ name|ACPI_DB_WARN
 operator|,
 literal|"Store into type %s not implemented\n"
 operator|,
-name|AcpiUtGetTypeName
+name|AcpiUtGetObjectTypeName
 argument_list|(
 name|DestDesc
-operator|->
-name|Common
-operator|.
-name|Type
 argument_list|)
 operator|)
 argument_list|)

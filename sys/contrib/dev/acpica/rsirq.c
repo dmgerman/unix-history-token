@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 24 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 28 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -205,6 +205,20 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Zero interrupts is invalid! */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_DATA
+argument_list|)
+expr_stmt|;
+block|}
 name|OutputStruct
 operator|->
 name|Data
@@ -219,6 +233,9 @@ comment|/*      * Calculate the structure size based upon the number of interrup
 name|StructSize
 operator|+=
 operator|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|OutputStruct
 operator|->
 name|Data
@@ -376,6 +393,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -695,7 +715,7 @@ modifier|*
 name|OutputStruct
 init|=
 operator|(
-name|ACPI_RESOURCE
+name|void
 operator|*
 operator|)
 operator|*
@@ -711,7 +731,7 @@ name|Temp8
 init|=
 literal|0
 decl_stmt|;
-name|NATIVE_CHAR
+name|UINT8
 modifier|*
 name|TempPtr
 decl_stmt|;
@@ -883,6 +903,9 @@ name|Index
 operator|++
 control|)
 block|{
+name|ACPI_MOVE_UNALIGNED32_TO_32
+argument_list|(
+operator|&
 name|OutputStruct
 operator|->
 name|Data
@@ -893,12 +916,9 @@ name|Interrupts
 index|[
 name|Index
 index|]
-operator|=
-operator|(
-name|UINT32
-operator|)
-operator|*
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 comment|/* Point to the next IRQ */
 name|Buffer
@@ -912,10 +932,10 @@ condition|(
 operator|*
 name|BytesConsumed
 operator|>
-call|(
-name|UINT32
-call|)
-argument_list|(
+operator|(
+operator|(
+name|ACPI_SIZE
+operator|)
 name|OutputStruct
 operator|->
 name|Data
@@ -925,7 +945,7 @@ operator|.
 name|NumberOfInterrupts
 operator|*
 literal|4
-argument_list|)
+operator|)
 operator|+
 literal|5
 condition|)
@@ -979,6 +999,10 @@ operator|)
 expr_stmt|;
 name|TempPtr
 operator|=
+operator|(
+name|UINT8
+operator|*
+operator|)
 name|OutputStruct
 operator|->
 name|Data
@@ -1105,6 +1129,9 @@ name|OutputStruct
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|StructSize
 expr_stmt|;
 comment|/*      * Return the final size of the structure      */
@@ -1186,11 +1213,12 @@ expr_stmt|;
 comment|/*      * Set a pointer to the Length field - to be filled in later      */
 name|LengthField
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|UINT16
-operator|*
-operator|)
+argument_list|,
 name|Buffer
+argument_list|)
 expr_stmt|;
 name|Buffer
 operator|+=

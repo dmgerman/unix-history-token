@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -114,7 +114,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_CREATE_FIELD_OP
 condition|)
@@ -193,6 +195,8 @@ name|ScopeInfo
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -228,6 +232,8 @@ block|}
 comment|/* We could put the returned object (Node) on the object stack for later, but      * for now, we will put it in the "op" object that the parser uses, so we      * can get it again at the end of this scope      */
 name|Op
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|Node
@@ -289,14 +295,10 @@ name|Extra
 operator|.
 name|AmlStart
 operator|=
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Data
 expr_stmt|;
 name|SecondDesc
@@ -305,14 +307,10 @@ name|Extra
 operator|.
 name|AmlLength
 operator|=
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Op
-operator|)
 operator|->
+name|Named
+operator|.
 name|Length
 expr_stmt|;
 name|ObjDesc
@@ -387,6 +385,9 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_INTEGER
+name|Position
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 literal|"DsGetFieldNames"
@@ -412,15 +413,16 @@ switch|switch
 condition|(
 name|Arg
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 condition|)
 block|{
 case|case
 name|AML_INT_RESERVEDFIELD_OP
 case|:
-if|if
-condition|(
-operator|(
+name|Position
+operator|=
 operator|(
 name|ACPI_INTEGER
 operator|)
@@ -428,12 +430,20 @@ name|Info
 operator|->
 name|FieldBitPosition
 operator|+
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Size
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|Position
 operator|>
 name|ACPI_UINT32_MAX
 condition|)
@@ -454,12 +464,11 @@ block|}
 name|Info
 operator|->
 name|FieldBitPosition
-operator|+=
-name|Arg
-operator|->
-name|Value
-operator|.
-name|Size
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|Position
 expr_stmt|;
 break|break;
 case|case
@@ -492,6 +501,8 @@ call|)
 argument_list|(
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -511,6 +522,8 @@ call|)
 argument_list|(
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -534,14 +547,10 @@ name|NATIVE_CHAR
 operator|*
 operator|)
 operator|&
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Arg
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 argument_list|,
 name|Info
@@ -587,14 +596,10 @@ operator|(
 literal|"Field name [%4.4s] already exists in current scope\n"
 operator|,
 operator|&
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Arg
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|)
 argument_list|)
@@ -604,6 +609,8 @@ else|else
 block|{
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|Info
@@ -616,6 +623,8 @@ name|FieldBitLength
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Size
@@ -644,9 +653,8 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Keep track of bit position for the next field */
-if|if
-condition|(
-operator|(
+name|Position
+operator|=
 operator|(
 name|ACPI_INTEGER
 operator|)
@@ -654,12 +662,20 @@ name|Info
 operator|->
 name|FieldBitPosition
 operator|+
+operator|(
+name|ACPI_INTEGER
+operator|)
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Size
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|Position
 operator|>
 name|ACPI_UINT32_MAX
 condition|)
@@ -703,13 +719,15 @@ literal|"Invalid opcode in field list: %X\n"
 operator|,
 name|Arg
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_ERROR
+name|AE_AML_BAD_OPCODE
 argument_list|)
 expr_stmt|;
 block|}
@@ -717,6 +735,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
@@ -751,8 +771,6 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_AML_ERROR
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -773,6 +791,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -793,6 +813,8 @@ name|ScopeInfo
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -829,6 +851,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Info
@@ -837,6 +861,8 @@ name|FieldFlags
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer8
@@ -871,6 +897,8 @@ name|WalkState
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 argument_list|)
 expr_stmt|;
@@ -901,8 +929,6 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_AML_ERROR
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -984,6 +1010,12 @@ operator|=
 name|INTERNAL_TYPE_INDEX_FIELD
 expr_stmt|;
 break|break;
+default|default:
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Walk the list of entries in the FieldList      */
 while|while
@@ -996,7 +1028,9 @@ if|if
 condition|(
 name|Arg
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEDFIELD_OP
 condition|)
@@ -1014,14 +1048,10 @@ name|NATIVE_CHAR
 operator|*
 operator|)
 operator|&
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Arg
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 argument_list|,
 name|Type
@@ -1067,21 +1097,24 @@ operator|(
 literal|"Field name [%4.4s] already exists in current scope\n"
 operator|,
 operator|&
-operator|(
-operator|(
-name|ACPI_PARSE2_OBJECT
-operator|*
-operator|)
 name|Arg
-operator|)
 operator|->
+name|Named
+operator|.
 name|Name
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Name already exists, just ignore this error */
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
 block|}
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Node
 operator|=
 name|Node
@@ -1092,12 +1125,14 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -1126,8 +1161,6 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_AML_ERROR
 decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
@@ -1148,6 +1181,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1168,6 +1203,8 @@ name|ScopeInfo
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Name
@@ -1204,6 +1241,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Status
@@ -1216,6 +1255,8 @@ name|ScopeInfo
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1253,6 +1294,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Info
@@ -1261,6 +1304,8 @@ name|BankValue
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer32
@@ -1270,6 +1315,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Info
@@ -1278,6 +1325,8 @@ name|FieldFlags
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer8
@@ -1306,6 +1355,8 @@ name|WalkState
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 argument_list|)
 expr_stmt|;
@@ -1360,6 +1411,8 @@ name|Arg
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Arg
@@ -1374,6 +1427,8 @@ name|ScopeInfo
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1411,6 +1466,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Status
@@ -1423,6 +1480,8 @@ name|ScopeInfo
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|String
@@ -1460,6 +1519,8 @@ name|Arg
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Info
@@ -1468,6 +1529,8 @@ name|FieldFlags
 operator|=
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Value
 operator|.
 name|Integer8
@@ -1496,6 +1559,8 @@ name|WalkState
 argument_list|,
 name|Arg
 operator|->
+name|Common
+operator|.
 name|Next
 argument_list|)
 expr_stmt|;

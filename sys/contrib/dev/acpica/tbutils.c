@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"actables.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_define
@@ -157,7 +151,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateTableHeader  *  * PARAMETERS:  TableHeader         - Logical pointer to the table  *  * RETURN:      Status  *  * DESCRIPTION: Check an ACPI table header for validity  *  * NOTE:  Table pointers are validated as follows:  *          1) Table pointer must point to valid physical memory  *          2) Signature must be 4 ASCII chars, even if we don't recognize the  *             name  *          3) Table must be readable for length specified in the header  *          4) Table checksum must be valid (with the exception of the FACS  *              which has no checksum for some odd reason)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbValidateTableHeader  *  * PARAMETERS:  TableHeader         - Logical pointer to the table  *  * RETURN:      Status  *  * DESCRIPTION: Check an ACPI table header for validity  *  * NOTE:  Table pointers are validated as follows:  *          1) Table pointer must point to valid physical memory  *          2) Signature must be 4 ASCII chars, even if we don't recognize the  *             name  *          3) Table must be readable for length specified in the header  *          4) Table checksum must be valid (with the exception of the FACS  *              which has no checksum because it contains variable fields)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -215,7 +209,6 @@ argument_list|(
 operator|&
 name|Signature
 argument_list|,
-operator|&
 name|TableHeader
 operator|->
 name|Signature
@@ -351,7 +344,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 modifier|*
 name|Size
 parameter_list|,
@@ -365,7 +358,7 @@ name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|TableSize
 init|=
 operator|*
@@ -430,18 +423,21 @@ block|}
 comment|/* Extract the full table length before we delete the mapping */
 name|TableSize
 operator|=
+operator|(
+name|ACPI_SIZE
+operator|)
 name|Table
 operator|->
 name|Length
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* We don't want to validate the header here.  */
 comment|/*          * Validate the header and delete the mapping.          * We will create a mapping for the full table below.          */
-name|Status
-operator|=
-name|AcpiTbValidateTableHeader
-argument_list|(
-name|Table
-argument_list|)
-expr_stmt|;
+block|Status = AcpiTbValidateTableHeader (Table);
+endif|#
+directive|endif
 comment|/* Always unmap the memory for the header */
 name|AcpiOsUnmapMemory
 argument_list|(
@@ -453,21 +449,13 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* Exit if header invalid */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
+block|if (ACPI_FAILURE (Status))         {             return (Status);         }
+endif|#
+directive|endif
 block|}
 comment|/* Map the physical memory for the correct length */
 name|Status
@@ -585,11 +573,6 @@ literal|"Invalid checksum (%X) in table %4.4s\n"
 operator|,
 name|Checksum
 operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|TableHeader
 operator|->
 name|Signature

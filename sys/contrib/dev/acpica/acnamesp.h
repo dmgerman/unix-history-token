@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 123 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 125 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -293,7 +293,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+name|void
 name|AcpiNsDeleteNamespaceByOwner
 parameter_list|(
 name|UINT16
@@ -433,7 +433,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+name|void
 name|AcpiNsDeleteNamespaceSubtree
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
@@ -554,10 +554,54 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsDumpOneDevice
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|AcpiNsDumpRootDevices
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiNsDumpOneObject
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|UINT32
+name|Level
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|ReturnValue
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -728,6 +772,24 @@ name|AcpiNsOpensScope
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|Type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiNsBuildExternalPath
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|,
+name|ACPI_SIZE
+name|Size
+parameter_list|,
+name|NATIVE_CHAR
+modifier|*
+name|NameBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1055,7 +1117,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
+name|void
 name|AcpiNsGetInternalNameLength
 parameter_list|(
 name|ACPI_NAMESTRING_INFO

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 55 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 59 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -16,37 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_include
@@ -132,6 +102,8 @@ name|MethodBreakpoint
 operator|<=
 name|Op
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|)
 condition|)
@@ -144,6 +116,8 @@ literal|"***Break*** at AML offset %X\n"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 argument_list|)
 expr_stmt|;
@@ -177,6 +151,8 @@ name|UserBreakpoint
 operator|==
 name|Op
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 operator|)
 condition|)
@@ -187,6 +163,8 @@ literal|"***UserBreakpoint*** at AML offset %X\n"
 argument_list|,
 name|Op
 operator|->
+name|Common
+operator|.
 name|AmlOffset
 argument_list|)
 expr_stmt|;
@@ -210,7 +188,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_NAMEDFIELD_OP
 condition|)
@@ -238,6 +218,9 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+default|default:
+comment|/* All other opcodes -- continue */
+break|break;
 block|}
 comment|/*      * Under certain debug conditions, display this opcode and its operands      */
 if|if
@@ -294,10 +277,14 @@ name|Next
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 operator|=
 name|NULL
@@ -310,6 +297,8 @@ name|ParentOp
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 if|if
@@ -349,7 +338,9 @@ condition|(
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_IF_OP
 operator|)
@@ -357,7 +348,9 @@ operator|||
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_WHILE_OP
 operator|)
@@ -373,6 +366,8 @@ name|ParentOp
 operator|=
 name|ParentOp
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}
@@ -389,7 +384,9 @@ condition|(
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_IF_OP
 operator|)
@@ -397,7 +394,9 @@ operator|||
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_ELSE_OP
 operator|)
@@ -405,7 +404,9 @@ operator|||
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_SCOPE_OP
 operator|)
@@ -413,7 +414,9 @@ operator|||
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_METHOD_OP
 operator|)
@@ -421,7 +424,9 @@ operator|||
 operator|(
 name|ParentOp
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_WHILE_OP
 operator|)
@@ -437,6 +442,8 @@ name|ParentOp
 operator|=
 name|ParentOp
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 block|}
@@ -457,7 +464,9 @@ condition|(
 operator|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_IF_OP
 operator|)
@@ -465,7 +474,9 @@ operator|||
 operator|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_WHILE_OP
 operator|)
@@ -502,7 +513,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_ELSE_OP
 condition|)
@@ -516,6 +529,8 @@ block|}
 comment|/* Restore everything */
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 operator|=
 name|Next
@@ -553,7 +568,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|!=
 name|AML_INT_METHODCALL_OP
 condition|)
@@ -576,7 +593,9 @@ if|if
 condition|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 operator|==
 name|AML_INT_METHODCALL_OP
 condition|)
@@ -699,6 +718,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the user input line */
+operator|(
+name|void
+operator|)
 name|AcpiOsGetLine
 argument_list|(
 name|AcpiGbl_DbLineBuf
@@ -732,12 +754,15 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|int
+name|ACPI_STATUS
 name|AcpiDbInitialize
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Init globals */
 name|AcpiGbl_DbBuffer
 operator|=
@@ -799,7 +824,9 @@ name|AcpiGbl_DbBuffer
 condition|)
 block|{
 return|return
-literal|0
+operator|(
+name|AE_NO_MEMORY
+operator|)
 return|;
 block|}
 name|ACPI_MEMSET
@@ -839,17 +866,61 @@ name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
 comment|/* These were created with one unit, grab it */
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_COMPLETE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not get debugger mutex\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_READY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not get debugger mutex\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/* Create the debug execution thread to execute commands */
+name|Status
+operator|=
 name|AcpiOsQueueForExecution
 argument_list|(
 literal|0
@@ -859,6 +930,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Could not start debugger thread\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -881,7 +971,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|AE_OK
 operator|)
 return|;
 block|}

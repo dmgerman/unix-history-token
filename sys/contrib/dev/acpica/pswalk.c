@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"amlcode.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acparser.h"
 end_include
 
@@ -29,18 +23,6 @@ begin_include
 include|#
 directive|include
 file|"acdispat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acinterp.h"
 end_include
 
 begin_define
@@ -154,12 +136,16 @@ name|Next
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|Parent
 operator|=
 name|Op
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 name|WalkState
@@ -176,7 +162,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 name|WalkState
@@ -185,7 +173,9 @@ name|Opcode
 operator|=
 name|Op
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 expr_stmt|;
 name|Status
 operator|=
@@ -276,12 +266,16 @@ name|GrandParent
 operator|=
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Parent
 expr_stmt|;
 name|Next
 operator|=
 name|Parent
 operator|->
+name|Common
+operator|.
 name|Next
 expr_stmt|;
 name|WalkState
@@ -298,7 +292,9 @@ name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 argument_list|)
 expr_stmt|;
 name|WalkState
@@ -307,7 +303,9 @@ name|Opcode
 operator|=
 name|Parent
 operator|->
-name|Opcode
+name|Common
+operator|.
+name|AmlOpcode
 expr_stmt|;
 name|Status
 operator|=
@@ -456,6 +454,9 @@ name|ACPI_THREAD_STATE
 modifier|*
 name|Thread
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 literal|"PsDeleteParseTree"
@@ -554,6 +555,8 @@ operator|->
 name|NextOp
 condition|)
 block|{
+name|Status
+operator|=
 name|AcpiPsGetNextWalkOp
 argument_list|(
 name|WalkState
@@ -565,15 +568,26 @@ argument_list|,
 name|AcpiPsDeleteCompletedOp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+break|break;
+block|}
 block|}
 comment|/* We are done with this walk */
 name|AcpiUtDeleteGenericState
 argument_list|(
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_GENERIC_STATE
-operator|*
-operator|)
+argument_list|,
 name|Thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiDsDeleteWalkState

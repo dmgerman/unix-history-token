@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 126 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 129 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"achware.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"acnamesp.h"
 end_include
 
@@ -35,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
 end_include
 
 begin_include
@@ -1309,11 +1297,27 @@ operator|)
 name|Type
 expr_stmt|;
 comment|/* Clear the GPE (of stale events), the enable it */
+name|Status
+operator|=
 name|AcpiHwClearGpe
 argument_list|(
 name|GpeNumber
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Cleanup
+goto|;
+block|}
+name|Status
+operator|=
 name|AcpiHwEnableGpe
 argument_list|(
 name|GpeNumber
@@ -1398,11 +1402,27 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Disable the GPE before removing the handler */
+name|Status
+operator|=
 name|AcpiHwDisableGpe
 argument_list|(
 name|GpeNumber
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiUtAcquireMutex
@@ -1437,6 +1457,9 @@ operator|!=
 name|Handler
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiHwEnableGpe
 argument_list|(
 name|GpeNumber
@@ -1584,6 +1607,9 @@ name|UINT32
 name|Handle
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 if|if
 condition|(
 name|Handle
@@ -1597,12 +1623,14 @@ name|AE_NOT_ACQUIRED
 operator|)
 return|;
 block|}
+name|Status
+operator|=
 name|AcpiEvReleaseGlobalLock
 argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|Status
 operator|)
 return|;
 block|}

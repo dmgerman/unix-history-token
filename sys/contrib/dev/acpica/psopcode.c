@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 70 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|NUM_EXTENDED_OPCODE
-value|MAX_EXTENDED_OPCODE + 1
+value|(MAX_EXTENDED_OPCODE + 1)
 end_define
 
 begin_define
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|NUM_INTERNAL_OPCODE
-value|MAX_INTERNAL_OPCODE + 1
+value|(MAX_INTERNAL_OPCODE + 1)
 end_define
 
 begin_comment
@@ -1828,11 +1828,12 @@ comment|/*  * Master Opcode information table.  A summary of everything we know 
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|ACPI_OPCODE_INFO
 name|AcpiGbl_AmlOpInfo
-index|[]
+index|[
+name|AML_NUM_OPCODES
+index|]
 init|=
 block|{
 comment|/*! [Begin] no source code translation */
@@ -1846,13 +1847,13 @@ name|ARGP_ZERO_OP
 argument_list|,
 name|ARGI_ZERO_OP
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_INTEGER
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_CONSTANT
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 01 */
@@ -1864,13 +1865,13 @@ name|ARGP_ONE_OP
 argument_list|,
 name|ARGI_ONE_OP
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_INTEGER
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_CONSTANT
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 02 */
@@ -1940,7 +1941,7 @@ name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_LITERAL
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 05 */
@@ -1958,7 +1959,7 @@ name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_LITERAL
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 06 */
@@ -1976,7 +1977,7 @@ name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_LITERAL
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 07 */
@@ -1994,7 +1995,7 @@ name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_LITERAL
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 08 */
@@ -2041,6 +2042,8 @@ argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_DEFER
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 0A */
@@ -2061,6 +2064,8 @@ argument_list|,
 name|AML_HAS_ARGS
 operator||
 name|AML_DEFER
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 0B */
@@ -2415,6 +2420,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 1E */
@@ -2433,6 +2440,8 @@ argument_list|,
 name|AML_TYPE_EXEC_2A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 1F */
@@ -2453,6 +2462,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 20 */
@@ -2471,6 +2482,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_0T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_0T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 21 */
@@ -2489,6 +2502,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_0T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_0T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 22 */
@@ -2509,6 +2524,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 23 */
@@ -2527,6 +2544,8 @@ argument_list|,
 name|AML_TYPE_EXEC_2A_2T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_2T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 24 */
@@ -2547,6 +2566,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 25 */
@@ -2567,6 +2588,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 26 */
@@ -2587,6 +2610,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 27 */
@@ -2607,6 +2632,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 28 */
@@ -2627,6 +2654,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 29 */
@@ -2647,6 +2676,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 2A */
@@ -2667,6 +2698,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
 operator||
 name|AML_MATH
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 2B */
@@ -2685,6 +2718,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 2C */
@@ -2703,6 +2738,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 2D */
@@ -2721,6 +2758,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 2E */
@@ -2793,6 +2832,8 @@ argument_list|,
 name|AML_TYPE_EXEC_2A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 32 */
@@ -2811,6 +2852,8 @@ argument_list|,
 name|AML_TYPE_EXEC_6A_0T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_6A_0T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 33 */
@@ -2953,6 +2996,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
 name|AML_LOGICAL
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 39 */
@@ -2973,6 +3018,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
 name|AML_LOGICAL
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 3A */
@@ -2991,6 +3038,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_0T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_0T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 3B */
@@ -3011,6 +3060,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
 name|AML_LOGICAL
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 3C */
@@ -3031,6 +3082,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
 name|AML_LOGICAL
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 3D */
@@ -3051,6 +3104,8 @@ argument_list|,
 name|AML_FLAGS_EXEC_2A_0T_1R
 operator||
 name|AML_LOGICAL
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 3E */
@@ -3188,13 +3243,13 @@ name|ARGP_ONES_OP
 argument_list|,
 name|ARGI_ONES_OP
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_INTEGER
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_CONSTANT
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* Prefixed opcodes (Two-byte opcodes with a prefix op) */
@@ -3454,6 +3509,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 53 */
@@ -3472,6 +3529,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 54 */
@@ -3501,7 +3560,7 @@ name|ARGP_REVISION_OP
 argument_list|,
 name|ARGI_REVISION_OP
 argument_list|,
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_INTEGER
 argument_list|,
 name|AML_CLASS_ARGUMENT
 argument_list|,
@@ -3767,6 +3826,8 @@ argument_list|,
 name|AML_TYPE_BOGUS
 argument_list|,
 name|AML_HAS_ARGS
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 61 */
@@ -3785,6 +3846,8 @@ argument_list|,
 name|AML_TYPE_BOGUS
 argument_list|,
 name|AML_HAS_ARGS
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 62 */
@@ -3803,6 +3866,8 @@ argument_list|,
 name|AML_TYPE_BOGUS
 argument_list|,
 name|AML_HAS_ARGS
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 63 */
@@ -4033,7 +4098,7 @@ name|AML_CLASS_ARGUMENT
 argument_list|,
 name|AML_TYPE_LITERAL
 argument_list|,
-literal|0
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 6F */
@@ -4072,6 +4137,8 @@ argument_list|,
 name|AML_TYPE_EXEC_2A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 71 */
@@ -4090,6 +4157,8 @@ argument_list|,
 name|AML_TYPE_EXEC_2A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 72 */
@@ -4134,6 +4203,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 74 */
@@ -4152,6 +4223,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 75 */
@@ -4170,6 +4243,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 76 */
@@ -4188,6 +4263,8 @@ argument_list|,
 name|AML_TYPE_EXEC_1A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_1A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 77 */
@@ -4206,6 +4283,8 @@ argument_list|,
 name|AML_TYPE_EXEC_2A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_2A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 78 */
@@ -4242,6 +4321,8 @@ argument_list|,
 name|AML_TYPE_EXEC_3A_1T_1R
 argument_list|,
 name|AML_FLAGS_EXEC_3A_1T_1R
+operator||
+name|AML_CONSTANT
 argument_list|)
 block|,
 comment|/* 7A */
@@ -5282,6 +5363,7 @@ operator|)
 return|;
 block|}
 comment|/* Else fall through to error case below */
+comment|/*lint -fallthrough */
 default|default:
 name|ACPI_DEBUG_PRINT
 argument_list|(
