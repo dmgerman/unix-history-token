@@ -3388,6 +3388,7 @@ name|sc_rnghz
 operator|=
 literal|1
 expr_stmt|;
+comment|/* NB: 1 means the callout runs w/o Giant locked */
 name|callout_init
 argument_list|(
 operator|&
@@ -3395,7 +3396,7 @@ name|sc
 operator|->
 name|sc_rngto
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
