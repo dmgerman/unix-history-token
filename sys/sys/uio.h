@@ -155,17 +155,6 @@ begin_comment
 comment|/* max 1K of iov's */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UIO_SMALLIOV
-value|8
-end_define
-
-begin_comment
-comment|/* 8 on stack, else malloc */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
 name|vm_object
@@ -177,6 +166,20 @@ struct_decl|struct
 name|vm_page
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|struct
+name|uio
+modifier|*
+name|cloneuio
+parameter_list|(
+name|struct
+name|uio
+modifier|*
+name|uiop
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -198,6 +201,30 @@ name|len
 parameter_list|,
 name|int
 name|seg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|copyiniov
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+name|iovp
+parameter_list|,
+name|u_int
+name|iovcnt
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+modifier|*
+name|iov
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -232,17 +259,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|uio_yield
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
-name|uiofromiov
+name|copyinuio
 parameter_list|(
 name|struct
 name|iovec
@@ -255,7 +273,17 @@ parameter_list|,
 name|struct
 name|uio
 modifier|*
-name|auio
+modifier|*
+name|uiop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uio_yield
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
