@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.12 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +130,12 @@ directive|include
 file|<kvm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
 begin_decl_stmt
 name|struct
 name|nlist
@@ -211,10 +217,10 @@ block|}
 block|,
 define|#
 directive|define
-name|X_PHZ
+name|X_STATHZ
 value|9
 block|{
-literal|"_phz"
+literal|"_stathz"
 block|}
 block|,
 define|#
@@ -358,6 +364,13 @@ name|dr_name
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|kvm_t
+modifier|*
+name|kd
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -368,7 +381,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|kvm_read((void *)nl[x].n_value, (void *)&(v), sizeof(v))
+value|kvm_read(kd, nl[x].n_value,&(v), sizeof(v))
 end_define
 
 begin_include
@@ -477,7 +490,7 @@ name|reps
 decl_stmt|,
 name|interval
 decl_stmt|,
-name|phz
+name|stathz
 decl_stmt|,
 name|ndrives
 decl_stmt|;
@@ -495,6 +508,12 @@ decl_stmt|,
 name|buf
 index|[
 literal|30
+index|]
+decl_stmt|;
+name|char
+name|errbuf
+index|[
+name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
 name|interval
@@ -602,8 +621,8 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|kd
+operator|=
 name|kvm_openfiles
 argument_list|(
 name|nlistf
@@ -611,23 +630,31 @@ argument_list|,
 name|memf
 argument_list|,
 name|NULL
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|errbuf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kd
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|"kvm_openfiles: %s"
 argument_list|,
-name|kvm_geterr
-argument_list|()
+name|errbuf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|kvm_nlist
 argument_list|(
+name|kd
+argument_list|,
 name|nl
 argument_list|)
 operator|==
@@ -639,7 +666,9 @@ argument_list|(
 literal|"kvm_nlist: %s"
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -885,28 +914,26 @@ name|void
 operator|)
 name|nlread
 argument_list|(
-name|X_PHZ
+name|X_STATHZ
 argument_list|,
-name|phz
+name|stathz
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|phz
+name|stathz
 condition|)
 name|hz
 operator|=
-name|phz
+name|stathz
 expr_stmt|;
 operator|(
 name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_DK_WPMS
@@ -1207,10 +1234,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_DK_TIME
@@ -1235,10 +1260,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_DK_XFER
@@ -1263,10 +1286,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_DK_WDS
@@ -1291,10 +1312,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_DK_SEEK
@@ -1319,10 +1338,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_TK_NIN
@@ -1348,10 +1365,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_TK_NOUT
@@ -1377,10 +1392,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|X_CP_TIME
