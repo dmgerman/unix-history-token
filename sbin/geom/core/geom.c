@@ -4185,6 +4185,9 @@ name|printf
 argument_list|(
 literal|"%*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name_len
 argument_list|,
 name|name
@@ -4217,6 +4220,9 @@ name|printf
 argument_list|(
 literal|"  %*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|status_len
 argument_list|,
 name|conf
@@ -4237,6 +4243,9 @@ name|printf
 argument_list|(
 literal|"  %*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|status_len
 argument_list|,
 literal|"N/A"
@@ -4267,10 +4276,16 @@ name|printf
 argument_list|(
 literal|"%*s  %*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name_len
 argument_list|,
 literal|""
 argument_list|,
+operator|(
+name|int
+operator|)
 name|status_len
 argument_list|,
 literal|""
@@ -4635,10 +4650,16 @@ name|printf
 argument_list|(
 literal|"%*s  %*s  %s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|name_len
 argument_list|,
 literal|"Name"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|status_len
 argument_list|,
 literal|"Status"
