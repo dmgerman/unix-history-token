@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sysctl.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sysctl.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -88,16 +88,33 @@ name|kinfo_lock
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|getkerninfo
-argument_list|()
+argument_list|(
+argument|p
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
 end_macro
 
-begin_block
-block|{
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
 specifier|register
 struct|struct
-name|a
+name|args
 block|{
 name|int
 name|op
@@ -116,16 +133,18 @@ decl_stmt|;
 block|}
 modifier|*
 name|uap
-init|=
-operator|(
-expr|struct
-name|a
-operator|*
-operator|)
-name|u
-operator|.
-name|u_ap
 struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 name|int
 name|bufsize
 decl_stmt|,
@@ -457,23 +476,19 @@ name|done
 label|:
 if|if
 condition|(
+operator|!
 name|error
 condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|error
-expr_stmt|;
-else|else
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+operator|*
+name|retval
 operator|=
 name|needed
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_ktrace.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_ktrace.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"syscontext.h"
 end_include
 
 begin_include
@@ -170,6 +170,8 @@ argument_list|,
 argument|code
 argument_list|,
 argument|narg
+argument_list|,
+argument|args
 argument_list|)
 end_macro
 
@@ -178,6 +180,17 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|code
+decl_stmt|,
+name|narg
+decl_stmt|,
+name|args
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -293,9 +306,7 @@ operator|*
 name|argp
 operator|++
 operator|=
-name|u
-operator|.
-name|u_arg
+name|args
 index|[
 name|i
 index|]
@@ -345,6 +356,10 @@ argument_list|(
 argument|vp
 argument_list|,
 argument|code
+argument_list|,
+argument|error
+argument_list|,
+argument|retval
 argument_list|)
 end_macro
 
@@ -353,6 +368,16 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|code
+decl_stmt|,
+name|error
+decl_stmt|,
+name|retval
 decl_stmt|;
 end_decl_stmt
 
@@ -389,19 +414,13 @@ name|ktp
 operator|.
 name|ktr_error
 operator|=
-name|u
-operator|.
-name|u_error
+name|error
 expr_stmt|;
 name|ktp
 operator|.
 name|ktr_retval
 operator|=
-name|u
-operator|.
-name|u_r
-operator|.
-name|r_val1
+name|retval
 expr_stmt|;
 comment|/* what about val2 ? */
 name|kth
@@ -528,6 +547,8 @@ argument_list|,
 argument|iov
 argument_list|,
 argument|len
+argument_list|,
+argument|error
 argument_list|)
 end_macro
 
@@ -536,6 +557,12 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fd
 decl_stmt|;
 end_decl_stmt
 
@@ -591,9 +618,7 @@ name|kth
 operator|==
 name|NULL
 operator|||
-name|u
-operator|.
-name|u_error
+name|error
 condition|)
 return|return;
 name|MALLOC
@@ -873,16 +898,33 @@ begin_comment
 comment|/*  * ktrace system call  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|ktrace
-argument_list|()
+argument_list|(
+argument|curp
+argument_list|,
+argument|uap
+argument_list|,
+argument|retval
+argument_list|)
 end_macro
 
-begin_block
-block|{
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|curp
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
 specifier|register
 struct|struct
-name|a
+name|args
 block|{
 name|char
 modifier|*
@@ -900,16 +942,18 @@ decl_stmt|;
 block|}
 modifier|*
 name|uap
-init|=
-operator|(
-expr|struct
-name|a
-operator|*
-operator|)
-name|u
-operator|.
-name|u_ap
 struct|;
+end_struct
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|vnode
@@ -964,6 +1008,11 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Until security implications are thought through, 	 * limit tracing to root (unless ktrace_nocheck is set). 	 */
 if|if
 condition|(
@@ -971,9 +1020,7 @@ operator|!
 name|ktrace_nocheck
 operator|&&
 operator|(
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|suser
 argument_list|(
@@ -988,7 +1035,11 @@ name|u_acflag
 argument_list|)
 operator|)
 condition|)
-return|return;
+name|RETURN
+argument_list|(
+name|error
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ops
@@ -1013,9 +1064,7 @@ name|fname
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|vn_open
 argument_list|(
@@ -1028,7 +1077,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-return|return;
+name|RETURN
+argument_list|(
+name|error
+argument_list|)
+expr_stmt|;
 name|vp
 operator|=
 name|ndp
@@ -1044,18 +1097,16 @@ operator|!=
 name|VREG
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EACCES
-expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-return|return;
+name|RETURN
+argument_list|(
+name|EACCES
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Clear all uses of the tracefile 	 */
@@ -1122,9 +1173,7 @@ operator|!
 name|facs
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|EINVAL
 expr_stmt|;
@@ -1159,9 +1208,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|ESRCH
 expr_stmt|;
@@ -1241,9 +1288,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|ESRCH
 expr_stmt|;
@@ -1290,9 +1335,7 @@ condition|(
 operator|!
 name|ret
 condition|)
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|EPERM
 expr_stmt|;
@@ -1307,6 +1350,11 @@ condition|)
 name|vrele
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|RETURN
+argument_list|(
+name|error
 argument_list|)
 expr_stmt|;
 block|}
