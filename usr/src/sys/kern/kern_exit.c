@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"resource.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -99,6 +93,12 @@ directive|include
 file|"malloc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"resourcevar.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -125,13 +125,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_map.h"
+file|"vm/vm.h"
 end_include
 
 begin_include
@@ -290,8 +284,6 @@ operator|&=
 operator|~
 operator|(
 name|STRC
-operator||
-name|SULOCK
 operator||
 name|SPPWAIT
 operator|)
@@ -615,9 +607,9 @@ name|p_stat
 operator|=
 name|SZOMB
 expr_stmt|;
-name|noproc
+name|curproc
 operator|=
-literal|1
+name|NULL
 expr_stmt|;
 for|for
 control|(
