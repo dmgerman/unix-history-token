@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_if
@@ -64,12 +70,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -125,11 +125,22 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -153,12 +164,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -200,6 +205,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipf.h"
 end_include
 
@@ -217,15 +228,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -236,11 +243,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipft_tx.c,v 2.0.2.4 1997/04/30 13:55:13 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.0.2.11.2.1 1997/11/12 10:56:11 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,23 +261,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|opts
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|buildopts
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -338,8 +329,7 @@ operator|(
 name|char
 operator|*
 operator|,
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|,
 name|char
@@ -569,7 +559,7 @@ block|}
 return|return
 operator|*
 operator|(
-name|u_long
+name|u_32_t
 operator|*
 operator|)
 name|hp
@@ -827,17 +817,9 @@ name|NULL
 block|,
 literal|"echo"
 block|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|"routerad"
 block|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|"routersol"
 block|,
 literal|"timex"
 block|,
@@ -1009,8 +991,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|struct
-name|ip
+name|ip_t
 modifier|*
 name|ip
 decl_stmt|;
@@ -1023,8 +1004,7 @@ decl_stmt|;
 name|ip
 operator|=
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 name|buf
@@ -1146,8 +1126,7 @@ argument_list|(
 name|line
 argument_list|,
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 name|buf
@@ -1166,8 +1145,7 @@ directive|else
 return|return
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ip
+name|ip_t
 argument_list|)
 return|;
 endif|#
@@ -1197,8 +1175,7 @@ name|char
 modifier|*
 name|line
 decl_stmt|;
-name|struct
-name|ip
+name|ip_t
 modifier|*
 name|ip
 decl_stmt|;
@@ -1518,8 +1495,7 @@ name|ip_len
 operator|=
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ip
+name|ip_t
 argument_list|)
 expr_stmt|;
 if|if
@@ -2059,6 +2035,16 @@ operator|*
 name|cpp
 argument_list|,
 name|ipopts
+argument_list|,
+operator|(
+name|ip
+operator|->
+name|ip_hl
+operator|-
+literal|5
+operator|)
+operator|<<
+literal|2
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sock.c (C) 1995 Darren Reed  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  */
+comment|/*  * sock.c (C) 1995-1997 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"@(#)sock.c	1.2 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: sock.c,v 2.0.2.9 1997/09/28 07:13:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,11 +100,22 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ultrix
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -116,6 +134,29 @@ define|#
 directive|define
 name|KERNEL
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ultrix
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|LOCORE
+end_undef
+
+begin_include
+include|#
+directive|include
+file|<sys/smp_lock.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -165,11 +206,32 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|hpux
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<kvm.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -482,6 +544,14 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|off_t
+name|offset
+init|=
+operator|(
+name|u_long
+operator|)
+name|pos
+decl_stmt|;
 if|if
 condition|(
 name|kfd
@@ -504,10 +574,7 @@ name|lseek
 argument_list|(
 name|kfd
 argument_list|,
-operator|(
-name|off_t
-operator|)
-name|pos
+name|offset
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -562,7 +629,7 @@ name|struct
 name|nlist
 name|names
 index|[
-literal|3
+literal|4
 index|]
 init|=
 block|{
@@ -574,6 +641,21 @@ block|{
 literal|"_nproc"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|ultrix
+block|{
+literal|"_u"
+block|}
+block|,
+else|#
+directive|else
+block|{
+name|NULL
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|}
@@ -897,6 +979,27 @@ condition|)
 return|return
 name|NULL
 return|;
+name|printf
+argument_list|(
+literal|"fl %x ty %x cn %d mc %d\n"
+argument_list|,
+name|f
+operator|->
+name|f_flag
+argument_list|,
+name|f
+operator|->
+name|f_type
+argument_list|,
+name|f
+operator|->
+name|f_count
+argument_list|,
+name|f
+operator|->
+name|f_msgcount
+argument_list|)
+expr_stmt|;
 name|up
 operator|=
 operator|(
@@ -913,6 +1016,9 @@ name|up
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|ultrix
 if|if
 condition|(
 name|KMCPY
@@ -951,6 +1057,54 @@ return|return
 name|NULL
 return|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|KMCPY
+argument_list|(
+name|up
+argument_list|,
+name|names
+index|[
+literal|2
+index|]
+operator|.
+name|n_value
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|up
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"read(%#x,%#x) failed\n"
+argument_list|,
+name|p
+argument_list|,
+name|names
+index|[
+literal|2
+index|]
+operator|.
+name|n_value
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+endif|#
+directive|endif
 name|o
 operator|=
 operator|(
@@ -1015,7 +1169,7 @@ literal|"read(%#x,%#x,%d) - u_ofile - failed\n"
 argument_list|,
 name|up
 operator|->
-name|u_ofile_arr
+name|u_ofile
 argument_list|,
 name|o
 argument_list|,
@@ -1078,7 +1232,7 @@ literal|"read(%#x,%#x,%d) - o[fd] - failed\n"
 argument_list|,
 name|up
 operator|->
-name|u_ofile_arr
+name|u_ofile
 index|[
 name|fd
 index|]
@@ -1321,12 +1475,13 @@ name|getpid
 argument_list|()
 decl_stmt|;
 name|int
-name|n
-decl_stmt|,
 name|mib
 index|[
 literal|4
 index|]
+decl_stmt|;
+name|size_t
+name|n
 decl_stmt|;
 name|mib
 index|[
@@ -1589,7 +1744,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"read(%#lx,%#lx,%d) - u_ofile - failed\n"
+literal|"read(%#lx,%#lx,%lu) - u_ofile - failed\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1603,6 +1758,9 @@ name|u_long
 operator|)
 name|o
 argument_list|,
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1658,7 +1816,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"read(%#lx,%#lx,%d) - o[tfd] - failed\n"
+literal|"read(%#lx,%#lx,%lu) - o[tfd] - failed\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1673,6 +1831,9 @@ name|u_long
 operator|)
 name|f
 argument_list|,
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1727,7 +1888,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"read(%#lx,%#lx,%d) - f_data - failed\n"
+literal|"read(%#lx,%#lx,%lu) - f_data - failed\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1741,6 +1902,9 @@ name|u_long
 operator|)
 name|s
 argument_list|,
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1795,7 +1959,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kvm_read(%#lx,%#lx,%d) - so_pcb - failed\n"
+literal|"kvm_read(%#lx,%#lx,%lu) - so_pcb - failed\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1809,6 +1973,9 @@ name|u_long
 operator|)
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -1863,7 +2030,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"read(%#lx,%#lx,%d) - inp_ppcb - failed\n"
+literal|"read(%#lx,%#lx,%lu) - inp_ppcb - failed\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1877,6 +2044,9 @@ name|u_long
 operator|)
 name|t
 argument_list|,
+operator|(
+name|u_long
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*

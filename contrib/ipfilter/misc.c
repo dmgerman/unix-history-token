@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_if
@@ -58,12 +64,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -125,11 +125,22 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -153,12 +164,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -194,6 +199,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ip_fil.h"
 end_include
 
@@ -217,15 +228,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -236,11 +243,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: misc.c,v 2.0.2.6 1997/04/30 13:54:24 darrenr Exp $"
+literal|"@(#)$Id: misc.c,v 2.0.2.8.2.1 1997/11/12 10:58:26 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,8 +270,7 @@ name|printpacket
 parameter_list|(
 name|ip
 parameter_list|)
-name|struct
-name|ip
+name|ip_t
 modifier|*
 name|ip
 decl_stmt|;

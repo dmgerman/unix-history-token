@@ -129,6 +129,25 @@ directive|include
 file|<netinet/tcp.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include

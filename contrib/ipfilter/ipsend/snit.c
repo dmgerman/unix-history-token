@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright October 1992 Darren Reed. (from tcplog)  *  *   This software may be freely distributed as long as it is not altered  * in any way and that this messagge always accompanies it.  *  *   The author of this software makes no garuntee about the  * performance of this package or its suitability to fulfill any purpose.  *  */
+comment|/*  * (C)opyright 1992-1997 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -185,20 +185,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|snitid
+name|sccsid
 index|[]
 init|=
 literal|"@(#)snit.c	1.5 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: snit.c,v 2.0.2.4 1997/09/28 07:13:36 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  The author accepts no  * responsibility and is not changed in any way.  *  * I hate legaleese, don't you ?  * $Id: linux.h,v 2.0.2.3 1997/04/07 09:59:01 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  The author accepts no  * responsibility and is not changed in any way.  *  * I hate legaleese, don't you ?  * $Id: linux.h,v 2.0.2.4 1997/09/28 07:12:03 darrenr Exp $  */
 end_comment
 
 begin_include

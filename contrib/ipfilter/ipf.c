@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_ifdef
@@ -212,15 +212,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -231,11 +227,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipf.c,v 2.0.2.6 1997/04/30 13:59:59 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.0.2.13.2.2 1997/11/06 21:23:36 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,12 +240,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|SOLARIS
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -262,6 +253,12 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -450,6 +447,20 @@ name|opendevice
 name|__P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|closedevice
+name|__P
+argument_list|(
+operator|(
 name|void
 operator|)
 argument_list|)
@@ -476,6 +487,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|ipfname
+init|=
+name|IPL_NAME
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -493,7 +514,7 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|char
+name|int
 name|c
 decl_stmt|;
 while|while
@@ -507,7 +528,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AdDEf:F:Il:noprsUvyzZ"
+literal|"AdDEf:F:Il:noPrsUvyzZ"
 argument_list|)
 operator|)
 operator|!=
@@ -520,6 +541,15 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|opts
+operator|&=
+operator|~
+name|OPT_INACTIVE
+expr_stmt|;
+break|break;
 case|case
 literal|'E'
 case|:
@@ -542,15 +572,6 @@ name|u_int
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'A'
-case|:
-name|opts
-operator|&=
-operator|~
-name|OPT_INACTIVE
 expr_stmt|;
 break|break;
 case|case
@@ -618,11 +639,11 @@ name|OPT_OUTQUE
 expr_stmt|;
 break|break;
 case|case
-literal|'p'
+literal|'P'
 case|:
-name|opts
-operator||=
-name|OPT_PRINTFR
+name|ipfname
+operator|=
+name|IPL_AUTH
 expr_stmt|;
 break|break;
 case|case
@@ -660,9 +681,6 @@ operator||=
 name|OPT_VERBOSE
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|SOLARIS
 case|case
 literal|'y'
 case|:
@@ -670,8 +688,6 @@ name|frsync
 argument_list|()
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'z'
 case|:
@@ -717,7 +733,13 @@ begin_function
 specifier|static
 name|int
 name|opendevice
-parameter_list|()
+parameter_list|(
+name|ipfdev
+parameter_list|)
+name|char
+modifier|*
+name|ipfdev
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -729,6 +751,15 @@ return|return
 operator|-
 literal|2
 return|;
+if|if
+condition|(
+operator|!
+name|ipfdev
+condition|)
+name|ipfdev
+operator|=
+name|ipfname
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -750,7 +781,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|IPL_NAME
+name|ipfdev
 argument_list|,
 name|O_RDWR
 argument_list|)
@@ -766,7 +797,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|IPL_NAME
+name|ipfname
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -789,6 +820,25 @@ end_function
 begin_function
 specifier|static
 name|void
+name|closedevice
+parameter_list|()
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|set_state
 parameter_list|(
 name|enable
@@ -800,7 +850,9 @@ block|{
 if|if
 condition|(
 name|opendevice
-argument_list|()
+argument_list|(
+name|ipfname
+argument_list|)
 operator|!=
 operator|-
 literal|2
@@ -880,7 +932,9 @@ operator|(
 name|void
 operator|)
 name|opendevice
-argument_list|()
+argument_list|(
+name|ipfname
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1244,17 +1298,17 @@ argument|) 					perror(
 literal|"ioctl(SIOCADDFR)"
 argument|); 			} 		} 	} 	(void)fclose(fp); }
 comment|/*  * Similar to fgets(3) but can handle '\\'  */
-argument|static char *getline(str, size, file) register char	*str; size_t	size; FILE	*file; { 	register char *p;  	do { 		for (p = str;; p+= strlen(p) -
+argument|static char *getline(str, size, file) register char	*str; size_t	size; FILE	*file; { 	register char *p; 	register int len;  	do { 		for (p = str; ; p += strlen(p) -
 literal|1
-argument|) { 			if (!fgets(p, size, file)) 				return(NULL); 			p[strlen(p) -
+argument|) { 			if (!fgets(p, size, file)) 				return(NULL); 			len = strlen(p); 			p[len -
 literal|1
 argument|] =
 literal|'\0'
-argument|; 			if (p[strlen(p) -
+argument|; 			if (p[len -
 literal|1
 argument|] !=
 literal|'\\'
-argument|) 				break; 		} 	} while (*str ==
+argument|) 				break; 			size -= len; 		} 	} while (*str ==
 literal|'\0'
 argument||| *str ==
 literal|'\n'
@@ -1284,7 +1338,7 @@ argument|) || index(opt,
 literal|'d'
 argument|)) { 		flag |= FF_LOGBLOCK; 		if (opts& OPT_VERBOSE) 			printf(
 literal|"set log flag: block\n"
-argument|); 	}  	if (opendevice() != -
+argument|); 	}  	if (opendevice(ipfname) != -
 literal|2
 argument|&& (err = ioctl(fd, SIOCSETFF,&flag))) 		perror(
 literal|"ioctl(SIOCSETFF)"
@@ -1295,7 +1349,27 @@ literal|"log flag is now %#x\n"
 argument|, flag); 	} }   static	void	flushfilter(arg) char	*arg; { 	int	fl =
 literal|0
 argument_list|,
-argument|rem;  	if (!arg || !*arg) 		return; 	if (strchr(arg,
+argument|rem;  	if (!arg || !*arg) 		return; 	if (!strcmp(arg,
+literal|"s"
+argument|) || !strcmp(arg,
+literal|"S"
+argument|)) { 		if (*arg ==
+literal|'S'
+argument|) 			fl =
+literal|0
+argument|; 		else 			fl =
+literal|1
+argument|; 		rem = fl;  		closedevice(); 		if (opendevice(IPL_STATE) != -
+literal|2
+argument|&& 		    ioctl(fd, SIOCIPFFL,&fl) == -
+literal|1
+argument|) 			perror(
+literal|"ioctl(SIOCIPFFL)"
+argument|); 		if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 			printf(
+literal|"remove flags %s (%d)\n"
+argument|, arg, rem); 			printf(
+literal|"removed %d filter rules\n"
+argument|, fl); 		} 		closedevice(); 		return; 	} 	if (strchr(arg,
 literal|'i'
 argument|) || strchr(arg,
 literal|'I'
@@ -1307,7 +1381,7 @@ argument|)) 		fl = FR_OUTQUE; 	if (strchr(arg,
 literal|'a'
 argument|) || strchr(arg,
 literal|'A'
-argument|)) 		fl = FR_OUTQUE|FR_INQUE; 	fl |= (opts& FR_INACTIVE); 	rem = fl;  	if (opendevice() != -
+argument|)) 		fl = FR_OUTQUE|FR_INQUE; 	fl |= (opts& FR_INACTIVE); 	rem = fl;  	if (opendevice(ipfname) != -
 literal|2
 argument|&& ioctl(fd, SIOCIPFFL,&fl) == -
 literal|1
@@ -1327,7 +1401,7 @@ argument|, rem); 		printf(
 literal|"removed %d filter rules\n"
 argument|, fl); 	} 	return; }   static void swapactive() { 	int in =
 literal|2
-argument|;  	if (opendevice() != -
+argument|;  	if (opendevice(ipfname) != -
 literal|2
 argument|&& ioctl(fd, SIOCSWAPA,&in) == -
 literal|1
@@ -1335,26 +1409,7 @@ argument|) 		perror(
 literal|"ioctl(SIOCSWAPA)"
 argument|); 	else 		printf(
 literal|"Set %d now inactive\n"
-argument|, in); }
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|__SVR4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__svr4__
-argument_list|)
-operator|)
-argument|static void frsync() { 	if (opendevice() != -
+argument|, in); }   static void frsync() { 	if (opendevice(ipfname) != -
 literal|2
 argument|&& ioctl(fd, SIOCFRSYN,
 literal|0
@@ -1364,10 +1419,7 @@ argument|) 		perror(
 literal|"SIOCFRSYN"
 argument|); 	else 		printf(
 literal|"filter sync'd\n"
-argument|); }
-endif|#
-directive|endif
-argument|void zerostats() { 	friostat_t	fio;  	if (opendevice() != -
+argument|); }   void zerostats() { 	friostat_t	fio;  	if (opendevice(ipfname) != -
 literal|2
 argument|) { 		if (ioctl(fd, SIOCFRZST,&fio) == -
 literal|1
@@ -1452,13 +1504,13 @@ argument|].fr_skip); }
 if|#
 directive|if
 name|SOLARIS
-argument|static void blockunknown() { 	int	flag;  	if (opendevice() == -
+argument|static void blockunknown() { 	int	flag;  	if (opendevice(ipfname) == -
 literal|1
 argument|) 		return;  	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		if (ioctl(fd, SIOCGETFF,&flag)) 			perror(
 literal|"ioctl(SIOCGETFF)"
 argument|);  		printf(
 literal|"log flag is currently %#x\n"
-argument|, flag); 	}  	flag ^= FF_BLOCKNONIP;  	if (opendevice() != -
+argument|, flag); 	}  	flag ^= FF_BLOCKNONIP;  	if (opendevice(ipfname) != -
 literal|2
 argument|&& ioctl(fd, SIOCSETFF,&flag)) 		perror(
 literal|"ioctl(SIOCSETFF)"

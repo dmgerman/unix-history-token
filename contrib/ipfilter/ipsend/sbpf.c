@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright October 1995 Darren Reed. (from tcplog)  *  *   This software may be freely distributed as long as it is not altered  * in any way and that this messagge always accompanies it.  *  */
+comment|/*  * (C)opyright 1995-1997 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -157,12 +157,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -198,20 +192,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sbpf
+name|sccsid
 index|[]
 init|=
 literal|"@(#)sbpf.c	1.3 8/25/95 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: sbpf.c,v 2.0.2.7 1997/10/23 11:42:47 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

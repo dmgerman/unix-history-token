@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * arp.c (C) 1995 Darren Reed  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  */
+comment|/*  * arp.c (C) 1995-1997 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"@(#)arp.c	1.4 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: arp.c,v 2.0.2.6 1997/09/28 07:13:25 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,11 +64,32 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|hpux
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/sockio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -87,11 +115,22 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ultrix
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<net/if_arp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -374,6 +413,9 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|hpux
 if|if
 condition|(
 operator|(
@@ -406,6 +448,8 @@ condition|)
 goto|goto
 name|savearp
 goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sfd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1995-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_if
@@ -64,12 +70,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -125,11 +125,22 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -153,12 +164,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_icmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -194,6 +199,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcpip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ipf.h"
 end_include
 
@@ -211,15 +222,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -230,11 +237,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipft_hx.c,v 2.0.2.4 1997/04/30 13:55:07 darrenr Exp $"
+literal|"@(#)$Id: ipft_hx.c,v 2.0.2.8.2.1 1997/11/12 10:56:07 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -508,22 +516,20 @@ decl_stmt|,
 modifier|*
 name|u
 decl_stmt|;
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|char
 name|line
 index|[
 literal|513
 index|]
 decl_stmt|;
+name|ip_t
+modifier|*
+name|ip
+decl_stmt|;
 name|ip
 operator|=
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 name|buf
@@ -629,11 +635,19 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * interpret start of line as possibly "[ifname]" or 		 * "[in/out,ifname]". 		 */
+if|if
+condition|(
+name|ifn
+condition|)
 operator|*
 name|ifn
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|dir
+condition|)
 operator|*
 name|dir
 operator|=
@@ -698,11 +712,20 @@ block|{
 name|u
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|ifn
+condition|)
 operator|*
 name|ifn
 operator|=
 name|u
 expr_stmt|;
+if|if
+condition|(
+name|dir
+condition|)
+block|{
 if|if
 condition|(
 operator|*
@@ -729,7 +752,12 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-else|else
+block|}
+elseif|else
+if|if
+condition|(
+name|ifn
+condition|)
 operator|*
 name|ifn
 operator|=
@@ -751,8 +779,7 @@ expr_stmt|;
 name|ip
 operator|=
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 name|readhex

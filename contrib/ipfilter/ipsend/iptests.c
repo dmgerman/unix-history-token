@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993, 1994, 1995 by Darren Reed.  *  * This code may be freely distributed as long as it retains this notice  * and is not changed in any way.  The author accepts no responsibility  * for the use of this software.  I hate legaleese, don't you ?  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"%W% %G% (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: iptests.c,v 2.0.2.13 1997/10/23 11:42:45 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +90,18 @@ name|defined
 argument_list|(
 name|solaris
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
 end_if
 
 begin_define
@@ -138,17 +157,61 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|ultrix
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|hpux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sgi
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<kvm.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ultrix
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -248,11 +311,77 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+operator|&&
+operator|(
+name|LINUX
+operator|>=
+literal|0200
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<asm/atomic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|linux
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<net/route.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__KERNEL__
+end_define
+
+begin_comment
+comment|/* because there's a macro not wrapped by this */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
+
+begin_comment
+comment|/* in this file :-/ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -290,11 +419,11 @@ directive|include
 file|<netinet/ip_icmp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|linux
+end_ifndef
 
 begin_include
 include|#
@@ -320,6 +449,11 @@ directive|include
 file|<netinet/tcp_var.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -331,6 +465,11 @@ operator|||
 name|defined
 argument_list|(
 name|__svr4__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sgi
 argument_list|)
 end_if
 
@@ -404,6 +543,8 @@ name|int
 name|nfd
 decl_stmt|,
 name|i
+init|=
+literal|0
 decl_stmt|,
 name|len
 decl_stmt|,
@@ -4277,8 +4418,7 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|struct
-name|udphdr
+name|udphdr_t
 modifier|*
 name|u
 decl_stmt|;
@@ -5101,11 +5241,11 @@ operator|||
 operator|(
 name|ptest
 operator|==
-literal|4
+literal|5
 operator|)
 condition|)
 block|{
-comment|/* 		 * Test 5: sizeof(struct ip)<= MTU<= sizeof(struct udphdr) + 		 * sizeof(struct ip) 		 */
+comment|/* 		 * Test 5: sizeof(ip_t)<= MTU<= sizeof(udphdr_t) + 		 * sizeof(ip_t) 		 */
 name|printf
 argument_list|(
 literal|"4.5 UDP 20<= MTU<= 32\n"
@@ -5242,12 +5382,17 @@ literal|2
 operator|)
 operator|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|linux
 name|t
 operator|->
 name|th_x2
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|t
 operator|->
 name|th_off
@@ -5980,6 +6125,12 @@ operator|!
 name|defined
 argument_list|(
 name|__svr4__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sgi
 argument_list|)
 block|{
 name|struct

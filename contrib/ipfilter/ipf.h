@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.0.2.6 1997/04/30 13:49:05 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ipf.h	1.12 6/5/96  * $Id: ipf.h,v 2.0.2.12 1997/09/28 07:11:50 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -187,6 +187,20 @@ name|OPT_SAVEOUT
 value|0x20000
 end_define
 
+begin_define
+define|#
+directive|define
+name|OPT_AUTHSTATS
+value|0x40000
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_RAW
+value|0x80000
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -228,6 +242,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ultrix
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|strdup
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -325,7 +365,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|u_32_t
 name|buildopts
 name|__P
 argument_list|(
@@ -335,6 +375,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -342,7 +384,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|u_32_t
 name|hostnum
 name|__P
 argument_list|(
@@ -359,7 +401,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_long
+name|u_32_t
 name|optname
 name|__P
 argument_list|(
@@ -383,8 +425,7 @@ name|printpacket
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|ip
+name|ip_t
 operator|*
 operator|)
 argument_list|)

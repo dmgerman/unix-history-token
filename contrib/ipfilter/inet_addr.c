@@ -11,15 +11,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -30,11 +26,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_addr.c,v 2.0.2.4 1997/05/08 10:11:34 darrenr Exp $"
+literal|"@(#)$Id: inet_addr.c,v 2.0.2.6 1997/10/19 15:39:21 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,7 +592,7 @@ operator|)
 end_if
 
 begin_function
-name|u_int
+name|in_addr_t
 else|#
 directive|else
 name|u_long

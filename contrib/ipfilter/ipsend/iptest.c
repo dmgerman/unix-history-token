@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ipsend.c (C) 1995 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  *  * This was written and tested (successfully) on SunOS 4.1.x.  */
+comment|/*  * ipsend.c (C) 1995-1997 Darren Reed  *  * This was written to test what size TCP fragments would get through  * various TCP/IP packet filters, as used in IP firewalls.  In certain  * conditions, enough of the TCP header is missing for unpredictable  * results unless the filter is aware that this can happen.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"%W% %G% (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: iptest.c,v 2.0.2.8 1997/10/12 09:48:39 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,6 +274,26 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|default_device
+index|[]
+init|=
+literal|"ec0"
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|char
 name|default_device
@@ -275,6 +302,11 @@ init|=
 literal|"lan0"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -417,8 +449,6 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|dst
-decl_stmt|,
-name|c
 decl_stmt|;
 name|int
 name|mtu
@@ -432,6 +462,8 @@ decl_stmt|,
 name|pointtest
 init|=
 literal|0
+decl_stmt|,
+name|c
 decl_stmt|;
 comment|/* 	 * 65535 is maximum packet size...you never know... 	 */
 name|ip
@@ -483,16 +515,13 @@ condition|(
 operator|(
 name|c
 operator|=
-operator|(
-name|char
-operator|)
 name|getopt
 argument_list|(
 name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1234567IP:TUd:f:g:m:o:p:s:t:"
+literal|"1234567d:g:m:p:s:"
 argument_list|)
 operator|)
 operator|!=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993,1994,1995 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  *  * Broken still:  * Displaying the nat with redirect entries is way confusing  *  * Example redirection line:  * rdr le1 0.0.0.0/0 port 79 -> 199.165.219.129 port 9901  *   * Will redirect all incoming packets on le1 to any machine, port 79 to  * host 199.165.219.129, port 9901  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  *  * Broken still:  * Displaying the nat with redirect entries is way confusing  *  * Example redirection line:  * rdr le1 0.0.0.0/0 port 79 -> 199.165.219.129 port 9901  *   * Will redirect all incoming packets on le1 to any machine, port 79 to  * host 199.165.219.129, port 9901  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_if
@@ -58,12 +64,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
 
 begin_include
 include|#
@@ -208,25 +208,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip_compat.h"
+file|"netinet/ip_compat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_fil.h"
+file|"netinet/ip_fil.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_proxy.h"
+file|"netinet/ip_proxy.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_nat.h"
+file|"netinet/ip_nat.h"
 end_include
 
 begin_include
@@ -243,15 +243,11 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -262,11 +258,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipnat.c,v 2.0.2.9 1997/05/05 14:03:55 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.0.2.21.2.1 1997/11/08 04:55:55 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,15 +575,18 @@ modifier|*
 name|file
 init|=
 name|NULL
-decl_stmt|,
-name|c
 decl_stmt|;
 name|int
 name|fd
+init|=
+operator|-
+literal|1
 decl_stmt|,
 name|opts
 init|=
 literal|1
+decl_stmt|,
+name|c
 decl_stmt|;
 while|while
 condition|(
@@ -932,6 +932,11 @@ block|{
 name|int
 name|bits
 decl_stmt|;
+name|struct
+name|protoent
+modifier|*
+name|pr
+decl_stmt|;
 switch|switch
 condition|(
 name|np
@@ -944,7 +949,7 @@ name|NAT_REDIRECT
 case|:
 name|printf
 argument_list|(
-literal|"redir "
+literal|"rdr "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1105,10 +1110,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|np
 operator|->
 name|in_flags
 operator|&
+name|IPN_TCPUDP
+operator|)
+operator|==
 name|IPN_TCPUDP
 condition|)
 name|printf
@@ -1119,10 +1128,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|np
 operator|->
 name|in_flags
 operator|&
+name|IPN_TCP
+operator|)
+operator|==
 name|IPN_TCP
 condition|)
 name|printf
@@ -1133,10 +1146,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|np
 operator|->
 name|in_flags
 operator|&
+name|IPN_UDP
+operator|)
+operator|==
 name|IPN_UDP
 condition|)
 name|printf
@@ -1333,7 +1350,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" proxy"
+literal|" proxy port"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1356,8 +1373,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %.*s/%d"
+literal|" %.*s/"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|np
@@ -1368,6 +1388,34 @@ argument_list|,
 name|np
 operator|->
 name|in_plabel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pr
+operator|=
+name|getprotobynumber
+argument_list|(
+name|np
+operator|->
+name|in_p
+argument_list|)
+operator|)
+condition|)
+name|fputs
+argument_list|(
+name|pr
+operator|->
+name|p_name
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%d"
 argument_list|,
 name|np
 operator|->
@@ -2510,7 +2558,7 @@ block|}
 return|return
 operator|*
 operator|(
-name|u_long
+name|u_32_t
 operator|*
 operator|)
 name|hp
@@ -3663,6 +3711,22 @@ name|NULL
 expr_stmt|;
 comment|/* That's all she wrote! */
 block|}
+name|ipn
+operator|.
+name|in_inip
+operator|&=
+name|ipn
+operator|.
+name|in_inmsk
+expr_stmt|;
+name|ipn
+operator|.
+name|in_outip
+operator|&=
+name|ipn
+operator|.
+name|in_outmsk
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4208,6 +4272,11 @@ argument_list|,
 literal|"-"
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|fp
 operator|=
 name|fopen
@@ -4216,7 +4285,21 @@ name|file
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
+condition|)
+block|{
+name|perror
+argument_list|(
+name|file
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 name|fp
 operator|=
@@ -4383,9 +4466,15 @@ name|linenum
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fp
+operator|!=
+name|stdin
+condition|)
 name|fclose
 argument_list|(
-name|stdin
+name|fp
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|__SNOOP_H__
 end_define
 
 begin_comment
-comment|/*  * written to comply with the RFC (1761) from Sun.  * $Id: snoop.h,v 2.0.2.4 1997/04/30 13:49:52 darrenr Exp $  */
+comment|/*  * written to comply with the RFC (1761) from Sun.  * $Id: snoop.h,v 2.0.2.5 1997/09/28 07:12:11 darrenr Exp $  */
 end_comment
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ip.c (C) 1995 Darren Reed  *  * The author provides this program as-is, with no gaurantee for its  * suitability for any specific purpose.  The author takes no responsibility  * for the misuse/abuse of this program and provides it for the sole purpose  * of testing packet filter policies.  This file maybe distributed freely  * providing it is not modified and that this notice remains in tact.  */
+comment|/*  * ip.c (C) 1995-1997 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -11,20 +11,27 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
 end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
 literal|"%W% %G% (C)1995"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: ip.c,v 2.0.2.11 1997/10/23 11:42:44 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +124,12 @@ directive|include
 file|<netinet/ip_icmp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -134,6 +147,25 @@ include|#
 directive|include
 file|<netinet/ip_var.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -362,40 +394,21 @@ name|s_addr
 condition|)
 name|bcopy
 argument_list|(
-name|last_arp
+argument|last_arp
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eh
-operator|->
-name|ether_dhost
+argument|(char *)A_A eh->ether_dhost
 argument_list|,
 literal|6
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
 name|arp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|gwip
+argument|(char *)&gwip
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eh
-operator|->
-name|ether_dhost
+argument|(char *)A_A eh->ether_dhost
 argument_list|)
 operator|==
 operator|-
@@ -416,7 +429,10 @@ name|eh
 operator|->
 name|ether_type
 operator|=
+name|htons
+argument_list|(
 name|ETHERTYPE_IP
+argument_list|)
 expr_stmt|;
 name|last_gw
 operator|.
@@ -552,23 +568,11 @@ name|ipbuf
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eh
-operator|->
-name|ether_shost
+argument|(char *)A_A eh->ether_shost
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|eh
-operator|->
-name|ether_shost
+argument|sizeof(eh->ether_shost)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|last_gw
@@ -587,40 +591,21 @@ operator|)
 condition|)
 name|bcopy
 argument_list|(
-name|last_arp
+argument|last_arp
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eh
-operator|->
-name|ether_dhost
+argument|(char *)A_A eh->ether_dhost
 argument_list|,
 literal|6
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
 name|arp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|gwip
+argument|(char *)&gwip
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eh
-operator|->
-name|ether_dhost
+argument|(char *)A_A eh->ether_dhost
 argument_list|)
 operator|==
 operator|-
@@ -639,28 +624,21 @@ return|;
 block|}
 name|bcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|eh
-operator|->
-name|ether_dhost
+argument|(char *)A_A eh->ether_dhost
 argument_list|,
-name|last_arp
+argument|last_arp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|last_arp
+argument|sizeof(last_arp)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|eh
 operator|->
 name|ether_type
 operator|=
+name|htons
+argument_list|(
 name|ETHERTYPE_IP
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -717,6 +695,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
+name|frag
+operator|&
+literal|2
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|ip
 operator|->
 name|ip_v
@@ -757,6 +745,7 @@ name|ip_ttl
 operator|=
 literal|60
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
