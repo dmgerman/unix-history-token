@@ -8176,7 +8176,7 @@ if|if
 condition|(
 name|pa
 operator|>=
-literal|0x100000
+name|KERNLOAD
 operator|&&
 name|pa
 operator|<

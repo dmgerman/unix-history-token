@@ -1682,6 +1682,19 @@ name|KERNBASE
 operator|)
 expr_stmt|;
 operator|*
+name|pte
+operator|=
+operator|(
+name|vm86pa
+operator|-
+name|PAGE_SIZE
+operator|)
+operator||
+name|PG_RW
+operator||
+name|PG_V
+expr_stmt|;
+operator|*
 name|ptd
 operator|=
 name|vtophys
@@ -1701,8 +1714,6 @@ name|pte
 operator|=
 name|PTmap
 expr_stmt|;
-block|}
-comment|/*      * install pointer to page 0.  we don't need to flush the tlb,      * since there should not be a previous mapping for page 0.      */
 operator|*
 name|pte
 operator|=
@@ -1716,6 +1727,13 @@ name|PG_RW
 operator||
 name|PG_V
 expr_stmt|;
+block|}
+name|pmap_invalidate_all
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
+comment|/* XXX insurance for now */
 name|stack_top
 operator|=
 name|stack
@@ -1982,6 +2000,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* remove entry */
+comment|/* 	 * XXX only needs to be invlpg(0) but that doesn't work on the 386  	 */
+name|pmap_invalidate_all
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1991,6 +2015,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* remove page table */
+comment|/* 	 * XXX only needs to be invlpg(0) but that doesn't work on the 386  	 */
+name|pmap_invalidate_all
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|pte
@@ -2000,12 +2030,6 @@ argument_list|)
 expr_stmt|;
 comment|/* ... and free it */
 block|}
-comment|/*      * XXX only needs to be invlpg(0) but that doesn't work on the 386       */
-name|pmap_invalidate_all
-argument_list|(
-name|kernel_pmap
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|i

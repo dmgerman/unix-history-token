@@ -1318,6 +1318,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|pseflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|pgeflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|ptvmmap
@@ -1413,7 +1427,7 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|pmap_set_opt
+name|pmap_set_pg
 parameter_list|(
 name|void
 parameter_list|)

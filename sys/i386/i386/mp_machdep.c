@@ -2347,9 +2347,6 @@ argument_list|(
 name|cr0
 argument_list|)
 expr_stmt|;
-name|pmap_set_opt
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -3875,9 +3872,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|int
-name|pgeflag
-decl_stmt|;
 name|POSTCODE
 argument_list|(
 name|MPTABLE_PASS2_POST
@@ -3907,11 +3901,6 @@ name|cpu_flags
 operator|=
 name|PROCENTRY_FLAG_EN
 expr_stmt|;
-name|pgeflag
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX - Not used under SMP yet.  */
 name|MALLOC
 argument_list|(
 name|io_apic_versions
@@ -4140,8 +4129,6 @@ argument_list|(
 name|PG_V
 operator||
 name|PG_RW
-operator||
-name|pgeflag
 operator||
 operator|(
 name|io_apic_address
@@ -9414,9 +9401,6 @@ name|x
 index|]
 operator|=
 literal|0
-expr_stmt|;
-name|pmap_set_opt
-argument_list|()
 expr_stmt|;
 comment|/* number of APs actually started */
 return|return
