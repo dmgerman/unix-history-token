@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.7	81/10/29	*/
+comment|/*	param.c	4.8	81/11/07	*/
 end_comment
 
 begin_include
@@ -412,13 +412,6 @@ name|host
 decl_stmt|,
 modifier|*
 name|hostNHOST
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|net
-name|netcb
 decl_stmt|;
 end_decl_stmt
 
