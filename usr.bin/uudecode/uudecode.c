@@ -807,7 +807,7 @@ name|IS_DEC
 parameter_list|(
 name|c
 parameter_list|)
-value|( (((c) - ' ')> 0)&&  (((c) - ' ')<= 077 + 1) )
+value|( (((c) - ' ')>= 0)&&  (((c) - ' ')<= 077 + 1) )
 comment|/* #define IS_DEC(c) (1) */
 define|#
 directive|define
