@@ -163,11 +163,24 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"zopen.h"
-end_include
+begin_function_decl
+specifier|extern
+name|FILE
+modifier|*
+name|zopen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -714,6 +727,12 @@ operator|*
 operator|,
 operator|...
 operator|)
+argument_list|)
+name|__printf0like
+argument_list|(
+literal|2
+argument_list|,
+literal|3
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2109,7 +2128,7 @@ name|bounds
 argument_list|,
 name|compress
 condition|?
-literal|".Z"
+literal|".gz"
 else|:
 literal|""
 argument_list|)
@@ -2125,8 +2144,6 @@ argument_list|(
 name|path
 argument_list|,
 literal|"w"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -2501,7 +2518,7 @@ name|bounds
 argument_list|,
 name|compress
 condition|?
-literal|".Z"
+literal|".gz"
 else|:
 literal|""
 argument_list|)
@@ -2517,8 +2534,6 @@ argument_list|(
 name|path
 argument_list|,
 literal|"w"
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 else|else
