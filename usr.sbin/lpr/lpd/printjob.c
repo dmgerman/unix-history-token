@@ -2208,14 +2208,17 @@ name|cp
 decl_stmt|;
 name|int
 name|bombed
-init|=
-name|OK
-decl_stmt|;
-name|int
+decl_stmt|,
 name|didignorehdr
-init|=
-literal|0
 decl_stmt|;
+name|bombed
+operator|=
+name|OK
+expr_stmt|;
+name|didignorehdr
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * open control file; ignore if no longer there. 	 */
 if|if
 condition|(
@@ -3265,8 +3268,6 @@ literal|2
 index|]
 decl_stmt|,
 name|stopped
-init|=
-literal|0
 decl_stmt|;
 name|union
 name|wait
@@ -3369,6 +3370,11 @@ name|job_dfcnt
 operator|++
 expr_stmt|;
 comment|/* increment datafile counter for this job */
+name|stopped
+operator|=
+literal|0
+expr_stmt|;
+comment|/* output filter is not stopped */
 comment|/* everything seems OK, start it up */
 if|if
 condition|(
