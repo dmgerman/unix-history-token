@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.32 (Berkeley) %G%"
+literal|"@(#)cp.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * cp copies source files to target files.  *   * The global PATH_T structures "to" always containa the path to the  * current target file, respectively.  Since fts(3) does not change  * directories, this path can be either absolute or dot-realative.  *   * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'. The more interesing case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir   * (stored in "to") to form the final target path.  */
+comment|/*  * Cp copies source files to target files.  *   * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-realative.  *   * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
 end_comment
 
 begin_include
@@ -137,32 +137,11 @@ end_include
 begin_define
 define|#
 directive|define
-name|FILE_TO_FILE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FILE_TO_DIR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIR_TO_DNE
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
 name|STRIP_TRAILING_SLASH
 parameter_list|(
 name|p
 parameter_list|)
-value|{ \         while ((p).p_end> (p).p_path&& (p).p_end[-1] == '/') \                 *--(p).p_end = 0; \ 		}
+value|{					\         while ((p).p_end> (p).p_path&& (p).p_end[-1] == '/')		\                 *--(p).p_end = 0;					\ }
 end_define
 
 begin_decl_stmt
@@ -172,8 +151,6 @@ name|copy
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
 name|FTS
 operator|*
 operator|)
@@ -234,7 +211,11 @@ begin_decl_stmt
 name|int
 name|iflag
 decl_stmt|,
+name|orflag
+decl_stmt|,
 name|pflag
+decl_stmt|,
+name|rflag
 decl_stmt|;
 end_decl_stmt
 
@@ -245,14 +226,19 @@ name|progname
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_enum
 specifier|static
-name|int
-name|rflag
-decl_stmt|,
-name|orflag
-decl_stmt|;
-end_decl_stmt
+enum|enum
+block|{
+name|FILE_TO_FILE
+block|,
+name|FILE_TO_DIR
+block|,
+name|DIR_TO_DNE
+block|}
+name|type
+enum|;
+end_enum
 
 begin_function
 name|int
@@ -267,19 +253,19 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|struct
 name|stat
 name|to_stat
 decl_stmt|,
 name|tmp_stat
+decl_stmt|;
+name|FTS
+modifier|*
+name|ftsp
 decl_stmt|;
 specifier|register
 name|int
@@ -287,28 +273,19 @@ name|c
 decl_stmt|,
 name|r
 decl_stmt|;
+name|int
+name|fts_options
+decl_stmt|,
+name|Hflag
+decl_stmt|,
+name|hflag
+decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|target
-decl_stmt|;
-name|int
-name|fts_options
-decl_stmt|;
-name|int
-name|type
-decl_stmt|;
-name|FTS
-modifier|*
-name|ftsp
-decl_stmt|;
-name|int
-name|hflag
-decl_stmt|,
-name|Hflag
 decl_stmt|;
 comment|/* 	 * The utility cp(1) is used by mv(1) -- except for usage statements, 	 * print the "called as" program name. 	 */
 name|progname
@@ -335,10 +312,6 @@ comment|/*          * Symbolic link handling is as follows:          * 1.  Follo
 name|Hflag
 operator|=
 name|hflag
-operator|=
-name|rflag
-operator|=
-name|orflag
 operator|=
 literal|0
 expr_stmt|;
@@ -485,24 +458,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|hflag
+name|orflag
 condition|)
 block|{
-name|fts_options
-operator|&=
-operator|~
-name|FTS_PHYSICAL
-expr_stmt|;
-name|fts_options
-operator||=
-name|FTS_LOGICAL
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|rflag
-operator|&&
-name|orflag
 condition|)
 block|{
 operator|(
@@ -521,12 +482,51 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Hflag
+operator|||
+name|hflag
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cp: the -r and the -H and -h options are mutually exclusive.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|hflag
+condition|)
+block|{
+name|fts_options
+operator|&=
+operator|~
+name|FTS_PHYSICAL
+expr_stmt|;
+name|fts_options
+operator||=
+name|FTS_LOGICAL
+expr_stmt|;
+block|}
 name|myuid
 operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-comment|/* copy the umask for explicit mode setting */
+comment|/* Copy the umask for explicit mode setting. */
 name|myumask
 operator|=
 name|umask
@@ -542,7 +542,7 @@ argument_list|(
 name|myumask
 argument_list|)
 expr_stmt|;
-comment|/* Save the target base in "to" */
+comment|/* Save the target base in "to". */
 name|target
 operator|=
 name|argv
@@ -641,7 +641,7 @@ name|to
 operator|.
 name|p_end
 expr_stmt|;
-comment|/* Want to know when end of list for fts. */
+comment|/* Set end of argument list for fts(3). */
 name|argv
 index|[
 name|argc
@@ -649,7 +649,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Cp has two distinct cases: 	 * 	 * % cp [-rip] source target 	 * % cp [-rip] source1 ... directory 	 * 	 * In both cases, source can be either a file or a directory. 	 * 	 * In (1), the target becomes a copy of the source. That is, if the 	 * source is a file, the target will be a file, and likewise for 	 * directories. 	 * 	 * In (2), the real target is not directory, but "directory/source". 	 */
+comment|/* 	 * Cp has two distinct cases: 	 * 	 * cp [-R] source target 	 * cp [-R] source1 ... sourceN directory 	 * 	 * In both cases, source can be either a file or a directory. 	 * 	 * In (1), the target becomes a copy of the source. That is, if the 	 * source is a file, the target will be a file, and likewise for 	 * directories. 	 * 	 * In (2), the real target is not directory, but "directory/source". 	 */
 name|r
 operator|=
 name|stat
@@ -727,7 +727,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Need to detect the case: 		 * % cp -R dir foo 		 * Where dir is a directory and foo does not exist, because  		 * in this special case we want pathname concatenations 		 * turned on but not for the initial mkdir(). 		 */
+comment|/* 		 * Need to detect the case: 		 *	cp -R dir foo 		 * Where dir is a directory and foo does not exist, where 		 * we want pathname concatenations turned on but not for 		 * the initial mkdir(). 		 */
 if|if
 condition|(
 name|r
@@ -842,8 +842,6 @@ expr_stmt|;
 block|}
 name|copy
 argument_list|(
-name|type
-argument_list|,
 name|ftsp
 argument_list|)
 expr_stmt|;
@@ -865,18 +863,24 @@ specifier|static
 name|void
 name|copy
 parameter_list|(
-name|type
-parameter_list|,
 name|ftsp
 parameter_list|)
-name|int
-name|type
-decl_stmt|;
 name|FTS
 modifier|*
 name|ftsp
 decl_stmt|;
 block|{
+specifier|register
+name|FTSENT
+modifier|*
+name|curr
+decl_stmt|;
+specifier|register
+name|int
+name|base
+decl_stmt|,
+name|nlen
+decl_stmt|;
 name|struct
 name|stat
 name|to_stat
@@ -884,24 +888,12 @@ decl_stmt|;
 name|int
 name|dne
 decl_stmt|;
-specifier|register
-name|FTSENT
-modifier|*
-name|curr
-decl_stmt|;
 name|char
 modifier|*
 name|c
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|n
-decl_stmt|;
-specifier|register
-name|int
-name|base
-decl_stmt|,
-name|nlen
 decl_stmt|;
 while|while
 condition|(
@@ -913,21 +905,19 @@ name|ftsp
 argument_list|)
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|curr
 operator|->
 name|fts_info
-operator|==
-name|FTS_ERR
-operator|||
-name|curr
-operator|->
-name|fts_info
-operator|==
-name|FTS_NS
 condition|)
 block|{
+case|case
+name|FTS_NS
+case|:
+case|case
+name|FTS_ERR
+case|:
 name|err
 argument_list|(
 literal|"%s: %s"
@@ -949,25 +939,9 @@ operator|=
 literal|1
 expr_stmt|;
 continue|continue;
-block|}
-if|if
-condition|(
-name|curr
-operator|->
-name|fts_info
-operator|==
-name|FTS_DP
-condition|)
-continue|continue;
-if|if
-condition|(
-name|curr
-operator|->
-name|fts_info
-operator|==
+case|case
 name|FTS_DC
-condition|)
-block|{
+case|:
 name|err
 argument_list|(
 literal|"%s: directory causes a cycle"
@@ -981,7 +955,11 @@ name|exit_val
 operator|=
 literal|1
 expr_stmt|;
-return|return;
+continue|continue;
+case|case
+name|FTS_DP
+case|:
+continue|continue;
 block|}
 comment|/* 		 * If we are in case (2) or (3) above, we need to append the                   * source name to the target name.                    */
 if|if
@@ -1027,7 +1005,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * We need to remember roots of traversals so we can 			 * create correct pathnames.  In the case where 			 * we have a directory copied to a non-existent one: 			 * % cp -R a/dir noexist 			 * we want the path names to be noexist/foo rather than 			 * noexist/dir/foo, where foo is a file in dir, as  			 * opposed to the case where the target exists. 			 */
+comment|/* 			 * Need to remember the roots of traversals to create 			 * correct pathnames.  If there's a directory being 			 * copied to a non-existent directory, e.g. 			 *	cp -R a/dir noexist 			 * the resulting path name should be noexist/foo, not 			 * noexist/dir/foo (where foo is a file in dir), which 			 * is the case where the target exists. 			 * 			 * Also, check for "..".  This is for correct path 			 * concatentation for paths ending in "..", e.g. 			 *	cp -R .. /tmp 			 * Paths ending in ".." are changed to ".".  This is 			 * tricky, but seems the easiest way to fix the problem. 			 */
 if|if
 condition|(
 name|curr
@@ -1036,7 +1014,6 @@ name|fts_level
 operator|==
 name|FTS_ROOTLEVEL
 condition|)
-block|{
 if|if
 condition|(
 name|type
@@ -1078,7 +1055,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 				 * This is necessary to assure that 				 * correct concatentation of paths ending 				 * in ".." occurs.  This is somewhat 				 * tricky.  Note that the old 				 * cp(1) did not handle these cases  				 * correctly.  This is sort of a hack 				 * but it is the easiest way to 				 * fix the problem. 				 */
 if|if
 condition|(
 operator|!
@@ -1107,7 +1083,6 @@ name|curr
 operator|->
 name|fts_pathlen
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|to
@@ -1511,7 +1486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mastercmp() is the comparison function for the copy order.  The order is  * to copy non-directory files before directory files.  There are two reasons  * to do directories last.  The first is efficiency.  Files tend to be in the   * same cylinder group as their parent, whereas directories tend not to be.  * Copying files all at once reduces seeking.  Second, deeply nested trees  * could use up all the file descriptors if we didn't close one directory   * before recursively starting on the next.  */
+comment|/*  * mastercmp --  *	The comparison function for the copy order.  The order is to copy  *	non-directory files before directory files.  The reason for this  *	is because files tend to be in the same cylinder group as their  *	parent directory, whereas directories tend not to be.  Copying the  *	files first reduces seeking.  */
 end_comment
 
 begin_function
@@ -1537,6 +1512,7 @@ end_function
 
 begin_block
 block|{
+specifier|register
 name|int
 name|a_info
 decl_stmt|,
@@ -1566,7 +1542,9 @@ operator|==
 name|FTS_DNR
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|b_info
 operator|=
@@ -1592,7 +1570,9 @@ operator|==
 name|FTS_DNR
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -1601,8 +1581,10 @@ operator|==
 name|FTS_D
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -1611,10 +1593,14 @@ operator|==
 name|FTS_D
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_block
