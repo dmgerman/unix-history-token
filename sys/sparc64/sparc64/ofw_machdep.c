@@ -295,6 +295,15 @@ literal|"ebus"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"isa"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
