@@ -1481,6 +1481,14 @@ name|atadev
 argument_list|,
 name|request
 operator|->
+name|data
+argument_list|,
+name|request
+operator|->
+name|bytecount
+argument_list|,
+name|request
+operator|->
 name|flags
 operator|&
 name|ATPR_F_READ

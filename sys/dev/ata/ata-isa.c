@@ -486,6 +486,12 @@ name|ata_device
 modifier|*
 name|atadev
 parameter_list|,
+name|caddr_t
+name|data
+parameter_list|,
+name|int32_t
+name|count
+parameter_list|,
 name|int
 name|dir
 parameter_list|)

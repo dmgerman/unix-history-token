@@ -1842,12 +1842,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ata_dmastart
 parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+parameter_list|,
+name|caddr_t
+parameter_list|,
+name|int32_t
 parameter_list|,
 name|int
 parameter_list|)
