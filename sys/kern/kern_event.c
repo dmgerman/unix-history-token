@@ -1134,7 +1134,11 @@ operator|~
 name|EV_FLAG1
 expr_stmt|;
 block|}
-comment|/* XXX lock the proc here while adding to the list? */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -1145,6 +1149,11 @@ argument_list|,
 name|kn
 argument_list|,
 name|kn_selnext
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -1190,7 +1199,11 @@ operator|&
 name|KN_DETACHED
 condition|)
 return|return;
-comment|/* XXX locking?  this might modify another process. */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|SLIST_REMOVE
 argument_list|(
 operator|&
@@ -1203,6 +1216,11 @@ argument_list|,
 name|knote
 argument_list|,
 name|kn_selnext
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
