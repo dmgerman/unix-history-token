@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  *  * @(#)ectype.c	1.2 (Berkeley) %G%  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ectype.c	3.1  10/29/86"
+literal|"@(#)ectype.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

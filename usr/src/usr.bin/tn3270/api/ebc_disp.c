@@ -3,6 +3,31 @@ begin_comment
 comment|/*  * Translate table to map EBCDIC into 3270 display codes.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ebc_disp.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_decl_stmt
 name|unsigned
 name|char

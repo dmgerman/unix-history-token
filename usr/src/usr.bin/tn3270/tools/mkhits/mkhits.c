@@ -1,5 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  *	Copyright (c) 1984-1987 by the Regents of the  *	University of California and by Gregory Glenn Minshall.  *  *	Permission to use, copy, modify, and distribute these  *	programs and their documentation for any purpose and  *	without fee is hereby granted, provided that this  *	copyright and permission appear on all copies and  *	supporting documentation, the name of the Regents of  *	the University of California not be used in advertising  *	or publicity pertaining to distribution of the programs  *	without specific prior permission, and notice be given in  *	supporting documentation that copying and distribution is  *	by permission of the Regents of the University of California  *	and by Gregory Glenn Minshall.  Neither the Regents of the  *	University of California nor Gregory Glenn Minshall make  *	representations about the suitability of this software  *	for any purpose.  It is provided "as is" without  *	express or implied warranty.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)mkhits.c	1.7 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_comment
 comment|/*  * This program scans a file which describes a keyboard.  The output  * of the program is a series of 'C' declarations which describe a  * mapping between (scancode, shiftstate, altstate) and 3270 functions,  * characters, and AIDs.  *  * The format of the input file is as follows:  *  * keynumber [ scancode [ unshifted [ shifted [ alted [ shiftalted ] ] ] ] ]  *  * keynumber is in decimal, and starts in column 1.  * scancode is hexadecimal.  * unshifted, etc. - these are either a single ascii character,  *			or the name of a function or an AID-generating key.  *  * all fields are separated by a single space.  */
 end_comment
 

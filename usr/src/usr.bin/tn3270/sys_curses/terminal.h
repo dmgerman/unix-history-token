@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)screen.h	3.1  10/29/86  */
+comment|/*  * @(#)terminal.h	1.6 (Berkeley) %G%  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Define the translate tables used to go between 3270 display code  * and ascii  */
+comment|/*  * Define the translate tables used to go between 3270 display code  * and ascii  *  * @(#)disp_asc.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt

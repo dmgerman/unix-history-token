@@ -3,6 +3,31 @@ begin_comment
 comment|/*  * There isn't much excuse for this file, but here it is.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)disp_asc.c	1.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The 'spint' (spawn and interrupt) routines use this structure.  *  * Note that spint_asm.asm contains an Assembly language version of  * the following, so keep changes in synch!  */
+comment|/*  * The 'spint' (spawn and interrupt) routines use this structure.  *  * Note that spint_asm.asm contains an Assembly language version of  * the following, so keep changes in synch!  *  * @(#)spint.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_typedef

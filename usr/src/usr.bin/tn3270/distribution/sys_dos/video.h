@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This is a header file describing the interface via int 10H to the  * video subsystem.  */
+comment|/*  * This is a header file describing the interface via int 10H to the  * video subsystem.  *  * @(#)video.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_define

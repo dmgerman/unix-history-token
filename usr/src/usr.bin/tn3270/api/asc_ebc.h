@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Definitions of translate tables used for ascii<->ebcdic translation.  */
+comment|/*  * Definitions of translate tables used for ascii<->ebcdic translation.  *  * @(#)asc_ebc.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_define

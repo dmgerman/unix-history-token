@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)globals.h	3.1  10/29/86  */
-end_comment
-
-begin_comment
-comment|/*  *	This file contains all the globals used by tn3270.  *  *	Since various files may want to reference this file,  *	and since they may only want subsets of the globals,  *	we assume they have #include'd all the other .h files  *	first, and we only give those globals relevant to  *	the #include'd .h files.  */
+comment|/*  *	This file contains all the globals used by tn3270.  *  *	Since various files may want to reference this file,  *	and since they may only want subsets of the globals,  *	we assume they have #include'd all the other .h files  *	first, and we only give those globals relevant to  *	the #include'd .h files.  *  * @(#)globals.h	1.10 (Berkeley) %G%  */
 end_comment
 
 begin_if

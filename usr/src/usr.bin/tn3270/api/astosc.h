@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This defines the structure used to translate:  *  *	ascii name ==> (scancode, shiftstate)  *  * (Actually, map3270 does "ascii name ==> index", and  * termin does "index ==> (scancode, shiftstate)".  Both  * mappings use this structure.)  */
+comment|/*  * This defines the structure used to translate:  *  *	ascii name ==> (scancode, shiftstate)  *  * (Actually, map3270 does "ascii name ==> index", and  * termin does "index ==> (scancode, shiftstate)".  Both  * mappings use this structure.)  *  * @(#)astosc.h	1.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
