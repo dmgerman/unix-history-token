@@ -164,34 +164,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|Hex
-parameter_list|(
-name|str
-parameter_list|,
-name|ans
-parameter_list|,
-name|tmp
-parameter_list|)
-value|if (hex(str,&tmp, ans)) ans = tmp
-end_define
-
-begin_define
-define|#
-directive|define
-name|String
-parameter_list|(
-name|str
-parameter_list|,
-name|ans
-parameter_list|,
-name|len
-parameter_list|)
-value|{char *z = ans; char **dflt =&z; if (string(str, dflt)) strncpy(ans, *dflt, len); }
-end_define
-
-begin_define
-define|#
-directive|define
 name|RoundCyl
 parameter_list|(
 name|x
@@ -222,6 +194,7 @@ comment|/* the sector size to start sensing at */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|secsize
 init|=
@@ -234,6 +207,7 @@ comment|/* the sensed sector size */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|disk
@@ -241,6 +215,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|disklabel
 name|disklabel
@@ -252,6 +227,7 @@ comment|/* disk parameters */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cyls
 decl_stmt|,
@@ -298,19 +274,17 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mboot
 name|mboot
-init|=
-block|{
-block|{
-literal|0
-block|}
-block|,
-name|NULL
-block|,
-literal|0
-block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fd
 decl_stmt|;
 end_decl_stmt
 
@@ -329,25 +303,29 @@ value|0xAA55
 end_define
 
 begin_decl_stmt
-name|int
+specifier|static
+name|uint
 name|dos_cyls
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|uint
 name|dos_heads
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|uint
 name|dos_sectors
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+specifier|static
+name|uint
 name|dos_cylsecs
 decl_stmt|;
 end_decl_stmt
@@ -373,16 +351,6 @@ name|c
 parameter_list|)
 value|(c& 0xff)
 end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|partition
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -589,6 +557,7 @@ comment|/* Be verbose */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|part_type
 block|{
@@ -596,6 +565,7 @@ name|unsigned
 name|char
 name|type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -909,7 +879,7 @@ block|,
 block|{
 literal|0x81
 block|,
-literal|"Minix since 1.4b, early Linux partition or Mitac (disk manager)"
+literal|"Minix since 1.4b, early Linux partition or Mitac disk manager"
 block|}
 block|,
 block|{
@@ -1166,7 +1136,9 @@ begin_function_decl
 specifier|static
 name|void
 name|print_params
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1185,7 +1157,9 @@ begin_function_decl
 specifier|static
 name|void
 name|change_code
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1193,7 +1167,9 @@ begin_function_decl
 specifier|static
 name|void
 name|get_params_to_use
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1227,7 +1203,7 @@ name|int
 name|open_disk
 parameter_list|(
 name|int
-name|u_flag
+name|flag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1266,7 +1242,9 @@ begin_function_decl
 specifier|static
 name|int
 name|get_params
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1274,7 +1252,9 @@ begin_function_decl
 specifier|static
 name|int
 name|read_s0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1282,7 +1262,9 @@ begin_function_decl
 specifier|static
 name|int
 name|write_s0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1291,6 +1273,7 @@ specifier|static
 name|int
 name|ok
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1303,6 +1286,7 @@ specifier|static
 name|int
 name|decimal
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1319,6 +1303,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|get_type
@@ -1373,18 +1358,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int hex(char *str, int *num, int deflt); static int string(char *str, char **ans);
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|main
@@ -1406,6 +1379,17 @@ name|int
 name|c
 decl_stmt|,
 name|i
+decl_stmt|;
+name|int
+name|partition
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|struct
+name|dos_partition
+modifier|*
+name|partp
 decl_stmt|;
 while|while
 condition|(
@@ -1609,29 +1593,24 @@ name|ENOENT
 condition|)
 block|{
 comment|/* Try prepending "/dev" */
-if|if
-condition|(
-operator|(
+name|asprintf
+argument_list|(
+operator|&
 name|disk
-operator|=
-name|malloc
-argument_list|(
-name|strlen
-argument_list|(
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|_PATH_DEV
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|_PATH_DEV
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|disk
 operator|==
 name|NULL
 condition|)
@@ -1640,23 +1619,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"out of memory"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|disk
-argument_list|,
-name|_PATH_DEV
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|disk
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1740,14 +1702,6 @@ condition|(
 name|s_flag
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|struct
-name|dos_partition
-modifier|*
-name|partp
-decl_stmt|;
 if|if
 condition|(
 name|read_s0
@@ -1877,11 +1831,6 @@ condition|(
 name|I_flag
 condition|)
 block|{
-name|struct
-name|dos_partition
-modifier|*
-name|partp
-decl_stmt|;
 name|read_s0
 argument_list|()
 expr_stmt|;
@@ -1973,11 +1922,9 @@ argument_list|()
 operator|||
 name|i_flag
 condition|)
-block|{
 name|reset_boot
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1986,35 +1933,29 @@ argument_list|(
 name|f_flag
 argument_list|)
 condition|)
-block|{
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|v_flag
 condition|)
-block|{
 name|print_s0
 argument_list|(
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|t_flag
 condition|)
-block|{
 name|write_s0
 argument_list|()
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2022,17 +1963,13 @@ if|if
 condition|(
 name|u_flag
 condition|)
-block|{
 name|get_params_to_use
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|print_params
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|read_s0
@@ -2267,10 +2204,6 @@ specifier|static
 name|struct
 name|dos_partition
 name|mtpart
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2474,7 +2407,7 @@ modifier|*
 name|fname
 decl_stmt|;
 name|int
-name|fd
+name|fdesc
 decl_stmt|,
 name|n
 decl_stmt|;
@@ -2493,7 +2426,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|fd
+name|fdesc
 operator|=
 name|open
 argument_list|(
@@ -2508,7 +2441,7 @@ literal|1
 operator|||
 name|fstat
 argument_list|(
-name|fd
+name|fdesc
 argument_list|,
 operator|&
 name|sb
@@ -2603,7 +2536,7 @@ name|n
 operator|=
 name|read
 argument_list|(
-name|fd
+name|fdesc
 argument_list|,
 name|mboot
 operator|.
@@ -2620,7 +2553,7 @@ literal|1
 operator|||
 name|close
 argument_list|(
-name|fd
+name|fdesc
 argument_list|)
 condition|)
 name|err
@@ -3499,13 +3432,11 @@ specifier|static
 name|void
 name|dos
 parameter_list|(
-name|partp
-parameter_list|)
 name|struct
 name|dos_partition
 modifier|*
 name|partp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cy
@@ -3663,23 +3594,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|fd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Getting device status */
-end_comment
-
 begin_function
 specifier|static
 name|int
 name|open_disk
 parameter_list|(
 name|int
-name|u_flag
+name|flag
 parameter_list|)
 block|{
 name|struct
@@ -3755,7 +3676,7 @@ name|I_flag
 operator|||
 name|B_flag
 operator|||
-name|u_flag
+name|flag
 condition|?
 name|O_RDWR
 else|:
@@ -3792,9 +3713,7 @@ block|}
 if|if
 condition|(
 name|get_params
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|==
 operator|-
 literal|1
@@ -4210,14 +4129,6 @@ name|int
 name|write_s0
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|NOT_NOW
-name|int
-name|flag
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|sector
 decl_stmt|;
@@ -4259,34 +4170,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * write enable label sector before write (if necessary), 	 * disable after writing. 	 * needed if the disklabel protected area also protects 	 * sector 0. (e.g. empty disk) 	 */
-ifdef|#
-directive|ifdef
-name|NOT_NOW
-name|flag
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|DIOCWLABEL
-argument_list|,
-operator|&
-name|flag
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|warn
-argument_list|(
-literal|"ioctl DIOCWLABEL"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|sector
@@ -4334,51 +4217,7 @@ return|return
 operator|-
 literal|1
 return|;
-ifdef|#
-directive|ifdef
-name|NOT_NOW
-name|flag
-operator|=
-literal|0
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|DIOCWLABEL
-argument_list|,
-operator|&
-name|flag
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
-ifdef|#
-directive|ifdef
-name|NOT_NOW
-name|flag
-operator|=
-literal|0
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|DIOCWLABEL
-argument_list|,
-operator|&
-name|flag
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -4392,12 +4231,11 @@ specifier|static
 name|int
 name|ok
 parameter_list|(
-name|str
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -4495,6 +4333,7 @@ specifier|static
 name|int
 name|decimal
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -4703,20 +4542,9 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static int hex(char *str, int *num, int deflt) { int acc = 0, c; char *cp;  	while (1) { 		printf("Supply a hex value for \"%s\" [%x] ", str, deflt); 		fgets(lbuf, LBUF, stdin); 		lbuf[strlen(lbuf)-1] = 0;  		if (!*lbuf) 			return 0;  		cp = lbuf; 		while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (!c) 			return 0; 		while ((c = *cp++)) { 			if (c<= '9'&& c>= '0') 				acc = (acc<< 4) + c - '0'; 			else if (c<= 'f'&& c>= 'a') 				acc = (acc<< 4) + c - 'a' + 10; 			else if (c<= 'F'&& c>= 'A') 				acc = (acc<< 4) + c - 'A' + 10; 			else 				break; 		} 		if (c == ' ' || c == '\t') 			while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (!c) { 			*num = acc; 			return 1; 		} else 			printf("%s is an invalid hex number.  Try again.\n", 				lbuf); 	}  }  static int string(char *str, char **ans) { int c; char *cp = lbuf;  	while (1) { 		printf("Supply a string value for \"%s\" [%s] ", str, *ans); 		fgets(lbuf, LBUF, stdin); 		lbuf[strlen(lbuf)-1] = 0;  		if (!*lbuf) 			return 0;  		while ((c = *cp)&& (c == ' ' || c == '\t')) cp++; 		if (c == '"') { 			c = *++cp; 			*ans = cp; 			while ((c = *cp)&& c != '"') cp++; 		} else { 			*ans = cp; 			while ((c = *cp)&& c != ' '&& c != '\t') cp++; 		}  		if (c) 			*cp = 0; 		return 1; 	} }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|get_type
@@ -4768,7 +4596,6 @@ name|type
 operator|==
 name|type
 condition|)
-block|{
 return|return
 operator|(
 name|ptr
@@ -4776,7 +4603,6 @@ operator|->
 name|name
 operator|)
 return|;
-block|}
 name|ptr
 operator|++
 expr_stmt|;
@@ -4797,18 +4623,14 @@ specifier|static
 name|void
 name|parse_config_line
 parameter_list|(
-name|line
-parameter_list|,
-name|command
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
+parameter_list|,
 name|CMD
 modifier|*
 name|command
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4825,7 +4647,6 @@ while|while
 condition|(
 literal|1
 condition|)
-comment|/* dirty trick used to insure one exit point for this 		   function */
 block|{
 name|memset
 argument_list|(
@@ -4863,9 +4684,7 @@ name|cp
 operator|==
 literal|'#'
 condition|)
-block|{
 break|break;
-block|}
 name|command
 operator|->
 name|cmd
@@ -4898,10 +4717,8 @@ name|cp
 operator|==
 literal|'#'
 condition|)
-block|{
 break|break;
 comment|/* found comment */
-block|}
 if|if
 condition|(
 name|isalpha
@@ -4910,7 +4727,6 @@ operator|*
 name|cp
 argument_list|)
 condition|)
-block|{
 name|command
 operator|->
 name|args
@@ -4926,7 +4742,6 @@ operator|*
 name|cp
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -4936,10 +4751,8 @@ operator|*
 name|cp
 argument_list|)
 condition|)
-block|{
 break|break;
 comment|/* assume end of line */
-block|}
 name|end
 operator|=
 name|NULL
@@ -4971,10 +4784,8 @@ name|cp
 operator|==
 name|end
 condition|)
-block|{
 break|break;
 comment|/* couldn't parse number */
-block|}
 name|cp
 operator|=
 name|end
@@ -4995,12 +4806,10 @@ specifier|static
 name|int
 name|process_geometry
 parameter_list|(
-name|command
-parameter_list|)
 name|CMD
 modifier|*
 name|command
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -5060,18 +4869,15 @@ break|break;
 block|}
 name|dos_cyls
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|dos_heads
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|dos_sectors
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -5183,9 +4989,7 @@ name|status
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 name|dos_cylsecs
 operator|=
 name|dos_heads
@@ -5196,7 +5000,7 @@ comment|/* 	 * Do sanity checks on parameter values 	 */
 if|if
 condition|(
 name|dos_cyls
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -5215,10 +5019,6 @@ block|}
 if|if
 condition|(
 name|dos_cyls
-operator|==
-literal|0
-operator|||
-name|dos_cyls
 operator|>
 literal|1024
 condition|)
@@ -5236,7 +5036,7 @@ block|}
 if|if
 condition|(
 name|dos_heads
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -5255,10 +5055,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|dos_heads
-operator|<
-literal|1
-operator|||
 name|dos_heads
 operator|>
 literal|256
@@ -5279,7 +5075,7 @@ block|}
 if|if
 condition|(
 name|dos_sectors
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -5298,10 +5094,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|dos_sectors
-operator|<
-literal|1
-operator|||
 name|dos_sectors
 operator|>
 literal|63
@@ -5334,12 +5126,10 @@ specifier|static
 name|int
 name|process_partition
 parameter_list|(
-name|command
-parameter_list|)
 name|CMD
 modifier|*
 name|command
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -5743,12 +5533,10 @@ specifier|static
 name|int
 name|process_active
 parameter_list|(
-name|command
-parameter_list|)
 name|CMD
 modifier|*
 name|command
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -5895,12 +5683,10 @@ specifier|static
 name|int
 name|process_line
 parameter_list|(
-name|line
-parameter_list|)
 name|char
 modifier|*
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 name|CMD
 name|command
@@ -5994,12 +5780,10 @@ specifier|static
 name|int
 name|read_config
 parameter_list|(
-name|config_file
-parameter_list|)
 name|char
 modifier|*
 name|config_file
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -6022,7 +5806,6 @@ while|while
 condition|(
 literal|1
 condition|)
-comment|/* dirty trick used to insure one exit point for this 		   function */
 block|{
 if|if
 condition|(
@@ -6096,9 +5879,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
 break|break;
-block|}
 operator|++
 name|current_line_number
 expr_stmt|;
@@ -6115,9 +5896,7 @@ name|status
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 block|}
 break|break;
 block|}
@@ -6214,13 +5993,11 @@ specifier|static
 name|int
 name|sanitize_partition
 parameter_list|(
-name|partp
-parameter_list|)
 name|struct
 name|dos_partition
 modifier|*
 name|partp
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int32_t
 name|prev_head_boundary
