@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.6	81/04/23	*/
+comment|/*	vm_meter.c	4.7	81/04/23	*/
 end_comment
 
 begin_include
@@ -307,11 +307,19 @@ name|nswdev
 operator|==
 literal|1
 operator|&&
-name|nkb
-operator|>=
+name|physmem
+operator|*
+name|NBPG
+operator|>
 literal|2
 operator|*
 literal|1024
+operator|*
+operator|(
+literal|1024
+operator|-
+literal|16
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -399,17 +407,17 @@ name|slowscan
 operator|=
 name|maxslp
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|defined
-name|(
+argument_list|(
 name|BERT
-name|)
-name|||
+argument_list|)
+operator|||
 name|defined
-name|(
+argument_list|(
 name|ERNIE
-name|)
+argument_list|)
 name|printf
 argument_list|(
 literal|"slowscan %d, fastscan %d, maxpgio %d\n"
