@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2002, 2003 Alexey Zelkin<phantom@FreeBSD.org>  * Al
 end_comment
 
 begin_comment
-comment|/*  * XXX: implement missing int_* (LC_MONETARY) and era_* (LC_CTYIME) keywords  *      (require libc modification)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *      localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  *  * XXX: implement '-k list' to show all available keywords.  Add descriptions  *      for all of keywords (and mention FreeBSD only there)  *  */
+comment|/*  * XXX: implement missing int_* (LC_MONETARY) and era_* (LC_CTIME) keywords  *      (require libc modification)  *  * XXX: correctly handle reserved 'charmap' keyword and '-m' option (require  *      localedef(1) implementation).  Currently it's handled via  *	nl_langinfo(CODESET).  *  * XXX: implement '-k list' to show all available keywords.  Add descriptions  *      for all of keywords (and mention FreeBSD only there)  *  */
 end_comment
 
 begin_include
@@ -485,17 +485,6 @@ name|THOUSEP
 block|}
 block|,
 comment|/* compat */
-block|{
-literal|"currency_symbol"
-block|,
-literal|1
-block|,
-name|LC_MONETARY
-block|,
-name|KW_CURRENCY_SYMBOL
-block|}
-block|,
-comment|/*compat*/
 block|{
 literal|"int_curr_symbol"
 block|,
@@ -1785,11 +1774,6 @@ condition|(
 name|lang
 operator|==
 name|NULL
-operator|||
-operator|*
-name|lang
-operator|==
-literal|'\0'
 condition|)
 block|{
 name|lang
@@ -1913,11 +1897,6 @@ condition|(
 name|vval
 operator|==
 name|NULL
-operator|||
-operator|*
-name|vval
-operator|==
-literal|'\0'
 condition|)
 block|{
 name|vval
