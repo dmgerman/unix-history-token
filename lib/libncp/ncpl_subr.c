@@ -1253,11 +1253,6 @@ modifier|*
 name|ostr
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
 specifier|static
 name|char
 modifier|*
