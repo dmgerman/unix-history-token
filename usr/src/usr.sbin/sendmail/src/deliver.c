@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	1.8	%G%"
+literal|"@(#)deliver.c	1.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -696,7 +696,7 @@ argument_list|(
 literal|"Cannot dup to zero!"
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 name|EX_OSERR
 argument_list|)
@@ -772,7 +772,7 @@ argument_list|)
 expr_stmt|;
 comment|/* syserr fails because log is closed */
 comment|/* syserr("Cannot exec %s", m->m_mailer); */
-name|exit
+name|_exit
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|)
