@@ -428,13 +428,24 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|ehile
+while|while
+condition|(
+operator|(
+name|i
+operator|=
+name|resource_query_string
 argument_list|(
-argument|(i = resource_query_string(i,
+name|i
+argument_list|,
 literal|"at"
-argument|, buf)) != -
-literal|1
+argument_list|,
+name|buf
 argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
 block|{
 if|if
 condition|(
