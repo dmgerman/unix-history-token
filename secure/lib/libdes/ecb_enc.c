@@ -33,7 +33,7 @@ name|char
 modifier|*
 name|DES_version
 init|=
-literal|"DES part of SSLeay 0.6.1 12-Jul-1996"
+literal|"DES part of SSLeay 0.6.2 24-Jul-1996"
 decl_stmt|;
 end_decl_stmt
 

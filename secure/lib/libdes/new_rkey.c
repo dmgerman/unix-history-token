@@ -263,9 +263,13 @@ begin_comment
 comment|/*  *   des_init_random_number_generator: intialises the random number generator  *                                     to a truly nasty sequence using system  *                                     supplied volatile variables.  */
 end_comment
 
+begin_comment
+comment|/* Name shortened for VMS - there is a macro for the old name */
+end_comment
+
 begin_function
 name|void
-name|des_init_random_number_generator
+name|des_init_random_num_generator
 parameter_list|(
 name|key
 parameter_list|)
