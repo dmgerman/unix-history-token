@@ -3092,6 +3092,13 @@ operator|.
 name|jb
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 comment|/* 	 * Leave a little space on the stack and round down to the 	 * nearest aligned word: 	 */
 name|stackp
 operator|-=
@@ -3105,6 +3112,8 @@ operator|&=
 operator|~
 literal|0x3UL
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Allocate room on top of the stack for a new signal frame: */
 name|stackp
 operator|-=
@@ -3114,6 +3123,19 @@ expr|struct
 name|pthread_signal_frame
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+name|stackp
+operator|&=
+operator|~
+literal|0xFUL
+expr_stmt|;
+endif|#
+directive|endif
 name|psf
 operator|=
 operator|(
@@ -3250,6 +3272,13 @@ operator||
 name|PTHREAD_FLAGS_IN_SYNCQ
 expr_stmt|;
 comment|/* 	 * Set up the context: 	 */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 name|stackp
 operator|-=
 sizeof|sizeof
@@ -3257,6 +3286,8 @@ argument_list|(
 name|double
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|_setjmp
 argument_list|(
 name|thread
@@ -3266,6 +3297,13 @@ operator|.
 name|jb
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 name|SET_STACK_JB
 argument_list|(
 name|thread
@@ -3277,6 +3315,23 @@ argument_list|,
 name|stackp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|UPD_STACK_JB
+argument_list|(
+name|thread
+operator|->
+name|ctx
+operator|.
+name|jb
+argument_list|,
+name|stackp
+operator|-
+literal|16
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|SET_RETURN_ADDR_JB
 argument_list|(
 name|thread
