@@ -1494,6 +1494,17 @@ begin_comment
 comment|/* Process is using KSEs. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P_CONTINUED
+value|0x10000
+end_define
+
+begin_comment
+comment|/* Proc has continued from a stopped state. */
+end_comment
+
 begin_comment
 comment|/* Should be moved to machine-dependent areas. */
 end_comment

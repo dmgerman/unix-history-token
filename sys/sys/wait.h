@@ -151,6 +151,20 @@ parameter_list|)
 value|(_W_INT(x)>> 8)
 end_define
 
+begin_define
+define|#
+directive|define
+name|WIFCONTINUED
+parameter_list|(
+name|x
+parameter_list|)
+value|(x == 0x13)
+end_define
+
+begin_comment
+comment|/* 0x13 == SIGCONT */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -218,6 +232,17 @@ end_define
 
 begin_comment
 comment|/* tell about stopped, untraced children */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WCONTINUED
+value|4
+end_define
+
+begin_comment
+comment|/* Report a job control continued process. */
 end_comment
 
 begin_define
