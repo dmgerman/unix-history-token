@@ -49,6 +49,10 @@ define|#
 directive|define
 name|KERNELDUMP_I386_VERSION
 value|1
+define|#
+directive|define
+name|KERNELDUMP_IA64_VERSION
+value|1
 name|uint64_t
 name|dumplength
 decl_stmt|;
@@ -152,8 +156,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|_SYS_KERNELDUMP_H
 end_endif
+
+begin_comment
+comment|/* _SYS_KERNELDUMP_H */
+end_comment
 
 end_unit
 
