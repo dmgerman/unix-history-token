@@ -878,56 +878,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_TIGON_I
+name|BGE_CHIPID_TIGON_I
 value|0x40000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_TIGON_II
+name|BGE_CHIPID_TIGON_II
 value|0x60000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5700_B0
+name|BGE_CHIPID_BCM5700_B0
 value|0x71000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5700_B1
+name|BGE_CHIPID_BCM5700_B1
 value|0x71020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5700_B2
+name|BGE_CHIPID_BCM5700_B2
 value|0x71030000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5700_ALTIMA
+name|BGE_CHIPID_BCM5700_ALTIMA
 value|0x71040000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5700_C0
+name|BGE_CHIPID_BCM5700_C0
 value|0x72000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5701_A0
+name|BGE_CHIPID_BCM5701_A0
 value|0x00000000
 end_define
 
@@ -938,63 +938,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5701_B0
+name|BGE_CHIPID_BCM5701_B0
 value|0x01000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5701_B2
+name|BGE_CHIPID_BCM5701_B2
 value|0x01020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5701_B5
+name|BGE_CHIPID_BCM5701_B5
 value|0x01050000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5703_A0
+name|BGE_CHIPID_BCM5703_A0
 value|0x10000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5703_A1
+name|BGE_CHIPID_BCM5703_A1
 value|0x10010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5703_A2
+name|BGE_CHIPID_BCM5703_A2
 value|0x10020000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5704_A0
+name|BGE_CHIPID_BCM5704_A0
 value|0x20000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5704_A1
+name|BGE_CHIPID_BCM5704_A1
 value|0x20010000
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_ASICREV_BCM5704_A2
+name|BGE_CHIPID_BCM5704_A2
 value|0x20020000
 end_define
 
@@ -1038,6 +1038,48 @@ define|#
 directive|define
 name|BGE_ASICREV_BCM5704
 value|0x02
+end_define
+
+begin_comment
+comment|/* chip revisions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5700_AX
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5700_BX
+value|0x71
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5700_CX
+value|0x72
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5701_AX
+value|0x00
 end_define
 
 begin_comment
@@ -11265,7 +11307,13 @@ name|u_int8_t
 name|bge_rx_alignment_bug
 decl_stmt|;
 name|u_int32_t
+name|bge_chipid
+decl_stmt|;
+name|u_int8_t
 name|bge_asicrev
+decl_stmt|;
+name|u_int8_t
+name|bge_chiprev
 decl_stmt|;
 name|struct
 name|bge_ring_data

@@ -2274,17 +2274,17 @@ switch|switch
 condition|(
 name|sc
 operator|->
-name|bge_asicrev
+name|bge_chipid
 condition|)
 block|{
 case|case
-name|BGE_ASICREV_BCM5701_B5
+name|BGE_CHIPID_BCM5701_B5
 case|:
 case|case
-name|BGE_ASICREV_BCM5703_A2
+name|BGE_CHIPID_BCM5703_A2
 case|:
 case|case
-name|BGE_ASICREV_BCM5704_A0
+name|BGE_CHIPID_BCM5704_A0
 case|:
 return|return
 operator|(
@@ -4343,14 +4343,11 @@ expr_stmt|;
 comment|/* 5700 b2 errata */
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
-name|bge_asicrev
-argument_list|)
+name|bge_chiprev
 operator|==
-name|BGE_ASICREV_BCM5700
+name|BGE_CHIPREV_5700_BX
 condition|)
 name|CSR_WRITE_4
 argument_list|(
@@ -4373,14 +4370,11 @@ expr_stmt|;
 comment|/* 5700 b2 errata */
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
-name|bge_asicrev
-argument_list|)
+name|bge_chiprev
 operator|==
-name|BGE_ASICREV_BCM5700
+name|BGE_CHIPREV_5700_BX
 condition|)
 name|CSR_WRITE_4
 argument_list|(
@@ -4925,12 +4919,9 @@ comment|/* PCI-X bus */
 comment|/* 		 * The 5704 uses a different encoding of read/write 		 * watermarks. 		 */
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
 name|bge_asicrev
-argument_list|)
 operator|==
 name|BGE_ASICREV_BCM5704
 condition|)
@@ -4978,21 +4969,15 @@ expr_stmt|;
 comment|/* 		 * 5703 and 5704 need ONEDMA_AT_ONCE as a workaround 		 * for hardware bugs. 		 */
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
 name|bge_asicrev
-argument_list|)
 operator|==
 name|BGE_ASICREV_BCM5703
 operator|||
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
 name|bge_asicrev
-argument_list|)
 operator|==
 name|BGE_ASICREV_BCM5704
 condition|)
@@ -5029,21 +5014,15 @@ block|}
 block|}
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
 name|bge_asicrev
-argument_list|)
 operator|==
 name|BGE_ASICREV_BCM5703
 operator|||
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
 name|bge_asicrev
-argument_list|)
 operator|==
 name|BGE_ASICREV_BCM5704
 condition|)
@@ -6642,16 +6621,6 @@ operator||
 name|BGE_SDISTATSCTL_FASTER
 argument_list|)
 expr_stmt|;
-comment|/* init LED register */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MAC_LED_CTL
-argument_list|,
-literal|0x00000000
-argument_list|)
-expr_stmt|;
 comment|/* ack/clear link change events */
 name|CSR_WRITE_4
 argument_list|(
@@ -6708,12 +6677,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
 name|bge_asicrev
-argument_list|)
 operator|==
 name|BGE_ASICREV_BCM5700
 condition|)
@@ -7688,7 +7654,7 @@ expr_stmt|;
 comment|/* Save ASIC rev. */
 name|sc
 operator|->
-name|bge_asicrev
+name|bge_chipid
 operator|=
 name|pci_read_config
 argument_list|(
@@ -7700,6 +7666,28 @@ literal|4
 argument_list|)
 operator|&
 name|BGE_PCIMISCCTL_ASICREV
+expr_stmt|;
+name|sc
+operator|->
+name|bge_asicrev
+operator|=
+name|BGE_ASICREV
+argument_list|(
+name|sc
+operator|->
+name|bge_chipid
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|bge_chiprev
+operator|=
+name|BGE_CHIPREV
+argument_list|(
+name|sc
+operator|->
+name|bge_chipid
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Figure out what sort of media we have by checking the 	 * hardware config word in the first 32k of NIC internal memory, 	 * or fall back to examining the EEPROM if necessary. 	 * Note: on some BCM5700 cards, this value appears to be unset. 	 * If that's the case, we have to rely on identifying the NIC 	 * by its PCI subsystem ID, as we do below for the SysKonnect 	 * SK-9D41. 	 */
 if|if
@@ -7927,20 +7915,20 @@ switch|switch
 condition|(
 name|sc
 operator|->
-name|bge_asicrev
+name|bge_chipid
 condition|)
 block|{
 case|case
-name|BGE_ASICREV_BCM5701_A0
+name|BGE_CHIPID_BCM5701_A0
 case|:
 case|case
-name|BGE_ASICREV_BCM5701_B0
+name|BGE_CHIPID_BCM5701_B0
 case|:
 case|case
-name|BGE_ASICREV_BCM5701_B2
+name|BGE_CHIPID_BCM5701_B2
 case|:
 case|case
-name|BGE_ASICREV_BCM5701_B5
+name|BGE_CHIPID_BCM5701_B5
 case|:
 comment|/* If in PCI-X mode, work around the alignment bug. */
 if|if
@@ -9306,12 +9294,9 @@ expr_stmt|;
 comment|/* 	 * Process link state changes. 	 * Grrr. The link status word in the status block does 	 * not work correctly on the BCM5700 rev AX and BX chips, 	 * according to all avaibable information. Hence, we have 	 * to enable MII interrupts in order to properly obtain 	 * async link changes. Unfortunately, this also means that 	 * we have to read the MAC status register to detect link 	 * changes, thereby adding an additional register access to 	 * the interrupt handler. 	 */
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
 name|bge_asicrev
-argument_list|)
 operator|==
 name|BGE_ASICREV_BCM5700
 condition|)
@@ -10524,14 +10509,11 @@ expr_stmt|;
 comment|/* 5700 b2 errata */
 if|if
 condition|(
-name|BGE_ASICREV
-argument_list|(
 name|sc
 operator|->
-name|bge_asicrev
-argument_list|)
+name|bge_chiprev
 operator|==
-name|BGE_ASICREV_BCM5700
+name|BGE_CHIPREV_5700_BX
 condition|)
 name|CSR_WRITE_4
 argument_list|(
