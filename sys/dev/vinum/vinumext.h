@@ -2087,7 +2087,7 @@ name|Malloc
 parameter_list|(
 name|x
 parameter_list|)
-value|malloc((x), M_DEVBUF, \ 	curproc->p_intr_nesting_level == 0? M_WAITOK: M_NOWAIT)
+value|malloc((x), M_DEVBUF, \ 	intr_nesting_level == 0? M_WAITOK: M_NOWAIT)
 end_define
 
 begin_define
