@@ -3800,7 +3800,7 @@ name|ccb_sdev_ptr
 expr_stmt|;
 name|SBP_DEBUG
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
@@ -3969,7 +3969,7 @@ name|ccb_sdev_ptr
 expr_stmt|;
 name|SBP_DEBUG
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
@@ -4161,7 +4161,7 @@ argument_list|)
 expr_stmt|;
 name|SBP_DEBUG
 argument_list|(
-literal|1
+literal|0
 argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
@@ -5140,7 +5140,9 @@ decl_stmt|;
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_SBP
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7402,18 +7404,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|sbp_show_sdev_info
-argument_list|(
-name|sdev
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"reset agent\n"
-argument_list|)
-expr_stmt|;
 name|sbp_agent_reset
 argument_list|(
 name|sdev
@@ -8535,7 +8525,9 @@ block|}
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_SBP
+argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
@@ -8774,19 +8766,6 @@ name|status
 operator|==
 name|SBP_DEV_ATTACHED
 condition|)
-block|{
-name|sbp_show_sdev_info
-argument_list|(
-name|sdev
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"logout\n"
-argument_list|)
-expr_stmt|;
 name|sbp_mgm_orb
 argument_list|(
 name|sdev
@@ -8794,7 +8773,6 @@ argument_list|,
 name|ORB_FUN_LGO
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
@@ -9191,9 +9169,12 @@ name|ocb
 operator|->
 name|sdev
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int s;
+endif|#
+directive|endif
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -9206,24 +9187,22 @@ argument_list|(
 literal|"request timeout ... requeue\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX need reset? */
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
-name|sbp_abort_all_ocbs
+comment|/* XXX need bus reset? */
+if|#
+directive|if
+literal|0
+block|s = splfw(); 	sbp_abort_all_ocbs(sdev, CAM_CMD_TIMEOUT); 	splx(s);
+else|#
+directive|else
+name|sbp_agent_reset
 argument_list|(
 name|sdev
 argument_list|,
-name|CAM_CMD_TIMEOUT
+literal|0
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
@@ -11021,7 +11000,7 @@ directive|endif
 argument|ocb->flags =
 literal|0
 argument|; 	ocb->ccb = NULL; 	STAILQ_INSERT_TAIL(&sbp->free_ocbs, ocb, ocb); }  static void sbp_abort_ocb(struct sbp_ocb *ocb, int status) { 	struct sbp_dev *sdev;  	sdev = ocb->sdev; SBP_DEBUG(
-literal|0
+literal|1
 argument|) 	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(

@@ -1248,6 +1248,11 @@ argument|fw_xfer
 argument_list|)
 name|link
 expr_stmt|;
+name|struct
+name|malloc_type
+modifier|*
+name|malloc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1318,7 +1323,9 @@ name|fw_xfer_alloc
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|malloc_type
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1882,6 +1889,14 @@ begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
 name|M_FW
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FWXFER
 argument_list|)
 expr_stmt|;
 end_expr_stmt

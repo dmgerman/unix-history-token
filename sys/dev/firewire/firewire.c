@@ -209,6 +209,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_FWXFER
+argument_list|,
+literal|"fw_xfer"
+argument_list|,
+literal|"XFER/FireWire"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -4319,7 +4331,12 @@ name|struct
 name|fw_xfer
 modifier|*
 name|fw_xfer_alloc
-parameter_list|()
+parameter_list|(
+name|struct
+name|malloc_type
+modifier|*
+name|type
+parameter_list|)
 block|{
 name|struct
 name|fw_xfer
@@ -4336,7 +4353,7 @@ expr|struct
 name|fw_xfer
 argument_list|)
 argument_list|,
-name|M_FW
+name|type
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -4364,6 +4381,12 @@ name|sub
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|xfer
+operator|->
+name|malloc
+operator|=
+name|type
 expr_stmt|;
 return|return
 name|xfer
@@ -4665,7 +4688,9 @@ name|free
 argument_list|(
 name|xfer
 argument_list|,
-name|M_FW
+name|xfer
+operator|->
+name|malloc
 argument_list|)
 expr_stmt|;
 block|}
@@ -4742,7 +4767,9 @@ directive|endif
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 name|xfer
 operator|->
@@ -6667,7 +6694,9 @@ directive|else
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -6961,7 +6990,9 @@ decl_stmt|;
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9468,7 +9499,7 @@ endif|#
 directive|endif
 argument|ntohs(fp->mode.rreqq.dest_hi), 				ntohl(fp->mode.rreqq.dest_lo), 				fp->mode.common.tcode); 			if (fc->status == FWBUSRESET) { 				printf(
 literal|"fw_rcv: cannot response(bus reset)!\n"
-argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
+argument|); 				goto err; 			} 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL){ 				return; 			} 			xfer->spd = spd; 			xfer->send.buf = malloc(
 literal|16
 argument|, M_FW, M_NOWAIT); 			resfp = (struct fw_pkt *)xfer->send.buf; 			switch(fp->mode.common.tcode){ 			case FWTCODE_WREQQ: 			case FWTCODE_WREQB: 				resfp->mode.hdr.tcode = FWTCODE_WRES; 				xfer->send.len =
 literal|12
@@ -9488,9 +9519,9 @@ argument|;
 comment|/* 			xfer->act.hand = fw_asy_callback; */
 argument|xfer->act.hand = fw_xfer_free; 			if(fw_asyreq(fc, -
 literal|1
-argument|, xfer)){ 				fw_xfer_free( xfer); 				return; 			} 			goto err; 		} 		switch(bind->xfer->act_type){ 		case FWACT_XFER: 			xfer = fw_xfer_alloc(); 			if(xfer == NULL) goto err; 			xfer->fc = bind->xfer->fc; 			xfer->sc = bind->xfer->sc; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			xfer->act.hand = bind->xfer->act.hand; 			if (fc->status != FWBUSRESET) 				xfer->act.hand(xfer); 			else 				STAILQ_INSERT_TAIL(&fc->pending, xfer, link); 			return; 			break; 		case FWACT_CH: 			if(fc->ir[bind->xfer->sub]->queued>= 				fc->ir[bind->xfer->sub]->maxq){ 				device_printf(fc->bdev,
+argument|, xfer)){ 				fw_xfer_free( xfer); 				return; 			} 			goto err; 		} 		switch(bind->xfer->act_type){ 		case FWACT_XFER: 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL) goto err; 			xfer->fc = bind->xfer->fc; 			xfer->sc = bind->xfer->sc; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			xfer->act.hand = bind->xfer->act.hand; 			if (fc->status != FWBUSRESET) 				xfer->act.hand(xfer); 			else 				STAILQ_INSERT_TAIL(&fc->pending, xfer, link); 			return; 			break; 		case FWACT_CH: 			if(fc->ir[bind->xfer->sub]->queued>= 				fc->ir[bind->xfer->sub]->maxq){ 				device_printf(fc->bdev,
 literal|"Discard a packet %x %d\n"
-argument|, 					bind->xfer->sub, 					fc->ir[bind->xfer->sub]->queued); 				goto err; 			} 			xfer = fw_xfer_alloc(); 			if(xfer == NULL) goto err; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			s = splfw(); 			fc->ir[bind->xfer->sub]->queued++; 			STAILQ_INSERT_TAIL(&fc->ir[bind->xfer->sub]->q, xfer, link); 			splx(s);  			wakeup((caddr_t)fc->ir[bind->xfer->sub]);  			return; 			break; 		default: 			goto err; 			break; 		} 		break; 	case FWTCODE_STREAM: 	{ 		struct fw_xferq *xferq;  		xferq = fc->ir[sub];
+argument|, 					bind->xfer->sub, 					fc->ir[bind->xfer->sub]->queued); 				goto err; 			} 			xfer = fw_xfer_alloc(M_FWXFER); 			if(xfer == NULL) goto err; 			xfer->recv.buf = buf; 			xfer->recv.len = len; 			xfer->recv.off = off; 			xfer->spd = spd; 			s = splfw(); 			fc->ir[bind->xfer->sub]->queued++; 			STAILQ_INSERT_TAIL(&fc->ir[bind->xfer->sub]->q, xfer, link); 			splx(s);  			wakeup((caddr_t)fc->ir[bind->xfer->sub]);  			return; 			break; 		default: 			goto err; 			break; 		} 		break; 	case FWTCODE_STREAM: 	{ 		struct fw_xferq *xferq;  		xferq = fc->ir[sub];
 if|#
 directive|if
 literal|0
@@ -9499,7 +9530,7 @@ endif|#
 directive|endif
 argument|if(xferq->queued>= xferq->maxq) { 			printf(
 literal|"receive queue is full\n"
-argument|); 			goto err; 		} 		xfer = fw_xfer_alloc(); 		if(xfer == NULL) goto err; 		xfer->recv.buf = buf; 		xfer->recv.len = len; 		xfer->recv.off = off; 		xfer->spd = spd; 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, xfer, link); 		splx(s); 		sc = device_get_softc(fc->bdev);
+argument|); 			goto err; 		} 		xfer = fw_xfer_alloc(M_FWXFER); 		if(xfer == NULL) goto err; 		xfer->recv.buf = buf; 		xfer->recv.len = len; 		xfer->recv.off = off; 		xfer->spd = spd; 		s = splfw(); 		xferq->queued++; 		STAILQ_INSERT_TAIL(&xferq->q, xfer, link); 		splx(s); 		sc = device_get_softc(fc->bdev);
 if|#
 directive|if
 name|__FreeBSD_version
@@ -9535,7 +9566,7 @@ argument|); 	} error: 	fw_xfer_free(xfer); }
 comment|/*  * To candidate Bus Manager election process.  */
 argument|void fw_try_bmr(void *arg) { 	struct fw_xfer *xfer; 	struct firewire_comm *fc = (struct firewire_comm *)arg; 	struct fw_pkt *fp; 	int err =
 literal|0
-argument|;  	xfer = fw_xfer_alloc(); 	if(xfer == NULL){ 		return; 	} 	xfer->send.len =
+argument|;  	xfer = fw_xfer_alloc(M_FWXFER); 	if(xfer == NULL){ 		return; 	} 	xfer->send.len =
 literal|24
 argument|; 	xfer->spd =
 literal|0

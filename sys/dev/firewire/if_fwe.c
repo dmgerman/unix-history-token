@@ -2173,7 +2173,9 @@ break|break;
 name|xfer
 operator|=
 name|fw_xfer_alloc
-argument_list|()
+argument_list|(
+name|M_FWXFER
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
