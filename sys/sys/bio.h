@@ -228,11 +228,6 @@ decl_stmt|;
 comment|/* buffer queue index */
 name|unsigned
 name|char
-name|b_unused1
-decl_stmt|;
-comment|/* unused field */
-name|unsigned
-name|char
 name|b_xflags
 decl_stmt|;
 comment|/* extra flags */
@@ -354,12 +349,12 @@ name|void
 modifier|*
 name|b_caller1
 decl_stmt|;
-comment|/* for private use by the driver */
+comment|/* for private use by the caller */
 name|void
 modifier|*
 name|b_caller2
 decl_stmt|;
-comment|/* for private use by the driver */
+comment|/* for private use by the caller */
 union|union
 name|pager_info
 block|{
