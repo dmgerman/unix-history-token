@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.43 (Berkeley) %G%"
+literal|"@(#)conf.c	6.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -498,7 +498,7 @@ expr_stmt|;
 comment|/* option T */
 name|PrivacyFlags
 operator|=
-name|PRIV_AUTHWARNINGS
+literal|0
 expr_stmt|;
 comment|/* option p */
 name|setdefuser
