@@ -1120,6 +1120,9 @@ comment|/* 368 = __cap_set_fd */
 literal|"__cap_set_file"
 block|,
 comment|/* 369 = __cap_set_file */
+literal|"lkmressys"
+block|,
+comment|/* 370 = lkmressys */
 block|}
 decl_stmt|;
 end_decl_stmt

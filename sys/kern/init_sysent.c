@@ -2227,7 +2227,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|semsys
+name|lkmressys
 block|}
 block|,
 comment|/* 169 = semsys */
@@ -2241,7 +2241,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgsys
+name|lkmressys
 block|}
 block|,
 comment|/* 170 = msgsys */
@@ -2255,7 +2255,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmsys
+name|lkmressys
 block|}
 block|,
 comment|/* 171 = shmsys */
@@ -2872,7 +2872,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|__semctl
+name|lkmressys
 block|}
 block|,
 comment|/* 220 = __semctl */
@@ -2886,7 +2886,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|semget
+name|lkmressys
 block|}
 block|,
 comment|/* 221 = semget */
@@ -2900,7 +2900,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|semop
+name|lkmressys
 block|}
 block|,
 comment|/* 222 = semop */
@@ -2925,7 +2925,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgctl
+name|lkmressys
 block|}
 block|,
 comment|/* 224 = msgctl */
@@ -2939,7 +2939,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgget
+name|lkmressys
 block|}
 block|,
 comment|/* 225 = msgget */
@@ -2953,7 +2953,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgsnd
+name|lkmressys
 block|}
 block|,
 comment|/* 226 = msgsnd */
@@ -2967,7 +2967,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|msgrcv
+name|lkmressys
 block|}
 block|,
 comment|/* 227 = msgrcv */
@@ -2981,7 +2981,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmat
+name|lkmressys
 block|}
 block|,
 comment|/* 228 = shmat */
@@ -2995,7 +2995,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmctl
+name|lkmressys
 block|}
 block|,
 comment|/* 229 = shmctl */
@@ -3009,7 +3009,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmdt
+name|lkmressys
 block|}
 block|,
 comment|/* 230 = shmdt */
@@ -3023,7 +3023,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmget
+name|lkmressys
 block|}
 block|,
 comment|/* 231 = shmget */
@@ -4790,6 +4790,17 @@ name|__cap_set_file
 block|}
 block|,
 comment|/* 369 = __cap_set_file */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|lkmressys
+block|}
+block|,
+comment|/* 370 = lkmressys */
 block|}
 decl_stmt|;
 end_decl_stmt

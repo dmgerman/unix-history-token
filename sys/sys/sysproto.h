@@ -13260,6 +13260,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lkmressys
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|nosys_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
