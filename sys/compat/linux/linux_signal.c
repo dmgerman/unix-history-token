@@ -2225,12 +2225,14 @@ name|pid
 expr_stmt|;
 return|return
 operator|(
-name|kill
+name|kern_kill
 argument_list|(
 name|td
 argument_list|,
 operator|&
 name|tmp
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;

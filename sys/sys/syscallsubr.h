@@ -95,6 +95,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|kill_args
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|stat
 struct_decl|;
 end_struct_decl
@@ -480,6 +486,23 @@ parameter_list|,
 name|socklen_t
 modifier|*
 name|valsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kern_kill
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|kill_args
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3733,6 +3733,9 @@ name|proc
 parameter_list|,
 name|int
 name|signum
+parameter_list|,
+name|int
+name|pedantic
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3991,6 +3994,9 @@ name|p
 parameter_list|,
 name|int
 name|signum
+parameter_list|,
+name|int
+name|pedantic
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -6139,6 +6139,9 @@ name|proc
 parameter_list|,
 name|int
 name|signum
+parameter_list|,
+name|int
+name|pedantic
 parameter_list|)
 block|{
 name|int
@@ -6249,6 +6252,8 @@ name|p_flag
 operator|&
 name|P_SUGID
 operator|)
+operator|&&
+name|pedantic
 condition|)
 block|{
 switch|switch
@@ -6291,9 +6296,6 @@ name|SIGUSR1
 case|:
 case|case
 name|SIGUSR2
-case|:
-case|case
-name|SIGTHR
 case|:
 comment|/* 			 * Generally, permit job and terminal control 			 * signals. 			 */
 break|break;
@@ -6411,6 +6413,9 @@ name|p
 parameter_list|,
 name|int
 name|signum
+parameter_list|,
+name|int
+name|pedantic
 parameter_list|)
 block|{
 name|KASSERT
@@ -6480,6 +6485,8 @@ argument_list|,
 name|p
 argument_list|,
 name|signum
+argument_list|,
+name|pedantic
 argument_list|)
 operator|)
 return|;
