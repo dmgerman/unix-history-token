@@ -9154,7 +9154,7 @@ name|mask
 decl_stmt|;
 if|if
 condition|(
-operator|(
+operator|!
 name|inet_aton
 argument_list|(
 operator|*
@@ -9163,10 +9163,6 @@ argument_list|,
 operator|&
 name|mask
 argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
 operator|||
 operator|(
 name|netmask
