@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * procfs ioctl definitions.  *  * $Id: pioctl.h,v 1.1 1997/12/06 04:11:14 sef Exp $  */
+comment|/*  * procfs ioctl definitions.  *  * $Id: pioctl.h,v 1.2 1997/12/07 03:59:26 sef Exp $  */
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|PIOCSFL
-value|_IOR('p', 3, unsigned int)
+value|_IOW('p', 3, unsigned int)
 end_define
 
 begin_comment
