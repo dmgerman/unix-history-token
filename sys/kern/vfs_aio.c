@@ -1910,6 +1910,11 @@ operator|==
 name|JOBST_JOBQGLOBAL
 condition|)
 block|{
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -1930,6 +1935,11 @@ argument_list|,
 name|aiocbe
 argument_list|,
 name|plist
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -6745,13 +6755,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * If we don't have a free AIO process, and we are below our quota, then 	 * start one.  Otherwise, depend on the subsequent I/O completions to 	 * pick-up this job.  If we don't sucessfully create the new process 	 * (thread) due to resource issues, we return an error for now (EAGAIN), 	 * which is likely not the correct thing to do. 	 */
-name|retryproc
-label|:
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|retryproc
+label|:
 if|if
 condition|(
 operator|(
@@ -7076,11 +7086,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|cb
@@ -7108,11 +7113,6 @@ operator|==
 name|jobref
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ujob
@@ -7219,11 +7219,6 @@ literal|0
 return|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splbio
