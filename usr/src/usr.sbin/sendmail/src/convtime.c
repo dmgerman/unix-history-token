@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	8.1 (Berkeley) %G%"
+literal|"@(#)convtime.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,31 @@ name|units
 expr_stmt|;
 name|p
 operator|--
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strchr
+argument_list|(
+literal|"wdhms"
+argument_list|,
+name|c
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Invalid time unit `%c'"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|units
 expr_stmt|;
 block|}
 switch|switch
