@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	5.14 (Berkeley) %G%"
+literal|"@(#)file.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,16 +344,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/* gcc bug: Enums in decls */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -364,31 +354,13 @@ operator|(
 name|Char
 operator|*
 operator|,
-name|int
-operator|,
 name|COMMAND
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|tsearch
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2451,11 +2423,11 @@ name|Char
 modifier|*
 name|word
 decl_stmt|;
-name|int
-name|max_word_length
-decl_stmt|;
 name|COMMAND
 name|command
+decl_stmt|;
+name|int
+name|max_word_length
 decl_stmt|;
 block|{
 specifier|static
