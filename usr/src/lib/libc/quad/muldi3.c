@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)muldi3.c	5.6 (Berkeley) %G%"
+literal|"@(#)muldi3.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,8 +569,6 @@ operator|+=
 name|HHALF
 argument_list|(
 name|mid
-operator|>>
-literal|16
 argument_list|)
 operator|+
 operator|(
