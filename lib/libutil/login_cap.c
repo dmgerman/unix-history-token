@@ -1387,10 +1387,6 @@ name|login_getcapstr
 argument_list|(
 name|lc
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 name|NULL
