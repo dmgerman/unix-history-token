@@ -1539,9 +1539,11 @@ literal|"DOS partition table editor"
 argument_list|,
 literal|"This editor is still under construction :-)"
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|,
 literal|1
 argument_list|)

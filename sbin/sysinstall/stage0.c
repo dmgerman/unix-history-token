@@ -100,9 +100,11 @@ literal|"Welcome to FreeBSD!"
 argument_list|,
 literal|"Use ALT-F2 and ALT-F1 to toggle between debugging\ninformation screen (ALT-F2) or this dialog screen (ALT-F1)\n\nPlease select one of the following options:"
 argument_list|,
-literal|18
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|,
 literal|7
 argument_list|,
@@ -198,9 +200,11 @@ literal|"Sorry!"
 argument_list|,
 literal|"This feature is not currently implemented."
 argument_list|,
-literal|6
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|,
 literal|1
 argument_list|)

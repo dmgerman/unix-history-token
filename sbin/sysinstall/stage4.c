@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.6 1994/11/17 14:12:37 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.7 1994/11/17 14:18:43 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -125,9 +125,11 @@ name|TITLE
 argument_list|,
 literal|"Insert CPIO floppy in floppy drive 0"
 argument_list|,
-literal|6
+operator|-
+literal|1
 argument_list|,
-literal|75
+operator|-
+literal|1
 argument_list|,
 literal|1
 argument_list|)

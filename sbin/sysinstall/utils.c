@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.27 1994/11/16 14:42:22 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.28 1994/11/17 14:12:38 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -503,9 +503,11 @@ literal|"Abort"
 argument_list|,
 name|p
 argument_list|,
-literal|15
+operator|-
+literal|1
 argument_list|,
-literal|60
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -540,9 +542,11 @@ literal|"Exit sysinstall"
 argument_list|,
 literal|"\n\nAre you sure you want to quit?"
 argument_list|,
-literal|10
+operator|-
+literal|1
 argument_list|,
-literal|40
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -606,9 +610,11 @@ name|TITLE
 argument_list|,
 literal|"\n\nCan't reboot machine -- hit reset button"
 argument_list|,
-literal|5
+operator|-
+literal|1
 argument_list|,
-literal|30
+operator|-
+literal|1
 argument_list|,
 literal|0
 argument_list|)
