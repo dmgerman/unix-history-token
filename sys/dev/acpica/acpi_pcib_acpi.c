@@ -627,7 +627,6 @@ name|ENXIO
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
 comment|/* if it's not found, assume 0 */
@@ -637,6 +636,7 @@ name|ap_bus
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/*      * If the bus is zero and pcib0 already exists, read the bus number      * via PCI config space.      */
 name|busok
@@ -661,6 +661,10 @@ operator|!=
 name|dev
 condition|)
 block|{
+name|busok
+operator|=
+literal|0
+expr_stmt|;
 name|status
 operator|=
 name|acpi_EvaluateInteger
@@ -709,7 +713,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -717,11 +720,6 @@ argument_list|,
 literal|"could not determine config space address\n"
 argument_list|)
 expr_stmt|;
-name|busok
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -771,7 +769,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -779,11 +776,6 @@ argument_list|,
 literal|"could not read bus number from config space\n"
 argument_list|)
 expr_stmt|;
-name|busok
-operator|=
-literal|0
-expr_stmt|;
-block|}
 else|else
 block|{
 name|sc
@@ -791,6 +783,10 @@ operator|->
 name|ap_bus
 operator|=
 name|busno
+expr_stmt|;
+name|busok
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
