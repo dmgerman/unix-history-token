@@ -16,7 +16,7 @@ name|_NET_ETHERNET_H_
 end_define
 
 begin_comment
-comment|/*  * The number of bytes in an ethernet (MAC) address.  */
+comment|/*  * Somce basic Ethernet constants.  */
 end_comment
 
 begin_define
@@ -27,7 +27,7 @@ value|6
 end_define
 
 begin_comment
-comment|/*  * The number of bytes in the type field.  */
+comment|/* length of an Ethernet address */
 end_comment
 
 begin_define
@@ -38,7 +38,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * The number of bytes in the trailing CRC field.  */
+comment|/* length of the Ethernet type field */
 end_comment
 
 begin_define
@@ -49,7 +49,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * The length of the combined header.  */
+comment|/* length of the Ethernet CRC */
 end_comment
 
 begin_define
@@ -59,10 +59,6 @@ name|ETHER_HDR_LEN
 value|(ETHER_ADDR_LEN*2+ETHER_TYPE_LEN)
 end_define
 
-begin_comment
-comment|/*  * The minimum packet length.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -71,7 +67,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * The maximum packet length.  */
+comment|/* minimum frame len, including CRC */
 end_comment
 
 begin_define
@@ -79,6 +75,99 @@ define|#
 directive|define
 name|ETHER_MAX_LEN
 value|1518
+end_define
+
+begin_comment
+comment|/* maximum frame len, including CRC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_MAX_LEN_JUMBO
+value|9018
+end_define
+
+begin_comment
+comment|/* max jumbo frame len, including CRC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_VLAN_ENCAP_LEN
+value|4
+end_define
+
+begin_comment
+comment|/* len of 802.1Q VLAN encapsulation */
+end_comment
+
+begin_comment
+comment|/*  * Mbuf adjust factor to force 32-bit alignment of IP header.  * Drivers should do m_adj(m, ETHER_ALIGN) when setting up a  * receive so the upper layers get the IP header properly aligned  * past the 14-byte Ethernet header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_ALIGN
+value|2
+end_define
+
+begin_comment
+comment|/* driver adjust for IP hdr alignment */
+end_comment
+
+begin_comment
+comment|/*  * Compute the maximum frame size based on ethertype (i.e. possible  * encapsulation) and whether or not an FCS is present.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_MAX_FRAME
+parameter_list|(
+name|ifp
+parameter_list|,
+name|etype
+parameter_list|,
+name|hasfcs
+parameter_list|)
+define|\
+value|((ifp)->if_mtu + ETHER_HDR_LEN +				\ 	 ((hasfcs) ? ETHER_CRC_LEN : 0) +				\ 	 (((etype) == ETHERTYPE_VLAN) ? ETHER_VLAN_ENCAP_LEN : 0))
+end_define
+
+begin_comment
+comment|/*  * Ethernet-specific mbuf flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASFCS
+value|M_PROTO5
+end_define
+
+begin_comment
+comment|/* FCS included at end of frame */
+end_comment
+
+begin_comment
+comment|/*  * Ethernet CRC32 polynomials (big- and little-endian verions).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_CRC_POLY_LE
+value|0xedb88320
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHER_CRC_POLY_BE
+value|0x04c11db6
 end_define
 
 begin_comment
@@ -140,6 +229,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ETHER_IS_MULTICAST
+parameter_list|(
+name|addr
+parameter_list|)
+value|(*(addr)& 0x01)
+end_define
+
+begin_comment
+comment|/* is address mcast/bcast? */
+end_comment
 
 begin_comment
 comment|/*  *  NOTE: 0x0000-0x05DC (0..1500) are generally IEEE 802.3 length fields.  *  However, there are some conflicts.  */
@@ -2416,30 +2519,19 @@ name|ETHERMIN
 value|(ETHER_MIN_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ETHERMTU_JUMBO
+value|(ETHER_MAX_LEN_JUMBO - ETHER_HDR_LEN - ETHER_CRC_LEN)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/*  * For device drivers to specify whether they support BPF or not  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_BPF_UNSUPPORTED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_BPF_SUPPORTED
-value|1
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|ifnet
@@ -2452,29 +2544,30 @@ name|mbuf
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|rtentry
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
-function_decl|(
-modifier|*
-name|ng_ether_input_p
-function_decl|)
+name|ether_demux
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-modifier|*
-name|mp
-parameter_list|,
-name|struct
-name|ether_header
-modifier|*
-name|eh
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2482,25 +2575,27 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-function_decl|(
-modifier|*
-name|ng_ether_input_orphan_p
-function_decl|)
+name|ether_ifattach
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|,
-name|struct
-name|mbuf
+specifier|const
+name|u_int8_t
 modifier|*
-name|m
-parameter_list|,
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ether_ifdetach
+parameter_list|(
 name|struct
-name|ether_header
+name|ifnet
 modifier|*
-name|eh
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2508,53 +2603,15 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-function_decl|(
-modifier|*
-name|ng_ether_output_p
-function_decl|)
+name|ether_ioctl
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-name|ifp
 parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|ng_ether_attach_p
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|ng_ether_detach_p
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
+name|int
+parameter_list|,
+name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2562,20 +2619,23 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-function_decl|(
-modifier|*
-name|vlan_input_p
-function_decl|)
+name|ether_output
 parameter_list|(
 name|struct
-name|ether_header
+name|ifnet
 modifier|*
-name|eh
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|m
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2583,44 +2643,31 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-function_decl|(
-modifier|*
-name|vlan_input_tag_p
-function_decl|)
+name|ether_output_frame
 parameter_list|(
 name|struct
-name|ether_header
+name|ifnet
 modifier|*
-name|eh
 parameter_list|,
 name|struct
 name|mbuf
 modifier|*
-name|m
-parameter_list|,
-name|u_int16_t
-name|t
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|VLAN_INPUT_TAG
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|ether_sprintf
 parameter_list|(
-name|eh
-parameter_list|,
-name|m
-parameter_list|,
-name|t
+specifier|const
+name|u_int8_t
+modifier|*
 parameter_list|)
-value|do {			\
-comment|/* XXX: lock */
-value|\ 	if (vlan_input_tag_p != NULL) 			\ 		(*vlan_input_tag_p)(eh, m, t);		\ 	else {						\ 		(m)->m_pkthdr.rcvif->if_noproto++;	\ 		m_freem(m);				\ 	}						\
-comment|/* XXX: unlock */
-value|\ } while (0)
-end_define
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
