@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.72 (Berkeley) %G%"
+literal|"@(#)ls.c	5.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,7 +596,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRTacdfgikloqrstu"
+literal|"1ACFLRTacdfgiloqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -760,21 +760,6 @@ case|:
 name|f_inode
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'k'
-case|:
-comment|/* Delete before 4.4BSD. */
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ls: -k no longer supported\n"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
