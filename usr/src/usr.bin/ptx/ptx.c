@@ -1,21 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ptx.c	4.2 (Berkeley) %G%"
+literal|"@(#)ptx.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_empty
-empty|#
-end_empty
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*	permuted title index 	ptx [-t] [-i ignore] [-o only] [-w num] [-f] [input] [output] 	Ptx reads the input file and permutes on words in it. 	It excludes all words in the ignore file. 	Alternately it includes words in the only file. 	if neither is given it excludes the words in /usr/lib/eign.  	The width of the output line can be changed to num 	characters.  If omitted 72 is default unless troff than 100. 	the -f flag tells the program to fold the output 	the -t flag says the output is for troff and the 	output is then wider.
-comment|make: cc ptx.c -lS 	*/
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*	permuted title index 	ptx [-t] [-i ignore] [-o only] [-w num] [-f] [input] [output] 	Ptx reads the input file and permutes on words in it. 	It excludes all words in the ignore file. 	Alternately it includes words in the only file. 	if neither is given it excludes the words in /usr/lib/eign.  	The width of the output line can be changed to num 	characters.  If omitted 72 is default unless troff than 100. 	the -f flag tells the program to fold the output 	the -t flag says the output is for troff and the 	output is then wider.  	*/
 end_comment
 
 begin_include
@@ -1246,7 +1256,6 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-operator|*
 name|sortfile
 condition|)
 name|unlink
@@ -2672,7 +2681,6 @@ begin_block
 block|{
 if|if
 condition|(
-operator|*
 name|sortfile
 condition|)
 name|unlink
