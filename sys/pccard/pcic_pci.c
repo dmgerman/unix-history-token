@@ -1036,6 +1036,19 @@ name|pcic_pci_ricoh_chip
 block|}
 block|,
 block|{
+name|PCIC_ID_SMC_34C90
+block|,
+literal|"SMC 34C90 PCI-CardBus Bridge"
+block|,
+name|PCIC_RF5C296
+block|,
+name|PCIC_CARDBUS_POWER
+block|,
+operator|&
+name|pcic_pci_generic_chip
+block|}
+block|,
+block|{
 name|PCIC_ID_TI1031
 block|,
 literal|"TI PCI-1031 PCI-PCMCIA Bridge"
@@ -5472,7 +5485,9 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Could not map register memory\n"
+literal|"Could not map register memory 0x%x\n"
+argument_list|,
+name|sockbase
 argument_list|)
 expr_stmt|;
 return|return
