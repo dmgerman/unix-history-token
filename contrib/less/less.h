@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -690,6 +690,24 @@ name|POSITION
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|off_t
+name|LINENUM
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MIN_LINENUM_WIDTH
+value|7
+end_define
+
+begin_comment
+comment|/* Min printing width of a line number */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1001,6 +1019,9 @@ name|p_string
 decl_stmt|;
 name|int
 name|p_int
+decl_stmt|;
+name|LINENUM
+name|p_linenum
 decl_stmt|;
 block|}
 name|PARG
@@ -1672,6 +1693,31 @@ include|#
 directive|include
 file|"funcs.h"
 end_include
+
+begin_comment
+comment|/* Functions not included in funcs.h */
+end_comment
+
+begin_function_decl
+name|void
+name|postoa
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|linenumtoa
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|inttoa
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 

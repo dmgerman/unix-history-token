@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -766,6 +766,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|char
+modifier|*
+name|filename
+decl_stmt|;
 if|#
 directive|if
 operator|(
@@ -783,10 +787,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|gfilename
-decl_stmt|;
-name|char
-modifier|*
-name|filename
 decl_stmt|;
 name|gfilename
 operator|=
@@ -825,8 +825,10 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|ifile
-operator|=
+block|{
+operator|(
+name|void
+operator|)
 name|get_ifile
 argument_list|(
 name|filename
@@ -834,6 +836,14 @@ argument_list|,
 name|ifile
 argument_list|)
 expr_stmt|;
+name|ifile
+operator|=
+name|prev_ifile
+argument_list|(
+name|NULL_IFILE
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|gfilename
@@ -841,15 +851,43 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|ifile
+name|filename
 operator|=
-name|get_ifile
+name|shell_quote
 argument_list|(
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|filename
+operator|==
+name|NULL
+condition|)
+name|filename
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+name|argv
 operator|++
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|get_ifile
+argument_list|(
+name|filename
 argument_list|,
 name|ifile
+argument_list|)
+expr_stmt|;
+name|ifile
+operator|=
+name|prev_ifile
+argument_list|(
+name|NULL_IFILE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -939,13 +977,13 @@ expr_stmt|;
 name|init_mark
 argument_list|()
 expr_stmt|;
+name|open_getchr
+argument_list|()
+expr_stmt|;
 name|raw_mode
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
-name|open_getchr
-argument_list|()
 expr_stmt|;
 name|init_signals
 argument_list|(
@@ -1087,6 +1125,11 @@ name|QUIT_OK
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1209,6 +1252,11 @@ name|QUIT_ERROR
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 

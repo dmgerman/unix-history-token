@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -375,7 +375,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|LINENUM
 name|number
 decl_stmt|;
 end_decl_stmt
@@ -795,6 +795,9 @@ name|multi_search
 argument_list|(
 name|cbuf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -883,6 +886,9 @@ index|]
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -904,6 +910,9 @@ index|]
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -924,10 +933,15 @@ argument_list|(
 name|cbuf
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|TAGS
 comment|/* If tag structure is loaded then clean it up. */
 name|cleantags
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 endif|#
 directive|endif
@@ -1289,7 +1303,7 @@ condition|)
 block|{
 comment|/* 			 * We're getting a long option name. 			 * See if we've matched an option name yet. 			 * If so, display the complete name and stop  			 * accepting chars until user hits RETURN. 			 */
 name|struct
-name|option
+name|loption
 modifier|*
 name|o
 decl_stmt|;
@@ -2836,6 +2850,9 @@ literal|0
 condition|)
 name|swindow
 operator|=
+operator|(
+name|int
+operator|)
 name|number
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -2868,6 +2885,9 @@ argument_list|)
 expr_stmt|;
 name|forward
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|,
 literal|0
@@ -2888,6 +2908,9 @@ literal|0
 condition|)
 name|swindow
 operator|=
+operator|(
+name|int
+operator|)
 name|number
 expr_stmt|;
 comment|/* FALLTHRU */
@@ -2911,6 +2934,9 @@ argument_list|()
 expr_stmt|;
 name|backward
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|,
 literal|0
@@ -2953,6 +2979,9 @@ argument_list|)
 expr_stmt|;
 name|forward
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|,
 literal|0
@@ -2980,6 +3009,9 @@ argument_list|()
 expr_stmt|;
 name|backward
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|,
 literal|0
@@ -3022,6 +3054,9 @@ argument_list|)
 expr_stmt|;
 name|forward
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|,
 literal|1
@@ -3049,6 +3084,9 @@ argument_list|()
 expr_stmt|;
 name|backward
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|,
 literal|1
@@ -3088,6 +3126,9 @@ argument_list|)
 expr_stmt|;
 name|forward
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|,
 literal|1
@@ -3166,6 +3207,9 @@ literal|0
 condition|)
 name|wscroll
 operator|=
+operator|(
+name|int
+operator|)
 name|number
 expr_stmt|;
 name|cmd_exec
@@ -3204,6 +3248,9 @@ literal|0
 condition|)
 name|wscroll
 operator|=
+operator|(
+name|int
+operator|)
 name|number
 expr_stmt|;
 name|cmd_exec
@@ -3310,6 +3357,9 @@ argument_list|()
 expr_stmt|;
 name|jump_percent
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -3458,7 +3508,7 @@ define|#
 directive|define
 name|DO_SEARCH
 parameter_list|()
-value|if (number<= 0) number = 1;	\ 			mca_search();			\ 			cmd_exec();			\ 			multi_search((char *)NULL, number);
+value|if (number<= 0) number = 1;	\ 			mca_search();			\ 			cmd_exec();			\ 			multi_search((char *)NULL, (int) number);
 case|case
 name|A_F_SEARCH
 case|:
@@ -3790,6 +3840,9 @@ case|case
 name|A_NEXT_FILE
 case|:
 comment|/* 			 * Examine next file. 			 */
+if|#
+directive|if
+name|TAGS
 if|if
 condition|(
 name|ntags
@@ -3805,6 +3858,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|number
@@ -3819,6 +3874,9 @@ if|if
 condition|(
 name|edit_next
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 condition|)
@@ -3870,6 +3928,9 @@ case|case
 name|A_PREV_FILE
 case|:
 comment|/* 			 * Examine previous file. 			 */
+if|#
+directive|if
+name|TAGS
 if|if
 condition|(
 name|ntags
@@ -3885,6 +3946,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|number
@@ -3899,6 +3962,9 @@ if|if
 condition|(
 name|edit_prev
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 condition|)
@@ -3930,6 +3996,9 @@ break|break;
 case|case
 name|A_NEXT_TAG
 case|:
+if|#
+directive|if
+name|TAGS
 if|if
 condition|(
 name|number
@@ -3944,6 +4013,9 @@ name|tagfile
 operator|=
 name|nexttag
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -3993,10 +4065,24 @@ name|jump_sline
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|error
+argument_list|(
+literal|"Command not available"
+argument_list|,
+name|NULL_PARG
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|A_PREV_TAG
 case|:
+if|#
+directive|if
+name|TAGS
 if|if
 condition|(
 name|number
@@ -4011,6 +4097,9 @@ name|tagfile
 operator|=
 name|prevtag
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -4060,6 +4149,17 @@ name|jump_sline
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|error
+argument_list|(
+literal|"Command not available"
+argument_list|,
+name|NULL_PARG
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|A_INDEX_FILE
@@ -4079,6 +4179,9 @@ if|if
 condition|(
 name|edit_index
 argument_list|(
+operator|(
+name|int
+operator|)
 name|number
 argument_list|)
 condition|)

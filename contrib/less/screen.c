@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1984-2000  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2002  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_comment
@@ -1328,6 +1328,13 @@ name|screen_trashed
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|tty
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -1421,7 +1428,7 @@ block|{
 comment|/* 		 * Get terminal modes. 		 */
 name|tcgetattr
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 operator|&
 name|s
@@ -1936,14 +1943,14 @@ directive|if
 name|HAVE_FSYNC
 name|fsync
 argument_list|(
-literal|2
+name|tty
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 name|tcsetattr
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 name|TCSADRAIN
 argument_list|,
@@ -1963,7 +1970,7 @@ block|{
 comment|/* 		 * Broken termios *ignores* any line discipline 		 * except TERMIODISC.  A different old line discipline 		 * is therefore not restored, yet.  Restore the old 		 * line discipline by hand. 		 */
 name|ioctl
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 name|TIOCSETD
 argument_list|,
@@ -2006,7 +2013,7 @@ block|{
 comment|/* 		 * Get terminal modes. 		 */
 name|ioctl
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 name|TCGETA
 argument_list|,
@@ -2156,7 +2163,7 @@ expr_stmt|;
 block|}
 name|ioctl
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 name|TCSETAW
 argument_list|,
@@ -2194,7 +2201,7 @@ block|{
 comment|/* 		 * Get terminal modes. 		 */
 name|ioctl
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 name|TIOCGETP
 argument_list|,
@@ -2277,7 +2284,7 @@ expr_stmt|;
 block|}
 name|ioctl
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 name|TIOCSETN
 argument_list|,
@@ -2315,7 +2322,7 @@ block|{
 comment|/* 		 * Get terminal modes. 		 */
 name|_gs_opt
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 operator|&
 name|s
@@ -2392,7 +2399,7 @@ expr_stmt|;
 block|}
 name|_ss_opt
 argument_list|(
-literal|2
+name|tty
 argument_list|,
 operator|&
 name|s
