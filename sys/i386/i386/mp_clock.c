@@ -113,13 +113,18 @@ init|=
 block|{
 name|piix_get_timecount
 block|,
+comment|/* get_timecount */
 literal|0
 block|,
+comment|/* no poll_pps */
 literal|0xffffff
 block|,
+comment|/* counter_mask */
 literal|0
 block|,
+comment|/* frequency */
 literal|"PIIX"
+comment|/* name */
 block|}
 decl_stmt|;
 end_decl_stmt
