@@ -1,6 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993,1995 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ldconfig.c,v 1.21 1998/05/26 20:12:50 sos Exp $  */
+comment|/*  * Copyright (c) 1993,1995 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -24,67 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dirent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ranlib.h>
 end_include
 
 begin_include
@@ -96,7 +62,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stab.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<link.h>
 end_include
 
 begin_include
@@ -121,18 +117,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<link.h>
 end_include
 
 begin_include
@@ -339,6 +323,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dofile
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|buildhints
@@ -368,6 +367,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|listhints
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
 name|__P
 argument_list|(
 operator|(
@@ -419,7 +431,8 @@ literal|"Rf:mrsv"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -476,18 +489,8 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"Usage: %s [-Rmrsv] [-f hints_file] "
-literal|"[dir | file ...]"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -756,6 +759,27 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: ldconfig [-Rmrsv] [-f hints_file] [dir | file ...]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|dofile
 parameter_list|(
@@ -900,7 +924,7 @@ literal|'\0'
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"%s: Trailing characters ignored"
+literal|"%s: trailing characters ignored"
 argument_list|,
 name|sp
 argument_list|)
@@ -1935,7 +1959,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Bummer!"
+literal|"bummer!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2491,7 +2515,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: Bad magic: %lo"
+literal|"%s: bad magic: %lo"
 argument_list|,
 name|hints_file
 argument_list|,
@@ -2522,7 +2546,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Unsupported version: %ld"
+literal|"unsupported version: %ld"
 argument_list|,
 name|hdr
 operator|->
@@ -2704,7 +2728,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Bad name index: %#x"
+literal|"bad name index: %#x"
 argument_list|,
 name|bp
 operator|->
@@ -2729,7 +2753,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Bad path index: %#x"
+literal|"bad path index: %#x"
 argument_list|,
 name|bp
 operator|->
