@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -1079,6 +1085,9 @@ directive|endif
 comment|/* beyond partition? */
 if|if
 condition|(
+operator|(
+name|uintmax_t
+operator|)
 name|secno
 operator|+
 name|nsec
@@ -1109,17 +1118,11 @@ operator|)
 return|;
 block|}
 comment|/* or truncate if part of it fits */
-name|nsec
-operator|=
-name|endsecno
-operator|-
-name|secno
-expr_stmt|;
 if|if
 condition|(
-name|nsec
-operator|<=
-literal|0
+name|secno
+operator|>
+name|endsecno
 condition|)
 block|{
 name|bp
@@ -1136,7 +1139,11 @@ name|bp
 operator|->
 name|bio_bcount
 operator|=
-name|nsec
+operator|(
+name|endsecno
+operator|-
+name|secno
+operator|)
 operator|*
 name|ssp
 operator|->
