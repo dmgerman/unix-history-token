@@ -1326,6 +1326,7 @@ name|vnode
 modifier|*
 name|h_devvp
 decl_stmt|;
+comment|/* XXX: remove, hpfsmount has it */
 name|struct
 name|cdev
 modifier|*
