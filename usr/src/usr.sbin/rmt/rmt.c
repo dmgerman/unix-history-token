@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	4.4 (Berkeley) 84/11/15"
+literal|"@(#)rmt.c	4.5 (Berkeley) 84/12/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -280,6 +286,30 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|n
+operator|=
+name|MAXRECSIZ
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|&
+name|n
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|n
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|top
 label|:
 name|errno
