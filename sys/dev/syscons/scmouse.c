@@ -89,6 +89,70 @@ directive|include
 file|<dev/syscons/syscons.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SC_TWOBUTTON_MOUSE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SC_MOUSE_PASTEBUTTON
+value|MOUSE_BUTTON3DOWN
+end_define
+
+begin_comment
+comment|/* right button */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_MOUSE_EXTENDBUTTON
+value|MOUSE_BUTTON2DOWN
+end_define
+
+begin_comment
+comment|/* not really used */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SC_MOUSE_PASTEBUTTON
+value|MOUSE_BUTTON2DOWN
+end_define
+
+begin_comment
+comment|/* middle button */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_MOUSE_EXTENDBUTTON
+value|MOUSE_BUTTON3DOWN
+end_define
+
+begin_comment
+comment|/* right button */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SC_TWOBUTTON_MOUSE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -5103,7 +5167,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|MOUSE_BUTTON2DOWN
+name|SC_MOUSE_PASTEBUTTON
 case|:
 switch|switch
 condition|(
@@ -5131,7 +5195,7 @@ break|break;
 block|}
 break|break;
 case|case
-name|MOUSE_BUTTON3DOWN
+name|SC_MOUSE_EXTENDBUTTON
 case|:
 switch|switch
 condition|(
