@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2526,6 +2526,12 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|rt
+operator|=
+name|la
+operator|->
+name|la_rt
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -2554,9 +2560,7 @@ name|sdl
 operator|=
 name|SDL
 argument_list|(
-name|la
-operator|->
-name|la_rt
+name|rt
 operator|->
 name|rt_gateway
 argument_list|)
