@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ank.c,v 1.22 2001/08/10 08:08:22 joda Exp $"
+literal|"$Id: ank.c,v 1.23 2002/06/07 19:05:38 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -589,6 +589,12 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n_keys
+operator|>
+literal|0
+condition|)
 name|free
 argument_list|(
 name|new_keys

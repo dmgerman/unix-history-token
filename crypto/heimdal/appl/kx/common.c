@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: common.c,v 1.65 2001/08/26 01:40:38 assar Exp $"
+literal|"$Id: common.c,v 1.66 2002/08/22 16:23:28 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2648,15 +2648,13 @@ name|a
 decl_stmt|;
 name|tmp_disp
 operator|=
-name|strndup
+name|malloc
 argument_list|(
 name|auth
 operator|->
-name|number
-argument_list|,
-name|auth
-operator|->
 name|number_length
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2669,6 +2667,28 @@ return|return
 operator|-
 literal|1
 return|;
+name|memcpy
+argument_list|(
+name|tmp_disp
+argument_list|,
+name|auth
+operator|->
+name|number
+argument_list|,
+name|auth
+operator|->
+name|number_length
+argument_list|)
+expr_stmt|;
+name|tmp_disp
+index|[
+name|auth
+operator|->
+name|number_length
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|auth_disp
 operator|=
 name|atoi

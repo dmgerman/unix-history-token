@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: commands.c,v 1.67 2001/08/29 00:45:20 assar Exp $"
+literal|"$Id: commands.c,v 1.72 2002/08/28 21:04:59 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2828,7 +2828,7 @@ block|,
 block|{
 literal|"authdebug"
 block|,
-literal|"Toggle authentication debugging"
+literal|"authentication debugging"
 block|,
 name|auth_togdebug
 block|,
@@ -2872,7 +2872,7 @@ block|,
 block|{
 literal|"verbose_encrypt"
 block|,
-literal|"Toggle verbose encryption output"
+literal|"verbose encryption output"
 block|,
 name|EncryptVerbose
 block|,
@@ -2884,13 +2884,45 @@ block|,
 block|{
 literal|"encdebug"
 block|,
-literal|"Toggle encryption debugging"
+literal|"encryption debugging"
 block|,
 name|EncryptDebug
 block|,
 literal|0
 block|,
 literal|"print encryption debugging information"
+block|}
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+block|{
+literal|"forward"
+block|,
+literal|"credentials forwarding"
+block|,
+name|kerberos5_set_forward
+block|,
+literal|0
+block|,
+literal|"forward credentials"
+block|}
+block|,
+block|{
+literal|"forwardable"
+block|,
+literal|"forwardable flag of forwarded credentials"
+block|,
+name|kerberos5_set_forwardable
+block|,
+literal|0
+block|,
+literal|"forward forwardable credentials"
 block|}
 block|,
 endif|#
@@ -3073,7 +3105,7 @@ block|,
 block|{
 literal|"termdata"
 block|,
-literal|"(debugging) toggle printing of hexadecimal terminal data"
+literal|"printing of hexadecimal terminal data (debugging)"
 block|,
 literal|0
 block|,
@@ -5177,7 +5209,7 @@ block|,
 block|{
 literal|"-softtabs"
 block|,
-literal|"Disable character editing"
+literal|"Disable tab expansion"
 block|,
 name|tn_clearmode
 block|,
@@ -7251,13 +7283,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|IRIX
-operator|==
-literal|4
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIX4
+end_ifdef
 
 begin_define
 define|#
@@ -11080,6 +11110,9 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
+name|set_forward_options
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|autologin
@@ -12282,9 +12315,13 @@ name|cp2
 decl_stmt|,
 modifier|*
 name|lsrp
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|lsrep
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -12321,6 +12358,8 @@ name|struct
 name|cmsghdr
 modifier|*
 name|cmsg
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr_in6

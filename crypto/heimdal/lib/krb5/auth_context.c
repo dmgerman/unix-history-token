@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth_context.c,v 1.57 2001/06/17 23:12:34 assar Exp $"
+literal|"$Id: auth_context.c,v 1.58 2002/08/15 08:23:07 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -581,6 +581,8 @@ goto|goto
 name|out
 goto|;
 block|}
+name|ret
+operator|=
 name|krb5_sockaddr2address
 argument_list|(
 name|context
@@ -591,6 +593,13 @@ operator|&
 name|local_k_address
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|flags
@@ -674,6 +683,8 @@ goto|goto
 name|out
 goto|;
 block|}
+name|ret
+operator|=
 name|krb5_sockaddr2address
 argument_list|(
 name|context
@@ -684,6 +695,13 @@ operator|&
 name|remote_k_address
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|flags

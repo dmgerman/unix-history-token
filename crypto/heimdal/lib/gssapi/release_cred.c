@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: release_cred.c,v 1.5 2001/01/30 00:49:05 assar Exp $"
+literal|"$Id: release_cred.c,v 1.6 2002/08/20 12:02:45 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -45,6 +45,17 @@ block|}
 name|gssapi_krb5_init
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|cred_handle
+operator|)
+operator|->
+name|principal
+operator|!=
+name|NULL
+condition|)
 name|krb5_free_principal
 argument_list|(
 name|gssapi_krb5_context

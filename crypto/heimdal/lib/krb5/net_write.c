@@ -12,13 +12,13 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: net_write.c,v 1.6 1999/12/02 17:05:11 joda Exp $"
+literal|"$Id: net_write.c,v 1.7 2002/08/21 09:08:07 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|ssize_t
+name|krb5_ssize_t
 name|krb5_net_write
 parameter_list|(
 name|krb5_context

@@ -4,19 +4,19 @@ comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: private.h,v 1.14 2000/07/11 15:58:57 joda Exp $ */
+comment|/* $Id: private.h,v 1.15 2002/08/16 20:57:44 joda Exp $ */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__kadm5_private_h__
+name|__kadm5_privatex_h__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__kadm5_private_h__
+name|__kadm5_privatex_h__
 end_define
 
 begin_struct
@@ -446,7 +446,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __kadm5_private_h__ */
+comment|/* __kadm5_privatex_h__ */
 end_comment
 
 end_unit

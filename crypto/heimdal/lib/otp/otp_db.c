@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: otp_db.c,v 1.17 1999/12/02 16:58:44 joda Exp $"
+literal|"$Id: otp_db.c,v 1.19 2002/05/19 22:11:03 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -33,6 +33,33 @@ include|#
 directive|include
 file|"otp_locl.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_NDBM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_DB_NDBM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"ndbm_wrap.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of KTH nor the names of its contributors may be  *    used to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY KTH AND ITS CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL KTH OR ITS CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+comment|/*  * Copyright (c) 1999 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of KTH nor the names of its contributors may be  *    used to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY KTH AND ITS CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL KTH OR ITS CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 end_comment
 
 begin_ifndef
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ls.c,v 1.23 2001/09/14 11:32:52 joda Exp $"
+literal|"$Id: ls.c,v 1.25 2002/08/22 08:31:03 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -529,6 +529,33 @@ define|#
 directive|define
 name|S_ISTXT
 value|S_ISVTX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_S_IFMT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|S_IFMT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_S_IFMT
+value|S_IFMT
 end_define
 
 begin_endif
@@ -2038,20 +2065,17 @@ end_function
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|list_dir
 parameter_list|(
 name|FILE
 modifier|*
-name|out
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|directory
 parameter_list|,
 name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2503,7 +2527,7 @@ end_define
 
 begin_function
 specifier|static
-name|void
+name|int
 name|list_files
 parameter_list|(
 name|FILE
@@ -2547,6 +2571,20 @@ name|n_print
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|n_files
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|n_files
@@ -2577,14 +2615,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sec_fprintf2
+name|syslog
 argument_list|(
-name|out
+name|LOG_ERR
 argument_list|,
-literal|"ouf of memory\r\n"
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 for|for
 control|(
@@ -2710,22 +2751,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sec_fprintf2
+name|syslog
 argument_list|(
-name|out
+name|LOG_ERR
 argument_list|,
-literal|"%s: %s\r\n"
+literal|"%s: %m"
 argument_list|,
 name|files
 index|[
 name|i
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
 argument_list|)
-argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|out
@@ -4083,6 +4124,9 @@ argument_list|(
 name|dirs
 argument_list|)
 expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 
@@ -4219,7 +4263,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|list_dir
 parameter_list|(
 name|FILE
@@ -4268,21 +4312,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sec_fprintf2
+name|syslog
 argument_list|(
-name|out
+name|LOG_ERR
 argument_list|,
-literal|"%s: %s\r\n"
+literal|"%s: %m"
 argument_list|,
 name|directory
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 while|while
 condition|(
@@ -4340,11 +4382,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sec_fprintf2
+name|syslog
 argument_list|(
-name|out
+name|LOG_ERR
 argument_list|,
-literal|"%s: out of memory\r\n"
+literal|"%s: out of memory"
 argument_list|,
 name|directory
 argument_list|)
@@ -4361,7 +4403,10 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|files
 operator|=
@@ -4394,11 +4439,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sec_fprintf2
+name|syslog
 argument_list|(
-name|out
+name|LOG_ERR
 argument_list|,
-literal|"%s: out of memory\r\n"
+literal|"%s: out of memory"
 argument_list|,
 name|directory
 argument_list|)
@@ -4415,7 +4460,10 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 operator|++
 name|n_files
@@ -4426,6 +4474,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+return|return
 name|list_files
 argument_list|(
 name|out
@@ -4444,7 +4493,7 @@ name|flags
 operator||
 name|LS_DIR_FLAG
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -4741,7 +4790,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|builtin_ls
 parameter_list|(
 name|FILE
@@ -4756,6 +4805,9 @@ parameter_list|)
 block|{
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 if|if
 condition|(
@@ -4785,6 +4837,8 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|list_files
 argument_list|(
 name|out
@@ -4802,6 +4856,9 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
+return|return
+name|ret
+return|;
 block|}
 end_function
 

@@ -2823,6 +2823,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_APPEND
+argument_list|,
+literal|0600
 argument_list|)
 expr_stmt|;
 endif|#
