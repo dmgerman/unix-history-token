@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.58	83/02/10	*/
+comment|/*	kern_proc.c	4.59	83/02/16	*/
 end_comment
 
 begin_include
@@ -2489,14 +2489,6 @@ operator|.
 name|u_gid
 operator|=
 name|gid
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|entergroup
-argument_list|(
-name|gid
-argument_list|)
 expr_stmt|;
 block|}
 else|else
