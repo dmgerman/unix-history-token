@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -479,6 +479,21 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 end_ifdef
+
+begin_decl_stmt
+name|void
+name|__bt_dnpage
+name|__P
+argument_list|(
+operator|(
+name|DB
+operator|*
+operator|,
+name|pgno_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
