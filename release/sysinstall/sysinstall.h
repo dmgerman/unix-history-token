@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.153.2.7 1999/04/06 08:27:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.153.2.8 1999/04/24 02:02:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -268,6 +268,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_DESKSTYLE
+value|"_deskStyle"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_DISK
 value|"disk"
 end_define
@@ -410,13 +417,6 @@ define|#
 directive|define
 name|VAR_FTP_HOST
 value|"ftpHost"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_GATED_PKG
-value|"gated_pkg"
 end_define
 
 begin_define
@@ -655,13 +655,6 @@ define|#
 directive|define
 name|VAR_PCNFSD
 value|"pcnfsd"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAR_PCNFSD_PKG
-value|"pcnfsd_pkg"
 end_define
 
 begin_define
@@ -2029,6 +2022,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
+name|MenuDiskDevices
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disk type devices				*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
 name|MenuSubDistributions
 decl_stmt|;
 end_decl_stmt
@@ -2128,7 +2132,18 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|DMenu
-name|MenuDiskDevices
+name|MenuXF86SelectFonts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XFree86 font selection menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuXDesktops
 decl_stmt|;
 end_decl_stmt
 
@@ -2486,7 +2501,19 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|configXEnvironment
+name|configXSetup
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|configXDesktop
 parameter_list|(
 name|dialogMenuItem
 modifier|*
