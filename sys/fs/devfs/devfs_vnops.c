@@ -2729,6 +2729,12 @@ operator|->
 name|va_flags
 operator|!=
 name|VNOVAL
+operator|&&
+name|vap
+operator|->
+name|va_flags
+operator|!=
+literal|0
 operator|)
 operator|||
 operator|(
