@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -1824,6 +1830,7 @@ operator|==
 operator|-
 literal|1
 operator|||
+operator|(
 name|waitpid
 argument_list|(
 name|pid
@@ -1836,6 +1843,11 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|ECHILD
+operator|)
 condition|)
 return|return
 operator|(
