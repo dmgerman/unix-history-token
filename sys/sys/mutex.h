@@ -1271,6 +1271,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Network MPSAFE temporary workarounds.  When debug_mpsafenet  * is 1 the network is assumed to operate without Giant on the  * input path and protocols that require Giant must collect it  * on entry.  When 0 Giant is grabbed in the network interface  * ISR's and in the netisr path and there is no need to grab  * the Giant lock.  *  * This mechanism is intended as temporary until everything of  * importance is properly locked.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|debug_mpsafenet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* defined in net/netisr.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NET_PICKUP_GIANT
+parameter_list|()
+value|do {						\ 	if (debug_mpsafenet)						\ 		mtx_lock(&Giant);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NET_DROP_GIANT
+parameter_list|()
+value|do {						\ 	if (debug_mpsafenet)						\ 		mtx_unlock(&Giant);					\ } while (0)
+end_define
+
 begin_define
 define|#
 directive|define
