@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id: krb.h,v 1.5 1995/07/18 16:36:34 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id: krb.h,v 1.3 1995/08/25 22:50:15 markm Exp $  */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<des.h>
+file|<kerberosIV/des.h>
 end_include
 
 begin_include
