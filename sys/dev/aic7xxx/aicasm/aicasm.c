@@ -9,7 +9,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"$Id: aic7xxx_asm.c,v 1.9 1995/05/30 07:57:33 rgrimes Exp $"
+literal|"$Id: aic7xxx_asm.c,v 1.10 1996/01/03 06:25:31 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4059,6 +4059,8 @@ argument_list|,
 literal|"-"
 argument_list|,
 literal|"-"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
