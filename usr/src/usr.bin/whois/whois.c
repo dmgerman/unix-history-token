@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.5 (Berkeley) %G%"
+literal|"@(#)whois.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"h"
+literal|"h:"
 argument_list|)
 operator|)
 operator|!=
@@ -229,9 +229,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"whois: %s: host unknown\n"
+literal|"whois: %s: "
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
