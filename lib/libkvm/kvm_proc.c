@@ -930,6 +930,7 @@ name|pstats
 operator|.
 name|p_start
 expr_stmt|;
+comment|/* 			 * XXX: The times here are probably zero and need 			 * to be calculated from the raw data in p_rux and 			 * p_crux. 			 */
 name|kp
 operator|->
 name|ki_rusage
@@ -1765,7 +1766,9 @@ argument_list|(
 operator|&
 name|proc
 operator|.
-name|p_runtime
+name|p_rux
+operator|.
+name|rux_runtime
 argument_list|,
 operator|&
 name|tv
