@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.34 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.35 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.34 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.35 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3519,9 +3519,6 @@ comment|/* DNS_MAILB */
 else|#
 directive|else
 comment|/* not NAMED_BIND */
-include|#
-directive|include
-file|<netdb.h>
 name|bool
 name|getcanonname
 parameter_list|(
