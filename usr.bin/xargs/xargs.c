@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)xargs.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)xargs.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -98,12 +118,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
 
@@ -123,22 +137,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|run
 name|__P
 argument_list|(
@@ -152,6 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 name|__P
@@ -164,6 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -330,8 +330,10 @@ operator|)
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal argument count"
 argument_list|)
 expr_stmt|;
@@ -430,14 +432,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Use the user's name for the utility as argv[0], just like the 	 * shell.  Echo is the default.  Set up pointers for the user's 	 * arguments. 	 */
@@ -511,8 +510,10 @@ name|nline
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"insufficient space for command"
 argument_list|)
 expr_stmt|;
@@ -533,14 +534,11 @@ literal|1
 argument_list|)
 operator|)
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|ebp
@@ -678,8 +676,10 @@ name|insingle
 operator|||
 name|indouble
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unterminated quote"
 argument_list|)
 expr_stmt|;
@@ -724,8 +724,10 @@ name|p
 operator|==
 name|ebp
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"insufficient space for arguments"
 argument_list|)
 expr_stmt|;
@@ -832,8 +834,10 @@ operator|)
 operator|==
 name|EOF
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"backslash at EOF"
 argument_list|)
 expr_stmt|;
@@ -863,8 +867,10 @@ name|bxp
 operator|==
 name|xp
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"insufficient space for argument"
 argument_list|)
 expr_stmt|;
@@ -873,8 +879,10 @@ if|if
 condition|(
 name|xflag
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"insufficient space for arguments"
 argument_list|)
 expr_stmt|;
@@ -1039,12 +1047,9 @@ literal|1
 case|:
 name|err
 argument_list|(
-literal|"vfork: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"vfork"
 argument_list|)
 expr_stmt|;
 case|case
@@ -1060,24 +1065,14 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"xargs: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|noinvoke
@@ -1111,12 +1106,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"waitpid: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"waitpid"
 argument_list|)
 expr_stmt|;
 comment|/* If we couldn't invoke the utility, exit 127. */
@@ -1164,6 +1156,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -1183,132 +1176,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"xargs: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
