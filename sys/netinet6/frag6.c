@@ -224,19 +224,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX we eventually need splreass6, or some real semaphore */
-end_comment
-
 begin_decl_stmt
+specifier|static
 name|int
-name|frag6_doing_reass
+name|ip6q_locked
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int
 name|frag6_nfragpackets
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|frag6_nfrags
 decl_stmt|;
 end_decl_stmt
 
@@ -251,9 +254,140 @@ begin_comment
 comment|/* ip6 reassemble queue */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|__inline
+name|int
+name|ip6q_lock_try
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|__inline
+name|void
+name|ip6q_unlock
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|ip6q_lock_try
+parameter_list|()
+block|{
+if|if
+condition|(
+name|ip6q_locked
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|ip6q_locked
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ip6q_unlock
+parameter_list|()
+block|{
+name|ip6q_locked
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IP6Q_LOCK
+parameter_list|()
+define|\
+value|do {									\ 	if (ip6q_lock_try() == 0) {					\ 		printf("%s:%d: ip6q already locked\n", __FILE__, __LINE__); \ 		panic("ip6q_lock");					\ 	}								\ } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6Q_LOCK_CHECK
+parameter_list|()
+define|\
+value|do {									\ 	if (ip6q_locked == 0) {						\ 		printf("%s:%d: ip6q lock not held\n", __FILE__, __LINE__); \ 		panic("ip6q lock check");				\ 	}								\ } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|IP6Q_LOCK
+parameter_list|()
+value|(void) ip6q_lock_try()
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP6Q_LOCK_CHECK
+parameter_list|()
+end_define
+
 begin_comment
-comment|/* FreeBSD tweak */
+comment|/* nothing */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IP6Q_UNLOCK
+parameter_list|()
+value|ip6q_unlock()
+end_define
 
 begin_expr_stmt
 specifier|static
@@ -278,6 +412,12 @@ name|frag6_init
 parameter_list|()
 block|{
 name|ip6_maxfragpackets
+operator|=
+name|nmbclusters
+operator|/
+literal|4
+expr_stmt|;
+name|ip6_maxfrags
 operator|=
 name|nmbclusters
 operator|/
@@ -797,10 +937,30 @@ expr|struct
 name|ip6_frag
 argument_list|)
 expr_stmt|;
-name|frag6_doing_reass
-operator|=
-literal|1
+name|IP6Q_LOCK
+argument_list|()
 expr_stmt|;
+comment|/* 	 * Enforce upper bound on number of fragments. 	 * If maxfrag is 0, never accept fragments. 	 * If maxfrag is -1, accept all fragments without limitation. 	 */
+if|if
+condition|(
+name|ip6_maxfrags
+operator|<
+literal|0
+condition|)
+empty_stmt|;
+elseif|else
+if|if
+condition|(
+name|frag6_nfrags
+operator|>=
+operator|(
+name|u_int
+operator|)
+name|ip6_maxfrags
+condition|)
+goto|goto
+name|dropfrag
+goto|;
 for|for
 control|(
 name|q6
@@ -870,7 +1030,7 @@ name|first_frag
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxfrag is 0, never accept fragments. 		 * If maxfrag is -1, accept all fragments without limitation. 		 */
+comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxfragpackets is 0, never accept fragments. 		 * If maxfragpackets is -1, accept all fragments without 		 * limitation. 		 */
 if|if
 condition|(
 name|ip6_maxfragpackets
@@ -1018,6 +1178,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* The 1st fragment has not arrived. */
+name|q6
+operator|->
+name|ip6q_nfrag
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* 	 * If it's the 1st fragment, record the length of the 	 * unfragmentable part and the next header of the fragment header. 	 */
 name|fragoff
@@ -1131,9 +1297,8 @@ name|ip6f_offlg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|frag6_doing_reass
-operator|=
-literal|0
+name|IP6Q_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1177,9 +1342,8 @@ name|ip6f_offlg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|frag6_doing_reass
-operator|=
-literal|0
+name|IP6Q_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1501,7 +1665,7 @@ comment|/* 	 * While we overlap succeeding segments trim them or, 	 * if they ar
 block|while (af6 != (struct ip6asfrag *)q6&& 	       ip6af->ip6af_off + ip6af->ip6af_frglen> af6->ip6af_off) { 		i = (ip6af->ip6af_off + ip6af->ip6af_frglen) - af6->ip6af_off; 		if (i< af6->ip6af_frglen) { 			af6->ip6af_frglen -= i; 			af6->ip6af_off += i; 			m_adj(IP6_REASS_MBUF(af6), i); 			break; 		} 		af6 = af6->ip6af_down; 		m_freem(IP6_REASS_MBUF(af6->ip6af_up)); 		frag6_deq(af6->ip6af_up); 	}
 else|#
 directive|else
-comment|/* 	 * If the incoming framgent overlaps some existing fragments in 	 * the reassembly queue, drop it, since it is dangerous to override 	 * existing fragments from a security point of view. 	 */
+comment|/* 	 * If the incoming framgent overlaps some existing fragments in 	 * the reassembly queue, drop it, since it is dangerous to override 	 * existing fragments from a security point of view. 	 * We don't know which fragment is the bad guy - here we trust 	 * fragment that came in earlier, with no real reason. 	 */
 if|if
 condition|(
 name|af6
@@ -1628,6 +1792,14 @@ operator|->
 name|ip6af_up
 argument_list|)
 expr_stmt|;
+name|frag6_nfrags
+operator|++
+expr_stmt|;
+name|q6
+operator|->
+name|ip6q_nfrag
+operator|++
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -1672,9 +1844,8 @@ operator|!=
 name|next
 condition|)
 block|{
-name|frag6_doing_reass
-operator|=
-literal|0
+name|IP6Q_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|IPPROTO_DONE
@@ -1696,9 +1867,8 @@ operator|->
 name|ip6af_mff
 condition|)
 block|{
-name|frag6_doing_reass
-operator|=
-literal|0
+name|IP6Q_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|IPPROTO_DONE
@@ -1968,6 +2138,12 @@ argument_list|(
 name|q6
 argument_list|)
 expr_stmt|;
+name|frag6_nfrags
+operator|-=
+name|q6
+operator|->
+name|ip6q_nfrag
+expr_stmt|;
 name|free
 argument_list|(
 name|q6
@@ -2025,6 +2201,12 @@ name|frag6_remque
 argument_list|(
 name|q6
 argument_list|)
+expr_stmt|;
+name|frag6_nfrags
+operator|-=
+name|q6
+operator|->
+name|ip6q_nfrag
 expr_stmt|;
 name|free
 argument_list|(
@@ -2103,9 +2285,8 @@ name|offp
 operator|=
 name|offset
 expr_stmt|;
-name|frag6_doing_reass
-operator|=
-literal|0
+name|IP6Q_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|nxt
@@ -2129,9 +2310,8 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|frag6_doing_reass
-operator|=
-literal|0
+name|IP6Q_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|IPPROTO_DONE
@@ -2163,6 +2343,9 @@ decl_stmt|,
 modifier|*
 name|down6
 decl_stmt|;
+name|IP6Q_LOCK_CHECK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|af6
@@ -2281,6 +2464,12 @@ argument_list|(
 name|q6
 argument_list|)
 expr_stmt|;
+name|frag6_nfrags
+operator|-=
+name|q6
+operator|->
+name|ip6q_nfrag
+expr_stmt|;
 name|free
 argument_list|(
 name|q6
@@ -2318,6 +2507,9 @@ end_function
 
 begin_block
 block|{
+name|IP6Q_LOCK_CHECK
+argument_list|()
+expr_stmt|;
 name|af6
 operator|->
 name|ip6af_up
@@ -2365,6 +2557,9 @@ modifier|*
 name|af6
 decl_stmt|;
 block|{
+name|IP6Q_LOCK_CHECK
+argument_list|()
+expr_stmt|;
 name|af6
 operator|->
 name|ip6af_up
@@ -2408,6 +2603,9 @@ end_function
 
 begin_block
 block|{
+name|IP6Q_LOCK_CHECK
+argument_list|()
+expr_stmt|;
 name|new
 operator|->
 name|ip6q_prev
@@ -2451,6 +2649,9 @@ modifier|*
 name|p6
 decl_stmt|;
 block|{
+name|IP6Q_LOCK_CHECK
+argument_list|()
+expr_stmt|;
 name|p6
 operator|->
 name|ip6q_prev
@@ -2494,9 +2695,8 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|frag6_doing_reass
-operator|=
-literal|1
+name|IP6Q_LOCK
+argument_list|()
 expr_stmt|;
 name|q6
 operator|=
@@ -2582,9 +2782,8 @@ name|ip6q_prev
 argument_list|)
 expr_stmt|;
 block|}
-name|frag6_doing_reass
-operator|=
-literal|0
+name|IP6Q_UNLOCK
+argument_list|()
 expr_stmt|;
 if|#
 directive|if
@@ -2612,7 +2811,10 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|frag6_doing_reass
+name|ip6q_lock_try
+argument_list|()
+operator|==
+literal|0
 condition|)
 return|return;
 while|while
@@ -2639,6 +2841,9 @@ name|ip6q_next
 argument_list|)
 expr_stmt|;
 block|}
+name|IP6Q_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

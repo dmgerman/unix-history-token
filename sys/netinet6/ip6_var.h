@@ -96,6 +96,10 @@ name|ip6q_nxtp
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|ip6q_nfrag
+decl_stmt|;
+comment|/* # of fragments */
 block|}
 struct|;
 end_struct
@@ -741,6 +745,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Maximum packets in reassembly queue */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_maxfrags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Maximum fragments in reassembly queue */
 end_comment
 
 begin_decl_stmt

@@ -1247,6 +1247,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|ip6_maxfrags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* initialized in frag6.c:frag6_init() */
+end_comment
+
+begin_decl_stmt
+name|int
 name|ip6_log_interval
 init|=
 literal|5
@@ -2316,6 +2326,27 @@ operator|&
 name|rip6stat
 argument_list|,
 name|rip6stat
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet6_ip6
+argument_list|,
+name|IPV6CTL_MAXFRAGS
+argument_list|,
+name|maxfrags
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ip6_maxfrags
+argument_list|,
+literal|0
 argument_list|,
 literal|""
 argument_list|)

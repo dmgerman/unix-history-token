@@ -2137,6 +2137,17 @@ begin_comment
 comment|/* raw_ip6 stats */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MAXFRAGS
+value|41
+end_define
+
+begin_comment
+comment|/* max fragments */
+end_comment
+
 begin_comment
 comment|/* New entries should be added here from current IPV6CTL_MAXID value. */
 end_comment
@@ -2149,7 +2160,7 @@ begin_define
 define|#
 directive|define
 name|IPV6CTL_MAXID
-value|37
+value|42
 end_define
 
 begin_comment
