@@ -1732,6 +1732,13 @@ name|dp
 operator|->
 name|d_geom
 expr_stmt|;
+if|if
+condition|(
+name|gp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|gp
 operator|->
 name|softc
@@ -1745,6 +1752,7 @@ argument_list|,
 name|ENXIO
 argument_list|)
 expr_stmt|;
+block|}
 name|g_free
 argument_list|(
 name|dp
