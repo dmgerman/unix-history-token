@@ -3738,7 +3738,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(
