@@ -167,6 +167,14 @@ decl_stmt|;
 name|dev_t
 name|pdev
 decl_stmt|;
+if|if
+condition|(
+name|dktype
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return;
 name|LIST_FOREACH
 argument_list|(
 argument|dp
