@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.80
+literal|3.81
 operator|%
 name|G
 operator|%
@@ -3407,7 +3407,9 @@ argument|) !=
 literal|0
 argument|) 			pxp++; 		if (*pxp == NULL) 		{
 comment|/* no.... append the "@domain" from the sender */
-argument|register char **qxq = CurEnv->e_fromdomain;  			while ((*pxp++ = *qxq++) != NULL) 				continue; 		} 	}
+argument|register char **qxq = CurEnv->e_fromdomain;  			while ((*pxp++ = *qxq++) != NULL) 				continue; 			rewrite(pvp,
+literal|3
+argument|); 		} 	}
 comment|/* 	**  Do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 depending on whether this is 	**		a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
 argument|if (senderaddress) 	{ 		rewrite(pvp,
 literal|1
