@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkpasswd.c	4.1 (Berkeley) 83/12/05"
+literal|"@(#)mkpasswd.c	4.2 (Berkeley) 83/12/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,6 +373,8 @@ argument_list|,
 name|key
 argument_list|,
 name|content
+argument_list|,
+name|DB_INSERT
 argument_list|)
 expr_stmt|;
 name|key
@@ -404,6 +406,8 @@ argument_list|,
 name|key
 argument_list|,
 name|content
+argument_list|,
+name|DB_INSERT
 argument_list|)
 expr_stmt|;
 name|entries
