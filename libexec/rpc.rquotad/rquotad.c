@@ -3,6 +3,32 @@ begin_comment
 comment|/*  * by Manuel Bouyer (bouyer@ensta.fr)  *   * There is no copyright, you can use it as you want.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -48,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -60,25 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<grp.h>
 end_include
 
 begin_include
@@ -90,13 +104,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<grp.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -484,7 +510,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"couldn't create udp service."
+literal|"couldn't create udp service"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -514,7 +540,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unable to register (RQUOTAPROG, RQUOTAVERS, %s)."
+literal|"unable to register (RQUOTAPROG, RQUOTAVERS, %s)"
 argument_list|,
 name|proto
 condition|?
