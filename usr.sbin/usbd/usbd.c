@@ -4534,17 +4534,6 @@ name|int
 name|ch
 decl_stmt|;
 comment|/* getopt option */
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-comment|/* from getopt */
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-comment|/* from getopt */
 name|int
 name|debug
 init|=
