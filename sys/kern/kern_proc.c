@@ -4225,6 +4225,11 @@ operator|&
 name|kinfo_proc
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -4241,6 +4246,11 @@ sizeof|sizeof
 argument_list|(
 name|kinfo_proc
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
