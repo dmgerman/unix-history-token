@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.21 1995/04/22 14:55:07 jkh Exp $"
+literal|"$Id: perform.c,v 1.22 1995/04/24 21:50:11 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -816,17 +816,41 @@ name|FILENAME_MAX
 index|]
 decl_stmt|;
 name|char
+modifier|*
 name|cmd
-index|[
-name|ARG_MAX
-index|]
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|max
 decl_stmt|;
 name|PackingList
 name|p
 decl_stmt|;
+name|max
+operator|=
+name|sysconf
+argument_list|(
+name|_SC_ARG_MAX
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|alloca
+argument_list|(
+name|max
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cmd
+condition|)
+name|barf
+argument_list|(
+literal|"Couldn't allocate temporary storage for dist name!"
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|cmd
@@ -841,9 +865,11 @@ name|pkg
 operator|==
 literal|'/'
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tball
+argument_list|,
+name|max
 argument_list|,
 literal|"%s.%s"
 argument_list|,
@@ -853,9 +879,11 @@ name|suffix
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|tball
+argument_list|,
+name|max
 argument_list|,
 literal|"%s/%s.%s"
 argument_list|,
@@ -876,22 +904,36 @@ literal|'z'
 argument_list|)
 condition|)
 comment|/* Compress/gzip? */
-name|strcat
+name|stnrcat
 argument_list|(
 name|cmd
 argument_list|,
 literal|"-z"
+argument_list|,
+name|max
+operator|-
+name|strlen
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|Dereference
 condition|)
-name|strcat
+name|strncat
 argument_list|(
 name|cmd
 argument_list|,
 literal|"h"
+argument_list|,
+name|max
+operator|-
+name|strlen
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -905,25 +947,39 @@ argument_list|,
 name|tball
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strncat
 argument_list|(
 name|cmd
 argument_list|,
 literal|"cf "
+argument_list|,
+name|max
+operator|-
+name|strlen
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strncat
 argument_list|(
 name|cmd
 argument_list|,
 name|tball
+argument_list|,
+name|max
+operator|-
+name|strlen
+argument_list|(
+name|cmd
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ExcludeFrom
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -933,13 +989,15 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" -X %s"
 argument_list|,
 name|ExcludeFrom
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -949,6 +1007,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" %s %s %s"
 argument_list|,
@@ -963,7 +1023,7 @@ if|if
 condition|(
 name|Install
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -973,6 +1033,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" %s"
 argument_list|,
@@ -983,7 +1045,7 @@ if|if
 condition|(
 name|DeInstall
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -993,6 +1055,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" %s"
 argument_list|,
@@ -1003,7 +1067,7 @@ if|if
 condition|(
 name|Require
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -1013,6 +1077,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" %s"
 argument_list|,
@@ -1023,7 +1089,7 @@ if|if
 condition|(
 name|Display
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -1033,6 +1099,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" %s"
 argument_list|,
@@ -1043,7 +1111,7 @@ if|if
 condition|(
 name|Mtree
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -1053,6 +1121,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" %s"
 argument_list|,
@@ -1084,7 +1154,7 @@ name|type
 operator|==
 name|PLIST_FILE
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -1094,6 +1164,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" %s"
 argument_list|,
@@ -1111,7 +1183,7 @@ name|type
 operator|==
 name|PLIST_CWD
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -1121,6 +1193,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" -C %s"
 argument_list|,
@@ -1138,7 +1212,7 @@ name|type
 operator|==
 name|PLIST_SRC
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 name|cmd
@@ -1148,6 +1222,8 @@ argument_list|(
 name|cmd
 argument_list|)
 index|]
+argument_list|,
+name|max
 argument_list|,
 literal|" -C %s"
 argument_list|,
