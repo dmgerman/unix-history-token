@@ -4161,7 +4161,7 @@ name|pam_ctxt
 expr_stmt|;
 return|return
 operator|(
-name|ret
+literal|0
 operator|)
 return|;
 block|}
