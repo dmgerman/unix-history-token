@@ -233,6 +233,28 @@ begin_comment
 comment|/* Set semvals from arg.array {ALTER} */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SEM_STAT
+value|10
+end_define
+
+begin_comment
+comment|/* Like IPC_STAT but treats semid as sema-index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEM_INFO
+value|11
+end_define
+
+begin_comment
+comment|/* Like IPC_INFO but treats semid as sema-index */
+end_comment
+
 begin_comment
 comment|/*  * Permissions  */
 end_comment
