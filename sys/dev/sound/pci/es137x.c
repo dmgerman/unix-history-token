@@ -185,6 +185,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CT5880REV_CT5880_E
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|ES_DEFAULT_BUFSZ
 value|4096
 end_define
@@ -3044,6 +3051,16 @@ name|revid
 operator|==
 name|CT5880REV_CT5880_D
 operator|)
+operator|||
+operator|(
+name|devid
+operator|==
+name|CT5880_PCI_ID
+operator|&&
+name|revid
+operator|==
+name|CT5880REV_CT5880_E
+operator|)
 condition|)
 block|{
 name|bus_space_write_4
@@ -5026,6 +5043,19 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Creative CT5880-D"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|CT5880REV_CT5880_E
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Creative CT5880-E"
 argument_list|)
 expr_stmt|;
 return|return
