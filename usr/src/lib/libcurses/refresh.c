@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.30 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -675,6 +675,19 @@ index|]
 operator|->
 name|firstchp
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|__TRACE
+argument_list|(
+literal|"wrefresh: line %d notdirty \n"
+argument_list|,
+name|wy
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|win
 operator|->
 name|lines
@@ -687,6 +700,7 @@ operator|&=
 operator|~
 name|__ISDIRTY
 expr_stmt|;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -2449,6 +2463,19 @@ operator|!=
 literal|0
 condition|)
 break|break;
+else|else
+name|win
+operator|->
+name|lines
+index|[
+name|top
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISDIRTY
+expr_stmt|;
 comment|/* 	* Find how many lines from bottom of screen are unchanged.  	*/
 for|for
 control|(
@@ -2528,6 +2555,19 @@ operator|!=
 literal|0
 condition|)
 break|break;
+else|else
+name|win
+operator|->
+name|lines
+index|[
+name|bot
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISDIRTY
+expr_stmt|;
 comment|/* 	 * Search for the largest block of text not changed. 	 * Invariants of the loop: 	 * - Startw is the index of the beginning of the examined block in win.          * - Starts is the index of the beginning of the examined block in  	 *    curscr. 	 * - Curs is the index of one past the end of the exmined block in win. 	 * - Curw is the index of one past the end of the exmined block in  	 *   curscr. 	 * - bsize is the current size of the examined block.          */
 for|for
 control|(
