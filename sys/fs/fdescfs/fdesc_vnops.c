@@ -1766,7 +1766,7 @@ operator|(
 name|EBADF
 operator|)
 return|;
-comment|/* 	 * Can setattr the underlying vnode, but not sockets! 	 */
+comment|/* 	 * Do not allow anybody to actually setattr anything. 	 */
 switch|switch
 condition|(
 name|fp
