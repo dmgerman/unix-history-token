@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 by Joel Baker.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the Author nor the names of any contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*	$OpenBSD: ftw.h,v 1.1 2003/07/21 21:13:18 millert Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 2003 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Sponsored in part by the Defense Advanced Research Projects  * Agency (DARPA) and Air Force Research Laboratory, Air Force  * Materiel Command, USAF, under agreement number F39502-99-1-0512.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -18,125 +22,142 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
-begin_decl_stmt
-name|__BEGIN_DECLS
-comment|/* Enumerated values for 'flag' when calling [n]ftw */
-name|enum
-type|{
-name|FTW_D
-decl_stmt|,
-comment|/* Directories */
-name|FTW_DNR
-decl_stmt|,
-comment|/* Unreadable directory */
+begin_comment
+comment|/*  * Valid flags for the 3rd argument to the function that is passed as the  * second argument to ftw(3) and nftw(3).  Say it three times fast!  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FTW_F
-decl_stmt|,
-comment|/* Regular files */
-name|FTW_SL
-decl_stmt|,
-comment|/* Symbolic link */
-name|FTW_NS
-decl_stmt|,
-comment|/* stat(2) failed */
-if|#
-directive|if
-name|__XSI_VISIBLE
-comment|/* X/Open */
-comment|/* Flags for nftw only */
+value|0
+end_define
+
+begin_comment
+comment|/* File.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTW_D
+value|1
+end_define
+
+begin_comment
+comment|/* Directory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTW_DNR
+value|2
+end_define
+
+begin_comment
+comment|/* Directory without read permission.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FTW_DP
-decl_stmt|,
-comment|/* Directory, subdirs visited */
+value|3
+end_define
+
+begin_comment
+comment|/* Directory with subdirectories visited.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTW_NS
+value|4
+end_define
+
+begin_comment
+comment|/* Unknown type; stat() failed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTW_SL
+value|5
+end_define
+
+begin_comment
+comment|/* Symbolic link.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FTW_SLN
-decl_stmt|,
-end_decl_stmt
+value|6
+end_define
 
 begin_comment
-comment|/* Dangling symlink */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __XSI_VISIBLE */
-end_comment
-
-begin_if
-unit|};
-if|#
-directive|if
-name|__XSI_VISIBLE
-end_if
-
-begin_comment
-comment|/* X/Open */
+comment|/* Sym link that names a nonexistent file.  */
 end_comment
 
 begin_comment
-comment|/* Enumerated values for 'flags' when calling nftw */
+comment|/*  * Flags for use as the 4th argument to nftw(3).  These may be ORed together.  */
 end_comment
-
-begin_enum
-enum|enum
-block|{
-name|FTW_CHDIR
-init|=
-literal|1
-block|,
-comment|/* Do a chdir(2) when entering a directory */
-name|FTW_DEPTH
-init|=
-literal|2
-block|,
-comment|/* Report files first (before directory) */
-name|FTW_MOUNT
-init|=
-literal|4
-block|,
-comment|/* Single filesystem */
-name|FTW_PHYS
-init|=
-literal|8
-comment|/* Physical walk; ignore symlinks */
-block|}
-enum|;
-end_enum
 
 begin_define
 define|#
 directive|define
 name|FTW_PHYS
-value|FTW_PHYS
+value|0x01
 end_define
+
+begin_comment
+comment|/* Physical walk, don't follow sym links.  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FTW_MOUNT
-value|FTW_MOUNT
+value|0x02
 end_define
 
-begin_define
-define|#
-directive|define
-name|FTW_CHDIR
-value|FTW_CHDIR
-end_define
+begin_comment
+comment|/* The walk does not cross a mount point.  */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FTW_DEPTH
-value|FTW_DEPTH
+value|0x04
 end_define
 
 begin_comment
-comment|/* FTW struct for callbacks from nftw */
+comment|/* Subdirs visited before the dir itself. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTW_CHDIR
+value|0x08
+end_define
+
+begin_comment
+comment|/* Change to a directory before reading it. */
 end_comment
 
 begin_struct
@@ -153,141 +174,72 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __XSI_VISIBLE */
-end_comment
-
-begin_comment
-comment|/* Typecasts for callback functions */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|__ftw_func_t
-function_decl|) \
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-specifier|const
-name|struct
-name|stat
-modifier|*
-name|status
-parameter_list|,
-name|int
-name|flag
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/* ftw: walk a directory tree, calling a function for each element */
-end_comment
-
 begin_function_decl
-specifier|extern
+name|__BEGIN_DECLS
 name|int
 name|ftw
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|dir
 parameter_list|,
-name|__ftw_func_t
-name|func
-parameter_list|,
-name|int
-name|descr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_if
-if|#
-directive|if
-name|__XSI_VISIBLE
-end_if
-
-begin_comment
-comment|/* X/Open */
-end_comment
-
-begin_typedef
-typedef|typedef
 name|int
 function_decl|(
 modifier|*
-name|__nftw_func_t
-function_decl|) \
+function_decl|)
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|file
 parameter_list|,
 specifier|const
 name|struct
 name|stat
 modifier|*
-name|status
 parameter_list|,
 name|int
-name|flag
+parameter_list|)
 parameter_list|,
-name|struct
-name|FTW
-modifier|*
-name|detail
+name|int
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_comment
-comment|/* nftw: walk a directory tree, calling a function for each element; much  * like ftw, but with behavior flags and minty freshness.  */
-end_comment
+end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|nftw
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|dir
-parameter_list|,
-name|__nftw_func_t
-name|func
 parameter_list|,
 name|int
-name|descr
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|stat
+modifier|*
 parameter_list|,
 name|int
-name|flags
+parameter_list|,
+name|struct
+name|FTW
+modifier|*
+parameter_list|)
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __XSI_VISIBLE */
-end_comment
 
 begin_macro
 name|__END_DECLS
@@ -299,7 +251,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FTW_H */
+comment|/* !_FTW_H */
 end_comment
 
 end_unit
