@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.7 83/05/05"
+literal|"@(#)route.c	4.8 (Berkeley) 83/08/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -1268,6 +1268,37 @@ decl_stmt|;
 name|u_long
 name|val
 decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|s
+argument_list|,
+literal|"default"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sin
+operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|sin
+operator|->
+name|sin_addr
+operator|=
+name|inet_makeaddr
+argument_list|(
+literal|0
+argument_list|,
+name|INADDR_ANY
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|hp
 operator|=
 name|gethostbyname
