@@ -1503,15 +1503,13 @@ name|type
 condition|)
 block|{
 case|case
-name|freebsd
-case|:
-name|subtype
-operator|=
-literal|0xc494
-expr_stmt|;
-comment|/* FALLTHROUGH */
-case|case
 name|fat
+case|:
+case|case
+name|pc98
+case|:
+case|case
+name|freebsd
 case|:
 name|c1
 operator|=
