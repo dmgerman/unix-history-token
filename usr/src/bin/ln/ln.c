@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c 4.3 %G%"
+literal|"@(#)ln.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_decl_stmt
@@ -70,6 +76,13 @@ name|rindex
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -459,6 +472,18 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EEXIST
+condition|)
+name|perror
+argument_list|(
+name|to
+argument_list|)
+expr_stmt|;
+else|else
 name|perror
 argument_list|(
 name|from
