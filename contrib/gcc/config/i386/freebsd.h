@@ -423,6 +423,52 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* If defined, a C expression whose value is a string containing the    assembler operation to identify the following data as    uninitialized global data.  If not defined, and neither    `ASM_OUTPUT_BSS' nor `ASM_OUTPUT_ALIGNED_BSS' are defined,    uninitialized global data will be output in the data section if    `-fno-common' is passed, otherwise `ASM_OUTPUT_COMMON' will be    used.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|BSS_SECTION_ASM_OP
+end_undef
+
+begin_define
+define|#
+directive|define
+name|BSS_SECTION_ASM_OP
+value|"\t.section\t.bss"
+end_define
+
+begin_comment
+comment|/* Like `ASM_OUTPUT_BSS' except takes the required alignment as a    separate, explicit argument.  If you define this macro, it is used    in place of `ASM_OUTPUT_BSS', and gives you more flexibility in    handling the required alignment of the variable.  The alignment is    specified as the number of bits.     Try to use function `asm_output_aligned_bss' defined in file    `varasm.c' when defining this macro.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGNED_BSS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGNED_BSS
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|NAME
+parameter_list|,
+name|SIZE
+parameter_list|,
+name|ALIGN
+parameter_list|)
+define|\
+value|asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
+end_define
+
+begin_comment
 comment|/************************[  Debugger stuff  ]*********************************/
 end_comment
 
