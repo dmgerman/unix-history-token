@@ -1624,7 +1624,7 @@ name|sblock
 operator|.
 name|fs_bsize
 operator|>=
-name|SBLOCKSIZE
+name|MINBSIZE
 operator|&&
 name|sblock
 operator|.
