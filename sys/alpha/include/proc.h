@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: proc.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
+comment|/* $Id: proc.h,v 1.2 1998/06/10 10:55:17 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -14,6 +14,20 @@ end_comment
 begin_comment
 comment|/*  * Machine-dependent part of the proc struct for the Alpha.  */
 end_comment
+
+begin_struct
+struct|struct
+name|mdbpt
+block|{
+name|vm_offset_t
+name|addr
+decl_stmt|;
+name|u_int32_t
+name|contents
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -34,6 +48,14 @@ modifier|*
 name|md_pcbpaddr
 decl_stmt|;
 comment|/* phys addr of the pcb */
+name|struct
+name|mdbpt
+name|md_sstep
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* two single step breakpoints */
 block|}
 struct|;
 end_struct
@@ -47,6 +69,28 @@ end_define
 
 begin_comment
 comment|/* Process used the FPU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDP_STEP1
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Single step normal instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDP_STEP2
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Single step branch instruction */
 end_comment
 
 end_unit
