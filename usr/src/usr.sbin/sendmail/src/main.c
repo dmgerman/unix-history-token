@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.55.1.2 (Berkeley) %G%"
+literal|"@(#)main.c	8.81 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2521,10 +2521,7 @@ name|FullName
 operator|=
 name|newstr
 argument_list|(
-name|denlstring
-argument_list|(
 name|optarg
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3536,6 +3533,38 @@ expr_stmt|;
 break|break;
 block|}
 end_switch
+
+begin_comment
+comment|/* full names can't have newlines */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|FullName
+operator|!=
+name|NULL
+operator|&&
+name|strchr
+argument_list|(
+name|FullName
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|FullName
+operator|=
+name|newstr
+argument_list|(
+name|denlstring
+argument_list|(
+name|FullName
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* do heuristic mode adjustment */
