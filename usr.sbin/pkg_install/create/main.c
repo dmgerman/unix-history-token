@@ -201,7 +201,7 @@ begin_decl_stmt
 name|int
 name|Dereference
 init|=
-literal|0
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -209,7 +209,7 @@ begin_decl_stmt
 name|int
 name|PlistOnly
 init|=
-literal|0
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -309,7 +309,7 @@ literal|'O'
 case|:
 name|PlistOnly
 operator|=
-name|YES
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -416,7 +416,7 @@ literal|'h'
 case|:
 name|Dereference
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
