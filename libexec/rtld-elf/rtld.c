@@ -3051,7 +3051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the library with the given name, and return its full pathname.  * The returned string is dynamically allocated.  Generates an error  * message and returns NULL if the library cannot be found.  *  * If the second argument is non-NULL, then it refers to an already-  * loaded shared object, whose library search path will be searched.  *  * The search order is:  *   LD_LIBRARY_PATH  *   ldconfig hints  *   rpath in the referencing file  *   /usr/lib  */
+comment|/*  * Find the library with the given name, and return its full pathname.  * The returned string is dynamically allocated.  Generates an error  * message and returns NULL if the library cannot be found.  *  * If the second argument is non-NULL, then it refers to an already-  * loaded shared object, whose library search path will be searched.  *  * The search order is:  *   rpath in the referencing file  *   LD_LIBRARY_PATH  *   ldconfig hints  *   /usr/lib  */
 end_comment
 
 begin_function
