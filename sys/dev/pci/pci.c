@@ -3734,6 +3734,17 @@ operator|->
 name|intline
 operator|!=
 literal|255
+ifdef|#
+directive|ifdef
+name|__i386__
+operator|&&
+name|cfg
+operator|->
+name|intline
+operator|!=
+literal|0
+endif|#
+directive|endif
 condition|)
 block|{
 ifdef|#
