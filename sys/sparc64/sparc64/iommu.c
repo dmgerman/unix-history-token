@@ -3741,10 +3741,6 @@ operator|>=
 name|dt
 operator|->
 name|dt_nsegments
-operator|||
-name|sgcnt
-operator|>=
-name|BUS_DMAMAP_NSEGS
 condition|)
 return|return
 operator|(

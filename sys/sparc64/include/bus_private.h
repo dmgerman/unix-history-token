@@ -73,17 +73,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * This is more or less arbitrary, except for the stack space consumed by  * the segments array. Choose more than ((BUS_SPACE_MAXSIZE / PAGE_SIZE) + 1),  * since in practice we could be map pages more than once.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUS_DMAMAP_NSEGS
-value|64
-end_define
-
 begin_struct
 struct|struct
 name|bus_dmamap_res
