@@ -1797,11 +1797,6 @@ argument_list|)
 operator|&&
 operator|!
 name|SOLARIS
-name|struct
-name|ifqueue
-modifier|*
-name|ifq
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;
