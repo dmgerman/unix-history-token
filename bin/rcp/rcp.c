@@ -142,6 +142,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -185,12 +197,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<libutil.h>
 end_include
 
 begin_include
@@ -2962,7 +2968,7 @@ index|]
 decl_stmt|,
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 if|if
@@ -3199,9 +3205,10 @@ operator|->
 name|d_name
 argument_list|)
 operator|>=
-name|MAXPATHLEN
-operator|-
-literal|1
+sizeof|sizeof
+argument_list|(
+name|path
+argument_list|)
 condition|)
 block|{
 name|run_err
