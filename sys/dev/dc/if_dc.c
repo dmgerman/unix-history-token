@@ -8846,6 +8846,10 @@ name|rid
 decl_stmt|,
 name|mac_offset
 decl_stmt|;
+name|u_int8_t
+modifier|*
+name|mac
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -9690,7 +9694,6 @@ name|dc_pmode
 operator|=
 name|DC_PMODE_MII
 expr_stmt|;
-comment|/* XXX Call the cardbus function to get nic from the CIS */
 break|break;
 case|case
 name|DC_DEVICEID_RS7112
@@ -10072,6 +10075,40 @@ break|break;
 case|case
 name|DC_TYPE_XIRCOM
 case|:
+comment|/* The MAC comes from the CIS */
+name|mac
+operator|=
+name|pci_get_ether
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mac
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"No station address in CIS!\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+name|bcopy
+argument_list|(
+name|mac
+argument_list|,
+name|eaddr
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|dc_read_eeprom
