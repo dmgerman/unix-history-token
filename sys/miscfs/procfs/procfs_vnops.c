@@ -2556,15 +2556,7 @@ name|cnp
 operator|->
 name|cn_nameptr
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|curp
-init|=
-name|cnp
-operator|->
-name|cn_proc
-decl_stmt|;
+comment|/* struct proc *curp = cnp->cn_proc; */
 name|struct
 name|proc_target
 modifier|*
