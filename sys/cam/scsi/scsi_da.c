@@ -817,6 +817,24 @@ name|DA_Q_NO_SYNC_CACHE
 operator||
 name|DA_Q_NO_PREVENT
 block|}
+block|,
+block|{
+comment|/* 		 * Neuros USB Digital Audio Computer 		 * PR: kern/63645 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"NEUROS"
+block|,
+literal|"dig. audio comp."
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
