@@ -2144,6 +2144,12 @@ name|ALPHA_MCES_DPC
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Clear userland thread pointer */
+name|alpha_pal_wrunique
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Find out what hardware we're on, and do basic initialization. 	 */
 name|cputype
 operator|=
@@ -9388,13 +9394,7 @@ name|mcp
 operator|->
 name|mc_thrptr
 operator|=
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_hw
-operator|.
-name|apcb_unique
+literal|0
 expr_stmt|;
 name|mcp
 operator|->
@@ -9634,19 +9634,6 @@ name|mc_thrptr
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_hw
-operator|.
-name|apcb_unique
-operator|=
-name|mcp
-operator|->
-name|mc_thrptr
-expr_stmt|;
 comment|/* 		 * The context is a trapframe, so just copy it over the 		 * threads frame. 		 */
 name|bcopy
 argument_list|(

@@ -363,6 +363,16 @@ name|td_pcb
 operator|->
 name|pcb_hw
 operator|.
+name|apcb_unique
+operator|=
+literal|0
+expr_stmt|;
+name|td2
+operator|->
+name|td_pcb
+operator|->
+name|pcb_hw
+operator|.
 name|apcb_flags
 operator|&=
 operator|~

@@ -463,6 +463,12 @@ operator|)
 name|pcpup
 argument_list|)
 expr_stmt|;
+comment|/* Clear userland thread pointer. */
+name|alpha_pal_wrunique
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Point interrupt/exception vectors to our own. 	 */
 name|alpha_pal_wrent
 argument_list|(
