@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ndu.h	4.1	85/03/19	*/
+comment|/*	ndu.h	4.2	87/12/10	*/
 end_comment
 
 begin_comment
@@ -174,11 +174,11 @@ comment|/* DCON node */
 name|int
 name|op
 decl_stmt|;
-name|TWORD
-name|type
-decl_stmt|;
 name|int
 name|cdim
+decl_stmt|;
+name|TWORD
+name|type
 decl_stmt|;
 name|int
 name|csiz
@@ -196,11 +196,11 @@ comment|/* FCON node */
 name|int
 name|op
 decl_stmt|;
-name|TWORD
-name|type
-decl_stmt|;
 name|int
 name|cdim
+decl_stmt|;
+name|TWORD
+name|type
 decl_stmt|;
 name|int
 name|csiz
