@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.8 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.9 %G%  */
 end_comment
 
 begin_comment
@@ -468,28 +468,6 @@ end_decl_stmt
 begin_comment
 comment|/*current upper bound in the current buffer*/
 end_comment
-
-begin_comment
-comment|/*  *	Strings are stored in the string pool; see strsave(str, length)  *	Strings are known by their length and values.  *	A string pointer points to the beginning of the value bytes;  *	the preceding two bytes are the length.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|STRLEN
-parameter_list|(
-name|str
-parameter_list|)
-value|(((lgtype *)str)[-1])
-end_define
-
-begin_function_decl
-name|char
-modifier|*
-name|savestr
-parameter_list|()
-function_decl|;
-end_function_decl
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asjxxx.c 4.6 %G%"
+literal|"@(#)asjxxx.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1107,9 +1107,10 @@ name|printf
 argument_list|(
 literal|"Tunnel from %s from line %d\n"
 argument_list|,
+name|FETCHNAME
+argument_list|(
 name|jumpfrom
-operator|->
-name|s_name
+argument_list|)
 argument_list|,
 name|lineno
 argument_list|)
@@ -1663,11 +1664,12 @@ name|printf
 argument_list|(
 literal|"Explode jump to %s on line %d\n"
 argument_list|,
+name|FETCHNAME
+argument_list|(
 name|sp
 operator|->
 name|s_dest
-operator|->
-name|s_name
+argument_list|)
 argument_list|,
 name|lineno
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.13 %G%"
+literal|"@(#)asparse.c 4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,7 +256,7 @@ specifier|static
 name|char
 name|UDotsname
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -339,7 +339,8 @@ name|symtab
 modifier|*
 name|stpt
 decl_stmt|;
-name|char
+name|struct
+name|strdesc
 modifier|*
 name|stringp
 decl_stmt|;
@@ -646,7 +647,7 @@ argument|, 					NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
-argument|np->s_name); 				goto  errorfix; 			} restlab: 			shift; 			flushfield(NBPW/
+argument|FETCHNAME(np)); 				goto  errorfix; 			} restlab: 			shift; 			flushfield(NBPW/
 literal|4
 argument|); 			if ((np->s_type&XTYPE)!=XUNDEF) { 				if(  (np->s_type&XTYPE)!=dotp->e_xtype  				   || np->s_value!=dotp->e_xvalue 				   || (  (passno==
 literal|1
@@ -654,7 +655,7 @@ argument|)&&(np->s_index != dotp->e_xloc) 				      ) 				  ){
 ifndef|#
 directive|ifndef
 name|DEBUG
-argument|if (np->s_name[
+argument|if (FETCHNAME(np)[
 literal|0
 argument|] !=
 literal|'L'
@@ -680,7 +681,7 @@ argument|, 							NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
-argument|np->s_name); 						else
+argument|FETCHNAME(np)); 						else
 ifdef|#
 directive|ifdef
 name|FLEXNAMES
@@ -696,9 +697,9 @@ argument|, 							NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
-argument|np->s_name, 							np->s_value, 							dotp->e_xvalue); 					} 				} 			} 			np->s_type&= ~(XTYPE|XFORW); 			np->s_type |= dotp->e_xtype; 			np->s_value = dotp->e_xvalue; 			if (passno ==
+argument|FETCHNAME(np), 							np->s_value, 							dotp->e_xvalue); 					} 				} 			} 			np->s_type&= ~(XTYPE|XFORW); 			np->s_type |= dotp->e_xtype; 			np->s_value = dotp->e_xvalue; 			if (passno ==
 literal|1
-argument|){ 				np->s_index = dotp-usedot; 				if (np->s_name[
+argument|){ 				np->s_index = dotp-usedot; 				if (FETCHNAME(np)[
 literal|0
 argument|] ==
 literal|'L'
@@ -716,9 +717,9 @@ argument|break;     case PARSEEOF: 	tokptr -= sizeof(bytetoktype); 	*tokptr++ = 
 literal|1
 argument|] = VOID; 	tokptr[
 literal|2
-argument|] = PARSEEOF; 	break;     case IFILE: 	shift; 	stringp = (char *)yylval; 	shiftover(STRING); 	dotsname =&UDotsname[
+argument|] = PARSEEOF; 	break;     case IFILE: 	shift; 	stringp = (struct strdesc *)yylval; 	shiftover(STRING); 	dotsname =&UDotsname[
 literal|0
-argument|]; 	movestr(dotsname, stringp, min(STRLEN(stringp), sizeof(dotsname))); 	break;     case ILINENO: 	shift;
+argument|]; 	movestr(dotsname, stringp->sd_string, 		min(stringp->sd_strlen, sizeof(UDotsname))); 	break;     case ILINENO: 	shift;
 comment|/*over the ILINENO*/
 argument|expr(locxp, val); 	lineno = locxp->e_xvalue; 	break;     case ISET:
 comment|/* .set<name> ,<expr> */
@@ -739,7 +740,7 @@ name|FLEXNAMES
 argument|stpt->s_name = np->s_name;
 else|#
 directive|else
-argument|movestr(stpt->s_name, np->s_name, NCPName);
+argument|movestr(FETCHNAME(stpt), FETCHNAME(np), NCPName);
 endif|#
 directive|endif
 argument|np->s_tag = OBSOLETE;
@@ -935,11 +936,11 @@ argument|case IASCIZ:
 comment|/* .asciz [<stringlist> ] */
 argument|auxval = val; 	shift;
 comment|/* 	 *	Code to consume a string list 	 * 	 *	stringlist: empty | STRING | stringlist STRING 	 */
-argument|while (val == STRING){ 		flushfield(NBPW/
+argument|while (val == STRING){ 		int	mystrlen; 		flushfield(NBPW/
 literal|4
-argument|); 		if (bitoff) 			dotp->e_xvalue++; 		stringp = (char *)yylval;
-comment|/* 		 *	utilize the string scanner cheat, 		 *	where it appended a null byte on the string, 		 *	but didn't charge it to STRLEN 		 */
-argument|STRLEN(stringp) += (auxval == IASCIZ) ?
+argument|); 		if (bitoff) 			dotp->e_xvalue++; 		stringp = (struct strdesc *)yylval;
+comment|/* 		 *	utilize the string scanner cheat; 		 *	the scanner appended a null byte on the string, 		 *	but didn't charge it to sd_strlen 		 */
+argument|mystrlen = stringp->sd_strlen; 		mystrlen += (auxval == IASCIZ) ?
 literal|1
 argument|:
 literal|0
@@ -947,7 +948,17 @@ argument|;
 ifdef|#
 directive|ifdef
 name|UNIX
-argument|outs(stringp, STRLEN(stringp));
+argument|if (passno ==
+literal|2
+argument|){ 			if (stringp->sd_place& STR_CORE){ 				outs(stringp->sd_string, mystrlen); 			} else { 				int	i, nread; 				fseek(strfile, stringp->sd_stroff,
+literal|0
+argument|); 				for (i =
+literal|0
+argument|; i< mystrlen;
+comment|/*VOID*/
+argument|){ 					nread = fread(yytext,
+literal|1
+argument|, 						min(mystrlen - i, 						  sizeof(yytext)), strfile); 					outs(yytext, nread); 					i += nread; 				} 			} 		} else { 			dotp->e_xvalue += mystrlen; 		}
 endif|#
 directive|endif
 endif|UNIX
@@ -998,7 +1009,7 @@ argument|)	goto errorfix; 	stpt = (struct symtab *)yylval;
 comment|/* 	 *	Make a pointer to the .stab slot. 	 *	There is a pointer in the way (stpt), and 	 *	tokptr points to the next token. 	 */
 argument|stabstart = tokptr; 	(char *)stabstart -= sizeof(struct symtab *); 	(char *)stabstart -= sizeof(bytetoktype); 	shift; 	for (argcnt =
 literal|0
-argument|; argcnt< NCPName; argcnt++){ 		expr(locxp, val); 		stpt->s_name[argcnt] = locxp->e_xvalue; 		xp = explist; 		shiftover(CM); 	} 	goto tailstab;
+argument|; argcnt< NCPName; argcnt++){ 		expr(locxp, val); 		FETCHNAME(stpt)[argcnt] = locxp->e_xvalue; 		xp = explist; 		shiftover(CM); 	} 	goto tailstab;
 else|#
 directive|else
 else|FLEXNAMES
@@ -1049,16 +1060,16 @@ argument|; goto shortstab;     case ISTABSTR: 	stabname =
 literal|".stabs"
 argument|;    shortstab: 	auxval = val; 	if (passno ==
 literal|2
-argument|) goto errorfix; 	stpt = (struct symtab *)yylval; 	stabstart = tokptr; 	(bytetoktype *)stabstart -= sizeof(struct symtab *); 	(bytetoktype *)stabstart -= sizeof(bytetoktype); 	shift; 	if (auxval == ISTABSTR){ 		stringp = (char *)yylval; 		shiftover(STRING);
+argument|) goto errorfix; 	stpt = (struct symtab *)yylval; 	stabstart = tokptr; 	(bytetoktype *)stabstart -= sizeof(struct symtab *); 	(bytetoktype *)stabstart -= sizeof(bytetoktype); 	shift; 	if (auxval == ISTABSTR){ 		stringp = (struct strdesc *)yylval; 		shiftover(STRING);
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|movestr(stpt->s_name, stringp, min(STRLEN(stringp), NCPName));
+argument|movestr(FETCHNAME(stpt), stringp, 			min(stringp->sd_strlen, NCPName));
 else|#
 directive|else
-argument|stpt->s_name = stringp;
+argument|stpt->s_name = (char *)stringp;
 comment|/* 		 *	We want the trailing null included in this string. 		 *	We utilize the cheat the string scanner used, 		 *	and merely increment the string length 		 */
-argument|STRLEN(stringp) +=
+argument|stringp->sd_strlen +=
 literal|1
 argument|;
 endif|#
@@ -1067,14 +1078,14 @@ argument|shiftover(CM); 	} else {
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|static char nullstr[NCPName]; 		movestr(stpt->s_name, nullstr, NCPName);
+argument|static char nullstr[NCPName]; 		movestr(FETCHNAME(stpt), nullstr, NCPName);
 else|#
 directive|else
 argument|static char nullstr[
 literal|1
-argument|]; 		stpt->s_name = savestr(nullstr,
-literal|1
-argument|);
+argument|]; 		static	struct	strdesc strdp; 		strdp.sd_stroff = strfilepos; 		strdp.sd_strlen =
+literal|0
+argument|; 		strdp.sd_place = STR_BOTH; 		stpt->s_name = (char *)savestr(nullstr,&strdp);
 endif|#
 directive|endif
 argument|} 	goto tailstab; 	break;     case ICOMM:
@@ -1103,7 +1114,7 @@ argument|, 			NCPName,
 endif|#
 directive|endif
 endif|not FLEXNAMES
-argument|np->s_name); 	if (passno==
+argument|FETCHNAME(np)); 	if (passno==
 literal|1
 argument|) { 		np->s_value = locxp->e_xvalue; 		if (auxval == ICOMM) 			np->s_type |= XXTRN; 		else { 			np->s_type&= ~XTYPE; 			np->s_type |= XBSS; 		} 	} 	break;     case IALIGN:
 comment|/* .align<expr> */

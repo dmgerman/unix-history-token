@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.9 %G%"
+literal|"@(#)ascode.c 4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,12 +1131,13 @@ name|yywarning
 argument_list|(
 literal|"%s: destination label is external"
 argument_list|,
+name|FETCHNAME
+argument_list|(
 name|ITABFETCH
 argument_list|(
 name|opcode
 argument_list|)
-operator|->
-name|s_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1151,12 +1152,13 @@ name|yyerror
 argument_list|(
 literal|"%s: Branch too far(%db): try -J flag"
 argument_list|,
+name|FETCHNAME
+argument_list|(
 name|ITABFETCH
 argument_list|(
 name|opcode
 argument_list|)
-operator|->
-name|s_name
+argument_list|)
 argument_list|,
 name|argtype
 argument_list|)
@@ -1198,12 +1200,13 @@ name|yywarning
 argument_list|(
 literal|"%s: destination label is external"
 argument_list|,
+name|FETCHNAME
+argument_list|(
 name|ITABFETCH
 argument_list|(
 name|opcode
 argument_list|)
-operator|->
-name|s_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|xp
@@ -1224,12 +1227,13 @@ name|yyerror
 argument_list|(
 literal|"%s: Branch too far(%db): try -J flag"
 argument_list|,
+name|FETCHNAME
+argument_list|(
 name|ITABFETCH
 argument_list|(
 name|opcode
 argument_list|)
-operator|->
-name|s_name
+argument_list|)
 argument_list|,
 name|argtype
 argument_list|)

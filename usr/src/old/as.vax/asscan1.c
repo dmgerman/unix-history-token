@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan1.c 4.4 %G%"
+literal|"@(#)asscan1.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ file|"asscanl.h"
 end_include
 
 begin_macro
-name|inittmpfile
+name|inittokfile
 argument_list|()
 end_macro
 
@@ -132,7 +132,7 @@ block|}
 end_block
 
 begin_macro
-name|closetmpfile
+name|closetokfile
 argument_list|()
 end_macro
 
@@ -202,7 +202,7 @@ name|emptybuf
 argument_list|,
 literal|1
 argument_list|,
-name|tmpfil
+name|tokfile
 argument_list|)
 condition|)
 block|{
@@ -259,7 +259,7 @@ name|emptybuf
 argument_list|,
 literal|1
 argument_list|,
-name|tmpfil
+name|tokfile
 argument_list|)
 condition|)
 goto|goto
@@ -683,16 +683,15 @@ name|printf
 argument_list|(
 literal|"\"%.8s\""
 argument_list|,
-operator|(
+name|FETCHNAME
+argument_list|(
 operator|(
 expr|struct
 name|symtab
 operator|*
 operator|)
 name|yylval
-operator|)
-operator|->
-name|s_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -727,12 +726,13 @@ name|printf
 argument_list|(
 literal|"%.8s"
 argument_list|,
+name|FETCHNAME
+argument_list|(
 name|ITABFETCH
 argument_list|(
 name|yyopcode
 argument_list|)
-operator|->
-name|s_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1022,7 +1022,7 @@ name|emptybuf
 argument_list|,
 literal|1
 argument_list|,
-name|tmpfil
+name|tokfile
 argument_list|)
 condition|)
 block|{
@@ -1063,7 +1063,7 @@ name|emptybuf
 argument_list|,
 literal|1
 argument_list|,
-name|tmpfil
+name|tokfile
 argument_list|)
 condition|)
 block|{

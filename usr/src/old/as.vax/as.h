@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.14 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.15 %G%  */
 end_comment
 
 begin_ifdef
@@ -975,9 +975,42 @@ name|s_name
 value|s_nm.n_un.n_name
 end_define
 
-begin_comment
-comment|/* name pointer */
-end_comment
+begin_define
+define|#
+directive|define
+name|i_name
+value|s_name
+end_define
+
+begin_define
+define|#
+directive|define
+name|FETCHNAME
+parameter_list|(
+name|sp
+parameter_list|)
+value|(((struct strdesc *)(sp)->s_name)->sd_string)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRLEN
+parameter_list|(
+name|sp
+parameter_list|)
+value|(((struct strdesc *)(sp)->s_name)->sd_strlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STROFF
+parameter_list|(
+name|sp
+parameter_list|)
+value|(((struct strdesc *)(sp)->s_name)->sd_stroff)
+end_define
 
 begin_define
 define|#
@@ -1001,6 +1034,23 @@ define|#
 directive|define
 name|s_name
 value|s_nm.n_name
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_name
+value|s_name
+end_define
+
+begin_define
+define|#
+directive|define
+name|FETCHNAME
+parameter_list|(
+name|sp
+parameter_list|)
+value|((sp)->s_name)
 end_define
 
 begin_endif
@@ -1432,6 +1482,78 @@ parameter_list|)
 value|(((x)>= MINUWORD)&& ((x)<= MAXUWORD))
 end_define
 
+begin_comment
+comment|/*  *	Definitions for strings.  *  *	Strings are stored in the string pool; see strsave(str, length)  *	Strings are known by their length and values.  *	A string pointer points to the beginning of the value bytes;  *  *	If this structure is changed, change insts also.  */
+end_comment
+
+begin_struct
+struct|struct
+name|strdesc
+block|{
+name|int
+name|sd_stroff
+decl_stmt|;
+comment|/* offset into string file */
+name|short
+name|sd_place
+decl_stmt|;
+comment|/* where string is */
+name|u_short
+name|sd_strlen
+decl_stmt|;
+comment|/* string length */
+name|char
+name|sd_string
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* the string itself, flexible length */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  *	Where a string can be.  If these are changed, also change instrs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STR_FILE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|STR_CORE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|STR_BOTH
+value|0x3
+end_define
+
+begin_function_decl
+name|struct
+name|strdesc
+modifier|*
+name|savestr
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*  *	Global variables  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1567,20 +1689,6 @@ literal|10
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|tmpn1
-index|[
-name|TNAMESIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Interpass temporary */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1738,12 +1846,63 @@ begin_decl_stmt
 specifier|extern
 name|FILE
 modifier|*
-name|tmpfil
+name|tokfile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* interpass communication*/
+comment|/* temp token communication*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|strfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* temp string file*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|tokfilename
+index|[
+name|TNAMESIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* token file name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|strfilename
+index|[
+name|TNAMESIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* string file name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|strfilepos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* position in string file */
 end_comment
 
 begin_decl_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aspseudo.c 4.4 %G%"
+literal|"@(#)aspseudo.c 4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +92,14 @@ block|{
 include|#
 directive|include
 file|"instrs.as"
+name|PSEUDO
+argument_list|(
+literal|"\0\0\0\0\0\0\0\0\0\0"
+argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
