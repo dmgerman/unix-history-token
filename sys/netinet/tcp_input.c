@@ -4260,6 +4260,12 @@ name|th
 operator|->
 name|th_ack
 expr_stmt|;
+name|tp
+operator|->
+name|t_dupacks
+operator|=
+literal|0
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
