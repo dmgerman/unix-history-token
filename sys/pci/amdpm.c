@@ -195,6 +195,13 @@ name|AMDPM_DEVICEID_AMD768PM
 value|0x7443
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDPM_DEVICEID_AMD8111PM
+value|0x746A
+end_define
+
 begin_comment
 comment|/* nVidia nForce chipset */
 end_comment
@@ -594,6 +601,12 @@ name|did
 operator|==
 name|AMDPM_DEVICEID_AMD768PM
 operator|)
+operator|||
+operator|(
+name|did
+operator|==
+name|AMDPM_DEVICEID_AMD8111PM
+operator|)
 operator|)
 condition|)
 block|{
@@ -601,7 +614,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"AMD 756/766/768 Power Management Controller"
+literal|"AMD 756/766/768/8111 Power Management Controller"
 argument_list|)
 expr_stmt|;
 comment|/*  		 * We have to do this, since the BIOS won't give us the 		 * resource info (not mine, anyway). 		 */
