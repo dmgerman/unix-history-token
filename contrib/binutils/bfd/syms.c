@@ -1062,6 +1062,15 @@ condition|)
 goto|goto
 name|error_return
 goto|;
+if|if
+condition|(
+name|storage
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 name|syms
 operator|=
 operator|(
