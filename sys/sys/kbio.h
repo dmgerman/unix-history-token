@@ -440,7 +440,7 @@ value|_IOR('K', 101, keyboard_info_t)
 end_define
 
 begin_comment
-comment|/* set keyboard repeat rate (new interface) */
+comment|/* set/get keyboard repeat rate (new interface) */
 end_comment
 
 begin_struct
@@ -470,6 +470,13 @@ define|#
 directive|define
 name|KDSETREPEAT
 value|_IOW('K', 102, keyboard_repeat_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KDGETREPEAT
+value|_IOR('K', 103, keyboard_repeat_t)
 end_define
 
 begin_comment
