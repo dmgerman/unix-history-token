@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#27 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#29 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -890,46 +890,16 @@ comment|/* Enable SCB paging */
 name|AHC_EDGE_INTERRUPT
 init|=
 literal|0x800000
+block|,
 comment|/* Device uses edge triggered ints */
+name|AHC_39BIT_ADDRESSING
+init|=
+literal|0x1000000
+comment|/* Use 39 bit addressing scheme. */
 block|}
 name|ahc_flag
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Controller  Information composed at probe time.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ahc_probe_config
-block|{
-specifier|const
-name|char
-modifier|*
-name|description
-decl_stmt|;
-name|char
-name|channel
-decl_stmt|;
-name|char
-name|channel_b
-decl_stmt|;
-name|ahc_chip
-name|chip
-decl_stmt|;
-name|ahc_feature
-name|features
-decl_stmt|;
-name|ahc_bug
-name|bugs
-decl_stmt|;
-name|ahc_flag
-name|flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/************************* Hardware  SCB Definition ***************************/
@@ -1125,6 +1095,31 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|sg_map_node
+block|{
+name|bus_dmamap_t
+name|sg_dmamap
+decl_stmt|;
+name|bus_addr_t
+name|sg_physaddr
+decl_stmt|;
+name|struct
+name|ahc_dma_seg
+modifier|*
+name|sg_vaddr
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|sg_map_node
+argument_list|)
+name|links
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The current state of this SCB.  */
 end_comment
@@ -1245,6 +1240,11 @@ modifier|*
 name|platform_data
 decl_stmt|;
 name|struct
+name|sg_map_node
+modifier|*
+name|sg_map
+decl_stmt|;
+name|struct
 name|ahc_dma_seg
 modifier|*
 name|sg_list
@@ -1256,31 +1256,6 @@ name|u_int
 name|sg_count
 decl_stmt|;
 comment|/* How full ahc_dma_seg is */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sg_map_node
-block|{
-name|bus_dmamap_t
-name|sg_dmamap
-decl_stmt|;
-name|bus_addr_t
-name|sg_physaddr
-decl_stmt|;
-name|struct
-name|ahc_dma_seg
-modifier|*
-name|sg_vaddr
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|sg_map_node
-argument_list|)
-name|links
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -2572,10 +2547,8 @@ function_decl|(
 name|ahc_device_setup_t
 function_decl|)
 parameter_list|(
-name|ahc_dev_softc_t
-parameter_list|,
 name|struct
-name|ahc_probe_config
+name|ahc_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2892,17 +2865,6 @@ comment|/****************************** Initialization *************************
 end_comment
 
 begin_function_decl
-name|void
-name|ahc_init_probe_config
-parameter_list|(
-name|struct
-name|ahc_probe_config
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|ahc_softc
 modifier|*
@@ -2925,10 +2887,6 @@ name|ahc_softc_init
 parameter_list|(
 name|struct
 name|ahc_softc
-modifier|*
-parameter_list|,
-name|struct
-name|ahc_probe_config
 modifier|*
 parameter_list|)
 function_decl|;

@@ -345,6 +345,22 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Should we bother disabling 39Bit addressing 	 * based on installed memory? 	 */
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|bus_addr_t
+argument_list|)
+operator|>
+literal|4
+condition|)
+name|ahc
+operator|->
+name|flags
+operator||=
+name|AHC_39BIT_ADDRESSING
+expr_stmt|;
 comment|/* Allocate a dmatag for our SCB DMA maps */
 comment|/* XXX Should be a child of the PCI bus dma tag */
 name|error
@@ -360,7 +376,16 @@ argument_list|,
 comment|/*boundary*/
 literal|0
 argument_list|,
-comment|/*lowaddr*/
+operator|(
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_39BIT_ADDRESSING
+operator|)
+condition|?
+literal|0x7FFFFFFFFF
+else|:
 name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/*highaddr*/
@@ -719,6 +744,8 @@ expr_stmt|;
 if|if
 condition|(
 name|regs
+operator|!=
+name|NULL
 condition|)
 block|{
 name|ahc
@@ -760,6 +787,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|regs
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|ahc
+operator|->
+name|dev_softc
+argument_list|,
+literal|"can't allocate register resources\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|ahc
 operator|->
 name|platform_data
@@ -784,28 +833,6 @@ name|regs
 operator|=
 name|regs
 expr_stmt|;
-if|if
-condition|(
-name|regs
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|ahc
-operator|->
-name|dev_softc
-argument_list|,
-literal|"can't allocate register resources\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
 return|return
 operator|(
 literal|0

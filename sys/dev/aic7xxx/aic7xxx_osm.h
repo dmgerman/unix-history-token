@@ -532,6 +532,10 @@ define|\
 value|bus_dmamap_unload(tag, map)
 end_define
 
+begin_comment
+comment|/* XXX Need to update Bus DMA for partial map syncs */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -543,10 +547,14 @@ name|dma_tag
 parameter_list|,
 name|dmamap
 parameter_list|,
+name|offset
+parameter_list|,
+name|len
+parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|bus_dmamap_sync(dma_tag_dmamap, op)
+value|bus_dmamap_sync(dma_tag, dmamap, op)
 end_define
 
 begin_comment
