@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<miscfs/specfs/specdev.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/quota.h>
 end_include
 

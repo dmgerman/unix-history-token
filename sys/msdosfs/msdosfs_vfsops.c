@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.44 1999/05/08 06:40:00 phk Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.45 1999/05/31 11:28:02 phk Exp $ */
 end_comment
 
 begin_comment
@@ -56,20 +56,6 @@ include|#
 directive|include
 file|<sys/vnode.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<miscfs/specfs/specdev.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_comment
-comment|/* defines v_rdev */
-end_comment
 
 begin_include
 include|#
