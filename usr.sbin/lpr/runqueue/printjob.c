@@ -2804,6 +2804,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* pipe is stdout */
+name|closelog
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|n
@@ -2847,6 +2850,15 @@ argument_list|,
 literal|"-F"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_LPR
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -3536,6 +3548,9 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|closelog
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|n
@@ -3562,6 +3577,15 @@ argument_list|(
 name|prog
 argument_list|,
 name|av
+argument_list|)
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_LPR
 argument_list|)
 expr_stmt|;
 name|syslog
@@ -5446,6 +5470,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|closelog
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5510,6 +5537,24 @@ argument_list|,
 name|buf
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_LPR
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cannot execl %s"
+argument_list|,
+name|_PATH_SENDMAIL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6951,6 +6996,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* printer is std out */
+name|closelog
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -7006,6 +7054,15 @@ argument_list|,
 name|length
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"lpd"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_LPR
 argument_list|)
 expr_stmt|;
 name|syslog
