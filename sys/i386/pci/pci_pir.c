@@ -3336,13 +3336,9 @@ argument_list|,
 name|CONF1_ENABLE_CHK
 argument_list|)
 expr_stmt|;
-name|outb
+name|DELAY
 argument_list|(
-name|CONF1_ADDR_PORT
-operator|+
-literal|3
-argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|mode1res
