@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.41 1999/05/11 14:32:18 peter Exp $"
+literal|"$Id: pstat.c,v 1.42 1999/08/08 19:44:00 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2070,18 +2070,6 @@ name|fp
 operator|++
 operator|=
 literal|'B'
-expr_stmt|;
-if|if
-condition|(
-name|flag
-operator|&
-name|VALIASED
-condition|)
-operator|*
-name|fp
-operator|++
-operator|=
-literal|'A'
 expr_stmt|;
 if|if
 condition|(
