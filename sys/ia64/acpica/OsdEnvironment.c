@@ -81,7 +81,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|NULL
+name|AE_OK
 operator|)
 return|;
 block|}
@@ -96,7 +96,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|NULL
+name|AE_OK
 operator|)
 return|;
 block|}
