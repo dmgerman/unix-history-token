@@ -925,7 +925,7 @@ operator|)
 operator|>>
 literal|32
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|tv
 operator|->
@@ -1028,7 +1028,7 @@ operator|->
 name|tc_scale_nano_i
 operator|)
 expr_stmt|;
-if|if
+while|while
 condition|(
 name|delta
 operator|>=
