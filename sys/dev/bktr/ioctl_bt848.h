@@ -3,6 +3,18 @@ begin_comment
 comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MACHINE_IOCTL_BT848_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MACHINE_IOCTL_BT848_H_
+end_define
+
 begin_comment
 comment|/*  * frequency sets  */
 end_comment
@@ -1384,6 +1396,15 @@ directive|define
 name|BT848_IFORM_F_AUTO
 value|(0x0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MACHINE_IOCTL_BT848_H_ */
+end_comment
 
 end_unit
 
