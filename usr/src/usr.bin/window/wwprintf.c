@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwprintf.c	3.8 (Berkeley) %G%"
+literal|"@(#)wwprintf.c	3.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,13 +76,6 @@ end_macro
 
 begin_block
 block|{
-include|#
-directive|include
-file|<stdio.h>
-name|struct
-name|_iobuf
-name|_wwbuf
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -92,60 +85,12 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-comment|/* 	 * A danger is that when buf overflows, _flsbuf() will be 	 * called automatically.  It doesn't check for _IOSTR. 	 * We set the file descriptor to -1 so no actual io will be done. 	 */
-name|_wwbuf
-operator|.
-name|_flag
-operator|=
-name|_IOWRT
-operator|+
-name|_IOSTRG
-expr_stmt|;
-name|_wwbuf
-operator|.
-name|_base
-operator|=
-name|_wwbuf
-operator|.
-name|_ptr
-operator|=
-name|buf
-expr_stmt|;
-name|_wwbuf
-operator|.
-name|_cnt
-operator|=
-sizeof|sizeof
-name|buf
-expr_stmt|;
-name|_wwbuf
-operator|.
-name|_file
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* safe */
 name|va_start
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-name|_doprnt
-argument_list|(
-name|fmt
-argument_list|,
-name|ap
-argument_list|,
-operator|&
-name|_wwbuf
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
+comment|/* buffer can overflow */
 operator|(
 name|void
 operator|)
@@ -155,11 +100,19 @@ name|w
 argument_list|,
 name|buf
 argument_list|,
-name|_wwbuf
-operator|.
-name|_ptr
-operator|-
+name|vsprintf
+argument_list|(
 name|buf
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 block|}
