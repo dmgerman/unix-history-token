@@ -15,6 +15,20 @@ directive|define
 name|_COMMON_H_INCLUDED
 end_define
 
+begin_define
+define|#
+directive|define
+name|FTP_DEFAULT_PORT
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|HTTP_DEFAULT_PORT
+value|80
+end_define
+
 begin_comment
 comment|/* Structure used for error message lists */
 end_comment
