@@ -4,7 +4,7 @@ comment|/* nls.c -- skeletal internationalization code. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1996 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 1, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1996 Free Software Foundation, Inc.     This file is part of the GNU Readline Library, a library for    reading lines of text with interactive input and history editing.     The GNU Readline Library is free software; you can redistribute it    and/or modify it under the terms of the GNU General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     The GNU Readline Library is distributed in the hope that it will be    useful, but WITHOUT ANY WARRANTY; without even the implied warranty    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_if
@@ -130,39 +136,23 @@ directive|include
 file|"rldefs.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_rl_convert_meta_chars_to_ascii
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"readline.h"
+end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_rl_output_meta_chars
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"rlshell.h"
+end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_rl_meta_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Functions imported from shell.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|get_env_value
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"rlprivate.h"
+end_include
 
 begin_if
 if|#
@@ -208,30 +198,43 @@ literal|"iso885910"
 block|,
 literal|"koi8r"
 block|,
-literal|"koi8-r"
-block|,
 literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|normalize_codeset
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|find_codeset
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|size_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

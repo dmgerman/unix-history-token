@@ -4,7 +4,7 @@ comment|/* histlib.h -- internal definitions for the history library. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_if
@@ -87,6 +87,16 @@ begin_comment
 comment|/* _FUNCTION_DEF */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|STREQ
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -110,8 +120,13 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|(((a)[0] == (b)[0])&& (strncmp ((a), (b), (n)) == 0))
+value|(((n) == 0) ? (1) \ 				    : ((a)[0] == (b)[0])&& (strncmp ((a), (b), (n)) == 0))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -355,6 +370,17 @@ directive|define
 name|HISTORY_OVERWRITE
 value|1
 end_define
+
+begin_comment
+comment|/* Some variable definitions shared across history source files. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|history_offset
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|/* histfile.c - functions to manipulate the history file. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1989, 1992 Free Software Foundation, Inc.     This file contains the GNU History Library (the Library), a set of    routines for managing the text of previously typed lines.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"posixstat.h"
 end_include
 
 begin_include
@@ -168,12 +168,21 @@ begin_comment
 comment|/* !HAVE_STRING_H */
 end_comment
 
+begin_comment
+comment|/* If we're compiling for __EMX__ (OS/2) or __CYGWIN__ (cygwin32 environment    on win 95/98/nt), we want to open files with O_BINARY mode so that there    is no \n -> \r\n conversion performed.  On other systems, we don't want to    mess around with O_BINARY at all, so we ensure that it's defined to 0. */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__EMX__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
 argument_list|)
 end_if
 
@@ -201,11 +210,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__EMX__ */
-end_comment
-
-begin_comment
-comment|/* If we're not compiling for __EMX__, we don't want this at all.  Ever. */
+comment|/* !__EMX__&& !__CYGWIN__ */
 end_comment
 
 begin_undef
@@ -227,7 +232,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__EMX__ */
+comment|/* !__EMX__&& !__CYGWIN__ */
 end_comment
 
 begin_include
@@ -274,31 +279,17 @@ directive|include
 file|"histlib.h"
 end_include
 
-begin_comment
-comment|/* Functions imported from shell.c */
-end_comment
+begin_include
+include|#
+directive|include
+file|"rlshell.h"
+end_include
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|get_env_value
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|xrealloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
 
 begin_comment
 comment|/* Return the string that should be used in the place of this    filename.  This only matters when you don't specify the    filename to read_history (), or write_history (). */
@@ -408,6 +399,25 @@ index|]
 operator|=
 literal|'/'
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MSDOS__
+argument_list|)
+name|strcpy
+argument_list|(
+name|return_val
+operator|+
+name|home_len
+operator|+
+literal|1
+argument_list|,
+literal|"_history"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|strcpy
 argument_list|(
 name|return_val
@@ -419,6 +429,8 @@ argument_list|,
 literal|".history"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|return_val
@@ -499,6 +511,8 @@ name|int
 name|file
 decl_stmt|,
 name|current_line
+decl_stmt|,
+name|chars_read
 decl_stmt|;
 name|struct
 name|stat
@@ -609,14 +623,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (read (file, buffer, file_size) != file_size)
-else|#
-directive|else
-if|if
-condition|(
+name|chars_read
+operator|=
 name|read
 argument_list|(
 name|file
@@ -625,11 +633,13 @@ name|buffer
 argument_list|,
 name|file_size
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|chars_read
 operator|<
 literal|0
 condition|)
-endif|#
-directive|endif
 block|{
 name|error_and_exit
 label|:
@@ -674,7 +684,7 @@ literal|0
 condition|)
 name|to
 operator|=
-name|file_size
+name|chars_read
 expr_stmt|;
 comment|/* Start at beginning of file, work to end. */
 name|line_start
@@ -690,7 +700,7 @@ while|while
 condition|(
 name|line_start
 operator|<
-name|file_size
+name|chars_read
 operator|&&
 name|current_line
 operator|<
@@ -705,7 +715,7 @@ name|line_start
 init|;
 name|line_end
 operator|<
-name|file_size
+name|chars_read
 condition|;
 name|line_end
 operator|++
@@ -747,7 +757,7 @@ name|line_start
 init|;
 name|line_end
 operator|<
-name|file_size
+name|chars_read
 condition|;
 name|line_end
 operator|++
@@ -906,6 +916,21 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+condition|)
+goto|goto
+name|truncate_exit
+goto|;
+comment|/* Don't try to truncate non-regular files. */
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|finfo
+operator|.
+name|st_mode
+argument_list|)
+operator|==
+literal|0
 condition|)
 goto|goto
 name|truncate_exit
@@ -1080,7 +1105,7 @@ name|buffer
 operator|+
 name|i
 argument_list|,
-name|file_size
+name|chars_read
 operator|-
 name|i
 argument_list|)
@@ -1096,7 +1121,7 @@ name|ftruncate
 argument_list|(
 name|file
 argument_list|,
-name|file_size
+name|chars_read
 operator|-
 name|i
 argument_list|)
