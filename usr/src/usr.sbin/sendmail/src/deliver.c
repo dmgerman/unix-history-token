@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.58 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2858,7 +2858,6 @@ name|q_mailer
 operator|==
 name|FileMailer
 condition|)
-block|{
 name|ctladdr
 operator|=
 name|getctladdr
@@ -2866,50 +2865,6 @@ argument_list|(
 name|to
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ctladdr
-operator|!=
-name|NULL
-operator|&&
-name|bitset
-argument_list|(
-name|QBOGUSSHELL
-argument_list|,
-name|ctladdr
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
-comment|/* user has no valid shell on this machine */
-name|usrerr
-argument_list|(
-literal|"550 User %s doesn't have a valid shell on %s"
-argument_list|,
-name|ctladdr
-operator|->
-name|q_ruser
-argument_list|,
-name|MyHostName
-argument_list|)
-expr_stmt|;
-name|giveresponse
-argument_list|(
-name|EX_UNAVAILABLE
-argument_list|,
-name|m
-argument_list|,
-name|NULL
-argument_list|,
-name|ctladdr
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-block|}
 name|user
 operator|=
 name|to
