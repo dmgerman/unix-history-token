@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuclean.c	5.4 (Berkeley) %G%"
+literal|"@(#)uuclean.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,13 +23,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"uucp.h"
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"uucp.h"
 end_include
 
 begin_include
@@ -72,16 +72,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/*******  *  *	uuclean  -  this program will search through the spool  *	directory (Spool) and delete all files with a requested  *	prefix which are older than (nomtime) seconds.  *	If the -m option is set, the program will try to  *	send mail to the usid of the file.  *  *	options:  *		-m  -  send mail for deleted file  *		-d  -  directory to clean  *		-n  -  time to age files before delete (in hours)  *		-p  -  prefix for search  *		-x  -  turn on debug outputs  *	exit status:  *		0  -  normal return  *		1  -  can not read directory  */
+comment|/*  *  *	this program will search through the spool  *	directory (Spool) and delete all files with a requested  *	prefix which are older than (nomtime) seconds.  *	If the -m option is set, the program will try to  *	send mail to the usid of the file.  *  *	options:  *		-m  -  send mail for deleted file  *		-d  -  directory to clean  *		-n  -  time to age files before delete (in hours)  *		-p  -  prefix for search  *		-x  -  turn on debug outputs  *	exit status:  *		0  -  normal return  *		1  -  can not read directory  */
 end_comment
 
 begin_define
