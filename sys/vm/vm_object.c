@@ -3624,12 +3624,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|end
 operator|=
 name|pindex
@@ -3935,12 +3929,6 @@ name|tobject
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
