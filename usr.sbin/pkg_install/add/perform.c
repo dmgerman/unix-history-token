@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.37.2.4 1997/10/09 07:07:50 charnier Exp $"
+literal|"$Id: perform.c,v 1.37.2.5 1997/10/13 15:06:09 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1089,7 +1089,13 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"pkg_add %s"
+literal|"pkg_add %s%s"
+argument_list|,
+name|Verbose
+condition|?
+literal|"-v "
+else|:
+literal|""
 argument_list|,
 name|cp
 argument_list|)
