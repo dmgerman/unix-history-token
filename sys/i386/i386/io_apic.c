@@ -3410,6 +3410,7 @@ comment|/*  * Support for mixed-mode interrupt sources.  These sources route an 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ioapic_setup_mixed_mode
 parameter_list|(
