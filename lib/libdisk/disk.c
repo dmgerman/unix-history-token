@@ -1911,7 +1911,7 @@ name|XML_FWHEADS
 case|:
 name|dl
 operator|->
-name|d_nsectors
+name|d_nheads
 operator|=
 operator|(
 name|u_int32_t
@@ -1923,7 +1923,7 @@ name|XML_FWSECTORS
 case|:
 name|dl
 operator|->
-name|d_ntracks
+name|d_nsectors
 operator|=
 operator|(
 name|u_int32_t
