@@ -448,7 +448,7 @@ name|size
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%-*lz"
+literal|"%-*ly"
 argument_list|,
 name|width
 argument_list|,
@@ -838,7 +838,7 @@ literal|'z'
 case|:
 name|db_printf
 argument_list|(
-literal|"%8lz"
+literal|"%8ly"
 argument_list|,
 operator|(
 name|long
