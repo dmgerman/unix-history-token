@@ -422,6 +422,11 @@ name|st_mode
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|label
+operator|)
+return|;
 block|}
 break|break;
 block|}
