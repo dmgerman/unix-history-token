@@ -322,8 +322,6 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
-operator|,
 name|void
 operator|*
 call|(

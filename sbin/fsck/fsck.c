@@ -210,15 +210,6 @@ end_struct
 
 begin_decl_stmt
 specifier|static
-name|int
-name|maxrun
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|options
@@ -598,11 +589,9 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|maxrun
-operator|=
-name|atoi
+name|warnx
 argument_list|(
-name|optarg
+literal|"Ignoring obsolete -l option\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -676,8 +665,6 @@ return|return
 name|checkfstab
 argument_list|(
 name|flags
-argument_list|,
-name|maxrun
 argument_list|,
 name|isok
 argument_list|,
