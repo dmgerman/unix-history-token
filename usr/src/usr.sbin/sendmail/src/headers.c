@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.33 (Berkeley) %G%"
+literal|"@(#)headers.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2764,6 +2764,24 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"--- putheader, mailer = %s ---\n"
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|h
@@ -2795,6 +2813,33 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"  %s: "
+argument_list|,
+name|h
+operator|->
+name|h_field
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|h
+operator|->
+name|h_value
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|bitset
 argument_list|(
 name|H_CHECK
@@ -2818,7 +2863,23 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (skipped)\n"
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* handle Resent-... headers specially */
 if|if
 condition|(
@@ -2841,7 +2902,37 @@ operator|->
 name|e_flags
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (skipped (resent))\n"
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|h
