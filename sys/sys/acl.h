@@ -355,6 +355,24 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/*  * POSIX.1e ACLs are capable of expressing the read, write, and execute  * bits of the POSIX mode field.  We provide two masks: one that defines  * the bits the ACL will replace in the mode, and the other that defines  * the bits that must be preseved when an ACL is updating a mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACL_OVERRIDE_MASK
+value|(S_IRWXU | S_IRWXG | S_IRWXO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_PRESERVE_MASK
+value|(~ACL_OVERRIDE_MASK)
+end_define
+
+begin_comment
 comment|/*  * Storage for ACLs and support structures.  */
 end_comment
 
@@ -376,6 +394,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * File system independent code to move back and forth between POSIX mode  * and POSIX.1e ACL representations.  */
+end_comment
 
 begin_function_decl
 name|acl_perm_t
@@ -431,6 +453,37 @@ name|acl_other_entry
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|mode_t
+name|acl_posix1e_acl_to_mode
+parameter_list|(
+name|struct
+name|acl
+modifier|*
+name|acl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|mode_t
+name|acl_posix1e_newfilemode
+parameter_list|(
+name|mode_t
+name|cmode
+parameter_list|,
+name|struct
+name|acl
+modifier|*
+name|dacl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * File system independent syntax check for a POSIX.1e ACL.  */
+end_comment
 
 begin_function_decl
 name|int
