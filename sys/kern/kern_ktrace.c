@@ -829,7 +829,7 @@ name|uio
 operator|->
 name|uio_rw
 operator|=
-name|UIO_READ
+name|UIO_WRITE
 expr_stmt|;
 name|ktrwrite
 argument_list|(
