@@ -3656,6 +3656,12 @@ operator|->
 name|ip_dst
 argument_list|)
 expr_stmt|;
+name|pip
+operator|->
+name|ip_dst
+operator|=
+name|original_address
+expr_stmt|;
 name|accumulate
 operator|-=
 name|twowords
