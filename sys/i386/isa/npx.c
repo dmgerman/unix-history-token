@@ -1191,12 +1191,12 @@ name|save_idt_npxtrap
 operator|=
 name|idt
 index|[
-literal|16
+name|IDT_MF
 index|]
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|16
+name|IDT_MF
 argument_list|,
 name|probetrap
 argument_list|,
@@ -1595,7 +1595,7 @@ literal|1
 expr_stmt|;
 name|idt
 index|[
-literal|16
+name|IDT_MF
 index|]
 operator|=
 name|save_idt_npxtrap
@@ -1615,7 +1615,7 @@ name|no_irq13
 label|:
 name|idt
 index|[
-literal|16
+name|IDT_MF
 index|]
 operator|=
 name|save_idt_npxtrap

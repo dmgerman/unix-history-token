@@ -3280,7 +3280,7 @@ expr_stmt|;
 comment|/* 	 * Cyrix 486-class CPU does not support rdmsr instruction. 	 * The rdmsr instruction generates invalid opcode fault, and exception 	 * will be trapped by bluetrap6() on Cyrix 486-class CPU.  The 	 * bluetrap6() set the magic number to trap_by_rdmsr. 	 */
 name|setidt
 argument_list|(
-literal|6
+name|IDT_UD
 argument_list|,
 name|bluetrap6
 argument_list|,
@@ -3299,7 +3299,7 @@ expr_stmt|;
 comment|/* 	 * Certain BIOS disables cpuid instruction of Cyrix 6x86MX CPU. 	 * In this case, rdmsr generates general protection fault, and 	 * exception will be trapped by bluetrap13(). 	 */
 name|setidt
 argument_list|(
-literal|13
+name|IDT_GP
 argument_list|,
 name|bluetrap13
 argument_list|,

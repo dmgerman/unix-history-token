@@ -9032,7 +9032,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|0
+name|IDT_DE
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9054,7 +9054,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|1
+name|IDT_DB
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9076,7 +9076,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|2
+name|IDT_NMI
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9098,7 +9098,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|3
+name|IDT_BP
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9120,7 +9120,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|4
+name|IDT_OF
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9142,7 +9142,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|5
+name|IDT_BR
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9164,7 +9164,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|6
+name|IDT_UD
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9186,7 +9186,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|7
+name|IDT_NM
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9208,7 +9208,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|8
+name|IDT_DF
 argument_list|,
 literal|0
 argument_list|,
@@ -9226,7 +9226,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|9
+name|IDT_FPUGP
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9248,7 +9248,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|10
+name|IDT_TS
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9270,7 +9270,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|11
+name|IDT_NP
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9292,7 +9292,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|12
+name|IDT_SS
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9314,7 +9314,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|13
+name|IDT_GP
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9336,7 +9336,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|14
+name|IDT_PF
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9358,29 +9358,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|15
-argument_list|,
-operator|&
-name|IDTVEC
-argument_list|(
-name|rsvd
-argument_list|)
-argument_list|,
-name|SDT_SYS386TGT
-argument_list|,
-name|SEL_KPL
-argument_list|,
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|setidt
-argument_list|(
-literal|16
+name|IDT_MF
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9402,7 +9380,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|17
+name|IDT_AC
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9424,7 +9402,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|18
+name|IDT_MC
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9446,7 +9424,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|19
+name|IDT_XF
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9468,7 +9446,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|0x80
+name|IDT_SYSCALL
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9560,7 +9538,7 @@ expr_stmt|;
 comment|/* Final stage of CPU initialization */
 name|setidt
 argument_list|(
-literal|6
+name|IDT_UD
 argument_list|,
 operator|&
 name|IDTVEC
@@ -9582,7 +9560,7 @@ argument_list|)
 expr_stmt|;
 name|setidt
 argument_list|(
-literal|13
+name|IDT_GP
 argument_list|,
 operator|&
 name|IDTVEC

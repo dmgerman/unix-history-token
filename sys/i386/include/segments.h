@@ -847,6 +847,230 @@ comment|/* reserved entries for cpu exceptions */
 end_comment
 
 begin_comment
+comment|/*  * Entries in the Interrupt Descriptor Table (IDT)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_DE
+value|0
+end_define
+
+begin_comment
+comment|/* #DE: Divide Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_DB
+value|1
+end_define
+
+begin_comment
+comment|/* #DB: Debug */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_NMI
+value|2
+end_define
+
+begin_comment
+comment|/* Nonmaskable External Interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_BP
+value|3
+end_define
+
+begin_comment
+comment|/* #BP: Breakpoint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_OF
+value|4
+end_define
+
+begin_comment
+comment|/* #OF: Overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_BR
+value|5
+end_define
+
+begin_comment
+comment|/* #BR: Bound Range Exceeded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_UD
+value|6
+end_define
+
+begin_comment
+comment|/* #UD: Undefined/Invalid Opcode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_NM
+value|7
+end_define
+
+begin_comment
+comment|/* #NM: No Math Coprocessor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_DF
+value|8
+end_define
+
+begin_comment
+comment|/* #DF: Double Fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_FPUGP
+value|9
+end_define
+
+begin_comment
+comment|/* Coprocessor Segment Overrun */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_TS
+value|10
+end_define
+
+begin_comment
+comment|/* #TS: Invalid TSS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_NP
+value|11
+end_define
+
+begin_comment
+comment|/* #NP: Segment Not Present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_SS
+value|12
+end_define
+
+begin_comment
+comment|/* #SS: Stack Segment Fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_GP
+value|13
+end_define
+
+begin_comment
+comment|/* #GP: General Protection Fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_PF
+value|14
+end_define
+
+begin_comment
+comment|/* #PF: Page Fault */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_MF
+value|16
+end_define
+
+begin_comment
+comment|/* #MF: FPU Floating-Point Error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_AC
+value|17
+end_define
+
+begin_comment
+comment|/* #AC: Alignment Check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_MC
+value|18
+end_define
+
+begin_comment
+comment|/* #MC: Machine Check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_XF
+value|19
+end_define
+
+begin_comment
+comment|/* #XF: SIMD Floating-Point Exception */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_SYSCALL
+value|0x80
+end_define
+
+begin_comment
+comment|/* System Call Interrupt Vector */
+end_comment
+
+begin_comment
 comment|/*  * Entries in the Global Descriptor Table (GDT)  */
 end_comment
 
