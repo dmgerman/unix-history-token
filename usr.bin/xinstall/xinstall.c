@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.12 1996/09/05 07:54:08 peter Exp $"
+literal|"$Id: xinstall.c,v 1.13 1996/09/24 04:15:02 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +550,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Ccdf:g:m:o:psv"
+literal|"CcDf:g:m:o:psv"
 argument_list|)
 operator|)
 operator|!=
