@@ -404,8 +404,6 @@ modifier|*
 name|shm_find_segment_by_shmid
 parameter_list|(
 name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -417,8 +415,6 @@ name|shmid_ds
 modifier|*
 name|shm_find_segment_by_shmidx
 parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -671,6 +667,13 @@ name|shm_use_phys
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|shm_allow_removed
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -816,6 +819,27 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|shm_allow_removed
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|shm_allow_removed
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_PROC
 argument_list|(
 name|_kern_ipc
@@ -915,9 +939,6 @@ name|shm_find_segment_by_shmid
 parameter_list|(
 name|int
 name|shmid
-parameter_list|,
-name|int
-name|wantrem
 parameter_list|)
 block|{
 name|int
@@ -960,8 +981,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 operator|(
 name|shmseg
 operator|->
@@ -971,11 +990,13 @@ name|mode
 operator|&
 name|SHMSEG_ALLOCATED
 operator|)
+operator|==
+literal|0
 operator|||
 operator|(
-name|wantrem
-operator|&&
 operator|!
+name|shm_allow_removed
+operator|&&
 operator|(
 name|shmseg
 operator|->
@@ -985,7 +1006,8 @@ name|mode
 operator|&
 name|SHMSEG_REMOVED
 operator|)
-operator|)
+operator|!=
+literal|0
 operator|)
 operator|||
 name|shmseg
@@ -1021,9 +1043,6 @@ name|shm_find_segment_by_shmidx
 parameter_list|(
 name|int
 name|segnum
-parameter_list|,
-name|int
-name|wantrem
 parameter_list|)
 block|{
 name|struct
@@ -1056,8 +1075,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 operator|(
 name|shmseg
 operator|->
@@ -1067,11 +1084,13 @@ name|mode
 operator|&
 name|SHMSEG_ALLOCATED
 operator|)
+operator|==
+literal|0
 operator|||
 operator|(
-name|wantrem
-operator|&&
 operator|!
+name|shm_allow_removed
+operator|&&
 operator|(
 name|shmseg
 operator|->
@@ -1081,7 +1100,8 @@ name|mode
 operator|&
 name|SHMSEG_REMOVED
 operator|)
-operator|)
+operator|!=
+literal|0
 operator|)
 condition|)
 return|return
@@ -1564,8 +1584,6 @@ parameter_list|,
 name|shmaddr
 parameter_list|,
 name|shmflg
-parameter_list|,
-name|wantrem
 parameter_list|)
 name|struct
 name|thread
@@ -1582,9 +1600,6 @@ name|shmaddr
 decl_stmt|;
 name|int
 name|shmflg
-decl_stmt|;
-name|int
-name|wantrem
 decl_stmt|;
 block|{
 name|struct
@@ -1735,8 +1750,6 @@ operator|=
 name|shm_find_segment_by_shmid
 argument_list|(
 name|shmid
-argument_list|,
-name|wantrem
 argument_list|)
 expr_stmt|;
 if|if
@@ -2145,8 +2158,6 @@ argument_list|,
 name|uap
 operator|->
 name|shmflg
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -2288,8 +2299,6 @@ argument_list|(
 name|uap
 operator|->
 name|shmid
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2526,8 +2535,6 @@ parameter_list|,
 name|buf
 parameter_list|,
 name|bufsz
-parameter_list|,
-name|wantrem
 parameter_list|)
 name|struct
 name|thread
@@ -2547,9 +2554,6 @@ decl_stmt|;
 name|size_t
 modifier|*
 name|bufsz
-decl_stmt|;
-name|int
-name|wantrem
 decl_stmt|;
 block|{
 name|int
@@ -2729,8 +2733,6 @@ operator|=
 name|shm_find_segment_by_shmidx
 argument_list|(
 name|shmid
-argument_list|,
-name|wantrem
 argument_list|)
 expr_stmt|;
 else|else
@@ -2739,8 +2741,6 @@ operator|=
 name|shm_find_segment_by_shmid
 argument_list|(
 name|shmid
-argument_list|,
-name|wantrem
 argument_list|)
 expr_stmt|;
 if|if
@@ -3119,8 +3119,6 @@ name|buf
 argument_list|,
 operator|&
 name|bufsz
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -3483,8 +3483,6 @@ name|bsd_shminfo
 argument_list|,
 operator|&
 name|bufsz
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3556,8 +3554,6 @@ name|bsd_shm_info
 argument_list|,
 operator|&
 name|bufsz
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3622,8 +3618,6 @@ name|bsd_shmid
 argument_list|,
 operator|&
 name|bufsz
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3689,8 +3683,6 @@ name|bsd_shmid
 argument_list|,
 operator|&
 name|bufsz
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3792,8 +3784,6 @@ name|bsd_shmid
 argument_list|,
 operator|&
 name|bufsz
-argument_list|,
-literal|1
 argument_list|)
 return|;
 case|case
@@ -3880,8 +3870,6 @@ name|buf
 argument_list|,
 operator|&
 name|bufsz
-argument_list|,
-literal|1
 argument_list|)
 return|;
 block|}

@@ -601,9 +601,6 @@ name|shmaddr
 parameter_list|,
 name|int
 name|shmflg
-parameter_list|,
-name|int
-name|wantrem
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -630,9 +627,6 @@ parameter_list|,
 name|size_t
 modifier|*
 name|bufsz
-parameter_list|,
-name|int
-name|wantrem
 parameter_list|)
 function_decl|;
 end_function_decl
