@@ -135,7 +135,7 @@ name|ALTENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|_ENTRY(x); \ 			pushl %rbp; movl %rsp,%rbp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %rbp; \ 			jmp 9f
+value|_ENTRY(x); \ 			call PIC_PLT(HIDENAME(mcount)); \ 			jmp 9f
 end_define
 
 begin_define
@@ -145,7 +145,7 @@ name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|_ENTRY(x); \ 			pushl %rbp; movl %rsp,%rbp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %rbp; \ 			9:
+value|_ENTRY(x); \ 			call PIC_PLT(HIDENAME(mcount)); \ 			9:
 end_define
 
 begin_else
