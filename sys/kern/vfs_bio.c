@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.155 1998/03/08 09:57:04 julian Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.156 1998/03/16 01:55:22 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -6918,30 +6918,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* 		 * 1024byte/sector support 		 */
-define|#
-directive|define
-name|B_XXX2
-value|0x8000000
-if|if
-condition|(
-name|vp
-operator|->
-name|v_flag
-operator|&
-literal|0x10000
-condition|)
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_XXX2
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|bp
