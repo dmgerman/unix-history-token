@@ -814,7 +814,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Substitute error message for %m. */
+comment|/* 		 * Substitute error message for %m.  Be careful not to 		 * molest an escaped percent "%%m".  We want to pass it 		 * on untouched as the format is later parsed by vfprintf. 		 */
 for|for
 control|(
 init|;
@@ -828,6 +828,7 @@ condition|;
 operator|++
 name|fmt
 control|)
+block|{
 if|if
 condition|(
 name|ch
@@ -856,7 +857,24 @@ name|fmt_fp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ch
+operator|==
+literal|'%'
+operator|&&
+name|fmt
+index|[
+literal|1
+index|]
+operator|==
+literal|'%'
+condition|)
+block|{
+operator|++
+name|fmt
+expr_stmt|;
 name|fputc
 argument_list|(
 name|ch
@@ -864,6 +882,25 @@ argument_list|,
 name|fmt_fp
 argument_list|)
 expr_stmt|;
+name|fputc
+argument_list|(
+name|ch
+argument_list|,
+name|fmt_fp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fputc
+argument_list|(
+name|ch
+argument_list|,
+name|fmt_fp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Null terminate if room */
 name|fputc
 argument_list|(
