@@ -3646,8 +3646,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"swap_pager: indefinite wait buffer: device: "
-literal|"%s, blkno: %jd, size: %ld\n"
+literal|"swap_pager: indefinite wait buffer: device: %s, blkno: %jd, size: %ld\n"
 argument_list|,
 name|bp
 operator|->
