@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.16 1998/09/22 04:55:07 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.17 1998/10/02 03:40:53 gibbs Exp $"
 end_empty
 
 begin_define
@@ -7536,7 +7536,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Please mail this message to shimon@i-connect.net\n"
+literal|"Please mail this message to shimon@simon-shapiro.org\n"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -7645,6 +7645,12 @@ operator|=
 name|splcam
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Try to clear any pending jobs.  FreeBSD will loose interrupts, 	 * leaving the controller suspended, and commands timed-out. 	 * By calling the interrupt handler, any command thus stuck will be 	 * completed. 	 */
+name|dpt_intr
+argument_list|(
+name|dpt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7685,7 +7691,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Do an abort.  I have no idea what this really does... */
+comment|/* Abort this particular command.  Leave all others running */
 name|dpt_send_immediate
 argument_list|(
 name|dpt
