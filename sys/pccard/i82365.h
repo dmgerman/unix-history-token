@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	i82365.h - Definitions for Intel 82365 PCIC  *	PCMCIA Card Interface Controller  *  * originally by Barry Jaspan; hacked over by Keith Moore  * hacked to unrecognisability by Andrew McRae (andrew@mega.com.au)  *  * Updated 3/3/95 to include Cirrus Logic stuff.  *-------------------------------------------------------------------------  *  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  *	i82365.h - Definitions for Intel 82365 PCIC  *	PCMCIA Card Interface Controller  *  * originally by Barry Jaspan; hacked over by Keith Moore  * hacked to unrecognisability by Andrew McRae (andrew@mega.com.au)  *  * Updated 3/3/95 to include Cirrus Logic stuff.  *-------------------------------------------------------------------------  *  * Copyright (c) 2001 M. Warner Losh.  All rights reserved.  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -11,7 +11,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Intel chip */
+comment|/* Intel i82365SL-A/B or clone */
 end_comment
 
 begin_define
@@ -105,8 +105,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_RF5C396
+name|PCIC_RF5C296
 value|9
+end_define
+
+begin_comment
+comment|/* Ricoh RF5C296 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_RF5C396
+value|10
 end_define
 
 begin_comment
@@ -117,7 +128,7 @@ begin_define
 define|#
 directive|define
 name|PCIC_IBM_KING
-value|10
+value|11
 end_define
 
 begin_comment
@@ -127,27 +138,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_PC98
-value|11
-end_define
-
-begin_comment
-comment|/* NEC PC98 PCMCIA Controller */
-end_comment
-
-begin_comment
-comment|/* These last ones aren't in normal freebsd */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_TI1130
+name|PCIC_I82365SL_DF
 value|12
 end_define
 
 begin_comment
-comment|/* TI PCI1130 CardBus */
+comment|/* Intel i82365sl-DF step */
 end_comment
 
 begin_comment
@@ -157,45 +153,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_INDEX_0
+name|PCIC_INDEX
+value|0
+end_define
+
+begin_comment
+comment|/* Index register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_DATA
+value|1
+end_define
+
+begin_comment
+comment|/* Data register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_NPORT
+value|2
+end_define
+
+begin_comment
+comment|/* Number of ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PORT_0
 value|0x3e0
 end_define
 
 begin_comment
 comment|/* index reg, chips 0 and 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_DATA_0
-value|(PCIC_INDEX_0 + 1)
-end_define
-
-begin_comment
-comment|/* data reg, chips 0 and 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_INDEX_1
-value|(PCIC_INDEX_0 + 2)
-end_define
-
-begin_comment
-comment|/* index reg, chips 2 and 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_DATA_1
-value|(PCIC_INDEX_1 + 1)
-end_define
-
-begin_comment
-comment|/* data reg, chips 2 and 3 */
 end_comment
 
 begin_comment
@@ -392,12 +388,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_RICOH_MCR2
+value|0x2f
+end_define
+
+begin_comment
+comment|/* Ricoh: Mode Control Register 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_VMISC
 value|0x3a
 end_define
 
 begin_comment
 comment|/* Vadem: Misc control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_RICOH_ID
+value|0x3a
+end_define
+
+begin_comment
+comment|/* Ricoh: ID register */
 end_comment
 
 begin_define
@@ -481,6 +499,17 @@ end_define
 
 begin_comment
 comment|/* Intel 82365SL Rev. 1; Both Memory and I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_INTEL2
+value|0x84
+end_define
+
+begin_comment
+comment|/* Intel 82365SL step D */
 end_comment
 
 begin_define
@@ -665,6 +694,17 @@ end_define
 
 begin_comment
 comment|/* 5 volts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VCC_ON
+value|0x10
+end_define
+
+begin_comment
+comment|/* Turn on VCC on some chips. */
 end_comment
 
 begin_define
@@ -1065,6 +1105,28 @@ begin_comment
 comment|/* s/w card detect interrupt */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIC_VS1STAT
+value|0x40
+end_define
+
+begin_comment
+comment|/* 0 VS1# low, 1 VS1# high */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VS2STAT
+value|0x80
+end_define
+
+begin_comment
+comment|/* 0 VS2# low, 1 VS2# high */
+end_comment
+
 begin_comment
 comment|/* CL-PD67[12]x: For 3.3V cards, etc. (PCIC_MISC1) */
 end_comment
@@ -1295,6 +1357,21 @@ comment|/* 3.3V */
 end_comment
 
 begin_comment
+comment|/* Ricoh: Misc Control Register 2 (PCIC_RICOH_MCR2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_MCR2_VCC_33
+value|0x01
+end_define
+
+begin_comment
+comment|/* 3.3V */
+end_comment
+
+begin_comment
 comment|/* Vadem: misc register (PCIC_VMISC) */
 end_comment
 
@@ -1306,7 +1383,25 @@ value|0x40
 end_define
 
 begin_comment
-comment|/*  *	Mask of allowable interrupts.  *  *	For IBM-AT machines, irqs 3, 4, 5, 7, 9, 10, 11, 12, 14, 15 are  *	allowed.  Nearly all IBM-AT machines with pcic cards or bridges  *	wire these interrupts (or a subset thereof) to the corresponding  *	pins on the ISA bus.  Some older laptops are reported to not route  *	all the interrupt pins to the bus because the designers knew that  *	some would conflict with builtin devices.  *  *	For NEC PC98 machines, irq 3, 5, 6, 9, 10, 11, 12, 13 are allowed.  *	These correspond to the C-BUS signals INT 0, 1, 2, 3, 41, 42, 5, 6  *	respectively.  This is with the desktop C-BUS addin card.  I don't  *	know if this corresponds to laptop usage or not.  *  *	I'm not sure the proper way to map these interrupts, but it looks  *	like pc98 is a subset of ibm-at so no actual mapping is required.  */
+comment|/* Ricoh: ID register values (PCIC_RICOH_ID) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_RID_296
+value|0x32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIC_RID_396
+value|0xb2
+end_define
+
+begin_comment
+comment|/*  *	Mask of allowable interrupts.  *  *	For IBM-AT machines, irqs 3, 4, 5, 7, 9, 10, 11, 12, 14, 15 are  *	allowed.  Nearly all IBM-AT machines with pcic cards or bridges  *	wire these interrupts (or a subset thereof) to the corresponding  *	pins on the ISA bus.  Some older laptops are reported to not route  *	all the interrupt pins to the bus because the designers knew that  *	some would conflict with builtin devices.  *  *	For NEC PC98 machines, irq 3, 5, 6, 9, 10, 11, 12, 13 are allowed.  *	These correspond to the C-BUS signals INT 0, 1, 2, 3, 41, 42, 5, 6  *	respectively.  This is with the desktop C-BUS addin card.  *  *	Hiroshi TSUKADA-san writes in FreeBSD98-testers that cbus IRQ  *	6 is routed to the IRQ 7 pin of the pcic in pc98 cbus based  *	cards.  I do not know how pc98 laptop models are wired.  */
 end_comment
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999, M. Warner Losh.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1999, 2001 M. Warner Losh.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -34,13 +34,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
+file|<sys/select.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -66,6 +72,38 @@ include|#
 directive|include
 file|<machine/resource.h>
 end_include
+
+begin_comment
+comment|/* XXX Shouldn't reach into the MD code here */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -141,11 +179,89 @@ parameter_list|)
 value|(struct pccard_devinfo *) device_get_ivars(d)
 end_define
 
-begin_if
-if|#
-directive|if
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pccard
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"pccard"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|mem_start
+init|=
+name|IOM_BEGIN
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|mem_end
+init|=
+name|IOM_END
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_machdep_pccard
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mem_start
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mem_start
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_machdep_pccard
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mem_end
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|mem_end
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|NOT_YET_XXX
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * glue for NEWCARD/OLDCARD compat layer  */
@@ -215,11 +331,30 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"PC Card bus -- kludge version"
+literal|"PC Card bus (classic)"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|pccard_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -583,7 +718,9 @@ operator|!=
 name|SYS_RES_DRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -592,7 +729,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -605,7 +744,9 @@ operator|>=
 name|PCCARD_NPORT
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -618,7 +759,9 @@ operator|>=
 name|PCCARD_NMEM
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -631,7 +774,9 @@ operator|>=
 name|PCCARD_NIRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -644,7 +789,9 @@ operator|>=
 name|PCCARD_NDRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|resource_list_add
 argument_list|(
@@ -666,7 +813,9 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -739,7 +888,9 @@ operator|!
 name|rle
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 if|if
 condition|(
@@ -764,7 +915,9 @@ operator|->
 name|count
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -852,7 +1005,7 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-comment|/* 	 * Consider adding a resource definition. We allow rid 0 for 	 * irq, 0-3 for memory and 0-1 for ports 	 */
+comment|/* 	 * Consider adding a resource definition. We allow rid 0 for 	 * irq, 0-4 for memory and 0-1 for ports 	 */
 name|int
 name|passthrough
 init|=
@@ -920,11 +1073,11 @@ condition|)
 block|{
 name|start
 operator|=
-literal|0xd0000
+name|mem_start
 expr_stmt|;
 name|end
 operator|=
-literal|0xdffff
+name|mem_end
 expr_stmt|;
 block|}
 name|isdefault
@@ -975,7 +1128,9 @@ operator|<
 literal|0
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 switch|switch
 condition|(
@@ -993,7 +1148,9 @@ operator|>=
 name|PCCARD_NIRQ
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 case|case
@@ -1007,7 +1164,9 @@ operator|>=
 name|PCCARD_NDRQ
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 case|case
@@ -1021,7 +1180,9 @@ operator|>=
 name|PCCARD_NMEM
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 case|case
@@ -1035,12 +1196,16 @@ operator|>=
 name|PCCARD_NPORT
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 default|default:
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 name|resource_list_add
@@ -1136,6 +1301,7 @@ operator|->
 name|resources
 decl_stmt|;
 return|return
+operator|(
 name|resource_list_release
 argument_list|(
 name|rl
@@ -1150,6 +1316,7 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1203,18 +1370,18 @@ name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* Pass card requests up to pcic.  This may mean a bad design XXX */
-end_comment
 
 begin_function
 specifier|static
@@ -1238,6 +1405,7 @@ name|value
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_SET_RES_FLAGS
 argument_list|(
 name|device_get_parent
@@ -1253,6 +1421,7 @@ name|rid
 argument_list|,
 name|value
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1280,6 +1449,7 @@ name|value
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_GET_RES_FLAGS
 argument_list|(
 name|device_get_parent
@@ -1295,6 +1465,7 @@ name|rid
 argument_list|,
 name|value
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1318,6 +1489,7 @@ name|offset
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_SET_MEMORY_OFFSET
 argument_list|(
 name|device_get_parent
@@ -1331,6 +1503,7 @@ name|rid
 argument_list|,
 name|offset
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1355,6 +1528,7 @@ name|offset
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_GET_MEMORY_OFFSET
 argument_list|(
 name|device_get_parent
@@ -1368,6 +1542,7 @@ name|rid
 argument_list|,
 name|offset
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1381,7 +1556,7 @@ end_ifdef
 begin_function
 specifier|static
 name|int
-name|pccard_get_function
+name|pccard_get_function_num
 parameter_list|(
 name|device_t
 name|bus
@@ -1473,7 +1648,9 @@ name|matchfn
 parameter_list|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -1502,7 +1679,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|bus_generic_attach
+name|pccard_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1647,7 +1824,7 @@ name|DEVMETHOD
 argument_list|(
 name|card_get_function
 argument_list|,
-name|pccard_get_function
+name|pccard_get_function_num
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -1699,9 +1876,11 @@ literal|"pccard"
 block|,
 name|pccard_methods
 block|,
-literal|1
-block|,
-comment|/* no softc */
+expr|sizeof
+operator|(
+expr|struct
+name|slot
+operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1729,7 +1908,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pccard
 argument_list|,
-name|pc98pcic
+name|mecia
 argument_list|,
 name|pccard_driver
 argument_list|,
@@ -1747,7 +1926,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|pccard
 argument_list|,
-name|cbb
+name|tcic
 argument_list|,
 name|pccard_driver
 argument_list|,
