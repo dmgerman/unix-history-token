@@ -4480,11 +4480,6 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-name|ieee80211_crypto_delglobalkeys
-argument_list|(
-name|ic
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 if|if
