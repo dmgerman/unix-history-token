@@ -667,6 +667,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|D_NAGGED
+value|0x20000
+end_define
+
+begin_comment
+comment|/* nagged about missing make_dev() */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|D_CANFREE
 value|0x40000
 end_define
