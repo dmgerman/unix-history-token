@@ -13453,8 +13453,6 @@ name|GLOB_BRACE
 operator||
 name|GLOB_NOCHECK
 operator||
-name|GLOB_QUOTE
-operator||
 name|GLOB_TILDE
 decl_stmt|;
 name|memset
