@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.44	82/03/29	*/
+comment|/*	up.c	4.45	82/03/31	*/
 end_comment
 
 begin_include
@@ -414,6 +414,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|UPIPUNITS
+value|8
+end_define
+
 begin_decl_stmt
 name|struct
 name|uba_device
@@ -423,10 +430,14 @@ index|[
 name|NSC
 index|]
 index|[
-literal|4
+name|UPIPUNITS
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* fuji w/fixed head gives n,n+4 */
+end_comment
 
 begin_decl_stmt
 name|u_short
@@ -2985,6 +2996,10 @@ name|unit
 expr_stmt|;
 if|if
 condition|(
+name|unit
+operator|<
+name|UPIPUNITS
+operator|&&
 name|upustart
 argument_list|(
 name|upip
