@@ -1586,7 +1586,6 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Shortcut the sppp tls/tlf actions to up/down 			 * events since our lower layer is always ready. 			 */
 name|sp
 operator|=
 operator|(
@@ -1597,22 +1596,6 @@ operator|)
 name|c
 operator|->
 name|ifp
-expr_stmt|;
-name|sp
-operator|->
-name|pp_tls
-operator|=
-name|sp
-operator|->
-name|pp_up
-expr_stmt|;
-name|sp
-operator|->
-name|pp_tlf
-operator|=
-name|sp
-operator|->
-name|pp_down
 expr_stmt|;
 if|#
 directive|if
