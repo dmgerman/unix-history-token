@@ -44,6 +44,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/ctype.h>
+end_include
+
+begin_comment
+comment|/* string functions */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -63,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
 end_include
 
 begin_include
@@ -108,33 +112,6 @@ end_include
 begin_comment
 comment|/* for struct arpcom */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_ipfw.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipdn.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -236,11 +213,10 @@ end_define
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|bdginit
 parameter_list|(
 name|void
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -278,15 +254,6 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|int
-name|bdg_initialized
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|bdg_ipfw
 init|=
 literal|0
@@ -294,11 +261,41 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|bdg_hash_table
 modifier|*
 name|bdg_table
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|bdg_dst_names
+index|[]
+init|=
+block|{
+literal|"BDG_NULL    "
+block|,
+literal|"BDG_BCAST   "
+block|,
+literal|"BDG_MCAST   "
+block|,
+literal|"BDG_LOCAL   "
+block|,
+literal|"BDG_DROP    "
+block|,
+literal|"BDG_UNKNOWN "
+block|,
+literal|"BDG_IN      "
+block|,
+literal|"BDG_OUT     "
+block|,
+literal|"BDG_FORWARD "
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -336,11 +333,166 @@ value|if (ifp2sc[ifp->if_index].magic != 0xDEADBEEF) { x ; }
 end_define
 
 begin_comment
+comment|/*  * Find the right pkt destination:  *	BDG_BCAST	is a broadcast  *	BDG_MCAST	is a multicast  *	BDG_LOCAL	is for a local address  *	BDG_DROP	must be dropped  *	other		ifp of the dest. interface (incl.self)  *  * We assume this is only called for interfaces for which bridging  * is enabled, i.e. BDG_USED(ifp) is true.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|ifnet
+operator|*
+name|bridge_dst_lookup
+argument_list|(
+argument|struct ether_header *eh
+argument_list|)
+block|{     struct
+name|ifnet
+operator|*
+name|dst
+block|;
+name|int
+name|index
+block|;
+name|bdg_addr
+operator|*
+name|p
+block|;
+if|if
+condition|(
+name|IS_ETHER_BROADCAST
+argument_list|(
+name|eh
+operator|->
+name|ether_dhost
+argument_list|)
+condition|)
+return|return
+name|BDG_BCAST
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|eh
+operator|->
+name|ether_dhost
+index|[
+literal|0
+index|]
+operator|&
+literal|1
+condition|)
+return|return
+name|BDG_MCAST
+return|;
+end_if
+
+begin_comment
+comment|/*      * Lookup local addresses in case one matches.      */
+end_comment
+
+begin_for
+for|for
+control|(
+name|index
+operator|=
+name|bdg_ports
+operator|,
+name|p
+operator|=
+name|bdg_addresses
+init|;
+name|index
+condition|;
+name|index
+operator|--
+operator|,
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|BDG_MATCH
+argument_list|(
+name|p
+operator|->
+name|etheraddr
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|)
+condition|)
+return|return
+name|BDG_LOCAL
+return|;
+end_for
+
+begin_comment
+comment|/*      * Look for a possible destination in table      */
+end_comment
+
+begin_expr_stmt
+name|index
+operator|=
+name|HASH_FN
+argument_list|(
+name|eh
+operator|->
+name|ether_dhost
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|dst
+operator|=
+name|bdg_table
+index|[
+name|index
+index|]
+operator|.
+name|name
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|dst
+operator|&&
+name|BDG_MATCH
+argument_list|(
+name|bdg_table
+index|[
+name|index
+index|]
+operator|.
+name|etheraddr
+argument_list|,
+name|eh
+operator|->
+name|ether_dhost
+argument_list|)
+condition|)
+return|return
+name|dst
+return|;
+else|else
+return|return
+name|BDG_UNKNOWN
+return|;
+end_if
+
+begin_comment
+unit|}
 comment|/*  * turn off promisc mode, optionally clear the IFF_USED flag.  * The flag is turned on by parse_bdg_config  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|void
 name|bdg_promisc_off
 parameter_list|(
@@ -678,16 +830,6 @@ argument|, 	oidp->oid_name, oidp->oid_arg2, 	oldval, do_bridge);
 argument_list|)
 if|if
 condition|(
-name|bdg_table
-operator|==
-name|NULL
-condition|)
-name|do_bridge
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 name|oldval
 operator|!=
 name|do_bridge
@@ -736,7 +878,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * parse the config string, set IFF_USED, name and cluster_id  * for all interfaces found.  */
+comment|/*  * parse the config string, set IFF_USED, name and cluster_id  * for all interfaces found.  * The config string is a list of "if[:cluster]" with  * a number of possible separators (see "sep").  */
 end_comment
 
 begin_function
@@ -764,6 +906,13 @@ name|bdg_softc
 modifier|*
 name|b
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|sep
+init|=
+literal|", \t"
+decl_stmt|;
 for|for
 control|(
 name|p
@@ -777,47 +926,41 @@ name|p
 operator|++
 control|)
 block|{
-comment|/* interface names begin with [a-z]  and continue up to ':' */
 if|if
 condition|(
+name|index
+argument_list|(
+name|sep
+argument_list|,
 operator|*
 name|p
-operator|<
-literal|'a'
-operator|||
-operator|*
-name|p
-operator|>
-literal|'z'
+argument_list|)
 condition|)
+comment|/* skip separators */
 continue|continue ;
+comment|/* names are lowercase and digits */
 for|for
 control|(
 name|beg
 operator|=
 name|p
 init|;
+name|islower
+argument_list|(
 operator|*
 name|p
-operator|&&
+argument_list|)
+operator|||
+name|isdigit
+argument_list|(
 operator|*
 name|p
-operator|!=
-literal|':'
+argument_list|)
 condition|;
 name|p
 operator|++
 control|)
 empty_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|0
-condition|)
-comment|/* end of string, ':' not found */
-return|return ;
 name|l
 operator|=
 name|p
@@ -825,49 +968,41 @@ operator|-
 name|beg
 expr_stmt|;
 comment|/* length of name string */
-name|p
-operator|++
-expr_stmt|;
-name|DEB
-argument_list|(
-argument|printf(
-literal|"-- match beg(%d)<%s> p<%s>\n"
-argument|, l, beg, p);
-argument_list|)
-for|for
-control|(
-name|cluster
-operator|=
+if|if
+condition|(
+name|l
+operator|==
 literal|0
-init|;
+condition|)
+comment|/* invalid name */
+break|break ;
+if|if
+condition|(
 operator|*
 name|p
-operator|&&
-operator|*
-name|p
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|p
-operator|<=
-literal|'9'
-condition|;
-name|p
-operator|++
-control|)
+operator|!=
+literal|':'
+condition|)
+comment|/* no ':', assume default cluster 1 */
 name|cluster
 operator|=
+literal|1
+expr_stmt|;
+else|else
+comment|/* fetch cluster */
 name|cluster
-operator|*
-literal|10
-operator|+
-operator|(
-operator|*
+operator|=
+name|strtoul
+argument_list|(
 name|p
-operator|-
-literal|'0'
-operator|)
+operator|+
+literal|1
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|10
+argument_list|)
 expr_stmt|;
 comment|/* 	 * now search in bridge strings 	 */
 for|for
@@ -941,7 +1076,6 @@ name|l
 argument_list|)
 condition|)
 block|{
-comment|/* XXX not correct for>10 if! */
 name|b
 operator|->
 name|cluster_id
@@ -992,14 +1126,6 @@ argument_list|)
 break|break ;
 block|}
 block|}
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-break|break ;
 block|}
 block|}
 end_function
@@ -1200,6 +1326,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * The follow macro declares a variable, and maps it to  * a SYSCTL_INT entry with the same name.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1295,6 +1425,16 @@ literal|"iface refresh"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/* diagnostic vars */
+end_comment
 
 begin_expr_stmt
 name|SY
@@ -1404,6 +1544,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|SYSCTL_STRUCT
 argument_list|(
@@ -1447,13 +1592,6 @@ name|s
 decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|bdg_table
-operator|==
-name|NULL
-condition|)
-return|return ;
 name|s
 operator|=
 name|splimp
@@ -1654,8 +1792,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bdg_ports
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bdg_max_ports
+init|=
+name|BDG_MAX_PORTS
 decl_stmt|;
 end_decl_stmt
 
@@ -1665,23 +1813,12 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|bdginit
 parameter_list|(
 name|void
-modifier|*
-name|dummy
 parameter_list|)
 block|{
-name|bdg_initialized
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|bdg_table
-operator|==
-name|NULL
-condition|)
 name|bdg_table
 operator|=
 operator|(
@@ -1702,11 +1839,19 @@ argument_list|,
 name|M_IFADDR
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|flush_table
-argument_list|()
-expr_stmt|;
+if|if
+condition|(
+name|bdg_table
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|ifp2sc
 operator|=
 name|malloc
@@ -1725,6 +1870,43 @@ name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp2sc
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|bdg_table
+argument_list|,
+name|M_IFADDR
+argument_list|)
+expr_stmt|;
+name|bdg_table
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
+name|bridge_in_ptr
+operator|=
+name|bridge_in
+expr_stmt|;
+name|bdg_forward_ptr
+operator|=
+name|bdg_forward
+expr_stmt|;
+name|bdgtakeifaces_ptr
+operator|=
+name|bdgtakeifaces
+expr_stmt|;
+name|flush_table
+argument_list|()
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1749,8 +1931,15 @@ name|do_bridge
 operator|=
 literal|0
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * fetch interfaces that can do bridging.  * This is re-done every time we attach or detach an interface.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1781,12 +1970,6 @@ name|bdg_softc
 modifier|*
 name|bp
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|bdg_initialized
-condition|)
-return|return;
 name|bdg_ports
 operator|=
 literal|0
@@ -1798,7 +1981,7 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"BRIDGE 011004, have %d interfaces\n"
+literal|"BRIDGE 011031, have %d interfaces\n"
 argument_list|,
 name|if_index
 argument_list|)
@@ -1821,6 +2004,7 @@ name|IFT_ETHER
 condition|)
 block|{
 comment|/* ethernet ? */
+comment|/* 	     * XXX should try to grow the arrays as needed. 	     */
 name|bp
 operator|=
 operator|&
@@ -1989,7 +2173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bridge_in() is invoked to perform bridging decision on input packets.  *  * On Input:  *   eh		Ethernet header of the incoming packet.  *  * On Return: destination of packet, one of  *   BDG_BCAST	broadcast  *   BDG_MCAST  multicast  *   BDG_LOCAL  is only for a local address (do not forward)  *   BDG_DROP   drop the packet  *   ifp	ifp of the destination interface.  *  * Forwarding is not done directly to give a chance to some drivers  * to fetch more of the packet, or simply drop it completely.  */
+comment|/**  * bridge_in() is invoked to perform bridging decision on input packets.  *  * On Input:  *   eh		Ethernet header of the incoming packet. We only need this.  *  * On Return: destination of packet, one of  *   BDG_BCAST	broadcast  *   BDG_MCAST  multicast  *   BDG_LOCAL  is only for a local address (do not forward)  *   BDG_DROP   drop the packet  *   ifp	ifp of the destination interface.  *  * Forwarding is not done directly to give a chance to some drivers  * to fetch more of the packet, or simply drop it completely.  */
 end_comment
 
 begin_function
@@ -2112,7 +2296,7 @@ operator|!=
 name|ifp
 condition|)
 block|{
-comment|/* 	     * found a loop. Either a machine has moved, or there 	     * is a misconfiguration/reconfiguration of the network. 	     * First, do not forward this packet! 	     * Record the relocation anyways; then, if loops persist, 	     * suspect a reconfiguration and disable forwarding 	     * from the old interface. 	     */
+comment|/* 	     * Found a loop. Either a machine has moved, or there 	     * is a misconfiguration/reconfiguration of the network. 	     * First, do not forward this packet! 	     * Record the relocation anyways; then, if loops persist, 	     * suspect a reconfiguration and disable forwarding 	     * from the old interface. 	     */
 name|bdg_table
 index|[
 name|index
@@ -2243,7 +2427,7 @@ argument_list|(
 name|eh
 argument_list|)
 expr_stmt|;
-comment|/* Return values:      *   BDG_BCAST, BDG_MCAST, BDG_LOCAL, BDG_UNKNOWN, BDG_DROP, ifp.      * For muted interfaces, the first 3 are changed in BDG_LOCAL,      * and others to BDG_DROP. Also, for incoming packets, ifp is changed      * to BDG_DROP in case ifp == src . These mods are not necessary      * for outgoing packets from ether_output().      */
+comment|/*      * bridge_dst_lookup can return the following values:      *   BDG_BCAST, BDG_MCAST, BDG_LOCAL, BDG_UNKNOWN, BDG_DROP, ifp.      * For muted interfaces, or when we detect a loop, the first 3 are      * changed in BDG_LOCAL (we still listen to incoming traffic),      * and others to BDG_DROP (no use for the local host).      * Also, for incoming packets, ifp is changed to BDG_DROP if ifp == src.      * These changes are not necessary for outgoing packets from ether_output().      */
 name|BDG_STAT
 argument_list|(
 name|ifp
@@ -2342,33 +2526,49 @@ name|dst
 operator|==
 name|BDG_LOCAL
 condition|)
-return|return
+name|dst
+operator|=
 name|BDG_LOCAL
-return|;
+expr_stmt|;
 else|else
-return|return
+name|dst
+operator|=
 name|BDG_DROP
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
-return|return
-operator|(
+if|if
+condition|(
 name|dst
 operator|==
 name|ifp
-condition|?
-name|BDG_DROP
-else|:
+condition|)
 name|dst
-operator|)
-return|;
+operator|=
+name|BDG_DROP
+expr_stmt|;
 block|}
+name|DEB
+argument_list|(
+argument|printf(
+literal|"bridge_in %6D ->%6D ty 0x%04x dst %s%d\n"
+argument|, 	eh->ether_shost,
+literal|"."
+argument|, 	eh->ether_dhost,
+literal|"."
+argument|, 	ntohs(eh->ether_type), 	(dst<= BDG_FORWARD) ? bdg_dst_names[(int)dst] : 		dst->if_name, 	(dst<= BDG_FORWARD) ?
+literal|0
+argument|: dst->if_unit);
+argument_list|)
+return|return
+name|dst
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Forward to dst, excluding src port and muted interfaces.  * If src == NULL, the pkt comes from ether_output, and dst is the real  * interface the packet is originally sent to. In this case we must forward  * it to the whole cluster. We never call bdg_forward ether_output on  * interfaces which are not part of a cluster.  *  * The packet is freed if possible (i.e. surely not of interest for  * the upper layer), otherwise a copy is left for use by the caller  * (pointer in m0).  *  * It would be more efficient to make bdg_forward() always consume  * the packet, leaving to the caller the task to check if it needs a copy  * and get one in case. As it is now, bdg_forward() can sometimes make  * a copy whereas it is not necessary.  *  * XXX be careful about eh, it can be a pointer into *m  */
+comment|/*  * Forward a packet to dst -- which can be a single interface or  * an entire cluster. The src port and muted interfaces are excluded.  *  * If src == NULL, the pkt comes from ether_output, and dst is the real  * interface the packet is originally sent to. In this case, we must forward  * it to the whole cluster.  * We never call bdg_forward from ether_output on interfaces which are  * not part of a cluster.  *  * If possible (i.e. we can determine that the caller does not need  * a copy), the packet is consumed here, and bdg_forward returns NULL.  * Otherwise, a pointer to a copy of the packet is returned.  *  * XXX be careful with eh, it can be a pointer into *m  */
 end_comment
 
 begin_function
@@ -2406,7 +2606,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 decl_stmt|;
-comment|/* could be NULL in output */
+comment|/* NULL when called by *_output */
 name|struct
 name|ifnet
 modifier|*
@@ -2504,7 +2704,7 @@ else|else
 name|bdg_thru
 operator|++
 expr_stmt|;
-comment|/* only count once */
+comment|/* count packet, only once */
 if|if
 condition|(
 name|src
@@ -2623,7 +2823,7 @@ expr_stmt|;
 comment|/*      * Do filtering in a very similar way to what is done in ip_output.      * Only if firewall is loaded, enabled, and the packet is not      * from ether_output() (src==NULL, or we would filter it twice).      * Additional restrictions may apply e.g. non-IP, short packets,      * and pkts already gone through a pipe.      */
 if|if
 condition|(
-name|ip_fw_chk_ptr
+name|IPFW_LOADED
 operator|&&
 name|bdg_ipfw
 operator|!=
@@ -2766,10 +2966,7 @@ expr_stmt|;
 comment|/* 	 * The third parameter to the firewall code is the dst. interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
 name|i
 operator|=
-call|(
-modifier|*
 name|ip_fw_chk_ptr
-call|)
 argument_list|(
 operator|&
 name|ip
@@ -2844,11 +3041,7 @@ name|forward
 goto|;
 if|if
 condition|(
-name|do_bridge
-operator|&&
-name|ip_dn_io_ptr
-operator|!=
-name|NULL
+name|DUMMYNET_LOADED
 operator|&&
 operator|(
 name|i
@@ -3402,6 +3595,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * initialization code, both for static and dynamic loading.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3421,11 +3618,9 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
+name|int
+name|err
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -3434,27 +3629,59 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|bridge_in_ptr
+if|if
+condition|(
+name|BDG_LOADED
+condition|)
+block|{
+name|err
 operator|=
-name|bridge_in
+name|EEXIST
 expr_stmt|;
-name|bdg_forward_ptr
+break|break ;
+block|}
+name|s
 operator|=
-name|bdg_forward
+name|splimp
+argument_list|()
 expr_stmt|;
-name|bdgtakeifaces_ptr
+name|err
 operator|=
-name|bdgtakeifaces
-expr_stmt|;
 name|bdginit
+argument_list|()
+expr_stmt|;
+name|splx
 argument_list|(
-name|NULL
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+name|printf
+argument_list|(
+literal|"bridge statically compiled, cannot unload\n"
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
+else|#
+directive|else
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|do_bridge
 operator|=
 literal|0
@@ -3480,12 +3707,6 @@ argument_list|,
 name|bdg_timeout_h
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bdg_table
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|bdg_table
@@ -3493,12 +3714,10 @@ argument_list|,
 name|M_IFADDR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifp2sc
-operator|!=
+name|bdg_table
+operator|=
 name|NULL
-condition|)
+expr_stmt|;
 name|free
 argument_list|(
 name|ifp2sc
@@ -3506,17 +3725,27 @@ argument_list|,
 name|M_IFADDR
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
+name|ifp2sc
+operator|=
+name|NULL
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+break|break;
+default|default:
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
 return|return
-literal|0
+name|err
 return|;
 block|}
 end_function

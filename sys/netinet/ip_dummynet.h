@@ -737,6 +737,13 @@ name|ip_dn_io_ptr
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|DUMMYNET_LOADED
+value|(ip_dn_io_ptr != NULL)
+end_define
+
 begin_endif
 endif|#
 directive|endif

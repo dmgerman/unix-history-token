@@ -2092,7 +2092,7 @@ if|if
 condition|(
 name|fw_enable
 operator|&&
-name|ip_fw_chk_ptr
+name|IPFW_LOADED
 condition|)
 block|{
 ifdef|#
@@ -2112,10 +2112,7 @@ comment|/* IPFIREWALL_FORWARD */
 comment|/* 		 * See the comment in ip_output for the return values 		 * produced by the firewall. 		 */
 name|i
 operator|=
-call|(
-modifier|*
 name|ip_fw_chk_ptr
-call|)
 argument_list|(
 operator|&
 name|ip
@@ -2204,9 +2201,7 @@ name|pass
 goto|;
 if|if
 condition|(
-name|ip_dn_io_ptr
-operator|!=
-name|NULL
+name|DUMMYNET_LOADED
 operator|&&
 operator|(
 name|i
@@ -2386,7 +2381,7 @@ name|ip_fw_fwd_addr
 operator|->
 name|sin_addr
 expr_stmt|;
-comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 *          * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible with IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 */
+comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 * 	 * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible with IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 */
 name|checkif
 operator|=
 name|ip_checkinterface

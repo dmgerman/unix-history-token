@@ -606,7 +606,7 @@ comment|/* must be power of 2 */
 end_comment
 
 begin_comment
-comment|/**  * timeouts for various events in handing dynamic rules.  */
+comment|/*  * timeouts for various events in handing dynamic rules.  */
 end_comment
 
 begin_decl_stmt
@@ -971,6 +971,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SYSCTL_NODE */
+end_comment
 
 begin_define
 define|#
@@ -3543,9 +3547,9 @@ name|head
 parameter_list|,
 name|q
 parameter_list|)
-value|{			\     struct ipfw_dyn_rule *old_q = q;				\ 								\
+value|{				\ 	struct ipfw_dyn_rule *old_q = q;				\ 									\
 comment|/* remove a refcount to the parent */
-value|\     if (q->dyn_type == DYN_LIMIT)				\ 	q->parent->count--;					\     DEB(printf("-- unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",	\ 	(q->id.src_ip), (q->id.src_port),			\ 	(q->id.dst_ip), (q->id.dst_port), dyn_count-1 ); )	\     if (prev != NULL)						\ 	prev->next = q = q->next ;				\     else							\ 	ipfw_dyn_v[i] = q = q->next ;				\     dyn_count-- ;						\     free(old_q, M_IPFW); }
+value|\ 	if (q->dyn_type == DYN_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("-- unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",	\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next ;				\ 	else								\ 		ipfw_dyn_v[i] = q = q->next ;				\ 	dyn_count-- ;							\ 	free(old_q, M_IPFW); }
 end_define
 
 begin_define
@@ -3747,15 +3751,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|q
-operator|->
-name|count
-operator|!=
-literal|0
+name|pass
+operator|==
+literal|1
 condition|)
+comment|/* should not happen */
 name|printf
 argument_list|(
-literal|"cannot remove parent, count %d\n"
+literal|"OUCH! cannot remove rule, count %d\n"
 argument_list|,
 name|q
 operator|->
@@ -3957,7 +3960,7 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
-continue|continue ;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -4641,7 +4644,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * lookup dynamic parent rule using pkt and chain as search keys.  * If the lookup fails, then install one.  */
+comment|/**  * lookup dynamic parent rule using pkt and rule as search keys.  * If the lookup fails, then install one.  */
 end_comment
 
 begin_function
@@ -5156,7 +5159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * given an ip_fw *, lookup_next_rule will return a pointer  * of the same type to the next one. This can be either the jump  * target (for skipto instructions) or the next one in the chain (in  * all other cases including a missing jump target).  * Backward jumps are not allowed, so start looking from the next  * rule...  */
+comment|/*  * given an ip_fw *, lookup_next_rule will return a pointer  * of the same type to the next one. This can be either the jump  * target (for skipto instructions) or the next one in the list (in  * all other cases including a missing jump target).  * Backward jumps are not allowed, so start looking from the next  * rule...  */
 end_comment
 
 begin_function_decl
@@ -5789,7 +5792,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 	     * Go down the chain, looking for enlightment. 	     * If we've been asked to start at a given rule, do so. 	     */
+comment|/* 	     * Go down the list, looking for enlightment. 	     * If we've been asked to start at a given rule, do so. 	     */
 name|f
 operator|=
 name|LIST_FIRST
@@ -7229,6 +7232,7 @@ name|flow_id
 operator|=
 name|f
 expr_stmt|;
+comment|/* XXX set flow id */
 return|return
 operator|(
 name|f
@@ -7613,7 +7617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * when a rule is added/deleted, zero the direct pointers within  * all firewall rules. These will be reconstructed on the fly  * as packets are matched.  * Must be called at splnet().  */
+comment|/*  * when a rule is added/deleted, zero the direct pointers within  * all firewall rules. These will be reconstructed on the fly  * as packets are matched.  * Must be called at splimp().  */
 end_comment
 
 begin_function
@@ -7760,7 +7764,7 @@ name|NULL
 expr_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
@@ -7935,7 +7939,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * free storage associated with a static chain entry (including  * dependent dynamic rules), and zeroes rule pointers to avoid  * dangling pointer dereferences.  * @return a pointer to the next entry.  * Must be called at splnet() and with a non-null argument.  */
+comment|/**  * free storage associated with a static rule entry (including  * dependent dynamic rules), and zeroes rule pointers to avoid  * dangling pointer dereferences.  * @return a pointer to the next entry.  * Must be called at splimp() and with a non-null argument.  */
 end_comment
 
 begin_function
@@ -7982,9 +7986,7 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|ip_dn_ruledel_ptr
-operator|!=
-name|NULL
+name|DUMMYNET_LOADED
 condition|)
 name|ip_dn_ruledel_ptr
 argument_list|(
@@ -8061,7 +8063,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* prevent access to rules while removing */
@@ -8146,7 +8148,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -8222,7 +8224,7 @@ name|frwl
 operator|->
 name|fw_number
 expr_stmt|;
-comment|/* 	 * It's possible to insert multiple chain entries with the 	 * same number, so we don't stop after finding the first 	 * match if zeroing a specific entry. 	 */
+comment|/* 	 * It is possible to insert multiple chain entries with the 	 * same number, so we don't stop after finding the first 	 * match if zeroing a specific entry. 	 */
 name|LIST_FOREACH
 argument_list|(
 argument|rule
@@ -8242,7 +8244,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 while|while
@@ -8318,7 +8320,7 @@ condition|(
 operator|!
 name|cleared
 condition|)
-comment|/* we didn't find any matching rules */
+comment|/* we did not find any matching rules */
 return|return
 operator|(
 name|EINVAL
@@ -9150,9 +9152,10 @@ block|{
 case|case
 name|IP_FW_GET
 case|:
+comment|/* 		 * pass up a copy of the current rules. Static rules 		 * come first (the last of which has number 65535), 		 * followed by a possibly empty list of dynamic rule. 		 * The last dynamic rule has NULL in the "next" field. 		 */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* size of static rules */
@@ -9331,13 +9334,13 @@ name|rule
 operator|->
 name|fw_number
 expr_stmt|;
+comment|/* 			     * store a non-null value in "next". The userland 			     * code will interpret a NULL here as a marker 			     * for the last dynamic rule. 			     */
 name|dst
 operator|->
 name|next
 operator|=
 name|dst
 expr_stmt|;
-comment|/* fake non-null pointer... */
 name|last
 operator|=
 name|dst
@@ -9379,6 +9382,7 @@ name|next
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* mark last dynamic rule */
 block|}
 name|splx
 argument_list|(
@@ -9396,7 +9400,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|buf
 argument_list|,
@@ -9410,7 +9414,7 @@ case|:
 comment|/* 		 * Normally we cannot release the lock on each iteration. 		 * We could do it here only because we start from the head all 		 * the times so there is no risk of missing some entries. 		 * On the other hand, the risk is that we end up with 		 * a very inconsistent ruleset, so better keep the lock 		 * around the whole cycle. 		 *  		 * XXX this code can be improved by resetting the head of 		 * the list to point to the default rule, and then freeing 		 * the old list without the need for a lock. 		 */
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 while|while
@@ -9664,7 +9668,7 @@ if|if
 condition|(
 name|error
 condition|)
-break|break ;
+break|break;
 name|arg
 operator|=
 operator|&
@@ -9907,24 +9911,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-unit|}  static
-name|ip_fw_chk_t
-modifier|*
-name|old_chk_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|ip_fw_ctl_t
-modifier|*
-name|old_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
 begin_function
-specifier|static
+unit|}  static
 name|int
 name|ipfw_modevent
 parameter_list|(
@@ -9942,6 +9930,11 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -9955,19 +9948,38 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|printf
+argument_list|(
+literal|"IPFW: MOD_LOAD\n"
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
-name|old_chk_ptr
-operator|=
-name|ip_fw_chk_ptr
+if|if
+condition|(
+name|IPFW_LOADED
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
-name|old_ctl_ptr
-operator|=
-name|ip_fw_ctl_ptr
+name|printf
+argument_list|(
+literal|"IP firewall already loaded\n"
+argument_list|)
 expr_stmt|;
+name|err
+operator|=
+name|EEXIST
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ip_fw_init
 argument_list|()
 expr_stmt|;
@@ -9976,25 +9988,53 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+block|}
+break|break ;
 case|case
 name|MOD_UNLOAD
 case|:
+name|printf
+argument_list|(
+literal|"IPFW: MOD_UNLOAD\n"
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+name|printf
+argument_list|(
+literal|"ipfw statically compiled, cannot unload\n"
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|EBUSY
+expr_stmt|;
+else|#
+directive|else
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 name|ip_fw_chk_ptr
 operator|=
-name|old_chk_ptr
+name|NULL
 expr_stmt|;
 name|ip_fw_ctl_ptr
 operator|=
-name|old_ctl_ptr
+name|NULL
 expr_stmt|;
+block|{
+name|struct
+name|ip_fw
+modifier|*
+name|fcp
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -10014,6 +10054,7 @@ argument_list|(
 name|fcp
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -10024,14 +10065,14 @@ argument_list|(
 literal|"IP firewall unloaded\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+endif|#
+directive|endif
+break|break;
 default|default:
 break|break;
 block|}
 return|return
-literal|0
+name|err
 return|;
 block|}
 end_function

@@ -156,27 +156,6 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -821,6 +800,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dn_rule_delete
 parameter_list|(
@@ -1143,7 +1123,7 @@ parameter_list|,
 name|node
 parameter_list|)
 define|\
-value|if (heap->offset> 0) \ 	*((int *)((char *)(heap->p[node].object) + heap->offset)) = -1 ;
+value|if (heap->offset> 0) \ 	    *((int *)((char *)(heap->p[node].object) + heap->offset)) = -1 ;
 end_define
 
 begin_function
@@ -1851,10 +1831,25 @@ name|DN_TO_BDG_FWD
 case|:
 if|if
 condition|(
-name|bdg_forward_ptr
-operator|!=
-name|NULL
+operator|!
+name|BDG_LOADED
 condition|)
+block|{
+comment|/* somebody unloaded the bridge module. Drop pkt */
+name|printf
+argument_list|(
+literal|"-- dropping bridged packet trapped in pipe--\n"
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|pkt
+operator|->
+name|dn_m
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|struct
 name|mbuf
@@ -1931,7 +1926,7 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
-comment|/* 		 * bdg_forward_ptr() wants a pointer to the pseudo-mbuf-header, 		 * but on return it will supply the pointer to the actual packet 		 * (originally pkt->dn_m, but could be something else now) if 		 * it has not consumed it. 		 */
+comment|/* 		 * bdg_forward() wants a pointer to the pseudo-mbuf-header, but 		 * on return it will supply the pointer to the actual packet 		 * (originally pkt->dn_m, but could be something else now) if 		 * it has not consumed it. 		 */
 name|m
 operator|=
 name|bdg_forward_ptr
@@ -1975,7 +1970,7 @@ argument_list|)
 expr_stmt|;
 break|break ;
 block|}
-name|FREE
+name|free
 argument_list|(
 name|pkt
 argument_list|,
@@ -3756,7 +3751,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* M_ZERO needed */
 if|if
 condition|(
 name|q
@@ -6384,6 +6378,7 @@ name|x
 operator|->
 name|w_q_lookup
 condition|)
+block|{
 name|free
 argument_list|(
 name|x
@@ -6393,6 +6388,13 @@ argument_list|,
 name|M_DUMMYNET
 argument_list|)
 expr_stmt|;
+name|x
+operator|->
+name|w_q_lookup
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|red_lookup_depth
@@ -6874,7 +6876,7 @@ operator|->
 name|fs
 operator|)
 decl_stmt|;
-comment|/* 	 * The config program passes parameters as follows:      * bw = bits/second (0 means no limits),      * delay = ms, must be translated into ticks.      * qsize = slots/bytes 	 */
+comment|/*      * The config program passes parameters as follows:      * bw = bits/second (0 means no limits),      * delay = ms, must be translated into ticks.      * qsize = slots/bytes      */
 name|p
 operator|->
 name|delay
@@ -8867,7 +8869,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|buf
 argument_list|,
@@ -9074,7 +9076,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (011004)\n"
+literal|"DUMMYNET initialized (011031)\n"
 argument_list|)
 expr_stmt|;
 name|all_pipes
@@ -9137,13 +9139,13 @@ name|ip_dn_ctl_ptr
 operator|=
 name|ip_dn_ctl
 expr_stmt|;
-name|ip_dn_ruledel_ptr
-operator|=
-name|dn_rule_delete
-expr_stmt|;
 name|ip_dn_io_ptr
 operator|=
 name|dummynet_io
+expr_stmt|;
+name|ip_dn_ruledel_ptr
+operator|=
+name|dn_rule_delete
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -9203,6 +9205,25 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|DUMMYNET_LOADED
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"DUMMYNET already loaded\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EEXIST
+return|;
+block|}
 name|ip_dn_init
 argument_list|()
 expr_stmt|;
@@ -9215,6 +9236,28 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+name|printf
+argument_list|(
+literal|"dummynet statically compiled, cannot unload\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+else|#
+directive|else
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|untimeout
 argument_list|(
 name|dummynet
@@ -9225,11 +9268,6 @@ name|dn_timeout
 argument_list|)
 expr_stmt|;
 name|dummynet_flush
-argument_list|()
-expr_stmt|;
-name|s
-operator|=
-name|splimp
 argument_list|()
 expr_stmt|;
 name|ip_dn_ctl_ptr
@@ -9249,6 +9287,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break ;
 default|default:
 break|break ;

@@ -147,12 +147,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_bdg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bridge.h>
 end_include
 
@@ -9794,13 +9788,7 @@ name|ac_if
 operator|.
 name|if_bpf
 operator|&&
-name|do_bridge
-operator|&&
-name|bdg_forward_ptr
-operator|!=
-name|NULL
-operator|&&
-name|BDG_USED
+name|BDG_ACTIVE
 argument_list|(
 operator|(
 operator|&

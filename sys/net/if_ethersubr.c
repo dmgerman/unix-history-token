@@ -1981,13 +1981,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|do_bridge
-operator|&&
-name|bdg_forward_ptr
-operator|!=
-name|NULL
-operator|&&
-name|BDG_USED
+name|BDG_ACTIVE
 argument_list|(
 name|ifp
 argument_list|)
@@ -2199,13 +2193,7 @@ block|}
 comment|/* Check for bridging mode */
 if|if
 condition|(
-name|do_bridge
-operator|&&
-name|bdg_forward_ptr
-operator|!=
-name|NULL
-operator|&&
-name|BDG_USED
+name|BDG_ACTIVE
 argument_list|(
 name|ifp
 argument_list|)
@@ -2429,6 +2417,16 @@ name|l
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+operator|(
+name|BDG_ACTIVE
+argument_list|(
+name|ifp
+argument_list|)
+operator|)
+condition|)
 comment|/* Discard packet if upper layers shouldn't see it because it was 	   unicast to a different Ethernet address. If the driver is working 	   properly, then this situation can only happen when the interface 	   is in promiscuous mode. */
 if|if
 condition|(
@@ -3331,9 +3329,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bdgtakeifaces_ptr
-operator|!=
-name|NULL
+name|BDG_LOADED
 condition|)
 name|bdgtakeifaces_ptr
 argument_list|()
@@ -3392,9 +3388,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bdgtakeifaces_ptr
-operator|!=
-name|NULL
+name|BDG_LOADED
 condition|)
 name|bdgtakeifaces_ptr
 argument_list|()

@@ -2349,7 +2349,7 @@ if|if
 condition|(
 name|fw_enable
 operator|&&
-name|ip_fw_chk_ptr
+name|IPFW_LOADED
 condition|)
 block|{
 name|struct
@@ -2361,10 +2361,7 @@ name|dst
 decl_stmt|;
 name|off
 operator|=
-call|(
-modifier|*
 name|ip_fw_chk_ptr
-call|)
 argument_list|(
 operator|&
 name|ip
@@ -2465,9 +2462,7 @@ name|pass
 goto|;
 if|if
 condition|(
-name|ip_dn_io_ptr
-operator|!=
-name|NULL
+name|DUMMYNET_LOADED
 operator|&&
 operator|(
 name|off
