@@ -47,7 +47,7 @@ name|BDEV_MAJOR
 init|=
 literal|25
 block|,
-comment|/* and block device */
+comment|/* and legacy major number for block device */
 name|ROUND_ROBIN_READPOL
 init|=
 operator|-
@@ -179,23 +179,10 @@ parameter_list|,
 name|t
 parameter_list|)
 value|( (v<< VINUM_VOL_SHIFT)		\ 			      | (p<< VINUM_PLEX_SHIFT)		\ 			      | (s<< VINUM_SD_SHIFT) 		\ 			      | (t<< VINUM_TYPE_SHIFT) )
-comment|/* Create block and character device minor numbers */
+comment|/* Create device minor numbers */
 define|#
 directive|define
-name|VINUMBDEV
-parameter_list|(
-name|v
-parameter_list|,
-name|p
-parameter_list|,
-name|s
-parameter_list|,
-name|t
-parameter_list|)
-value|makedev (BDEV_MAJOR, VINUMMINOR (v, p, s, t))
-define|#
-directive|define
-name|VINUMCDEV
+name|VINUMDEV
 parameter_list|(
 name|v
 parameter_list|,
@@ -208,28 +195,14 @@ parameter_list|)
 value|makedev (CDEV_MAJOR, VINUMMINOR (v, p, s, t))
 define|#
 directive|define
-name|VINUM_BLOCK_PLEX
-parameter_list|(
-name|p
-parameter_list|)
-value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
-define|#
-directive|define
-name|VINUM_CHAR_PLEX
+name|VINUM_PLEX
 parameter_list|(
 name|p
 parameter_list|)
 value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
 define|#
 directive|define
-name|VINUM_BLOCK_SD
-parameter_list|(
-name|s
-parameter_list|)
-value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
-define|#
-directive|define
-name|VINUM_CHAR_SD
+name|VINUM_SD
 parameter_list|(
 name|s
 parameter_list|)
@@ -432,13 +405,6 @@ define|#
 directive|define
 name|VINUM_DIR
 value|"/dev/vinum"
-end_define
-
-begin_define
-define|#
-directive|define
-name|VINUM_RDIR
-value|"/dev/rvinum"
 end_define
 
 begin_comment
@@ -712,7 +678,9 @@ comment|/* maximum number of requests ever outstanding */
 if|#
 directive|if
 name|VINUMDEBUG
-name|int
+name|struct
+name|request
+modifier|*
 name|lastrq
 decl_stmt|;
 name|struct
@@ -856,8 +824,7 @@ begin_struct
 struct|struct
 name|vinum_hdr
 block|{
-name|long
-name|long
+name|uint64_t
 name|magic
 decl_stmt|;
 comment|/* we're long on magic numbers */
@@ -1147,6 +1114,10 @@ name|int
 name|revive_interval
 decl_stmt|;
 comment|/* and time to wait between transfers */
+name|pid_t
+name|reviver
+decl_stmt|;
+comment|/* PID of reviving process */
 name|struct
 name|request
 modifier|*
@@ -1759,6 +1730,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1769,6 +1746,11 @@ end_define
 begin_comment
 comment|/* test our longjmps */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
