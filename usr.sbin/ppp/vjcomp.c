@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.14 1997/12/03 10:23:54 brian Exp $  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.15 1998/01/11 17:50:46 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"timer.h"
 end_include
 
@@ -117,6 +111,7 @@ comment|/* Maximum size of compressed header */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|slcompress
 name|cslc
@@ -394,7 +389,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|NULLBUFF
+name|NULL
 expr_stmt|;
 block|}
 return|return
@@ -463,7 +458,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
-name|NULLBUFF
+name|NULL
 return|;
 block|}
 name|len

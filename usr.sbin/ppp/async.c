@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	             PPP Async HDLC Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: async.c,v 1.13 1997/10/29 01:19:38 brian Exp $  *  */
+comment|/*  *	             PPP Async HDLC Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: async.c,v 1.14 1997/11/22 03:37:23 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -103,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"os.h"
 end_include
 
 begin_include
@@ -618,9 +612,7 @@ operator|!=
 name|HDLC_SYN
 condition|)
 return|return
-operator|(
-name|NULLBUFF
-operator|)
+name|NULL
 return|;
 switch|switch
 condition|(
@@ -676,9 +668,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
 name|bp
-operator|)
 return|;
 block|}
 break|break;
@@ -778,7 +768,7 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-name|NULLBUFF
+name|NULL
 return|;
 block|}
 end_function

@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.10 1997/12/21 14:28:23 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.11 1997/12/24 10:28:37 brian Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
 end_include
 
 begin_include

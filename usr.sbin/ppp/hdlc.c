@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.26 1998/01/06 00:58:31 brian Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.27 1998/01/10 01:55:10 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -154,6 +154,7 @@ file|"ccp.h"
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|hdlcstat
 block|{
@@ -195,21 +196,8 @@ name|ifOutLQRs
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ifInPackets
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ifInOctets
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
+specifier|static
 struct|struct
 name|protostat
 block|{
@@ -872,14 +860,10 @@ name|void
 name|HdlcInit
 parameter_list|()
 block|{
-name|ifInOctets
-operator|=
 name|ifOutOctets
 operator|=
 literal|0
 expr_stmt|;
-name|ifInPackets
-operator|=
 name|ifOutPackets
 operator|=
 literal|0
@@ -946,6 +930,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|inline
 name|u_short
 name|HdlcFcsBuf
@@ -1136,7 +1121,7 @@ name|DEV_IS_SYNC
 condition|)
 name|mfcs
 operator|=
-name|NULLBUFF
+name|NULL
 expr_stmt|;
 else|else
 name|mfcs
@@ -2483,6 +2468,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|DecodePacket
 parameter_list|(
@@ -2626,7 +2612,7 @@ if|if
 condition|(
 name|bp
 operator|==
-name|NULLBUFF
+name|NULL
 condition|)
 block|{
 break|break;
@@ -3137,15 +3123,6 @@ name|MBUF_CTOP
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|ifInPackets
-operator|++
-expr_stmt|;
-name|ifInOctets
-operator|+=
-name|bp
-operator|->
-name|cnt
 expr_stmt|;
 if|if
 condition|(
