@@ -2622,7 +2622,7 @@ name|sc
 operator|->
 name|acpi_disable_on_poweroff
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
