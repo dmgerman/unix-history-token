@@ -1045,6 +1045,11 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|CMD_ERROR
@@ -1125,6 +1130,11 @@ comment|/* Add to the list of loaded modules */
 name|mod_append
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
