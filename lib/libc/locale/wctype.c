@@ -186,6 +186,13 @@ block|}
 block|,
 comment|/* BSD extension */
 block|{
+literal|"rune"
+block|,
+literal|0xFFFFFF00L
+block|}
+block|,
+comment|/* BSD extension */
+block|{
 name|NULL
 block|,
 literal|0UL
