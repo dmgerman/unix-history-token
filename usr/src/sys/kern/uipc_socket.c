@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.27.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4689,6 +4689,48 @@ name|ENOPROTOOPT
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|so
+operator|->
+name|so_proto
+operator|&&
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_ctloutput
+condition|)
+call|(
+name|void
+call|)
+argument_list|(
+call|(
+modifier|*
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_ctloutput
+call|)
+argument_list|(
+name|PRCO_SETOPT
+argument_list|,
+name|so
+argument_list|,
+name|level
+argument_list|,
+name|optname
+argument_list|,
+operator|&
+name|m0
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 name|bad
 label|:
