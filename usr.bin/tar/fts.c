@@ -59,14 +59,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
 
 begin_comment
-comment|/* bsdtar: translate certain system calls to Linux names. */
+comment|/* bsdtar: Don't use FreeBSD names on non-FreeBSD. */
 end_comment
 
 begin_define
