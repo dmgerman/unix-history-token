@@ -14094,12 +14094,6 @@ name|wcred
 operator|=
 name|NOCRED
 expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_WRITEINPROG
-expr_stmt|;
 name|vfs_busy_pages
 argument_list|(
 name|bp
@@ -14364,8 +14358,6 @@ operator|&=
 operator|~
 operator|(
 name|B_NEEDCOMMIT
-operator||
-name|B_WRITEINPROG
 operator||
 name|B_CLUSTEROK
 operator|)
@@ -14684,8 +14676,6 @@ operator|->
 name|b_flags
 operator||=
 name|B_ASYNC
-operator||
-name|B_WRITEINPROG
 expr_stmt|;
 name|splx
 argument_list|(
@@ -15069,7 +15059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the "real" nfs::bwrite(struct buf*).  * B_WRITEINPROG isn't set unless the force flag is one and it  * handles the B_NEEDCOMMIT flag.  * We set B_CACHE if this is a VMIO buffer.  */
+comment|/*  * This is the "real" nfs::bwrite(struct buf*).  * We set B_CACHE if this is a VMIO buffer.  */
 end_comment
 
 begin_function
@@ -15083,6 +15073,7 @@ name|bp
 parameter_list|,
 name|int
 name|force
+name|__unused
 parameter_list|,
 name|struct
 name|thread
@@ -15221,16 +15212,6 @@ name|bp
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|force
-condition|)
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_WRITEINPROG
 expr_stmt|;
 name|BUF_KERNPROC
 argument_list|(

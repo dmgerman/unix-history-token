@@ -3589,8 +3589,6 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_WRITEINPROG
-operator||
 name|B_CACHE
 expr_stmt|;
 name|bp

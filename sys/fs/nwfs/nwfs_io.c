@@ -1813,12 +1813,6 @@ name|uio_rw
 operator|=
 name|UIO_WRITE
 expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_WRITEINPROG
-expr_stmt|;
 name|error
 operator|=
 name|ncp_write
@@ -1837,13 +1831,6 @@ name|uiop
 argument_list|,
 name|cr
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_WRITEINPROG
 expr_stmt|;
 comment|/* 		 * For an interrupted write, the buffer is still valid 		 * and the write hasn't been pushed to the server yet, 		 * so we can't set BIO_ERROR and report the interruption 		 * by setting B_EINTR. For the B_ASYNC case, B_EINTR 		 * is not relevant, so the rpc attempt is essentially 		 * a noop.  For the case of a V3 write rpc not being 		 * committed to stable storage, the block is still 		 * dirty and requires either a commit rpc or another 		 * write rpc with iomode == NFSV3WRITE_FILESYNC before 		 * the block is reused. This is indicated by setting 		 * the B_DELWRI and B_NEEDCOMMIT flags. 		 */
 if|if

@@ -3924,13 +3924,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_WRITEINPROG
-expr_stmt|;
 if|if
 condition|(
 operator|(

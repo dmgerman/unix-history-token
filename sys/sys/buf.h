@@ -718,12 +718,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_WRITEINPROG
+name|B_01000000
 value|0x01000000
 end_define
 
 begin_comment
-comment|/* Write in progress. */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -807,7 +807,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_FLAGS
-value|"\20\40b31\37cluster\36vmio\35ram\34b27" \ 	"\33paging\32b25\31writeinprog\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23phys\22clusterok\21malloc\20nocache\17locked\16inval" \ 	"\15scanned\14nowdrain\13eintr\12done\11b8\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
+value|"\20\40b31\37cluster\36vmio\35ram\34b27" \ 	"\33paging\32b25\31b24\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23phys\22clusterok\21malloc\20nocache\17locked\16inval" \ 	"\15scanned\14nowdrain\13eintr\12done\11b8\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
 end_define
 
 begin_comment
