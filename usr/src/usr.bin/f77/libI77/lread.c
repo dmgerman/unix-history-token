@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_lread[] = "@(#)lread.c	1.5";  *  * list directed read  */
+comment|/* char id_lread[] = "@(#)lread.c	1.6";  *  * list directed read  */
 end_comment
 
 begin_include
@@ -534,6 +534,10 @@ name|lcount
 operator|=
 literal|0
 expr_stmt|;
+name|ltype
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|curunit
@@ -1046,12 +1050,18 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
+name|flex
+operator|*
+operator|)
+operator|(
+operator|(
 name|char
 operator|*
 operator|)
 name|ptr
 operator|+
 name|len
+operator|)
 expr_stmt|;
 block|}
 return|return
@@ -1357,6 +1367,17 @@ name|int
 operator|)
 name|a
 expr_stmt|;
+if|if
+condition|(
+name|nullfld
+argument_list|()
+condition|)
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+comment|/* could be R* */
 name|db
 operator|=
 name|rd_int
@@ -1795,6 +1816,17 @@ return|;
 comment|/* get repeat count */
 if|if
 condition|(
+name|nullfld
+argument_list|()
+condition|)
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+comment|/* could be R* */
+if|if
+condition|(
 name|GETC
 argument_list|(
 name|ch
@@ -1929,6 +1961,17 @@ name|n
 operator|)
 return|;
 comment|/* get repeat count */
+if|if
+condition|(
+name|nullfld
+argument_list|()
+condition|)
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+comment|/* could be R* */
 if|if
 condition|(
 name|GETC
@@ -2127,6 +2170,17 @@ name|n
 operator|)
 return|;
 comment|/* get repeat count */
+if|if
+condition|(
+name|nullfld
+argument_list|()
+condition|)
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+comment|/* could be R* */
 if|if
 condition|(
 name|isapos
@@ -2600,6 +2654,66 @@ expr_stmt|;
 return|return
 operator|(
 name|OK
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|nullfld
+argument_list|()
+end_macro
+
+begin_comment
+comment|/* look for null field following a repeat count */
+end_comment
+
+begin_block
+block|{
+name|int
+name|ch
+decl_stmt|;
+while|while
+condition|(
+name|isblnk
+argument_list|(
+name|GETC
+argument_list|(
+name|ch
+argument_list|)
+argument_list|)
+condition|)
+empty_stmt|;
+call|(
+modifier|*
+name|ungetn
+call|)
+argument_list|(
+name|ch
+argument_list|,
+name|cf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|issep
+argument_list|(
+name|ch
+argument_list|)
+operator|||
+name|endlinp
+argument_list|(
+name|ch
+argument_list|)
+condition|)
+return|return
+operator|(
+name|YES
+operator|)
+return|;
+return|return
+operator|(
+name|NO
 operator|)
 return|;
 block|}
