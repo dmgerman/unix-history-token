@@ -1327,8 +1327,6 @@ name|int
 name|i
 decl_stmt|,
 name|hlen
-decl_stmt|,
-name|mff
 decl_stmt|;
 name|u_short
 name|sum
@@ -2677,27 +2675,9 @@ operator|(
 name|IP_MF
 operator||
 name|IP_OFFMASK
-operator||
-name|IP_RF
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-comment|/* 	 * Reassembly should be able to treat a mbuf cluster, for later 	 * operation of contiguous protocol headers on the cluster. (KAME) 	 */
-block|if (m->m_flags& M_EXT) {
-comment|/* XXX */
-block|if ((m = m_pullup(m, hlen)) == 0) { 				ipstat.ips_toosmall++;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
-block|ip_fw_fwd_addr = NULL;
-endif|#
-directive|endif
-block|return; 			} 			ip = mtod(m, struct ip *); 		}
-endif|#
-directive|endif
 name|sum
 operator|=
 name|IPREASS_HASH
@@ -2872,28 +2852,20 @@ expr_stmt|;
 block|}
 name|found
 label|:
-comment|/* 		 * Adjust ip_len to not reflect header, 		 * set ip_mff if more fragments are expected, 		 * convert offset of this to bytes. 		 */
+comment|/* 		 * Adjust ip_len to not reflect header, 		 * convert offset of this to bytes. 		 */
 name|ip
 operator|->
 name|ip_len
 operator|-=
 name|hlen
 expr_stmt|;
-name|mff
-operator|=
-operator|(
+if|if
+condition|(
 name|ip
 operator|->
 name|ip_off
 operator|&
 name|IP_MF
-operator|)
-operator|!=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|mff
 condition|)
 block|{
 comment|/* 		         * Make sure that fragments have a data length 			 * that's a non-zero multiple of 8 bytes. 		         */
@@ -2939,16 +2911,7 @@ name|ip_off
 operator|<<=
 literal|3
 expr_stmt|;
-comment|/* 		 * If datagram marked as having more fragments 		 * or if this is not the first fragment, 		 * attempt reassembly; if it succeeds, proceed. 		 */
-if|if
-condition|(
-name|mff
-operator|||
-name|ip
-operator|->
-name|ip_off
-condition|)
-block|{
+comment|/* 		 * Attempt reassembly; if it succeeds, proceed. 		 */
 name|ipstat
 operator|.
 name|ips_fragments
@@ -3120,17 +3083,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-block|}
-elseif|else
-if|if
-condition|(
-name|fp
-condition|)
-name|ip_freef
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|ip
@@ -3461,8 +3413,6 @@ name|struct
 name|mbuf
 modifier|*
 name|p
-init|=
-literal|0
 decl_stmt|,
 modifier|*
 name|q
