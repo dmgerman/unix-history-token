@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.49 (Berkeley) %G%"
+literal|"@(#)login.c	5.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,6 +212,12 @@ name|char
 name|term
 index|[
 literal|64
+index|]
+decl_stmt|,
+modifier|*
+name|envinit
+index|[
+literal|1
 index|]
 decl_stmt|,
 modifier|*
@@ -434,12 +440,6 @@ name|domain
 decl_stmt|,
 modifier|*
 name|salt
-decl_stmt|,
-modifier|*
-name|envinit
-index|[
-literal|1
-index|]
 decl_stmt|,
 modifier|*
 name|ttyn
