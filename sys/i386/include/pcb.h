@@ -92,6 +92,11 @@ directive|define
 name|PCB_DBREGS
 value|0x02
 comment|/* process using debug registers */
+define|#
+directive|define
+name|PCB_NPXTRAP
+value|0x04
+comment|/* npx trap pending */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;
