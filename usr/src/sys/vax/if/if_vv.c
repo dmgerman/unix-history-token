@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.1	82/06/04	*/
+comment|/*	if_vv.c	4.2	82/06/12	*/
 end_comment
 
 begin_comment
@@ -1653,8 +1653,6 @@ name|vs
 operator|->
 name|vs_if
 argument_list|,
-name|RTF_DIRECT
-operator||
 name|RTF_UP
 argument_list|)
 expr_stmt|;
@@ -3265,8 +3263,6 @@ name|ifp
 operator|->
 name|if_addr
 argument_list|,
-name|RTF_DIRECT
-operator||
 name|RTF_UP
 operator||
 name|RTF_HOST
