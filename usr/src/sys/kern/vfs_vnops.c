@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	6.3	84/08/29	*/
+comment|/*	vfs_vnops.c	6.4	85/03/18	*/
 end_comment
 
 begin_include
@@ -118,7 +118,7 @@ specifier|register
 name|m
 expr_stmt|;
 specifier|register
-name|int
+name|gid_t
 modifier|*
 name|gp
 decl_stmt|;
