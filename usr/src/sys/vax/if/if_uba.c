@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.c	4.5	81/12/09	*/
+comment|/*	if_uba.c	4.6	81/12/09	*/
 end_comment
 
 begin_include
@@ -549,17 +549,6 @@ argument_list|(
 name|IF_RUBAGET
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"if_rubaget totlen %d off0 %d cp %x\n"
-argument_list|,
-name|totlen
-argument_list|,
-name|off0
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 name|top
 operator|=
 literal|0
@@ -622,19 +611,6 @@ else|else
 name|len
 operator|=
 name|totlen
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"m %x len %d off %d cp %x\n"
-argument_list|,
-name|m
-argument_list|,
-name|len
-argument_list|,
-name|off
-argument_list|,
-name|cp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -874,37 +850,8 @@ name|m_off
 operator|=
 name|MMINOFF
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"nopage m->m_len %d, m %x\n"
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 name|copy
 label|:
-name|printf
-argument_list|(
-literal|"copy %d from %x to %x"
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|,
-name|cp
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|cp
