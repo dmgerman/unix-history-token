@@ -2959,6 +2959,13 @@ name|p
 operator|++
 operator|)
 expr_stmt|;
+comment|/* Since we change the pointer 'from', we also have 			   to change the perceived length of the string it 			   points at.  /RL */
+name|len
+operator|-=
+name|e
+operator|-
+name|from
+expr_stmt|;
 name|from
 operator|=
 name|e

@@ -94,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|INTEL_DEF_PROV
-value|TEXT("Intel Hardware Cryptographic Service Provider")
+value|L"Intel Hardware Cryptographic Service Provider"
 end_define
 
 begin_function_decl
@@ -181,15 +181,15 @@ name|BOOL
 function_decl|(
 name|WINAPI
 modifier|*
-name|CRYPTACQUIRECONTEXT
+name|CRYPTACQUIRECONTEXTW
 function_decl|)
 parameter_list|(
 name|HCRYPTPROV
 modifier|*
 parameter_list|,
-name|LPCTSTR
+name|LPCWSTR
 parameter_list|,
-name|LPCTSTR
+name|LPCWSTR
 parameter_list|,
 name|DWORD
 parameter_list|,
@@ -516,7 +516,7 @@ name|user
 decl_stmt|,
 name|netapi
 decl_stmt|;
-name|CRYPTACQUIRECONTEXT
+name|CRYPTACQUIRECONTEXTW
 name|acquire
 init|=
 literal|0
@@ -577,6 +577,15 @@ operator|&&
 name|WCEPLATFORM
 operator|!=
 name|MS_HPC_PRO
+ifndef|#
+directive|ifndef
+name|CryptAcquireContext
+define|#
+directive|define
+name|CryptAcquireContext
+value|CryptAcquireContextW
+endif|#
+directive|endif
 comment|/* poll the CryptoAPI PRNG */
 comment|/* The CryptoAPI returns sizeof(buf) bytes of randomness */
 if|if
@@ -635,6 +644,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_SYS_WINCE
+comment|/* 	 * None of below libraries are present on Windows CE, which is 	 * why we #ifndef the whole section. This also excuses us from 	 * handling the GetProcAddress issue. The trouble is that in 	 * real Win32 API GetProcAddress is available in ANSI flavor 	 * only. In WinCE on the other hand GetProcAddress is a macro 	 * most commonly defined as GetProcAddressW, which accepts 	 * Unicode argument. If we were to call GetProcAddress under 	 * WinCE, I'd recommend to either redefine GetProcAddress as 	 * GetProcAddressA (there seem to be one in common CE spec) or 	 * implement own shim routine, which would accept ANSI argument 	 * and expand it to Unicode. 	 */
 comment|/* load functions dynamically - not available on all systems */
 name|advapi
 operator|=
@@ -676,9 +689,6 @@ literal|"NETAPI32.DLL"
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|OPENSSL_SYS_WINCE
 if|#
 directive|if
 literal|1
@@ -697,10 +707,7 @@ name|GetProcAddress
 argument_list|(
 name|netapi
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"NetStatisticsGet"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|netfree
@@ -712,10 +719,7 @@ name|GetProcAddress
 argument_list|(
 name|netapi
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"NetApiBufferFree"
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -817,12 +821,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 1 */
-endif|#
-directive|endif
-comment|/* !OPENSSL_SYS_WINCE */
-ifndef|#
-directive|ifndef
-name|OPENSSL_SYS_WINCE
 comment|/* It appears like this can cause an exception deep within ADVAPI32.DLL          * at random times on Windows 2000.  Reported by Jeffrey Altman.            * Only use it on NT. 	 */
 comment|/* Wolfgang Marczy<WMarczy@topcall.co.at> reports that 	 * the RegQueryValueEx call below can hang on NT4.0 (SP6). 	 * So we don't use this at all for now. */
 if|#
@@ -837,27 +835,22 @@ comment|/* Close the Registry Key to allow Windows to cleanup/close 			 * the op
 block|RegCloseKey(HKEY_PERFORMANCE_DATA); 			} 		if (buf) 			free(buf); 		}
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* !OPENSSL_SYS_WINCE */
 if|if
 condition|(
 name|advapi
 condition|)
 block|{
+comment|/* 		 * If it's available, then it's available in both ANSI 		 * and UNICODE flavors even in Win9x, documentation says. 		 * We favor Unicode... 		 */
 name|acquire
 operator|=
 operator|(
-name|CRYPTACQUIRECONTEXT
+name|CRYPTACQUIRECONTEXTW
 operator|)
 name|GetProcAddress
 argument_list|(
 name|advapi
 argument_list|,
-name|TEXT
-argument_list|(
-literal|"CryptAcquireContextA"
-argument_list|)
+literal|"CryptAcquireContextW"
 argument_list|)
 expr_stmt|;
 name|gen
@@ -869,10 +862,7 @@ name|GetProcAddress
 argument_list|(
 name|advapi
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"CryptGenRandom"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|release
@@ -884,10 +874,7 @@ name|GetProcAddress
 argument_list|(
 name|advapi
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"CryptReleaseContext"
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1038,49 +1025,6 @@ argument_list|(
 name|advapi
 argument_list|)
 expr_stmt|;
-comment|/* timer data */
-name|readtimer
-argument_list|()
-expr_stmt|;
-comment|/* memory usage statistics */
-name|GlobalMemoryStatus
-argument_list|(
-operator|&
-name|m
-argument_list|)
-expr_stmt|;
-name|RAND_add
-argument_list|(
-operator|&
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|m
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* process ID */
-name|w
-operator|=
-name|GetCurrentProcessId
-argument_list|()
-expr_stmt|;
-name|RAND_add
-argument_list|(
-operator|&
-name|w
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|w
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|user
@@ -1104,10 +1048,7 @@ name|GetProcAddress
 argument_list|(
 name|user
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"GetForegroundWindow"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cursor
@@ -1119,10 +1060,7 @@ name|GetProcAddress
 argument_list|(
 name|user
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"GetCursorInfo"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|queue
@@ -1134,10 +1072,7 @@ name|GetProcAddress
 argument_list|(
 name|user
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"GetQueueStatus"
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1329,10 +1264,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"CreateToolhelp32Snapshot"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|close_snap
@@ -1344,10 +1276,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"CloseToolhelp32Snapshot"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|heap_first
@@ -1359,10 +1288,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Heap32First"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|heap_next
@@ -1374,10 +1300,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Heap32Next"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|heaplist_first
@@ -1389,10 +1312,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Heap32ListFirst"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|heaplist_next
@@ -1404,10 +1324,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Heap32ListNext"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|process_first
@@ -1419,10 +1336,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Process32First"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|process_next
@@ -1434,10 +1348,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Process32Next"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|thread_first
@@ -1449,10 +1360,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Thread32First"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|thread_next
@@ -1464,10 +1372,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Thread32Next"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|module_first
@@ -1479,10 +1384,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Module32First"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|module_next
@@ -1494,10 +1396,7 @@ name|GetProcAddress
 argument_list|(
 name|kernel
 argument_list|,
-name|TEXT
-argument_list|(
 literal|"Module32Next"
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1801,6 +1700,52 @@ name|kernel
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !OPENSSL_SYS_WINCE */
+comment|/* timer data */
+name|readtimer
+argument_list|()
+expr_stmt|;
+comment|/* memory usage statistics */
+name|GlobalMemoryStatus
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
+name|RAND_add
+argument_list|(
+operator|&
+name|m
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* process ID */
+name|w
+operator|=
+name|GetCurrentProcessId
+argument_list|()
+expr_stmt|;
+name|RAND_add
+argument_list|(
+operator|&
+name|w
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|w
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -2056,10 +2001,9 @@ argument_list|(
 name|_MSC_VER
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
-name|OPENSSL_SYS_WINCE
+name|_M_X86
 argument_list|)
 specifier|static
 name|int

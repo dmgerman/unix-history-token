@@ -4794,10 +4794,8 @@ argument_list|)
 expr_stmt|;
 name|des_ecb2_encrypt
 argument_list|(
-operator|&
 name|in
 argument_list|,
-operator|&
 name|out
 argument_list|,
 name|ks
@@ -4809,10 +4807,8 @@ argument_list|)
 expr_stmt|;
 name|des_ecb2_encrypt
 argument_list|(
-operator|&
 name|out
 argument_list|,
-operator|&
 name|outin
 argument_list|,
 name|ks

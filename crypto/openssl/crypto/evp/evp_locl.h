@@ -80,7 +80,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|static int cname##_cfb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
+value|static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
 end_define
 
 begin_define
@@ -204,7 +204,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb, CFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb##cbits, CFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
 end_define
 
 begin_define
@@ -361,6 +361,29 @@ parameter_list|,
 name|ctx
 parameter_list|)
 value|((kstruct *)(ctx)->cipher_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IMPLEMENT_CFBR
+parameter_list|(
+name|cipher
+parameter_list|,
+name|cprefix
+parameter_list|,
+name|kstruct
+parameter_list|,
+name|ksched
+parameter_list|,
+name|keysize
+parameter_list|,
+name|cbits
+parameter_list|,
+name|iv_len
+parameter_list|)
+define|\
+value|BLOCK_CIPHER_func_cfb(cipher##_##keysize,cprefix,cbits,kstruct,ksched) \ 	BLOCK_CIPHER_def_cfb(cipher##_##keysize,kstruct, \ 			     NID_##cipher##_##keysize, keysize/8, iv_len, cbits, \ 			     0, cipher##_init_key, NULL, \ 			     EVP_CIPHER_set_asn1_iv, \ 			     EVP_CIPHER_get_asn1_iv, \ 			     NULL)
 end_define
 
 end_unit

@@ -2487,6 +2487,8 @@ argument_list|)
 expr_stmt|;
 comment|/* challenge length */
 comment|/*challenge id data*/
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|s
@@ -2497,7 +2499,13 @@ name|challenge
 argument_list|,
 name|SSL2_CHALLENGE_LENGTH
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|memcpy
 argument_list|(
 name|d
@@ -2744,6 +2752,8 @@ name|i
 operator|>
 literal|0
 condition|)
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|sess
@@ -2752,7 +2762,13 @@ name|key_arg
 argument_list|,
 name|i
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|/* make a master key */
 name|i
 operator|=

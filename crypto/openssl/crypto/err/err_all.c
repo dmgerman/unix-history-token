@@ -188,6 +188,12 @@ directive|include
 file|<openssl/err.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
 begin_function
 name|void
 name|ERR_load_crypto_strings
@@ -307,6 +313,14 @@ name|ERR_load_OCSP_strings
 argument_list|()
 expr_stmt|;
 name|ERR_load_UI_strings
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+name|ERR_load_FIPS_strings
 argument_list|()
 expr_stmt|;
 endif|#

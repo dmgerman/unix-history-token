@@ -537,6 +537,7 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_WIN32
 argument_list|)
+block|{
 comment|/* For some reason Win32 can't write to files created this way */
 comment|/* chmod(..., 0600) is too late to protect the file, 	 * permissions should be restrictive from the start */
 name|int
@@ -567,6 +568,7 @@ argument_list|,
 literal|"wb"
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if

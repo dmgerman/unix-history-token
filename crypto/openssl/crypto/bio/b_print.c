@@ -2747,6 +2747,9 @@ if|if
 condition|(
 name|fracpart
 operator|>=
+operator|(
+name|long
+operator|)
 name|pow10
 argument_list|(
 name|max

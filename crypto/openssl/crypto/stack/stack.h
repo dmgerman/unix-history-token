@@ -337,6 +337,15 @@ modifier|*
 name|st
 parameter_list|)
 function_decl|;
+name|int
+name|sk_is_sorted
+parameter_list|(
+specifier|const
+name|STACK
+modifier|*
+name|st
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
