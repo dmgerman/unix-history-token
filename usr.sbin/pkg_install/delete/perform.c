@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.3 1993/10/08 01:19:35 jkh Exp $"
+literal|"$Id: perform.c,v 1.4 1994/05/25 18:00:02 asami Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,6 +430,11 @@ argument_list|(
 literal|"Toto!  This doesn't look like Kansas anymore!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Fake
+operator|&&
 name|delete_package
 argument_list|(
 name|FALSE
@@ -437,11 +442,8 @@ argument_list|,
 operator|&
 name|Plist
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Fake
+operator|!=
+name|FAIL
 operator|&&
 name|vsystem
 argument_list|(

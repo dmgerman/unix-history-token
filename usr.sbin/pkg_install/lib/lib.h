@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.7 1994/05/25 18:00:04 asami Exp $ */
+comment|/* $Id: lib.h,v 1.8 1994/08/28 14:15:29 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -824,7 +824,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|delete_package
 parameter_list|(
 name|Boolean

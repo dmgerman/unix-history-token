@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.7 1994/07/11 01:11:14 jkh Exp $"
+literal|"$Id: plist.c,v 1.8 1994/08/28 14:15:30 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1241,7 +1241,7 @@ comment|/* Delete the results of a package installation, not the packaging itsel
 end_comment
 
 begin_function
-name|void
+name|int
 name|delete_package
 parameter_list|(
 name|Boolean
@@ -1269,6 +1269,11 @@ modifier|*
 name|last_file
 init|=
 literal|""
+decl_stmt|;
+name|Boolean
+name|fail
+init|=
+name|SUCCESS
 decl_stmt|;
 while|while
 condition|(
@@ -1352,6 +1357,7 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
+block|{
 name|whinge
 argument_list|(
 literal|"unexec '%s' failed."
@@ -1359,6 +1365,11 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+name|fail
+operator|=
+name|FAIL
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -1427,6 +1438,7 @@ argument_list|,
 name|ign_err
 argument_list|)
 condition|)
+block|{
 name|whinge
 argument_list|(
 literal|"Unable to completely remove file '%s'"
@@ -1434,6 +1446,11 @@ argument_list|,
 name|full_name
 argument_list|)
 expr_stmt|;
+name|fail
+operator|=
+name|FAIL
+expr_stmt|;
+block|}
 name|last_file
 operator|=
 name|p
@@ -1448,6 +1465,9 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+return|return
+name|fail
+return|;
 block|}
 end_function
 
