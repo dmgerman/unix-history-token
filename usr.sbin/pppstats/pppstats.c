@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pppstats.c,v 1.9 1997/02/22 16:12:12 peter Exp $"
+literal|"$Id: pppstats.c,v 1.10 1997/08/22 15:39:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1519,7 +1519,7 @@ operator|.
 name|d
 operator|.
 name|ratio
-operator|*
+operator|/
 literal|256.0
 argument_list|)
 expr_stmt|;
@@ -1566,7 +1566,7 @@ operator|.
 name|c
 operator|.
 name|ratio
-operator|*
+operator|/
 literal|256.0
 argument_list|)
 expr_stmt|;
@@ -1610,7 +1610,7 @@ operator|.
 name|d
 operator|.
 name|ratio
-operator|*
+operator|/
 literal|256.0
 argument_list|)
 expr_stmt|;
@@ -1651,7 +1651,7 @@ operator|.
 name|c
 operator|.
 name|ratio
-operator|*
+operator|/
 literal|256.0
 argument_list|)
 expr_stmt|;
