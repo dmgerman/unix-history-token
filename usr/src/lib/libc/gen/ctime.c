@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.17 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3552,10 +3552,10 @@ name|name
 operator|==
 literal|'\0'
 condition|)
-name|stdoffset
-operator|=
-literal|0
-expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 else|else
 block|{
 name|name
@@ -4688,13 +4688,9 @@ condition|)
 operator|(
 name|void
 operator|)
-name|tzparse
+name|gmtload
 argument_list|(
-name|name
-argument_list|,
 name|lclptr
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|settzname
