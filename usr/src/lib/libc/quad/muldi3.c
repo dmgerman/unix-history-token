@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)muldi3.c	5.3 (Berkeley) %G%"
+literal|"@(#)muldi3.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,7 +230,8 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|size_t
+name|unsigned
+name|long
 name|m
 decl_stmt|,
 name|n

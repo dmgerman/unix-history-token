@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)negdi2.c	5.1 (Berkeley) %G%"
+literal|"@(#)negdi2.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,8 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|size_t
+name|unsigned
+name|long
 name|n
 decl_stmt|;
 end_decl_stmt
