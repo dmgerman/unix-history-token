@@ -2962,7 +2962,7 @@ expr_stmt|;
 name|tvt
 operator|.
 name|tv_usec
-operator|-=
+operator|+=
 name|tickdelta
 expr_stmt|;
 if|if
