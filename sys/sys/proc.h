@@ -467,6 +467,10 @@ name|int
 name|td_inhibitors
 decl_stmt|;
 comment|/* (j) Why can not run */
+name|int
+name|td_pflags
+decl_stmt|;
+comment|/* (k) Private thread (TDP_*) flags. */
 name|struct
 name|kse
 modifier|*
@@ -498,14 +502,6 @@ name|u_char
 name|td_lastcpu
 decl_stmt|;
 comment|/* (j) Last cpu we were on. */
-name|u_char
-name|td_inktr
-decl_stmt|;
-comment|/* (k) Currently handling a KTR. */
-name|u_char
-name|td_inktrace
-decl_stmt|;
-comment|/* (k) Currently handling a KTRACE. */
 name|u_char
 name|td_oncpu
 decl_stmt|;
@@ -735,17 +731,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_OLDMASK
-value|0x000001
-end_define
-
-begin_comment
-comment|/* Need to restore mask after suspend. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_INPANIC
 value|0x000002
 end_define
@@ -928,6 +913,43 @@ end_define
 
 begin_comment
 comment|/* Lock aquisition - deadlock treatment. */
+end_comment
+
+begin_comment
+comment|/* "private" flags kept in td_pflags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_OLDMASK
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Need to restore mask after suspend. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_INKTR
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Thread is currently in KTR code. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_INKTRACE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Thread is currently in KTRACE code. */
 end_comment
 
 begin_define

@@ -148,7 +148,8 @@ name|td
 parameter_list|,
 name|type
 parameter_list|)
-value|(KTRCHECK((td), (type))&& !(td)->td_inktrace)
+define|\
+value|(KTRCHECK((td), (type))&& !((td)->td_pflags& TDP_INKTRACE))
 end_define
 
 begin_comment
