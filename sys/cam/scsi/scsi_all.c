@@ -10788,37 +10788,44 @@ decl_stmt|;
 name|u_int
 name|period
 decl_stmt|;
-comment|/* in 10ths of ns */
+comment|/* in 100ths of ns */
 block|}
 name|scsi_syncrates
 index|[]
 init|=
 block|{
 block|{
+literal|0x08
+block|,
+literal|625
+block|}
+block|,
+comment|/* FAST-160 */
+block|{
 literal|0x09
 block|,
-literal|125
+literal|1250
 block|}
 block|,
 comment|/* FAST-80 */
 block|{
 literal|0x0a
 block|,
-literal|250
+literal|2500
 block|}
 block|,
 comment|/* FAST-40 40MHz */
 block|{
 literal|0x0b
 block|,
-literal|303
+literal|3030
 block|}
 block|,
 comment|/* FAST-40 33MHz */
 block|{
 literal|0x0c
 block|,
-literal|500
+literal|5000
 block|}
 comment|/* FAST-20 */
 block|}
@@ -10888,7 +10895,7 @@ block|{
 comment|/* Period in kHz */
 return|return
 operator|(
-literal|10000000
+literal|100000000
 operator|/
 name|scsi_syncrates
 index|[
