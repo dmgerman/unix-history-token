@@ -2025,12 +2025,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|oldcred
-operator|=
-name|p
-operator|->
-name|p_ucred
-expr_stmt|;
 name|uid
 operator|=
 name|uap
@@ -2046,6 +2040,12 @@ expr_stmt|;
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|oldcred
+operator|=
+name|p
+operator|->
+name|p_ucred
 expr_stmt|;
 comment|/* 	 * See if we have "permission" by POSIX 1003.1 rules. 	 * 	 * Note that setuid(geteuid()) is a special case of 	 * "appropriate privileges" in appendix B.4.2.2.  We need 	 * to use this clause to be compatible with traditional BSD 	 * semantics.  Basically, it means that "setuid(xx)" sets all 	 * three id's (assuming you have privs). 	 * 	 * Notes on the logic.  We do things in three steps. 	 * 1: We determine if the euid is going to change, and do EPERM 	 *    right away.  We unconditionally change the euid later if this 	 *    test is satisfied, simplifying that part of the logic. 	 * 2: We determine if the real and/or saved uids are going to 	 *    change.  Determined by compile options. 	 * 3: Change euid last. (after tests in #2 for "appropriate privs") 	 */
 if|if
