@@ -1,32 +1,44 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fcntl.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fcntl.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Flag values accessible to open(2) and fcntl(2)  *  (The first three can only be set by open)  */
+comment|/*  * Flag values accessible to open(2) and fcntl(2)-- copied from  *<sys/file.h>.  (The first three can only be set by open.)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|O_RDONLY
-value|0
+value|000
 end_define
+
+begin_comment
+comment|/* open for reading */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|O_WRONLY
-value|1
+value|001
 end_define
+
+begin_comment
+comment|/* open for writing */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|O_RDWR
-value|2
+value|002
 end_define
+
+begin_comment
+comment|/* open for read& write */
+end_comment
 
 begin_define
 define|#
@@ -36,7 +48,11 @@ value|FNDELAY
 end_define
 
 begin_comment
-comment|/* Non-blocking I/O */
+comment|/* non-blocking open */
+end_comment
+
+begin_comment
+comment|/* really non-blocking I/O for fcntl */
 end_comment
 
 begin_define
@@ -47,7 +63,7 @@ value|FAPPEND
 end_define
 
 begin_comment
-comment|/* append (writes guaranteed at the end) */
+comment|/* append on each write */
 end_comment
 
 begin_define
