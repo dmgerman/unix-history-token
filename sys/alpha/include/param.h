@@ -133,7 +133,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|NCPUS
+name|MAXCPU
 value|32
 end_define
 
@@ -145,7 +145,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|NCPUS
+name|MAXCPU
 value|1
 end_define
 

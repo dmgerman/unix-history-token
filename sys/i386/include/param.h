@@ -125,8 +125,8 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|NCPUS
-value|2
+name|MAXCPU
+value|16
 end_define
 
 begin_else
@@ -137,7 +137,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|NCPUS
+name|MAXCPU
 value|1
 end_define
 
@@ -145,6 +145,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SMP */
+end_comment
 
 begin_comment
 comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value  * for all data types (int, long, ...).   The result is unsigned int  * and must be cast to any desired pointer type.  */

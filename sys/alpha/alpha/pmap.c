@@ -650,7 +650,7 @@ specifier|static
 name|pmap_t
 name|pmap_active
 index|[
-name|NCPUS
+name|MAXCPU
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -4078,7 +4078,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCPUS
+name|MAXCPU
 condition|;
 name|i
 operator|++
@@ -4314,7 +4314,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NCPUS
+name|MAXCPU
 condition|;
 name|i
 operator|++

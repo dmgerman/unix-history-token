@@ -555,7 +555,7 @@ comment|/* generation number */
 block|}
 name|pm_asn
 index|[
-name|NCPUS
+name|MAXCPU
 index|]
 struct|;
 name|struct

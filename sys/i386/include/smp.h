@@ -82,47 +82,6 @@ begin_comment
 comment|/* SMP&& !APIC_IO */
 end_comment
 
-begin_comment
-comment|/*  * Maximum number of CPUs we will use.  * In the !SMP case we save ourselves a litle space.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|MAXCPU
-value|16
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAXCPU
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
-
 begin_if
 if|#
 directive|if

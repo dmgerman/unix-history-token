@@ -710,7 +710,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|NCPUS
+name|MAXCPU
 operator|==
 literal|1
 end_if
@@ -772,7 +772,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NCPUS == 1 */
+comment|/* MAXCPU == 1 */
 end_comment
 
 begin_endif
