@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id$"
+literal|"@(#)$Id: gethostbynis.c,v 1.8 1997/02/22 15:00:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: gethostbynis.c,v 1.8 1997/02/22 15:00:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
 end_include
 
 begin_include
@@ -241,6 +247,8 @@ name|result
 decl_stmt|;
 name|int
 name|resultlen
+decl_stmt|,
+name|size
 decl_stmt|;
 specifier|static
 name|struct
@@ -275,11 +283,19 @@ block|{
 case|case
 name|AF_INET
 case|:
+name|size
+operator|=
+name|NS_INADDRSZ
+expr_stmt|;
 break|break;
 default|default:
 case|case
 name|AF_INET6
 case|:
+name|size
+operator|=
+name|NS_IN6ADDRSZ
+expr_stmt|;
 name|errno
 operator|=
 name|EAFNOSUPPORT
@@ -453,10 +469,7 @@ name|h
 operator|.
 name|h_length
 operator|=
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
+name|size
 expr_stmt|;
 name|h
 operator|.
