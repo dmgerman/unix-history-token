@@ -1080,6 +1080,11 @@ argument_list|,
 literal|"unexpected operator"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|nargv
+argument_list|)
+expr_stmt|;
 return|return
 name|res
 return|;
