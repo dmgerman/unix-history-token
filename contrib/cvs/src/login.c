@@ -1042,6 +1042,22 @@ decl_stmt|;
 name|int
 name|line_length
 decl_stmt|;
+name|int
+name|anoncvs
+decl_stmt|;
+name|anoncvs
+operator|=
+operator|(
+name|strcmp
+argument_list|(
+name|CVSroot_username
+argument_list|,
+literal|"anoncvs"
+argument_list|)
+operator|==
+literal|0
+operator|)
+expr_stmt|;
 comment|/* If someone (i.e., login()) is calling connect_to_pserver() out of        context, then assume they have supplied the correct, scrambled        password. */
 if|if
 condition|(
@@ -1148,6 +1164,24 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|anoncvs
+condition|)
+block|{
+name|free
+argument_list|(
+name|passfile
+argument_list|)
+expr_stmt|;
+return|return
+name|strdup
+argument_list|(
+literal|"Ay=0=h<Z"
+argument_list|)
+return|;
+comment|/* scrambled "anoncvs" */
+block|}
 name|error
 argument_list|(
 literal|0
@@ -1267,6 +1301,11 @@ argument_list|,
 name|passfile
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|passfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|found_it
@@ -1333,6 +1372,17 @@ argument_list|(
 name|linebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|anoncvs
+condition|)
+return|return
+name|strdup
+argument_list|(
+literal|"Ay=0=h<Z"
+argument_list|)
+return|;
+comment|/* scrambled "anoncvs" */
 name|error
 argument_list|(
 literal|0
