@@ -336,6 +336,9 @@ name|struct
 name|pccard_mem_handle
 name|pf_pcmh
 decl_stmt|;
+name|device_t
+name|dev
+decl_stmt|;
 define|#
 directive|define
 name|pf_ccrt
