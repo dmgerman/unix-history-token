@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	8.1 (Berkeley) %G%"
+literal|"@(#)look.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -333,6 +333,8 @@ name|int
 name|ch
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|termchar
 decl_stmt|;
 name|char
 modifier|*
@@ -346,10 +348,17 @@ name|front
 decl_stmt|,
 modifier|*
 name|string
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|file
 operator|=
 name|_PATH_WORDS
+expr_stmt|;
+name|termchar
+operator|=
+literal|'\0'
 expr_stmt|;
 while|while
 condition|(
@@ -362,7 +371,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"df"
+literal|"dft:"
 argument_list|)
 operator|)
 operator|!=
@@ -387,6 +396,15 @@ case|:
 name|fflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|termchar
+operator|=
+operator|*
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -447,6 +465,31 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|termchar
+operator|!=
+literal|'\0'
+operator|&&
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|string
+argument_list|,
+name|termchar
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+operator|*
+operator|++
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -781,11 +824,16 @@ argument_list|,
 name|back
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the file changes underneath us, make sure we don't 	 * infinitely loop. 	 */
 while|while
 condition|(
 name|p
-operator|!=
+operator|<
 name|back
+operator|&&
+name|back
+operator|>
+name|front
 condition|)
 block|{
 if|if
@@ -1178,7 +1226,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: look [-df] string [file]\n"
+literal|"usage: look [-df] [-t char] string [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
