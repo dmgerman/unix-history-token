@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: parse_netgroup.c,v 1.1.1.1 1995/10/26 16:25:29 wpaul Exp $"
+literal|"$Id: parse_netgroup.c,v 1.2 1996/05/12 17:17:44 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: parse_netgroup.c,v 1.2 1996/05/12 17:17:44 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,37 +289,6 @@ name|gtable
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|lookup
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|group_entry
-operator|*
-index|[]
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|LINSIZ
-value|1024
-end_define
-
-begin_comment
-comment|/* Length of netgroup file line */
-end_comment
 
 begin_comment
 comment|/*  * setnetgrent()  * Parse the netgroup file looking for the netgroup and build the list  * of netgrp structures. Let parse_netgrp() and read_for_group() do  * most of the work.  */
@@ -1297,9 +1266,13 @@ name|spos
 decl_stmt|,
 modifier|*
 name|linep
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|olinep
+init|=
+name|NULL
 decl_stmt|;
 specifier|register
 name|int
@@ -1324,11 +1297,6 @@ literal|1
 index|]
 decl_stmt|;
 name|char
-modifier|*
-name|key
-init|=
-name|NULL
-decl_stmt|,
 modifier|*
 name|data
 init|=
