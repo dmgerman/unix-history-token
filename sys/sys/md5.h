@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD5.H - header file for MD5C.C  * $FreeBSD$  */
+comment|/* MD5.H - header file for MD5C.C  * $Id$  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MD5_H_
+name|_SYS_MD5_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MD5_H_
+name|_SYS_MD5_H_
 end_define
 
 begin_comment
@@ -152,7 +152,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MD5_H_ */
+comment|/* _SYS_MD5_H_ */
 end_comment
 
 end_unit
