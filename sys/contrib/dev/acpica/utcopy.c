@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1620,6 +1620,19 @@ name|Node
 operator|=
 name|NULL
 expr_stmt|;
+name|DestDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+expr_stmt|;
+comment|/* Fall through to common string/buffer case */
 case|case
 name|ACPI_TYPE_STRING
 case|:
@@ -1880,6 +1893,18 @@ name|Package
 operator|.
 name|Count
 expr_stmt|;
+name|TargetObject
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|SourceObject
+operator|->
+name|Common
+operator|.
+name|Flags
+expr_stmt|;
 comment|/*          * Pass the new package object back to the package walk routine          */
 name|State
 operator|->
@@ -1956,6 +1981,18 @@ name|Type
 expr_stmt|;
 name|DestObj
 operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|SourceObj
+operator|->
+name|Common
+operator|.
+name|Flags
+expr_stmt|;
+name|DestObj
+operator|->
 name|Package
 operator|.
 name|Count
@@ -2015,19 +2052,6 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Init */
-name|DestObj
-operator|->
-name|Package
-operator|.
-name|NextElement
-operator|=
-name|DestObj
-operator|->
-name|Package
-operator|.
-name|Elements
-expr_stmt|;
 comment|/*      * Copy the package element-by-element by walking the package "tree".      * This handles nested packages of arbitrary depth.      */
 name|Status
 operator|=

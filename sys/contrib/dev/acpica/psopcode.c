@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 66 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1112,7 +1112,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_BUFFER_OP
-value|ARGI_INVALID_OPCODE
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1567,7 +1567,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_PACKAGE_OP
-value|ARGI_INVALID_OPCODE
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1784,7 +1784,7 @@ begin_define
 define|#
 directive|define
 name|ARGI_VAR_PACKAGE_OP
-value|ARGI_INVALID_OPCODE
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
@@ -1820,7 +1820,7 @@ comment|/*  * Summary of opcode types/flags  */
 end_comment
 
 begin_comment
-comment|/******************************************************************************   Opcodes that have associated namespace objects (AML_NSOBJECT flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that are "namespace" opcodes (AML_NSOPCODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that have an associated namespace node (AML_NSNODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that define named ACPI objects (AML_NAMED flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that contain executable AML as part of the definition that   must be deferred until needed      AML_METHOD_OP     AML_VAR_PACKAGE_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_REGION_OP    Field opcodes      AML_CREATE_FIELD_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP    Field "Create" opcodes      AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP  ******************************************************************************/
+comment|/******************************************************************************   Opcodes that have associated namespace objects (AML_NSOBJECT flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that are "namespace" opcodes (AML_NSOPCODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that have an associated namespace node (AML_NSNODE flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_INT_NAMEDFIELD_OP     AML_INT_METHODCALL_OP     AML_INT_NAMEPATH_OP    Opcodes that define named ACPI objects (AML_NAMED flag)      AML_SCOPE_OP     AML_DEVICE_OP     AML_THERMAL_ZONE_OP     AML_METHOD_OP     AML_POWER_RES_OP     AML_PROCESSOR_OP     AML_NAME_OP     AML_ALIAS_OP     AML_MUTEX_OP     AML_EVENT_OP     AML_REGION_OP     AML_INT_NAMEDFIELD_OP    Opcodes that contain executable AML as part of the definition that   must be deferred until needed      AML_METHOD_OP     AML_VAR_PACKAGE_OP     AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP     AML_REGION_OP     AML_BUFFER_OP    Field opcodes      AML_CREATE_FIELD_OP     AML_FIELD_OP     AML_INDEX_FIELD_OP     AML_BANK_FIELD_OP    Field "Create" opcodes      AML_CREATE_FIELD_OP     AML_CREATE_BIT_FIELD_OP     AML_CREATE_BYTE_FIELD_OP     AML_CREATE_WORD_FIELD_OP     AML_CREATE_DWORD_FIELD_OP     AML_CREATE_QWORD_FIELD_OP  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2034,11 +2034,13 @@ name|ARGI_BUFFER_OP
 argument_list|,
 name|ACPI_TYPE_BUFFER
 argument_list|,
-name|AML_CLASS_ARGUMENT
+name|AML_CLASS_CREATE
 argument_list|,
-name|AML_TYPE_DATA_TERM
+name|AML_TYPE_CREATE_OBJECT
 argument_list|,
 name|AML_HAS_ARGS
+operator||
+name|AML_DEFER
 argument_list|)
 block|,
 comment|/* 0A */
@@ -2052,11 +2054,13 @@ name|ARGI_PACKAGE_OP
 argument_list|,
 name|ACPI_TYPE_PACKAGE
 argument_list|,
-name|AML_CLASS_ARGUMENT
+name|AML_CLASS_CREATE
 argument_list|,
-name|AML_TYPE_DATA_TERM
+name|AML_TYPE_CREATE_OBJECT
 argument_list|,
 name|AML_HAS_ARGS
+operator||
+name|AML_DEFER
 argument_list|)
 block|,
 comment|/* 0B */
@@ -4043,9 +4047,9 @@ name|ARGI_VAR_PACKAGE_OP
 argument_list|,
 name|ACPI_TYPE_PACKAGE
 argument_list|,
-name|AML_CLASS_ARGUMENT
+name|AML_CLASS_CREATE
 argument_list|,
-name|AML_TYPE_DATA_TERM
+name|AML_TYPE_CREATE_OBJECT
 argument_list|,
 name|AML_HAS_ARGS
 operator||
@@ -4302,6 +4306,23 @@ operator||
 name|AML_NAMED
 argument_list|)
 block|,
+comment|/* 7D */
+name|ACPI_OP
+argument_list|(
+literal|"[EvalSubTree]"
+argument_list|,
+argument|ARGP_SCOPE_OP
+argument_list|,
+argument|ARGI_SCOPE_OP
+argument_list|,
+argument|INTERNAL_TYPE_SCOPE
+argument_list|,
+argument|AML_CLASS_NAMED_OBJECT
+argument_list|,
+argument|AML_TYPE_NAMED_NO_OBJ
+argument_list|,
+argument|AML_HAS_ARGS | AML_NSOBJECT | AML_NSOPCODE | AML_NSNODE
+argument_list|)
 comment|/*! [End] no source code translation !*/
 block|}
 decl_stmt|;
@@ -4440,7 +4461,7 @@ literal|0x64
 block|,
 literal|0x6A
 block|,
-name|_UNK
+literal|0x7D
 block|,
 comment|/* 0x38 */
 name|_UNK

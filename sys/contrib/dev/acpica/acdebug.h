@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -630,6 +630,17 @@ end_function_decl
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiDbLoadAcpiTable
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|Filename
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDbGetAcpiTable
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*

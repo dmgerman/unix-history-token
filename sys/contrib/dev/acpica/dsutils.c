@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 88 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 89 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -274,6 +274,46 @@ name|Opcode
 operator|==
 name|AML_DATA_REGION_OP
 operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_PACKAGE_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_VAR_PACKAGE_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_BUFFER_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_INT_EVAL_SUBTREE_OP
+operator|)
 condition|)
 block|{
 comment|/*              * These opcodes allow TermArg(s) as operands and therefore              * the operands can be method calls.  The result is used.              */
@@ -284,8 +324,8 @@ block|}
 goto|goto
 name|ResultNotUsed
 goto|;
-comment|/*      * In all other cases. the parent will actually use the return      * object, so keep it.      */
 default|default:
+comment|/*          * In all other cases. the parent will actually use the return          * object, so keep it.          */
 goto|goto
 name|ResultUsed
 goto|;

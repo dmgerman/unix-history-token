@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswload - Dispatcher namespace load callbacks  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -433,6 +433,8 @@ operator|=
 name|Node
 operator|->
 name|Name
+operator|.
+name|Integer
 expr_stmt|;
 comment|/*      * Put the Node in the "op" object that the parser uses, so we      * can get it again quickly when this scope is closed      */
 name|Op
@@ -1147,6 +1149,8 @@ operator|=
 name|Node
 operator|->
 name|Name
+operator|.
+name|Integer
 expr_stmt|;
 operator|*
 name|OutOp

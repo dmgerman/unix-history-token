@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -208,7 +208,7 @@ block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"Resolved object %p\n"
 operator|,
@@ -379,7 +379,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"[Arg/Local %d] ValueObj is %p\n"
 operator|,
@@ -626,6 +626,28 @@ block|}
 comment|/* switch (Opcode) */
 break|break;
 comment|/* case INTERNAL_TYPE_REFERENCE */
+case|case
+name|ACPI_TYPE_BUFFER
+case|:
+name|Status
+operator|=
+name|AcpiDsGetBufferArguments
+argument_list|(
+name|StackDesc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_PACKAGE
+case|:
+name|Status
+operator|=
+name|AcpiDsGetPackageArguments
+argument_list|(
+name|StackDesc
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/*      * These cases may never happen here, but just in case..      */
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
@@ -660,6 +682,8 @@ name|Status
 operator|=
 name|AcpiExReadDataFromField
 argument_list|(
+name|WalkState
+argument_list|,
 name|StackDesc
 argument_list|,
 operator|&

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 132 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 133 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -348,6 +348,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiExReadDataFromField
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdos16.h - DOS specific defines, etc.  *       $Revision: 1 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdos16.h - DOS specific defines, etc.  *       $Revision: 2 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -71,29 +71,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|causeinterrupt
-parameter_list|(
-name|level
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BREAKPOINT3
 end_define
 
 begin_define
 define|#
 directive|define
-name|acpi_disable_irqs
+name|ACPI_DISABLE_IRQS
 parameter_list|()
 end_define
 
 begin_define
 define|#
 directive|define
-name|acpi_enable_irqs
+name|ACPI_ENABLE_IRQS
 parameter_list|()
 end_define
 

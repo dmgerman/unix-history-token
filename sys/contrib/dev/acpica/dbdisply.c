@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 66 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 67 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -813,6 +813,11 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" Uninitialized\n"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|AcpiOsPrintf
@@ -1198,7 +1203,7 @@ name|AML_LOCAL_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Local%d]"
+literal|"[Local%d] "
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1229,7 +1234,7 @@ name|Object
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" %p"
+literal|"%p"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1246,7 +1251,7 @@ name|AML_ARG_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Arg%d]  "
+literal|"[Arg%d]   "
 argument_list|,
 name|ObjDesc
 operator|->
@@ -1277,7 +1282,7 @@ name|Object
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" %p"
+literal|"%p"
 argument_list|,
 name|ObjDesc
 argument_list|)

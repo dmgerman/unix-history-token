@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 152 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 153 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1190,9 +1190,15 @@ block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
-literal|"Setting global scope to %p\n"
+literal|"Setting current scope to [%4.4s] (%p)\n"
+operator|,
+name|ThisNode
+operator|->
+name|Name
+operator|.
+name|Ascii
 operator|,
 name|ThisNode
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -202,7 +202,7 @@ comment|/*      * 1) Perform the first pass parse of the method to enter any    
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_PARSE
 operator|,
 literal|"**** Begin Method Parse **** Entry=%p obj=%p\n"
 operator|,
@@ -339,7 +339,7 @@ comment|/*      * 2) Execute the method.  Performs second pass parse simultaneou
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_PARSE
 operator|,
 literal|"**** Begin Method Execution **** Entry=%p obj=%p\n"
 operator|,
@@ -377,6 +377,8 @@ argument_list|,
 name|MethodNode
 operator|->
 name|Name
+operator|.
+name|Integer
 argument_list|)
 expr_stmt|;
 name|Op
@@ -515,7 +517,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_PARSE
 operator|,
 literal|"Method returned ObjDesc=%p\n"
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 85 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 86 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -941,36 +941,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|causeinterrupt
-parameter_list|(
-name|level
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BREAKPOINT3
 end_define
 
 begin_define
 define|#
 directive|define
-name|acpi_disable_irqs
+name|ACPI_DISABLE_IRQS
 parameter_list|()
 end_define
 
 begin_define
 define|#
 directive|define
-name|acpi_enable_irqs
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|halt
+name|ACPI_ENABLE_IRQS
 parameter_list|()
 end_define
 
@@ -1018,23 +1002,8 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|causeinterrupt
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|BREAKPOINT3
 end_undef
-
-begin_define
-define|#
-directive|define
-name|causeinterrupt
-parameter_list|(
-name|level
-parameter_list|)
-end_define
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -72,6 +72,17 @@ end_function_decl
 begin_comment
 comment|/*  * Evmisc  */
 end_comment
+
+begin_function_decl
+name|BOOLEAN
+name|AcpiEvIsNotifyObject
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS

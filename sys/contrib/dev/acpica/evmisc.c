@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -50,6 +50,54 @@ argument_list|(
 literal|"evmisc"
 argument_list|)
 end_macro
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvIsNotifyObject  *  * PARAMETERS:  Node            - Node to check  *  * RETURN:      TRUE if notifies allowed on this object  *  * DESCRIPTION: Check type of node for a object that supports notifies.  *  *              TBD: This could be replaced by a flag bit in the node.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|BOOLEAN
+name|AcpiEvIsNotifyObject
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Node
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
+case|case
+name|ACPI_TYPE_PROCESSOR
+case|:
+case|case
+name|ACPI_TYPE_POWER
+case|:
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+comment|/*          * These are the ONLY objects that can receive ACPI notifications          */
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGetGpeRegisterIndex  *  * PARAMETERS:  GpeNumber       - Raw GPE number  *  * RETURN:      None.  *  * DESCRIPTION: Returns the register index (index into the GPE register info  *              table) associated with this GPE.  *  ******************************************************************************/

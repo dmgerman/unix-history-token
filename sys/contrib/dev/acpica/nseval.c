@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 109 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 112 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -249,7 +249,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"Object [%s] not found [%s]\n"
 operator|,
@@ -270,7 +270,7 @@ comment|/*      * Now that we have a handle to the object, we can attempt      *
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"%s [%p] Value %p\n"
 operator|,
@@ -299,7 +299,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"*** Completed eval of object %s ***\n"
 operator|,
@@ -451,7 +451,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"Object at [%s] was not found, status=%.4X\n"
 operator|,
@@ -469,7 +469,7 @@ comment|/*      * Now that we have a handle to the object, we can attempt      *
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"%s [%p] Value %p\n"
 operator|,
@@ -498,7 +498,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"*** Completed eval of object %s ***\n"
 operator|,
@@ -809,12 +809,23 @@ name|AE_NULL_OBJECT
 argument_list|)
 expr_stmt|;
 block|}
+name|ACPI_DUMP_PATHNAME
+argument_list|(
+name|MethodNode
+argument_list|,
+literal|"NsExecuteControlMethod: Executing"
+argument_list|,
+name|ACPI_LV_INFO
+argument_list|,
+name|_COMPONENT
+argument_list|)
+expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
-literal|"Control method at Offset %p Length %x]\n"
+literal|"Method at AML address %p Length %x\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -830,34 +841,6 @@ name|Method
 operator|.
 name|AmlLength
 operator|-
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_DUMP_PATHNAME
-argument_list|(
-name|MethodNode
-argument_list|,
-literal|"NsExecuteControlMethod: Executing"
-argument_list|,
-name|ACPI_LV_NAMES
-argument_list|,
-name|_COMPONENT
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_NAMES
-operator|,
-literal|"At offset %p\n"
-operator|,
-name|ObjDesc
-operator|->
-name|Method
-operator|.
-name|AmlStart
-operator|+
 literal|1
 operator|)
 argument_list|)
@@ -1041,7 +1024,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"Returning obj %p\n"
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 145 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 147 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -361,7 +361,7 @@ condition|(
 operator|!
 operator|(
 operator|(
-name|ACPI_LV_INFO
+name|ACPI_LV_EXEC
 operator|&
 name|AcpiDbgLevel
 operator|)
@@ -387,13 +387,9 @@ name|ObjDesc
 condition|)
 block|{
 comment|/*          * This usually indicates that something serious is wrong --          * since most (if not all)          * code that dumps the stack expects something to be there!          */
-name|ACPI_DEBUG_PRINT
+name|AcpiOsPrintf
 argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
 literal|"Null stack entry ptr\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -415,7 +411,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"%p NS Node: "
 operator|,
@@ -427,7 +423,7 @@ name|ACPI_DUMP_ENTRY
 argument_list|(
 name|ObjDesc
 argument_list|,
-name|ACPI_LV_INFO
+name|ACPI_LV_EXEC
 argument_list|)
 expr_stmt|;
 return|return
@@ -449,7 +445,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"%p is not a local object\n"
 operator|,
@@ -477,7 +473,7 @@ comment|/*  ObjDesc is a valid object  */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"%p "
 operator|,
@@ -1252,7 +1248,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"*NULL* \n"
 operator|)
@@ -1471,7 +1467,7 @@ block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"************* Operand Stack Contents (Opcode [%s], %d Operands)\n"
 operator|,
@@ -1537,7 +1533,7 @@ block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"************* Stack dump from %s(%d), %s\n"
 operator|,
@@ -2053,17 +2049,6 @@ operator|->
 name|Package
 operator|.
 name|Elements
-argument_list|)
-expr_stmt|;
-name|AcpiExOutPointer
-argument_list|(
-literal|"NextElement"
-argument_list|,
-name|ObjDesc
-operator|->
-name|Package
-operator|.
-name|NextElement
 argument_list|)
 expr_stmt|;
 comment|/* Dump the package contents */

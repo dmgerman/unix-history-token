@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 83 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 84 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -162,6 +162,8 @@ condition|(
 name|NextNode
 operator|->
 name|Name
+operator|.
+name|Integer
 operator|==
 name|TargetName
 condition|)
@@ -282,7 +284,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Name %4.4s (type %X) not found at %p\n"
+literal|"Name %4.4s Type [%s] not found at %p\n"
 operator|,
 operator|(
 name|char
@@ -291,7 +293,10 @@ operator|)
 operator|&
 name|TargetName
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|Type
+argument_list|)
 operator|,
 name|NextNode
 operator|)
@@ -401,7 +406,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"[%4.4s] type %X is local(no search)\n"
+literal|"[%4.4s] type [%s] must be local to this scope (no parent search)\n"
 operator|,
 operator|(
 name|char
@@ -410,7 +415,10 @@ operator|)
 operator|&
 name|TargetName
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -254,6 +254,21 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
+name|Status
+operator|=
+name|AcpiDsGetPackageArguments
+argument_list|(
+name|SourceDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 comment|/* Return an additional reference to the object */
 name|ObjDesc
 operator|=
@@ -264,6 +279,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER
@@ -303,6 +319,21 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
+name|Status
+operator|=
+name|AcpiDsGetBufferArguments
+argument_list|(
+name|SourceDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 comment|/* Return an additional reference to the object */
 name|ObjDesc
 operator|=
@@ -313,6 +344,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_STRING
@@ -443,6 +475,8 @@ name|Status
 operator|=
 name|AcpiExReadDataFromField
 argument_list|(
+name|WalkState
+argument_list|,
 name|SourceDesc
 argument_list|,
 operator|&

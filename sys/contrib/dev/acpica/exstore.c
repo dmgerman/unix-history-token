@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 162 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 163 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -302,7 +302,7 @@ comment|/*          * Storing to the Debug object causes the value stored to be 
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"**** Write to Debug Object: ****:\n\n"
 operator|)
@@ -452,7 +452,7 @@ block|}
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"\n"
 operator|)
@@ -862,7 +862,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"Storing %p(%s) into node %p(%s)\n"
 operator|,
@@ -1002,7 +1002,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"Store %s into %s via Convert/Attach\n"
 operator|,
@@ -1032,7 +1032,7 @@ default|default:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"Storing %s (%p) directly into node (%p), no implicit conversion\n"
 operator|,

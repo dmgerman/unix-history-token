@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -981,6 +981,8 @@ name|Status
 operator|=
 name|AcpiExReadDataFromField
 argument_list|(
+name|WalkState
+argument_list|,
 name|ObjDesc
 argument_list|,
 operator|&

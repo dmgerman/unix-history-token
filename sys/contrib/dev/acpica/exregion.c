@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -115,9 +115,6 @@ name|Length
 decl_stmt|;
 name|UINT32
 name|WindowSize
-decl_stmt|;
-name|UINT32
-name|Remaining
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -238,7 +235,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*           * Don't attempt to map memory beyond the end of the region, and          * constrain the maximum mapping size to something reasonable.          */
-name|Remaining
+name|WindowSize
 operator|=
 call|(
 name|UINT32
@@ -249,9 +246,6 @@ name|MemInfo
 operator|->
 name|Address
 operator|+
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
 name|MemInfo
 operator|->
 name|Length
@@ -262,7 +256,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Remaining
+name|WindowSize
 operator|>
 name|SYSMEM_REGION_WINDOW_SIZE
 condition|)
@@ -270,13 +264,6 @@ block|{
 name|WindowSize
 operator|=
 name|SYSMEM_REGION_WINDOW_SIZE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|WindowSize
-operator|=
-name|Remaining
 expr_stmt|;
 block|}
 comment|/* Create a new mapping starting at the address given */

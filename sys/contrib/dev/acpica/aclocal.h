@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 159 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 162 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -523,6 +523,25 @@ end_comment
 
 begin_typedef
 typedef|typedef
+union|union
+name|acpi_name_union
+block|{
+name|UINT32
+name|Integer
+decl_stmt|;
+name|char
+name|Ascii
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|ACPI_NAME_UNION
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|acpi_node
 block|{
@@ -537,7 +556,7 @@ comment|/* Type associated with this name */
 name|UINT16
 name|OwnerId
 decl_stmt|;
-name|UINT32
+name|ACPI_NAME_UNION
 name|Name
 decl_stmt|;
 comment|/* ACPI Name, always 4 chars per ACPI spec */
@@ -880,11 +899,15 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UINT16
-name|RegisterCount
+name|UINT8
+name|AddressSpaceId
+decl_stmt|;
+name|ACPI_GENERIC_ADDRESS
+modifier|*
+name|BlockAddress
 decl_stmt|;
 name|UINT16
-name|BlockAddress
+name|RegisterCount
 decl_stmt|;
 name|UINT8
 name|BlockBaseNumber
@@ -902,12 +925,12 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UINT16
-name|StatusAddr
+name|ACPI_GENERIC_ADDRESS
+name|StatusAddress
 decl_stmt|;
 comment|/* Address of status reg */
-name|UINT16
-name|EnableAddr
+name|ACPI_GENERIC_ADDRESS
+name|EnableAddress
 decl_stmt|;
 comment|/* Address of enable reg */
 name|UINT8
@@ -1124,7 +1147,7 @@ comment|/* Two 32-bit fields and a pointer */
 define|\
 value|UINT8                   DataType;
 comment|/* To differentiate various internal objs */
-value|\     UINT8                   Flags; \     UINT16                  Value; \     UINT16                  State; \     UINT16                  AcpiEval;  \     void                    *Next; \  typedef struct acpi_common_state
+value|\     UINT8                   Flags;      \     UINT16                  Value;      \     UINT16                  State;      \     UINT16                  Reserved;   \     void                    *Next;      \  typedef struct acpi_common_state
 end_define
 
 begin_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 120 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 121 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -92,6 +92,13 @@ end_comment
 begin_comment
 comment|/*  * Table pointers.  * Although these pointers are somewhat redundant with the global AcpiTable,  * they are convenient because they are typed pointers.  *  * These tables are single-table only; meaning that there can be at most one  * of each in the system.  Each global points to the actual table.  *  */
 end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT32
+name|AcpiGbl_TableFlags
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN

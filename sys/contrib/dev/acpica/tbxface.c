@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -62,8 +62,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_PHYSICAL_ADDRESS
-name|RsdpPhysicalAddress
+name|ACPI_POINTER
+name|RsdpAddress
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -86,7 +86,7 @@ argument_list|(
 name|ACPI_LOGICAL_ADDRESSING
 argument_list|,
 operator|&
-name|RsdpPhysicalAddress
+name|RsdpAddress
 argument_list|)
 expr_stmt|;
 if|if
@@ -114,11 +114,18 @@ name|ErrorExit
 goto|;
 block|}
 comment|/* Map and validate the RSDP */
+name|AcpiGbl_TableFlags
+operator|=
+name|RsdpAddress
+operator|.
+name|PointerType
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiTbVerifyRsdp
 argument_list|(
-name|RsdpPhysicalAddress
+operator|&
+name|RsdpAddress
 argument_list|)
 expr_stmt|;
 if|if
@@ -297,6 +304,9 @@ decl_stmt|;
 name|ACPI_TABLE_DESC
 name|TableInfo
 decl_stmt|;
+name|ACPI_POINTER
+name|Address
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiLoadTable"
@@ -315,13 +325,26 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Copy the table to a local buffer */
+name|Address
+operator|.
+name|PointerType
+operator|=
+name|ACPI_LOGICAL_POINTER
+expr_stmt|;
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Logical
+operator|=
+name|TablePtr
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiTbGetTable
 argument_list|(
-literal|0
-argument_list|,
-name|TablePtr
+operator|&
+name|Address
 argument_list|,
 operator|&
 name|TableInfo
