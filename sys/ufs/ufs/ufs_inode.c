@@ -254,7 +254,7 @@ literal|1
 argument_list|,
 name|NOCRED
 argument_list|,
-literal|0
+name|FORCE
 argument_list|)
 expr_stmt|;
 endif|#
