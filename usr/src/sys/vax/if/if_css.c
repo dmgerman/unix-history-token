@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_css.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_css.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8,6 +8,14 @@ include|#
 directive|include
 file|"css.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|NCSS
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * DEC/CSS IMP11-A ARPAnet IMP interface driver.  * Since "imp11a" is such a mouthful, it is called  * "css" after the LH/DH being called "acc".  *  * Configuration notes:  *  * As delivered from DEC/CSS, it  * is addressed and vectored as two DR11-B's.  This makes  * Autoconfig almost IMPOSSIBLE.  To make it work, the  * interrupt vectors must be restrapped to make the vectors  * consecutive.  The 020 hole between the CSR addresses is  * tolerated, althought that could be cleaned-up also.  *  * Additionally, the TRANSMIT side of the IMP11-A has the  * lower address of the two subunits, so the vector ordering  * in the CONFIG file is reversed from most other devices.  * It should be:  *  * device css0 ....  cssxint cssrint  *  * If you get it wrong, it will still autoconfig, but will just  * sit there with RECEIVE IDLE indicated on the front panel.  */
@@ -1752,6 +1760,11 @@ name|CSS_GO
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -9,6 +9,14 @@ directive|include
 file|"ex.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|NEX
+operator|>
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Excelan EXOS 204 Interface  *  *	George Powers  *	Excelan Inc.  */
 end_comment
@@ -4541,6 +4549,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

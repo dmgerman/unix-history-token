@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_vv.c	6.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8,6 +8,14 @@ include|#
 directive|include
 file|"vv.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|NVV
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * Proteon proNET-10 and proNET-80 token ring driver.  * The name of this device driver derives from the old MIT  * name of V2LNI for the proNET hardware, would would abbreviate  * to "v2", but this won't work right. Thus the name is "vv".  *  * This driver is compatible with the proNET 10 meagbit and  * 80 megabit token ring interfaces (models p1000 and p1080).  *  * TRAILERS: You must turn off trailers via ifconfig if you want to share  * a ring with software using the following protocol types:  *  3: Address Resolution Protocol  *  4: HDLC (old Proteon drivers)  *  5: VAX Debugging Protocol (never used)  * This is because the protocol type values chosen for trailers  * conflict with these protocols. It's too late to change either now.  *  * HARDWARE COMPATABILITY: This driver requires that the HSBU (p1001)  * have a serial number>= 040, which is about March, 1982. Older  * HSBUs do not carry across 64kbyte boundaries. The old warning  * about use without Wire Centers applies only to CTL (p1002) cards with  * serial<= 057, which have not received ECO 176-743, which was  * implemented in March, 1982. Most such CTLs have received this ECO,  * but they are only compatible with the old HSBUs (<=039) anyways.  */
@@ -4441,6 +4449,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
