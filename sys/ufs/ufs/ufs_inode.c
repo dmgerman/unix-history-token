@@ -69,18 +69,6 @@ directive|include
 file|<ufs/ufs/ufs_extern.h>
 end_include
 
-begin_decl_stmt
-name|int
-name|prtactive
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 => print out reclaim of active vnodes */
-end_comment
-
 begin_comment
 comment|/*  * Last reference to an inode.  If necessary, write or delete it.  */
 end_comment

@@ -735,6 +735,18 @@ name|vnode_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|prtactive
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => print out reclaim of active vnodes */
+end_comment
+
 begin_comment
 comment|/*  * The workitem queue.  */
 end_comment
