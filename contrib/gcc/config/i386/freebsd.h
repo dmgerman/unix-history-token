@@ -679,6 +679,18 @@ end_comment
 begin_undef
 undef|#
 directive|undef
+name|INVOKE__main
+end_undef
+
+begin_define
+define|#
+directive|define
+name|INVOKE__main
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|GEN_CALL__MAIN
 end_undef
 
