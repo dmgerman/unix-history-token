@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	5.5 (Berkeley) %G%"
+literal|"@(#)restore.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1424,8 +1424,10 @@ name|INOFND
 operator||
 name|MODECHG
 case|:
-name|panic
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"[%s] %s: inconsistent state\n"
 argument_list|,
 name|keyval
