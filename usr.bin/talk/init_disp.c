@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)init_disp.c	8.2 (Berkeley) 2/16/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)init_disp.c	8.2 (Berkeley) 2/16/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,31 +48,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ttydefaults.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -71,7 +60,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include

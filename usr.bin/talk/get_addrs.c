@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)get_addrs.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)get_addrs.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -43,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -110,32 +123,20 @@ name|hp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"talk: %s: "
+literal|"%s: %s"
 argument_list|,
 name|his_machine_name
-argument_list|)
-expr_stmt|;
-name|herror
+argument_list|,
+name|hstrerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 name|hp
@@ -168,19 +169,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"failed to find my interface address"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* find the server's port */
 name|sp
 operator|=
@@ -197,25 +192,13 @@ name|sp
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"talk: %s/%s: service is not registered.\n"
-argument_list|,
-literal|"ntalk"
-argument_list|,
-literal|"udp"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
 literal|1
+argument_list|,
+literal|"ntalk/udp: service is not registered"
 argument_list|)
 expr_stmt|;
-block|}
 name|daemon_port
 operator|=
 name|sp
