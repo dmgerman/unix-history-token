@@ -390,6 +390,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -410,11 +415,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -895,9 +895,6 @@ decl_stmt|;
 name|u_int8_t
 name|porta
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
 if|if
 condition|(
 name|ISA_PNP_PROBE
@@ -914,17 +911,6 @@ argument_list|)
 operator|==
 name|ENXIO
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|isa_get_vendorid
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-endif|#
-directive|endif
 return|return
 operator|(
 name|ENXIO
