@@ -3259,6 +3259,10 @@ comment|/* length of partition name */
 name|int
 name|drives
 decl_stmt|;
+name|int
+name|goodpart
+decl_stmt|;
+comment|/* good vinum drives on this disk */
 name|malloced
 operator|=
 literal|0
@@ -3588,6 +3592,11 @@ operator|-
 name|cp
 expr_stmt|;
 comment|/* and point past */
+name|goodpart
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no partitions on this disk yet */
 name|partnamelen
 operator|=
 name|MAXPATHLEN
@@ -3728,6 +3737,9 @@ comment|/* which is no longer newly born */
 name|gooddrives
 operator|++
 expr_stmt|;
+name|goodpart
+operator|++
+expr_stmt|;
 block|}
 block|}
 block|}
@@ -3737,7 +3749,7 @@ directive|endif
 comment|/* 	 * If the machine doesn't have a BIOS 	 * partition table, try normal devices. 	 */
 if|if
 condition|(
-name|gooddrives
+name|goodpart
 operator|==
 literal|0
 condition|)
@@ -3853,6 +3865,9 @@ name|VF_NEWBORN
 expr_stmt|;
 comment|/* which is no longer newly born */
 name|gooddrives
+operator|++
+expr_stmt|;
+name|goodpart
 operator|++
 expr_stmt|;
 block|}
