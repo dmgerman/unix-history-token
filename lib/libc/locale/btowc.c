@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<wchar.h>
 end_include
 
@@ -43,6 +37,16 @@ name|int
 name|c
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|mbstate_t
+name|initial
+decl_stmt|;
+name|mbstate_t
+name|mbs
+init|=
+name|initial
+decl_stmt|;
 name|char
 name|cc
 decl_stmt|;
@@ -60,6 +64,7 @@ operator|(
 name|WEOF
 operator|)
 return|;
+comment|/* 	 * We expect mbrtowc() to return 0 or 1, hence the check for n> 1 	 * which detects error return values as well as "impossible" byte 	 * counts. 	 */
 name|cc
 operator|=
 operator|(
@@ -67,7 +72,6 @@ name|char
 operator|)
 name|c
 expr_stmt|;
-comment|/* 	 * We expect mbrtowc() to return 0 or 1, hence the check for n> 1 	 * which detects error return values as well as "impossible" byte 	 * counts. 	 * 	 * We pass NULL as the state pointer to mbrtowc() because we don't 	 * support state-dependent encodings and don't want to waste time 	 * creating a zeroed mbstate_t that will not be used. 	 */
 if|if
 condition|(
 name|mbrtowc
@@ -80,7 +84,8 @@ name|cc
 argument_list|,
 literal|1
 argument_list|,
-name|NULL
+operator|&
+name|mbs
 argument_list|)
 operator|>
 literal|1
