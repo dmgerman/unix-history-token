@@ -354,6 +354,13 @@ name|_maxy
 value|maxy
 end_define
 
+begin_define
+define|#
+directive|define
+name|_tty
+value|__baset
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -948,10 +955,17 @@ begin_comment
 comment|/* Standard screen. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_typedef
+typedef|typedef
 name|struct
 name|termios
+name|SGTTY
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|SGTTY
 name|__orig_termios
 decl_stmt|;
 end_decl_stmt
@@ -962,8 +976,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|termios
+name|SGTTY
 name|__baset
 decl_stmt|;
 end_decl_stmt
