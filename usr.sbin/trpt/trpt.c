@@ -992,11 +992,8 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"\n%x:\n"
+literal|"\n%p:\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|tcp_pcbs
 index|[
 name|i
