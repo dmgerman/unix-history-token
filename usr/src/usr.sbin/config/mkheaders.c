@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	mkheaders.c	1.6	81/04/08  * Make all the .h files for the optional entries  */
+comment|/*  *	mkheaders.c	1.7	82/03/28  * Make all the .h files for the optional entries  */
 end_comment
 
 begin_include
@@ -177,6 +177,25 @@ condition|)
 block|{
 name|count
 operator|++
+expr_stmt|;
+comment|/* 	     * Allow holes in unit numbering, 	     * assumption is unit numbering starts 	     * at zero. 	     */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_unit
+operator|+
+literal|1
+operator|>
+name|count
+condition|)
+name|count
+operator|=
+name|dp
+operator|->
+name|d_unit
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
