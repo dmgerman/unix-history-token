@@ -148,6 +148,9 @@ name|spec
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NETSMB_NO_ANON_USER
 if|if
 condition|(
 name|dp
@@ -162,6 +165,8 @@ condition|)
 return|return
 name|EINVAL
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dp
