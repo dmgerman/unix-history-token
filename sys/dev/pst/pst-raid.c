@@ -1404,7 +1404,7 @@ name|pst_timeout
 argument_list|,
 name|request
 argument_list|,
-literal|20
+literal|10
 operator|*
 name|hz
 argument_list|)

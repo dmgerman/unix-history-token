@@ -448,6 +448,9 @@ decl_stmt|;
 name|u_int32_t
 name|initiator_context
 decl_stmt|;
+name|u_int32_t
+name|transaction_context
+decl_stmt|;
 block|}
 name|__attribute__
 argument_list|(

@@ -679,19 +679,10 @@ decl_stmt|;
 name|u_int32_t
 name|mfa
 decl_stmt|;
-if|if
+comment|/* we might get more than one finished request pr interrupt */
+while|while
 condition|(
-operator|(
-name|mfa
-operator|=
-name|sc
-operator|->
-name|reg
-operator|->
-name|oqueue
-operator|)
-operator|==
-literal|0xffffffff
+literal|1
 condition|)
 block|{
 if|if
@@ -708,15 +699,21 @@ operator|)
 operator|==
 literal|0xffffffff
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pstiop: no mfa on interrupt ?\n"
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
+name|mfa
+operator|=
+name|sc
+operator|->
+name|reg
+operator|->
+name|oqueue
+operator|)
+operator|==
+literal|0xffffffff
+condition|)
 return|return;
-block|}
-block|}
 name|reply
 operator|=
 operator|(
@@ -839,6 +836,7 @@ name|reply
 operator|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
@@ -863,6 +861,7 @@ name|timeout
 init|=
 literal|5000
 decl_stmt|;
+specifier|volatile
 name|u_int32_t
 name|reply
 init|=
@@ -1044,6 +1043,7 @@ name|timeout
 init|=
 literal|5000
 decl_stmt|;
+specifier|volatile
 name|u_int32_t
 name|reply
 init|=
@@ -1067,7 +1067,7 @@ name|M_PSTIOP
 argument_list|,
 name|M_NOWAIT
 argument_list|,
-literal|0
+literal|0x00010000
 argument_list|,
 literal|0xFFFFFFFF
 argument_list|,
@@ -1423,7 +1423,7 @@ name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|,
-literal|0
+literal|0x00010000
 argument_list|,
 literal|0xFFFFFFFF
 argument_list|,
@@ -1735,7 +1735,7 @@ name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|,
-literal|0
+literal|0x00010000
 argument_list|,
 literal|0xFFFFFFFF
 argument_list|,
@@ -1767,7 +1767,7 @@ name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|,
-literal|0
+literal|0x00010000
 argument_list|,
 literal|0xFFFFFFFF
 argument_list|,
