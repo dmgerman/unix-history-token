@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: getbootfile.c,v 1.1 1994/09/23 20:22:01 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,7 +119,7 @@ literal|1
 condition|)
 return|return
 operator|(
-literal|0
+literal|"/kernel"
 operator|)
 return|;
 return|return
