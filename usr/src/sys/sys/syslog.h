@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	syslog.h	4.3	85/01/31	*/
+comment|/*	syslog.h	4.4	85/02/25	*/
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LOG_WARN
+name|LOG_WARNING
 value|12
 end_define
 
