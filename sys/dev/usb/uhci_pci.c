@@ -648,6 +648,17 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
+name|pci_write_config
+argument_list|(
+name|self
+argument_list|,
+name|PCI_LEGSUP
+argument_list|,
+name|PCI_LEGSUP_USBPIRQDEN
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|uhci_power
 argument_list|(
 name|PWR_RESUME
