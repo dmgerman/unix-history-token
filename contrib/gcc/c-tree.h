@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for C parsing and type checking.    Copyright (C) 1987, 1993, 1994, 1995 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for C parsing and type checking.    Copyright (C) 1987, 1993, 1994, 1995, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -69,7 +69,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((struct lang_identifier *)(NODE))->global_value)
+value|(((struct lang_identifier *) (NODE))->global_value)
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((struct lang_identifier *)(NODE))->local_value)
+value|(((struct lang_identifier *) (NODE))->local_value)
 end_define
 
 begin_comment
@@ -99,7 +99,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((struct lang_identifier *)(NODE))->label_value)
+value|(((struct lang_identifier *) (NODE))->label_value)
 end_define
 
 begin_comment
@@ -114,7 +114,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((struct lang_identifier *)(NODE))->limbo_value)
+value|(((struct lang_identifier *) (NODE))->limbo_value)
 end_define
 
 begin_comment
@@ -129,7 +129,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((struct lang_identifier *)(NODE))->implicit_decl)
+value|(((struct lang_identifier *) (NODE))->implicit_decl)
 end_define
 
 begin_comment
@@ -144,7 +144,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(((struct lang_identifier *)(NODE))->error_locus)
+value|(((struct lang_identifier *) (NODE))->error_locus)
 end_define
 
 begin_comment
@@ -320,7 +320,7 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|(TREE_COMPLEXITY (exp) = (int)(code))
+value|(TREE_COMPLEXITY (exp) = (int) (code))
 end_define
 
 begin_comment
@@ -363,6 +363,20 @@ parameter_list|(
 name|NODE
 parameter_list|)
 value|TYPE_NONCOPIED_PARTS (NODE)
+end_define
+
+begin_comment
+comment|/* In a FIELD_DECL, nonzero if the decl was originally a bitfield.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECL_C_BIT_FIELD
+parameter_list|(
+name|NODE
+parameter_list|)
+value|DECL_LANG_FLAG_4 (NODE)
 end_define
 
 begin_comment
@@ -449,6 +463,19 @@ name|PROTO
 argument_list|(
 operator|(
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|finish_file
+name|PROTO
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -602,29 +629,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|record_function_format
-name|PROTO
-argument_list|(
-operator|(
-name|tree
-operator|,
-name|tree
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
 name|check_function_format
 name|PROTO
 argument_list|(
@@ -633,6 +637,19 @@ name|tree
 operator|,
 name|tree
 operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|c_get_alias_set
+name|PROTO
+argument_list|(
+operator|(
 name|tree
 operator|)
 argument_list|)
@@ -665,6 +682,49 @@ name|PROTO
 argument_list|(
 operator|(
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|c_expand_start_cond
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|c_expand_start_else
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|c_expand_end_cond
+name|PROTO
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -764,12 +824,45 @@ begin_comment
 comment|/* Read the rest of the current #-directive line.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USE_CPPLIB
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|get_directive_line
-name|STDIO_PROTO
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|GET_DIRECTIVE_LINE
+parameter_list|()
+value|get_directive_line ()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|get_directive_line
+name|PROTO
 argument_list|(
 operator|(
 name|FILE
@@ -778,6 +871,19 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|GET_DIRECTIVE_LINE
+parameter_list|()
+value|get_directive_line (finput)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Subroutine of build_binary_op, used for comparison operations.    See if the operands have both been converted from subword integer types    and, if so, perhaps change them both back to their original type.  */
@@ -942,6 +1048,13 @@ begin_decl_stmt
 specifier|extern
 name|tree
 name|float_type_node
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|intTI_type_node
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,6 +1264,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
+name|unsigned_intTI_type_node
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
 name|unsigned_intDI_type_node
 decl_stmt|;
 end_decl_stmt
@@ -1316,7 +1436,10 @@ name|c_decode_option
 name|PROTO
 argument_list|(
 operator|(
+name|int
+operator|,
 name|char
+operator|*
 operator|*
 operator|)
 argument_list|)
@@ -1839,7 +1962,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|print_lang_decl
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|FILE
@@ -1857,7 +1980,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|print_lang_identifier
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|FILE
@@ -1875,7 +1998,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|print_lang_type
-name|STDIO_PROTO
+name|PROTO
 argument_list|(
 operator|(
 name|FILE
@@ -2783,6 +2906,19 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
+name|init_iterators
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|iterator_expand
 name|PROTO
 argument_list|(
@@ -2881,6 +3017,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means the expression being parsed will never be evaluated.    This is a count, since unevaluated expressions can nest.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|skip_evaluation
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means `$' can be in an identifier.  */
 end_comment
 
@@ -2910,6 +3057,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_no_asm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means environment is hosted (i.e., not freestanding) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_hosted
 decl_stmt|;
 end_decl_stmt
 
@@ -3057,6 +3215,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Warn if main is suspicious. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_main
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means do some things the same way PCC does.  */
 end_comment
 
@@ -3101,19 +3270,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means this is a function to call to perform comptypes    on two record types.  */
+comment|/* Warn about comparison of signed and unsigned values.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
-function_decl|(
-modifier|*
-name|comptypes_record_hook
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+name|warn_sign_compare
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about multicharacter constants.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_multichar
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Nonzero means we are reading code that came from a system header file.  */
@@ -3134,6 +3310,23 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|doing_objc_thang
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* In c-decl.c */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|finish_incomplete_decl
+name|PROTO
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
