@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.5 (Berkeley) %G%"
+literal|"@(#)dir.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,8 +196,6 @@ operator|&
 name|mtimes
 argument_list|,
 literal|0
-argument_list|,
-name|HASH_STRING_KEYS
 argument_list|)
 expr_stmt|;
 comment|/*      * Since the Path structure is placed on both openDirectories and      * the path we give Dir_AddDir (which in this case is openDirectories),      * we need to remove "." from openDirectories and what better time to      * do it than when we have to fetch the thing anyway?      */
@@ -442,8 +440,6 @@ name|Str_Match
 argument_list|(
 name|entry
 operator|->
-name|key
-operator|.
 name|name
 argument_list|,
 name|pattern
@@ -453,8 +449,6 @@ operator|(
 operator|(
 name|entry
 operator|->
-name|key
-operator|.
 name|name
 index|[
 literal|0
@@ -488,8 +482,6 @@ name|strdup
 argument_list|(
 name|entry
 operator|->
-name|key
-operator|.
 name|name
 argument_list|)
 else|:
@@ -501,8 +493,6 @@ name|name
 argument_list|,
 name|entry
 operator|->
-name|key
-operator|.
 name|name
 argument_list|,
 name|STR_ADDSLASH
@@ -1519,9 +1509,6 @@ name|dot
 operator|->
 name|files
 argument_list|,
-operator|(
-name|Address
-operator|)
 name|cp
 argument_list|)
 operator|!=
@@ -1657,9 +1644,6 @@ name|p
 operator|->
 name|files
 argument_list|,
-operator|(
-name|Address
-operator|)
 name|cp
 argument_list|)
 operator|!=
@@ -2303,9 +2287,6 @@ name|p
 operator|->
 name|files
 argument_list|,
-operator|(
-name|Address
-operator|)
 name|cp
 argument_list|)
 operator|!=
@@ -2958,8 +2939,6 @@ name|files
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-name|HASH_STRING_KEYS
 argument_list|)
 expr_stmt|;
 comment|/* 	     * Skip the first two entries -- these will *always* be . and .. 	     */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)targ.c	5.7 (Berkeley) %G%"
+literal|"@(#)targ.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,8 +111,6 @@ operator|&
 name|targets
 argument_list|,
 name|HTSIZE
-argument_list|,
-name|HASH_STRING_KEYS
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,12 +19,6 @@ directive|define
 name|_HASH
 end_define
 
-begin_include
-include|#
-directive|include
-file|"list.h"
-end_include
-
 begin_comment
 comment|/*   * The following defines one entry in the hash table.  */
 end_comment
@@ -34,70 +28,44 @@ typedef|typedef
 struct|struct
 name|Hash_Entry
 block|{
-name|List_Links
-name|links
+name|struct
+name|Hash_Entry
+modifier|*
+name|next
 decl_stmt|;
 comment|/* Used to link together all the     					 * entries associated with the same 					 * bucket. */
 name|ClientData
 name|clientData
 decl_stmt|;
 comment|/* Arbitrary piece of data associated     					 * with key. */
-union|union
-block|{
-name|Address
-name|ptr
+name|unsigned
+name|namehash
 decl_stmt|;
-comment|/* One-word key value to identify 					 * entry. */
-name|int
-name|words
+comment|/* hash value of key */
+name|char
+name|name
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* N-word key value.  Note: the actual 					 * size may be longer if necessary to 					 * hold the entire key. */
-name|char
-name|name
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* Text name of this entry.  Note: the 					 * actual size may be longer if 					 * necessary to hold the whole string. 					 * This MUST be the last entry in the 					 * structure!!! */
-block|}
-name|key
-union|;
+comment|/* key string */
 block|}
 name|Hash_Entry
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*   * A hash table consists of an array of pointers to hash  * lists.  Tables can be organized in either of three ways, depending  * on the type of comparison keys:  *  *	Strings:	  these are NULL-terminated; their address  *			  is passed to HashFind as a (char *).  *	Single-word keys: these may be anything, but must be passed  *			  to Hash_Find as an Address.  *	Multi-word keys:  these may also be anything; their address  *			  is passed to HashFind as an Address.  *  *	Single-word keys are fastest, but most restrictive.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASH_STRING_KEYS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|HASH_ONE_WORD_KEYS
-value|1
-end_define
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|Hash_Table
 block|{
-name|List_Links
+name|struct
+name|Hash_Entry
+modifier|*
 modifier|*
 name|bucketPtr
 decl_stmt|;
-comment|/* Pointer to array of List_Links, one     				 * for each bucket in the table. */
+comment|/* Pointers to Hash_Entry, one     				 * for each bucket in the table. */
 name|int
 name|size
 decl_stmt|;
@@ -107,17 +75,9 @@ name|numEntries
 decl_stmt|;
 comment|/* Number of entries in the table. */
 name|int
-name|downShift
-decl_stmt|;
-comment|/* Shift count, used in hashing function. */
-name|int
 name|mask
 decl_stmt|;
 comment|/* Used to select bits for hashing. */
-name|int
-name|keyType
-decl_stmt|;
-comment|/* Type of keys used in table:     				 * HASH_STRING_KEYS, HASH_ONE-WORD_KEYS, 				 * or>1 menas keyType gives number of words 				 * in keys. 				 */
 block|}
 name|Hash_Table
 typedef|;
@@ -146,11 +106,6 @@ modifier|*
 name|hashEntryPtr
 decl_stmt|;
 comment|/* Next entry to check in current bucket. */
-name|List_Links
-modifier|*
-name|hashList
-decl_stmt|;
-comment|/* Hash chain currently being checked. */
 block|}
 name|Hash_Search
 typedef|;
@@ -175,7 +130,7 @@ value|((h)->clientData)
 end_define
 
 begin_comment
-comment|/*   * Hash_SetValue(h, val);   *     HashEntry *h;   *     char *val;   */
+comment|/*   * Hash_SetValue(h, val);   *     Hash_Entry *h;   *     char *val;   */
 end_comment
 
 begin_define

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lstInit.c	5.3 (Berkeley) %G%"
+literal|"@(#)lstInit.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,39 +104,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_macro
-name|Malloc
-argument_list|(
-argument|nbytes
-argument_list|)
-end_macro
-
-begin_block
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"malloc: %d\n"
-argument_list|,
-name|nbytes
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
-return|return
-operator|(
-name|malloc
-argument_list|(
-name|nbytes
-argument_list|)
-operator|)
-return|;
-block|}
-end_block
 
 end_unit
 

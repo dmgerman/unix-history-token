@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arch.c	5.6 (Berkeley) %G%"
+literal|"@(#)arch.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1149,9 +1149,6 @@ name|ar
 operator|->
 name|members
 argument_list|,
-operator|(
-name|Address
-operator|)
 name|member
 argument_list|)
 expr_stmt|;
@@ -1369,8 +1366,6 @@ name|members
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-name|HASH_STRING_KEYS
 argument_list|)
 expr_stmt|;
 name|memName
@@ -1647,9 +1642,6 @@ name|ar
 operator|->
 name|members
 argument_list|,
-operator|(
-name|Address
-operator|)
 name|member
 argument_list|)
 expr_stmt|;
