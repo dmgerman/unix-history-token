@@ -4768,8 +4768,26 @@ name|PULLUP_TO
 parameter_list|(
 name|len
 parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 				offset = (ip->ip_off& IP_OFFMASK);	\ 			    }						\ 			} while (0)
+value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 			    }						\ 			} while (0)
 comment|/* 	 * Collect parameters into local variables for faster matching. 	 */
+name|proto
+operator|=
+name|ip
+operator|->
+name|ip_p
+expr_stmt|;
+name|src_ip
+operator|=
+name|ip
+operator|->
+name|ip_src
+expr_stmt|;
+name|dst_ip
+operator|=
+name|ip
+operator|->
+name|ip_dst
+expr_stmt|;
 name|offset
 operator|=
 operator|(
@@ -4780,6 +4798,12 @@ operator|&
 name|IP_OFFMASK
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|offset
+operator|==
+literal|0
+condition|)
 block|{
 name|struct
 name|tcphdr
@@ -4791,25 +4815,6 @@ name|udphdr
 modifier|*
 name|udp
 decl_stmt|;
-name|dst_ip
-operator|=
-name|ip
-operator|->
-name|ip_dst
-expr_stmt|;
-name|src_ip
-operator|=
-name|ip
-operator|->
-name|ip_src
-expr_stmt|;
-name|proto
-operator|=
-name|ip
-operator|->
-name|ip_p
-expr_stmt|;
-comment|/* 	     * warning - if offset != 0, port values are bogus. 	     * Not a problem for ipfw, but could be for dummynet. 	     */
 switch|switch
 condition|(
 name|proto
@@ -4822,7 +4827,11 @@ name|PULLUP_TO
 argument_list|(
 name|hlen
 operator|+
-literal|14
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|tcp
@@ -4870,7 +4879,11 @@ name|PULLUP_TO
 argument_list|(
 name|hlen
 operator|+
-literal|4
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udphdr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|udp
@@ -4912,9 +4925,10 @@ name|PULLUP_TO
 argument_list|(
 name|hlen
 operator|+
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
+comment|/* type, code and checksum. */
 name|flags
 operator|=
 operator|(
@@ -4940,12 +4954,8 @@ name|icmp_type
 expr_stmt|;
 break|break ;
 default|default :
-name|src_port
-operator|=
-name|dst_port
-operator|=
-literal|0
-expr_stmt|;
+break|break;
+block|}
 block|}
 undef|#
 directive|undef
@@ -5002,7 +5012,6 @@ name|flags
 operator|=
 name|flags
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
