@@ -300,6 +300,31 @@ begin_comment
 comment|/* EON */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPFILTER
+end_ifdef
+
+begin_function_decl
+name|void
+name|iplinit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ip_init
+value|iplinit
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|struct
