@@ -8220,9 +8220,6 @@ name|idx
 operator|++
 control|)
 block|{
-name|vm_page_t
-name|m
-decl_stmt|;
 name|retry
 label|:
 name|m
@@ -8339,14 +8336,14 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
-block|{
 name|vm_page_wakeup
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|entry
 operator|->
