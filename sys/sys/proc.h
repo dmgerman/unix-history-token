@@ -1624,7 +1624,7 @@ value|0x00080
 end_define
 
 begin_comment
-comment|/* Proces is on a cv_waitq (not slpq). */
+comment|/* Thread is on a cv_waitq (not slpq). */
 end_comment
 
 begin_define
