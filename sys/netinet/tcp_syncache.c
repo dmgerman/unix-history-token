@@ -1153,12 +1153,6 @@ block|}
 comment|/* 	 * Allocate the syncache entries.  Allow the zone to allocate one 	 * more entry than cache limit, so a new entry can bump out an 	 * older one. 	 */
 name|tcp_syncache
 operator|.
-name|cache_limit
-operator|-=
-literal|1
-expr_stmt|;
-name|tcp_syncache
-operator|.
 name|zone
 operator|=
 name|uma_zcreate
@@ -1194,6 +1188,12 @@ name|tcp_syncache
 operator|.
 name|cache_limit
 argument_list|)
+expr_stmt|;
+name|tcp_syncache
+operator|.
+name|cache_limit
+operator|-=
+literal|1
 expr_stmt|;
 block|}
 end_function
