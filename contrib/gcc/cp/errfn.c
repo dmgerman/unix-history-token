@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -687,12 +693,12 @@ name|format
 decl_stmt|;
 function|arglist_dcl
 block|{
-specifier|extern
-name|errorfn
-name|sprintf
-decl_stmt|;
 name|cp_thing
 argument_list|(
+operator|(
+name|errorfn
+operator|*
+operator|)
 name|sprintf
 argument_list|,
 literal|0
