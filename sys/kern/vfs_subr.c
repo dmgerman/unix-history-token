@@ -8317,6 +8317,13 @@ literal|"vput: null vp"
 operator|)
 argument_list|)
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"vput"
+argument_list|)
+expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -8395,10 +8402,28 @@ condition|(
 name|vp
 operator|->
 name|v_usecount
-operator|==
+operator|!=
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|vprint
+argument_list|(
+literal|"vput: negative ref count"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|panic
+argument_list|(
+literal|"vput: negative ref cnt"
+argument_list|)
+expr_stmt|;
+block|}
 name|v_incr_usecount
 argument_list|(
 name|vp
@@ -8475,27 +8500,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|vprint
-argument_list|(
-literal|"vput: negative ref count"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|panic
-argument_list|(
-literal|"vput: negative ref cnt"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
