@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * config.h	1.6	82/07/21  * Definitions that everybody needs to know  */
+comment|/*  * config.h	1.7	82/10/11  * Definitions that everybody needs to know  */
 end_comment
 
 begin_define
@@ -48,6 +48,13 @@ define|#
 directive|define
 name|INVISIBLE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROFILING
+value|4
 end_define
 
 begin_define
@@ -328,6 +335,12 @@ decl_stmt|,
 name|maxusers
 decl_stmt|,
 name|dst
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|profiling
 decl_stmt|;
 end_decl_stmt
 

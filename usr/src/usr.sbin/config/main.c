@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * main.c	1.4	81/03/09  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
+comment|/*  * main.c	1.5	82/10/11  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
 end_comment
 
 begin_include
@@ -46,6 +46,35 @@ block|{
 if|if
 condition|(
 name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"-p"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+name|profiling
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
 operator|!=
 literal|2
 condition|)
@@ -54,7 +83,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: config<sysname>\n"
+literal|"usage: config [ -p ]<sysname>\n"
 argument_list|)
 expr_stmt|;
 name|exit
