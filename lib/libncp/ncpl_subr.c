@@ -1171,6 +1171,20 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Kernel module ncp is not loaded.\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|stderr
