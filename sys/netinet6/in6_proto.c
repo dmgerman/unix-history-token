@@ -1273,11 +1273,22 @@ begin_comment
 comment|/* DupAddrDetectionTransmits */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RANDOM_IP_ID
+end_ifndef
+
 begin_decl_stmt
 name|u_int32_t
 name|ip6_flow_seq
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int

@@ -821,6 +821,25 @@ return|;
 block|}
 end_function
 
+begin_function
+name|u_int32_t
+name|ip6_randomflowlabel
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+name|randomid
+argument_list|(
+operator|&
+name|randomtab_20
+argument_list|)
+operator|&
+literal|0xfffff
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
