@@ -389,6 +389,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_SAVEDINO
+argument_list|,
+literal|"savedino"
+argument_list|,
+literal|"Saved inodes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -10474,7 +10487,7 @@ name|inodedep
 operator|->
 name|id_savedino1
 argument_list|,
-name|M_INODEDEP
+name|M_SAVEDINO
 argument_list|)
 expr_stmt|;
 name|inodedep
@@ -15963,7 +15976,7 @@ expr|struct
 name|ufs1_dinode
 argument_list|)
 argument_list|,
-name|M_INODEDEP
+name|M_SAVEDINO
 argument_list|,
 name|M_SOFTDEP_FLAGS
 argument_list|)
@@ -16694,7 +16707,7 @@ expr|struct
 name|ufs2_dinode
 argument_list|)
 argument_list|,
-name|M_INODEDEP
+name|M_SAVEDINO
 argument_list|,
 name|M_SOFTDEP_FLAGS
 argument_list|)
@@ -18903,7 +18916,7 @@ name|inodedep
 operator|->
 name|id_savedino1
 argument_list|,
-name|M_INODEDEP
+name|M_SAVEDINO
 argument_list|)
 expr_stmt|;
 name|inodedep
