@@ -194,12 +194,25 @@ begin_comment
 comment|/* Like ticks, but for softclock(). */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|mtx
 name|callout_lock
+decl_stmt|,
+name|callout_dont_sleep
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -412,6 +425,23 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|mtx_init
+argument_list|(
+operator|&
+name|callout_dont_sleep
+argument_list|,
+literal|"callout_dont_sleep"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -762,6 +792,12 @@ operator|&
 name|bt1
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|callout_dont_sleep
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|c_func
@@ -772,6 +808,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
+name|mtx_unlock
+argument_list|(
+operator|&
+name|callout_dont_sleep
+argument_list|)
+expr_stmt|;
 name|binuptime
 argument_list|(
 operator|&
