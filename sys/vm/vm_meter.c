@@ -930,29 +930,14 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate object memory usage statistics. 	 */
-for|for
-control|(
-name|object
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|vm_object_list
-argument_list|)
-init|;
-name|object
-operator|!=
-name|NULL
-condition|;
-name|object
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|object
+argument|object
 argument_list|,
-name|object_list
+argument|&vm_object_list
+argument_list|,
+argument|object_list
 argument_list|)
-control|)
 block|{
 comment|/* 		 * devices, like /dev/mem, will badly skew our totals 		 */
 if|if

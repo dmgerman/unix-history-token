@@ -376,10 +376,6 @@ begin_comment
 comment|/* list of allocated objects */
 end_comment
 
-begin_comment
-comment|/* lock for object list and count */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|vm_object_t
