@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.18 1998/06/27 23:48:48 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.19 1998/08/07 18:42:49 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
@@ -146,6 +146,10 @@ name|u_short
 name|his_auth
 decl_stmt|;
 comment|/* Peer wants this type of authentication */
+name|u_char
+name|his_authtype
+decl_stmt|;
+comment|/* Fifth octet of REQ/NAK/REJ */
 name|struct
 name|callback
 name|his_callback
@@ -193,6 +197,10 @@ name|u_short
 name|want_auth
 decl_stmt|;
 comment|/* We want this type of authentication */
+name|u_char
+name|want_authtype
+decl_stmt|;
+comment|/* Fifth octet of REQ/NAK/REJ */
 name|struct
 name|callback
 name|want_callback
@@ -265,11 +273,28 @@ literal|2
 decl_stmt|;
 comment|/* Address& Control Field Compression neg */
 name|unsigned
-name|chap
+name|chap05
 range|:
 literal|2
 decl_stmt|;
 comment|/* Challenge Handshake Authentication proto */
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+name|unsigned
+name|chap80nt
+range|:
+literal|2
+decl_stmt|;
+comment|/* Microsoft (NT) CHAP */
+name|unsigned
+name|chap80lm
+range|:
+literal|2
+decl_stmt|;
+comment|/* Microsoft (LANMan) CHAP */
+endif|#
+directive|endif
 name|unsigned
 name|lqr
 range|:
@@ -527,12 +552,6 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|link
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|physical
 struct_decl|;
 end_struct_decl
 
