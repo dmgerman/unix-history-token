@@ -8589,23 +8589,13 @@ return|return
 literal|0
 return|;
 comment|/* XXX should be panic ? */
-if|if
-condition|(
-name|inp
-operator|!=
-name|NULL
-operator|&&
-name|inp
-operator|->
-name|inp_socket
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"ipsec4_hdrsize: why is socket NULL but there is PCB."
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* this is possible in TIME_WAIT state */
+block|if (inp != NULL&& inp->inp_socket == NULL) 		panic("ipsec4_hdrsize: why is socket NULL but there is PCB.");
+endif|#
+directive|endif
 comment|/* get SP for this packet. 	 * When we are called from ip_forward(), we call 	 * ipsec4_getpolicybyaddr() with IP_FORWARDING flag. 	 */
 if|if
 condition|(
