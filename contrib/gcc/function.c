@@ -27721,6 +27721,9 @@ name|Pmode
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|TARGET_PROFILER_EPILOGUE
 if|if
 condition|(
 name|current_function_profile
@@ -27766,6 +27769,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Let except.c know where it should emit the call to unregister      the function context for sjlj exceptions.  */
 if|if
 condition|(
