@@ -319,16 +319,15 @@ name|timeval
 name|no_flash
 init|=
 block|{
+comment|/* inhibit flash update */
 name|EPOCH
 operator|+
 name|SUPPLY_INTERVAL
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* inhibit flash update */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -935,7 +934,7 @@ operator|++
 expr_stmt|;
 name|msglog
 argument_list|(
-literal|"version 2.17"
+literal|"version 2.22"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -3853,6 +3853,8 @@ operator|.
 name|parm_int_state
 operator||=
 name|IS_NO_RIP
+operator||
+name|IS_PASSIVE
 expr_stmt|;
 block|}
 elseif|else

@@ -5223,6 +5223,22 @@ operator|==
 name|RIP_DEFAULT
 condition|)
 continue|continue;
+comment|/* ignore aliases on the right network */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|ifp
+operator|->
+name|int_name
+argument_list|,
+name|ifp1
+operator|->
+name|int_name
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|on_net

@@ -70,13 +70,11 @@ end_elif
 
 begin_expr_stmt
 name|__RCSID
+argument_list|(
 literal|"$NetBSD$"
+argument_list|)
+expr_stmt|;
 end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_endif
 endif|#
@@ -259,7 +257,7 @@ comment|/* when received */
 name|time_t
 name|dr_life
 decl_stmt|;
-comment|/* lifetime */
+comment|/* lifetime in host byte order */
 name|n_long
 name|dr_recv_pref
 decl_stmt|;
@@ -2253,6 +2251,7 @@ comment|/* signed and in network order */
 name|u_short
 name|life
 parameter_list|,
+comment|/* in host byte order */
 name|struct
 name|interface
 modifier|*
@@ -2611,10 +2610,7 @@ name|new_drp
 operator|->
 name|dr_life
 operator|=
-name|ntohs
-argument_list|(
 name|life
-argument_list|)
 expr_stmt|;
 name|new_drp
 operator|->
