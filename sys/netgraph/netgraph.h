@@ -334,9 +334,7 @@ block|{
 name|char
 name|hk_name
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* what this node knows this link as */
@@ -1847,9 +1845,7 @@ block|{
 name|char
 name|nd_name
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 comment|/* optional globally unique name */
