@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.32 (Berkeley) %G%"
+literal|"@(#)ls.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +198,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* print inode */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_kblocks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print size in kilobytes */
 end_comment
 
 begin_decl_stmt
@@ -530,7 +540,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ACFLRacdgilqrstu"
+literal|"1ACFLRacdgiklqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -677,6 +687,14 @@ case|case
 literal|'i'
 case|:
 name|f_inode
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|f_kblocks
 operator|=
 literal|1
 expr_stmt|;

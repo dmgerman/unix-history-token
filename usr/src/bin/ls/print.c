@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.14 (Berkeley) %G%"
+literal|"@(#)print.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,22 @@ name|printf
 argument_list|(
 literal|"total %lu\n"
 argument_list|,
+name|f_kblocks
+condition|?
+name|howmany
+argument_list|(
+name|stats
+index|[
+literal|0
+index|]
+operator|.
+name|lstat
+operator|.
+name|st_btotal
+argument_list|,
+literal|2
+argument_list|)
+else|:
 name|stats
 index|[
 literal|0
@@ -214,6 +230,19 @@ name|printf
 argument_list|(
 literal|"%4ld "
 argument_list|,
+name|f_kblocks
+condition|?
+name|howmany
+argument_list|(
+name|stats
+operator|->
+name|lstat
+operator|.
+name|st_blocks
+argument_list|,
+literal|2
+argument_list|)
+else|:
 name|stats
 operator|->
 name|lstat
@@ -235,7 +264,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3d "
+literal|"%3u "
 argument_list|,
 name|stats
 operator|->
@@ -562,6 +591,22 @@ name|printf
 argument_list|(
 literal|"total %lu\n"
 argument_list|,
+name|f_kblocks
+condition|?
+name|howmany
+argument_list|(
+name|stats
+index|[
+literal|0
+index|]
+operator|.
+name|lstat
+operator|.
+name|st_btotal
+argument_list|,
+literal|2
+argument_list|)
+else|:
 name|stats
 index|[
 literal|0
@@ -733,6 +778,19 @@ name|printf
 argument_list|(
 literal|"%4ld "
 argument_list|,
+name|f_kblocks
+condition|?
+name|howmany
+argument_list|(
+name|lp
+operator|->
+name|lstat
+operator|.
+name|st_blocks
+argument_list|,
+literal|2
+argument_list|)
+else|:
 name|lp
 operator|->
 name|lstat
