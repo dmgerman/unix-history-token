@@ -270,7 +270,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|kvm_read
 name|__P
 argument_list|(
@@ -284,15 +284,14 @@ operator|,
 name|void
 operator|*
 operator|,
-name|unsigned
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ssize_t
 name|kvm_write
 name|__P
 argument_list|(
@@ -307,8 +306,7 @@ specifier|const
 name|void
 operator|*
 operator|,
-name|unsigned
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
