@@ -5259,6 +5259,21 @@ argument_list|(
 name|mp
 argument_list|)
 decl_stmt|;
+comment|/* 	 * In that case, we cannot lock. We should not have any active vnodes 	 * on the fs if this is not yet initialized but is going to be, so 	 * this can go unlocked. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|ump
+operator|->
+name|um_extattr
+operator|.
+name|uepm_flags
+operator|&
+name|UFS_EXTATTR_UEPM_INITIALIZED
+operator|)
+condition|)
+return|return;
 name|ufs_extattr_uepm_lock
 argument_list|(
 name|ump
