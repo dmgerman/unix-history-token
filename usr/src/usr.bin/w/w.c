@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.1 (Berkeley) %G%"
+literal|"@(#)w.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1561,6 +1561,7 @@ index|]
 operator|.
 name|w_time
 expr_stmt|;
+comment|/*  			 * Meaning of debug fields following proc name is: 			 *& by itself: ignoring both SIGINT and QUIT. 			 *		(==> this proc is not a candidate.) 			 *&<i><q>:   i is SIGINT status, q is quit. 			 *		0 == DFL, 1 == IGN, 2 == caught. 			 * *:		proc pgrp == tty pgrp. 			 */
 if|if
 condition|(
 name|debug
@@ -2694,6 +2695,12 @@ operator|.
 name|p_stat
 operator|==
 literal|0
+operator|||
+name|mproc
+operator|.
+name|p_stat
+operator|==
+name|SZOMB
 operator|||
 name|mproc
 operator|.
