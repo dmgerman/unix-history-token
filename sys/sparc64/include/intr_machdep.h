@@ -200,7 +200,6 @@ name|iv_func_t
 modifier|*
 name|iv_func
 decl_stmt|;
-comment|/* must be first */
 name|void
 modifier|*
 name|iv_arg
@@ -213,8 +212,8 @@ decl_stmt|;
 name|u_int
 name|iv_pri
 decl_stmt|;
-name|int
-name|iv_stray
+name|u_int
+name|iv_vec
 decl_stmt|;
 block|}
 struct|;
@@ -246,34 +245,6 @@ name|intr_vectors
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|intr_dispatch
-parameter_list|(
-name|int
-name|level
-parameter_list|,
-name|struct
-name|trapframe
-modifier|*
-name|tf
-parameter_list|)
-block|{
-name|intr_handlers
-index|[
-name|level
-index|]
-operator|.
-name|ih_func
-argument_list|(
-name|tf
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function_decl
 name|void
