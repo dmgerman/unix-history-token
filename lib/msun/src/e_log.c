@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_log.c,v 1.1.1.1 1994/08/19 09:39:44 jkh Exp $"
+literal|"$Id: e_log.c,v 1.2 1995/05/30 05:48:30 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,14 +158,14 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_log
+name|__generic___ieee754_log
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_log
+function|double __generic___ieee754_log
 parameter_list|(
 name|x
 parameter_list|)

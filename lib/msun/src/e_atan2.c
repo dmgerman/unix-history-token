@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_atan2.c,v 1.2 1995/05/30 05:47:57 rgrimes Exp $"
+literal|"$Id: e_atan2.c,v 1.3 1996/07/12 18:57:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_atan2
+name|__generic___ieee754_atan2
 parameter_list|(
 name|double
 name|y
@@ -119,7 +119,7 @@ name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_atan2
+function|double __generic___ieee754_atan2
 parameter_list|(
 name|y
 parameter_list|,

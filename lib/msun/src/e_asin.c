@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_asin.c,v 1.2 1995/05/30 05:47:55 rgrimes Exp $"
+literal|"$Id: e_asin.c,v 1.3 1996/07/12 18:57:45 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,14 +152,14 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_asin
+name|__generic___ieee754_asin
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_asin
+function|double __generic___ieee754_asin
 parameter_list|(
 name|x
 parameter_list|)

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_sqrt.c,v 1.1.1.1 1994/08/19 09:39:44 jkh Exp $"
+literal|"$Id: e_sqrt.c,v 1.2 1995/05/30 05:48:50 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,14 +95,14 @@ end_ifdef
 
 begin_function
 name|double
-name|__ieee754_sqrt
+name|__generic___ieee754_sqrt
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double __ieee754_sqrt
+function|double __generic___ieee754_sqrt
 parameter_list|(
 name|x
 parameter_list|)

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_rint.c,v 1.2 1995/05/30 05:50:18 rgrimes Exp $"
+literal|"$Id: s_rint.c,v 1.3 1996/08/28 16:34:33 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,14 +91,14 @@ end_ifdef
 
 begin_function
 name|double
-name|rint
+name|__generic_rint
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double rint
+function|double __generic_rint
 parameter_list|(
 name|x
 parameter_list|)

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_floor.c,v 1.1.1.1 1994/08/19 09:39:51 jkh Exp $"
+literal|"$Id: s_floor.c,v 1.2 1995/05/30 05:49:39 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,14 +87,14 @@ end_ifdef
 
 begin_function
 name|double
-name|floor
+name|__generic_floor
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double floor
+function|double __generic_floor
 parameter_list|(
 name|x
 parameter_list|)

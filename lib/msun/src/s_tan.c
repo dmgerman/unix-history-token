@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_tan.c,v 1.1.1.1 1994/08/19 09:39:53 jkh Exp $"
+literal|"$Id: s_tan.c,v 1.2 1995/05/30 05:50:33 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,14 +52,14 @@ end_ifdef
 
 begin_function
 name|double
-name|tan
+name|__generic_tan
 parameter_list|(
 name|double
 name|x
 parameter_list|)
 else|#
 directive|else
-function|double tan
+function|double __generic_tan
 parameter_list|(
 name|x
 parameter_list|)

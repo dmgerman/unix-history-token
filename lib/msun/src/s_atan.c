@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: s_atan.c,v 1.1.1.1 1994/08/19 09:39:45 jkh Exp $"
+literal|"$Id: s_atan.c,v 1.2 1995/05/30 05:49:20 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,14 +200,14 @@ ifdef|#
 directive|ifdef
 name|__STDC__
 name|double
-name|atan
+name|__generic_atan
 argument_list|(
 argument|double x
 argument_list|)
 else|#
 directive|else
 name|double
-name|atan
+name|__generic_atan
 argument_list|(
 argument|x
 argument_list|)
