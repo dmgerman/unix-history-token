@@ -10954,7 +10954,7 @@ comment|/* The lock is the first dword in the sarea. */
 name|value
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|dev
 operator|->
@@ -10994,7 +10994,8 @@ name|value
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|int
+operator|&
+name|value
 argument_list|)
 argument_list|)
 condition|)

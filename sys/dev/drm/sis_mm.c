@@ -1721,8 +1721,7 @@ name|set_t
 modifier|*
 name|set
 decl_stmt|;
-name|unsigned
-name|int
+name|ITEM_TYPE
 name|item
 decl_stmt|;
 name|int
@@ -1767,7 +1766,7 @@ condition|)
 block|{
 name|DRM_DEBUG
 argument_list|(
-literal|"free video memory 0x%x\n"
+literal|"free video memory 0x%lx\n"
 argument_list|,
 name|item
 argument_list|)
@@ -1846,7 +1845,7 @@ condition|)
 block|{
 name|DRM_DEBUG
 argument_list|(
-literal|"free agp memory 0x%x\n"
+literal|"free agp memory 0x%lx\n"
 argument_list|,
 name|item
 argument_list|)
