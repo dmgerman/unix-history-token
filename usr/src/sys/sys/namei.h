@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.5	84/07/08	*/
+comment|/*	namei.h	6.6	84/07/08	*/
 end_comment
 
 begin_ifndef
@@ -43,6 +43,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Encapsulation of namei parameters.  * One of these is located in the u. area to  * minimize space allocated on the kernel stack.  */
+end_comment
+
 begin_struct
 struct|struct
 name|nameidata
@@ -51,6 +55,14 @@ name|caddr_t
 name|ni_dirp
 decl_stmt|;
 comment|/* pathname pointer */
+name|short
+name|ni_nameiop
+decl_stmt|;
+comment|/* see below */
+name|short
+name|ni_error
+decl_stmt|;
+comment|/* error return if any */
 name|struct
 name|inode
 modifier|*
@@ -58,26 +70,26 @@ name|ni_pdir
 decl_stmt|;
 comment|/* inode of parent directory of dirp */
 name|struct
+name|buf
+modifier|*
+name|ni_pathbp
+decl_stmt|;
+comment|/* unresolved pathname */
+name|struct
 name|iovec
 name|ni_iovec
 decl_stmt|;
+comment|/* MUST be pointed to by ni_iov */
 name|struct
 name|uio
 name|ni_uio
 decl_stmt|;
+comment|/* directory I/O parameters */
 name|struct
 name|direct
 name|ni_dent
 decl_stmt|;
 comment|/* current directory entry */
-name|short
-name|ni_error
-decl_stmt|;
-comment|/* error return if any */
-name|short
-name|ni_nameiop
-decl_stmt|;
-comment|/* see below */
 block|}
 struct|;
 end_struct
