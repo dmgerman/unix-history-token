@@ -10692,10 +10692,10 @@ operator||
 name|LOCKLEAF
 operator||
 name|NOOBJ
-argument_list|,
-name|UIO_USERSPACE
 operator||
 name|MPSAFE
+argument_list|,
+name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
