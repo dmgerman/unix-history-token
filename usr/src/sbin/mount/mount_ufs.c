@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_ufs.c	8.1 (Berkeley) %G%"
+literal|"@(#)mount_ufs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,10 @@ index|[]
 init|=
 block|{
 name|MOPT_STDOPTS
+block|,
+name|MOPT_ASYNC
+block|,
+name|MOPT_SYNC
 block|,
 name|MOPT_UPDATE
 block|,
