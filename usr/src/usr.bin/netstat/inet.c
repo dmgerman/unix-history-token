@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.7 82/12/18"
+literal|"@(#)inet.c	4.8 83/02/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -980,11 +980,38 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d incomplete packets\n"
+literal|"\t%d packet size smaller than minimum\n"
 argument_list|,
 name|ipstat
 operator|.
 name|ips_tooshort
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d data size< data length\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_toosmall
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d header length< data size\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_badhlen
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t%d data length< header length\n"
+argument_list|,
+name|ipstat
+operator|.
+name|ips_badlen
 argument_list|)
 expr_stmt|;
 block|}
