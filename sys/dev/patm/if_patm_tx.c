@@ -3752,7 +3752,6 @@ operator|->
 name|cps
 condition|)
 block|{
-comment|/* send message */
 name|patm_debug
 argument_list|(
 name|sc
@@ -3762,6 +3761,28 @@ argument_list|,
 literal|"ACRI=%04x CPS=%u"
 argument_list|,
 name|acri
+argument_list|,
+name|cps
+argument_list|)
+expr_stmt|;
+name|ATMEV_SEND_ACR_CHANGED
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ifatm
+argument_list|,
+name|vcc
+operator|->
+name|vcc
+operator|.
+name|vpi
+argument_list|,
+name|vcc
+operator|->
+name|vcc
+operator|.
+name|vci
 argument_list|,
 name|cps
 argument_list|)
