@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpwent.c	4.5 (Berkeley) 84/08/28 */
+comment|/* @(#)getpwent.c	4.6 (Berkeley) 85/01/16 */
 end_comment
 
 begin_include
