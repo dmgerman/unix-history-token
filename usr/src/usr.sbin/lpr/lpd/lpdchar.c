@@ -4,7 +4,7 @@ comment|/*  *	Bill Shannon	21 Dec 1978  *	removed from lpd.c so as to be easier 
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpdchar.c	5.4 (Berkeley) %G%"
+literal|"@(#)lpdchar.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
