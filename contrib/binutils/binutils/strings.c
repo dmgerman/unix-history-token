@@ -56,6 +56,96 @@ directive|include
 file|"libiberty.h"
 end_include
 
+begin_comment
+comment|/* Some platforms need to put stdin into binary mode, to read     binary files.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SETMODE
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_O_BINARY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|_O_BINARY
+end_define
+
+begin_define
+define|#
+directive|define
+name|setmode
+value|_setmode
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|O_BINARY
+end_if
+
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SET_BINARY
+parameter_list|(
+name|f
+parameter_list|)
+value|do { if (!isatty(f)) setmode(f,O_BINARY); } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -69,7 +159,7 @@ name|isgraphic
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& (isprint (c) || isblank (c)))
+value|(isascii (c)&& (isprint (c) || (c) == '\t'))
 end_define
 
 begin_else
@@ -84,7 +174,7 @@ name|isgraphic
 parameter_list|(
 name|c
 parameter_list|)
-value|(isprint (c) || isblank (c))
+value|(isprint (c) || (c) == '\t')
 end_define
 
 begin_endif
@@ -747,6 +837,19 @@ name|datasection_only
 operator|=
 name|false
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SET_BINARY
+name|SET_BINARY
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|print_strings
 argument_list|(
 literal|"{standard input}"
