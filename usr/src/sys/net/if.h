@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -156,6 +156,18 @@ name|ifnet
 modifier|*
 name|if_next
 decl_stmt|;
+name|u_char
+name|if_type
+decl_stmt|;
+comment|/* ethernet, tokenring, etc */
+name|u_char
+name|if_addrlen
+decl_stmt|;
+comment|/* media address length */
+name|u_char
+name|if_hdrlen
+decl_stmt|;
+comment|/* media header length */
 block|}
 struct|;
 end_struct
@@ -395,32 +407,27 @@ name|ifaddr
 block|{
 name|struct
 name|sockaddr
+modifier|*
 name|ifa_addr
 decl_stmt|;
 comment|/* address of interface */
-union|union
-block|{
 name|struct
 name|sockaddr
-name|ifu_broadaddr
+modifier|*
+name|ifa_dstaddr
 decl_stmt|;
-name|struct
-name|sockaddr
-name|ifu_dstaddr
-decl_stmt|;
-block|}
-name|ifa_ifu
-union|;
+comment|/* other end of p-to-p link */
 define|#
 directive|define
 name|ifa_broadaddr
-value|ifa_ifu.ifu_broadaddr
-comment|/* broadcast address */
-define|#
-directive|define
-name|ifa_dstaddr
-value|ifa_ifu.ifu_dstaddr
-comment|/* other end of p-to-p link */
+value|ifa_dstaddr
+comment|/* broadcast address interface */
+name|struct
+name|sockaddr
+modifier|*
+name|ifa_netmask
+decl_stmt|;
+comment|/* used to determine subnet */
 name|struct
 name|ifnet
 modifier|*
@@ -512,6 +519,33 @@ directive|define
 name|ifr_data
 value|ifr_ifru.ifru_data
 comment|/* for use by interface */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ifaliasreq
+block|{
+name|char
+name|ifra_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
+name|struct
+name|sockaddr
+name|ifra_addr
+decl_stmt|;
+name|struct
+name|sockaddr
+name|ifra_broadaddr
+decl_stmt|;
+name|struct
+name|sockaddr
+name|ifra_mask
+decl_stmt|;
 block|}
 struct|;
 end_struct

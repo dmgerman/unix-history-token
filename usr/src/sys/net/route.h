@@ -88,6 +88,12 @@ modifier|*
 name|rt_ifp
 decl_stmt|;
 comment|/* the answer: interface to use */
+name|struct
+name|ifaddr
+modifier|*
+name|rt_ifa
+decl_stmt|;
+comment|/* the answer: interface to use */
 block|}
 struct|;
 end_struct

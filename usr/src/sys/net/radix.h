@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)radix.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)radix.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -255,14 +255,6 @@ directive|ifndef
 name|KERNEL
 end_ifndef
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -313,18 +305,6 @@ parameter_list|)
 value|free((char *)p);
 end_define
 
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)< (b) ? (a) : (b))
-end_define
-
 begin_else
 else|#
 directive|else
@@ -341,7 +321,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|bcmp(((caddr_t)(a)), ((caddr_t)(b)), (n))
+value|bcmp(((caddr_t)(a)), ((caddr_t)(b)), (unsigned)(n))
 end_define
 
 begin_define
@@ -355,7 +335,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|bcopy(((caddr_t)(a)), ((caddr_t)(b)), (n))
+value|bcopy(((caddr_t)(a)), ((caddr_t)(b)), (unsigned)(n))
 end_define
 
 begin_define
@@ -367,7 +347,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
-value|bzero((caddr_t)(p), (int)(n));
+value|bzero((caddr_t)(p), (unsigned)(n));
 end_define
 
 begin_define
@@ -381,7 +361,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|(p = (t) malloc((n), M_RTABLE, M_DONTWAIT))
+value|(p = (t) malloc((unsigned long)(n), M_RTABLE, M_DONTWAIT))
 end_define
 
 begin_define
@@ -391,14 +371,17 @@ name|Free
 parameter_list|(
 name|p
 parameter_list|)
-value|free((caddr_t)p);
+value|free((caddr_t)p, M_RTABLE);
 end_define
 
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/*KERNEL*/
+end_comment
 
 end_unit
 
