@@ -2645,11 +2645,15 @@ name|g_class
 name|g_mbrext_class
 init|=
 block|{
+operator|.
+name|name
+operator|=
 name|MBREXT_CLASS_NAME
 block|,
+operator|.
+name|taste
+operator|=
 name|g_mbrext_taste
-block|,
-name|NULL
 block|,
 name|G_CLASS_INITIALIZER
 block|}
