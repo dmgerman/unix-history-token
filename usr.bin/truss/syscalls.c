@@ -2509,7 +2509,7 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"%5d:  "
+literal|"%5d: "
 argument_list|,
 name|trussinfo
 operator|->
