@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.14	82/10/09	*/
+comment|/*	raw_pup.c	4.15	82/10/20	*/
 end_comment
 
 begin_include
@@ -266,6 +266,8 @@ directive|if
 name|vax
 operator|||
 name|pdp11
+operator|||
+name|ns16032
 name|pup
 operator|->
 name|pup_length
@@ -304,6 +306,9 @@ name|ifp
 operator|=
 name|if_ifonnetof
 argument_list|(
+operator|(
+name|int
+operator|)
 name|pup
 operator|->
 name|pup_dnet

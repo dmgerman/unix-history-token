@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.21	82/10/20	*/
+comment|/*	raw_usrreq.c	4.22	82/10/20	*/
 end_comment
 
 begin_include
@@ -999,9 +999,7 @@ name|mtod
 argument_list|(
 name|nam
 argument_list|,
-expr|struct
-name|sockaddr
-operator|*
+name|caddr_t
 argument_list|)
 argument_list|,
 sizeof|sizeof

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.c	4.7	82/10/20	*/
+comment|/*	in.c	4.8	82/10/20	*/
 end_comment
 
 begin_include
@@ -380,6 +380,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|notdef
+end_ifndef
+
 begin_comment
 comment|/*  * Return the host portion of an internet address.  */
 end_comment
@@ -469,6 +475,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Initialize an interface's routing  * table entry according to the network.  * INTERNET SPECIFIC.  */

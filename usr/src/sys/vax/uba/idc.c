@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	idc.c	4.8	82/10/17	*/
+comment|/*	idc.c	4.9	82/10/20	*/
 end_comment
 
 begin_include
@@ -804,6 +804,9 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|idcwait
 argument_list|(
 name|idcaddr
@@ -836,6 +839,9 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* read header to synchronize microcode */
+operator|(
+name|void
+operator|)
 name|idcwait
 argument_list|(
 name|idcaddr
@@ -857,6 +863,9 @@ operator|)
 operator||
 name|IDC_RHDR
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|idcwait
 argument_list|(
 name|idcaddr
@@ -2851,6 +2860,9 @@ operator|<<
 literal|8
 operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|idcwait
 argument_list|(
 name|idcaddr
@@ -3820,6 +3832,9 @@ operator|.
 name|b_actf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|idcstart
 argument_list|(
 name|um
@@ -4847,7 +4862,7 @@ name|start
 operator|=
 literal|0
 expr_stmt|;
-comment|/*** 	idcaddr->idccs1 = IDC_CCLR; 	idcaddr->idccs2 = unit; 	idcaddr->idccs1 = idctypes[ui->ui_type]|IDC_DCLR|IDC_GO; 	idcwait(idcaddr); 	dbsize = 20 or 31; ***/
+comment|/*** 	idcaddr->idccs1 = IDC_CCLR; 	idcaddr->idccs2 = unit; 	idcaddr->idccs1 = idctypes[ui->ui_type]|IDC_DCLR|IDC_GO; 	(void) idcwait(idcaddr); 	dbsize = 20 or 31; ***/
 name|st
 operator|=
 operator|&
@@ -5041,7 +5056,7 @@ name|st
 operator|->
 name|nsect
 expr_stmt|;
-comment|/*** 		idcaddr->idccyl = cn; 		rp = (short *)&idcaddr->idcda; 		*rp = (tn<< 8) + sn; 		*--rp = 0; 		*--rp = -blk*NBPG / sizeof (short); 		*--rp = idctypes[ui->ui_type]|IDC_GO|IDC_WRITE; 		idcwait(idcaddr); ***/
+comment|/*** 		idcaddr->idccyl = cn; 		rp = (short *)&idcaddr->idcda; 		*rp = (tn<< 8) + sn; 		*--rp = 0; 		*--rp = -blk*NBPG / sizeof (short); 		*--rp = idctypes[ui->ui_type]|IDC_GO|IDC_WRITE; 		(void) idcwait(idcaddr); ***/
 if|if
 condition|(
 name|idcaddr

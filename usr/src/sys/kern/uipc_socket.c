@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.57	82/10/20	*/
+comment|/*	uipc_socket.c	4.58	82/10/20	*/
 end_comment
 
 begin_include
@@ -834,7 +834,7 @@ name|so
 argument_list|,
 operator|(
 expr|struct
-name|sockaddr
+name|mbuf
 operator|*
 operator|)
 literal|0
