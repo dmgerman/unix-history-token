@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n7.c	4.3 %G%"
+literal|"@(#)n7.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2730,11 +2730,6 @@ block|{
 name|print
 operator|++
 expr_stmt|;
-name|pfrom
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2753,11 +2748,6 @@ block|{
 name|print
 operator|=
 literal|0
-expr_stmt|;
-name|opn
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 name|chkpn
 argument_list|()
@@ -2983,6 +2973,8 @@ end_macro
 
 begin_block
 block|{
+name|pfrom
+operator|=
 name|pto
 operator|=
 operator|*
@@ -2990,13 +2982,6 @@ operator|(
 name|pnp
 operator|++
 operator|)
-expr_stmt|;
-name|pfrom
-operator|=
-name|pto
-operator|&
-operator|~
-name|MOT
 expr_stmt|;
 if|if
 condition|(
@@ -3018,17 +3003,38 @@ block|}
 if|if
 condition|(
 name|pto
+operator|==
+operator|-
+literal|2
+condition|)
+block|{
+name|print
+operator|++
+expr_stmt|;
+name|pfrom
+operator|=
+literal|0
+expr_stmt|;
+name|pto
+operator|=
+literal|10000
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pto
 operator|&
 name|MOT
 condition|)
 block|{
+name|print
+operator|++
+expr_stmt|;
 name|pto
 operator|&=
 operator|~
 name|MOT
-expr_stmt|;
-name|print
-operator|++
 expr_stmt|;
 name|pfrom
 operator|=
