@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.110 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.111 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -11112,7 +11112,7 @@ init|;
 operator|*
 name|q
 operator|!=
-name|NULL
+literal|'\0'
 condition|;
 name|q
 operator|++

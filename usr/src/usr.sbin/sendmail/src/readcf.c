@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.47 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8320,7 +8320,7 @@ argument_list|,
 literal|"*"
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|TimeOuts
