@@ -151,6 +151,15 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
+name|cpu_idle
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|pci_intr_init
 function_decl|)
 parameter_list|(

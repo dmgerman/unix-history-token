@@ -97,6 +97,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LCA_PMR
+value|0x120000098L
+end_define
+
+begin_comment
+comment|/* Power Management (21066A)*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LCA_IOC_HAE
 value|LCA_IOC_BASE
 end_define

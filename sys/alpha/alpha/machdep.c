@@ -7668,6 +7668,40 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cpu_idle_hlt
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cpu_idle_hlt
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|cpu_idle_hlt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Idle loop HLT enable"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * call platform specific code to halt (until next interrupt) for the idle loop  */
+end_comment
+
 begin_function
 name|void
 name|cpu_idle
@@ -7675,7 +7709,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Insert code to halt (until next interrupt) for the idle loop */
+if|if
+condition|(
+name|cpu_idle_hlt
+operator|&&
+name|platform
+operator|.
+name|cpu_idle
+operator|!=
+name|NULL
+condition|)
+name|platform
+operator|.
+name|cpu_idle
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
