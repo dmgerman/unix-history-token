@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.32 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3124,7 +3124,7 @@ name|tTd
 argument_list|(
 literal|21
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -5567,7 +5567,7 @@ name|tTd
 argument_list|(
 literal|21
 argument_list|,
-literal|2
+literal|1
 argument_list|)
 condition|)
 block|{
