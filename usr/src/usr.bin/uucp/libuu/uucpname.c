@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpname.c	5.4 (Berkeley) %G%"
+literal|"@(#)uucpname.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,6 +418,16 @@ name|s
 operator|=
 name|sysname
 expr_stmt|;
+name|strncpy
+argument_list|(
+name|Myfullname
+argument_list|,
+name|s
+argument_list|,
+sizeof|sizeof
+name|Myfullname
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -616,6 +626,16 @@ name|s
 operator|=
 name|MYNAME
 expr_stmt|;
+name|strncpy
+argument_list|(
+name|Myfullname
+argument_list|,
+name|s
+argument_list|,
+sizeof|sizeof
+name|Myfullname
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -639,33 +659,20 @@ argument_list|,
 literal|"CANNOT DETERMINE"
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-literal|"unknown"
-expr_stmt|;
-block|}
-comment|/* 	 * copy uucpname back to caller-supplied buffer, 	 * truncating to MAXBASENAME characters. 	 * Also set up subdirectory names 	 * Truncate names at '.' if found to handle cases like 	 * seismo.arpa being returned by gethostname(). 	 * uucp sites should not have '.' in their name anyway 	 */
-name|strncpy
+name|strcpy
 argument_list|(
-name|name
+name|Myfullname
 argument_list|,
-name|s
-argument_list|,
-name|MAXBASENAME
+literal|"unknown"
 argument_list|)
 expr_stmt|;
-name|name
-index|[
-name|MAXBASENAME
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
+block|}
+comment|/* 	 * copy uucpname back to caller-supplied buffer, 	 * truncating to MAXBASENAME characters. 	 * Also set up subdirectory names 	 * Truncate names at '.' if found to handle cases like 	 * seismo.css.gov being returned by gethostname(). 	 * uucp sites should not have '.' in their name anyway 	 */
 name|s
 operator|=
 name|index
 argument_list|(
-name|name
+name|Myfullname
 argument_list|,
 literal|'.'
 argument_list|)
@@ -678,6 +685,22 @@ name|NULL
 condition|)
 operator|*
 name|s
+operator|=
+literal|'\0'
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|name
+argument_list|,
+name|Myfullname
+argument_list|,
+name|MAXBASENAME
+argument_list|)
+expr_stmt|;
+name|name
+index|[
+name|MAXBASENAME
+index|]
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -806,7 +829,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* rti!trt: was "hostunknown" */
 name|nname
 index|[
 literal|0
