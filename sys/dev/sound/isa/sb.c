@@ -6863,6 +6863,15 @@ name|logical_id
 condition|)
 block|{
 case|case
+literal|0x01000000
+case|:
+comment|/* @@@0001 */
+name|s
+operator|=
+literal|"Avance Asound 100"
+expr_stmt|;
+break|break;
+case|case
 literal|0x01100000
 case|:
 comment|/* @@@1001 */
