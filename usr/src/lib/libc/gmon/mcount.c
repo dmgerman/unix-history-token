@@ -30,7 +30,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mcount.c	5.2 (Berkeley) %G%"
+literal|"@(#)mcount.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,9 @@ index|[
 name|frompc
 operator|/
 operator|(
-name|HASHFRACTION
+name|p
+operator|->
+name|hashfraction
 operator|*
 sizeof|sizeof
 argument_list|(
