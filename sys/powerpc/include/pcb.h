@@ -147,6 +147,21 @@ name|fpuproc
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|makectx
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|,
+name|struct
+name|pcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
