@@ -8351,7 +8351,7 @@ operator|>>
 name|IEEE80211_FC0_SUBTYPE_SHIFT
 index|]
 argument_list|,
-literal|"for off-channel %u\n"
+literal|"for off-channel %u"
 argument_list|,
 name|chan
 argument_list|)
