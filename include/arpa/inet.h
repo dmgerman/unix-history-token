@@ -151,11 +151,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_ifdef
 ifdef|#
@@ -185,10 +185,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !_POSIX_SOURCE */
-end_comment
 
 begin_comment
 comment|/*  * XXX socklen_t is used by a POSIX.1-2001 interface, but not required by  * POSIX.1-2001.  */
