@@ -17849,6 +17849,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
+comment|/*__alpha__*/
 name|optimize_size
 operator|=
 literal|0
