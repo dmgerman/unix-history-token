@@ -274,11 +274,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
 name|__BSD_VISIBLE
-end_ifndef
+end_if
 
 begin_include
 include|#

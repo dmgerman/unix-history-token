@@ -1357,11 +1357,11 @@ begin_comment
 comment|/*  * Reentrant version of gamma& lgamma; passes signgam back by reference  * as the second argument; user must allocate space for signgam.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__BSD_VISIBLE
-end_ifdef
+end_if
 
 begin_function_decl
 name|double
@@ -1914,11 +1914,11 @@ begin_comment
 comment|/*  * Float versions of reentrant version of gamma& lgamma; passes  * signgam back by reference as the second argument; user must  * allocate space for signgam.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__BSD_VISIBLE
-end_ifdef
+end_if
 
 begin_function_decl
 name|float
