@@ -1661,8 +1661,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|OnVTY
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|)
+argument_list|,
+literal|"serial"
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|systemSuspendDialog
 argument_list|()
@@ -1683,8 +1692,6 @@ name|int
 name|i
 decl_stmt|,
 name|fd
-decl_stmt|,
-name|fdstop
 decl_stmt|;
 name|struct
 name|termios
@@ -1706,24 +1713,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|fdstop
-operator|=
-name|strcmp
-argument_list|(
-name|variable_get
-argument_list|(
-name|VAR_FIXIT_TTY
-argument_list|)
-argument_list|,
-literal|"serial"
-argument_list|)
-operator|==
-literal|0
-condition|?
-literal|3
-else|:
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1733,7 +1722,7 @@ argument_list|()
 init|;
 name|i
 operator|>=
-name|fdstop
+literal|0
 condition|;
 operator|--
 name|i
@@ -1752,12 +1741,21 @@ argument_list|(
 name|VAR_FIXIT_TTY
 argument_list|)
 argument_list|,
-literal|"standard"
+literal|"serial"
 argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/console"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+else|else
 name|fd
 operator|=
 name|open
@@ -1791,7 +1789,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 name|DebugFD
 operator|=
 literal|2
@@ -1878,6 +1875,34 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|)
+argument_list|,
+literal|"serial"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Waiting for fixit shell to exit.\n"
+literal|"When you are done, type ``exit'' to exit\n"
+literal|"the fixit shell and be returned here.\n\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* use the .profile from the fixit medium */
 name|setenv
 argument_list|(
@@ -1916,9 +1941,6 @@ empty_stmt|;
 block|}
 else|else
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1934,21 +1956,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Waiting for fixit shell to exit.  Go to VTY4 now by\n"
 literal|"typing ALT-F4.  When you are done, type ``exit'' to exit\n"
-literal|"the fixit shell and be returned here."
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|msgNotify
-argument_list|(
-literal|"Waiting for fixit shell to exit.\n"
-literal|"When you are done, type ``exit'' to exit\n"
-literal|"the fixit shell and be returned here."
+literal|"the fixit shell and be returned here\n."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1964,6 +1979,23 @@ name|waitstatus
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|)
+argument_list|,
+literal|"serial"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|systemResumeDialog
+argument_list|()
 expr_stmt|;
 block|}
 name|dialog_clear
@@ -4634,11 +4666,25 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OnVTY
+condition|)
 name|variable_set2
 argument_list|(
 name|VAR_FIXIT_TTY
 argument_list|,
 literal|"standard"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|variable_set2
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|,
+literal|"serial"
 argument_list|,
 literal|0
 argument_list|)
