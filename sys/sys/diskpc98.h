@@ -1461,7 +1461,7 @@ comment|/*  * XXX encoding of disk minor numbers, should be elsewhere.  *  * See
 end_comment
 
 begin_comment
-comment|/*        3                   2                   1                   0      1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0     _________________________________________________________________     | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |     -----------------------------------------------------------------     |      TYPE           | SLICE   |  MAJOR?       |  UNIT   |PART |     -----------------------------------------------------------------     |      TYPE     |PART2| SLICE   |  MAJOR?       |  UNIT   |PART |<-soon     -----------------------------------------------------------------  	I want 3 more part bits (taken from 'TYPE' (useless as it is) (JRE) */
+comment|/*        3                   2                   1                   0      1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0     _________________________________________________________________     | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |     -----------------------------------------------------------------     |    TYPE     |UNIT_2 | SLICE   |  MAJOR?       |  UNIT   |PART |     ----------------------------------------------------------------- */
 end_comment
 
 begin_define
@@ -1530,7 +1530,7 @@ name|dktype
 parameter_list|(
 name|dev
 parameter_list|)
-value|((minor(dev)>> 21)& 0x7ff)
+value|((minor(dev)>> 25)& 0x7f)
 end_define
 
 begin_define
@@ -1540,7 +1540,7 @@ name|dkunit
 parameter_list|(
 name|dev
 parameter_list|)
-value|((minor(dev)>> 3)& 0x1f)
+value|((((dev)>> 16)& 0x1e0) | (((dev)>> 3)& 0x1f))
 end_define
 
 begin_ifdef
