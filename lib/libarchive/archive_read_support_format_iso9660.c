@@ -474,6 +474,10 @@ name|struct
 name|archive_string
 name|pathname
 decl_stmt|;
+name|char
+name|seenRockridge
+decl_stmt|;
+comment|/* Set true if RR extensions are used. */
 name|uint64_t
 name|previous_offset
 decl_stmt|;
@@ -1240,6 +1244,41 @@ operator|->
 name|pformat_data
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|iso9660
+operator|->
+name|seenRockridge
+condition|)
+block|{
+name|a
+operator|->
+name|archive_format
+operator|=
+name|ARCHIVE_FORMAT_ISO9660_ROCKRIDGE
+expr_stmt|;
+name|a
+operator|->
+name|archive_format_name
+operator|=
+literal|"ISO9660 with Rockridge extensions"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|a
+operator|->
+name|archive_format
+operator|=
+name|ARCHIVE_FORMAT_ISO9660
+expr_stmt|;
+name|a
+operator|->
+name|archive_format_name
+operator|=
+literal|"ISO9660"
+expr_stmt|;
+block|}
 comment|/* Get the next entry that appears after the current offset. */
 name|r
 operator|=
@@ -3056,7 +3095,13 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 				 * RR extension comprises: 				 * 				 */
+name|iso9660
+operator|->
+name|seenRockridge
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 				 * RR extension comprises: 				 *    one byte flag value 				 */
 comment|/* TODO: Handle RR extension. */
 break|break;
 block|}
