@@ -19,7 +19,7 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.44.2.24 1999/02/27 21:51:35 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.44.2.25 1999/03/05 16:13:54 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,7 +250,7 @@ name|char
 name|message
 index|[]
 init|=
-literal|"Internet Software Consortium DHCP Client V2.0b1pl17"
+literal|"Internet Software Consortium DHCP Client V2.0b1pl18"
 decl_stmt|;
 end_decl_stmt
 
