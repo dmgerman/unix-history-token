@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.5	83/01/05	*/
+comment|/*	lpr.c	4.6	83/01/05	*/
 end_comment
 
 begin_comment
@@ -163,12 +163,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|cflag
+name|lflag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* force copy */
+comment|/* link flag */
 end_comment
 
 begin_decl_stmt
@@ -732,10 +732,10 @@ name|hdr
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
+literal|'l'
 case|:
-comment|/* force copy of files */
-name|cflag
+comment|/* try to link files */
+name|lflag
 operator|++
 expr_stmt|;
 break|break;
@@ -923,8 +923,7 @@ continue|continue;
 comment|/* file unreasonable */
 if|if
 condition|(
-operator|!
-name|cflag
+name|lflag
 operator|&&
 name|linked
 argument_list|(
