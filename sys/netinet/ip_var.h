@@ -226,10 +226,6 @@ modifier|*
 name|imo_multicast_ifp
 decl_stmt|;
 comment|/* ifp for outgoing multicasts */
-name|u_long
-name|imo_multicast_vif
-decl_stmt|;
-comment|/* vif num outgoing multicasts */
 name|u_char
 name|imo_multicast_ttl
 decl_stmt|;
@@ -250,6 +246,10 @@ index|[
 name|IP_MAX_MEMBERSHIPS
 index|]
 decl_stmt|;
+name|u_long
+name|imo_multicast_vif
+decl_stmt|;
+comment|/* vif num outgoing multicasts */
 block|}
 struct|;
 end_struct
@@ -490,6 +490,21 @@ end_comment
 
 begin_extern
 extern|extern int	(*legal_vif_num
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern u_long	(*ip_mcast_src
 end_extern
 
 begin_expr_stmt

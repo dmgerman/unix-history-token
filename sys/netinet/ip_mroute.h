@@ -16,17 +16,17 @@ name|_NETINET_IP_MROUTE_H_
 end_define
 
 begin_comment
-comment|/*  * Definitions for the kernel part of DVMRP,  * a Distance-Vector Multicast Routing Protocol.  * (See RFC-1075.)  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Ajit Thyagarajan, PARC, August 1993.  * Modified by Ajit Thyagarajan, PARC, August 1994.  *  * MROUTING 1.5  */
+comment|/*  * Definitions for IP multicast forwarding.  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Ajit Thyagarajan, PARC, August 1993.  * Modified by Ajit Thyagarajan, PARC, August 1994.  *  * MROUTING Revision: 3.3.1.3  */
 end_comment
 
 begin_comment
-comment|/*  * DVMRP-specific setsockopt commands.  */
+comment|/*  * Multicast Routing set/getsockopt commands.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DVMRP_INIT
+name|MRT_INIT
 value|100
 end_define
 
@@ -37,7 +37,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DVMRP_DONE
+name|MRT_DONE
 value|101
 end_define
 
@@ -48,7 +48,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DVMRP_ADD_VIF
+name|MRT_ADD_VIF
 value|102
 end_define
 
@@ -59,7 +59,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DVMRP_DEL_VIF
+name|MRT_DEL_VIF
 value|103
 end_define
 
@@ -70,7 +70,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DVMRP_ADD_MFC
+name|MRT_ADD_MFC
 value|104
 end_define
 
@@ -81,12 +81,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DVMRP_DEL_MFC
+name|MRT_DEL_MFC
 value|105
 end_define
 
 begin_comment
 comment|/* delete forwarding cache entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_VERSION
+value|106
+end_define
+
+begin_comment
+comment|/* get kernel version number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MRT_ASSERT
+value|107
+end_define
+
+begin_comment
+comment|/* enable PIM assert processing */
 end_comment
 
 begin_define
@@ -127,6 +149,13 @@ end_typedef
 begin_comment
 comment|/* type of a vif index */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ALL_VIFS
+value|(vifi_t)-1
+end_define
 
 begin_define
 define|#
@@ -199,7 +228,7 @@ value|((m1) == (m2))
 end_define
 
 begin_comment
-comment|/*  * Argument structure for DVMRP_ADD_VIF.  * (DVMRP_DEL_VIF takes a single vifi_t argument.)  */
+comment|/*  * Argument structure for MRT_ADD_VIF.  * (MRT_DEL_VIF takes a single vifi_t argument.)  */
 end_comment
 
 begin_struct
@@ -221,7 +250,7 @@ comment|/* min ttl required to forward on vif */
 name|u_int
 name|vifc_rate_limit
 decl_stmt|;
-comment|/* max tate */
+comment|/* max rate */
 name|struct
 name|in_addr
 name|vifc_lcl_addr
@@ -259,7 +288,7 @@ comment|/* tunnel uses IP source routing */
 end_comment
 
 begin_comment
-comment|/*  * Argument structure for DVMRP_ADD_MFC  * (mfcc_tos to be added at a future point)  */
+comment|/*  * Argument structure for MRT_ADD_MFC and MRT_DEL_MFC  * (mfcc_tos to be added at a future point)  */
 end_comment
 
 begin_struct
@@ -270,17 +299,12 @@ name|struct
 name|in_addr
 name|mfcc_origin
 decl_stmt|;
-comment|/* subnet origin of mcasts   */
+comment|/* ip origin of mcasts       */
 name|struct
 name|in_addr
 name|mfcc_mcastgrp
 decl_stmt|;
 comment|/* multicast group associated*/
-name|struct
-name|in_addr
-name|mfcc_originmask
-decl_stmt|;
-comment|/* subnet mask for origin    */
 name|vifi_t
 name|mfcc_parent
 decl_stmt|;
@@ -292,83 +316,6 @@ name|MAXVIFS
 index|]
 decl_stmt|;
 comment|/* forwarding ttls on vifs   */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Argument structure for DVMRP_DEL_MFC  */
-end_comment
-
-begin_struct
-struct|struct
-name|delmfcctl
-block|{
-name|struct
-name|in_addr
-name|mfcc_origin
-decl_stmt|;
-comment|/* subnet origin of multicasts      */
-name|struct
-name|in_addr
-name|mfcc_mcastgrp
-decl_stmt|;
-comment|/* multicast group assoc. w/ origin */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Argument structure used by RSVP daemon to get vif information  */
-end_comment
-
-begin_struct
-struct|struct
-name|vif_req
-block|{
-name|u_char
-name|v_flags
-decl_stmt|;
-comment|/* VIFF_ flags defined above           */
-name|u_char
-name|v_threshold
-decl_stmt|;
-comment|/* min ttl required to forward on vif  */
-name|struct
-name|in_addr
-name|v_lcl_addr
-decl_stmt|;
-comment|/* local interface address             */
-name|struct
-name|in_addr
-name|v_rmt_addr
-decl_stmt|;
-name|char
-name|v_if_name
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-comment|/* if name */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|vif_conf
-block|{
-name|u_int
-name|vifc_len
-decl_stmt|;
-name|u_int
-name|vifc_num
-decl_stmt|;
-name|struct
-name|vif_req
-modifier|*
-name|vifc_req
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -429,6 +376,10 @@ name|u_long
 name|mrts_pkt2large
 decl_stmt|;
 comment|/* pkts dropped - size> BKT SIZE  */
+name|u_long
+name|mrts_upq_sockfull
+decl_stmt|;
+comment|/* upcalls dropped - socket full */
 block|}
 struct|;
 end_struct
@@ -450,7 +401,13 @@ name|in_addr
 name|grp
 decl_stmt|;
 name|u_long
-name|count
+name|pktcnt
+decl_stmt|;
+name|u_long
+name|bytecnt
+decl_stmt|;
+name|u_long
+name|wrong_if
 decl_stmt|;
 block|}
 struct|;
@@ -467,12 +424,23 @@ block|{
 name|vifi_t
 name|vifi
 decl_stmt|;
+comment|/* vif number				*/
 name|u_long
 name|icount
 decl_stmt|;
+comment|/* Input packet count on vif		*/
 name|u_long
 name|ocount
 decl_stmt|;
+comment|/* Output packet count on vif		*/
+name|u_long
+name|ibytes
+decl_stmt|;
+comment|/* Input byte count on vif		*/
+name|u_long
+name|obytes
+decl_stmt|;
+comment|/* Output byte count on vif		*/
 block|}
 struct|;
 end_struct
@@ -482,6 +450,10 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * The kernel's virtual-interface structure.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -529,12 +501,35 @@ name|u_long
 name|v_pkt_out
 decl_stmt|;
 comment|/* # pkts out on interface           */
+name|u_long
+name|v_bytes_in
+decl_stmt|;
+comment|/* # bytes in on interface	     */
+name|u_long
+name|v_bytes_out
+decl_stmt|;
+comment|/* # bytes out on interface	     */
+name|struct
+name|route
+name|v_route
+decl_stmt|;
+comment|/* cached route if this is a tunnel */
+name|u_int
+name|v_rsvp_on
+decl_stmt|;
+comment|/* RSVP listening on this vif */
+name|struct
+name|socket
+modifier|*
+name|v_rsvpd
+decl_stmt|;
+comment|/* RSVP daemon socket */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * The kernel's multicast forwarding cache entry structure  * (A field for the type of service (mfc_tos) is to be added  * at a future point)  */
+comment|/*  * The kernel's multicast forwarding cache entry structure   * (A field for the type of service (mfc_tos) is to be added   * at a future point)  */
 end_comment
 
 begin_struct
@@ -545,17 +540,12 @@ name|struct
 name|in_addr
 name|mfc_origin
 decl_stmt|;
-comment|/* subnet origin of mcasts   */
+comment|/* IP origin of mcasts   */
 name|struct
 name|in_addr
 name|mfc_mcastgrp
 decl_stmt|;
 comment|/* multicast group associated*/
-name|struct
-name|in_addr
-name|mfc_originmask
-decl_stmt|;
-comment|/* subnet mask for origin    */
 name|vifi_t
 name|mfc_parent
 decl_stmt|;
@@ -571,6 +561,70 @@ name|u_long
 name|mfc_pkt_cnt
 decl_stmt|;
 comment|/* pkt count for src-grp     */
+name|u_long
+name|mfc_byte_cnt
+decl_stmt|;
+comment|/* byte count for src-grp    */
+name|u_long
+name|mfc_wrong_if
+decl_stmt|;
+comment|/* wrong if for src-grp	     */
+name|int
+name|mfc_expire
+decl_stmt|;
+comment|/* time to clean entry up    */
+name|struct
+name|timeval
+name|mfc_last_assert
+decl_stmt|;
+comment|/* last time I sent an assert*/
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Struct used to communicate from kernel to multicast router  * note the convenient similarity to an IP packet  */
+end_comment
+
+begin_struct
+struct|struct
+name|igmpmsg
+block|{
+name|u_long
+name|unused1
+decl_stmt|;
+name|u_long
+name|unused2
+decl_stmt|;
+name|u_char
+name|im_msgtype
+decl_stmt|;
+comment|/* what type of message	    */
+define|#
+directive|define
+name|IGMPMSG_NOCACHE
+value|1
+define|#
+directive|define
+name|IGMPMSG_WRONGVIF
+value|2
+name|u_char
+name|im_mbz
+decl_stmt|;
+comment|/* must be zero		    */
+name|u_char
+name|im_vif
+decl_stmt|;
+comment|/* vif rec'd on		    */
+name|u_char
+name|unused3
+decl_stmt|;
+name|struct
+name|in_addr
+name|im_src
+decl_stmt|,
+name|im_dst
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -588,19 +642,28 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+comment|/* A copy of the packet		    */
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_long
-name|tunnel_src
+comment|/* Interface pkt came in on	    */
+name|vifi_t
+name|xmt_vif
 decl_stmt|;
+comment|/* Saved copy of imo_multicast_vif  */
+ifdef|#
+directive|ifdef
+name|UPCALL_TIMING
 name|struct
-name|ip_moptions
-modifier|*
-name|imo
+name|timeval
+name|t
 decl_stmt|;
+comment|/* Timestamp */
+endif|#
+directive|endif
+comment|/* UPCALL_TIMING */
 block|}
 struct|;
 end_struct
@@ -674,7 +737,7 @@ comment|/* max. no of pkts in upcall Q */
 end_comment
 
 begin_comment
-comment|/*  * Token Bucket filter code  */
+comment|/*  * Token Bucket filter code   */
 end_comment
 
 begin_define
@@ -758,7 +821,7 @@ struct|;
 end_struct
 
 begin_extern
-extern|extern int	(*ip_mrouter_cmd
+extern|extern int	(*ip_mrouter_set
 end_extern
 
 begin_expr_stmt
@@ -774,6 +837,30 @@ operator|*
 operator|,
 expr|struct
 name|mbuf
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern int	(*ip_mrouter_get
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|socket
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
 operator|*
 operator|)
 argument_list|)

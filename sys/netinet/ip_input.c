@@ -160,6 +160,20 @@ file|<sys/socketvar.h>
 end_include
 
 begin_decl_stmt
+name|int
+name|rsvp_on
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip_rsvp_on
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|socket
 modifier|*
@@ -1051,12 +1065,10 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/* greedy RSVP, snatches any PATH packet of the RSVP protocol and no          * matter if it is destined to another node, or whether it is          * a multicast one, RSVP wants it! and prevents it from being forwarded          * anywhere else. Also checks if the rsvp daemon is running before 	 * grabbing the packet.          */
+comment|/* greedy RSVP, snatches any PATH packet of the RSVP protocol and no          * matter if it is destined to another node, or whether it is           * a multicast one, RSVP wants it! and prevents it from being forwarded          * anywhere else. Also checks if the rsvp daemon is running before 	 * grabbing the packet.          */
 if|if
 condition|(
-name|ip_rsvpd
-operator|!=
-name|NULL
+name|rsvp_on
 operator|&&
 name|ip
 operator|->
@@ -1419,7 +1431,7 @@ name|next
 goto|;
 name|ours
 label|:
-comment|/* 		 * If packet came to us we count it... 		 * This way we count all incoming packets which has 		 * not been forwarded... 		 * Do not convert ip_len to host byte order when 		 * counting,ppl already made it for us before.. 		 */
+comment|/* 		 * If packet came to us we count it... 		 * This way we count all incoming packets which has  		 * not been forwarded... 		 * Do not convert ip_len to host byte order when  		 * counting,ppl already made it for us before.. 		 */
 if|if
 condition|(
 name|ip_acct_cnt_ptr
@@ -5538,6 +5550,21 @@ name|ip_rsvpd
 operator|=
 name|so
 expr_stmt|;
+comment|/* 	 * This may seem silly, but we need to be sure we don't over-increment 	 * the RSVP counter, in case something slips up. 	 */
+if|if
+condition|(
+operator|!
+name|ip_rsvp_on
+condition|)
+block|{
+name|ip_rsvp_on
+operator|=
+literal|1
+expr_stmt|;
+name|rsvp_on
+operator|++
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -5555,6 +5582,20 @@ name|ip_rsvpd
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * This may seem silly, but we need to be sure we don't over-decrement 	 * the RSVP counter, in case something slips up. 	 */
+if|if
+condition|(
+name|ip_rsvp_on
+condition|)
+block|{
+name|ip_rsvp_on
+operator|=
+literal|0
+expr_stmt|;
+name|rsvp_on
+operator|--
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;

@@ -265,11 +265,26 @@ end_comment
 
 begin_function_decl
 name|void
-name|multiencap_decap
+name|rsvp_input
 parameter_list|(
 name|struct
 name|mbuf
 modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ipip_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -497,7 +512,7 @@ name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-name|rip_input
+name|rsvp_input
 block|,
 name|rip_output
 block|,
@@ -528,7 +543,7 @@ name|PR_ATOMIC
 operator||
 name|PR_ADDR
 block|,
-name|multiencap_decap
+name|ipip_input
 block|,
 name|rip_output
 block|,
