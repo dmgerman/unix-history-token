@@ -333,6 +333,14 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
+name|BCOM_DEVICEID_BCM5702X
+block|,
+literal|"Broadcom BCM5702X Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
 name|BCOM_DEVICEID_BCM5703X
 block|,
 literal|"Broadcom BCM5703X Gigabit Ethernet"
