@@ -3380,8 +3380,6 @@ name|char
 name|domain
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 specifier|static

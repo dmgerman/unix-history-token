@@ -238,19 +238,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|trimdomain
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|protopr
 name|__P
 argument_list|(
