@@ -4,7 +4,11 @@ comment|/* f77 driver dervied from g++.c by Jonas Olsson */
 end_comment
 
 begin_comment
-comment|/* G++ preliminary semantic processing for the compiler driver.    Copyright (C) 1993, 1994 Free Software Foundation, Inc.    Contributed by Brendan Kehoe (brendan@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* converted from gcc-2.6.x(?) derivative to 2.7.2.1 by Peter Wemm */
+end_comment
+
+begin_comment
+comment|/* G++ preliminary semantic processing for the compiler driver.    Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.    Contributed by Brendan Kehoe (brendan@cygnus.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -57,6 +61,16 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -66,6 +80,22 @@ end_include
 begin_comment
 comment|/* May get R_OK, etc. on some systems.  */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<process.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Defined to the name of the compiler; if using a cross compiler, the    Makefile should compile this file with the proper name    (e.g., "i386-aout-gcc").  */
@@ -121,6 +151,24 @@ directive|define
 name|F2CLIB
 value|(1<<3)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MATH_LIBRARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MATH_LIBRARY
+value|"-lm"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* On MSDOS, write temp files in current dir    because there's no place else we can expect to use.  */
@@ -278,14 +326,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|errno
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|errno
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|sys_nerr
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRERROR
+end_ifndef
 
 begin_if
 if|#
@@ -293,11 +363,6 @@ directive|if
 name|defined
 argument_list|(
 name|bsd4_4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
 argument_list|)
 end_if
 
@@ -331,6 +396,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Name with which this program was invoked.  */
 end_comment
@@ -342,6 +426,79 @@ modifier|*
 name|programname
 decl_stmt|;
 end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_function
+name|char
+modifier|*
+name|my_strerror
+parameter_list|(
+name|e
+parameter_list|)
+name|int
+name|e
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_STRERROR
+return|return
+name|strerror
+argument_list|(
+name|e
+argument_list|)
+return|;
+else|#
+directive|else
+specifier|static
+name|char
+name|buffer
+index|[
+literal|30
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|e
+condition|)
+return|return
+literal|""
+return|;
+if|if
+condition|(
+name|e
+operator|>
+literal|0
+operator|&&
+name|e
+operator|<
+name|sys_nerr
+condition|)
+return|return
+name|sys_errlist
+index|[
+name|e
+index|]
+return|;
+name|sprintf
+argument_list|(
+name|buffer
+argument_list|,
+literal|"Unknown error %d"
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|buffer
+return|;
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_escape
 end_escape
@@ -838,38 +995,19 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|s
-decl_stmt|;
-if|if
-condition|(
-name|errno
-operator|<
-name|sys_nerr
-condition|)
-name|s
-operator|=
+name|fatal
+argument_list|(
 name|concat
 argument_list|(
 literal|"%s: "
 argument_list|,
-name|sys_errlist
-index|[
+name|my_strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|,
 literal|""
 argument_list|)
-expr_stmt|;
-else|else
-name|s
-operator|=
-literal|"cannot open %s"
-expr_stmt|;
-name|fatal
-argument_list|(
-name|s
 argument_list|,
 name|name
 argument_list|)
@@ -1191,10 +1329,10 @@ name|concat
 argument_list|(
 literal|"installation problem, cannot exec %s: "
 argument_list|,
-name|sys_errlist
-index|[
+name|my_strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|,
 literal|""
 argument_list|)
@@ -1478,12 +1616,11 @@ name|verbose
 init|=
 literal|0
 decl_stmt|;
-comment|/* This will be NULL if we encounter a situation where we should not      link in libf2c.  */
-name|char
-modifier|*
+comment|/* This will be 0 if we encounter a situation where we should not      link in libf2c  */
+name|int
 name|library
 init|=
-literal|"-lf2c"
+literal|1
 decl_stmt|;
 comment|/* Used to track options that take arguments, so we don't go wrapping      those with -xf2c/-xnone.  */
 name|char
@@ -1512,16 +1649,17 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Non-zero if we saw `-lm' or `-lmath' on the command line.  */
-name|int
+name|char
+modifier|*
 name|saw_math
 init|=
 literal|0
 decl_stmt|;
-comment|/* The number of arguments being added to what's in argv.  By      default it's one new argument (adding `-lf2c').  We use this      to track the number of times we've inserted -xf2c/-xnone as well.  */
+comment|/* The number of arguments being added to what's in argv, other than      libraries.  We use this to track the number of times we've inserted      -xf2c/-xnone.  */
 name|int
 name|added
 init|=
-literal|2
+literal|0
 decl_stmt|;
 comment|/* An array used to flag each argument that needs a bit set for      LANGSPEC or MATHLIB.  */
 name|int
@@ -1740,6 +1878,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|library
+operator|!=
+literal|0
+operator|&&
 name|strcmp
 argument_list|(
 name|argv
@@ -1753,12 +1895,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|added
-operator|--
-expr_stmt|;
 name|library
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -1823,12 +1962,9 @@ literal|2
 condition|)
 block|{
 comment|/* If they only gave us `-v', don't try to link 		     in libf2c.  */
-name|added
-operator|--
-expr_stmt|;
 name|library
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -1911,6 +2047,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|library
+operator|!=
+literal|0
+operator|&&
 operator|(
 operator|(
 name|argv
@@ -1958,12 +2098,9 @@ operator|)
 condition|)
 block|{
 comment|/* Don't specify libraries if we won't link, since that would 		 cause a warning.  */
-name|added
-operator|--
-expr_stmt|;
 name|library
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -2064,6 +2201,8 @@ expr_stmt|;
 if|if
 condition|(
 name|added
+operator|||
+name|library
 condition|)
 block|{
 name|arglist
@@ -2080,7 +2219,7 @@ name|argc
 operator|+
 name|added
 operator|+
-literal|1
+literal|4
 operator|)
 operator|*
 sizeof|sizeof
@@ -2121,7 +2260,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* Make sure -lf2c is before the math library, since libg++ 	     itself uses those math routines.  */
+comment|/* Make sure -lf2c is before the math library, since libf2c 	     itself uses those math routines.  */
 if|if
 condition|(
 operator|!
@@ -2139,22 +2278,10 @@ operator|&&
 name|library
 condition|)
 block|{
+operator|--
+name|j
+expr_stmt|;
 name|saw_math
-operator|=
-literal|1
-expr_stmt|;
-name|arglist
-index|[
-name|j
-index|]
-operator|=
-name|library
-expr_stmt|;
-name|arglist
-index|[
-operator|++
-name|j
-index|]
 operator|=
 name|argv
 index|[
@@ -2175,28 +2302,40 @@ comment|/* Add `-lf2c' if we haven't already done so.  */
 if|if
 condition|(
 name|library
-operator|&&
-operator|!
+condition|)
+name|arglist
+index|[
+name|j
+operator|++
+index|]
+operator|=
+literal|"-lf2c"
+expr_stmt|;
+if|if
+condition|(
 name|saw_math
 condition|)
-block|{
 name|arglist
 index|[
 name|j
 operator|++
 index|]
 operator|=
+name|saw_math
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|library
-expr_stmt|;
+condition|)
 name|arglist
 index|[
 name|j
 operator|++
 index|]
 operator|=
-literal|"-lm"
+name|MATH_LIBRARY
 expr_stmt|;
-block|}
 name|arglist
 index|[
 name|j
@@ -2266,9 +2405,19 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|OS2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
 ifdef|#
 directive|ifdef
 name|__MSDOS__
@@ -2303,11 +2452,13 @@ directive|endif
 comment|/* __MSDOS__ */
 else|#
 directive|else
-comment|/* OS2 */
+comment|/* OS2 or _WIN32 */
 if|if
 condition|(
 name|spawnvp
 argument_list|(
+literal|1
+argument_list|,
 name|gcc
 argument_list|,
 name|arglist
