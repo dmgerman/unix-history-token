@@ -100,8 +100,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|palette
+index|[]
 decl_stmt|;
 end_decl_stmt
 
