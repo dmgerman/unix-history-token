@@ -219,12 +219,5 @@ parameter_list|)
 value|kvm_ckread(NPTR((indx)), (buf), (len))
 end_define
 
-begin_define
-define|#
-directive|define
-name|LONG
-value|(sizeof (long))
-end_define
-
 end_unit
 

@@ -223,12 +223,20 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"sysctl(%s...) expected %d, got %d"
+literal|"sysctl(%s...) expected %lu, got %lu"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|nlen
 argument_list|)
 expr_stmt|;
