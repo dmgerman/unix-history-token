@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -76,6 +76,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* usrpri of curproc */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lbolt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* once a second sleep address */
 end_comment
 
 begin_comment
