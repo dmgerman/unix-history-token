@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|5
+value|6
 end_define
 
 begin_comment
@@ -1080,6 +1080,32 @@ begin_comment
 comment|/* SNS Server Special ID */
 end_comment
 
+begin_comment
+comment|/* #define	ISP_USE_GA_NXT	1 */
+end_comment
+
+begin_comment
+comment|/* Use GA_NXT with switches */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GA_NXT_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GA_NXT_MAX
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1175,11 +1201,23 @@ comment|/* 	 * Port Data Base. This is indexed by 'target', which is invariate. 
 struct|struct
 name|lportdb
 block|{
-name|u_int
+name|u_int32_t
+name|port_type
+range|:
+literal|8
+decl_stmt|,
+range|:
+literal|4
+decl_stmt|,
+name|fc4_type
+range|:
+literal|4
+decl_stmt|,
 name|loopid
 range|:
 literal|8
 decl_stmt|,
+name|last_fabric_dev
 range|:
 literal|1
 decl_stmt|,

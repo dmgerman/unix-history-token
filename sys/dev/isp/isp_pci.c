@@ -874,46 +874,6 @@ value|((PCI_PRODUCT_QLOGIC_ISP2312<< 16) | PCI_VENDOR_QLOGIC)
 end_define
 
 begin_comment
-comment|/*  * I/O Mapping Stuff  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|_MACHINE_ARCH
-operator|==
-name|SPARC64
-end_if
-
-begin_comment
-comment|/* An IOMMU means that we only will ever need one descriptor. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISP_NSEG
-value|2
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_NSEG
-value|((MAXPHYS/PAGE_SIZE) + 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Odd case for some AMI raid cards... We need to *not* attach to this.  */
 end_comment
 
@@ -5072,11 +5032,15 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Should be BUS_SPACE_MAXSIZE, but MAXPHYS is larger than BUS_SPACE_MAXSIZE  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ISP_NSEGS
-value|((BUS_SPACE_MAXSIZE / PAGE_SIZE) + 1)
+value|((MAXPHYS / PAGE_SIZE) + 1)
 end_define
 
 begin_function

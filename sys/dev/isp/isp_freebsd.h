@@ -588,7 +588,7 @@ begin_define
 define|#
 directive|define
 name|ISP2100_SCRLEN
-value|0x400
+value|0x800
 end_define
 
 begin_define
