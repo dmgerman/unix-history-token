@@ -5480,7 +5480,7 @@ argument_list|(
 name|page
 argument_list|)
 argument_list|,
-name|SDT_SYSTGT
+name|SDT_SYSIGT
 argument_list|,
 name|SEL_KPL
 argument_list|,

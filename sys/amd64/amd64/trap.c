@@ -735,7 +735,7 @@ operator|==
 name|T_PAGEFLT
 condition|)
 block|{
-comment|/* 		 * If we get a page fault while holding a spin lock, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
+comment|/* 		 * If we get a page fault while holding a spin lock, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 * 		 * Note that T_PAGEFLT is registered as an interrupt gate.  This 		 * is just like a trap gate, except interrupts are disabled.  This 		 * happens to be critically important, because we could otherwise 		 * preempt and run another process that may cause %cr2 to be 		 * clobbered for something else. 		 */
 name|eva
 operator|=
 name|rcr2
@@ -747,9 +747,13 @@ name|PCPU_GET
 argument_list|(
 name|spinlocks
 argument_list|)
-operator|!=
+operator|==
 name|NULL
 condition|)
+name|enable_intr
+argument_list|()
+expr_stmt|;
+else|else
 name|trap_fatal
 argument_list|(
 operator|&
