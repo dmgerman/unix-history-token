@@ -9141,6 +9141,55 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|LIST_FOREACH
+argument_list|(
+argument|wk
+argument_list|,
+argument|&inodedep->id_bufwait
+argument_list|,
+argument|wk_list
+argument_list|)
+if|if
+condition|(
+name|wk
+operator|->
+name|wk_type
+operator|==
+name|D_NEWDIRBLK
+operator|&&
+name|WK_NEWDIRBLK
+argument_list|(
+name|wk
+argument_list|)
+operator|->
+name|db_pagedep
+operator|==
+name|pagedep
+condition|)
+break|break;
+if|if
+condition|(
+name|wk
+operator|!=
+name|NULL
+condition|)
+block|{
+name|WORKLIST_REMOVE
+argument_list|(
+name|wk
+argument_list|)
+expr_stmt|;
+name|free_newdirblk
+argument_list|(
+name|WK_NEWDIRBLK
+argument_list|(
+name|wk
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|FREE_LOCK
 argument_list|(
 operator|&
@@ -9150,9 +9199,10 @@ expr_stmt|;
 name|panic
 argument_list|(
 literal|"deallocate_dependencies: "
-literal|"active pagedep"
+literal|"lost pagedep"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|WORKLIST_REMOVE
 argument_list|(
@@ -17892,7 +17942,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * If no dependencies remain, the pagedep will be freed. 	 * Otherwise it will remain to update the page before it 	 * is written back to disk. 	 */
+comment|/* 	 * If no dependencies remain and we are not waiting for a 	 * new directory block to be claimed by its inode, then the 	 * pagedep will be freed. Otherwise it will remain to track 	 * any new entries on the page in case they are fsync'ed. 	 */
 if|if
 condition|(
 name|LIST_FIRST
@@ -17904,10 +17954,7 @@ name|pd_pendinghd
 argument_list|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|pagedep
 operator|->
@@ -17915,17 +17962,9 @@ name|pd_state
 operator|&
 name|NEWBLOCK
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"handle_written_filepage: active pagedep\n"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|LIST_REMOVE
 argument_list|(
@@ -17941,7 +17980,6 @@ argument_list|,
 name|D_PAGEDEP
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
