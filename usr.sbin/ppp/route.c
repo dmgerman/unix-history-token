@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.51 1998/06/27 23:48:53 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.52 1998/07/28 21:54:54 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -1271,6 +1271,11 @@ operator|>
 name|have
 condition|)
 block|{
+name|char
+modifier|*
+modifier|*
+name|newifs
+decl_stmt|;
 name|had
 operator|=
 name|have
@@ -1287,7 +1292,7 @@ if|if
 condition|(
 name|had
 condition|)
-name|ifs
+name|newifs
 operator|=
 operator|(
 name|char
@@ -1308,7 +1313,7 @@ name|have
 argument_list|)
 expr_stmt|;
 else|else
-name|ifs
+name|newifs
 operator|=
 operator|(
 name|char
@@ -1329,7 +1334,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|ifs
+name|newifs
 condition|)
 block|{
 name|log_Printf
@@ -1348,10 +1353,23 @@ name|nifs
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ifs
+condition|)
+name|free
+argument_list|(
+name|ifs
+argument_list|)
+expr_stmt|;
 return|return
 literal|"???"
 return|;
 block|}
+name|ifs
+operator|=
+name|newifs
+expr_stmt|;
 name|memset
 argument_list|(
 name|ifs
