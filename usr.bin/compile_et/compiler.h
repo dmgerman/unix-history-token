@@ -74,13 +74,5 @@ name|language
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|whoami
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 

@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -18,19 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -92,7 +98,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.2 1995/01/14 22:29:31 wollman Exp $"
+literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.3 1996/07/12 19:05:17 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,18 +210,13 @@ condition|(
 operator|!
 name|p
 condition|)
-block|{
-name|perror
-argument_list|(
-name|whoami
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|p
 return|;
@@ -464,11 +465,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: usage: %s ERROR_TABLE\n"
-argument_list|,
-name|whoami
-argument_list|,
-name|whoami
+literal|"usage: compile_et ERROR_TABLE\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -505,13 +502,9 @@ end_function
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: multiple %s specified: `%s' and `%s'\n"
-argument_list|,
-name|whoami
+literal|"multiple %s specified: `%s' and `%s'"
 argument_list|,
 name|type
 argument_list|,
@@ -573,32 +566,6 @@ expr_stmt|;
 name|filename
 operator|=
 literal|0
-expr_stmt|;
-name|whoami
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|p
-operator|=
-name|strrchr
-argument_list|(
-name|whoami
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-condition|)
-name|whoami
-operator|=
-name|p
-operator|+
-literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -698,7 +665,7 @@ name|language
 condition|)
 name|dup_err
 argument_list|(
-literal|"languanges"
+literal|"languages"
 argument_list|,
 name|language_names
 index|[
@@ -802,40 +769,22 @@ directive|undef
 name|check_lang
 else|else
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unknown language name `%s'\n"
-argument_list|,
-name|whoami
-argument_list|,
-name|arg
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\tpick one of: C K&R-C\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unknown language name `%s'\n\tpick one of: C K&R-C"
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unknown control argument -`%s'\n"
-argument_list|,
-name|whoami
+literal|"unknown control argument -`%s'"
 argument_list|,
 name|arg
 argument_list|)
@@ -871,18 +820,11 @@ operator|==
 name|lang_CPP
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Sorry, C++ support is not yet finished.\n"
-argument_list|,
-name|whoami
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"sorry, C++ support is not yet finished"
 argument_list|)
 expr_stmt|;
 block|}
