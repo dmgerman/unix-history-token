@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.11 (Berkeley) 84/05/17"
+literal|"@(#)route.c	4.12 (Berkeley) 84/10/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -1043,6 +1043,10 @@ name|cmd
 decl_stmt|;
 name|int
 name|ishost
+decl_stmt|,
+name|metric
+init|=
+literal|0
 decl_stmt|;
 name|cmd
 operator|=
@@ -1080,6 +1084,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|metric
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1161,13 +1175,7 @@ name|RTF_HOST
 expr_stmt|;
 if|if
 condition|(
-name|atoi
-argument_list|(
-name|argv
-index|[
-literal|3
-index|]
-argument_list|)
+name|metric
 operator|>
 literal|0
 condition|)
