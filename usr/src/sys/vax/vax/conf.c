@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.29	81/03/16	*/
+comment|/*	conf.c	4.30	81/03/21	*/
 end_comment
 
 begin_include
@@ -471,6 +471,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"ts.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NTS
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|tsopen
+argument_list|()
+decl_stmt|,
+name|tsclose
+argument_list|()
+decl_stmt|,
+name|tsstrategy
+argument_list|()
+decl_stmt|,
+name|tsread
+argument_list|()
+decl_stmt|,
+name|tswrite
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tsioctl
+argument_list|()
+decl_stmt|,
+name|tsdump
+argument_list|()
+decl_stmt|,
+name|tsreset
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -512,6 +563,11 @@ directive|define
 name|tsdump
 value|nodev
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
