@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * parsetime.c - parse time for at(1)  * Copyright (C) 1993  Thomas Koenig  *  * modifications for english-language times  * Copyright (C) 1993  David Parsons  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  at [NOW] PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS  *     /NUMBER [DOT NUMBER] [AM|PM]\ /[MONTH NUMBER [NUMBER]]             \  *     |NOON                       | |[TOMORROW]                          |  *     |MIDNIGHT                   | |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *     \TEATIME                    / \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
+comment|/*   *  parsetime.c - parse time for at(1)  *  Copyright (C) 1993, 1994  Thomas Koenig  *  *  modifications for english-language times  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  at [NOW] PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS  *     /NUMBER [DOT NUMBER] [AM|PM]\ /[MONTH NUMBER [NUMBER]]             \  *     |NOON                       | |[TOMORROW]                          |  *     |MIDNIGHT                   | |[DAY OF WEEK]                       |  *     \TEATIME                    / |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *                                   \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
 end_comment
 
 begin_comment
@@ -54,6 +54,23 @@ include|#
 directive|include
 file|<ctype.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<getopt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Local headers */
@@ -138,12 +155,26 @@ block|,
 name|NOV
 block|,
 name|DEC
+block|,
+name|SUN
+block|,
+name|MON
+block|,
+name|TUE
+block|,
+name|WED
+block|,
+name|THU
+block|,
+name|FRI
+block|,
+name|SAT
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * parse translation table - table driven parsers can be your FRIEND!  */
+comment|/* parse translation table - table driven parsers can be your FRIEND!  */
 end_comment
 
 begin_struct
@@ -158,6 +189,10 @@ name|int
 name|value
 decl_stmt|;
 comment|/* token id */
+name|int
+name|plural
+decl_stmt|;
+comment|/* is this plural? */
 block|}
 name|Specials
 index|[]
@@ -167,6 +202,8 @@ block|{
 literal|"midnight"
 block|,
 name|MIDNIGHT
+block|,
+literal|0
 block|}
 block|,
 comment|/* 00:00:00 of today or tomorrow */
@@ -174,6 +211,8 @@ block|{
 literal|"noon"
 block|,
 name|NOON
+block|,
+literal|0
 block|}
 block|,
 comment|/* 12:00:00 of today or tomorrow */
@@ -181,6 +220,8 @@ block|{
 literal|"teatime"
 block|,
 name|TEATIME
+block|,
+literal|0
 block|}
 block|,
 comment|/* 16:00:00 of today or tomorrow */
@@ -188,6 +229,8 @@ block|{
 literal|"am"
 block|,
 name|AM
+block|,
+literal|0
 block|}
 block|,
 comment|/* morning times for 0-12 clock */
@@ -195,6 +238,8 @@ block|{
 literal|"pm"
 block|,
 name|PM
+block|,
+literal|0
 block|}
 block|,
 comment|/* evening times for 0-12 clock */
@@ -202,6 +247,8 @@ block|{
 literal|"tomorrow"
 block|,
 name|TOMORROW
+block|,
+literal|0
 block|}
 block|,
 comment|/* execute 24 hours from time */
@@ -209,6 +256,8 @@ block|{
 literal|"today"
 block|,
 name|TODAY
+block|,
+literal|0
 block|}
 block|,
 comment|/* execute today - don't advance time */
@@ -216,6 +265,8 @@ block|{
 literal|"now"
 block|,
 name|NOW
+block|,
+literal|0
 block|}
 block|,
 comment|/* opt prefix for PLUS */
@@ -223,25 +274,17 @@ block|{
 literal|"minute"
 block|,
 name|MINUTES
+block|,
+literal|0
 block|}
 block|,
 comment|/* minutes multiplier */
 block|{
-literal|"min"
-block|,
-name|MINUTES
-block|}
-block|,
-block|{
-literal|"m"
-block|,
-name|MINUTES
-block|}
-block|,
-block|{
 literal|"minutes"
 block|,
 name|MINUTES
+block|,
+literal|1
 block|}
 block|,
 comment|/* (pluralized) */
@@ -249,26 +292,17 @@ block|{
 literal|"hour"
 block|,
 name|HOURS
+block|,
+literal|0
 block|}
 block|,
 comment|/* hours ... */
 block|{
-literal|"hr"
-block|,
-name|HOURS
-block|}
-block|,
-comment|/* abbreviated */
-block|{
-literal|"h"
-block|,
-name|HOURS
-block|}
-block|,
-block|{
 literal|"hours"
 block|,
 name|HOURS
+block|,
+literal|1
 block|}
 block|,
 comment|/* (pluralized) */
@@ -276,19 +310,17 @@ block|{
 literal|"day"
 block|,
 name|DAYS
+block|,
+literal|0
 block|}
 block|,
 comment|/* days ... */
 block|{
-literal|"d"
-block|,
-name|DAYS
-block|}
-block|,
-block|{
 literal|"days"
 block|,
 name|DAYS
+block|,
+literal|1
 block|}
 block|,
 comment|/* (pluralized) */
@@ -296,19 +328,17 @@ block|{
 literal|"week"
 block|,
 name|WEEKS
+block|,
+literal|0
 block|}
 block|,
 comment|/* week ... */
 block|{
-literal|"w"
-block|,
-name|WEEKS
-block|}
-block|,
-block|{
 literal|"weeks"
 block|,
 name|WEEKS
+block|,
+literal|1
 block|}
 block|,
 comment|/* (pluralized) */
@@ -316,74 +346,210 @@ block|{
 literal|"jan"
 block|,
 name|JAN
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"feb"
 block|,
 name|FEB
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"mar"
 block|,
 name|MAR
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"apr"
 block|,
 name|APR
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"may"
 block|,
 name|MAY
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"jun"
 block|,
 name|JUN
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"jul"
 block|,
 name|JUL
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"aug"
 block|,
 name|AUG
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"sep"
 block|,
 name|SEP
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"oct"
 block|,
 name|OCT
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"nov"
 block|,
 name|NOV
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|"dec"
 block|,
 name|DEC
+block|,
+literal|0
 block|}
+block|,
+block|{
+literal|"sunday"
+block|,
+name|SUN
+block|,
+literal|0
 block|}
+block|,
+block|{
+literal|"sun"
+block|,
+name|SUN
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"monday"
+block|,
+name|MON
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"mon"
+block|,
+name|MON
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tuesday"
+block|,
+name|TUE
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"tue"
+block|,
+name|TUE
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"wednesday"
+block|,
+name|WED
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"wed"
+block|,
+name|WED
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"thursday"
+block|,
+name|THU
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"thu"
+block|,
+name|THU
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"friday"
+block|,
+name|FRI
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"fri"
+block|,
+name|FRI
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"saturday"
+block|,
+name|SAT
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"sat"
+block|,
+name|SAT
+block|,
+literal|0
+block|}
+block|, }
 struct|;
 end_struct
 
@@ -474,11 +640,22 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|int
+name|sc_tokplur
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* scanner - is token plural? */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.1 1994/01/05 01:09:08 nate Exp $"
+literal|"$Id: parsetime.c,v 1.1 1994/05/10 18:23:08 kernel Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,12 +672,10 @@ specifier|static
 name|int
 name|parse_token
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -544,6 +719,15 @@ operator|==
 literal|0
 condition|)
 block|{
+name|sc_tokplur
+operator|=
+name|Specials
+index|[
+name|i
+index|]
+operator|.
+name|plural
+expr_stmt|;
 return|return
 name|sc_tokid
 operator|=
@@ -575,18 +759,14 @@ specifier|static
 name|void
 name|init_scanner
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|scp
 operator|=
@@ -626,20 +806,9 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|mymalloc
 argument_list|(
 name|sc_len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc_token
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"Insufficient virtual memory"
 argument_list|)
 expr_stmt|;
 block|}
@@ -680,11 +849,15 @@ name|sc_tokid
 operator|=
 name|EOF
 expr_stmt|;
+name|sc_tokplur
+operator|=
+literal|0
+expr_stmt|;
 name|idx
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * if we need to read another argument, walk along the argument list; 	 * when we fall off the arglist, we'll just return EOF forever 	 */
+comment|/* if we need to read another argument, walk along the argument list; 	 * when we fall off the arglist, we'll just return EOF forever 	 */
 if|if
 condition|(
 name|need
@@ -715,7 +888,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * eat whitespace now - if we walk off the end of the argument, 	 * we'll continue, which puts us up at the top of the while loop 	 * to fetch the next argument in 	 */
+comment|/* eat whitespace now - if we walk off the end of the argument, 	 * we'll continue, which puts us up at the top of the while loop 	 * to fetch the next argument in 	 */
 while|while
 condition|(
 name|isspace
@@ -740,7 +913,7 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * preserve the first character of the new token 	 */
+comment|/* preserve the first character of the new token 	 */
 name|sc_token
 index|[
 literal|0
@@ -750,7 +923,7 @@ operator|*
 name|sct
 operator|++
 expr_stmt|;
-comment|/* 	 * then see what it is 	 */
+comment|/* then see what it is 	 */
 if|if
 condition|(
 name|isdigit
@@ -879,8 +1052,10 @@ return|;
 elseif|else
 if|if
 condition|(
-operator|*
-name|sct
+name|sc_token
+index|[
+literal|0
+index|]
 operator|==
 literal|'/'
 condition|)
@@ -913,11 +1088,9 @@ specifier|static
 name|void
 name|plonk
 parameter_list|(
-name|tok
-parameter_list|)
 name|int
 name|tok
-decl_stmt|;
+parameter_list|)
 block|{
 name|panic
 argument_list|(
@@ -948,11 +1121,9 @@ specifier|static
 name|void
 name|expect
 parameter_list|(
-name|desired
-parameter_list|)
 name|int
 name|desired
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -983,18 +1154,14 @@ specifier|static
 name|void
 name|dateadd
 parameter_list|(
-name|minutes
-parameter_list|,
-name|tm
-parameter_list|)
 name|int
 name|minutes
-decl_stmt|;
+parameter_list|,
 name|struct
 name|tm
 modifier|*
 name|tm
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* increment days */
 while|while
@@ -1122,16 +1289,17 @@ specifier|static
 name|void
 name|plus
 parameter_list|(
-name|tm
-parameter_list|)
 name|struct
 name|tm
 modifier|*
 name|tm
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|delay
+decl_stmt|;
+name|int
+name|expectplur
 decl_stmt|;
 name|expect
 argument_list|(
@@ -1144,6 +1312,18 @@ name|atoi
 argument_list|(
 name|sc_token
 argument_list|)
+expr_stmt|;
+name|expectplur
+operator|=
+operator|(
+name|delay
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -1175,6 +1355,19 @@ expr_stmt|;
 case|case
 name|MINUTES
 case|:
+if|if
+condition|(
+name|expectplur
+operator|!=
+name|sc_tokplur
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"at: pluralization is wrong\n"
+argument_list|)
+expr_stmt|;
 name|dateadd
 argument_list|(
 name|delay
@@ -1205,13 +1398,11 @@ specifier|static
 name|void
 name|tod
 parameter_list|(
-name|tm
-parameter_list|)
 name|struct
 name|tm
 modifier|*
 name|tm
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|hour
@@ -1237,7 +1428,7 @@ argument_list|(
 name|sc_token
 argument_list|)
 expr_stmt|;
-comment|/*      * first pick out the time of day - if it's 4 digits, we assume      * a HHMM time, otherwise it's HH DOT MM time      */
+comment|/* first pick out the time of day - if it's 4 digits, we assume      * a HHMM time, otherwise it's HH DOT MM time      */
 if|if
 condition|(
 name|token
@@ -1305,7 +1496,7 @@ operator|/
 literal|100
 expr_stmt|;
 block|}
-comment|/*      * check if an AM or PM specifier was given      */
+comment|/* check if an AM or PM specifier was given      */
 if|if
 condition|(
 name|sc_tokid
@@ -1354,7 +1545,7 @@ argument_list|(
 literal|"garbled time"
 argument_list|)
 expr_stmt|;
-comment|/*      * if we specify an absolute time, we don't want to bump the day even      * if we've gone past that time - but if we're specifying a time plus      * a relative offset, it's okay to bump things      */
+comment|/* if we specify an absolute time, we don't want to bump the day even      * if we've gone past that time - but if we're specifying a time plus      * a relative offset, it's okay to bump things      */
 if|if
 condition|(
 operator|(
@@ -1373,11 +1564,18 @@ name|tm_hour
 operator|>
 name|hour
 condition|)
+block|{
 name|tm
 operator|->
 name|tm_mday
 operator|++
 expr_stmt|;
+name|tm
+operator|->
+name|tm_wday
+operator|++
+expr_stmt|;
+block|}
 name|tm
 operator|->
 name|tm_hour
@@ -1427,26 +1625,20 @@ specifier|static
 name|void
 name|assign_date
 parameter_list|(
-name|tm
-parameter_list|,
-name|mday
-parameter_list|,
-name|mon
-parameter_list|,
-name|year
-parameter_list|)
 name|struct
 name|tm
 modifier|*
 name|tm
-decl_stmt|;
+parameter_list|,
 name|long
 name|mday
-decl_stmt|,
+parameter_list|,
+name|long
 name|mon
-decl_stmt|,
+parameter_list|,
+name|long
 name|year
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1540,7 +1732,7 @@ comment|/* assign_date */
 end_comment
 
 begin_comment
-comment|/*   * month() picks apart a month specification  *  *  /[<month> NUMBER [NUMBER]]           \  *  |[TOMORROW]                          |  *  |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *  \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
+comment|/*   * month() picks apart a month specification  *  *  /[<month> NUMBER [NUMBER]]           \  *  |[TOMORROW]                          |  *  |[DAY OF WEEK]                       |  *  |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *  \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
 end_comment
 
 begin_function
@@ -1548,13 +1740,11 @@ specifier|static
 name|void
 name|month
 parameter_list|(
-name|tm
-parameter_list|)
 name|struct
 name|tm
 modifier|*
 name|tm
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|year
@@ -1566,6 +1756,8 @@ operator|)
 decl_stmt|;
 name|long
 name|mday
+decl_stmt|,
+name|wday
 decl_stmt|,
 name|mon
 decl_stmt|;
@@ -1593,6 +1785,11 @@ comment|/* do something tomorrow */
 name|tm
 operator|->
 name|tm_mday
+operator|++
+expr_stmt|;
+name|tm
+operator|->
+name|tm_wday
 operator|++
 expr_stmt|;
 case|case
@@ -1639,7 +1836,7 @@ case|:
 case|case
 name|DEC
 case|:
-comment|/* 	     * do month mday [year] 	     */
+comment|/* do month mday [year] 	     */
 name|mon
 operator|=
 operator|(
@@ -1692,9 +1889,99 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|SUN
+case|:
+case|case
+name|MON
+case|:
+case|case
+name|TUE
+case|:
+case|case
+name|WED
+case|:
+case|case
+name|THU
+case|:
+case|case
+name|FRI
+case|:
+case|case
+name|SAT
+case|:
+comment|/* do a particular day of the week 	     */
+name|wday
+operator|=
+operator|(
+name|sc_tokid
+operator|-
+name|SUN
+operator|)
+expr_stmt|;
+name|mday
+operator|=
+name|tm
+operator|->
+name|tm_mday
+expr_stmt|;
+comment|/* if this day is< today, then roll to next week 	     */
+if|if
+condition|(
+name|wday
+operator|<
+name|tm
+operator|->
+name|tm_wday
+condition|)
+name|mday
+operator|+=
+literal|7
+operator|-
+operator|(
+name|tm
+operator|->
+name|tm_wday
+operator|-
+name|wday
+operator|)
+expr_stmt|;
+else|else
+name|mday
+operator|+=
+operator|(
+name|wday
+operator|-
+name|tm
+operator|->
+name|tm_wday
+operator|)
+expr_stmt|;
+name|tm
+operator|->
+name|tm_wday
+operator|=
+name|wday
+expr_stmt|;
+name|assign_date
+argument_list|(
+name|tm
+argument_list|,
+name|mday
+argument_list|,
+name|tm
+operator|->
+name|tm_mon
+argument_list|,
+name|tm
+operator|->
+name|tm_year
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|NUMBER
 case|:
-comment|/* 	     * get numeric MMDDYY, mm/dd/yy, or dd.mm.yy 	     */
+comment|/* get numeric MMDDYY, mm/dd/yy, or dd.mm.yy 	     */
 name|tlen
 operator|=
 name|strlen
@@ -1766,7 +2053,7 @@ name|token
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 		 * flip months and days for european timing 		 */
+comment|/* flip months and days for european timing 		 */
 if|if
 condition|(
 name|sep
@@ -1908,20 +2195,16 @@ begin_function
 name|time_t
 name|parsetime
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/*  * Do the argument parsing, die if necessary, and return the time the job  * should be run.  */
+comment|/* Do the argument parsing, die if necessary, and return the time the job  * should be run.  */
 name|time_t
 name|nowtimer
 decl_stmt|,
@@ -2032,7 +2315,7 @@ name|runtime
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	     * evil coding for TEATIME|NOON|MIDNIGHT - we've initialised 	     * hr to zero up above, then fall into this case in such a 	     * way so we add +12 +4 hours to it for teatime, +12 hours 	     * to it for noon, and nothing at all for midnight, then 	     * set our runtime to that hour before leaping into the 	     * month scanner 	     */
+comment|/* evil coding for TEATIME|NOON|MIDNIGHT - we've initialised 	     * hr to zero up above, then fall into this case in such a 	     * way so we add +12 +4 hours to it for teatime, +12 hours 	     * to it for noon, and nothing at all for midnight, then 	     * set our runtime to that hour before leaping into the 	     * month scanner 	     */
 case|case
 name|TEATIME
 case|:
@@ -2058,11 +2341,18 @@ name|tm_hour
 operator|>=
 name|hr
 condition|)
+block|{
 name|runtime
 operator|.
 name|tm_mday
 operator|++
 expr_stmt|;
+name|runtime
+operator|.
+name|tm_wday
+operator|++
+expr_stmt|;
+block|}
 name|runtime
 operator|.
 name|tm_hour
@@ -2094,7 +2384,7 @@ argument_list|(
 name|EOF
 argument_list|)
 expr_stmt|;
-comment|/*      * adjust for daylight savings time      */
+comment|/* adjust for daylight savings time      */
 name|runtime
 operator|.
 name|tm_isdst

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * at.c : Put file into atrun queue  * Copyright (C) 1993  Thomas Koenig  *  * Atrun& Atq modifications  * Copyright (C) 1993  David Parsons  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*   *  at.c : Put file into atrun queue  *  Copyright (C) 1993, 1994 Thomas Koenig  *  *  Atrun& Atq modifications  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -104,6 +104,23 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<getopt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Local headers */
 end_comment
@@ -129,7 +146,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|"perm.h"
 end_include
 
 begin_define
@@ -147,6 +164,60 @@ end_include
 begin_comment
 comment|/* Macros */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATJOB_DIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATJOB_DIR
+value|"/usr/spool/atjobs/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LFILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LFILE
+value|ATJOB_DIR ".lockfile"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATJOB_MX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATJOB_MX
+value|255
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -183,7 +254,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.2 1993/12/06 04:10:42 cgd Exp $"
+literal|"$Id: at.c,v 1.2 1994/06/08 18:19:43 kernel Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,9 +313,10 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|atfile
-index|[
-name|FILENAME_MAX
-index|]
+index|[]
+init|=
+name|ATJOB_DIR
+literal|"12345678901234"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,77 +365,62 @@ begin_comment
 comment|/* Function declarations */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sigc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|signo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|alarmc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|signo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|cwdname
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|writefile
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|time_t
 name|runtimer
-operator|,
+parameter_list|,
 name|char
 name|queue
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|list_jobs
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Signal catching functions */
@@ -374,13 +431,11 @@ specifier|static
 name|void
 name|sigc
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* If the user presses ^C, remove the spool file and exit  */
+comment|/* If the user presses ^C, remove the spool file and exit   */
 if|if
 condition|(
 name|fcreated
@@ -407,11 +462,9 @@ specifier|static
 name|void
 name|alarmc
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Time out after some seconds  */
 name|panic
@@ -431,7 +484,9 @@ specifier|static
 name|char
 modifier|*
 name|cwdname
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Read in the current directory; the name will be overwritten on  * subsequent calls.  */
 specifier|static
@@ -459,7 +514,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|mymalloc
 argument_list|(
 name|size
 argument_list|)
@@ -522,7 +577,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|mymalloc
 argument_list|(
 name|size
 argument_list|)
@@ -536,18 +591,14 @@ specifier|static
 name|void
 name|writefile
 parameter_list|(
-name|runtimer
-parameter_list|,
-name|queue
-parameter_list|)
 name|time_t
 name|runtimer
-decl_stmt|;
+parameter_list|,
 name|char
 name|queue
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* 	 * This does most of the work if at or batch are invoked for 	 * writing a job. 	 */
+comment|/* This does most of the work if at or batch are invoked for writing a job.  */
 name|int
 name|i
 decl_stmt|;
@@ -603,7 +654,7 @@ name|struct
 name|flock
 name|lock
 decl_stmt|;
-comment|/* 	 * Install the signal handler for SIGINT; terminate after removing the 	 * spool file if necessary 	 */
+comment|/* Install the signal handler for SIGINT; terminate after removing the  * spool file if necessary  */
 name|act
 operator|.
 name|sa_handler
@@ -636,23 +687,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|atfile
-argument_list|,
-name|_PATH_ATJOBS
-argument_list|)
-expr_stmt|;
 name|ppos
 operator|=
 name|atfile
 operator|+
 name|strlen
 argument_list|(
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Loop over all possible file names for running something at this 	 *  particular time, see if a file is there; the first empty slot at 	 *  any particular time is used.  Lock the file _PATH_LOCKFILE first 	 *  to make sure we're alone when doing this. 	 */
+comment|/* Loop over all possible file names for running something at this      * particular time, see if a file is there; the first empty slot at any      * particular time is used.  Lock the file LFILE first to make sure      * we're alone when doing this.      */
 name|PRIV_START
 if|if
 condition|(
@@ -661,23 +705,24 @@ name|lockdes
 operator|=
 name|open
 argument_list|(
-name|_PATH_LOCKFILE
+name|LFILE
 argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
 argument_list|,
-literal|0600
+name|S_IWUSR
+operator||
+name|S_IRUSR
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
-name|perr2
+name|perr
 argument_list|(
 literal|"Cannot open lockfile "
-argument_list|,
-name|_PATH_LOCKFILE
+name|LFILE
 argument_list|)
 expr_stmt|;
 name|lock
@@ -726,7 +771,7 @@ name|sa_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Set an alarm so a timeout occurs after ALARMC seconds, in case 	 * something is seriously broken. 	 */
+comment|/* Set an alarm so a timeout occurs after ALARMC seconds, in case      * something is seriously broken.      */
 name|sigaction
 argument_list|(
 name|SIGALRM
@@ -765,7 +810,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AT_MAXJOBS
+name|ATJOB_MX
 condition|;
 name|i
 operator|++
@@ -775,7 +820,7 @@ name|sprintf
 argument_list|(
 name|ppos
 argument_list|,
-literal|"%c%8lx.%3x"
+literal|"%c%8lx.%2x"
 argument_list|,
 name|queue
 argument_list|,
@@ -839,11 +884,10 @@ name|ENOENT
 condition|)
 break|break;
 else|else
-name|perr2
+name|perr
 argument_list|(
 literal|"Cannot access "
-argument_list|,
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -853,14 +897,14 @@ if|if
 condition|(
 name|i
 operator|>=
-name|AT_MAXJOBS
+name|ATJOB_MX
 condition|)
 name|panic
 argument_list|(
 literal|"Too many jobs already"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create the file. The x bit is only going to be set after it has 	 * been completely written out, to make sure it is not executed in 	 * the meantime.  To make sure they do not get deleted, turn off 	 * their r bit.  Yes, this is a kluge. 	 */
+comment|/* Create the file. The x bit is only going to be set after it has      * been completely written out, to make sure it is not executed in the      * meantime.  To make sure they do not get deleted, turn off their r      * bit.  Yes, this is a kluge.      */
 name|cmask
 operator|=
 name|umask
@@ -919,8 +963,7 @@ name|fd2
 argument_list|,
 name|real_uid
 argument_list|,
-operator|-
-literal|1
+name|real_gid
 argument_list|)
 operator|!=
 literal|0
@@ -931,18 +974,19 @@ literal|"Cannot give away file"
 argument_list|)
 expr_stmt|;
 name|PRIV_END
-comment|/* 	 * We no longer need suid root; now we just need to be able to 	 * write to the directory, if necessary. 	 */
+comment|/* We no longer need suid root; now we just need to be able to write      * to the directory, if necessary.      */
 name|REDUCE_PRIV
 argument_list|(
-literal|0
+name|DAEMON_UID
+argument_list|,
+name|DAEMON_GID
 argument_list|)
-decl_stmt|;
-comment|/* 	 * We've successfully created the file; let's set the flag so it 	 * gets removed in case of an interrupt or error. 	 */
+comment|/* We've successfully created the file; let's set the flag so it       * gets removed in case of an interrupt or error.      */
 name|fcreated
-operator|=
+init|=
 literal|1
-expr_stmt|;
-comment|/* Now we can release the lock, so other people can access it */
+decl_stmt|;
+comment|/* Now we can release the lock, so other people can access it      */
 name|lock
 operator|.
 name|l_type
@@ -1002,7 +1046,7 @@ argument_list|(
 literal|"Cannot reopen atjob file"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get the userid to mail to, first by trying getlogin(), which 	 * reads /etc/utmp, then from LOGNAME, finally from getpwuid(). 	 */
+comment|/* Get the userid to mail to, first by trying getlogin(), which reads      * /etc/utmp, then from LOGNAME, finally from getpwuid().      */
 name|mailname
 operator|=
 name|getlogin
@@ -1045,6 +1089,15 @@ name|mailname
 argument_list|)
 operator|>
 literal|8
+operator|)
+operator|||
+operator|(
+name|getpwnam
+argument_list|(
+name|mailname
+argument_list|)
+operator|==
+name|NULL
 operator|)
 condition|)
 block|{
@@ -1114,7 +1167,7 @@ argument_list|,
 name|send_mail
 argument_list|)
 expr_stmt|;
-comment|/* Write out the umask at the time of invocation */
+comment|/* Write out the umask at the time of invocation      */
 name|fprintf
 argument_list|(
 name|fp
@@ -1128,7 +1181,7 @@ operator|)
 name|cmask
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Write out the environment. Anything that may look like a special 	 * character to the shell is quoted, except for \n, which is done 	 * with a pair of "'s.  Dont't export the no_export list (such as 	 * TERM or DISPLAY) because we don't want these. 	 */
+comment|/* Write out the environment. Anything that may look like a      * special character to the shell is quoted, except for \n, which is      * done with a pair of "'s.  Dont't export the no_export list (such      * as TERM or DISPLAY) because we don't want these.      */
 for|for
 control|(
 name|atenv
@@ -1294,6 +1347,11 @@ else|else
 block|{
 if|if
 condition|(
+operator|*
+name|ap
+operator|!=
+literal|'/'
+operator|&&
 operator|!
 name|isalnum
 argument_list|(
@@ -1354,15 +1412,84 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Cd to the directory at the time and write out all the commands 	 * the user supplies from stdin. 	 */
+comment|/* Cd to the directory at the time and write out all the      * commands the user supplies from stdin.      */
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"cd %s\n"
-argument_list|,
+literal|"cd "
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|ap
+operator|=
 name|cwdname
 argument_list|()
+init|;
+operator|*
+name|ap
+operator|!=
+literal|'\0'
+condition|;
+name|ap
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|ap
+operator|==
+literal|'\n'
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\"\n\""
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+operator|*
+name|ap
+operator|!=
+literal|'/'
+operator|&&
+operator|!
+name|isalnum
+argument_list|(
+operator|*
+name|ap
+argument_list|)
+condition|)
+name|fputc
+argument_list|(
+literal|'\\'
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|fputc
+argument_list|(
+operator|*
+name|ap
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Test cd's exit status: die if the original directory has been      * removed, become unreadable or whatever      */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" || {\n\t echo 'Execution directory "
+literal|"inaccessible'>&2\n\t exit 1\n}\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -1419,7 +1546,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the x bit so that we're ready to start executing 	 */
+comment|/* Set the x bit so that we're ready to start executing      */
 if|if
 condition|(
 name|fchmod
@@ -1463,7 +1590,7 @@ name|void
 name|list_jobs
 parameter_list|()
 block|{
-comment|/* 	 * List all a user's jobs in the queue, by looping through 	 * _PATH_ATJOBS, or everybody's if we are root 	 */
+comment|/* List all a user's jobs in the queue, by looping through ATJOB_DIR,       * or everybody's if we are root      */
 name|struct
 name|passwd
 modifier|*
@@ -1512,16 +1639,15 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 operator|!=
 literal|0
 condition|)
-name|perr2
+name|perr
 argument_list|(
 literal|"Cannot change to "
-argument_list|,
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1537,14 +1663,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|perr2
+name|perr
 argument_list|(
 literal|"Cannot open "
-argument_list|,
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
-comment|/* Loop over every file in the directory */
+comment|/*	Loop over every file in the directory       */
 while|while
 condition|(
 operator|(
@@ -1573,14 +1698,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|perr2
+name|perr
 argument_list|(
 literal|"Cannot stat in "
-argument_list|,
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
-comment|/* 		 * See it's a regular file and has its x bit turned on and 		 * is the user's 		 */
+comment|/* See it's a regular file and has its x bit turned on and          * is the user's          */
 if|if
 condition|(
 operator|!
@@ -1748,20 +1872,16 @@ specifier|static
 name|void
 name|delete_jobs
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* Delete every argument (job - ID) given */
+comment|/* Delete every argument (job - ID) given      */
 name|int
 name|i
 decl_stmt|;
@@ -1774,16 +1894,15 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 operator|!=
 literal|0
 condition|)
-name|perr2
+name|perr
 argument_list|(
 literal|"Cannot change to "
-argument_list|,
-name|_PATH_ATJOBS
+name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
 for|for
@@ -1893,21 +2012,67 @@ comment|/* Global functions */
 end_comment
 
 begin_function
+name|void
+modifier|*
+name|mymalloc
+parameter_list|(
+name|size_t
+name|n
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|malloc
+argument_list|(
+name|n
+argument_list|)
+operator|)
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Virtual memory exhausted\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|p
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -1915,7 +2080,12 @@ decl_stmt|;
 name|char
 name|queue
 init|=
-literal|'a'
+name|DEFAULT_AT_QUEUE
+decl_stmt|;
+name|char
+name|queue_set
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1943,14 +2113,19 @@ name|char
 modifier|*
 name|options
 init|=
-literal|"q:f:mv"
+literal|"q:f:mvldbV"
 decl_stmt|;
 comment|/* default options for at */
+name|int
+name|disp_version
+init|=
+literal|0
+decl_stmt|;
 name|time_t
 name|timer
 decl_stmt|;
 name|RELINQUISH_PRIVS
-comment|/* Eat any leading paths */
+comment|/* Eat any leading paths      */
 if|if
 condition|(
 operator|(
@@ -1984,7 +2159,7 @@ name|namep
 operator|=
 name|pgm
 expr_stmt|;
-comment|/* find out what this program is supposed to do */
+comment|/* find out what this program is supposed to do      */
 if|if
 condition|(
 name|strcmp
@@ -2003,7 +2178,7 @@ name|ATQ
 expr_stmt|;
 name|options
 operator|=
-literal|"q:v"
+literal|"q:vV"
 expr_stmt|;
 block|}
 elseif|else
@@ -2025,7 +2200,7 @@ name|ATRM
 expr_stmt|;
 name|options
 operator|=
-literal|""
+literal|"V"
 expr_stmt|;
 block|}
 elseif|else
@@ -2047,10 +2222,10 @@ name|BATCH
 expr_stmt|;
 name|options
 operator|=
-literal|"f:mv"
+literal|"f:q:mvV"
 expr_stmt|;
 block|}
-comment|/* process whatever options we can process */
+comment|/* process whatever options we can process      */
 name|opterr
 operator|=
 literal|1
@@ -2128,22 +2303,96 @@ name|optarg
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|!
+operator|(
 name|islower
 argument_list|(
 name|queue
 argument_list|)
-operator|)
 operator|||
-operator|(
+name|isupper
+argument_list|(
 name|queue
-operator|>
-literal|'l'
+argument_list|)
 operator|)
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+name|queue_set
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+if|if
+condition|(
+name|program
+operator|!=
+name|AT
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|program
+operator|=
+name|ATRM
+expr_stmt|;
+name|options
+operator|=
+literal|"V"
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|program
+operator|!=
+name|AT
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|program
+operator|=
+name|ATQ
+expr_stmt|;
+name|options
+operator|=
+literal|"q:vV"
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+if|if
+condition|(
+name|program
+operator|!=
+name|AT
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|program
+operator|=
+name|BATCH
+expr_stmt|;
+name|options
+operator|=
+literal|"f:q:mvV"
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+name|disp_version
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -2152,8 +2401,44 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-comment|/* end of options eating */
-comment|/* select our program */
+comment|/* end of options eating      */
+if|if
+condition|(
+name|disp_version
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"at version "
+name|VERSION
+literal|"\n"
+literal|"Bug reports to: ig25@rz.uni-karlsruhe.de (Thomas Koenig)\n"
+argument_list|)
+expr_stmt|;
+comment|/* select our program      */
+if|if
+condition|(
+operator|!
+name|check_permission
+argument_list|()
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"You do not have permission to use %s.\n"
+argument_list|,
+name|namep
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|program
@@ -2164,9 +2449,10 @@ name|ATQ
 case|:
 name|REDUCE_PRIV
 argument_list|(
-literal|0
+argument|DAEMON_UID
+argument_list|,
+argument|DAEMON_GID
 argument_list|)
-expr_stmt|;
 name|list_jobs
 argument_list|()
 expr_stmt|;
@@ -2176,9 +2462,10 @@ name|ATRM
 case|:
 name|REDUCE_PRIV
 argument_list|(
-literal|0
+argument|DAEMON_UID
+argument_list|,
+argument|DAEMON_GID
 argument_list|)
-expr_stmt|;
 name|delete_jobs
 argument_list|(
 name|argc
@@ -2239,14 +2526,79 @@ break|break;
 case|case
 name|BATCH
 case|:
-name|writefile
+if|if
+condition|(
+name|queue_set
+condition|)
+name|queue
+operator|=
+name|toupper
 argument_list|(
+name|queue
+argument_list|)
+expr_stmt|;
+else|else
+name|queue
+operator|=
+name|DEFAULT_BATCH_QUEUE
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+name|optind
+condition|)
+name|timer
+operator|=
+name|parsetime
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+else|else
+name|timer
+operator|=
 name|time
 argument_list|(
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|atverify
+condition|)
+block|{
+name|struct
+name|tm
+modifier|*
+name|tm
+init|=
+name|localtime
+argument_list|(
+operator|&
+name|timer
+argument_list|)
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
-literal|'b'
+literal|"%s\n"
+argument_list|,
+name|asctime
+argument_list|(
+name|tm
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|writefile
+argument_list|(
+name|timer
+argument_list|,
+name|queue
 argument_list|)
 expr_stmt|;
 break|break;
