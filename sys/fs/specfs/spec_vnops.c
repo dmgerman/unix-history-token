@@ -141,19 +141,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|spec_badop
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|spec_bmap
 name|__P
 argument_list|(
@@ -455,7 +442,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -532,7 +519,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -543,7 +530,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -554,7 +541,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -620,7 +607,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -631,7 +618,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -642,7 +629,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -664,7 +651,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -675,7 +662,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -686,7 +673,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -719,7 +706,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|spec_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -3862,25 +3849,6 @@ else|:
 name|EINVAL
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Special device bad operation  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|spec_badop
-parameter_list|()
-block|{
-name|panic
-argument_list|(
-literal|"spec_badop called"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
