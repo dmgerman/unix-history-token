@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.74 1995/04/22 22:44:30 dyson Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.75 1995/04/24 04:32:31 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -1395,7 +1395,7 @@ condition|)
 goto|goto
 name|nodevice
 goto|;
-comment|/* 	 * drive(s) did not time out during diagnostic : 	 * Get error status and check that both drives are OK. 	 * Table 9-2 of ATA specs suggests that we must check for  	 * a value of 0x01  	 * 	 * Strangely, some controllers will return a status of 	 * 0x81 (drive 0 OK, drive 1 failure), and then when 	 * the DRV bit is set, return status of 0x01 (OK) for 	 * drive 2.  (This seems to contradict the ATA spec.) 	 */
+comment|/* 	 * drive(s) did not time out during diagnostic : 	 * Get error status and check that both drives are OK. 	 * Table 9-2 of ATA specs suggests that we must check for 	 * a value of 0x01 	 * 	 * Strangely, some controllers will return a status of 	 * 0x81 (drive 0 OK, drive 1 failure), and then when 	 * the DRV bit is set, return status of 0x01 (OK) for 	 * drive 2.  (This seems to contradict the ATA spec.) 	 */
 name|du
 operator|->
 name|dk_error
@@ -6371,7 +6371,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|du->dk_dd.d_partitions[WDRAW].p_size =  				du->dk_dd.d_secperunit; 			du->dk_dd.d_type = DTYPE_ST506; 			du->dk_dd.d_subtype |= DSTYPE_GEOMETRY; 			strncpy(du->dk_dd.d_typename, "Bios geometry", 				sizeof du->dk_dd.d_typename); 			strncpy(du->dk_params.wdp_model, "ST506", 				sizeof du->dk_params.wdp_model);
+block|du->dk_dd.d_partitions[WDRAW].p_size = 				du->dk_dd.d_secperunit; 			du->dk_dd.d_type = DTYPE_ST506; 			du->dk_dd.d_subtype |= DSTYPE_GEOMETRY; 			strncpy(du->dk_dd.d_typename, "Bios geometry", 				sizeof du->dk_dd.d_typename); 			strncpy(du->dk_params.wdp_model, "ST506", 				sizeof du->dk_params.wdp_model);
 endif|#
 directive|endif
 name|bootinfo
@@ -7379,7 +7379,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/*  	 * phk put this here, better that return(wdstrategy(bp)); 	 * XXX 	 */
+comment|/* 	 * phk put this here, better that return(wdstrategy(bp)); 	 * XXX 	 */
 return|return
 operator|-
 literal|1
@@ -7950,7 +7950,7 @@ name|blknum
 operator|+
 name|blkcnt
 expr_stmt|;
-comment|/*  		 * See if one of the sectors is in the bad sector list 		 * (if we have one).  If the first sector is bad, then 		 * reduce the transfer to this one bad sector; if another 		 * sector is bad, then reduce reduce the transfer to 		 * avoid any bad sectors. 		 */
+comment|/* 		 * See if one of the sectors is in the bad sector list 		 * (if we have one).  If the first sector is bad, then 		 * reduce the transfer to this one bad sector; if another 		 * sector is bad, then reduce reduce the transfer to 		 * avoid any bad sectors. 		 */
 if|if
 condition|(
 name|du
