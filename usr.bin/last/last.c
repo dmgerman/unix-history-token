@@ -685,6 +685,9 @@ name|struct
 name|ttytab
 modifier|*
 name|tt
+decl_stmt|,
+modifier|*
+name|ttx
 decl_stmt|;
 comment|/* ttylist entry */
 name|struct
@@ -935,13 +938,6 @@ name|lh_first
 init|;
 name|tt
 condition|;
-name|tt
-operator|=
-name|tt
-operator|->
-name|list
-operator|.
-name|le_next
 control|)
 block|{
 name|LIST_REMOVE
@@ -951,9 +947,21 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+name|ttx
+operator|=
+name|tt
+expr_stmt|;
+name|tt
+operator|=
+name|tt
+operator|->
+name|list
+operator|.
+name|le_next
+expr_stmt|;
 name|free
 argument_list|(
-name|tt
+name|ttx
 argument_list|)
 expr_stmt|;
 block|}
