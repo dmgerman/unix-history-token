@@ -8860,7 +8860,6 @@ literal|0
 operator|)
 return|;
 block|}
-block|}
 if|if
 condition|(
 name|cp
@@ -8931,16 +8930,13 @@ name|v
 operator|++
 expr_stmt|;
 block|}
-end_function
-
-begin_return
 return|return
 name|v
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * control_unspec - response to an unspecified op-code  */
 end_comment
 
@@ -8949,7 +8945,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
 name|control_unspec
 parameter_list|(
