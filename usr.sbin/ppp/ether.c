@@ -2158,13 +2158,26 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|ID0kldload
+argument_list|(
+literal|"netgraph"
+argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Netgraph is not built into the kernel\n"
+literal|"kldload: netgraph: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
