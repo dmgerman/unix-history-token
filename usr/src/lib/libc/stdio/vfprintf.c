@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.28 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,50 @@ name|_cvt
 parameter_list|()
 function_decl|;
 comment|/* handles [eEfgG] formats */
+if|if
+condition|(
+name|fp
+operator|->
+name|_flag
+operator|&
+name|_IORW
+condition|)
+block|{
+name|fp
+operator|->
+name|_flag
+operator||=
+name|_IOWRT
+expr_stmt|;
+name|fp
+operator|->
+name|_flag
+operator|&=
+operator|~
+operator|(
+name|_IOEOF
+operator||
+name|_IOREAD
+operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|fp
+operator|->
+name|_flag
+operator|&
+name|_IOWRT
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EOF
+operator|)
+return|;
 name|fmt
 operator|=
 name|fmt0
