@@ -403,20 +403,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IPFILTER
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|ip_optcopy
@@ -464,35 +450,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ip_optcopy
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|,
-expr|struct
-name|ip
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1828,17 +1785,6 @@ block|}
 name|sendit
 label|:
 comment|/* 	 * IpHack's section. 	 * - Xlate: translate packet's addr/port (NAT). 	 * - Firewall: deny/allow/etc. 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.> 	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFILTER
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
 if|if
 condition|(
 name|fr_checkp
@@ -1894,8 +1840,6 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Check with the firewall... 	 */
 if|if
 condition|(
@@ -4237,26 +4181,7 @@ begin_comment
 comment|/*  * Copy options from ip to jp,  * omitting those not copied during fragmentation.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|IPFILTER
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
-end_if
-
 begin_function
-specifier|static
-endif|#
-directive|endif
 name|int
 name|ip_optcopy
 parameter_list|(

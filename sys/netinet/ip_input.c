@@ -868,20 +868,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IPFILTER
-argument_list|)
-end_if
-
 begin_macro
 name|int
 argument_list|(
@@ -915,11 +901,6 @@ operator|=
 name|NULL
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
@@ -1901,17 +1882,6 @@ name|iphack
 label|:
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFILTER
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IPFILTER_LKM
-argument_list|)
 comment|/* 	 * Check if we want to allow this packet to be processed. 	 * Consider it to be bad if not. 	 */
 if|if
 condition|(
@@ -1966,8 +1936,6 @@ operator|*
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|fw_enable
