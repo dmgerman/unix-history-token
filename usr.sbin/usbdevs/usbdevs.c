@@ -108,6 +108,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|oneline
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|usage
@@ -418,6 +426,11 @@ operator|.
 name|udi_vendor
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|oneline
+condition|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -441,6 +454,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|di
@@ -453,6 +467,24 @@ index|[
 literal|0
 index|]
 condition|)
+block|{
+if|if
+condition|(
+name|oneline
+condition|)
+name|printf
+argument_list|(
+literal|", device %s"
+argument_list|,
+name|di
+operator|.
+name|udi_devnames
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%*s  %s\n"
@@ -470,6 +502,17 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+block|}
+if|if
+condition|(
+name|oneline
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -770,7 +813,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:df:v?"
+literal|"a:df:ov?"
 argument_list|)
 operator|)
 operator|!=
@@ -807,6 +850,13 @@ case|:
 name|dev
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|oneline
+operator|++
 expr_stmt|;
 break|break;
 case|case
