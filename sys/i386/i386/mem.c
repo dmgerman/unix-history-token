@@ -238,7 +238,7 @@ comment|/* psize */
 name|nopsize
 block|,
 comment|/* flags */
-literal|0
+name|D_DISK
 block|,
 comment|/* maxio */
 literal|0
