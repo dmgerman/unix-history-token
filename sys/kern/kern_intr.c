@@ -2001,9 +2001,9 @@ name|ithread
 operator|->
 name|it_need
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_state
+name|td_state
 argument_list|)
 expr_stmt|;
 block|}
