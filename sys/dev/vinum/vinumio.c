@@ -3584,17 +3584,6 @@ index|[
 literal|0
 index|]
 operator|.
-name|p_fsize
-operator|=
-literal|1024
-expr_stmt|;
-name|lp
-operator|->
-name|d_partitions
-index|[
-literal|0
-index|]
-operator|.
 name|p_fstype
 operator|=
 name|FS_BSDFFS
@@ -3609,7 +3598,7 @@ index|]
 operator|.
 name|p_fsize
 operator|=
-literal|1024
+literal|2048
 expr_stmt|;
 comment|/* FS fragment size */
 name|lp
