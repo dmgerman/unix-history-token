@@ -890,16 +890,6 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|cred_free_thread
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|WITNESS_WARN
 argument_list|(
 name|WARN_PANIC
