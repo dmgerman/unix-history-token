@@ -130,13 +130,11 @@ break|break;
 block|}
 while|while
 condition|(
-operator|(
 name|ep
 operator|=
 operator|*
 name|env
 operator|++
-operator|)
 condition|)
 block|{
 for|for

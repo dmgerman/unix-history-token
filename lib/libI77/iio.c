@@ -53,12 +53,14 @@ name|f__hiwater
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|int
+begin_macro
 name|z_getc
-parameter_list|(
-name|Void
-parameter_list|)
+argument_list|(
+argument|Void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -106,7 +108,7 @@ return|return
 literal|'\n'
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -114,22 +116,31 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|z_putc
 argument_list|(
-name|c
+argument|c
 argument_list|)
+end_macro
+
+begin_else
 else|#
 directive|else
-name|int
+end_else
+
+begin_macro
 name|z_putc
 argument_list|(
-name|int
-name|c
+argument|int c
 argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 if|if
 condition|(
@@ -179,14 +190,16 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_block
 
-begin_function
-name|int
+begin_macro
 name|z_rnew
-parameter_list|(
-name|Void
-parameter_list|)
+argument_list|(
+argument|Void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|f__icptr
 operator|=
@@ -219,7 +232,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -247,12 +260,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|c_si
 argument_list|(
-name|a
+argument|a
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|icilist
 modifier|*
 name|a
@@ -264,16 +279,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|c_si
-parameter_list|(
-name|icilist
-modifier|*
-name|a
-parameter_list|)
+argument_list|(
+argument|icilist *a
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|f__elist
 operator|=
@@ -380,7 +398,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int
@@ -453,14 +471,12 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|c_si
 argument_list|(
 name|a
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(
@@ -503,12 +519,14 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
 name|z_wnew
-parameter_list|(
-name|Void
-parameter_list|)
+argument_list|(
+argument|Void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -562,7 +580,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -603,14 +621,12 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|c_si
 argument_list|(
 name|a
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(

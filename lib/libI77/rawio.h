@@ -5,12 +5,6 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
 begin_function_decl
 specifier|extern
 name|FILE
@@ -19,11 +13,6 @@ name|fdopen
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -41,6 +30,12 @@ include|#
 directive|include
 file|"io.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WATCOM
+end_ifndef
 
 begin_define
 define|#
@@ -82,6 +77,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*WATCOM*/
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*MSDOS*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -100,9 +108,6 @@ name|MSDOS
 ifdef|#
 directive|ifdef
 name|OPEN_DECL
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 specifier|extern
 name|int
 name|creat
@@ -125,11 +130,6 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 specifier|extern
 name|int
 name|close
@@ -168,17 +168,12 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|_POSIX_SOURCE
 ifndef|#
 directive|ifndef
 name|NON_UNIX_STDIO
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 specifier|extern
 name|FILE
 modifier|*
@@ -197,8 +192,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-endif|#
-directive|endif
+comment|/*KR_HEADERS*/
 specifier|extern
 name|char
 modifier|*

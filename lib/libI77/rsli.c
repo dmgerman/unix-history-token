@@ -116,19 +116,9 @@ name|f__icptr
 operator|>=
 name|f__icend
 condition|)
-name|err
-argument_list|(
-name|f__svic
-operator|->
-name|iciend
-argument_list|,
-operator|(
+return|return
 name|EOF
-operator|)
-argument_list|,
-literal|"internal read"
-argument_list|)
-expr_stmt|;
+return|;
 return|return
 operator|(
 operator|*

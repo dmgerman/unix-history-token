@@ -62,22 +62,31 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|t_putc
 argument_list|(
-name|c
+argument|c
 argument_list|)
+end_macro
+
+begin_else
 else|#
 directive|else
-name|int
+end_else
+
+begin_macro
 name|t_putc
 argument_list|(
-name|int
-name|c
+argument|int c
 argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|f__recpos
 operator|++
@@ -95,7 +104,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_block
 
 begin_function
 specifier|static
@@ -659,7 +668,6 @@ literal|'0'
 case|:
 while|while
 condition|(
-operator|(
 name|b
 index|[
 literal|0
@@ -669,7 +677,6 @@ name|b
 index|[
 literal|1
 index|]
-operator|)
 condition|)
 name|b
 operator|++
@@ -757,12 +764,10 @@ name|c
 operator|=
 literal|'E'
 init|;
-operator|(
 operator|*
 name|b
 operator|=
 name|c1
-operator|)
 condition|;
 name|c1
 operator|=
@@ -854,13 +859,11 @@ endif|#
 directive|endif
 while|while
 condition|(
-operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
-operator|)
 condition|)
 call|(
 modifier|*
@@ -1119,18 +1122,20 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|l_write
 argument_list|(
-name|number
+argument|number
 argument_list|,
-name|ptr
+argument|ptr
 argument_list|,
-name|len
+argument|len
 argument_list|,
-name|type
+argument|type
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ftnint
 modifier|*
 name|number
@@ -1157,26 +1162,25 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|l_write
-parameter_list|(
-name|ftnint
-modifier|*
-name|number
-parameter_list|,
-name|char
-modifier|*
-name|ptr
-parameter_list|,
-name|ftnlen
-name|len
-parameter_list|,
-name|ftnint
-name|type
-parameter_list|)
+argument_list|(
+argument|ftnint *number
+argument_list|,
+argument|char *ptr
+argument_list|,
+argument|ftnlen len
+argument_list|,
+argument|ftnint type
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 define|#
 directive|define
@@ -1442,7 +1446,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

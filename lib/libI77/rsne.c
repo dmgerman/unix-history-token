@@ -139,11 +139,12 @@ name|nl_cache
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|n_nlcache
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -437,13 +438,11 @@ name|x
 operator|=
 literal|0
 init|;
-operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
-operator|)
 condition|;
 name|x
 operator|=
@@ -590,12 +589,10 @@ operator|=
 operator|&
 name|nl_cache
 init|;
-operator|(
 name|y
 operator|=
 operator|*
 name|x
-operator|)
 condition|;
 name|x0
 operator|=
@@ -913,13 +910,11 @@ name|s
 operator|=
 literal|"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 init|;
-operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
-operator|)
 condition|;
 control|)
 name|Alpha
@@ -958,13 +953,11 @@ name|s
 operator|=
 literal|"0123456789_"
 init|;
-operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
-operator|)
 condition|;
 control|)
 name|Alphanum
@@ -1095,7 +1088,6 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-operator|(
 operator|*
 name|s
 operator|=
@@ -1108,7 +1100,6 @@ argument_list|)
 operator|&
 literal|0xff
 index|]
-operator|)
 condition|)
 if|if
 condition|(
@@ -1413,7 +1404,6 @@ name|x3
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|getnum
@@ -1422,7 +1412,6 @@ name|chp
 argument_list|,
 name|x1
 argument_list|)
-operator|)
 condition|)
 return|return
 name|k
@@ -1441,7 +1430,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|getnum
@@ -1451,7 +1439,6 @@ argument_list|,
 operator|&
 name|x2
 argument_list|)
-operator|)
 condition|)
 return|return
 name|k
@@ -1471,7 +1458,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|getnum
@@ -1481,7 +1467,6 @@ argument_list|,
 operator|&
 name|x3
 argument_list|)
-operator|)
 condition|)
 return|return
 name|k
@@ -1682,12 +1667,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|x_rsne
 argument_list|(
-name|a
+argument|a
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|cilist
 modifier|*
 name|a
@@ -1699,16 +1686,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|x_rsne
-parameter_list|(
-name|cilist
-modifier|*
-name|a
-parameter_list|)
+argument_list|(
+argument|cilist *a
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|int
 name|ch
@@ -1938,7 +1928,6 @@ name|have_amp
 label|:
 if|if
 condition|(
-operator|(
 name|ch
 operator|=
 name|getname
@@ -1950,7 +1939,6 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|)
 condition|)
 return|return
 name|ch
@@ -2202,7 +2190,6 @@ return|;
 default|default:
 if|if
 condition|(
-operator|(
 name|ch
 operator|<=
 literal|' '
@@ -2210,13 +2197,10 @@ operator|&&
 name|ch
 operator|>=
 literal|0
-operator|)
 operator|||
-operator|(
 name|ch
 operator|==
 literal|','
-operator|)
 condition|)
 continue|continue;
 name|Ungetc
@@ -2228,7 +2212,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ch
 operator|=
 name|getname
@@ -2240,7 +2223,6 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|)
 condition|)
 return|return
 name|ch
@@ -2380,7 +2362,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|getdimen
@@ -2403,7 +2384,6 @@ argument_list|,
 operator|&
 name|b
 argument_list|)
-operator|)
 condition|)
 name|errfl
 argument_list|(
@@ -2514,7 +2494,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|getdimen
@@ -2531,7 +2510,6 @@ argument_list|,
 operator|&
 name|b
 argument_list|)
-operator|)
 condition|)
 name|errfl
 argument_list|(
@@ -2612,7 +2590,6 @@ name|dims
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|getdimen
@@ -2634,7 +2611,6 @@ argument_list|,
 operator|&
 name|b1
 argument_list|)
-operator|)
 condition|)
 name|errfl
 argument_list|(
@@ -2763,7 +2739,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|getdimen
@@ -2781,7 +2756,6 @@ argument_list|,
 operator|&
 name|b
 argument_list|)
-operator|)
 condition|)
 name|errfl
 argument_list|(
@@ -3018,13 +2992,11 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|dims
 operator|=
 name|v
 operator|->
 name|dims
-operator|)
 condition|)
 block|{
 name|no
@@ -3135,7 +3107,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|l_read
@@ -3151,7 +3122,6 @@ name|size
 argument_list|,
 name|type
 argument_list|)
-operator|)
 condition|)
 return|return
 name|k
@@ -3213,7 +3183,6 @@ name|delta
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|k
 operator|=
 name|l_read
@@ -3229,7 +3198,6 @@ name|size
 argument_list|,
 name|type
 argument_list|)
-operator|)
 condition|)
 return|return
 name|k
@@ -3445,7 +3413,7 @@ break|break;
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_function
 name|integer
@@ -3488,14 +3456,12 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|c_le
 argument_list|(
 name|a
 argument_list|)
-operator|)
 condition|)
 return|return
 name|n

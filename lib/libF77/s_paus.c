@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"signal1.h"
 end_include
 
 begin_ifdef
@@ -374,7 +374,7 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|signal
+name|signal1
 argument_list|(
 name|PAUSESIG
 argument_list|,

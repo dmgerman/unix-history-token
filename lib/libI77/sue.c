@@ -30,12 +30,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|c_sue
 argument_list|(
-name|a
+argument|a
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|cilist
 modifier|*
 name|a
@@ -47,16 +49,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|c_sue
-parameter_list|(
-name|cilist
-modifier|*
-name|a
-parameter_list|)
+argument_list|(
+argument|cilist *a
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 if|if
 condition|(
@@ -178,7 +183,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -231,14 +236,12 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|c_sue
 argument_list|(
 name|a
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(
@@ -393,14 +396,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|c_sue
 argument_list|(
 name|a
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(

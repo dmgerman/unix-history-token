@@ -580,7 +580,7 @@ name|m
 parameter_list|,
 name|s
 parameter_list|)
-value|{if( (f) ) errno=(m); else f__fatal((m),(s)); return((m));}
+value|{if(f) errno= m; else f__fatal(m,s); return(m);}
 end_define
 
 begin_define
@@ -594,7 +594,7 @@ name|m
 parameter_list|,
 name|s
 parameter_list|)
-value|return err__fl((int)(f),(m),(s))
+value|return err__fl((int)f,m,s)
 end_define
 
 begin_comment
@@ -704,7 +704,7 @@ name|buf_end
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)->_flag& _IONBF ? (x)->_ptr : (x)->_base + BUFSIZ)
+value|(x->_flag& _IONBF ? x->_ptr : x->_base + BUFSIZ)
 end_define
 
 end_unit
