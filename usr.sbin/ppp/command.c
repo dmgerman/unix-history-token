@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.121 1997/12/29 22:23:10 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.122 1997/12/30 02:45:41 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -6495,6 +6495,19 @@ name|struct
 name|in_addr
 name|ipaddr
 decl_stmt|;
+if|if
+condition|(
+name|inet_aton
+argument_list|(
+name|cp
+argument_list|,
+operator|&
+name|ipaddr
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|hp
 operator|=
 name|gethostbyname
@@ -6526,25 +6539,14 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|inet_aton
-argument_list|(
-name|cp
-argument_list|,
-operator|&
-name|ipaddr
-argument_list|)
-operator|==
-literal|0
-condition|)
+else|else
 name|ipaddr
 operator|.
 name|s_addr
 operator|=
 literal|0
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ipaddr
