@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.6 91/10/21$  *  *	@(#)vm_mmap.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -626,8 +626,16 @@ name|caddr_t
 name|handle
 decl_stmt|;
 name|int
+name|flags
+decl_stmt|,
 name|error
 decl_stmt|;
+name|flags
+operator|=
+name|uap
+operator|->
+name|flags
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -657,8 +665,6 @@ name|uap
 operator|->
 name|prot
 argument_list|,
-name|uap
-operator|->
 name|flags
 argument_list|,
 name|uap
@@ -686,8 +692,6 @@ if|if
 condition|(
 operator|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_FIXED
@@ -708,8 +712,6 @@ literal|0
 operator|||
 operator|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_ANON
@@ -743,8 +745,6 @@ expr_stmt|;
 comment|/* 	 * Check for illegal addresses.  Watch out for address wrap... 	 * Note that VM_*_ADDRESS are not constants due to casts (argh). 	 */
 if|if
 condition|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_FIXED
@@ -804,8 +804,6 @@ operator|==
 literal|0
 operator|&&
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_FIXED
@@ -829,8 +827,6 @@ expr_stmt|;
 comment|/* 	 * If we are mapping a file we need to check various 	 * file/vnode related things. 	 */
 if|if
 condition|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_ANON
@@ -943,8 +939,6 @@ literal|0
 operator|||
 operator|(
 operator|(
-name|uap
-operator|->
 name|flags
 operator|&
 name|MAP_SHARED
@@ -974,6 +968,35 @@ operator|(
 name|EACCES
 operator|)
 return|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|MAP_SHARED
+operator|)
+operator|&&
+operator|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FWRITE
+operator|)
+operator|==
+literal|0
+condition|)
+name|flags
+operator|=
+operator|(
+name|flags
+operator|&
+operator|~
+name|MAP_SHARED
+operator|)
+operator||
+name|MAP_PRIVATE
+expr_stmt|;
 name|handle
 operator|=
 operator|(
@@ -1009,8 +1032,6 @@ name|size
 argument_list|,
 name|prot
 argument_list|,
-name|uap
-operator|->
 name|flags
 argument_list|,
 name|handle
