@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/sequencer.c  *   * The sequencer personality manager.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/sequencer.c  *   * The sequencer personality manager.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_define
@@ -46,15 +46,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|DEFINE_WAIT_QUEUE
-argument_list|(
+begin_comment
+comment|/* DEFINE_WAIT_QUEUE (midi_sleeper, midi_sleep_flag); */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|midi_sleeper
-argument_list|,
+value|seq_sleeper
+end_define
+
+begin_define
+define|#
+directive|define
 name|midi_sleep_flag
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+value|seq_sleep_flag
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -113,33 +121,42 @@ name|EV_SZ
 value|8
 end_define
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-name|queue
-index|[
-name|SEQ_MAX_QUEUE
-index|]
-index|[
-name|EV_SZ
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|IEV_SZ
+value|4
+end_define
 
 begin_decl_stmt
 specifier|static
 name|unsigned
 name|char
-name|iqueue
-index|[
-name|SEQ_MAX_QUEUE
-index|]
-index|[
-literal|4
-index|]
+modifier|*
+name|queue
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* SEQ_MAX_QUEUE * EV_SZ bytes */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|char
+modifier|*
+name|iqueue
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SEQ_MAX_QUEUE * IEV_SZ bytes */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -353,11 +370,13 @@ operator|!
 name|iqlen
 condition|)
 block|{
-name|INTERRUPTIBLE_SLEEP_ON
+name|DO_SLEEP
 argument_list|(
 name|midi_sleeper
 argument_list|,
 name|midi_sleep_flag
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -381,12 +400,11 @@ operator|&
 name|iqueue
 index|[
 name|iqhead
-index|]
-index|[
-literal|0
+operator|*
+name|IEV_SZ
 index|]
 argument_list|,
-literal|4
+name|IEV_SZ
 argument_list|)
 expr_stmt|;
 name|p
@@ -461,14 +479,17 @@ return|return;
 comment|/* Overflow */
 name|memcpy
 argument_list|(
+operator|&
 name|iqueue
 index|[
 name|iqtail
+operator|*
+name|IEV_SZ
 index|]
 argument_list|,
 name|event
 argument_list|,
-literal|4
+name|IEV_SZ
 argument_list|)
 expr_stmt|;
 name|iqlen
@@ -491,12 +512,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SOMEONE_WAITING
+argument_list|(
+name|midi_sleeper
+argument_list|,
 name|midi_sleep_flag
+argument_list|)
 condition|)
 block|{
 name|WAKE_UP
 argument_list|(
 name|midi_sleeper
+argument_list|,
+name|midi_sleep_flag
 argument_list|)
 expr_stmt|;
 block|}
@@ -1087,15 +1115,22 @@ operator|>=
 name|SEQ_MAX_QUEUE
 operator|&&
 operator|!
-name|seq_sleep_flag
-condition|)
-block|{
-comment|/* Sleep until there is enough space on the queue */
-name|INTERRUPTIBLE_SLEEP_ON
+name|SOMEONE_WAITING
 argument_list|(
 name|seq_sleeper
 argument_list|,
 name|seq_sleep_flag
+argument_list|)
+condition|)
+block|{
+comment|/* Sleep until there is enough space on the queue */
+name|DO_SLEEP
+argument_list|(
+name|seq_sleeper
+argument_list|,
+name|seq_sleep_flag
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1115,9 +1150,8 @@ operator|&
 name|queue
 index|[
 name|qtail
-index|]
-index|[
-literal|0
+operator|*
+name|EV_SZ
 index|]
 argument_list|,
 name|note
@@ -1453,9 +1487,8 @@ operator|&
 name|queue
 index|[
 name|this_one
-index|]
-index|[
-literal|0
+operator|*
+name|EV_SZ
 index|]
 expr_stmt|;
 switch|switch
@@ -1641,16 +1674,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SOMEONE_WAITING
+argument_list|(
+name|seq_sleeper
+argument_list|,
 name|seq_sleep_flag
+argument_list|)
 condition|)
 block|{
-name|seq_sleep_flag
-operator|=
-literal|0
-expr_stmt|;
 name|WAKE_UP
 argument_list|(
 name|seq_sleeper
+argument_list|,
+name|seq_sleep_flag
 argument_list|)
 expr_stmt|;
 block|}
@@ -1870,16 +1906,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SOMEONE_WAITING
+argument_list|(
+name|seq_sleeper
+argument_list|,
 name|seq_sleep_flag
+argument_list|)
 condition|)
 block|{
-name|seq_sleep_flag
-operator|=
-literal|0
-expr_stmt|;
 name|WAKE_UP
 argument_list|(
 name|seq_sleeper
+argument_list|,
+name|seq_sleep_flag
 argument_list|)
 expr_stmt|;
 block|}
@@ -2214,11 +2253,19 @@ name|sequencer_busy
 operator|=
 literal|1
 expr_stmt|;
+name|RESET_WAIT_QUEUE
+argument_list|(
+name|seq_sleeper
+argument_list|,
 name|seq_sleep_flag
-operator|=
+argument_list|)
+expr_stmt|;
+name|RESET_WAIT_QUEUE
+argument_list|(
+name|midi_sleeper
+argument_list|,
 name|midi_sleep_flag
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|output_treshold
 operator|=
@@ -2288,6 +2335,11 @@ while|while
 condition|(
 operator|!
 name|PROCESS_ABORTING
+argument_list|(
+name|midi_sleeper
+argument_list|,
+name|midi_sleep_flag
+argument_list|)
 operator|&&
 name|n
 condition|)
@@ -2353,20 +2405,15 @@ condition|(
 name|n
 condition|)
 block|{
-name|REQUEST_TIMEOUT
-argument_list|(
-name|HZ
-operator|/
-literal|10
-argument_list|,
-name|seq_sleeper
-argument_list|)
-expr_stmt|;
-name|INTERRUPTIBLE_SLEEP_ON
+name|DO_SLEEP
 argument_list|(
 name|seq_sleeper
 argument_list|,
 name|seq_sleep_flag
+argument_list|,
+name|HZ
+operator|/
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -2438,11 +2485,16 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * Wait until the queue is empty      */
+comment|/*      * Wait until the queue is empty    */
 while|while
 condition|(
 operator|!
 name|PROCESS_ABORTING
+argument_list|(
+name|seq_sleeper
+argument_list|,
+name|seq_sleep_flag
+argument_list|)
 operator|&&
 name|qlen
 condition|)
@@ -2614,6 +2666,11 @@ name|seq_playing
 operator|&&
 operator|!
 name|PROCESS_ABORTING
+argument_list|(
+name|seq_sleeper
+argument_list|,
+name|seq_sleep_flag
+argument_list|)
 condition|)
 name|seq_startplay
 argument_list|()
@@ -2623,15 +2680,22 @@ condition|(
 name|qlen
 operator|&&
 operator|!
-name|seq_sleep_flag
-condition|)
-comment|/* Queue not empty */
-block|{
-name|INTERRUPTIBLE_SLEEP_ON
+name|SOMEONE_WAITING
 argument_list|(
 name|seq_sleeper
 argument_list|,
 name|seq_sleep_flag
+argument_list|)
+condition|)
+comment|/* Queue not empty */
+block|{
+name|DO_SLEEP
+argument_list|(
+name|seq_sleeper
+argument_list|,
+name|seq_sleep_flag
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2684,18 +2748,13 @@ name|data
 argument_list|)
 condition|)
 block|{
-name|REQUEST_TIMEOUT
-argument_list|(
-literal|1
-argument_list|,
-name|seq_sleeper
-argument_list|)
-expr_stmt|;
-name|INTERRUPTIBLE_SLEEP_ON
+name|DO_SLEEP
 argument_list|(
 name|seq_sleeper
 argument_list|,
 name|seq_sleep_flag
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 name|n
@@ -2818,12 +2877,22 @@ name|midi_outc
 argument_list|(
 name|i
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 literal|0xb0
 operator|+
+operator|(
 name|chn
+operator|&
+literal|0xff
+operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Channel message */
+comment|/* Channel msg */
 name|midi_outc
 argument_list|(
 name|i
@@ -2872,7 +2941,12 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|SOMEONE_WAITING
+argument_list|(
+name|seq_sleeper
+argument_list|,
 name|seq_sleep_flag
+argument_list|)
 condition|)
 name|printk
 argument_list|(
@@ -2959,6 +3033,11 @@ name|qlen
 operator|&&
 operator|!
 name|PROCESS_ABORTING
+argument_list|(
+name|seq_sleeper
+argument_list|,
+name|seq_sleep_flag
+argument_list|)
 condition|)
 name|seq_sync
 argument_list|()
@@ -4111,10 +4190,6 @@ operator|!
 name|iqlen
 condition|)
 block|{
-name|midi_sleep_flag
-operator|=
-literal|1
-expr_stmt|;
 name|select_wait
 argument_list|(
 operator|&
@@ -4141,10 +4216,6 @@ operator|>=
 name|SEQ_MAX_QUEUE
 condition|)
 block|{
-name|seq_sleep_flag
-operator|=
-literal|1
-expr_stmt|;
 name|select_wait
 argument_list|(
 operator|&
@@ -4291,7 +4362,7 @@ operator|-
 name|BASE_OCTAVE
 operator|)
 expr_stmt|;
-comment|/* note_freq>>= 1;	 */
+comment|/* note_freq>>= 1;    */
 return|return
 name|note_freq
 return|;
@@ -4482,6 +4553,28 @@ name|sequencer_ok
 operator|=
 literal|1
 expr_stmt|;
+name|PERMANENT_MALLOC
+argument_list|(
+argument|unsigned char *
+argument_list|,
+argument|queue
+argument_list|,
+argument|SEQ_MAX_QUEUE * EV_SZ
+argument_list|,
+argument|mem_start
+argument_list|)
+empty_stmt|;
+name|PERMANENT_MALLOC
+argument_list|(
+argument|unsigned char *
+argument_list|,
+argument|iqueue
+argument_list|,
+argument|SEQ_MAX_QUEUE * IEV_SZ
+argument_list|,
+argument|mem_start
+argument_list|)
+empty_stmt|;
 return|return
 name|mem_start
 return|;
@@ -4589,7 +4682,7 @@ name|fileinfo
 modifier|*
 name|file
 parameter_list|)
-block|{   }
+block|{ }
 end_function
 
 begin_function

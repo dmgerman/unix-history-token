@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/opl3.c  *   * A low level driver for Yamaha YM3812 and OPL-3 -chips  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/opl3.c  *   * A low level driver for Yamaha YM3812 and OPL-3 -chips  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* Definitions for the operators OP3 and OP4 				 * begin here */
+comment|/* Definitions for the operators OP3 and OP4 				   * begin here */
 end_comment
 
 begin_decl_stmt
@@ -179,20 +179,11 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
-name|struct
-name|sbi_instrument
-name|instr_array
-index|[
-name|SBFM_MAXINSTR
-index|]
-typedef|;
-end_typedef
-
 begin_decl_stmt
 specifier|static
-name|instr_array
+name|struct
+name|sbi_instrument
+modifier|*
 name|instrmap
 decl_stmt|;
 end_decl_stmt
@@ -278,7 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0=no fm, 1=mono, 2=SB Pro 1, 3=SB Pro 2	 */
+comment|/* 0=no fm, 1=mono, 2=SB Pro 1, 3=SB Pro 2       */
 end_comment
 
 begin_function_decl
@@ -324,14 +315,12 @@ parameter_list|(
 name|int
 name|io_addr
 parameter_list|,
-specifier|const
 name|unsigned
-name|char
+name|int
 name|addr
 parameter_list|,
-specifier|const
 name|unsigned
-name|char
+name|int
 name|val
 parameter_list|)
 function_decl|;
@@ -580,7 +569,7 @@ index|]
 expr_stmt|;
 name|nr_voices
 operator|=
-literal|6
+literal|12
 expr_stmt|;
 block|}
 end_function
@@ -706,6 +695,14 @@ name|fm_info
 operator|.
 name|nr_voices
 operator|=
+operator|(
+name|nr_voices
+operator|==
+literal|12
+operator|)
+condition|?
+literal|6
+else|:
 name|nr_voices
 expr_stmt|;
 name|IOCTL_TO_USER
@@ -791,6 +788,14 @@ literal|0
 return|;
 comment|/* Do avoid duplicate initializations */
 block|}
+if|if
+condition|(
+name|opl3_enabled
+condition|)
+name|ioaddr
+operator|=
+name|left_address
+expr_stmt|;
 name|opl3_command
 argument_list|(
 name|ioaddr
@@ -835,7 +840,7 @@ block|{
 return|return
 literal|0
 return|;
-comment|/* Should be 0x00	 */
+comment|/* Should be 0x00        */
 block|}
 name|opl3_command
 argument_list|(
@@ -1208,7 +1213,7 @@ operator|)
 condition|)
 name|printk
 argument_list|(
-literal|"FM warning: Invalid patch format field (key) 0x%04x\n"
+literal|"FM warning: Invalid patch format field (key) 0x%x\n"
 argument_list|,
 name|instr
 operator|->
@@ -1873,7 +1878,7 @@ literal|0x01
 operator|)
 condition|)
 block|{
-comment|/* Additive synthesis	 */
+comment|/* Additive synthesis    */
 name|calc_vol
 argument_list|(
 operator|&
@@ -3317,14 +3322,12 @@ parameter_list|(
 name|int
 name|io_addr
 parameter_list|,
-specifier|const
 name|unsigned
-name|char
+name|int
 name|addr
 parameter_list|,
-specifier|const
 name|unsigned
-name|char
+name|int
 name|val
 parameter_list|)
 block|{
@@ -3334,12 +3337,20 @@ decl_stmt|;
 comment|/*    * The original 2-OP synth requires a quite long delay after writing to a    * register. The OPL-3 survives with just two INBs    */
 name|OUTB
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|addr
+operator|&
+literal|0xff
+argument_list|)
 argument_list|,
 name|io_addr
 argument_list|)
 expr_stmt|;
-comment|/* Select register	 */
+comment|/* Select register       */
 if|if
 condition|(
 operator|!
@@ -3369,14 +3380,22 @@ argument_list|)
 expr_stmt|;
 name|OUTB
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|val
+operator|&
+literal|0xff
+argument_list|)
 argument_list|,
 name|io_addr
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Write to register	 */
+comment|/* Write to register  */
 if|if
 condition|(
 operator|!
@@ -4356,7 +4375,7 @@ operator|&
 literal|0x3
 operator|)
 expr_stmt|;
-comment|/* KEYON|OCTAVE|MS bits 								 * of f-num */
+comment|/* KEYON|OCTAVE|MS bits * of f-num */
 name|voices
 index|[
 name|voice
@@ -4476,6 +4495,25 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|PERMANENT_MALLOC
+argument_list|(
+expr|struct
+name|sbi_instrument
+operator|*
+argument_list|,
+name|instrmap
+argument_list|,
+name|SBFM_MAXINSTR
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|instrmap
+argument_list|)
+argument_list|,
+name|mem_start
+argument_list|)
+expr_stmt|;
 name|synth_devs
 index|[
 name|num_synths
@@ -4523,6 +4561,9 @@ name|capabilities
 operator||=
 name|SYNTH_CAP_OPL3
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SCO
 name|strcpy
 argument_list|(
 name|fm_info
@@ -4532,6 +4573,8 @@ argument_list|,
 literal|"Yamaha OPL-3"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i

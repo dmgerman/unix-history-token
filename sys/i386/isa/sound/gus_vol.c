@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * gus_vol.c - Compute volume for GUS.  *   * Greg Lee 1993.  */
+comment|/*   * gus_vol.c - Compute volume for GUS.  *   * Greg Lee 1993.  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Calculate gus volume from note velocity, main volume, expression, and  * intrinsic patch volume given in patch library.  Expression is multiplied  * in, so it emphasizes differences in note velocity, while main volume is  * added in -- I don't know whether this is right, but it seems reasonable to  * me.  (In the previous stage, main volume controller messages were changed  * to expression controller messages, if they were found to be used for  * dynamic volume adjustments, so here, main volume can be assumed to be  * constant throughout a song.)  *   * Intrinsic patch volume is added in, but if over 64 is also multiplied in, so  * we can give a big boost to very weak voices like nylon guitar and the  * basses.  The normal value is 64.  Strings are assigned lower values.  */
+comment|/*   * Calculate gus volume from note velocity, main volume, expression, and  * intrinsic patch volume given in patch library.  Expression is multiplied  * in, so it emphasizes differences in note velocity, while main volume is  * added in -- I don't know whether this is right, but it seems reasonable to  * me.  (In the previous stage, main volume controller messages were changed  * to expression controller messages, if they were found to be used for  * dynamic volume adjustments, so here, main volume can be assumed to be  * constant throughout a song.)  *   * Intrinsic patch volume is added in, but if over 64 is also multiplied in, so  * we can give a big boost to very weak voices like nylon guitar and the  * basses.  The normal value is 64.  Strings are assigned lower values.  */
 end_comment
 
 begin_function
@@ -60,7 +60,7 @@ name|n
 decl_stmt|,
 name|x
 decl_stmt|;
-comment|/*    * A voice volume of 64 is considered neutral, so adjust the main volume if    * something other than this neutral value was assigned in the patch    * library.    */
+comment|/*     * A voice volume of 64 is considered neutral, so adjust the main volume if    * something other than this neutral value was assigned in the patch    * library.    */
 name|x
 operator|=
 literal|256
@@ -73,7 +73,7 @@ operator|-
 literal|64
 operator|)
 expr_stmt|;
-comment|/* Boost expression by voice volume above neutral. */
+comment|/*     * Boost expression by voice volume above neutral.     */
 if|if
 condition|(
 name|voicev
@@ -96,7 +96,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* Combine multiplicative and level components. */
+comment|/*     * Combine multiplicative and level components.     */
 name|x
 operator|=
 name|vel
@@ -116,7 +116,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GUS_VOLUME
-comment|/*    * Further adjustment by installation-specific master volume control    * (default 50).    */
+comment|/*     * Further adjustment by installation-specific master volume control    * (default 60).    */
 name|x
 operator|=
 operator|(
@@ -131,21 +131,44 @@ literal|10000
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|GUS_USE_CHN_MAIN_VOLUME
+comment|/*    * Experimental support for the channel main volume    */
+name|mainv
+operator|=
+operator|(
+name|mainv
+operator|/
+literal|2
+operator|)
+operator|+
+literal|64
+expr_stmt|;
+comment|/* Scale to 64 to 127 */
+name|x
+operator|=
+operator|(
+name|x
+operator|*
+name|mainv
+operator|*
+name|mainv
+operator|)
+operator|/
+literal|16384
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|x
 operator|<
-operator|(
-literal|1
-operator|<<
-literal|11
-operator|)
+literal|2
 condition|)
 return|return
 operator|(
-literal|11
-operator|<<
-literal|8
+literal|0
 operator|)
 return|;
 elseif|else
@@ -166,7 +189,7 @@ operator||
 literal|255
 operator|)
 return|;
-comment|/*    * Convert to gus's logarithmic form with 4 bit exponent i and 8 bit    * mantissa m.    */
+comment|/*     * Convert to gus's logarithmic form with 4 bit exponent i and 8 bit    * mantissa m.    */
 name|n
 operator|=
 name|x
@@ -216,7 +239,7 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-comment|/*    * Mantissa is part of linear volume not expressed in exponent.  (This is    * not quite like real logs -- I wonder if it's right.)    */
+comment|/*     * Mantissa is part of linear volume not expressed in exponent.  (This is    * not quite like real logs -- I wonder if it's right.)    */
 name|m
 operator|=
 name|x
@@ -227,7 +250,7 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
-comment|/* Adjust mantissa to 8 bits. */
+comment|/*     * Adjust mantissa to 8 bits.     */
 if|if
 condition|(
 name|m
@@ -261,20 +284,6 @@ operator|-
 name|i
 expr_stmt|;
 block|}
-comment|/* low volumes give occasional sour notes */
-if|if
-condition|(
-name|i
-operator|<
-literal|11
-condition|)
-return|return
-operator|(
-literal|11
-operator|<<
-literal|8
-operator|)
-return|;
 return|return
 operator|(
 operator|(

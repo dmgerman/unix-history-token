@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/mpu401.c  *   * The low level driver for Roland MPU-401 compatible Midi cards.  *   * This version supports just the DUMB UART mode.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*  * sound/sb16_midi.c  *   * The low level driver for the MPU-401 UART emulation of the SB16.  *   * Copyright by Hannu Savolainen 1993  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
 begin_include
@@ -21,7 +21,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|EXCLUDE_MPU401
+name|EXCLUDE_SB
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EXCLUDE_SB16
 argument_list|)
 operator|&&
 operator|!
@@ -35,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|DATAPORT
-value|(mpu401_base)
+value|(sb16midi_base)
 end_define
 
 begin_comment
@@ -46,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|COMDPORT
-value|(mpu401_base+1)
+value|(sb16midi_base+1)
 end_define
 
 begin_comment
@@ -57,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|STATPORT
-value|(mpu401_base+1)
+value|(sb16midi_base+1)
 end_define
 
 begin_comment
@@ -67,7 +73,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|mpu401_status
+name|sb16midi_status
 parameter_list|()
 value|INB(STATPORT)
 end_define
@@ -77,7 +83,7 @@ define|#
 directive|define
 name|input_avail
 parameter_list|()
-value|(!(mpu401_status()&INPUT_AVAIL))
+value|(!(sb16midi_status()&INPUT_AVAIL))
 end_define
 
 begin_define
@@ -85,13 +91,13 @@ define|#
 directive|define
 name|output_ready
 parameter_list|()
-value|(!(mpu401_status()&OUTPUT_READY))
+value|(!(sb16midi_status()&OUTPUT_READY))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mpu401_cmd
+name|sb16midi_cmd
 parameter_list|(
 name|cmd
 parameter_list|)
@@ -101,7 +107,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|mpu401_read
+name|sb16midi_read
 parameter_list|()
 value|INB(DATAPORT)
 end_define
@@ -109,7 +115,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|mpu401_write
+name|sb16midi_write
 parameter_list|(
 name|byte
 parameter_list|)
@@ -174,7 +180,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|mpu401_opened
+name|sb16midi_opened
 init|=
 literal|0
 decl_stmt|;
@@ -183,7 +189,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mpu401_base
+name|sb16midi_base
 init|=
 literal|0x330
 decl_stmt|;
@@ -192,14 +198,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|mpu401_irq
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|mpu401_detected
+name|sb16midi_detected
 init|=
 literal|0
 decl_stmt|;
@@ -215,7 +214,7 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-name|reset_mpu401
+name|reset_sb16midi
 parameter_list|(
 name|void
 parameter_list|)
@@ -243,7 +242,7 @@ end_function_decl
 begin_function
 specifier|static
 name|void
-name|mpu401_input_loop
+name|sb16midi_input_loop
 parameter_list|(
 name|void
 parameter_list|)
@@ -270,7 +269,7 @@ name|unsigned
 name|char
 name|c
 init|=
-name|mpu401_read
+name|sb16midi_read
 argument_list|()
 decl_stmt|;
 name|count
@@ -279,7 +278,7 @@ literal|100
 expr_stmt|;
 if|if
 condition|(
-name|mpu401_opened
+name|sb16midi_opened
 operator|&
 name|OPEN_READ
 condition|)
@@ -308,7 +307,7 @@ end_function
 
 begin_function
 name|void
-name|mpuintr
+name|sb16midiintr
 parameter_list|(
 name|int
 name|unit
@@ -319,7 +318,7 @@ condition|(
 name|input_avail
 argument_list|()
 condition|)
-name|mpu401_input_loop
+name|sb16midi_input_loop
 argument_list|()
 expr_stmt|;
 block|}
@@ -332,7 +331,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|poll_mpu401
+name|poll_sb16midi
 parameter_list|(
 name|unsigned
 name|long
@@ -345,16 +344,16 @@ name|flags
 decl_stmt|;
 name|DEFINE_TIMER
 argument_list|(
-name|mpu401_timer
+name|sb16midi_timer
 argument_list|,
-name|poll_mpu401
+name|poll_sb16midi
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
-name|mpu401_opened
+name|sb16midi_opened
 operator|&
 name|OPEN_READ
 operator|)
@@ -371,14 +370,14 @@ condition|(
 name|input_avail
 argument_list|()
 condition|)
-name|mpu401_input_loop
+name|sb16midi_input_loop
 argument_list|()
 expr_stmt|;
 name|ACTIVATE_TIMER
 argument_list|(
-name|mpu401_timer
+name|sb16midi_timer
 argument_list|,
-name|poll_mpu401
+name|poll_sb16midi
 argument_list|,
 literal|1
 argument_list|)
@@ -395,7 +394,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mpu401_open
+name|sb16midi_open
 parameter_list|(
 name|int
 name|dev
@@ -430,14 +429,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|mpu401_opened
+name|sb16midi_opened
 condition|)
 block|{
-name|printk
-argument_list|(
-literal|"MPU-401: Midi busy\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|RET_ERROR
 argument_list|(
@@ -445,18 +439,18 @@ name|EBUSY
 argument_list|)
 return|;
 block|}
-name|mpu401_input_loop
+name|sb16midi_input_loop
 argument_list|()
 expr_stmt|;
 name|midi_input_intr
 operator|=
 name|input
 expr_stmt|;
-name|mpu401_opened
+name|sb16midi_opened
 operator|=
 name|mode
 expr_stmt|;
-name|poll_mpu401
+name|poll_sb16midi
 argument_list|(
 literal|0
 argument_list|)
@@ -471,13 +465,13 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mpu401_close
+name|sb16midi_close
 parameter_list|(
 name|int
 name|dev
 parameter_list|)
 block|{
-name|mpu401_opened
+name|sb16midi_opened
 operator|=
 literal|0
 expr_stmt|;
@@ -487,7 +481,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mpu401_out
+name|sb16midi_out
 parameter_list|(
 name|int
 name|dev
@@ -515,7 +509,7 @@ condition|(
 name|input_avail
 argument_list|()
 condition|)
-name|mpu401_input_loop
+name|sb16midi_input_loop
 argument_list|()
 expr_stmt|;
 name|RESTORE_INTR
@@ -559,7 +553,7 @@ return|return
 literal|0
 return|;
 block|}
-name|mpu401_write
+name|sb16midi_write
 argument_list|(
 name|midi_byte
 argument_list|)
@@ -573,7 +567,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mpu401_command
+name|sb16midi_command
 parameter_list|(
 name|int
 name|dev
@@ -592,7 +586,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mpu401_start_read
+name|sb16midi_start_read
 parameter_list|(
 name|int
 name|dev
@@ -607,7 +601,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mpu401_end_read
+name|sb16midi_end_read
 parameter_list|(
 name|int
 name|dev
@@ -622,7 +616,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mpu401_ioctl
+name|sb16midi_ioctl
 parameter_list|(
 name|int
 name|dev
@@ -646,7 +640,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|mpu401_kick
+name|sb16midi_kick
 parameter_list|(
 name|int
 name|dev
@@ -657,7 +651,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mpu401_buffer_status
+name|sb16midi_buffer_status
 parameter_list|(
 name|int
 name|dev
@@ -674,43 +668,43 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|midi_operations
-name|mpu401_operations
+name|sb16midi_operations
 init|=
 block|{
 block|{
-literal|"MPU-401"
+literal|"SoundBlaster MPU-401"
 block|,
 literal|0
 block|,
 literal|0
 block|,
-name|SNDCARD_MPU401
+name|SNDCARD_SB16MIDI
 block|}
 block|,
-name|mpu401_open
+name|sb16midi_open
 block|,
-name|mpu401_close
+name|sb16midi_close
 block|,
-name|mpu401_ioctl
+name|sb16midi_ioctl
 block|,
-name|mpu401_out
+name|sb16midi_out
 block|,
-name|mpu401_start_read
+name|sb16midi_start_read
 block|,
-name|mpu401_end_read
+name|sb16midi_end_read
 block|,
-name|mpu401_kick
+name|sb16midi_kick
 block|,
-name|mpu401_command
+name|sb16midi_command
 block|,
-name|mpu401_buffer_status
+name|sb16midi_buffer_status
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 name|long
-name|attach_mpu401
+name|attach_sb16midi
 parameter_list|(
 name|long
 name|mem_start
@@ -730,22 +724,16 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
-name|mpu401_base
+name|sb16midi_base
 operator|=
 name|hw_config
 operator|->
 name|io_base
 expr_stmt|;
-name|mpu401_irq
-operator|=
-name|hw_config
-operator|->
-name|irq
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mpu401_detected
+name|sb16midi_detected
 condition|)
 return|return
 name|RET_ERROR
@@ -777,7 +765,7 @@ operator|--
 control|)
 empty_stmt|;
 comment|/* Wait */
-name|mpu401_cmd
+name|sb16midi_cmd
 argument_list|(
 name|UART_MODE_ON
 argument_list|)
@@ -809,7 +797,7 @@ argument_list|()
 condition|)
 if|if
 condition|(
-name|mpu401_read
+name|sb16midi_read
 argument_list|()
 operator|==
 name|MPU_ACK
@@ -825,14 +813,10 @@ argument_list|)
 expr_stmt|;
 name|printk
 argument_list|(
-literal|"snd5:<Roland MPU-401>"
+literal|"snd7:<SoundBlaster MPU-401>"
 argument_list|)
 expr_stmt|;
 name|my_dev
-operator|=
-name|num_midis
-expr_stmt|;
-name|mpu401_dev
 operator|=
 name|num_midis
 expr_stmt|;
@@ -843,7 +827,7 @@ operator|++
 index|]
 operator|=
 operator|&
-name|mpu401_operations
+name|sb16midi_operations
 expr_stmt|;
 return|return
 name|mem_start
@@ -854,7 +838,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|reset_mpu401
+name|reset_sb16midi
 parameter_list|(
 name|void
 parameter_list|)
@@ -916,7 +900,7 @@ operator|--
 control|)
 empty_stmt|;
 comment|/* Wait */
-name|mpu401_cmd
+name|sb16midi_cmd
 argument_list|(
 name|MPU_RESET
 argument_list|)
@@ -946,7 +930,7 @@ argument_list|()
 condition|)
 if|if
 condition|(
-name|mpu401_read
+name|sb16midi_read
 argument_list|()
 operator|==
 name|MPU_ACK
@@ -956,7 +940,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|mpu401_opened
+name|sb16midi_opened
 operator|=
 literal|0
 expr_stmt|;
@@ -964,7 +948,7 @@ if|if
 condition|(
 name|ok
 condition|)
-name|mpu401_input_loop
+name|sb16midi_input_loop
 argument_list|()
 expr_stmt|;
 comment|/* Flush input before enabling interrupts */
@@ -981,7 +965,7 @@ end_function
 
 begin_function
 name|int
-name|probe_mpu401
+name|probe_sb16midi
 parameter_list|(
 name|struct
 name|address_info
@@ -994,26 +978,16 @@ name|ok
 init|=
 literal|0
 decl_stmt|;
-name|mpu401_base
+name|sb16midi_base
 operator|=
 name|hw_config
 operator|->
 name|io_base
 expr_stmt|;
-name|mpu401_irq
-operator|=
-name|hw_config
-operator|->
-name|irq
-expr_stmt|;
 if|if
 condition|(
-name|snd_set_irq_handler
-argument_list|(
-name|mpu401_irq
-argument_list|,
-name|mpuintr
-argument_list|)
+name|sb_get_irq
+argument_list|()
 operator|<
 literal|0
 condition|)
@@ -1022,10 +996,10 @@ literal|0
 return|;
 name|ok
 operator|=
-name|reset_mpu401
+name|reset_sb16midi
 argument_list|()
 expr_stmt|;
-name|mpu401_detected
+name|sb16midi_detected
 operator|=
 name|ok
 expr_stmt|;
