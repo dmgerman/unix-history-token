@@ -244,6 +244,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|doit
 parameter_list|(
@@ -255,6 +256,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getstr
 parameter_list|(
@@ -270,6 +272,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|error
 parameter_list|(
@@ -283,15 +286,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|pam_fail
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|int
 name|no_uid_0
@@ -299,28 +293,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"usage: rexecd [-i]"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * remote execute server:  *	username\0  *	password\0  *	command\0  *	data  */
@@ -394,8 +366,17 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|usage
-argument_list|()
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"usage: rexecd [-i]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|argc
@@ -482,6 +463,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|doit
 parameter_list|(
@@ -1689,6 +1671,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|error
 parameter_list|(
@@ -1768,6 +1751,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|getstr
 parameter_list|(
