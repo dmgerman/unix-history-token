@@ -21,6 +21,18 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/frame.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
+
 begin_function
 specifier|static
 name|__inline
@@ -29,7 +41,15 @@ name|kdb_cpu_clear_singlestep
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|kdb_frame
+operator|->
+name|srr1
+operator|&=
+operator|~
+name|PSL_SE
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -40,7 +60,14 @@ name|kdb_cpu_set_singlestep
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+name|kdb_frame
+operator|->
+name|srr1
+operator||=
+name|PSL_SE
+expr_stmt|;
+block|}
 end_function
 
 begin_function
