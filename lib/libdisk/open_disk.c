@@ -1660,32 +1660,6 @@ name|strcmp
 argument_list|(
 name|t
 argument_list|,
-literal|"BDE"
-argument_list|)
-condition|)
-empty_stmt|;
-comment|/* nothing */
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|t
-argument_list|,
-literal|"CCD"
-argument_list|)
-condition|)
-empty_stmt|;
-comment|/* nothing */
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|t
-argument_list|,
 literal|"APPLE"
 argument_list|)
 condition|)
@@ -1710,48 +1684,9 @@ argument_list|,
 name|sn
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|t
-argument_list|,
-literal|"STRIPE"
-argument_list|)
-condition|)
-empty_stmt|;
-comment|/* nothing */
-elseif|else
-if|if
-condition|(
-name|strstr
-argument_list|(
-name|t
-argument_list|,
-literal|"VINUM"
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-empty_stmt|;
-comment|/* nothing */
 else|else
-block|{
-name|printf
-argument_list|(
-literal|"BARF %d\n"
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
+empty_stmt|;
+comment|/* Ignore unknown classes. */
 block|}
 comment|/* PLATFORM POLICY BEGIN ------------------------------------- */
 comment|/* We have a chance to do things on a blank disk here */
