@@ -160,16 +160,12 @@ end_function
 begin_decl_stmt
 name|int
 name|returntosingle
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 name|nflag
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
