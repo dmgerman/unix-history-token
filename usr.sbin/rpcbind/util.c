@@ -238,7 +238,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * For all bits set in "mask", compare the corresponding bits in  * "dst" and "src", and see if they match.  */
+comment|/*  * For all bits set in "mask", compare the corresponding bits in  * "dst" and "src", and see if they match. Returns 0 if the addresses  * match.  */
 end_comment
 
 begin_function
@@ -264,8 +264,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 name|u_int8_t
 modifier|*
@@ -283,9 +281,6 @@ name|netmask
 init|=
 name|mask
 decl_stmt|;
-name|u_int8_t
-name|bitmask
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -299,40 +294,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-literal|8
-condition|;
-name|j
-operator|++
-control|)
-block|{
-name|bitmask
-operator|=
-literal|1
-operator|<<
-name|j
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|netmask
-index|[
-name|i
-index|]
-operator|&
-name|bitmask
-operator|)
-condition|)
-continue|continue;
 if|if
 condition|(
 operator|(
@@ -341,7 +302,10 @@ index|[
 name|i
 index|]
 operator|&
-name|bitmask
+name|netmask
+index|[
+name|i
+index|]
 operator|)
 operator|!=
 operator|(
@@ -350,22 +314,27 @@ index|[
 name|i
 index|]
 operator|&
-name|bitmask
+name|netmask
+index|[
+name|i
+index|]
 operator|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-block|}
-block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Taken from ifconfig.c  */
+comment|/*  * Similar to code in ifconfig.c. Fill in the scope ID for link-local  * addresses returned by getifaddrs().  */
 end_comment
 
 begin_ifdef
@@ -385,6 +354,9 @@ modifier|*
 name|sin6
 parameter_list|)
 block|{
+name|u_int16_t
+name|ifindex
+decl_stmt|;
 if|if
 condition|(
 name|IN6_IS_ADDR_LINKLOCAL
@@ -396,9 +368,7 @@ name|sin6_addr
 argument_list|)
 condition|)
 block|{
-name|sin6
-operator|->
-name|sin6_scope_id
+name|ifindex
 operator|=
 name|ntohs
 argument_list|(
@@ -418,6 +388,31 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sin6
+operator|->
+name|sin6_scope_id
+operator|==
+literal|0
+operator|&&
+name|ifindex
+operator|!=
+literal|0
+condition|)
+block|{
+name|sin6
+operator|->
+name|sin6_scope_id
+operator|=
+name|ifindex
+expr_stmt|;
+operator|*
+operator|(
+name|u_int16_t
+operator|*
+operator|)
+operator|&
 name|sin6
 operator|->
 name|sin6_addr
@@ -427,17 +422,9 @@ index|[
 literal|2
 index|]
 operator|=
-name|sin6
-operator|->
-name|sin6_addr
-operator|.
-name|s6_addr
-index|[
-literal|3
-index|]
-operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -1520,7 +1507,7 @@ argument_list|,
 name|IPPROTO_UDP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Loop through all interfaces. For each interface, see if the 	 * network portion of its address is equal to that of the client. 	 * If so, we have found the interface that we want to use. 	 */
+comment|/* 	 * Loop through all interfaces. For each IPv6 multicast-capable 	 * interface, join the RPC multicast group on that interface. 	 */
 for|for
 control|(
 name|ifap
