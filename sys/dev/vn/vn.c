@@ -596,8 +596,6 @@ name|vnunit
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|,
-name|size
 decl_stmt|;
 name|struct
 name|vn_softc
