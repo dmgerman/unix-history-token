@@ -6,6 +6,24 @@ name|dprintf
 value|if(dbg)printf
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PI
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PI
+value|3.141592654
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -51,24 +69,6 @@ end_define
 begin_comment
 comment|/* clockwise arc */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PI
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PI
-value|3.141592654
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -757,6 +757,9 @@ name|getfval
 argument_list|()
 decl_stmt|,
 name|getcomp
+argument_list|()
+decl_stmt|,
+name|getblkvar
 argument_list|()
 decl_stmt|;
 end_decl_stmt

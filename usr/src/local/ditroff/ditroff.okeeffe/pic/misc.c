@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	2.1 (CWI) 85/07/23"
+literal|"@(#)misc.c	3.1 (CWI) 85/07/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +202,9 @@ case|:
 case|case
 name|BLOCK
 case|:
+case|case
+name|TEXT
+case|:
 return|return
 name|p
 operator|->
@@ -260,6 +263,9 @@ name|BOX
 case|:
 case|case
 name|BLOCK
+case|:
+case|case
+name|TEXT
 case|:
 return|return
 name|p
@@ -1254,6 +1260,9 @@ case|:
 case|case
 name|BLOCK
 case|:
+case|case
+name|TEXT
+case|:
 switch|switch
 condition|(
 name|corner
@@ -2130,6 +2139,47 @@ block|}
 end_function
 
 begin_function
+name|float
+name|getblkvar
+parameter_list|(
+name|p
+parameter_list|,
+name|s
+parameter_list|)
+comment|/* find variable s2 in block p */
+name|obj
+modifier|*
+name|p
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+name|YYSTYPE
+name|y
+decl_stmt|,
+name|getblk
+argument_list|()
+decl_stmt|;
+name|y
+operator|=
+name|getblk
+argument_list|(
+name|p
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|y
+operator|.
+name|f
+return|;
+block|}
+end_function
+
+begin_function
 name|obj
 modifier|*
 name|getblock
@@ -2148,6 +2198,51 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
+name|YYSTYPE
+name|y
+decl_stmt|,
+name|getblk
+argument_list|()
+decl_stmt|;
+name|y
+operator|=
+name|getblk
+argument_list|(
+name|p
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+name|y
+operator|.
+name|o
+return|;
+block|}
+end_function
+
+begin_function
+name|YYSTYPE
+name|getblk
+parameter_list|(
+name|p
+parameter_list|,
+name|s
+parameter_list|)
+comment|/* find union type for s in p */
+name|obj
+modifier|*
+name|p
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+block|{
+specifier|static
+name|YYSTYPE
+name|bug
+decl_stmt|;
 name|struct
 name|symtab
 modifier|*
@@ -2171,7 +2266,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|bug
 operator|)
 return|;
 block|}
@@ -2209,7 +2304,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"getblock found x,y= %g,%g\n"
+literal|"getblk found x,y= %g,%g\n"
 argument_list|,
 operator|(
 name|stp
@@ -2237,8 +2332,6 @@ operator|(
 name|stp
 operator|->
 name|s_val
-operator|.
-name|o
 operator|)
 return|;
 block|}
@@ -2251,7 +2344,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|bug
 operator|)
 return|;
 block|}

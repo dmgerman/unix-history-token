@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	2.1 (CWI) 85/07/23"
+literal|"@(#)main.c	3.1 (CWI) 85/07/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* attributes stored here as collected */
+comment|/*;attributes stored here as collected */
 end_comment
 
 begin_decl_stmt

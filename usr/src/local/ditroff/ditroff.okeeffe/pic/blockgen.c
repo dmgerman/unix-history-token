@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)blockgen.c	2.1 (CWI) 85/07/23"
+literal|"@(#)blockgen.c	3.1 (CWI) 85/07/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -833,6 +833,9 @@ expr_stmt|;
 break|break;
 case|case
 name|AT
+case|:
+case|case
+name|FROM
 case|:
 name|ppos
 operator|=

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)for.c	2.1 (CWI) 85/07/23"
+literal|"@(#)for.c	3.1 (CWI) 85/07/30"
 decl_stmt|;
 end_decl_stmt
 

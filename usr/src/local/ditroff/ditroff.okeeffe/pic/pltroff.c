@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pltroff.c	2.1 (CWI) 85/07/23"
+literal|"@(#)pltroff.c	3.1 (CWI) 85/07/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -1641,6 +1641,10 @@ argument_list|,
 argument|n
 argument_list|,
 argument|p
+argument_list|,
+argument|dashed
+argument_list|,
+argument|ddval
 argument_list|)
 end_macro
 
@@ -1665,6 +1669,18 @@ begin_comment
 comment|/* sic */
 end_comment
 
+begin_decl_stmt
+name|int
+name|dashed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
+name|ddval
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
@@ -1680,6 +1696,19 @@ name|xerr
 decl_stmt|,
 name|yerr
 decl_stmt|;
+if|if
+condition|(
+name|dashed
+operator|&&
+name|ddval
+condition|)
+name|printf
+argument_list|(
+literal|".nr 99 %.3fi\n"
+argument_list|,
+name|ddval
+argument_list|)
+expr_stmt|;
 name|move
 argument_list|(
 name|x
@@ -1690,16 +1719,38 @@ expr_stmt|;
 name|hvflush
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\\D'~"
-argument_list|)
-expr_stmt|;
 name|xerr
 operator|=
 name|yerr
 operator|=
 literal|0.0
+expr_stmt|;
+if|if
+condition|(
+name|dashed
+condition|)
+block|{
+if|if
+condition|(
+name|ddval
+condition|)
+name|printf
+argument_list|(
+literal|"\\X'Pd \\n(99'\\D'q 0 0"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\\X'Pd'\\D'q 0 0"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"\\D'~"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1768,6 +1819,16 @@ argument_list|)
 expr_stmt|;
 comment|/* WATCH SIGN */
 block|}
+if|if
+condition|(
+name|dashed
+condition|)
+name|printf
+argument_list|(
+literal|" 0 0'\\X'Ps'\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"'\n"

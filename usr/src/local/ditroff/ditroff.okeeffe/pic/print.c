@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	2.1 (CWI) 85/07/23"
+literal|"@(#)print.c	3.1 (CWI) 85/07/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,20 @@ name|o_val
 index|[
 literal|5
 index|]
+argument_list|,
+name|p
+operator|->
+name|o_attr
+operator|&
+operator|(
+name|DOTBIT
+operator||
+name|DASHBIT
+operator|)
+argument_list|,
+name|p
+operator|->
+name|o_ddval
 argument_list|)
 expr_stmt|;
 else|else
