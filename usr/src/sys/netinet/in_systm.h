@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_systm.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_systm.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Miscellaneous internetwork  * definitions for kernel.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
 
 begin_comment
 comment|/*  * Network types.  *  * Internally the system keeps counters in the headers with the bytes  * swapped so that VAX instructions will work on them.  It reverses  * the bytes before transmission at each protocol level.  The n_ types  * represent the types with the bytes in ``high-ender'' order.  */
@@ -50,17 +44,6 @@ begin_comment
 comment|/* ms since 00:00 GMT, byte rev */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -73,11 +56,6 @@ name|iptime
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
