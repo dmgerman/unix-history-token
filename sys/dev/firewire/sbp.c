@@ -8588,8 +8588,29 @@ argument|); 			ccb->ccb_h.status = CAM_REQ_INVALID; 			xpt_done(ccb); 			break; 
 literal|1
 argument|) 		printf(
 literal|"%s:%d:%d:%d:XPT_CALC_GEOMETRY: "
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 literal|"Volume size = %jd\n"
-argument|, 			device_get_nameunit(sbp->fd.dev), cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun, 			(uintmax_t)ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
+argument|,
+else|#
+directive|else
+literal|"Volume size = %d\n"
+argument|,
+endif|#
+directive|endif
+argument|device_get_nameunit(sbp->fd.dev), 			cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+argument|(uintmax_t)
+endif|#
+directive|endif
+argument|ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
 literal|1024L
 argument|*
 literal|1024L
