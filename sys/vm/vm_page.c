@@ -130,6 +130,14 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
+name|mtx
+name|vm_page_buckets_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
 name|vm_page
 modifier|*
 modifier|*
@@ -162,25 +170,6 @@ end_decl_stmt
 begin_comment
 comment|/* Mask for hash function */
 end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|volatile
-name|int
-name|vm_page_bucket_generation
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|vm_buckets_mtx
-index|[
-name|BUCKET_HASH_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|vm_page_t
@@ -614,6 +603,18 @@ operator|-
 name|new_end
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|,
+literal|"vm page buckets mutex"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|vm_page_buckets
 operator|=
 operator|(
@@ -651,34 +652,6 @@ name|bucket
 operator|++
 expr_stmt|;
 block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|BUCKET_HASH_SIZE
-condition|;
-operator|++
-name|i
-control|)
-name|mtx_init
-argument_list|(
-operator|&
-name|vm_buckets_mtx
-index|[
-name|i
-index|]
-argument_list|,
-literal|"vm buckets hash mutexes"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Compute the number of pages of memory that will be available for 	 * use (taking into account the overhead of a page structure per 	 * page). 	 */
 name|first_page
 operator|=
@@ -1651,6 +1624,12 @@ name|pindex
 argument_list|)
 index|]
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|hnext
@@ -1663,8 +1642,11 @@ name|bucket
 operator|=
 name|m
 expr_stmt|;
-name|vm_page_bucket_generation
-operator|++
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now link into the object's list of backed pages. 	 */
 name|TAILQ_INSERT_TAIL
@@ -1722,6 +1704,10 @@ block|{
 name|vm_object_t
 name|object
 decl_stmt|;
+name|vm_page_t
+modifier|*
+name|bucket
+decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 if|if
@@ -1764,14 +1750,7 @@ name|m
 operator|->
 name|object
 expr_stmt|;
-comment|/* 	 * Remove from the object_object/offset hash table.  The object 	 * must be on the hash queue, we will panic if it isn't 	 * 	 * Note: we must NULL-out m->hnext to prevent loops in detached 	 * buffers with vm_page_lookup(). 	 */
-block|{
-name|struct
-name|vm_page
-modifier|*
-modifier|*
-name|bucket
-decl_stmt|;
+comment|/* 	 * Remove from the object_object/offset hash table.  The object 	 * must be on the hash queue, we will panic if it isn't 	 */
 name|bucket
 operator|=
 operator|&
@@ -1788,6 +1767,12 @@ operator|->
 name|pindex
 argument_list|)
 index|]
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1833,10 +1818,12 @@ name|hnext
 operator|=
 name|NULL
 expr_stmt|;
-name|vm_page_bucket_generation
-operator|++
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Now remove from the object's list of backed pages. 	 */
 name|TAILQ_REMOVE
 argument_list|(
@@ -1871,7 +1858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	NOTE: the code below does not lock.  It will operate properly if  *	an interrupt makes a change, but the generation algorithm will not   *	operate properly in an SMP environment where both cpu's are able to run  *	kernel code simultaneously.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
+comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
 end_comment
 
 begin_function
@@ -1894,16 +1881,7 @@ modifier|*
 modifier|*
 name|bucket
 decl_stmt|;
-name|int
-name|generation
-decl_stmt|;
 comment|/* 	 * Search the hash table for this object/offset pair 	 */
-name|retry
-label|:
-name|generation
-operator|=
-name|vm_page_bucket_generation
-expr_stmt|;
 name|bucket
 operator|=
 operator|&
@@ -1916,6 +1894,12 @@ argument_list|,
 name|pindex
 argument_list|)
 index|]
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1954,15 +1938,12 @@ name|pindex
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|vm_page_bucket_generation
-operator|!=
-name|generation
-condition|)
-goto|goto
-name|retry
-goto|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|m
@@ -1970,15 +1951,12 @@ operator|)
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|vm_page_bucket_generation
-operator|!=
-name|generation
-condition|)
-goto|goto
-name|retry
-goto|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_buckets_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
