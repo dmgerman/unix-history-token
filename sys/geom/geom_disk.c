@@ -1175,6 +1175,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"GEOM: new disk %s\n"
+argument_list|,
+name|gp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

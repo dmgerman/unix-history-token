@@ -449,14 +449,6 @@ argument_list|(
 literal|"Initializing GEOMetry subsystem\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|g_debugflags
-operator||=
-name|G_T_TOPOLOGY
-expr_stmt|;
 name|sx_init
 argument_list|(
 operator|&
