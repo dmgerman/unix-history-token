@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: stdio.c,v 1.52 2001/09/18 21:45:23 gshapiro Exp $"
+literal|"@(#)$Id: stdio.c,v 1.56 2002/04/03 21:55:15 ca Exp $"
 argument_list|)
 end_macro
 
@@ -790,6 +790,39 @@ operator|->
 name|f_file
 return|;
 case|case
+name|SM_IO_WHAT_SIZE
+case|:
+block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fp
+operator|->
+name|f_file
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|st
+operator|.
+name|st_size
+return|;
+else|else
+return|return
+operator|-
+literal|1
+return|;
+block|}
+case|case
 name|SM_IO_IS_READABLE
 case|:
 block|{
@@ -883,7 +916,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SM_STDFDOPEN -- open file by primative 'fd' rather than pathname ** **	I/O function to handle fdopen() stdio equivalence. The rest of **	the functions are the same as the sm_stdopen() above. ** **	Parameters: **		fp -- the file pointer to be associated with the open **		name -- the primative file descriptor for association **		flags -- indicates type of access methods **		rpool -- ignored ** **	Results: **		Success: primative file descriptor value **		Failure: -1 and sets errno */
+comment|/* **  SM_STDFDOPEN -- open file by primitive 'fd' rather than pathname ** **	I/O function to handle fdopen() stdio equivalence. The rest of **	the functions are the same as the sm_stdopen() above. ** **	Parameters: **		fp -- the file pointer to be associated with the open **		name -- the primitive file descriptor for association **		flags -- indicates type of access methods **		rpool -- ignored ** **	Results: **		Success: primitive file descriptor value **		Failure: -1 and sets errno */
 end_comment
 
 begin_comment

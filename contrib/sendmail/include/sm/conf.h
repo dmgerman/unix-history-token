@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.82 2001/12/20 16:14:48 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.87 2002/04/02 08:11:52 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -373,6 +373,17 @@ ifdef|#
 directive|ifdef
 name|HPUX11
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* setreuid(2) works on HP-UX 11.x */
+end_comment
 
 begin_define
 define|#
@@ -4024,6 +4035,32 @@ begin_comment
 comment|/* ! _PATH_SENDMAILPID */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_DIGUNIX_SAFECHOWN
+end_if
+
+begin_comment
+comment|/* **  Testing on a Digital UNIX 4.0a system showed this to be the correct **  setting but given the security consequences, more testing and **  verification is needed.  Unfortunately, the man page offers no **  assistance. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_SAFE_CHOWN
+value|>= 0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_DIGUNIX_SAFECHOWN */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -4724,6 +4761,28 @@ end_define
 
 begin_comment
 comment|/* don't declare sys_errlist */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NOT_SENDMAIL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|sleep
+value|sleepX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! NOT_SENDMAIL */
 end_comment
 
 begin_endif

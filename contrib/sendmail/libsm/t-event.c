@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: t-event.c,v 1.7 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: t-event.c,v 1.9 2002/03/19 00:26:21 ca Exp $"
 argument_list|)
 end_macro
 
@@ -176,7 +176,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"this test may hang. If there is no output within twelve seconds, abort it\nand recompile with -DSM_CONF_SETITIMER=%d\n"
+literal|"This test may hang. If there is no output within twelve seconds, abort it\nand recompile with -DSM_CONF_SETITIMER=%d\n"
 argument_list|,
 name|SM_CONF_SETITIMER
 operator|==

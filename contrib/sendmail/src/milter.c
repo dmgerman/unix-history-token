@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.185 2001/11/21 02:21:15 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 8.194 2002/03/05 00:23:47 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -261,7 +261,7 @@ parameter_list|,
 name|started
 parameter_list|)
 define|\
-value|{ \ 	int ret; \ 	int save_errno; \ 	fd_set fds; \ 	struct timeval tv; \  \ 	if (SM_FD_SETSIZE> 0&& m->mf_sock>= SM_FD_SETSIZE) \ 	{ \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket %d is larger than FD_SETSIZE %d\n", \ 				   (routine), m->mf_name, m->mf_sock, \ 				   SM_FD_SETSIZE); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) %d is larger than FD_SETSIZE %d", \ 				  m->mf_name, (routine), m->mf_sock, \ 				  SM_FD_SETSIZE); \ 		milter_error(m, e); \ 		return NULL; \ 	} \  \ 	FD_ZERO(&fds); \ 	SM_FD_SET(m->mf_sock,&fds); \ 	tv.tv_sec = (secs); \ 	tv.tv_usec = 0; \ 	ret = select(m->mf_sock + 1, \ 		     (write) ? NULL :&fds, \ 		     (write) ?&fds : NULL, \ 		     NULL,&tv); \  \ 	switch (ret) \ 	{ \ 	  case 0: \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): timeout\n", (routine), \ 				   m->mf_name); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): %s %s %s %s", \ 				  m->mf_name, "timeout", \ 				  started ? "during" : "before", \ 				  "data", (routine)); \ 		milter_error(m, e); \ 		return NULL; \  \ 	  case -1: \ 		save_errno = errno; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): select: %s\n", (routine), \ 				   m->mf_name, sm_errstring(save_errno)); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): select(%s): %s", \ 				  m->mf_name, (routine), \ 				  sm_errstring(save_errno)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \  \ 	  default: \ 		if (SM_FD_ISSET(m->mf_sock,&fds)) \ 			break; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket not ready\n", \ 				(routine), m->mf_name); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) not ready", \ 				  m->mf_name, (routine)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \ 	} \ }
+value|{ \ 	int ret; \ 	int save_errno; \ 	fd_set fds; \ 	struct timeval tv; \  \ 	if (SM_FD_SETSIZE> 0&& m->mf_sock>= SM_FD_SETSIZE) \ 	{ \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket %d is larger than FD_SETSIZE %d\n", \ 				   (routine), m->mf_name, m->mf_sock, \ 				   SM_FD_SETSIZE); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) %d is larger than FD_SETSIZE %d", \ 				  m->mf_name, (routine), m->mf_sock, \ 				  SM_FD_SETSIZE); \ 		milter_error(m, e); \ 		return NULL; \ 	} \  \ 	do \ 	{ \ 		FD_ZERO(&fds); \ 		SM_FD_SET(m->mf_sock,&fds); \ 		tv.tv_sec = (secs); \ 		tv.tv_usec = 0; \ 		ret = select(m->mf_sock + 1, \ 			     (write) ? NULL :&fds, \ 			     (write) ?&fds : NULL, \ 			     NULL,&tv); \ 	} while (ret< 0&& errno == EINTR); \  \ 	switch (ret) \ 	{ \ 	  case 0: \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): timeout\n", (routine), \ 				   m->mf_name); \ 		if (MilterLogLevel> 0) \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): %s %s %s %s", \ 				  m->mf_name, "timeout", \ 				  started ? "during" : "before", \ 				  "data", (routine)); \ 		milter_error(m, e); \ 		return NULL; \  \ 	  case -1: \ 		save_errno = errno; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): select: %s\n", (routine), \ 				   m->mf_name, sm_errstring(save_errno)); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): select(%s): %s", \ 				  m->mf_name, (routine), \ 				  sm_errstring(save_errno)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \  \ 	  default: \ 		if (SM_FD_ISSET(m->mf_sock,&fds)) \ 			break; \ 		if (tTd(64, 5)) \ 			sm_dprintf("milter_%s(%s): socket not ready\n", \ 				(routine), m->mf_name); \ 		if (MilterLogLevel> 0) \ 		{ \ 			sm_syslog(LOG_ERR, e->e_id, \ 				  "Milter (%s): socket(%s) not ready", \ 				  m->mf_name, (routine)); \ 		} \ 		milter_error(m, e); \ 		return NULL; \ 	} \ }
 end_define
 
 begin_comment
@@ -1824,6 +1824,17 @@ literal|1
 return|;
 block|}
 comment|/* protocol:filename or protocol:port@host */
+name|memset
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|addr
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|m
@@ -7238,8 +7249,7 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
-comment|/* EMPTY */
-argument|;
+argument|return NULL
 argument_list|)
 empty_stmt|;
 return|return
@@ -7280,8 +7290,7 @@ condition|)
 block|{
 name|MILTER_CHECK_ERROR
 argument_list|(
-comment|/* EMPTY */
-argument|;
+argument|return NULL
 argument_list|)
 empty_stmt|;
 return|return
@@ -8481,7 +8490,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"milter_negotiate(%s): version %lu != MTA milter version %d\n"
+literal|"milter_negotiate(%s): version %d != MTA milter version %d\n"
 argument_list|,
 name|m
 operator|->
@@ -8508,7 +8517,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Milter (%s): negotiate: version %ld != MTA milter version %d"
+literal|"Milter (%s): negotiate: version %d != MTA milter version %d"
 argument_list|,
 name|m
 operator|->
@@ -8560,7 +8569,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"milter_negotiate(%s): filter abilities 0x%lx != MTA milter abilities 0x%lx\n"
+literal|"milter_negotiate(%s): filter abilities 0x%x != MTA milter abilities 0x%lx\n"
 argument_list|,
 name|m
 operator|->
@@ -8570,10 +8579,6 @@ name|m
 operator|->
 name|mf_fflags
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|SMFI_CURR_ACTS
 argument_list|)
 expr_stmt|;
@@ -8591,7 +8596,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Milter (%s): negotiate: filter abilities 0x%lx != MTA milter abilities 0x%lx"
+literal|"Milter (%s): negotiate: filter abilities 0x%x != MTA milter abilities 0x%lx"
 argument_list|,
 name|m
 operator|->
@@ -8647,7 +8652,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"milter_negotiate(%s): protocol abilities 0x%lx != MTA milter abilities 0x%lx\n"
+literal|"milter_negotiate(%s): protocol abilities 0x%x != MTA milter abilities 0x%lx\n"
 argument_list|,
 name|m
 operator|->
@@ -8678,7 +8683,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"Milter (%s): negotiate: protocol abilities 0x%lx != MTA milter abilities 0x%lx"
+literal|"Milter (%s): negotiate: protocol abilities 0x%x != MTA milter abilities 0x%lx"
 argument_list|,
 name|m
 operator|->
@@ -8718,7 +8723,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"milter_negotiate(%s): version %lu, fflags 0x%lx, pflags 0x%lx\n"
+literal|"milter_negotiate(%s): version %u, fflags 0x%x, pflags 0x%x\n"
 argument_list|,
 name|m
 operator|->
@@ -11137,8 +11142,6 @@ condition|)
 block|{
 name|off_t
 name|prevsize
-init|=
-literal|0
 decl_stmt|;
 name|char
 name|dfname
@@ -11170,32 +11173,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* Get the current data file information */
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|EF_HAS_DF
-argument_list|,
-name|e
-operator|->
-name|e_flags
-argument_list|)
-operator|&&
-name|e
-operator|->
-name|e_dfp
-operator|!=
-name|NULL
-condition|)
-block|{
-name|int
-name|afd
-decl_stmt|;
-name|struct
-name|stat
-name|st
-decl_stmt|;
-name|afd
+name|prevsize
 operator|=
 name|sm_io_getinfo
 argument_list|(
@@ -11203,34 +11181,21 @@ name|e
 operator|->
 name|e_dfp
 argument_list|,
-name|SM_IO_WHAT_FD
+name|SM_IO_WHAT_SIZE
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|afd
-operator|>
-literal|0
-operator|&&
-name|fstat
-argument_list|(
-name|afd
-argument_list|,
-operator|&
-name|st
-argument_list|)
-operator|==
+name|prevsize
+operator|<
 literal|0
 condition|)
 name|prevsize
 operator|=
-name|st
-operator|.
-name|st_size
+literal|0
 expr_stmt|;
-block|}
 comment|/* truncate current data file */
 if|if
 condition|(
@@ -12035,14 +12000,11 @@ name|SMFIA_INET
 expr_stmt|;
 name|port
 operator|=
-name|htons
-argument_list|(
 name|addr
 operator|.
 name|sin
 operator|.
 name|sin_port
-argument_list|)
 expr_stmt|;
 name|sockinfo
 operator|=
@@ -12092,14 +12054,11 @@ name|SMFIA_INET6
 expr_stmt|;
 name|port
 operator|=
-name|htons
-argument_list|(
 name|addr
 operator|.
 name|sin6
 operator|.
 name|sin6_port
-argument_list|)
 expr_stmt|;
 name|sockinfo
 operator|=
@@ -13642,7 +13601,7 @@ argument_list|)
 expr_stmt|;
 name|MILTER_CHECK_ERROR
 argument_list|(
-argument|continue
+argument|break
 argument_list|)
 empty_stmt|;
 break|break;

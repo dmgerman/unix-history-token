@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|SASL
-end_if
 
 begin_include
 include|#
@@ -18,9 +12,15 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sasl.c,v 8.11 2001/09/11 04:05:16 gshapiro Exp $"
+literal|"@(#)$Id: sasl.c,v 8.12 2002/01/21 02:28:05 gshapiro Exp $"
 argument_list|)
 end_macro
+
+begin_if
+if|#
+directive|if
+name|SASL
+end_if
 
 begin_include
 include|#

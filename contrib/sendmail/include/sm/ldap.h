@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.9 2002/01/11 22:06:50 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2001-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: ldap.h,v 1.22 2002/03/05 02:17:26 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -26,6 +26,10 @@ include|#
 directive|include
 file|<sm/rpool.h>
 end_include
+
+begin_comment
+comment|/* **  NOTE: These should be changed from LDAPMAP_* to SM_LDAP_* **        in the next major release (8.13) of sendmail. */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -112,35 +116,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LDAPMAP_ATTR_NORMAL
+name|SM_LDAP_ATTR_NONE
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_LDAP_ATTR_OBJCLASS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|LDAPMAP_ATTR_DN
+name|SM_LDAP_ATTR_NORMAL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LDAPMAP_ATTR_FILTER
+name|SM_LDAP_ATTR_DN
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|LDAPMAP_ATTR_URL
+name|SM_LDAP_ATTR_FILTER
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LDAPMAP_ATTR_FINAL
+name|SM_LDAP_ATTR_URL
 value|4
 end_define
 
@@ -162,6 +173,13 @@ name|SM_LDAP_MATCHONLY
 value|0x0002
 end_define
 
+begin_define
+define|#
+directive|define
+name|SM_LDAP_USE_ALLATTR
+value|0x0004
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -178,11 +196,29 @@ block|{
 comment|/* needed for ldap_open or ldap_init */
 name|char
 modifier|*
-name|ldap_host
+name|ldap_target
 decl_stmt|;
 name|int
 name|ldap_port
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_LDAP_URI
+name|bool
+name|ldap_uri
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_URI */
+if|#
+directive|if
+name|_FFR_LDAP_SETVERSION
+name|int
+name|ldap_version
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_SETVERSION */
 name|pid_t
 name|ldap_pid
 decl_stmt|;
@@ -249,7 +285,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|ldap_attr_final
+name|ldap_attr_needobjclass
 index|[
 name|LDAPMAP_MAX_ATTR
 operator|+
@@ -300,7 +336,7 @@ end_if
 
 begin_struct
 struct|struct
-name|sm_ldap_recurse_list
+name|sm_ldap_recurse_entry
 block|{
 name|char
 modifier|*
@@ -309,14 +345,40 @@ decl_stmt|;
 name|int
 name|lr_type
 decl_stmt|;
-name|struct
-name|sm_ldap_recurse_list
-modifier|*
-name|lr_next
+name|bool
+name|lr_done
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_struct
+struct|struct
+name|sm_ldap_recurse_list
+block|{
+name|int
+name|lr_size
+decl_stmt|;
+name|int
+name|lr_cnt
+decl_stmt|;
+name|struct
+name|sm_ldap_recurse_entry
+modifier|*
+modifier|*
+name|lr_data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|sm_ldap_recurse_entry
+name|SM_LDAP_RECURSE_ENTRY
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -407,13 +469,19 @@ name|int
 operator|,
 name|int
 operator|,
-name|char
+name|int
 operator|,
 name|SM_RPOOL_T
 operator|*
 operator|,
 name|char
 operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
 operator|*
 operator|,
 name|SM_LDAP_RECURSE_LIST
@@ -476,6 +544,36 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Portability defines */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|SM_CONF_LDAP_MEMFREE
+end_if
+
+begin_define
+define|#
+directive|define
+name|ldap_memfree
+parameter_list|(
+name|x
+parameter_list|)
+value|((void) 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SM_CONF_LDAP_MEMFREE */
+end_comment
 
 begin_endif
 endif|#

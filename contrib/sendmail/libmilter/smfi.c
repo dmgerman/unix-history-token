@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  *  Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smfi.c,v 8.57 2001/11/20 18:47:49 ca Exp $"
+literal|"@(#)$Id: smfi.c,v 8.63 2002/02/07 01:16:13 msk Exp $"
 argument_list|)
 end_macro
 
@@ -1809,9 +1809,7 @@ name|tl
 operator|>
 name|MAXREPLYLEN
 condition|)
-return|return
-name|MI_FAILURE
-return|;
+break|break;
 comment|/* this text, reply codes, \r\n */
 name|len
 operator|+=
@@ -1828,9 +1826,7 @@ name|args
 operator|>
 name|MAXREPLIES
 condition|)
-return|return
-name|MI_FAILURE
-return|;
+break|break;
 comment|/* XXX check also for unprintable chars? */
 if|if
 condition|(
@@ -1843,15 +1839,22 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-return|return
-name|MI_FAILURE
-return|;
+break|break;
 block|}
 name|SM_VA_END
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|txt
+operator|!=
+name|NULL
+condition|)
+return|return
+name|MI_FAILURE
+return|;
 comment|/* trailing '\0' */
 operator|++
 name|len
@@ -2429,6 +2432,83 @@ name|NULL
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|_FFR_SMFI_PROGRESS
+end_if
+
+begin_comment
+comment|/* **  SMFI_PROGRESS -- send "progress" message to the MTA to prevent premature **		     timeouts during long milter-side operations ** **	Parameters: **		ctx -- Opaque context structure ** **	Return value: **		MI_SUCCESS/MI_FAILURE */
+end_comment
+
+begin_function
+name|int
+name|smfi_progress
+parameter_list|(
+name|ctx
+parameter_list|)
+name|SMFICTX
+modifier|*
+name|ctx
+decl_stmt|;
+block|{
+name|struct
+name|timeval
+name|timeout
+decl_stmt|;
+if|if
+condition|(
+name|ctx
+operator|==
+name|NULL
+condition|)
+return|return
+name|MI_FAILURE
+return|;
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+name|ctx
+operator|->
+name|ctx_timeout
+expr_stmt|;
+name|timeout
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|mi_wr_cmd
+argument_list|(
+name|ctx
+operator|->
+name|ctx_sd
+argument_list|,
+operator|&
+name|timeout
+argument_list|,
+name|SMFIR_PROGRESS
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_SMFI_PROGRESS */
+end_comment
 
 end_unit
 

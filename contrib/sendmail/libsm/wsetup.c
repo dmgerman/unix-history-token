@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: wsetup.c,v 1.19 2001/09/11 04:04:49 gshapiro Exp $"
+literal|"@(#)$Id: wsetup.c,v 1.20 2002/02/07 18:02:45 ca Exp $"
 argument_list|)
 end_macro
 
@@ -41,7 +41,7 @@ file|"local.h"
 end_include
 
 begin_comment
-comment|/* **  SM_WSETUP -- check writting is safe ** **  Various output routines call wsetup to be sure it is safe to write, **  because either flags does not include SMMWR, or buf is NULL. **  Used in the macro "cantwrite" found in "local.h". ** **	Parameters: **		fp -- the file pointer ** **	Results: **		Failure: SM_IO_EOF and sets errno **		Success: 0 (zero) */
+comment|/* **  SM_WSETUP -- check writing is safe ** **  Various output routines call wsetup to be sure it is safe to write, **  because either flags does not include SMMWR, or buf is NULL. **  Used in the macro "cantwrite" found in "local.h". ** **	Parameters: **		fp -- the file pointer ** **	Results: **		Failure: SM_IO_EOF and sets errno **		Success: 0 (zero) */
 end_comment
 
 begin_function
@@ -122,6 +122,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* discard read buffer */
 name|fp
 operator|->
 name|f_flags

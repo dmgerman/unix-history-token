@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.603 2001/12/31 19:46:38 gshapiro Exp $"
+literal|"@(#)$Id: daemon.c,v 8.611 2002/03/18 23:08:50 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -539,6 +539,15 @@ init|=
 sizeof|sizeof
 name|sa
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+name|time_t
+name|lastrun
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
 if|#
 directive|if
 name|NETUNIX
@@ -1510,6 +1519,7 @@ condition|(
 name|doqueuerun
 argument_list|()
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1524,6 +1534,51 @@ argument_list|,
 name|false
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+name|lastrun
+operator|=
+name|now
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
+block|}
+if|#
+directive|if
+name|_FFR_QUEUE_RUN_PARANOIA
+elseif|else
+if|if
+condition|(
+name|QueueIntvl
+operator|>
+literal|0
+operator|&&
+name|lastrun
+operator|+
+name|QueueIntvl
+operator|+
+literal|60
+operator|<
+name|now
+condition|)
+block|{
+comment|/* 				**  set lastrun unconditionally to avoid 				**  calling checkqueuerunner() all the time. 				**  That's also why we currently ignore the 				**  result of the function call. 				*/
+operator|(
+name|void
+operator|)
+name|checkqueuerunner
+argument_list|()
+expr_stmt|;
+name|lastrun
+operator|=
+name|now
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_RUN_PARANOIA */
 if|if
 condition|(
 name|t
@@ -2948,6 +3003,15 @@ argument_list|,
 literal|"startup with %s"
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+name|markstats
+argument_list|(
+name|e
+argument_list|,
+name|NULL
+argument_list|,
+name|STATS_CONNECT
 argument_list|)
 expr_stmt|;
 if|if
@@ -9855,6 +9919,15 @@ name|save_errno
 operator|=
 name|errno
 expr_stmt|;
+comment|/* couldn't connect.... figure out why */
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* if running demand-dialed connection, try again */
 if|if
 condition|(
@@ -9909,15 +9982,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* couldn't connect.... figure out why */
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|LogLevel
@@ -11839,6 +11903,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SIGUSR1 */
+comment|/* Turn back on signals */
 name|sm_allsignals
 argument_list|(
 name|false

@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.177 2001/12/12 01:16:15 ca Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.180 2002/03/05 05:47:12 gshapiro Exp $ (with name server)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: domain.c,v 8.177 2001/12/12 01:16:15 ca Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.180 2002/03/05 05:47:12 gshapiro Exp $ (without name server)"
 argument_list|)
 end_macro
 
@@ -3463,6 +3463,37 @@ argument_list|(
 name|TRY_AGAIN
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_DONT_STOP_LOOKING
+if|if
+condition|(
+operator|*
+operator|*
+name|dp
+operator|==
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|statp
+operator|==
+name|EX_OK
+condition|)
+operator|*
+name|statp
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+goto|goto
+name|nexttype
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_DONT_STOP_LOOKING */
 operator|*
 name|statp
 operator|=
@@ -3489,6 +3520,14 @@ return|return
 name|false
 return|;
 block|}
+if|#
+directive|if
+name|_FFR_DONT_STOP_LOOKING
+name|nexttype
+label|:
+endif|#
+directive|endif
+comment|/* _FFR_DONT_STOP_LOOKING */
 if|if
 condition|(
 name|h_errno

@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.928 2002/01/10 03:23:29 gshapiro Exp $"
+literal|"@(#)$Id: deliver.c,v 8.935 2002/03/23 18:30:40 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -41,6 +41,29 @@ end_endif
 
 begin_comment
 comment|/* HASSETUSERCONTEXT */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
+end_if
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET || NETINET6 */
 end_comment
 
 begin_if
@@ -8203,6 +8226,15 @@ name|goodmxfound
 operator|=
 name|true
 expr_stmt|;
+name|markstats
+argument_list|(
+name|e
+argument_list|,
+name|firstto
+argument_list|,
+name|STATS_CONNECT
+argument_list|)
+expr_stmt|;
 name|mci
 operator|->
 name|mci_state
@@ -9928,6 +9960,73 @@ name|new_ruid
 operator|=
 name|DefUid
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_USE_SETLOGIN
+comment|/* run disconnected from terminal and set login name */
+if|if
+condition|(
+name|setsid
+argument_list|()
+operator|>=
+literal|0
+operator|&&
+name|ctladdr
+operator|!=
+name|NULL
+operator|&&
+name|ctladdr
+operator|->
+name|q_uid
+operator|!=
+literal|0
+operator|&&
+name|new_euid
+operator|==
+name|ctladdr
+operator|->
+name|q_uid
+condition|)
+block|{
+name|struct
+name|passwd
+modifier|*
+name|pwd
+decl_stmt|;
+name|pwd
+operator|=
+name|sm_getpwuid
+argument_list|(
+name|ctladdr
+operator|->
+name|q_uid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pwd
+operator|!=
+name|NULL
+operator|&&
+name|suidwarn
+condition|)
+operator|(
+name|void
+operator|)
+name|setlogin
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+name|endpwent
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_USE_SETLOGIN */
 if|if
 condition|(
 name|new_euid
@@ -10596,6 +10695,10 @@ name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+operator|!
+name|_FFR_USE_SETLOGIN
 comment|/* run disconnected from terminal */
 operator|(
 name|void
@@ -10603,6 +10706,9 @@ operator|)
 name|setsid
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !_FFR_USE_SETLOGIN */
 comment|/* try to execute the mailer */
 operator|(
 name|void
@@ -15550,6 +15656,58 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_LMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+operator|&&
+name|e
+operator|->
+name|e_statmsg
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%s (%s)"
+argument_list|,
+name|statmsg
+argument_list|,
+name|shortenstring
+argument_list|(
+name|e
+operator|->
+name|e_statmsg
+argument_list|,
+literal|403
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|statmsg
+operator|=
+name|buf
+expr_stmt|;
+name|usestat
+operator|=
+name|true
+expr_stmt|;
+block|}
 block|}
 comment|/* 	**  Print the message as appropriate 	*/
 if|if
@@ -20045,6 +20203,25 @@ name|len
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|filename
+operator|==
+literal|'/'
+condition|)
+name|filename
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|filename
+operator|!=
+literal|'\0'
+condition|)
+block|{
+comment|/* paranoia: trailing / should be removed in readcf */
+if|if
+condition|(
 name|targetfile
 index|[
 name|len
@@ -20067,16 +20244,6 @@ sizeof|sizeof
 name|targetfile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|filename
-operator|==
-literal|'/'
-condition|)
-name|filename
-operator|++
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -20090,6 +20257,7 @@ sizeof|sizeof
 name|targetfile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -20269,6 +20437,17 @@ name|targetfile
 expr_stmt|;
 block|}
 comment|/* 	**  Fork so we can change permissions here. 	**	Note that we MUST use fork, not vfork, because of 	**	the complications of calling subroutines, etc. 	*/
+comment|/* 	**  Dispose of SIGCHLD signal catchers that may be laying 	**  around so that the waitfor() below will get it. 	*/
+operator|(
+name|void
+operator|)
+name|sm_signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 name|DOFORK
 argument_list|(
 name|fork
@@ -21063,6 +21242,14 @@ operator|!=
 name|targetfile
 condition|)
 block|{
+name|char
+name|save
+decl_stmt|;
+name|save
+operator|=
+operator|*
+name|realfile
+expr_stmt|;
 operator|*
 name|realfile
 operator|=
@@ -21110,7 +21297,7 @@ block|}
 operator|*
 name|realfile
 operator|=
-literal|'/'
+name|save
 expr_stmt|;
 block|}
 if|if
