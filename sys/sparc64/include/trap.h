@@ -255,15 +255,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|T_RESTOREWP
+name|T_RSTRWP_PHYS
 value|0x21
 end_define
 
 begin_define
 define|#
 directive|define
-name|T_SOFT
+name|T_RSTRWP_VIRT
 value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|T_SOFT
+value|0x23
 end_define
 
 begin_define
