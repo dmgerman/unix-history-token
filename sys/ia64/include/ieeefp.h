@@ -83,28 +83,6 @@ begin_comment
 comment|/* imprecise(inexact) exception */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|FP_X_IOV
-value|0
-end_define
-
-begin_comment
-comment|/* integer overflow XXX? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 enum|enum
