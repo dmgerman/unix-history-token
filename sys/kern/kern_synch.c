@@ -810,16 +810,6 @@ argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|priority
-operator|&
-name|PDROP
-condition|)
-name|mtx
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 comment|/* 	 * We put ourselves on the sleep queue and start our timeout 	 * before calling thread_suspend_check, as we could stop there, 	 * and a wakeup or a SIGCONT (or both) could occur while we were 	 * stopped without resuming us.  Thus, we must be ready for sleep 	 * when cursig() is called.  If the wakeup happens while we're 	 * stopped, then td will no longer be on a sleep queue upon 	 * return from cursig(). 	 */
 name|sleepq_add
@@ -1027,6 +1017,13 @@ condition|(
 name|mtx
 operator|!=
 name|NULL
+operator|&&
+operator|!
+operator|(
+name|priority
+operator|&
+name|PDROP
+operator|)
 condition|)
 block|{
 name|mtx_lock
