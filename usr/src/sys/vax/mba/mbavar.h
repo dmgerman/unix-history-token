@@ -1,720 +1,78 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.12	81/03/03	*/
+comment|/*	mbavar.h	4.13	81/03/08	*/
 end_comment
 
 begin_comment
-comment|/*  * VAX Massbus adapter registers  */
+comment|/*  * This file contains definitions related to the kernel structures  * for dealing with the massbus adapters.  *  * Each mba has a mba_hd structure.  * Each massbus device has a mba_device structure.  * Each massbus slave has a mba_slave structure.  *  * At boot time we prowl the structures and fill in the pointers  * for devices which we find.  */
+end_comment
+
+begin_comment
+comment|/*  * Per-mba structure.  *  * The initialization routine uses the information in the mbdinit table  * to initialize the what is attached to each massbus slot information.  * It counts the number of devices on each mba (to see if bothering to  * search/seek is appropriate).  *  * During normal operation, the devices attached to the mba which wish  * to transfer are queued on the mh_act? links.  */
 end_comment
 
 begin_struct
 struct|struct
+name|mba_hd
+block|{
+name|short
+name|mh_active
+decl_stmt|;
+comment|/* set if mba is active */
+name|short
+name|mh_ndrive
+decl_stmt|;
+comment|/* number of devices, to avoid seeks */
+name|struct
 name|mba_regs
-block|{
-name|int
-name|mba_csr
+modifier|*
+name|mh_mba
 decl_stmt|;
-comment|/* configuration register */
-name|int
-name|mba_cr
+comment|/* virt addr of mba */
+name|struct
+name|mba_regs
+modifier|*
+name|mh_physmba
 decl_stmt|;
-comment|/* control register */
-name|int
-name|mba_sr
-decl_stmt|;
-comment|/* status register */
-name|int
-name|mba_var
-decl_stmt|;
-comment|/* virtual address register */
-name|int
-name|mba_bcr
-decl_stmt|;
-comment|/* byte count register */
-name|int
-name|mba_dr
-decl_stmt|;
-name|int
-name|mba_pad1
-index|[
-literal|250
-index|]
-decl_stmt|;
-struct|struct
-name|mba_drv
-block|{
-comment|/* per drive registers */
-name|int
-name|mbd_cs1
-decl_stmt|;
-comment|/* control status */
-name|int
-name|mbd_ds
-decl_stmt|;
-comment|/* drive status */
-name|int
-name|mbd_er1
-decl_stmt|;
-comment|/* error register */
-name|int
-name|mbd_mr1
-decl_stmt|;
-comment|/* maintenance register */
-name|int
-name|mbd_as
-decl_stmt|;
-comment|/* attention status */
-name|int
-name|mbd_da
-decl_stmt|;
-comment|/* desired address (disks) */
-define|#
-directive|define
-name|mbd_fc
-value|mbd_da
-comment|/* frame count (tapes) */
-name|int
-name|mbd_dt
-decl_stmt|;
-comment|/* drive type */
-name|int
-name|mbd_la
-decl_stmt|;
-comment|/* look ahead (disks) */
-define|#
-directive|define
-name|mbd_ck
-value|mbd_la
-comment|/* ??? (tapes) */
-name|int
-name|mbd_sn
-decl_stmt|;
-comment|/* serial number */
-name|int
-name|mbd_of
-decl_stmt|;
-comment|/* ??? */
-define|#
-directive|define
-name|mbd_tc
-value|mbd_of
-comment|/* ??? */
-name|int
-name|mbd_fill
-index|[
-literal|22
-index|]
-decl_stmt|;
-block|}
-name|mba_drv
+comment|/* phys addr of mba */
+name|struct
+name|mba_device
+modifier|*
+name|mh_mbip
 index|[
 literal|8
 index|]
-struct|;
+decl_stmt|;
+comment|/* what is attached to each dev */
 name|struct
-name|pte
-name|mba_map
-index|[
-literal|256
-index|]
+name|mba_device
+modifier|*
+name|mh_actf
 decl_stmt|;
-comment|/* io space virtual map */
-name|int
-name|mba_pad2
-index|[
-literal|256
-operator|*
-literal|5
-index|]
+comment|/* head of queue to transfer */
+name|struct
+name|mba_device
+modifier|*
+name|mh_actl
 decl_stmt|;
-comment|/* to size of a nexus */
+comment|/* tail of queue to transfer */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Bits in mba_cr  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBAINIT
-value|0x1
-end_define
-
-begin_comment
-comment|/* init mba */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBAIE
-value|0x4
-end_define
-
-begin_comment
-comment|/* enable mba interrupts */
-end_comment
-
-begin_comment
-comment|/*  * Bits in mba_sr  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_DTBUSY
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* data transfer busy */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_NRCONF
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* no response confirmation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_CRD
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* corrected read data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_CBHUNG
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* control bus hung */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_PGE
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* programming error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_NED
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* non-existant drive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_MCPE
-value|0x00020000
-end_define
-
-begin_comment
-comment|/* massbus control parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_ATTN
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* attention from massbus */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_SPE
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* silo parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_DTCMP
-value|0x00002000
-end_define
-
-begin_comment
-comment|/* data transfer completed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_DTABT
-value|0x00001000
-end_define
-
-begin_comment
-comment|/* data transfer aborted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_DLT
-value|0x00000800
-end_define
-
-begin_comment
-comment|/* data late */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_WCKUP
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* write check upper */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_WCKLWR
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* write check lower */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_MXF
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* miss transfer error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_MBEXC
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* massbus exception */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_MDPE
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* massbus data parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_MAPPE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* page frame map parity error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_INVMAP
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* invalid map */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_ERRCONF
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* error confirmation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_RDS
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* read data substitute */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_ISTIMO
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* interface sequence timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBS_RDTIMO
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* read data timeout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBASR_BITS
-define|\
-value|"\20\40DTBUSY\37NRCONF\36CRD\30CBHUNG\24PGE\23NED\22MCPE\21ATTN\ \17SPE\16DTCMP\15DTABT\14DLT\13WCKUP\12WCKLWR\11MXF\10MBEXC\7MDPE\ \6MAPPE\5INVMAP\4ERRCONF\3RDS\2ISTIMO\1RDTIMO"
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBASR_HARD
-value|(MBS_PGE|MBS_ERRCONF|MBS_ISTIMO|MBS_RDTIMO)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBAEBITS
-value|(~(MBS_DTBUSY|MBS_CRD|MBS_ATTN|MBS_DTCMP))
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|mbasr_bits
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Commands for mbd_cs1  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBD_WCOM
-value|0x30
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBD_RCOM
-value|0x38
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBD_GO
-value|0x1
-end_define
-
-begin_comment
-comment|/*  * Bits in mbd_ds.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBD_DRY
-value|0x80
-end_define
-
-begin_comment
-comment|/* drive ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBD_MOL
-value|0x1000
-end_define
-
-begin_comment
-comment|/* medium on line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBD_DPR
-value|0x100
-end_define
-
-begin_comment
-comment|/* drive present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBD_ERR
-value|0x4000
-end_define
-
-begin_comment
-comment|/* error in drive */
-end_comment
-
-begin_comment
-comment|/*  * Bits in mbd_dt  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_NSA
-value|0x8000
-end_define
-
-begin_comment
-comment|/* not sector addressible */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_TAP
-value|0x4000
-end_define
-
-begin_comment
-comment|/* is a tape */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_MOH
-value|0x2000
-end_define
-
-begin_comment
-comment|/* moving head */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_7CH
-value|0x1000
-end_define
-
-begin_comment
-comment|/* 7 channel */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_DRQ
-value|0x800
-end_define
-
-begin_comment
-comment|/* drive request required */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_SPR
-value|0x400
-end_define
-
-begin_comment
-comment|/* slave present */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_TYPE
-value|0x1ff
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_MASK
-value|(MBDT_NSA|MBDT_TAP|MBDT_TYPE)
-end_define
-
-begin_comment
-comment|/* type codes for disk drives */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_RP04
-value|020
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_RP05
-value|021
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_RP06
-value|022
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_RP07
-value|042
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_RM03
-value|024
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_RM05
-value|027
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_RM80
-value|026
-end_define
-
-begin_comment
-comment|/* type codes for tape drives */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBDT_TM03
-value|050
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_TE16
-value|051
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_TU45
-value|052
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_TU77
-value|054
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBDT_TU78
-value|0140
-end_define
-
-begin_comment
-comment|/* can't handle these (yet) */
-end_comment
-
-begin_comment
-comment|/*  * Each driver has an array of pointers to these structures, one for  * each device it is willing to handle.  At bootstrap time, the  * driver tables are filled in;  */
+comment|/*  * Per-device structure  * (one for each RM/RP disk, and one for each tape formatter).  *  * This structure is used by the device driver as its argument  * to the massbus driver, and by the massbus driver to locate  * the device driver for a particular massbus slot.  *  * The device drivers hang ready buffers on this structure,  * and the massbus driver will start i/o on the first such buffer  * when appropriate.  */
 end_comment
 
 begin_struct
 struct|struct
-name|mba_info
+name|mba_device
 block|{
 name|struct
 name|mba_driver
 modifier|*
 name|mi_driver
 decl_stmt|;
-name|short
-name|mi_name
-decl_stmt|;
-comment|/* two character generic name */
 name|short
 name|mi_unit
 decl_stmt|;
@@ -727,10 +85,6 @@ name|short
 name|mi_drive
 decl_stmt|;
 comment|/* controller on mba */
-name|short
-name|mi_slave
-decl_stmt|;
-comment|/* slave to controller (TM03/TU16) */
 name|short
 name|mi_dk
 decl_stmt|;
@@ -749,7 +103,7 @@ name|mi_tab
 decl_stmt|;
 comment|/* head of queue for this device */
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 name|mi_forw
 decl_stmt|;
@@ -774,76 +128,39 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The initialization routine uses the information in the mbinit table  * to initialize the drive type routines in the drivers and the  * mbahd array summarizing which devices are hooked to which massbus slots.  */
+comment|/*  * Tape formatter slaves are specified by  * the following information which is used  * at boot time to initialize the tape driver  * internal tables.  */
 end_comment
 
 begin_struct
 struct|struct
-name|mba_hd
+name|mba_slave
 block|{
+name|struct
+name|mba_driver
+modifier|*
+name|ms_driver
+decl_stmt|;
 name|short
-name|mh_active
+name|ms_ctlr
 decl_stmt|;
+comment|/* which of several formatters */
 name|short
-name|mh_ndrive
+name|ms_unit
 decl_stmt|;
-name|struct
-name|mba_regs
-modifier|*
-name|mh_mba
+comment|/* which unit to system */
+name|short
+name|ms_slave
 decl_stmt|;
-comment|/* virt addr of mba */
-name|struct
-name|mba_regs
-modifier|*
-name|mh_physmba
+comment|/* which slave to formatter */
+name|short
+name|ms_alive
 decl_stmt|;
-comment|/* phys addr of mba */
-name|struct
-name|mba_info
-modifier|*
-name|mh_mbip
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* what is attached */
-name|struct
-name|mba_info
-modifier|*
-name|mh_actf
-decl_stmt|;
-comment|/* head of queue to transfer */
-name|struct
-name|mba_info
-modifier|*
-name|mh_actl
-decl_stmt|;
-comment|/* tail of queue to transfer */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Values for flags; normally MH_NOSEEK will be set when there is  * only a single drive on an massbus.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MH_NOSEEK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MH_NOSEARCH
-value|2
-end_define
-
-begin_comment
-comment|/*  * Each massbus driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  */
+comment|/*  * Per device-type structure.  *  * Each massbus driver defines entries for a set of routines used  * by the massbus driver, as well as an array of types which are  * acceptable to it.  */
 end_comment
 
 begin_struct
@@ -853,11 +170,19 @@ block|{
 name|int
 function_decl|(
 modifier|*
-name|md_dkinit
+name|md_attach
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* setup dk info (mspw) */
+comment|/* attach a device */
+name|int
+function_decl|(
+modifier|*
+name|md_slave
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* attach a slave */
 name|int
 function_decl|(
 modifier|*
@@ -895,8 +220,16 @@ modifier|*
 name|md_type
 decl_stmt|;
 comment|/* array of drive type codes */
+name|char
+modifier|*
+name|md_dname
+decl_stmt|,
+modifier|*
+name|md_sname
+decl_stmt|;
+comment|/* device, slave names */
 name|struct
-name|mba_info
+name|mba_device
 modifier|*
 modifier|*
 name|md_info
@@ -1017,8 +350,30 @@ begin_comment
 comment|/* failed; retry the operation */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MBN_SKIP
+value|2
+end_define
+
 begin_comment
-comment|/*  * Clear attention status for specified drive.  */
+comment|/* don't do anything */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBN_CONT
+value|3
+end_define
+
+begin_comment
+comment|/* operation continues */
+end_comment
+
+begin_comment
+comment|/*  * Clear attention status for specified device.  */
 end_comment
 
 begin_define
@@ -1083,15 +438,20 @@ end_expr_stmt
 begin_decl_stmt
 specifier|extern
 name|struct
-name|mba_info
-name|mbinit
+name|mba_device
+name|mbdinit
 index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* blanks for filling mba_info */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mba_slave
+name|mbsinit
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
