@@ -6310,6 +6310,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|pvariable_set
+parameter_list|(
+name|char
+modifier|*
+name|var
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|pvariable_get
+parameter_list|(
+name|char
+modifier|*
+name|var
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* wizard.c */
 end_comment

@@ -274,18 +274,63 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* Initialize driver modules */
+comment|/* Initialize driver modules, if we haven't already done so (ie,        the user hit Ctrl-C -> Restart. */
+if|if
+condition|(
+operator|!
+name|pvariable_get
+argument_list|(
+literal|"modulesInitialize"
+argument_list|)
+condition|)
+block|{
 name|moduleInitialize
 argument_list|()
 expr_stmt|;
-comment|/* Initialize PC-card */
+name|pvariable_set
+argument_list|(
+literal|"modulesInitialize=1"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Initialize PC-card, if we haven't already done so. */
+if|if
+condition|(
+operator|!
+name|pvariable_get
+argument_list|(
+literal|"pccardInitialize"
+argument_list|)
+condition|)
+block|{
 name|pccardInitialize
 argument_list|()
 expr_stmt|;
-comment|/* Initialize USB */
+name|pvariable_set
+argument_list|(
+literal|"pccardInitialize=1"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Initialize USB, if we haven't already done so. */
+if|if
+condition|(
+operator|!
+name|pvariable_get
+argument_list|(
+literal|"usbInitialize"
+argument_list|)
+condition|)
+block|{
 name|usbInitialize
 argument_list|()
 expr_stmt|;
+name|pvariable_set
+argument_list|(
+literal|"usbInitialize=1"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Probe for all relevant devices on the system */
 name|deviceGetAll
 argument_list|()
