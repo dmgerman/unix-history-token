@@ -792,6 +792,36 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
+name|fhdr32
+index|[]
+init|=
+literal|"   LOC   TYPE   FLG  CNT MSG   DATA        OFFSET\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* c0000000 ------ RWAI 123 123 c0000000 1000000000000000 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|fhdr64
+index|[]
+init|=
+literal|"       LOC       TYPE   FLG  CNT MSG       DATA            OFFSET\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* c000000000000000 ------ RWAI 123 123 c000000000000000 1000000000000000 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
 name|hdr
 index|[]
 init|=
@@ -1513,9 +1543,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"   %2d,%-2d"
@@ -1807,10 +1834,21 @@ block|,
 literal|"inode"
 block|,
 literal|"socket"
+block|,
+literal|"pipe"
+block|,
+literal|"fifo"
+block|,
+literal|"kqueue"
+block|,
+literal|"crypto"
 block|}
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|int
+name|wid
 decl_stmt|;
 if|if
 condition|(
@@ -1985,13 +2023,31 @@ argument_list|,
 name|maxf
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
-literal|"   LOC   TYPE    FLG     CNT  MSG    DATA    OFFSET\n"
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
 argument_list|)
+operator|==
+literal|4
+condition|?
+name|fhdr32
+else|:
+name|fhdr64
+argument_list|)
+expr_stmt|;
+name|wid
+operator|=
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|uintptr_t
+argument_list|)
+operator|*
+literal|2
 expr_stmt|;
 for|for
 control|(
@@ -2022,13 +2078,24 @@ block|{
 if|if
 condition|(
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|fp
 operator|->
 name|xf_type
-operator|>
-name|DTYPE_SOCKET
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|dtypes
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|dtypes
+index|[
+literal|0
+index|]
+argument_list|)
 condition|)
 continue|continue;
 operator|(
@@ -2036,7 +2103,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8jx "
+literal|"%*jx"
+argument_list|,
+name|wid
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2054,7 +2123,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-8.8s"
+literal|" %-6.6s"
 argument_list|,
 name|dtypes
 index|[
@@ -2134,7 +2203,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6s  %3d"
+literal|" %4s %3d"
 argument_list|,
 name|flagbuf
 argument_list|,
@@ -2148,7 +2217,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  %3d"
+literal|" %3d"
 argument_list|,
 name|fp
 operator|->
@@ -2160,8 +2229,16 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  %p"
+literal|" %*jx"
 argument_list|,
+name|wid
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|fp
 operator|->
 name|xf_data
@@ -2172,7 +2249,19 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  %jx\n"
+literal|" %*jx\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|fp
+operator|->
+name|xf_offset
+argument_list|)
+operator|*
+literal|2
 argument_list|,
 operator|(
 name|uintmax_t
