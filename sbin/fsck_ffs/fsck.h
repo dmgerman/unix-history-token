@@ -705,6 +705,26 @@ end_comment
 
 begin_decl_stmt
 name|char
+name|usedsoftdep
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* just fix soft dependency inconsistencies */
+end_comment
+
+begin_decl_stmt
+name|char
+name|resolved
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* cleared if unresolved changes => not clean */
+end_comment
+
+begin_decl_stmt
+name|char
 name|preen
 decl_stmt|;
 end_decl_stmt

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.12 1997/12/20 22:24:32 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -877,6 +877,11 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Cleared if any questions answered no. Used to decide if 	 * the superblock should be marked clean. 	 */
+name|resolved
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * 1: scan inodes tallying blocks used 	 */
 if|if
 condition|(
@@ -921,6 +926,8 @@ block|{
 if|if
 condition|(
 name|preen
+operator|||
+name|usedsoftdep
 condition|)
 name|pfatal
 argument_list|(
@@ -1344,17 +1351,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
+name|rerun
+condition|)
+name|resolved
+operator|=
+literal|0
+expr_stmt|;
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|hotroot
 condition|)
-block|{
-name|ckfini
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|struct
 name|statfs
@@ -1379,19 +1389,26 @@ name|stfs_buf
 operator|.
 name|f_flags
 expr_stmt|;
-else|else
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|ckfini
-argument_list|(
+if|if
+condition|(
+operator|(
 name|flags
 operator|&
 name|MNT_RDONLY
-argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|resolved
+operator|=
+literal|0
 expr_stmt|;
 block|}
+name|ckfini
+argument_list|(
+name|resolved
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|blockmap

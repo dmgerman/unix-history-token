@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vnops.c	8.15 (Berkeley) 5/14/95  * $Id: ffs_vnops.c,v 1.42 1998/02/06 12:14:16 eivind Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vnops.c	8.15 (Berkeley) 5/14/95  * $Id: ffs_vnops.c,v 1.43 1998/02/26 06:39:38 msmith Exp $  */
 end_comment
 
 begin_include
@@ -287,6 +287,17 @@ block|}
 block|,
 block|{
 operator|&
+name|vop_balloc_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|ffs_balloc
+block|}
+block|,
+block|{
+operator|&
 name|vop_reallocblks_desc
 block|,
 operator|(
@@ -525,7 +536,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -535,7 +545,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-specifier|register
 name|struct
 name|buf
 modifier|*
@@ -551,10 +560,13 @@ modifier|*
 name|nbp
 decl_stmt|;
 name|int
-name|pass
-decl_stmt|;
-name|int
 name|s
+decl_stmt|,
+name|error
+decl_stmt|,
+name|passes
+decl_stmt|,
+name|skipmeta
 decl_stmt|;
 name|daddr_t
 name|lbn
@@ -611,11 +623,27 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|pass
+comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
+name|passes
+operator|=
+name|NIADDR
+expr_stmt|;
+name|skipmeta
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
+if|if
+condition|(
+name|ap
+operator|->
+name|a_waitfor
+operator|==
+name|MNT_WAIT
+condition|)
+name|skipmeta
+operator|=
+literal|1
+expr_stmt|;
 name|loop
 label|:
 name|s
@@ -623,6 +651,8 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+name|loop2
+label|:
 for|for
 control|(
 name|bp
@@ -648,6 +678,7 @@ name|b_vnbufs
 operator|.
 name|le_next
 expr_stmt|;
+comment|/*  		 * First time through on a synchronous call, 		 * or if it's already scheduled, skip to the next  		 * buffer 		 */
 if|if
 condition|(
 operator|(
@@ -659,9 +690,11 @@ name|B_BUSY
 operator|)
 operator|||
 operator|(
-name|pass
+operator|(
+name|skipmeta
 operator|==
-literal|0
+literal|1
+operator|)
 operator|&&
 operator|(
 name|bp
@@ -690,6 +723,7 @@ argument_list|(
 literal|"ffs_fsync: not dirty"
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If data is outstanding to another vnode, or we were 		 * asked to wait for everything, or it's not a file or BDEV, 		 * start the IO on this buffer immediatly. 		 */
 if|if
 condition|(
 operator|(
@@ -705,8 +739,8 @@ operator|(
 name|ap
 operator|->
 name|a_waitfor
-operator|!=
-name|MNT_NOWAIT
+operator|==
+name|MNT_WAIT
 operator|)
 operator|)
 operator|||
@@ -745,7 +779,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Wait for I/O associated with indirect blocks to complete, 			 * since there is no way to quickly wait for them below. 			 */
+comment|/* 			 * Wait for I/O associated with indirect blocks to 			 * complete, since there is no way to quickly wait 			 * for them below. 			 */
 if|if
 condition|(
 operator|(
@@ -755,13 +789,13 @@ name|b_vp
 operator|==
 name|vp
 operator|)
-operator|&&
+operator|||
 operator|(
 name|ap
 operator|->
 name|a_waitfor
-operator|==
-name|MNT_NOWAIT
+operator|!=
+name|MNT_WAIT
 operator|)
 condition|)
 block|{
@@ -832,6 +866,7 @@ name|lbn
 operator|)
 condition|)
 block|{
+comment|/*  			 * If the buffer is for data that has been truncated 			 * off the file, then throw it away. 			 */
 name|bremfree
 argument_list|(
 name|bp
@@ -875,26 +910,26 @@ goto|goto
 name|loop
 goto|;
 block|}
+comment|/* 	 * If we were asked to do this synchronously, then go back for 	 * another pass, this time doing the metadata. 	 */
+if|if
+condition|(
+name|skipmeta
+condition|)
+block|{
+name|skipmeta
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|loop2
+goto|;
+comment|/* stay within the splbio() */
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pass
-operator|==
-literal|0
-condition|)
-block|{
-name|pass
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
 if|if
 condition|(
 name|ap
@@ -945,14 +980,35 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  		 * Ensure that any filesystem metatdata associated 		 * with the vnode has been written. 		 */
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|softdep_sync_metadata
+argument_list|(
+name|ap
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -962,6 +1018,33 @@ operator|.
 name|lh_first
 condition|)
 block|{
+comment|/* 			 * Block devices associated with filesystems may 			 * have new I/O requests posted for them even if 			 * the vnode is locked, so no amount of trying will 			 * get them clean. Thus we give block devices a 			 * good effort, then just give up. For all other file 			 * types, go around and try again until it is clean. 			 */
+if|if
+condition|(
+name|passes
+operator|>
+literal|0
+condition|)
+block|{
+name|passes
+operator|-=
+literal|1
+expr_stmt|;
+goto|goto
+name|loop2
+goto|;
+block|}
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VBLK
+condition|)
 name|vprint
 argument_list|(
 literal|"ffs_fsync: dirty"
@@ -969,12 +1052,9 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 name|gettime
 argument_list|(
@@ -982,8 +1062,8 @@ operator|&
 name|tv
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|UFS_UPDATE
 argument_list|(
 name|ap
@@ -996,12 +1076,47 @@ argument_list|,
 operator|&
 name|tv
 argument_list|,
+operator|(
 name|ap
 operator|->
 name|a_waitfor
 operator|==
 name|MNT_WAIT
+operator|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
+name|ap
+operator|->
+name|a_waitfor
+operator|==
+name|MNT_WAIT
+condition|)
+name|error
+operator|=
+name|softdep_fsync
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}

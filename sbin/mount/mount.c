@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount.c,v 1.21 1997/11/13 00:28:49 julian Exp $"
+literal|"$Id: mount.c,v 1.22 1998/02/13 04:54:27 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -456,6 +456,12 @@ block|{
 name|MNT_SUIDDIR
 block|,
 literal|"suiddir"
+block|}
+block|,
+block|{
+name|MNT_SOFTDEP
+block|,
+literal|"soft-updates"
 block|}
 block|,
 block|{
@@ -2573,11 +2579,23 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%swrites: sync %d async %d)\n"
+argument_list|,
+operator|!
 name|f
+operator|++
 condition|?
-literal|")\n"
+literal|" ("
 else|:
-literal|"\n"
+literal|", "
+argument_list|,
+name|sfp
+operator|->
+name|f_syncwrites
+argument_list|,
+name|sfp
+operator|->
+name|f_asyncwrites
 argument_list|)
 expr_stmt|;
 block|}
@@ -3136,6 +3154,19 @@ condition|)
 name|printf
 argument_list|(
 literal|",noclusterw"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ent
+operator|->
+name|f_flags
+operator|&
+name|MNT_SUIDDIR
+condition|)
+name|printf
+argument_list|(
+literal|",suiddir"
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,10 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_undef
+undef|#
+directive|undef
+name|__FreeBSD__
+end_undef
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD__
+value|3
+end_define
+
 begin_comment
 comment|/*	$NetBSD: if_de.c,v 1.56 1997/10/20 14:32:46 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.79 1998/02/06 12:14:08 eivind Exp $ */
+comment|/*	$Id: if_de.c,v 1.80 1998/02/20 13:11:50 bde Exp $ */
 end_comment
 
 begin_comment

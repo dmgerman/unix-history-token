@@ -1788,6 +1788,8 @@ expr_stmt|;
 if|if
 condition|(
 name|preen
+operator|||
+name|usedsoftdep
 condition|)
 block|{
 if|if
@@ -1808,6 +1810,10 @@ literal|"LINK COUNT INCREASING"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|preen
+condition|)
 name|printf
 argument_list|(
 literal|" (ADJUSTED)\n"
@@ -2267,7 +2273,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|preen
+operator|||
+name|usedsoftdep
+operator|)
 operator|&&
 name|dp
 operator|->
@@ -2304,6 +2314,18 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|parentdir
+operator|!=
+literal|0
+condition|)
+name|lncntp
+index|[
+name|parentdir
+index|]
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|lfdir

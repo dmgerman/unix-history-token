@@ -245,6 +245,10 @@ argument_list|,
 name|question
 argument_list|)
 expr_stmt|;
+name|resolved
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -312,6 +316,7 @@ argument_list|)
 operator|!=
 literal|'\n'
 condition|)
+block|{
 if|if
 condition|(
 name|feof
@@ -319,11 +324,18 @@ argument_list|(
 name|stdin
 argument_list|)
 condition|)
+block|{
+name|resolved
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+block|}
 block|}
 do|while
 condition|(
@@ -364,6 +376,10 @@ operator|(
 literal|1
 operator|)
 return|;
+name|resolved
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1874,13 +1890,24 @@ name|long
 name|frags
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|,
 name|k
+decl_stmt|,
+name|cg
+decl_stmt|,
+name|baseblk
+decl_stmt|;
+name|struct
+name|cg
+modifier|*
+name|cgp
+init|=
+operator|&
+name|cgrp
 decl_stmt|;
 if|if
 condition|(
@@ -1986,6 +2013,63 @@ name|k
 expr_stmt|;
 continue|continue;
 block|}
+name|cg
+operator|=
+name|dtog
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|i
+operator|+
+name|j
+argument_list|)
+expr_stmt|;
+name|getblk
+argument_list|(
+operator|&
+name|cgblk
+argument_list|,
+name|cgtod
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|cg
+argument_list|)
+argument_list|,
+name|sblock
+operator|.
+name|fs_cgsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cg_chkmagic
+argument_list|(
+name|cgp
+argument_list|)
+condition|)
+name|pfatal
+argument_list|(
+literal|"CG %d: BAD MAGIC NUMBER\n"
+argument_list|,
+name|cg
+argument_list|)
+expr_stmt|;
+name|baseblk
+operator|=
+name|dtogd
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|i
+operator|+
+name|j
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|k
@@ -1999,6 +2083,7 @@ condition|;
 name|k
 operator|++
 control|)
+block|{
 name|setbmap
 argument_list|(
 name|i
@@ -2008,9 +2093,49 @@ operator|+
 name|k
 argument_list|)
 expr_stmt|;
+name|clrbit
+argument_list|(
+name|cg_blksfree
+argument_list|(
+name|cgp
+argument_list|)
+argument_list|,
+name|baseblk
+operator|+
+name|k
+argument_list|)
+expr_stmt|;
+block|}
 name|n_blks
 operator|+=
 name|frags
+expr_stmt|;
+if|if
+condition|(
+name|frags
+operator|==
+name|sblock
+operator|.
+name|fs_frag
+condition|)
+name|cgp
+operator|->
+name|cg_cs
+operator|.
+name|cs_nbfree
+operator|--
+expr_stmt|;
+else|else
+name|cgp
+operator|->
+name|cg_cs
+operator|.
+name|cs_nffree
+operator|-=
+name|frags
+expr_stmt|;
+name|cgdirty
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -2704,7 +2829,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * An unexpected inconsistency occured.  * Die if preening, otherwise just print message and continue.  */
+comment|/*  * An unexpected inconsistency occured.  * Die if preening or filesystem is running with soft dependency protocol,  * otherwise just print message and continue.  */
 end_comment
 
 begin_function
@@ -2782,6 +2907,20 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|usedsoftdep
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nUNEXPECTED SOFTDEP INCONSISTENCY\n"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 operator|(
@@ -2815,9 +2954,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%s: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.\n"
+literal|"\n%s: UNEXPECTED%sINCONSISTENCY; RUN fsck MANUALLY.\n"
 argument_list|,
 name|cdevname
+argument_list|,
+name|usedsoftdep
+condition|?
+literal|" SOFTDEP "
+else|:
+literal|" "
+argument_list|)
+expr_stmt|;
+name|ckfini
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2829,7 +2979,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pwarn just prints a message when not preening,  * or a warning (preceded by filename) when preening.  */
+comment|/*  * Pwarn just prints a message when not preening or running soft dependency  * protocol, or a warning (preceded by filename) when preening.  */
 end_comment
 
 begin_function

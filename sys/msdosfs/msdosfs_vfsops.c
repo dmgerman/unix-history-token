@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.28 1998/02/23 16:44:32 ache Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.29 1998/03/01 22:46:27 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -4048,9 +4048,9 @@ name|MNT_LOCAL
 expr_stmt|;
 name|devvp
 operator|->
-name|v_specflags
-operator||=
-name|SI_MOUNTEDON
+name|v_specmountpoint
+operator|=
+name|mp
 expr_stmt|;
 return|return
 literal|0
@@ -4237,10 +4237,9 @@ name|pmp
 operator|->
 name|pm_devvp
 operator|->
-name|v_specflags
-operator|&=
-operator|~
-name|SI_MOUNTEDON
+name|v_specmountpoint
+operator|=
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4914,6 +4913,14 @@ operator|==
 name|VNON
 operator|||
 operator|(
+name|waitfor
+operator|==
+name|MNT_LAZY
+operator|)
+comment|/* can this happen with msdosfs? */
+operator|||
+operator|(
+operator|(
 operator|(
 name|dep
 operator|->
@@ -4933,6 +4940,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
+operator|(
 name|vp
 operator|->
 name|v_dirtyblkhd
@@ -4940,6 +4948,8 @@ operator|.
 name|lh_first
 operator|==
 name|NULL
+operator|)
+operator|)
 condition|)
 block|{
 name|simple_unlock
