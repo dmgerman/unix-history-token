@@ -42,7 +42,7 @@ end_function_decl
 begin_function_decl
 name|CTL_MSG
 modifier|*
-name|find_request
+name|find_match
 parameter_list|(
 name|CTL_MSG
 modifier|*
@@ -54,7 +54,7 @@ end_function_decl
 begin_function_decl
 name|CTL_MSG
 modifier|*
-name|find_match
+name|find_request
 parameter_list|(
 name|CTL_MSG
 modifier|*
