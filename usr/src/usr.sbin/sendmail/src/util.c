@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.14 (Berkeley) %G%"
+literal|"@(#)util.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -1432,6 +1426,10 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 for|for
 control|(
 name|tries
@@ -1495,6 +1493,26 @@ condition|(
 name|fp
 operator|!=
 name|NULL
+operator|&&
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+name|S_ISREG
+argument_list|(
+name|st
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 block|{
 name|int
