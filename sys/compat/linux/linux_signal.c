@@ -9,12 +9,13 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_macro
+begin_expr_stmt
 name|__FBSDID
 argument_list|(
 literal|"$FreeBSD$"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
