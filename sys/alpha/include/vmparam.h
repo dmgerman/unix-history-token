@@ -260,6 +260,16 @@ comment|/* nominal ``small'' resident set size 					   protected against replace
 end_comment
 
 begin_comment
+comment|/*  * Alpha provides a machine specific single page allocator through the use  * of K0SEG.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
+begin_comment
 comment|/*  * Mach derived constants  */
 end_comment
 
