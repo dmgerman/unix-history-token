@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ccitt_addr.c	5.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
 comment|/*  * parse CCITT addresses  *  * Addresses must have the format: [hpr],x121address[,userdata][,protocol]  * items enclosed with square brackets are optional  * 'h' or 'p' means hi priority (packet size = 128; specific to Datapac  * and necessary only for X.25(76) and non-negotiating X.25(80) DTE's)  * 'r' means reverse charge (remote DTE pays for call).  * The x121address consists of an optional netid and dot, followed  * by a dte address.  *  * Frank Pronk  * The University of British Columbia  * Laboratory for Computational Vision  * Copyright (c) 1984  */
 end_comment
 
@@ -94,6 +98,16 @@ operator|->
 name|x25_family
 operator|=
 name|AF_CCITT
+expr_stmt|;
+name|xp
+operator|->
+name|x25_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|xp
+argument_list|)
 expr_stmt|;
 name|xp
 operator|->
