@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.13	82/08/01	*/
+comment|/*	param.c	4.14	82/09/18	*/
 end_comment
 
 begin_include
@@ -87,9 +87,22 @@ directive|include
 file|"../h/quota.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
 begin_comment
 comment|/*  * System parameter formulae.  *  * This file is copied into each directory where we compile  * the kernel; it should be modified there to suit local taste  * if necessary.  *  * Compiled with -DHZ=xx -DTIMEZONE=x -DDST=x -DMAXUSERS=xx  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HZ
+value|100
+end_define
 
 begin_decl_stmt
 name|int
@@ -101,17 +114,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|timezone
+name|tick
 init|=
-name|TIMEZONE
+literal|1000000
+operator|/
+name|HZ
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|dstflag
+name|struct
+name|timezone
+name|tz
 init|=
+block|{
+name|TIMEZONE
+block|,
 name|DST
+block|}
 decl_stmt|;
 end_decl_stmt
 
