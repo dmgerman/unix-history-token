@@ -304,6 +304,10 @@ name|lang
 operator|==
 name|NULL
 operator|||
+operator|!
+operator|*
+name|lang
+operator|||
 name|strchr
 argument_list|(
 name|lang
