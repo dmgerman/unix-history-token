@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.55 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.56 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.55 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.56 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1698,6 +1698,15 @@ modifier|*
 name|gethostbyname
 parameter_list|()
 function_decl|;
+specifier|extern
+name|bool
+name|getcanonname
+parameter_list|()
+function_decl|;
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
 if|if
 condition|(
 name|gethostname
@@ -1743,6 +1752,29 @@ name|hostbuf
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|hp
+operator|->
+name|h_name
+argument_list|,
+literal|'.'
+argument_list|)
+operator|!=
+name|NULL
+operator|||
+name|strchr
+argument_list|(
+name|hostbuf
+argument_list|,
+literal|'.'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1768,10 +1800,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|NAMED_BIND
-comment|/* if still no dot, try DNS directly (i.e., avoid NIS problems) */
+comment|/* 	**  If still no dot, try DNS directly (i.e., avoid NIS problems). 	**  This ought to be driven from the configuration file, but 	**  we are called before the configuration is read.  We could 	**  check for an /etc/resolv.conf file, but that isn't required. 	**  All in all, a bit of a mess. 	*/
 if|if
 condition|(
 name|strchr
@@ -1782,18 +1815,39 @@ literal|'.'
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|getcanonname
+argument_list|(
+name|hostbuf
+argument_list|,
+name|size
+argument_list|,
+name|TRUE
+argument_list|)
+operator|&&
+name|h_errno
+operator|==
+name|TRY_AGAIN
 condition|)
 block|{
-specifier|extern
-name|bool
-name|getcanonname
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|h_errno
+name|struct
+name|stat
+name|stbuf
 decl_stmt|;
 comment|/* try twice in case name server not yet started up */
+name|message
+argument_list|(
+literal|"My unqualifed host name (%s) unknown to DNS; sleeping for retry"
+argument_list|,
+name|hostbuf
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|60
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1805,47 +1859,13 @@ name|size
 argument_list|,
 name|TRUE
 argument_list|)
-operator|&&
-name|UseNameServer
-operator|&&
-operator|(
-name|h_errno
-operator|!=
-name|TRY_AGAIN
-operator|||
-operator|(
-name|sleep
-argument_list|(
-literal|30
-argument_list|)
-operator|,
-operator|!
-name|getcanonname
-argument_list|(
-name|hostbuf
-argument_list|,
-name|size
-argument_list|,
-name|TRUE
-argument_list|)
-operator|)
-operator|)
 condition|)
-block|{
 name|errno
 operator|=
 name|h_errno
 operator|+
 name|E_DNSBASE
 expr_stmt|;
-name|syserr
-argument_list|(
-literal|"!My host name (%s) not known to DNS"
-argument_list|,
-name|hostbuf
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -3500,10 +3520,6 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|MAYBENEXTRELEASE
-comment|/*** UNTESTED *** UNTESTED *** UNTESTED ***/
-ifdef|#
-directive|ifdef
 name|NETUNIX
 case|case
 name|AF_UNIX
@@ -3545,8 +3561,6 @@ expr_stmt|;
 return|return
 name|buf
 return|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -3783,10 +3797,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|MAYBENEXTRELEASE
-comment|/*** UNTESTED *** UNTESTED *** UNTESTED ***/
 case|case
 name|AF_UNIX
 case|:
@@ -3795,8 +3805,6 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|hp
 operator|=
