@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.16 1996/08/21 01:27:25 jkh Exp $ */
+comment|/* $Id: main.c,v 1.17 1996/08/22 21:30:51 jkh Exp $ */
 end_comment
 
 begin_include
@@ -452,7 +452,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|errno
+operator|!
+name|sig
 condition|)
 name|fprintf
 argument_list|(
@@ -473,9 +474,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Interrupted by signal\n"
+literal|"%s: Interrupted by signal %d\n"
 argument_list|,
 name|progname
+argument_list|,
+name|sig
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2587,48 +2590,32 @@ condition|(
 name|ftp
 condition|)
 block|{
-switch|switch
-condition|(
+specifier|const
+name|char
+modifier|*
+name|str
+init|=
+name|ftpErrString
+argument_list|(
 name|ftpErrno
 argument_list|(
 name|ftp
 argument_list|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|str
 condition|)
-block|{
-case|case
-literal|421
-case|:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Service not available\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|450
-case|:
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n"
 argument_list|,
-literal|"File not available\n"
+name|str
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|550
-case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No such file or directory\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 block|}
 name|rm
 argument_list|()
