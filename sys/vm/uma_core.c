@@ -6182,7 +6182,14 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
+name|int
+name|skip
+decl_stmt|;
 comment|/* This is the fast path free */
+name|skip
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG_ALLOC_1
@@ -6219,6 +6226,7 @@ name|zone
 operator|->
 name|uz_dtor
 condition|)
+block|{
 name|zone
 operator|->
 name|uz_dtor
@@ -6232,6 +6240,11 @@ argument_list|,
 name|udata
 argument_list|)
 expr_stmt|;
+name|skip
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|zfree_restart
 label|:
 name|cpu
@@ -6643,7 +6656,7 @@ name|item
 argument_list|,
 name|udata
 argument_list|,
-literal|0
+name|skip
 argument_list|)
 expr_stmt|;
 return|return;
