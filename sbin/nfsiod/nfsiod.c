@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -31,13 +32,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)nfsiod.c	8.4 (Berkeley) 5/3/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)nfsiod.c	8.4 (Berkeley) 5/3/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,19 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ucred.h>
 end_include
 
 begin_include
@@ -98,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfs/nfsproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<nfs/nfs.h>
 end_include
 
@@ -111,24 +107,6 @@ begin_include
 include|#
 directive|include
 file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -611,7 +589,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"missing system call: NFS not available."
+literal|"missing system call: NFS not available"
 argument_list|)
 expr_stmt|;
 block|}
