@@ -251,7 +251,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: mknetid [-q] [-g group_file] [-p passwd_file] [-h hosts_file]"
 argument_list|,
-literal|"               [-d netid_file] [-d domain]"
+literal|"               [-n netid_file] [-d domain]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -346,6 +346,10 @@ name|quiet
 init|=
 literal|0
 decl_stmt|;
+name|domain
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -619,6 +623,47 @@ name|pfp
 argument_list|)
 condition|)
 block|{
+comment|/* Ignore comments: ^[ \t]*# */
+for|for
+control|(
+name|ptr
+operator|=
+name|readbuf
+init|;
+operator|*
+name|ptr
+operator|!=
+literal|'\0'
+condition|;
+name|ptr
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|ptr
+operator|!=
+literal|' '
+operator|&&
+operator|*
+name|ptr
+operator|!=
+literal|'\t'
+condition|)
+break|break;
+if|if
+condition|(
+operator|*
+name|ptr
+operator|==
+literal|'#'
+operator|||
+operator|*
+name|ptr
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -634,6 +679,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"bad passwd file entry: %s"
@@ -641,6 +687,8 @@ argument_list|,
 name|readbuf
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 operator|*
 name|ptr
 operator|=
@@ -664,6 +712,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"bad passwd file entry: %s"
@@ -671,6 +720,8 @@ argument_list|,
 name|readbuf
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 operator|*
 name|ptr
 operator|=
@@ -698,6 +749,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"bad passwd file entry: %s"
@@ -705,6 +757,8 @@ argument_list|,
 name|readbuf
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 operator|*
 name|ptr
 operator|=
@@ -732,6 +786,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"bad passwd file entry: %s"
@@ -739,6 +794,8 @@ argument_list|,
 name|readbuf
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 operator|*
 name|ptr
 operator|=
