@@ -4249,7 +4249,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_pathconf_args
-comment|/* { 	struct vnode *vp; 	int name; 	int *retval; 	} */
+comment|/* { 	struct vnode *vp; 	int name; 	register_t *retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -4265,7 +4265,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|register_t
 modifier|*
 name|retval
 init|=
