@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2578,6 +2578,9 @@ name|i_flgs
 operator||=
 name|F_ALLOC
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 for|for
 control|(
 name|cp
@@ -2736,6 +2739,8 @@ operator|!=
 literal|':'
 condition|)
 block|{
+endif|#
+directive|endif
 comment|/* default bootstrap unit and device */
 name|file
 operator|->
@@ -2795,6 +2800,9 @@ name|cp
 operator|=
 name|str
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 block|}
 else|else
 block|{
@@ -2938,6 +2946,8 @@ name|badspec
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|opendev
 operator|=
 name|file
@@ -3231,6 +3241,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_expr_stmt
 specifier|static
 name|getdev
@@ -3390,6 +3406,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|close
