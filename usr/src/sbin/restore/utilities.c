@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	3.8	(Berkeley)	83/03/27"
+literal|"@(#)utilities.c	3.9	(Berkeley)	83/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -1019,12 +1019,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|flagbuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1176,6 +1170,47 @@ operator|->
 name|e_ino
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"flags: %s\n"
+argument_list|,
+name|flagvalues
+argument_list|(
+name|ep
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Construct a string indicating the active flag bits of an entry.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|flagvalues
+parameter_list|(
+name|ep
+parameter_list|)
+specifier|register
+name|struct
+name|entry
+modifier|*
+name|ep
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|flagbuf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|flagbuf
@@ -1198,6 +1233,9 @@ name|e_flags
 operator|&
 name|REMOVED
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|flagbuf
@@ -1213,6 +1251,9 @@ name|e_flags
 operator|&
 name|TMPNAME
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|flagbuf
@@ -1228,6 +1269,9 @@ name|e_flags
 operator|&
 name|EXTRACT
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|flagbuf
@@ -1243,6 +1287,9 @@ name|e_flags
 operator|&
 name|NEW
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|flagbuf
@@ -1258,6 +1305,9 @@ name|e_flags
 operator|&
 name|KEEP
 condition|)
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|flagbuf
@@ -1265,19 +1315,17 @@ argument_list|,
 literal|"|KEEP"
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"flags: %s\n"
-argument_list|,
+return|return
+operator|(
 operator|&
 name|flagbuf
 index|[
 literal|1
 index|]
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * canonicalize file names to always start with ``./''  */

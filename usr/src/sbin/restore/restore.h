@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	@(#)restore.h	3.5	(Berkeley)	83/03/27	*/
+comment|/*	@(#)restore.h	3.6	(Berkeley)	83/04/11	*/
 end_comment
 
 begin_include
@@ -425,6 +425,15 @@ specifier|extern
 name|char
 modifier|*
 name|gentempname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|flagvalues
 parameter_list|()
 function_decl|;
 end_function_decl
