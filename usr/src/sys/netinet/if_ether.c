@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -794,7 +794,7 @@ name|ac
 operator|->
 name|ac_if
 expr_stmt|;
-comment|/* if for us, then use software loopback driver */
+comment|/* if for us, use software loopback driver if up */
 if|if
 condition|(
 name|destip
@@ -806,14 +806,15 @@ operator|->
 name|ac_ipaddr
 operator|.
 name|s_addr
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|loif
 operator|.
 name|if_flags
 operator|&
 name|IFF_UP
-operator|)
 condition|)
 block|{
 name|sin
@@ -848,12 +849,43 @@ operator|&
 name|sin
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The packet has already been sent and freed. 		 */
+comment|/* 			 * The packet has already been sent and freed. 			 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+else|else
+block|{
+name|bcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ac
+operator|->
+name|ac_enaddr
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|desten
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ac
+operator|->
+name|ac_enaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 block|}
 name|s
 operator|=
