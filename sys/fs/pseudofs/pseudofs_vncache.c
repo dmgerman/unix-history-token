@@ -889,6 +889,13 @@ else|:
 name|pfs_vncache
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pvd
+operator|==
+name|NULL
+condition|)
+break|break;
 block|}
 name|mtx_unlock
 argument_list|(
@@ -1002,6 +1009,13 @@ else|:
 name|pfs_vncache
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pvd
+operator|==
+name|NULL
+condition|)
+break|break;
 block|}
 name|mtx_unlock
 argument_list|(
