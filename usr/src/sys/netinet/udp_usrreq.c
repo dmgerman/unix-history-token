@@ -1111,6 +1111,12 @@ name|inp
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|inp
