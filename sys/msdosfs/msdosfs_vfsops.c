@@ -2553,12 +2553,6 @@ operator|!
 name|pmp
 operator|->
 name|pm_Heads
-operator|||
-name|pmp
-operator|->
-name|pm_Heads
-operator|>
-literal|255
 ifdef|#
 directive|ifdef
 name|PC98
