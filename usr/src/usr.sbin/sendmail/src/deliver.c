@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.32	%G%"
+literal|"@(#)deliver.c	3.33	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,7 +848,8 @@ name|void
 operator|)
 name|expand
 argument_list|(
-name|user
+operator|*
+name|mvp
 argument_list|,
 name|buf
 argument_list|,
