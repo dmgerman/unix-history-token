@@ -133,7 +133,7 @@ end_include
 
 begin_decl_stmt
 name|void
-name|Usage
+name|usage
 name|__P
 argument_list|(
 operator|(
@@ -448,12 +448,12 @@ end_decl_stmt
 
 begin_function
 name|void
-name|Usage
+name|usage
 parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"Usage:\t%s [-dv] -c\n"
+literal|"usage:\t%s [-dv] -c\n"
 argument_list|,
 name|pname
 argument_list|)
@@ -536,9 +536,12 @@ name|ac
 operator|==
 literal|1
 condition|)
-name|Usage
+block|{
+name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|thiszone
 operator|=
 name|gmt2local
@@ -692,7 +695,7 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|Usage
+name|usage
 argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -780,7 +783,7 @@ argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
 default|default:
-name|Usage
+name|usage
 argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -983,7 +986,7 @@ comment|/* XXX: Enough ? Should I do MSG_PEEK ? */
 name|int
 name|so
 decl_stmt|,
-name|len
+name|l
 decl_stmt|;
 name|m_len
 operator|=
@@ -1075,7 +1078,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|len
+name|l
 operator|=
 name|send
 argument_list|(
@@ -1114,7 +1117,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|len
+name|l
 operator|=
 name|recv
 argument_list|(
@@ -1146,7 +1149,7 @@ comment|/*NOTREACHED*/
 block|}
 if|if
 condition|(
-name|len
+name|l
 operator|!=
 sizeof|sizeof
 argument_list|(
@@ -1167,7 +1170,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|len
+name|l
 operator|=
 name|recv
 argument_list|(
@@ -1217,7 +1220,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|len
+name|l
 condition|;
 name|i
 operator|++
@@ -1266,7 +1269,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|len
+name|l
 operator|%
 literal|16
 condition|)
@@ -1294,7 +1297,7 @@ operator|*
 name|base
 argument_list|)
 operator|<
-name|len
+name|l
 condition|)
 name|base
 operator|++
@@ -1348,7 +1351,7 @@ index|]
 decl_stmt|;
 comment|/* XXX: Enough ? Should I do MSG_PEEK ? */
 name|int
-name|len
+name|l
 decl_stmt|;
 name|struct
 name|sadb_msg
@@ -1459,7 +1462,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|len
+name|l
 operator|=
 name|send
 argument_list|(
@@ -1499,7 +1502,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|len
+name|l
 operator|=
 name|recv
 argument_list|(
@@ -1537,7 +1540,7 @@ operator|->
 name|sadb_msg_len
 argument_list|)
 operator|!=
-name|len
+name|l
 condition|)
 block|{
 name|warnx
@@ -1574,7 +1577,7 @@ name|postproc
 argument_list|(
 name|msg
 argument_list|,
-name|len
+name|l
 argument_list|)
 operator|<
 literal|0
@@ -1658,6 +1661,7 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|errmsg
@@ -1982,6 +1986,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|satype
@@ -2001,6 +2006,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sastate
@@ -2020,6 +2026,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ipproto
@@ -2495,11 +2502,16 @@ name|t
 operator|>=
 literal|1000
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|" big/"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2542,11 +2554,16 @@ name|t
 operator|>=
 literal|1000
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"big"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
