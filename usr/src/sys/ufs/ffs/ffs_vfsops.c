@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1305,6 +1305,9 @@ name|struct
 name|fs
 modifier|*
 name|fs
+decl_stmt|,
+modifier|*
+name|newfs
 decl_stmt|;
 name|struct
 name|partinfo
@@ -1435,7 +1438,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|fs
+name|newfs
 operator|=
 operator|(
 expr|struct
@@ -1448,19 +1451,19 @@ name|b_data
 expr_stmt|;
 if|if
 condition|(
-name|fs
+name|newfs
 operator|->
 name|fs_magic
 operator|!=
 name|FS_MAGIC
 operator|||
-name|fs
+name|newfs
 operator|->
 name|fs_bsize
 operator|>
 name|MAXBSIZE
 operator|||
-name|fs
+name|newfs
 operator|->
 name|fs_bsize
 operator|<
@@ -1503,16 +1506,7 @@ literal|0
 index|]
 argument_list|,
 operator|&
-operator|(
-operator|(
-expr|struct
-name|fs
-operator|*
-operator|)
-name|bp
-operator|->
-name|b_data
-operator|)
+name|newfs
 operator|->
 name|fs_csp
 index|[
@@ -1527,11 +1521,17 @@ name|fs_csp
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newfs
+operator|->
+name|fs_maxcluster
+operator|=
+name|fs
+operator|->
+name|fs_maxcluster
+expr_stmt|;
 name|bcopy
 argument_list|(
-name|bp
-operator|->
-name|b_data
+name|newfs
 argument_list|,
 name|fs
 argument_list|,
