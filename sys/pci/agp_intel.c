@@ -1512,7 +1512,7 @@ operator|~
 operator|(
 literal|1
 operator|<<
-literal|8
+literal|7
 operator|)
 argument_list|,
 literal|4
