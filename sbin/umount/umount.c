@@ -942,7 +942,7 @@ modifier|*
 name|mntpt
 decl_stmt|,
 modifier|*
-name|newname
+name|origname
 decl_stmt|,
 name|rname
 index|[
@@ -970,6 +970,10 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+name|origname
+operator|=
+name|name
+expr_stmt|;
 if|if
 condition|(
 name|stat
@@ -983,12 +987,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|mntpt
+operator|=
+name|rname
+expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
-name|mntpt
-operator|=
 name|getmntname
 argument_list|(
 name|rname
@@ -998,7 +1003,6 @@ argument_list|,
 operator|&
 name|type
 argument_list|)
-operator|)
 operator|==
 name|NULL
 operator|)
@@ -1035,10 +1039,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|name
-operator|=
-name|rname
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1083,10 +1083,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|name
-operator|=
-name|rname
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1105,9 +1101,6 @@ name|rname
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|newname
-operator|=
 name|getmntname
 argument_list|(
 name|mntpt
@@ -1117,7 +1110,6 @@ argument_list|,
 operator|&
 name|type
 argument_list|)
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -1135,10 +1127,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|newname
-operator|=
-name|name
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1155,6 +1143,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|name
+operator|=
+name|rname
+expr_stmt|;
 if|if
 condition|(
 name|checkvfsname
@@ -1294,7 +1286,7 @@ name|printf
 argument_list|(
 literal|"%s: unmount from %s\n"
 argument_list|,
-name|name
+name|origname
 argument_list|,
 name|mntpt
 argument_list|)
