@@ -867,7 +867,7 @@ specifier|static
 specifier|const
 name|struct
 name|ng_parse_type
-name|ng_pptp_stats_type
+name|ng_l2tp_stats_type
 init|=
 block|{
 operator|&
@@ -955,7 +955,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|ng_pptp_stats_type
+name|ng_l2tp_stats_type
 block|}
 block|,
 block|{
@@ -980,7 +980,7 @@ block|,
 name|NULL
 block|,
 operator|&
-name|ng_pptp_stats_type
+name|ng_l2tp_stats_type
 block|}
 block|,
 block|{
