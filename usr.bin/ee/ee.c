@@ -25109,7 +25109,7 @@ name|catgetlocal
 argument_list|(
 literal|147
 argument_list|,
-literal|"^b back 1 char          ^j undel char           ^t top of text             "
+literal|"^b back 1 char          ^j undel char           ^t begin of file           "
 argument_list|)
 expr_stmt|;
 name|emacs_help_text
@@ -25121,7 +25121,7 @@ name|catgetlocal
 argument_list|(
 literal|148
 argument_list|,
-literal|"^c command              ^k delete line          ^u bottom of text          "
+literal|"^c command              ^k delete line          ^u end of file             "
 argument_list|)
 expr_stmt|;
 name|emacs_help_text
@@ -25359,7 +25359,7 @@ name|catgetlocal
 argument_list|(
 literal|157
 argument_list|,
-literal|"^t top of text   ^e end of line   ^r restore word   ^f forward char           "
+literal|"^t begin of file ^e end of line   ^r restore word   ^f forward char           "
 argument_list|)
 expr_stmt|;
 name|emacs_control_keys
