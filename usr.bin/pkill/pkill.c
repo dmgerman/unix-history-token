@@ -337,6 +337,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|cflags
+init|=
+name|REG_EXTENDED
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|kvm_t
 modifier|*
 name|kd
@@ -807,7 +815,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DF:G:M:N:P:U:d:fg:j:lns:t:u:vx"
+literal|"DF:G:M:N:P:U:d:fg:ij:lns:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -951,6 +959,14 @@ expr_stmt|;
 name|criteria
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|cflags
+operator||=
+name|REG_ICASE
 expr_stmt|;
 break|break;
 case|case
@@ -1221,7 +1237,7 @@ argument_list|,
 operator|*
 name|argv
 argument_list|,
-name|REG_EXTENDED
+name|cflags
 argument_list|)
 operator|)
 operator|!=
@@ -2277,12 +2293,12 @@ name|pgrep
 condition|)
 name|ustr
 operator|=
-literal|"[-flnvx] [-d delim]"
+literal|"[-filnvx] [-d delim]"
 expr_stmt|;
 else|else
 name|ustr
 operator|=
-literal|"[-signal] [-fnvx]"
+literal|"[-signal] [-finvx]"
 expr_stmt|;
 name|fprintf
 argument_list|(
