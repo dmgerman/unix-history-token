@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisink.c	7.7 (Berkeley) %G%"
+literal|"@(#)tisink.c	7.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,7 @@ name|playtag
 decl_stmt|,
 name|echop
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
