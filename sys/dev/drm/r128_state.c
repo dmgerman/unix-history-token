@@ -92,7 +92,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -365,7 +365,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -430,7 +430,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -572,7 +572,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -644,7 +644,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -733,7 +733,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -813,7 +813,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -951,7 +951,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"    %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -1066,7 +1066,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: dirty=0x%08x\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|dirty
 argument_list|)
@@ -1737,7 +1737,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2230,7 +2230,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|#
@@ -2459,7 +2459,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: page=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|dev_priv
 operator|->
@@ -2652,7 +2652,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: buf=%d nbox=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|buf
 operator|->
@@ -3597,7 +3597,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* The compiler won't optimize away a division by a variable, 	 * even if the only legal values are powers of two.  Thus, we'll 	 * use a shift instead. 	 */
@@ -4047,7 +4047,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|count
@@ -4512,7 +4512,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|count
@@ -5103,7 +5103,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|count
@@ -5300,7 +5300,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|count
@@ -5620,7 +5620,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -5703,7 +5703,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -5800,7 +5800,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -5918,7 +5918,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"%s called with no initialization\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -5948,7 +5948,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: pid=%d index=%d count=%d discard=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|DRM_OS_CURRENTPID
 argument_list|,
@@ -6203,7 +6203,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"%s called with no initialization\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -6233,7 +6233,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: pid=%d buf=%d s=%d e=%d d=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|DRM_OS_CURRENTPID
 argument_list|,
@@ -6580,7 +6580,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: pid=%d index=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|DRM_OS_CURRENTPID
 argument_list|,
@@ -6910,7 +6910,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"%s called with no initialization\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return

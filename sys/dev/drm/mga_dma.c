@@ -103,7 +103,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 for|for
@@ -202,7 +202,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 for|for
@@ -296,7 +296,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* The primary DMA stream should look like new right about now. 	 */
@@ -347,7 +347,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* Okay, so we've completely screwed up and locked the engine. 	 * How about we clean up after ourselves? 	 */
@@ -438,7 +438,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s:\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -596,7 +596,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: done.\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -631,7 +631,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s:\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_DMA_WRAP
@@ -796,7 +796,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: done.\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -841,7 +841,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s:\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sarea_priv
@@ -884,7 +884,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: done.\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -1079,7 +1079,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: count=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|dma
 operator|->
@@ -1348,7 +1348,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|entry
@@ -1461,7 +1461,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s:\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|head
@@ -1648,7 +1648,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: age=0x%06lx wrap=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|buf_priv
 operator|->
@@ -1824,7 +1824,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -2892,7 +2892,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -3095,7 +3095,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: %s%s%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 operator|(
 name|lock
@@ -3184,8 +3184,9 @@ name|ret
 condition|)
 name|DRM_INFO
 argument_list|(
-name|__FUNCTION__
-literal|": -EBUSY\n"
+literal|"%s: -EBUSY\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return

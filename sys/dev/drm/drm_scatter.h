@@ -236,7 +236,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if

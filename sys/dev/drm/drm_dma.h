@@ -2944,7 +2944,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: irq=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|irq
 argument_list|)
@@ -3267,7 +3267,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: irq=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|irq
 argument_list|)

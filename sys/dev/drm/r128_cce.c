@@ -1348,7 +1348,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"%s failed!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1426,7 +1426,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"%s failed!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1521,7 +1521,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"%s failed!\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1560,7 +1560,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|r128_do_wait_for_idle
@@ -2086,7 +2086,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* The manual (p. 2) says this address is in "VM space".  This 	 * means it's an offset from the start of AGP space. 	 */
@@ -2378,7 +2378,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -3899,7 +3899,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|DRM_OS_KRNFROMUSR
@@ -3977,7 +3977,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4002,7 +4002,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s while CCE running\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4051,7 +4051,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4176,7 +4176,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4194,7 +4194,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s called before init done\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4243,7 +4243,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4286,7 +4286,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4329,7 +4329,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -4409,7 +4409,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|R128_WRITE

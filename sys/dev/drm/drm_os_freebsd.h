@@ -621,7 +621,7 @@ define|#
 directive|define
 name|DRM_OS_READMEMORYBARRIER
 define|\
-value|{												\    	int xchangeDummy;									\ 	DRM_DEBUG("%s\n", __FUNCTION__);							\    	__asm__ volatile(" push %%eax ; xchg %%eax, %0 ; pop %%eax" : : "m" (xchangeDummy));	\    	__asm__ volatile(" push %%eax ; push %%ebx ; push %%ecx ; push %%edx ;"			\ 			 " movl $0,%%eax ; cpuid ; pop %%edx ; pop %%ecx ; pop %%ebx ;"		\ 			 " pop %%eax" :
+value|{												\    	int xchangeDummy;									\ 	DRM_DEBUG("%s\n", __func__);							\    	__asm__ volatile(" push %%eax ; xchg %%eax, %0 ; pop %%eax" : : "m" (xchangeDummy));	\    	__asm__ volatile(" push %%eax ; push %%ebx ; push %%ecx ; push %%edx ;"			\ 			 " movl $0,%%eax ; cpuid ; pop %%edx ; pop %%ecx ; pop %%ebx ;"		\ 			 " pop %%eax" :
 comment|/* no outputs */
 value|:
 comment|/* no inputs */
@@ -1238,7 +1238,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|printf("error: " "[" DRM_NAME ":" __FUNCTION__ "] *ERROR* " fmt , ##arg)
+value|printf("error: [" DRM_NAME ":%s] *ERROR* " fmt , \ 		__func__, ##arg)
 end_define
 
 begin_define
@@ -1254,7 +1254,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|printf("error: " "[" DRM_NAME ":" __FUNCTION__ ":%s] *ERROR* " fmt , \ 	       DRM(mem_stats)[area].name , ##arg)
+value|printf("error: [" DRM_NAME ":%s:%s] *ERROR* " fmt , \ 	       __func__, DRM(mem_stats)[area].name , ##arg)
 end_define
 
 begin_define
@@ -1287,7 +1287,7 @@ name|arg
 modifier|...
 parameter_list|)
 define|\
-value|do {								  \ 		if (DRM(flags)& DRM_FLAG_DEBUG)				  \ 			printf("[" DRM_NAME ":" __FUNCTION__ "] " fmt ,	  \ 			       ##arg);					  \ 	} while (0)
+value|do {								\ 		if (DRM(flags)& DRM_FLAG_DEBUG)			\ 			printf("[" DRM_NAME ":%s] " fmt , 		\ 				__func__, ##arg);			\ 	} while (0)
 end_define
 
 begin_else

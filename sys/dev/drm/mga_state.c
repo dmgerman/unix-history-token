@@ -2139,8 +2139,9 @@ name|DMA_LOCALS
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-name|__FUNCTION__
-literal|":\n"
+literal|"%s:\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_DMA
@@ -2574,8 +2575,9 @@ name|DMA_LOCALS
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-name|__FUNCTION__
-literal|":\n"
+literal|"%s:\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sarea_priv
@@ -2830,7 +2832,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s... done.\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -3345,7 +3347,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s: buf=%d used=%d\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|buf
 operator|->
@@ -3580,8 +3582,9 @@ name|DMA_LOCALS
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-name|__FUNCTION__
-literal|":\n"
+literal|"%s:\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_DMA
@@ -4443,8 +4446,9 @@ name|iload
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-name|__FUNCTION__
-literal|":\n"
+literal|"%s:\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4471,7 +4475,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ( mga_do_wait_for_idle( dev_priv ) ) { 		if ( MGA_DMA_DEBUG ) 			DRM_INFO( __FUNCTION__": -EBUSY\n" ); 		return DRM_OS_ERR(EBUSY); 	}
+block|if ( mga_do_wait_for_idle( dev_priv ) ) { 		if ( MGA_DMA_DEBUG ) 			DRM_INFO( "%s: -EBUSY\n", __func__ ); 		return DRM_OS_ERR(EBUSY); 	}
 endif|#
 directive|endif
 if|if
@@ -4608,9 +4612,9 @@ name|blit
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
+literal|"%s:\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN

@@ -1740,7 +1740,7 @@ name|printk
 argument_list|(
 literal|"%s:\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|printk
@@ -2171,7 +2171,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|radeon_do_wait_for_idle
@@ -2248,7 +2248,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|#
@@ -2279,7 +2279,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|BEGIN_RING
@@ -2328,7 +2328,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|radeon_do_wait_for_idle
@@ -2392,7 +2392,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|cur_read_ptr
@@ -2447,7 +2447,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|RADEON_WRITE
@@ -2499,7 +2499,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|radeon_do_pixcache_flush
@@ -3031,7 +3031,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -4682,7 +4682,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -4884,7 +4884,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4903,7 +4903,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s while CP running\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4923,7 +4923,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s called with bogus CP mode (%d)\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|dev_priv
 operator|->
@@ -4976,7 +4976,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -5080,7 +5080,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -5098,7 +5098,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s called before init done\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return
@@ -5147,7 +5147,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -5177,7 +5177,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -5220,7 +5220,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -5300,7 +5300,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|RADEON_WRITE
