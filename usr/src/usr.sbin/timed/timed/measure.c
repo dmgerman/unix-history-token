@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)measure.c	8.1 (Berkeley) %G%"
+literal|"@(#)measure.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,7 +551,8 @@ name|oicp
 operator|->
 name|icmp_otime
 operator|=
-operator|(
+name|htonl
+argument_list|(
 operator|(
 name|tcur
 operator|.
@@ -567,7 +568,7 @@ operator|.
 name|tv_usec
 operator|/
 literal|1000
-operator|)
+argument_list|)
 expr_stmt|;
 name|oicp
 operator|->
