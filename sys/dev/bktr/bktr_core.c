@@ -117,6 +117,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -141,7 +147,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
+file|<sys/selinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -5363,7 +5375,7 @@ if|if
 condition|(
 name|ioflag
 operator|&
-name|IO_NDELAY
+name|FNDELAY
 condition|)
 block|{
 name|status
