@@ -1163,6 +1163,27 @@ block|}
 return|return
 name|NULL
 return|;
+case|case
+literal|0x00081103
+case|:
+switch|switch
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x07
+case|:
+return|return
+literal|"HighPoint HPT374 ATA133 controller"
+return|;
+block|}
+return|return
+name|NULL
+return|;
 comment|/* unsupported but known chipsets, generic DMA only */
 case|case
 literal|0x10001042
@@ -1581,6 +1602,10 @@ case|case
 literal|0x00041103
 case|:
 comment|/* HighPoint HPT 366/368/370/372 */
+case|case
+literal|0x00081103
+case|:
+comment|/* HighPoint HPT 374 */
 switch|switch
 condition|(
 name|pci_get_revid
@@ -1636,6 +1661,10 @@ case|case
 literal|0x05
 case|:
 comment|/* HPT 372 */
+case|case
+literal|0x07
+case|:
+comment|/* HPT 374 */
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -2063,6 +2092,10 @@ case|case
 literal|0x00041103
 case|:
 comment|/* HighPoint HPT366/368/370/372 */
+case|case
+literal|0x00081103
+case|:
+comment|/* HighPoint HPT374 */
 if|if
 condition|(
 operator|(
