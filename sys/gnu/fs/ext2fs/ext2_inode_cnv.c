@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 The University of Utah and  * the Computer Systems Laboratory at the University of Utah (CSL).  * All rights reserved.  *  * Permission to use, copy, modify and distribute this software is hereby  * granted provided that (1) source code retains these copyright, permission,  * and disclaimer notices, and (2) redistributions including binaries  * reproduce the notices in supporting documentation, and (3) all advertising  * materials mentioning features or use of this software display the following  * acknowledgement: ``This product includes software developed by the  * Computer Systems Laboratory at the University of Utah.''  *  * THE UNIVERSITY OF UTAH AND CSL ALLOW FREE USE OF THIS SOFTWARE IN ITS "AS  * IS" CONDITION.  THE UNIVERSITY OF UTAH AND CSL DISCLAIM ANY LIABILITY OF  * ANY KIND FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * CSL requests users of this software to return to csl-dist@cs.utah.edu any  * improvements that they make and grant CSL redistribution rights.  *  *      Utah $Hdr$  */
+comment|/*  * Copyright (c) 1995 The University of Utah and  * the Computer Systems Laboratory at the University of Utah (CSL).  * All rights reserved.  *  * Permission to use, copy, modify and distribute this software is hereby  * granted provided that (1) source code retains these copyright, permission,  * and disclaimer notices, and (2) redistributions including binaries  * reproduce the notices in supporting documentation, and (3) all advertising  * materials mentioning features or use of this software display the following  * acknowledgement: ``This product includes software developed by the  * Computer Systems Laboratory at the University of Utah.''  *  * THE UNIVERSITY OF UTAH AND CSL ALLOW FREE USE OF THIS SOFTWARE IN ITS "AS  * IS" CONDITION.  THE UNIVERSITY OF UTAH AND CSL DISCLAIM ANY LIABILITY OF  * ANY KIND FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * CSL requests users of this software to return to csl-dist@cs.utah.edu any  * improvements that they make and grant CSL redistribution rights.  *  *      Utah $Hdr$  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ file|<ufs/ufs/inode.h>
 end_include
 
 begin_comment
-comment|/* these defs would destroy the ext2_fs_i #include */
+comment|/*  * Undo the definitions in<ufs/ufs/inode.h> that would destroy the include  * of<gnu/ext2fs/ext2_fs.h>.  */
 end_comment
 
 begin_undef
@@ -153,12 +153,6 @@ begin_include
 include|#
 directive|include
 file|<gnu/ext2fs/ext2_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<gnu/ext2fs/ext2_fs_i.h>
 end_include
 
 begin_function
