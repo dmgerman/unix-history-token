@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: if_ppp.c,v 1.39 1997/02/22 09:41:03 peter Exp $ */
 end_comment
 
 begin_comment
@@ -74,7 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sockio.h>
 end_include
 
 begin_include
