@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)graphics3.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains additional routines for implementing graphics  * primitives for the gremlin picture editor  */
+comment|/* @(#)graphics3.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains additional routines for implementing graphics  * primitives for the gremlin picture editor  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_comment
@@ -200,6 +206,10 @@ block|{
 name|int
 name|button
 decl_stmt|;
+name|struct
+name|timeval
+name|selectpoll
+decl_stmt|;
 specifier|static
 name|unsigned
 name|long
@@ -220,6 +230,18 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+name|selectpoll
+operator|.
+name|tv_sec
+operator|=
+literal|0l
+expr_stmt|;
+name|selectpoll
+operator|.
+name|tv_usec
+operator|=
+literal|0l
+expr_stmt|;
 while|while
 condition|(
 name|TRUE
@@ -249,6 +271,9 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|selectpoll
 argument_list|)
 operator|<=
 literal|0
