@@ -8,7 +8,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.8 1993/11/18 05:02:57 rgrimes Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.9 1994/09/28 20:16:42 se Exp $  */
 end_comment
 
 begin_ifndef
@@ -164,6 +164,43 @@ name|rewind
 struct|;
 end_struct
 
+begin_comment
+comment|/* ** Tape erase - AKL: Andreas Klemm<andreas@knobel.gun.de> */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_erase
+block|{
+name|u_char
+name|op_code
+decl_stmt|;
+name|u_char
+name|byte2
+decl_stmt|;
+define|#
+directive|define
+name|SE_LONG
+value|0x01
+comment|/* 				** Archive Viper 2525 doesn't allow short  				** erase, other tapes possibly don't allow  				** that, too. 				*/
+define|#
+directive|define
+name|SE_IMMED
+value|0x02
+name|u_char
+name|unused
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_char
+name|control
+decl_stmt|;
+block|}
+name|erase
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|scsi_load
@@ -285,6 +322,17 @@ directive|define
 name|SPACE
 value|0x11
 end_define
+
+begin_define
+define|#
+directive|define
+name|ERASE
+value|0x19
+end_define
+
+begin_comment
+comment|/* AKL */
+end_comment
 
 begin_define
 define|#
