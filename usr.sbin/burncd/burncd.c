@@ -709,7 +709,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0
+name|addr
+operator|*
+name|block_size
 argument_list|,
 name|SEEK_SET
 argument_list|)
