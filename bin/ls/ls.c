@@ -117,6 +117,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<limits.h>
 end_include
 
@@ -124,6 +130,12 @@ begin_include
 include|#
 directive|include
 file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -199,112 +211,96 @@ parameter_list|)
 value|(1 + CHAR_BIT * sizeof(t) / 3 + 1)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|display
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FTSENT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FTSENT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_quad_t
 name|makenines
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|mastercmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|FTSENT
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 specifier|const
 name|FTSENT
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|traverse
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*printfcn
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|printfcn
+function_decl|)
+parameter_list|(
 name|DISPLAY
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|int
-argument_list|(
-argument|*sortfcn
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|sortfcn
+function_decl|)
+parameter_list|(
 specifier|const
 name|FTSENT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|FTSENT
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|long
@@ -344,22 +340,22 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_column
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* columnated format */
-end_comment
-
-begin_decl_stmt
-name|int
 name|f_flags
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* show flags associated with a file */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_humanval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show human-readable file sizes */
 end_comment
 
 begin_decl_stmt
@@ -373,6 +369,7 @@ comment|/* print inode */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_kblocks
 decl_stmt|;
@@ -383,6 +380,7 @@ comment|/* print size in kilobytes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_listdir
 decl_stmt|;
@@ -393,6 +391,7 @@ comment|/* list actual directory, not contents */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_listdot
 decl_stmt|;
@@ -423,6 +422,7 @@ comment|/* show unprintables as ? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_nosort
 decl_stmt|;
@@ -443,6 +443,7 @@ comment|/* don't use tab-separated multi-col output */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_numericonly
 decl_stmt|;
@@ -473,6 +474,7 @@ comment|/* like f_octal but use C escapes if possible */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_recursive
 decl_stmt|;
@@ -483,6 +485,7 @@ comment|/* ls subdirectories also */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_reversesort
 decl_stmt|;
@@ -503,6 +506,7 @@ comment|/* print the real time for all files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_singlecol
 decl_stmt|;
@@ -533,6 +537,7 @@ comment|/* use time of last mode change */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_timesort
 decl_stmt|;
@@ -553,6 +558,7 @@ comment|/* add type character for non-regular files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|f_whiteout
 decl_stmt|;
@@ -611,12 +617,35 @@ begin_comment
 comment|/* ANSI sequence to reset colours */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|attrs_off
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ANSI sequence to turn off attributes */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|enter_bold
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ANSI sequence to set color to bold mode */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rval
 decl_stmt|;
@@ -626,18 +655,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -764,8 +789,6 @@ name|win
 operator|.
 name|ws_col
 expr_stmt|;
-name|f_column
-operator|=
 name|f_nonprint
 operator|=
 literal|1
@@ -778,16 +801,16 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* retrieve environment variable, in case of explicit -C */
-if|if
-condition|(
-operator|(
 name|p
 operator|=
 name|getenv
 argument_list|(
 literal|"COLUMNS"
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|p
 condition|)
 name|termwidth
 operator|=
@@ -823,7 +846,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFGHLPRTWabcdfgiklnoqrstu"
+literal|"1ABCFGHLPRTWabcdfghiklnoqrstuw"
 argument_list|)
 operator|)
 operator|!=
@@ -844,8 +867,6 @@ name|f_singlecol
 operator|=
 literal|1
 expr_stmt|;
-name|f_column
-operator|=
 name|f_longform
 operator|=
 literal|0
@@ -870,10 +891,6 @@ break|break;
 case|case
 literal|'C'
 case|:
-name|f_column
-operator|=
-literal|1
-expr_stmt|;
 name|f_longform
 operator|=
 name|f_singlecol
@@ -888,8 +905,6 @@ name|f_longform
 operator|=
 literal|1
 expr_stmt|;
-name|f_column
-operator|=
 name|f_singlecol
 operator|=
 literal|0
@@ -1031,6 +1046,14 @@ case|:
 comment|/* Compatibility with 4.3BSD. */
 break|break;
 case|case
+literal|'h'
+case|:
+name|f_humanval
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'i'
 case|:
 name|f_inode
@@ -1134,6 +1157,22 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'w'
+case|:
+name|f_nonprint
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal
+operator|=
+literal|0
+expr_stmt|;
+name|f_octal_escape
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 default|default:
 case|case
 literal|'?'
@@ -1204,6 +1243,26 @@ operator|=
 name|tgetstr
 argument_list|(
 literal|"AB"
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
+name|attrs_off
+operator|=
+name|tgetstr
+argument_list|(
+literal|"me"
+argument_list|,
+operator|&
+name|bp
+argument_list|)
+expr_stmt|;
+name|enter_bold
+operator|=
+name|tgetstr
+argument_list|(
+literal|"md"
 argument_list|,
 operator|&
 name|bp
@@ -1553,22 +1612,17 @@ specifier|static
 name|void
 name|traverse
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|,
-name|options
-parameter_list|)
 name|int
 name|argc
-decl_stmt|,
-name|options
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|,
+name|int
+name|options
+parameter_list|)
 block|{
 name|FTS
 modifier|*
@@ -1807,6 +1861,7 @@ name|FTS_SKIP
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
 block|}
 if|if
 condition|(
@@ -1831,20 +1886,14 @@ specifier|static
 name|void
 name|display
 parameter_list|(
-name|p
-parameter_list|,
-name|list
-parameter_list|)
 name|FTSENT
 modifier|*
 name|p
-decl_stmt|,
-decl|*
+parameter_list|,
+name|FTSENT
+modifier|*
 name|list
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|struct
 name|stat
@@ -1862,7 +1911,7 @@ name|NAMES
 modifier|*
 name|np
 decl_stmt|;
-name|u_quad_t
+name|off_t
 name|maxsize
 decl_stmt|;
 name|u_long
@@ -1879,17 +1928,20 @@ decl_stmt|;
 name|int
 name|bcfile
 decl_stmt|,
+name|maxflags
+decl_stmt|;
+name|gid_t
+name|maxgroup
+decl_stmt|;
+name|uid_t
+name|maxuser
+decl_stmt|;
+name|size_t
 name|flen
-decl_stmt|,
-name|glen
 decl_stmt|,
 name|ulen
 decl_stmt|,
-name|maxflags
-decl_stmt|,
-name|maxgroup
-decl_stmt|,
-name|maxuser
+name|glen
 decl_stmt|;
 name|char
 modifier|*
@@ -1975,6 +2027,24 @@ literal|"LS_COLWIDTHS"
 argument_list|)
 expr_stmt|;
 comment|/* Fields match -lios order.  New ones should be added at the end. */
+name|maxblock
+operator|=
+name|maxinode
+operator|=
+name|maxlen
+operator|=
+name|maxnlink
+operator|=
+name|maxuser
+operator|=
+name|maxgroup
+operator|=
+name|maxflags
+operator|=
+name|maxsize
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|initmax
@@ -2156,7 +2226,7 @@ name|sscanf
 argument_list|(
 name|jinitmax
 argument_list|,
-literal|" %lu : %lu : %lu : %i : %i : %i : %qu : %lu "
+literal|" %lu : %lu : %lu : %i : %i : %i : %llu : %lu "
 argument_list|,
 operator|&
 name|maxinode
@@ -2199,6 +2269,7 @@ name|maxinode
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|1
 case|:
@@ -2206,6 +2277,7 @@ name|maxblock
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|2
 case|:
@@ -2213,6 +2285,7 @@ name|maxnlink
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|3
 case|:
@@ -2220,6 +2293,7 @@ name|maxuser
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|4
 case|:
@@ -2227,6 +2301,7 @@ name|maxgroup
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|5
 case|:
@@ -2234,6 +2309,7 @@ name|maxflags
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|6
 case|:
@@ -2241,6 +2317,7 @@ name|maxsize
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 case|case
 literal|7
 case|:
@@ -2248,6 +2325,7 @@ name|maxlen
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
 ifdef|#
 directive|ifdef
 name|COLORLS
@@ -2262,6 +2340,8 @@ name|f_notabs
 operator|=
 literal|0
 expr_stmt|;
+comment|/* fall through */
+default|default:
 block|}
 name|maxinode
 operator|=
@@ -2292,36 +2372,6 @@ name|maxsize
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|initmax
-operator|==
-name|NULL
-operator|||
-operator|*
-name|initmax
-operator|==
-literal|'\0'
-condition|)
-name|maxblock
-operator|=
-name|maxinode
-operator|=
-name|maxlen
-operator|=
-name|maxnlink
-operator|=
-name|maxuser
-operator|=
-name|maxgroup
-operator|=
-name|maxflags
-operator|=
-name|maxsize
-operator|=
-literal|0
-expr_stmt|;
 name|bcfile
 operator|=
 literal|0
@@ -2470,7 +2520,7 @@ operator|||
 name|f_octal_escape
 condition|)
 block|{
-name|int
+name|u_long
 name|t
 init|=
 name|len_octal
@@ -2736,17 +2786,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|flen
 operator|=
 name|strlen
 argument_list|(
 name|flags
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|flen
 operator|>
+operator|(
+name|size_t
+operator|)
 name|maxflags
 condition|)
 name|maxflags
@@ -3111,7 +3164,7 @@ name|fts_pointer
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Ordering for mastercmp:  * If ordering the argv (fts_level = FTS_ROOTLEVEL) return non-directories  * as larger than directories.  Within either group, use the sort function.  * All other levels use the sort function.  Error entries remain unsorted.  */
@@ -3122,23 +3175,18 @@ specifier|static
 name|int
 name|mastercmp
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 specifier|const
 name|FTSENT
 modifier|*
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|FTSENT
+modifier|*
 modifier|*
 name|b
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|a_info
@@ -3263,7 +3311,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Makenines() returns (10**n)-1.  This is useful for converting a width  * into a number that wide in decimal.  */
@@ -3274,11 +3322,9 @@ specifier|static
 name|u_quad_t
 name|makenines
 parameter_list|(
-name|n
-parameter_list|)
 name|u_long
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_long
 name|i

@@ -110,15 +110,12 @@ begin_function
 name|int
 name|prn_printable
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
-name|unsigned
 name|char
 name|c
 decl_stmt|;
@@ -150,6 +147,10 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -175,23 +176,19 @@ comment|/*  * The fts system makes it difficult to replace fts_name with a diffe
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|len_octal
 parameter_list|(
-name|s
-parameter_list|,
-name|len
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
+name|size_t
 name|r
 init|=
 literal|0
@@ -207,6 +204,7 @@ name|isprint
 argument_list|(
 operator|(
 name|unsigned
+specifier|const
 name|char
 operator|)
 operator|*
@@ -232,13 +230,11 @@ begin_function
 name|int
 name|prn_octal
 parameter_list|(
-name|s
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -254,6 +250,10 @@ condition|(
 operator|(
 name|ch
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 operator|++
@@ -492,7 +492,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -504,10 +506,10 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|COLORLS
-literal|"usage: ls [-ABCFGHLPRTWabcdfgiklnoqrstu1]"
+literal|"usage: ls [-ABCFGHLPRTWabcdfghiklnoqrstu1]"
 else|#
 directive|else
-literal|"usage: ls [-ABCFHLPRTWabcdfgiklnoqrstu1]"
+literal|"usage: ls [-ABCFHLPRTWabcdfghiklnoqrstu1]"
 endif|#
 directive|endif
 literal|" [file ...]\n"
