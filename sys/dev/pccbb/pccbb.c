@@ -4828,7 +4828,15 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 		 * In our ISR, we turn off the card changed interrupt.  Turn 		 * them back on here before we wait for them to happen.  We 		 * turn them on/off so that we can tolerate a large latency 		 * between the time we signal cbb_event_thread and it gets 		 * a chance to run. 		 */
+comment|/* 		 * Wait until it has been 1s since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop.  Although we clear the bit in the 		 * ISR, we signal sc->cv from the detach path after we've 		 * set the CBB_KTHREAD_DONE bit, so we can't do a simple 		 * 1s sleep here. 		 * 		 * In our ISR, we turn off the card changed interrupt.  Turn 		 * them back on here before we wait for them to happen.  We 		 * turn them on/off so that we can tolerate a large latency 		 * between the time we signal cbb_event_thread and it gets 		 * a chance to run. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 name|cbb_setb
 argument_list|(
 name|sc
@@ -4836,15 +4844,6 @@ argument_list|,
 name|CBB_SOCKET_MASK
 argument_list|,
 name|CBB_SOCKET_MASK_CD
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Wait until it has been 1s since the last time we 		 * get an interrupt.  We handle the rest of the interrupt 		 * at the top of the loop.  Although we clear the bit in the 		 * ISR, we signal sc->cv from the detach path after we've 		 * set the CBB_KTHREAD_DONE bit, so we can't do a simple 		 * 1s sleep here. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mtx
 argument_list|)
 expr_stmt|;
 name|cv_wait
@@ -5239,21 +5238,21 @@ operator|&
 name|CBB_SOCKET_EVENT_CD
 condition|)
 block|{
-name|cbb_clrb
-argument_list|(
-name|sc
-argument_list|,
-name|CBB_SOCKET_MASK
-argument_list|,
-name|CBB_SOCKET_MASK_CD
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|mtx
+argument_list|)
+expr_stmt|;
+name|cbb_setb
+argument_list|(
+name|sc
+argument_list|,
+name|CBB_SOCKET_MASK
+argument_list|,
+name|CBB_SOCKET_MASK_CD
 argument_list|)
 expr_stmt|;
 name|sc
