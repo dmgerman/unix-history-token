@@ -3763,6 +3763,18 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* 		 * If they want this synchronous then write it and wait for 		 * it.  Otherwise, if on a cluster boundary write it 		 * asynchronously so we can move on to the next block 		 * without delay.  Otherwise do a delayed write because we 		 * may want to write somemore into the block later. 		 */
 if|if
 condition|(
