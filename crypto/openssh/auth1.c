@@ -827,6 +827,7 @@ argument_list|(
 literal|"Kerberos v4 authentication disabled."
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 else|else
 block|{
