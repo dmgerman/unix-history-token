@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotaon.c	4.2 (Berkeley, Melbourne) %G%"
+literal|"@(#)quotaon.c	4.3 (Berkeley, Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_decl_stmt
 begin_comment
 comment|/* all file systems */
 end_comment
+
+begin_decl_stmt
+name|int
+name|done
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -120,6 +126,8 @@ decl_stmt|,
 name|errs
 init|=
 literal|0
+decl_stmt|,
+name|i
 decl_stmt|;
 name|whoami
 operator|=
@@ -290,17 +298,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|aflag
+operator|&&
+operator|(
 name|fs
 operator|->
 name|fs_type
 operator|==
 literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|aflag
-operator|&&
+operator|||
 name|strcmp
 argument_list|(
 name|fs
@@ -311,6 +317,7 @@ literal|"rq"
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 continue|continue;
 if|if
@@ -319,6 +326,7 @@ operator|!
 name|aflag
 operator|&&
 operator|!
+operator|(
 name|oneof
 argument_list|(
 name|fs
@@ -329,6 +337,18 @@ name|argv
 argument_list|,
 name|argc
 argument_list|)
+operator|||
+name|oneof
+argument_list|(
+name|fs
+operator|->
+name|fs_spec
+argument_list|,
+name|argv
+argument_list|,
+name|argc
+argument_list|)
+operator|)
 condition|)
 continue|continue;
 if|if
@@ -450,6 +470,45 @@ block|}
 name|endfsent
 argument_list|()
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|(
+name|done
+operator|&
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s not found in /etc/fstab\n"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|errs
@@ -520,11 +579,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|done
+operator||=
+literal|1
+operator|<<
+name|i
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
