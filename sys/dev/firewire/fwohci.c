@@ -13960,14 +13960,16 @@ name|printf
 argument_list|(
 literal|"%08jx %s %s %s %s %5d %08x %08x %04x:%04x"
 argument_list|,
+argument|(uintmax_t)db_tr->bus_addr
+argument_list|,
 else|#
 directive|else
 argument|printf(
 literal|"%08x %s %s %s %s %5d %08x %08x %04x:%04x"
-argument|,
+argument|, 				db_tr->bus_addr,
 endif|#
 directive|endif
-argument|(uintmax_t)db_tr->bus_addr, 				dbcode[(cmd>>
+argument|dbcode[(cmd>>
 literal|28
 argument|)&
 literal|0xf
