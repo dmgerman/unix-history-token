@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.9 (Berkeley) %G%"
+literal|"@(#)headers.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1451,6 +1451,14 @@ argument_list|(
 literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
+comment|/* if we are just verifying (that is, sendmail -t -bv), drop out now */
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_VERIFY
+condition|)
+return|return;
 comment|/* store hop count */
 if|if
 condition|(
