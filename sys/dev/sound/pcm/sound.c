@@ -2451,7 +2451,13 @@ name|sce
 operator|->
 name|channel
 argument_list|,
-literal|1
+name|SLIST_EMPTY
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|children
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
