@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_tty.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -331,14 +331,34 @@ name|u_ttyd
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|SESS_LEADER
+argument_list|(
 name|u
 operator|.
 name|u_procp
+argument_list|)
+condition|)
+block|{
+comment|/*  			 * XXX - check posix draft 			 */
+name|u
+operator|.
+name|u_ttyp
 operator|->
-name|p_pgrp
+name|t_session
 operator|=
 literal|0
 expr_stmt|;
+name|u
+operator|.
+name|u_ttyp
+operator|->
+name|t_pgid
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

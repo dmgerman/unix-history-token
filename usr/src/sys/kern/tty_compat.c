@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttcompat.c	7.11 (Berkeley) 4/8/88  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_compat.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*   * mapping routines for old line disciplines (yuck)  */
+comment|/*   * mapping routines for old line discipline (yuck)  */
 end_comment
 
 begin_ifdef
@@ -103,100 +103,16 @@ directive|include
 file|"syslog.h"
 end_include
 
-begin_comment
-comment|/* begin XXX */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|t_erase
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_kill
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_intrc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_quitc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_startc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_stopc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_eofc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_brkc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_suspc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_dsuspc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_rprntc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_flushc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_werasc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|t_lnextc
-end_undef
+begin_decl_stmt
+name|int
+name|ttydebug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* end XXX */
-end_comment
-
-begin_comment
-comment|/* should fold these two tables into one */
+comment|/* XXX - fold these two tables into one */
 end_comment
 
 begin_decl_stmt
@@ -486,8 +402,6 @@ name|ttcompatgetflags
 argument_list|(
 name|tp
 argument_list|)
-operator|&
-literal|0xffff
 expr_stmt|;
 break|break;
 block|}
@@ -626,7 +540,7 @@ index|[
 name|VERASE2
 index|]
 operator|=
-name|POSIX_V_DISABLE
+name|_POSIX_VDISABLE
 expr_stmt|;
 name|tp
 operator|->
@@ -848,7 +762,7 @@ index|[
 name|VEOL2
 index|]
 operator|=
-name|POSIX_V_DISABLE
+name|_POSIX_VDISABLE
 expr_stmt|;
 break|break;
 block|}
@@ -1054,7 +968,7 @@ operator|)
 operator||
 operator|*
 operator|(
-name|short
+name|int
 operator|*
 operator|)
 name|data
@@ -1096,7 +1010,7 @@ name|t_flags
 operator||=
 operator|*
 operator|(
-name|short
+name|int
 operator|*
 operator|)
 name|data
@@ -1112,7 +1026,7 @@ operator|~
 operator|(
 operator|*
 operator|(
-name|short
+name|int
 operator|*
 operator|)
 name|data
@@ -1150,7 +1064,7 @@ name|TIOCLGET
 case|:
 operator|*
 operator|(
-name|short
+name|int
 operator|*
 operator|)
 name|data
@@ -1162,7 +1076,83 @@ argument_list|)
 operator|>>
 literal|16
 expr_stmt|;
+if|if
+condition|(
+name|ttydebug
+condition|)
+name|printf
+argument_list|(
+literal|"CLGET: returning %x\n"
+argument_list|,
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
 break|break;
+case|case
+name|TIOCGETDCOMPAT
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|=
+name|tp
+operator|->
+name|t_line
+condition|?
+name|tp
+operator|->
+name|t_line
+else|:
+literal|2
+expr_stmt|;
+break|break;
+case|case
+name|TIOCSETDCOMPAT
+case|:
+block|{
+name|int
+name|ldisczero
+init|=
+literal|0
+decl_stmt|;
+return|return
+operator|(
+name|ttioctl
+argument_list|(
+name|tp
+argument_list|,
+name|TIOCSETD
+argument_list|,
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|==
+literal|2
+condition|?
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ldisczero
+else|:
+name|data
+argument_list|,
+name|flag
+argument_list|)
+operator|)
+return|;
+block|}
 default|default:
 return|return
 operator|(
@@ -1388,6 +1378,8 @@ condition|)
 name|flags
 operator||=
 name|CRTERA
+operator||
+name|CRTBS
 expr_stmt|;
 if|if
 condition|(
@@ -1398,6 +1390,8 @@ condition|)
 name|flags
 operator||=
 name|CRTKIL
+operator||
+name|CRTBS
 expr_stmt|;
 if|if
 condition|(
@@ -1452,6 +1446,17 @@ name|PENDIN
 operator||
 name|NOFLSH
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ttydebug
+condition|)
+name|printf
+argument_list|(
+literal|"getflags: %x\n"
+argument_list|,
+name|flags
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1822,10 +1827,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/* XXX - rethink this whole routine */
-end_comment
-
 begin_expr_stmt
 name|ttcompatsetlflags
 argument_list|(
@@ -1904,6 +1905,7 @@ expr_stmt|;
 else|else
 name|lflag
 operator|&=
+operator|~
 name|ECHOE
 expr_stmt|;
 if|if
