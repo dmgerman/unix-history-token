@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.7	82/04/10	*/
+comment|/*	raw_cb.c	4.8	82/04/11	*/
 end_comment
 
 begin_include
@@ -378,6 +378,7 @@ if|if
 condition|(
 name|addr
 condition|)
+block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -406,6 +407,7 @@ name|rcb_flags
 operator||=
 name|RAW_LADDR
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0

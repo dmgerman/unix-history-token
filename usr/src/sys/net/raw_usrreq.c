@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.13	82/04/10	*/
+comment|/*	raw_usrreq.c	4.14	82/04/11	*/
 end_comment
 
 begin_include
@@ -124,9 +124,9 @@ argument|m0
 argument_list|,
 argument|proto
 argument_list|,
-argument|dst
-argument_list|,
 argument|src
+argument_list|,
+argument|dst
 argument_list|)
 end_macro
 
@@ -150,10 +150,10 @@ begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
-name|dst
+name|src
 decl_stmt|,
 modifier|*
-name|src
+name|dst
 decl_stmt|;
 end_decl_stmt
 
@@ -322,16 +322,11 @@ name|rp
 decl_stmt|;
 specifier|register
 name|struct
-name|sockaddr
-modifier|*
-name|laddr
-decl_stmt|;
-specifier|register
-name|struct
 name|protosw
 modifier|*
 name|lproto
 decl_stmt|;
+specifier|register
 name|struct
 name|raw_header
 modifier|*
@@ -385,7 +380,6 @@ name|raw_header
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Find the appropriate socket(s) in which to place this 	 * packet.  This is done by matching the protocol and 	 * address information prepended by raw_input against 	 * the info stored in the control block structures. 	 */
 name|last
 operator|=
 literal|0
@@ -448,31 +442,17 @@ operator|.
 name|sp_protocol
 condition|)
 continue|continue;
-name|laddr
-operator|=
-operator|&
-name|rp
-operator|->
-name|rcb_laddr
-expr_stmt|;
-if|if
-condition|(
-name|laddr
-operator|->
-name|sa_family
-operator|&&
-name|laddr
-operator|->
-name|sa_family
-operator|!=
-name|rh
-operator|->
-name|raw_dst
-operator|.
-name|sa_family
-condition|)
-continue|continue;
 comment|/* 		 * We assume the lower level routines have 		 * placed the address in a canonical format 		 * suitable for a structure comparison. 		 */
+define|#
+directive|define
+name|equal
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|)
+define|\
+value|(bcmp((caddr_t)&(a1), (caddr_t)&(a2), sizeof (struct sockaddr)) == 0)
 if|if
 condition|(
 operator|(
@@ -483,22 +463,17 @@ operator|&
 name|RAW_LADDR
 operator|)
 operator|&&
-name|bcmp
+operator|!
+name|equal
 argument_list|(
-name|laddr
+name|rp
 operator|->
-name|sa_data
+name|rcb_laddr
 argument_list|,
 name|rh
 operator|->
 name|raw_dst
-operator|.
-name|sa_data
-argument_list|,
-literal|14
 argument_list|)
-operator|!=
-literal|0
 condition|)
 continue|continue;
 if|if
@@ -511,27 +486,19 @@ operator|&
 name|RAW_FADDR
 operator|)
 operator|&&
-name|bcmp
+operator|!
+name|equal
 argument_list|(
 name|rp
 operator|->
 name|rcb_faddr
-operator|.
-name|sa_data
 argument_list|,
 name|rh
 operator|->
 name|raw_src
-operator|.
-name|sa_data
-argument_list|,
-literal|14
 argument_list|)
-operator|!=
-literal|0
 condition|)
 continue|continue;
-comment|/* 		 * To avoid extraneous packet copies, we keep 		 * track of the last socket the packet should be 		 * placed in, and make copies only after finding a 		 * socket which "collides". 		 */
 if|if
 condition|(
 name|last

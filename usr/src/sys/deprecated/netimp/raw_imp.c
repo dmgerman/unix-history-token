@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.10	82/04/10	*/
+comment|/*	raw_imp.c	4.11	82/04/11	*/
 end_comment
 
 begin_include
@@ -376,6 +376,9 @@ name|rp
 operator|->
 name|rcb_faddr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|ip
 operator|->
 name|il_network
@@ -386,6 +389,16 @@ name|sin_addr
 operator|.
 name|s_net
 expr_stmt|;
+else|#
+directive|else
+name|ip
+operator|->
+name|il_network
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|il_host
@@ -411,9 +424,11 @@ name|ifp
 operator|=
 name|if_ifonnetof
 argument_list|(
-name|ip
+name|sin
 operator|->
-name|il_network
+name|sin_addr
+operator|.
+name|s_net
 argument_list|)
 expr_stmt|;
 if|if
