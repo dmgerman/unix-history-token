@@ -9784,7 +9784,7 @@ modifier|*
 name|afp
 parameter_list|)
 block|{
-name|u_short
+name|u_int
 name|first
 init|=
 literal|123
@@ -9799,7 +9799,7 @@ name|sscanf
 argument_list|(
 name|range
 argument_list|,
-literal|"%hu-%hu"
+literal|"%u-%u"
 argument_list|,
 operator|&
 name|first
