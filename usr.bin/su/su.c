@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.24 1997/10/27 22:05:12 guido Exp $"
+literal|"$Id: su.c,v 1.25 1997/10/28 21:20:21 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -470,6 +470,9 @@ decl_stmt|;
 name|uid_t
 name|ruid
 decl_stmt|;
+name|gid_t
+name|gid
+decl_stmt|;
 name|int
 name|asme
 decl_stmt|,
@@ -873,6 +876,12 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+name|gid
+operator|=
+name|pwd
+operator|->
+name|pw_gid
+expr_stmt|;
 if|if
 condition|(
 name|username
@@ -1119,7 +1128,7 @@ block|}
 endif|#
 directive|endif
 block|{
-comment|/* only allow those in group zero to su to root. */
+comment|/* 			 * Only allow those with pw_gid==0 or those listed in 			 * group zero to su to root.  If group zero entry is 			 * missing or empty, then allow anyone to su to root. 			 * iswheelsu will only be set if the user is EXPLICITLY 			 * listed in group zero. 			 */
 if|if
 condition|(
 name|pwd
@@ -1170,6 +1179,14 @@ operator|!
 operator|*
 name|g
 condition|)
+if|if
+condition|(
+name|gid
+operator|==
+literal|0
+condition|)
+break|break;
+else|else
 name|errx
 argument_list|(
 literal|1
