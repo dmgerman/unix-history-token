@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hostname.c	1.2 1.2 83/01/02"
+literal|"@(#)hostname.c	1.3 1.3 83/03/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,9 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
+name|int
+name|myerrno
+decl_stmt|;
 name|argc
 operator|--
 expr_stmt|;
@@ -78,6 +81,10 @@ argument_list|(
 literal|"sethostname"
 argument_list|)
 expr_stmt|;
+name|myerrno
+operator|=
+name|errno
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -91,6 +98,10 @@ name|hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|myerrno
+operator|=
+name|errno
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -101,7 +112,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|errno
+name|myerrno
 argument_list|)
 expr_stmt|;
 block|}
