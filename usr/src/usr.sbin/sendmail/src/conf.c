@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.73 (Berkeley) %G%"
+literal|"@(#)conf.c	8.74 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6238,7 +6238,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|ETXTBSY
-name|:
 case|case
 name|ETXTBSY
 case|:
