@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mapc.c	5.6 (Berkeley) %G%"
+literal|"@(#)mapc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3124,6 +3124,10 @@ if|if
 condition|(
 name|regexec
 argument_list|(
+operator|(
+name|regexp
+operator|*
+operator|)
 name|k
 operator|->
 name|key
