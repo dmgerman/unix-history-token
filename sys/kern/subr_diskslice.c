@@ -1047,8 +1047,7 @@ name|slicerel_secno
 condition|)
 name|printf
 argument_list|(
-literal|"dscheck(%s):"
-literal|" should map bad sector %ld -> %ld\n"
+literal|"dscheck(%s): should map bad sector %ld -> %ld\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -1487,8 +1486,7 @@ name|bad_bcount
 label|:
 name|printf
 argument_list|(
-literal|"dscheck(%s):"
-literal|" b_bcount %ld is not on a sector boundary (ssize %d)\n"
+literal|"dscheck(%s): b_bcount %ld is not on a sector boundary (ssize %d)\n"
 argument_list|,
 name|devtoname
 argument_list|(
@@ -1519,8 +1517,7 @@ name|bad_blkno
 label|:
 name|printf
 argument_list|(
-literal|"dscheck(%s):"
-literal|" b_blkno %ld is not on a sector boundary (ssize %d)\n"
+literal|"dscheck(%s): b_blkno %ld is not on a sector boundary (ssize %d)\n"
 argument_list|,
 name|devtoname
 argument_list|(
