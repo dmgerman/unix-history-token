@@ -77,20 +77,14 @@ begin_function
 name|void
 name|pr_attime
 parameter_list|(
-name|started
-parameter_list|,
-name|now
-parameter_list|)
 name|time_t
 modifier|*
 name|started
-decl_stmt|,
-decl|*
+parameter_list|,
+name|time_t
+modifier|*
 name|now
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -250,7 +244,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * pr_idle --  *	Display the idle time.  *	Returns number of excess characters that were used for long idle time.  */
@@ -260,11 +254,9 @@ begin_function
 name|int
 name|pr_idle
 parameter_list|(
-name|idle
-parameter_list|)
 name|time_t
 name|idle
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* If idle more than 36 hours, print as a number of days. */
 if|if

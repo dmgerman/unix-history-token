@@ -128,21 +128,16 @@ begin_function
 name|int
 name|proc_compare
 parameter_list|(
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
 name|struct
 name|kinfo_proc
 modifier|*
 name|p1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|kinfo_proc
+modifier|*
 name|p2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -377,7 +372,7 @@ operator|)
 return|;
 comment|/* tie - return highest pid */
 block|}
-end_block
+end_function
 
 end_unit
 
