@@ -82,10 +82,17 @@ name|s
 operator|==
 name|NULL
 condition|)
+block|{
 name|s
 operator|=
 name|buf
 expr_stmt|;
+name|wc
+operator|=
+literal|L'
+expr|\0'
+expr_stmt|;
+block|}
 name|sputrune
 argument_list|(
 name|wc
