@@ -1917,6 +1917,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|meta
+operator|!=
+name|NULL
+operator|&&
 name|bcmp
 argument_list|(
 name|buf1
