@@ -8002,7 +8002,7 @@ literal|4
 argument_list|,
 name|sc
 argument_list|,
-literal|"cmd_hdr = %x %lx %x %x %x %x %x\n %s"
+literal|"cmd_hdr = %x %lx %x %x %x %x %zx\n %s"
 argument_list|,
 name|sc
 operator|->

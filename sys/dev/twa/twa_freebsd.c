@@ -3454,7 +3454,7 @@ name|twa_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"9K cmd = %x %x %x %x %x %x %x %x %x\n"
+literal|"9K cmd = %x %x %x %x %x %x %x %x %jx\n"
 argument_list|,
 name|cmd9k
 operator|->
@@ -3490,6 +3490,9 @@ name|sgl_entries
 argument_list|,
 name|cmd_phys_addr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cmd9k
 operator|->
 name|sg_list
@@ -3694,7 +3697,7 @@ name|twa_printf
 argument_list|(
 name|sc
 argument_list|,
-literal|"cmdphys=0x%x data=%p length=0x%x\n"
+literal|"cmdphys=0x%x data=%p length=0x%jx\n"
 argument_list|,
 name|cmd_phys_addr
 argument_list|,
@@ -3702,6 +3705,9 @@ name|tr
 operator|->
 name|tr_data
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|tr
 operator|->
 name|tr_length
