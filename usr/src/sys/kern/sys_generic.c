@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3561,9 +3561,6 @@ name|selwait
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
 name|p
 operator|=
 name|pfind
@@ -3572,19 +3569,19 @@ name|sip
 operator|->
 name|si_pid
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
+expr_stmt|;
 name|sip
 operator|->
 name|si_pid
 operator|=
 literal|0
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
 block|{
 name|s
 operator|=
