@@ -928,7 +928,7 @@ name|PCIB_ACCESSOR
 end_undef
 
 begin_comment
-comment|/*  * PCI interrupt validation.  */
+comment|/*  * PCI interrupt validation.  Invalid interrupt values such as 0 or 128  * on i386 or other platforms should be mapped out in the MD pcireadconf  * code and not here, since the only MI invalid IRQ is 255.  */
 end_comment
 
 begin_define
@@ -945,7 +945,7 @@ name|PCI_INTERRUPT_VALID
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) != 0)&& ((x) != PCI_INVALID_IRQ))
+value|((x) != PCI_INVALID_IRQ)
 end_define
 
 begin_comment
