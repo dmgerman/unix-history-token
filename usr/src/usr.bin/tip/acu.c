@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acu.c	4.1	81/05/09	*/
+comment|/*	acu.c	4.2	81/10/02	*/
 end_comment
 
 begin_include
@@ -512,6 +512,8 @@ name|acu_dialer
 call|)
 argument_list|(
 name|phnum
+argument_list|,
+name|CU
 argument_list|)
 condition|)
 block|{
