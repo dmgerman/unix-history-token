@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	5.8 (Berkeley) %G%"
+literal|"@(#)archive.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -480,7 +480,8 @@ specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|20
