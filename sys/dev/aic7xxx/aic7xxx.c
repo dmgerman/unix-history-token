@@ -1887,6 +1887,7 @@ name|flags
 operator||=
 name|SCB_ACTIVE
 expr_stmt|;
+comment|/* 		 * Timers are disabled while recovery is in progress. 		 */
 name|aic_scb_timer_start
 argument_list|(
 name|scb
@@ -2663,7 +2664,27 @@ argument_list|,
 name|SEND_SENSE
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Ensure we have enough time to actually 			 * retrieve the sense. 			 */
+comment|/* 			 * Ensure we have enough time to actually 			 * retrieve the sense, but only schedule 			 * the timer if we are not in recovery or 			 * this is a recovery SCB that is allowed 			 * to have an active timer. 			 */
+if|if
+condition|(
+name|ahc
+operator|->
+name|scb_data
+operator|->
+name|recovery_scbs
+operator|==
+literal|0
+operator|||
+operator|(
+name|scb
+operator|->
+name|flags
+operator|&
+name|SCB_RECOVERY_SCB
+operator|)
+operator|!=
+literal|0
+condition|)
 name|aic_scb_timer_reset
 argument_list|(
 name|scb

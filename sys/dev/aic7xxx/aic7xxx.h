@@ -1424,6 +1424,10 @@ modifier|*
 name|sense
 decl_stmt|;
 comment|/* Per SCB sense data */
+name|u_int
+name|recovery_scbs
+decl_stmt|;
+comment|/* Transactions currently in recovery */
 comment|/* 	 * "Bus" addresses of our data structures. 	 */
 name|bus_dma_tag_t
 name|hscb_dmat
@@ -2432,6 +2436,16 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|AIC_SCB_DATA
+parameter_list|(
+name|softc
+parameter_list|)
+value|((softc)->scb_data)
+end_define
 
 begin_struct
 struct|struct

@@ -1168,6 +1168,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|AIC_SCB_DATA
+argument_list|(
+name|scb
+operator|->
+name|aic_softc
+argument_list|)
+operator|->
+name|recovery_scbs
+operator|==
+literal|0
+operator|&&
 name|scb
 operator|->
 name|io_ctx

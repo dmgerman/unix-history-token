@@ -1666,6 +1666,10 @@ index|[
 name|AHD_SCB_MAX
 index|]
 decl_stmt|;
+name|u_int
+name|recovery_scbs
+decl_stmt|;
+comment|/* Transactions currently in recovery */
 comment|/* 	 * "Bus" addresses of our data structures. 	 */
 name|bus_dma_tag_t
 name|hscb_dmat
@@ -3152,6 +3156,16 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|AIC_SCB_DATA
+parameter_list|(
+name|softc
+parameter_list|)
+value|(&(softc)->scb_data)
+end_define
 
 begin_struct
 struct|struct
