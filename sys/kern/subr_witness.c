@@ -3850,6 +3850,10 @@ literal|"cy"
 block|,
 endif|#
 directive|endif
+literal|"ng_node"
+block|,
+literal|"ng_worklist"
+block|,
 literal|"ithread table lock"
 block|,
 literal|"ithread list lock"
@@ -3866,10 +3870,6 @@ directive|endif
 literal|"callout"
 block|,
 comment|/* 	 * leaf locks 	 */
-literal|"ng_node"
-block|,
-literal|"ng_worklist"
-block|,
 ifdef|#
 directive|ifdef
 name|SMP

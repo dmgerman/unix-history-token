@@ -12222,11 +12222,6 @@ operator|.
 name|q_mtx
 argument_list|)
 expr_stmt|;
-name|NG_NODE_UNREF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 break|break;
 comment|/* go look for another node */
 block|}
@@ -12249,6 +12244,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -13101,6 +13101,13 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+comment|/* One for us */
+name|NG_NODE_REF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* and one for the item */
 name|NGI_SET_NODE
 argument_list|(
 name|item
@@ -13157,6 +13164,11 @@ literal|0
 argument_list|)
 operator|)
 return|;
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
