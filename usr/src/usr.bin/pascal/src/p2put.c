@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.13 %G%"
+literal|"@(#)p2put.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,17 +374,31 @@ endif|vax
 ifdef|#
 directive|ifdef
 name|mc68000
-comment|/* 	     *	this is a5 and d7 mashed together. 	     */
+comment|/* 	     *	this is how /lib/f1 wants it. 	     */
 name|maxtempreg
 operator|=
 operator|(
-literal|5
+name|sizesp
+operator|->
+name|curtmps
+operator|.
+name|next_avail
+index|[
+name|REG_ADDR
+index|]
 operator|<<
 literal|4
 operator|)
 operator||
 operator|(
-literal|7
+name|sizesp
+operator|->
+name|curtmps
+operator|.
+name|next_avail
+index|[
+name|REG_DATA
+index|]
 operator|)
 expr_stmt|;
 endif|#
@@ -456,7 +470,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	emit a right bracket operator      *	which for the binary (fortran) interface      *	forces the stack allocate and register mask      */
+comment|/*      *	emit a right bracket operator      *	which for the binary interface      *	forces the stack allocate and register mask      */
 end_comment
 
 begin_macro
