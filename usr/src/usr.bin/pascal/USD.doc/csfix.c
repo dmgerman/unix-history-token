@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csfix.c	4.1 (Berkeley) %G%"
+literal|"@(#)csfix.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
