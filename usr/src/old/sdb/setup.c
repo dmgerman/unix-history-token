@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c 4.1 %G%"
+literal|"@(#)setup.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,23 +381,6 @@ name|magic
 condition|)
 block|{
 case|case
-literal|0412
-case|:
-name|txtmap
-operator|.
-name|f1
-operator|=
-name|txtmap
-operator|.
-name|f2
-operator|=
-operator|(
-name|CLSIZE
-operator|*
-name|NBPG
-operator|)
-expr_stmt|;
-case|case
 literal|0407
 case|:
 name|txtmap
@@ -410,7 +393,7 @@ name|txtmap
 operator|.
 name|e1
 operator|=
-name|symbas
+literal|0
 expr_stmt|;
 name|txtmap
 operator|.
