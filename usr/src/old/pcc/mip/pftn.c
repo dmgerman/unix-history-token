@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.25 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3817,7 +3817,15 @@ argument|d = pstk->in_d; 	s = pstk->in_s; 	if( pstk->in_sz<
 literal|0
 argument|){
 comment|/* bit field */
-argument|sz = -pstk->in_sz; 		} 	else { 		sz = tsize( t, d, s ); 		}  	inforce( pstk->in_off );  	p = buildtree( ASSIGN, block( NAME, NIL,NIL, t, d, s ), p ); 	p->in.left->in.op = FREE; 	p->in.left = p->in.right; 	p->in.right = NIL; 	p->in.left = optim( p->in.left ); 	o = p->in.left->in.op; 	if( o == UNARY AND ){ 		o = p->in.left->in.op = FREE; 		p->in.left = p->in.left->in.left; 		} 	p->in.op = INIT;  	if( sz< SZINT ){
+argument|sz = -pstk->in_sz; 		} 	else { 		sz = tsize( t, d, s ); 		}  	inforce( pstk->in_off );  	p = buildtree( ASSIGN, block( NAME, NIL,NIL, t, d, s ), p );
+ifdef|#
+directive|ifdef
+name|LINT
+comment|/* force lint to treat this like an assignment */
+argument|ecode(p);
+endif|#
+directive|endif
+argument|p->in.left->in.op = FREE; 	p->in.left = p->in.right; 	p->in.right = NIL; 	p->in.left = optim( p->in.left ); 	o = p->in.left->in.op; 	if( o == UNARY AND ){ 		o = p->in.left->in.op = FREE; 		p->in.left = p->in.left->in.left; 		} 	p->in.op = INIT;  	if( sz< SZINT ){
 comment|/* special case: bit fields, etc. */
 argument|if( o != ICON || p->in.left->tn.rval != NONAME ) 			uerror(
 literal|"illegal initialization"
