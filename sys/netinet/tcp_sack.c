@@ -454,11 +454,20 @@ name|void
 name|tcp_update_sack_list
 parameter_list|(
 name|tp
+parameter_list|,
+name|rcv_laststart
+parameter_list|,
+name|rcv_lastend
 parameter_list|)
 name|struct
 name|tcpcb
 modifier|*
 name|tp
+decl_stmt|;
+name|tcp_seq
+name|rcv_laststart
+decl_stmt|,
+name|rcv_lastend
 decl_stmt|;
 block|{
 comment|/* 	 * First reported block MUST be the most recent one.  Subsequent 	 * blocks SHOULD be in the order in which they arrived at the 	 * receiver.  These two conditions make the implementation fully 	 * compliant with RFC 2018. 	 */
@@ -647,8 +656,6 @@ name|tp
 operator|->
 name|rcv_nxt
 argument_list|,
-name|tp
-operator|->
 name|rcv_laststart
 argument_list|)
 condition|)
@@ -663,8 +670,6 @@ index|]
 operator|.
 name|start
 operator|=
-name|tp
-operator|->
 name|rcv_laststart
 expr_stmt|;
 name|tp
@@ -676,8 +681,6 @@ index|]
 operator|.
 name|end
 operator|=
-name|tp
-operator|->
 name|rcv_lastend
 expr_stmt|;
 name|tp
@@ -726,8 +729,6 @@ name|tp
 operator|->
 name|rcv_nxt
 argument_list|,
-name|tp
-operator|->
 name|rcv_lastend
 argument_list|)
 condition|)
@@ -738,16 +739,12 @@ name|firstsack
 operator|.
 name|start
 operator|=
-name|tp
-operator|->
 name|rcv_laststart
 expr_stmt|;
 name|firstsack
 operator|.
 name|end
 operator|=
-name|tp
-operator|->
 name|rcv_lastend
 expr_stmt|;
 for|for
