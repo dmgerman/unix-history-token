@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.2 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,7 +570,7 @@ name|fill_buffer
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* Scan an alphanumeric token */
+comment|/* Scan an alphanumeric token.  Note that we must also handle      * stuff like "1.0e+03" and "7e-6". */
 if|if
 condition|(
 name|chartype
@@ -590,25 +590,18 @@ name|char
 modifier|*
 name|j
 decl_stmt|;
-comment|/* used for searching thru list of  				 * 				 * reserved words */
+comment|/* used for searching thru list of  				 * reserved words */
 specifier|register
 name|struct
 name|templ
 modifier|*
 name|p
 decl_stmt|;
-while|while
-condition|(
-name|chartype
-index|[
-operator|*
-name|buf_ptr
-operator|&
-literal|0177
-index|]
-operator|==
-name|alphanum
-condition|)
+specifier|register
+name|int
+name|c
+decl_stmt|;
+do|do
 block|{
 comment|/* copy it over */
 operator|*
@@ -629,6 +622,57 @@ name|fill_buffer
 argument_list|()
 expr_stmt|;
 block|}
+do|while
+condition|(
+name|chartype
+index|[
+name|c
+operator|=
+operator|*
+name|buf_ptr
+operator|&
+literal|0177
+index|]
+operator|==
+name|alphanum
+operator|||
+name|isdigit
+argument_list|(
+name|token
+index|[
+literal|0
+index|]
+argument_list|)
+operator|&&
+operator|(
+name|c
+operator|==
+literal|'+'
+operator|||
+name|c
+operator|==
+literal|'-'
+operator|)
+operator|&&
+operator|(
+name|tok
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'e'
+operator|||
+name|tok
+index|[
+operator|-
+literal|1
+index|]
+operator|==
+literal|'E'
+operator|)
+condition|)
+do|;
 operator|*
 name|tok
 operator|++
@@ -1093,7 +1137,7 @@ return|;
 comment|/* the ident is not in the list */
 block|}
 comment|/* end of procesing for alpanum character */
-comment|/* l l Scan a non-alphanumeric token */
+comment|/* Scan a non-alphanumeric token */
 operator|*
 name|tok
 operator|++
