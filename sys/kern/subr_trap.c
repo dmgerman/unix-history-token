@@ -300,14 +300,14 @@ name|frame
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Charge system time if profiling. 	 * 	 * XXX should move PS_PROFIL to a place that can obviously be 	 * accessed safely without sched_lock. 	 */
+comment|/* 	 * Charge system time if profiling. 	 */
 if|if
 condition|(
 name|p
 operator|->
-name|p_sflag
+name|p_flag
 operator|&
-name|PS_PROFIL
+name|P_PROFIL
 condition|)
 block|{
 name|quad_t
@@ -586,9 +586,11 @@ name|flags
 operator|&
 name|TDF_OWEUPC
 operator|&&
-name|sflag
+name|p
+operator|->
+name|p_flag
 operator|&
-name|PS_PROFIL
+name|P_PROFIL
 condition|)
 block|{
 name|prticks
@@ -640,9 +642,11 @@ name|flags
 operator|&
 name|TDF_OWEUPC
 operator|&&
-name|sflag
+name|p
+operator|->
+name|p_flag
 operator|&
-name|PS_PROFIL
+name|P_PROFIL
 condition|)
 name|addupc_task
 argument_list|(

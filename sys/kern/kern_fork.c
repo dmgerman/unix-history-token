@@ -1908,6 +1908,19 @@ name|p_flag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|->
+name|p_flag
+operator|&
+name|P_PROFIL
+condition|)
+name|startprofclock
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1919,19 +1932,6 @@ operator|->
 name|p_sflag
 operator|=
 name|PS_INMEM
-expr_stmt|;
-if|if
-condition|(
-name|p1
-operator|->
-name|p_sflag
-operator|&
-name|PS_PROFIL
-condition|)
-name|startprofclock
-argument_list|(
-name|p2
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Allow the scheduler to adjust the priority of the child and 	 * parent while we hold the sched_lock. 	 */
 name|sched_fork
@@ -2298,7 +2298,7 @@ argument_list|(
 name|p1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Preserve some more flags in subprocess.  PS_PROFIL has already 	 * been preserved. 	 */
+comment|/* 	 * Preserve some more flags in subprocess.  P_PROFIL has already 	 * been preserved. 	 */
 name|p2
 operator|->
 name|p_flag

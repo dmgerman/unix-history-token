@@ -2256,6 +2256,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_PROFIL
+value|0x00020
+end_define
+
+begin_comment
+comment|/* Has started profiling. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_STOPPROF
+value|0x00040
+end_define
+
+begin_comment
+comment|/* Has thread in requesting to stop prof */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_SUGID
 value|0x00100
 end_define
@@ -2504,28 +2526,6 @@ end_define
 
 begin_comment
 comment|/* Exceeded CPU limit. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_PROFIL
-value|0x00004
-end_define
-
-begin_comment
-comment|/* Has started profiling. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_STOPPROF
-value|0x00008
-end_define
-
-begin_comment
-comment|/* Has thread in requesting to stop prof */
 end_comment
 
 begin_define
