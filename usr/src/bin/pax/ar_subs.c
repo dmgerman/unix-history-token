@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar_subs.c	1.2 (Berkeley) %G%"
+literal|"@(#)ar_subs.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1956,6 +1956,27 @@ literal|0
 operator|)
 condition|)
 return|return;
+comment|/* 	 * reading the archive may take a long time. If verbose tell the user 	 */
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"pax: Reading archive to position at the end..."
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|vfpart
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * step through the archive until the format says it is done 	 */
 while|while
 condition|(
@@ -2100,6 +2121,29 @@ operator|<
 literal|0
 condition|)
 return|return;
+comment|/* 	 * tell the user we are done reading. 	 */
+if|if
+condition|(
+name|vflag
+operator|&&
+name|vfpart
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"done.\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|vfpart
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * go to the writing phase to add the new members 	 */
 name|wr_archive
 argument_list|(
