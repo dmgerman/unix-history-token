@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.74 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.75 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.74 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.75 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2614,6 +2614,72 @@ name|noident
 goto|;
 block|}
 comment|/* p now points to the OSTYPE field */
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|p
+argument_list|,
+literal|"other"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|p
+index|[
+literal|5
+index|]
+operator|==
+literal|':'
+operator|||
+name|p
+index|[
+literal|5
+index|]
+operator|==
+literal|' '
+operator|||
+name|p
+index|[
+literal|5
+index|]
+operator|==
+literal|','
+operator|||
+name|p
+index|[
+literal|5
+index|]
+operator|==
+literal|'\0'
+operator|)
+condition|)
+block|{
+comment|/* not useful information */
+goto|goto
+name|noident
+goto|;
+block|}
 name|p
 operator|=
 name|strchr
