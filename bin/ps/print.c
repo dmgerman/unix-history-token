@@ -2806,6 +2806,14 @@ name|var
 expr_stmt|;
 if|if
 condition|(
+name|k
+operator|->
+name|ki_p
+operator|->
+name|ki_stat
+operator|==
+name|SZOMB
+operator|||
 operator|!
 name|k
 operator|->
