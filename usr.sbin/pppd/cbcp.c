@@ -1536,8 +1536,6 @@ expr_stmt|;
 name|len
 operator|=
 literal|3
-operator|+
-literal|1
 expr_stmt|;
 name|PUTCHAR
 argument_list|(
@@ -1554,13 +1552,6 @@ name|bufp
 argument_list|)
 expr_stmt|;
 comment|/* delay */
-name|PUTCHAR
-argument_list|(
-literal|0
-argument_list|,
-name|bufp
-argument_list|)
-expr_stmt|;
 name|cbcp_send
 argument_list|(
 name|us
@@ -1601,18 +1592,11 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 name|PUTCHAR
 argument_list|(
 name|len
-argument_list|,
-name|bufp
-argument_list|)
-expr_stmt|;
-name|PUTCHAR
-argument_list|(
-literal|0
 argument_list|,
 name|bufp
 argument_list|)
