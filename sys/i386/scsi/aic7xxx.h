@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.14 1995/10/26 23:57:18 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.15 1995/11/04 14:43:30 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -44,7 +44,7 @@ value|255
 end_define
 
 begin_comment
-comment|/* 				 * Up to 255 SCBs on some types of aic7xxx 				 * based boards.  The aic7870 have 16 internal 				 * SCBs, but external SRAM bumps this to 255. 				 * The aic7770 family have only 4, and the  				 * aic7850 have only 3. 				 */
+comment|/* 				 * Up to 255 SCBs on some types of aic7xxx 				 * based boards.  The aic7870 have 16 internal 				 * SCBs, but external SRAM bumps this to 255. 				 * The aic7770 family have only 4, and the  				 * aic7850 has only 3. 				 */
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_long
 name|ahc_unit
 decl_stmt|;
 end_decl_stmt
@@ -436,6 +436,9 @@ begin_struct
 struct|struct
 name|ahc_data
 block|{
+name|int
+name|unit
+decl_stmt|;
 name|ahc_type
 name|type
 decl_stmt|;
@@ -536,6 +539,103 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Different debugging levels used when AHC_DEBUG is defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWMISC
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWCMDS
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWSCBS
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWABORTS
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SHOWSENSE
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_DEBUG
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ahc_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Initialized in i386/scsi/aic7xxx.c */
+end_comment
+
+begin_comment
+comment|/*  * Since the sequencer can disable pausing in a critical section, we  * must loop until it actually stops.  * XXX Should add a timeout in here??  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAUSE_SEQUENCER
+parameter_list|(
+name|ahc
+parameter_list|)
+define|\
+value|outb(HCNTRL + ahc->baseport, ahc->pause);   \ 				\         while ((inb(HCNTRL + ahc->baseport)& PAUSE) == 0)             \                         ;
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNPAUSE_SEQUENCER
+parameter_list|(
+name|ahc
+parameter_list|)
+define|\
+value|outb( HCNTRL + ahc->baseport, ahc->unpause )
+end_define
+
+begin_comment
+comment|/*  * Restart the sequencer program from address zero  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESTART_SEQUENCER
+parameter_list|(
+name|ahc
+parameter_list|)
+define|\
+value|do {                                    \                         outb( SEQCTL + ahc->baseport, SEQRESET|FASTMODE );    \                 } while (inb(SEQADDR0 + ahc->baseport) != 0&&   \ 			 inb(SEQADDR1 + ahc->baseport != 0));     \                                                         \                 UNPAUSE_SEQUENCER(ahc);
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -549,8 +649,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|ahcprobe
+name|void
+name|ahc_reset
+name|__P
+argument_list|(
+operator|(
+name|u_long
+name|iobase
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ahc_data
+modifier|*
+name|ahc_alloc
 name|__P
 argument_list|(
 operator|(
@@ -571,6 +686,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|ahc_free
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ahc_data
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ahc_init
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ahc_attach
 name|__P
@@ -584,14 +726,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|ahc_pci_intr
+name|void
+name|ahc_eisa_intr
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
-name|vunit
+name|arg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ahcintr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|arg
 operator|)
 argument_list|)
 decl_stmt|;
