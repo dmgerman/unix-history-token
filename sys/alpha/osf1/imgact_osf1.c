@@ -328,7 +328,8 @@ name|execp
 argument_list|)
 condition|)
 return|return
-name|ENOEXEC
+operator|-
+literal|1
 return|;
 comment|/* verfify it an OSF/1 exectutable */
 if|if
