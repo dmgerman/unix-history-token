@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.31 1995/01/25 21:37:38 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.32 1995/01/28 03:51:39 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -85,13 +85,6 @@ end_function_decl
 begin_decl_stmt
 name|int
 name|loadflags
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|char
-name|loadsyms
 decl_stmt|;
 end_decl_stmt
 
@@ -198,7 +191,7 @@ expr_stmt|;
 comment|/* This is ugly, but why use 4 printf()s when 1 will do? */
 name|printf
 argument_list|(
-literal|"\n\>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n\ Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n\ Usage: [[[%s(%d,a)]%s][-Dabcdhrsv]]\n\ Use ? for file list or press Enter for defaults\n\n"
+literal|"\n\>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n\ Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n\ Usage: [[%s(%d,a)]%s][-abcdhrsv]\n\ Use ? for file list or press Enter for defaults\n\n"
 argument_list|,
 name|ouraddr
 argument_list|,
@@ -339,6 +332,9 @@ name|bootdev
 decl_stmt|;
 name|int
 name|i
+decl_stmt|;
+name|unsigned
+name|pad
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -677,14 +673,6 @@ name|head
 operator|.
 name|a_bss
 expr_stmt|;
-if|if
-condition|(
-name|loadsyms
-condition|)
-block|{
-name|unsigned
-name|pad
-decl_stmt|;
 comment|/* Pad to a page boundary. */
 name|pad
 operator|=
@@ -857,7 +845,6 @@ name|bi_esymtab
 operator|=
 name|addr
 expr_stmt|;
-block|}
 comment|/* 	 * For backwards compatibility, use the previously-unused adaptor 	 * and controller bitfields to hold the slice number. 	 */
 name|bootdev
 operator|=
@@ -1081,14 +1068,6 @@ condition|(
 name|c
 condition|)
 block|{
-case|case
-literal|'D'
-case|:
-name|loadsyms
-operator|=
-literal|1
-expr_stmt|;
-continue|continue;
 case|case
 literal|'a'
 case|:
