@@ -3260,8 +3260,7 @@ argument_list|(
 name|tdvp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Need to get rid of old vnodes, because netware will change 	 * file id on rename 	 */
-name|vgone
+name|nwfs_attr_cacheremove
 argument_list|(
 name|fvp
 argument_list|)
@@ -3270,7 +3269,7 @@ if|if
 condition|(
 name|tvp
 condition|)
-name|vgone
+name|nwfs_attr_cacheremove
 argument_list|(
 name|tvp
 argument_list|)
