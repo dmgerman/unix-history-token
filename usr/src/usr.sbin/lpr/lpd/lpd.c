@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.18 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,6 +416,13 @@ argument_list|,
 name|LOG_PID
 argument_list|,
 name|LOG_LPR
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"restarted"
 argument_list|)
 expr_stmt|;
 operator|(
