@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	2.5 %G%"
+literal|"@(#)cmd2.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1894,7 +1894,7 @@ operator|)
 operator|/
 literal|512
 expr_stmt|;
-name|clobber1
+name|clob1
 argument_list|(
 name|times
 argument_list|)
@@ -1907,7 +1907,7 @@ comment|/*  * Clobber the stack.  */
 end_comment
 
 begin_macro
-name|clobber1
+name|clob1
 argument_list|(
 argument|n
 argument_list|)
@@ -1954,7 +1954,7 @@ operator|=
 literal|0xFF
 control|)
 empty_stmt|;
-name|clobber1
+name|clob1
 argument_list|(
 name|n
 operator|-
