@@ -250,6 +250,13 @@ literal|1
 operator|)
 return|;
 block|}
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
+name|buf_len
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set the buffer address and length in the request 	 */
 name|req
 operator|->
@@ -880,6 +887,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|bzero
+argument_list|(
+name|nif_info
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|air_netif_rsp
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set up the request 	 */
 name|air
 operator|.
