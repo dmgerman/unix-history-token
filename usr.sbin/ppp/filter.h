@@ -1,31 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.h,v 1.8 1997/06/09 03:27:20 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.h,v 1.9 1997/08/25 00:29:11 brian Exp $  *  *	TODO:  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_FILTER_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_FILTER_H_
-end_define
-
-begin_define
-define|#
-directive|define
-name|STREQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(strcmp(a,b) == 0)
-end_define
 
 begin_comment
 comment|/*  *   Actions  */
@@ -237,6 +213,7 @@ value|3
 end_define
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|filterent
 name|ifilters
@@ -246,7 +223,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* incoming packet filter */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|struct
 name|filterent
 name|ofilters
@@ -256,7 +238,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* outgoing packet filter */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|struct
 name|filterent
 name|dfilters
@@ -266,7 +253,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* dial-out packet filter */
+end_comment
+
 begin_decl_stmt
+specifier|extern
 name|struct
 name|filterent
 name|afilters
@@ -277,7 +269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* keep Alive packet filter */
+comment|/* keep-alive packet filter */
 end_comment
 
 begin_function_decl
@@ -305,14 +297,149 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|int
+name|ShowIfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* _FILTER_H_ */
-end_comment
+begin_function_decl
+specifier|extern
+name|int
+name|ShowOfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ShowDfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ShowAfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|SetIfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|SetOfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|SetDfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|SetAfilter
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

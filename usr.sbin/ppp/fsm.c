@@ -1,7 +1,61 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.18 1997/09/10 21:33:32 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.19 1997/09/10 23:55:35 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timer.h"
+end_include
 
 begin_include
 include|#
@@ -54,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vars.h"
 end_include
 
@@ -63,50 +123,101 @@ directive|include
 file|"pred.h"
 end_include
 
+begin_decl_stmt
+name|u_char
+name|AckBuff
+index|[
+literal|200
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+name|NakBuff
+index|[
+literal|200
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+name|RejBuff
+index|[
+literal|100
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+name|ReqBuff
+index|[
+literal|200
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+modifier|*
+name|ackp
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+modifier|*
+name|nakp
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+modifier|*
+name|rejp
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
+specifier|static
 name|void
 name|FsmSendConfigReq
 parameter_list|(
 name|struct
 name|fsm
 modifier|*
-name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|FsmSendTerminateReq
 parameter_list|(
 name|struct
 name|fsm
 modifier|*
-name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|FsmInitRestartCounter
 parameter_list|(
 name|struct
 name|fsm
 modifier|*
-name|fp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|FsmTimeout
-parameter_list|(
-name|struct
-name|fsm
-modifier|*
-name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -226,6 +337,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|NewState
 parameter_list|(
@@ -445,15 +557,15 @@ argument_list|,
 name|MB_FSM
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-operator|&
-name|lh
-argument_list|,
 name|MBUF_CTOP
 argument_list|(
 name|bp
 argument_list|)
+argument_list|,
+operator|&
+name|lh
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -466,10 +578,8 @@ if|if
 condition|(
 name|count
 condition|)
-name|bcopy
+name|memcpy
 argument_list|(
-name|ptr
-argument_list|,
 name|MBUF_CTOP
 argument_list|(
 name|bp
@@ -480,6 +590,8 @@ argument_list|(
 expr|struct
 name|fsmheader
 argument_list|)
+argument_list|,
+name|ptr
 argument_list|,
 name|count
 argument_list|)
@@ -885,6 +997,7 @@ comment|/*  *	Send functions  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|FsmSendConfigReq
 parameter_list|(
@@ -941,6 +1054,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmSendTerminateReq
 parameter_list|(
@@ -1217,6 +1331,7 @@ comment|/*  *	Timeout actions  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|FsmTimeout
 parameter_list|(
@@ -1372,6 +1487,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmInitRestartCounter
 parameter_list|(
@@ -1434,6 +1550,7 @@ comment|/*  *   Actions when receive packets  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvConfigReq
 parameter_list|(
@@ -1814,6 +1931,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvConfigAck
 parameter_list|(
@@ -1956,6 +2074,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvConfigNak
 parameter_list|(
@@ -2166,6 +2285,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvTermReq
 parameter_list|(
@@ -2318,6 +2438,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvTermAck
 parameter_list|(
@@ -2431,6 +2552,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvConfigRej
 parameter_list|(
@@ -2650,6 +2772,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvCodeRej
 parameter_list|(
@@ -2687,6 +2810,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvProtoRej
 parameter_list|(
@@ -2814,6 +2938,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvEchoReq
 parameter_list|(
@@ -2948,6 +3073,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvEchoRep
 parameter_list|(
@@ -3041,6 +3167,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvDiscReq
 parameter_list|(
@@ -3078,6 +3205,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvIdent
 parameter_list|(
@@ -3115,6 +3243,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvTimeRemain
 parameter_list|(
@@ -3152,6 +3281,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvResetReq
 parameter_list|(
@@ -3218,6 +3348,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|FsmRecvResetAck
 parameter_list|(

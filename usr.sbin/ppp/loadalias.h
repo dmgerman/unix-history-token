@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * $Id: $  */
+end_comment
+
 begin_struct
 struct|struct
 name|aliasHandlers
@@ -19,7 +23,9 @@ function_decl|(
 modifier|*
 name|PacketAliasInit
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 name|int
 function_decl|(
@@ -150,7 +156,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|unloadAliasHandlers
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 

@@ -1,15 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
+begin_comment
+comment|/*  * $Id: $  */
+end_comment
 
 begin_include
 include|#
@@ -26,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -39,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -57,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include

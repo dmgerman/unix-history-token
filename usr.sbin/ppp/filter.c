@@ -1,24 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.14 1997/08/31 22:59:23 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
+comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.15 1997/10/23 10:09:35 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -78,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"filter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"loadalias.h"
 end_include
 
@@ -98,6 +86,68 @@ include|#
 directive|include
 file|"ipcp.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"filter.h"
+end_include
+
+begin_decl_stmt
+name|struct
+name|filterent
+name|ifilters
+index|[
+name|MAXFILTERS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* incoming packet filter */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|filterent
+name|ofilters
+index|[
+name|MAXFILTERS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* outgoing packet filter */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|filterent
+name|dfilters
+index|[
+name|MAXFILTERS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dial-out packet filter */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|filterent
+name|afilters
+index|[
+name|MAXFILTERS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* keep-alive packet filter */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -251,7 +301,7 @@ expr_stmt|;
 comment|/* Assume 255.255.255.255 as default */
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 operator|*
 name|argv
@@ -450,7 +500,8 @@ operator|)
 return|;
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -465,7 +516,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -480,7 +532,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -688,7 +741,8 @@ literal|3
 case|:
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -696,7 +750,8 @@ argument_list|,
 literal|"src"
 argument_list|)
 operator|&&
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -789,7 +844,8 @@ name|OP_NONE
 decl_stmt|;
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 name|cp
 argument_list|,
@@ -803,7 +859,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 name|cp
 argument_list|,
@@ -817,7 +874,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 name|cp
 argument_list|,
@@ -899,7 +957,8 @@ name|argc
 operator|>=
 literal|3
 operator|&&
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -1003,7 +1062,8 @@ name|argc
 operator|>=
 literal|3
 operator|&&
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 name|argv
 index|[
@@ -1116,7 +1176,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -1352,10 +1413,12 @@ name|proto
 operator|=
 name|P_NONE
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|filterdata
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1365,7 +1428,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -1382,7 +1446,8 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -1399,7 +1464,8 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -1461,7 +1527,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv
@@ -1486,7 +1553,8 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 operator|*
 name|argv

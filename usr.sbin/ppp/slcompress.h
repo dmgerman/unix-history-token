@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Definitions for tcp compression routines.  *  * $Header: /home/ncvs/src/usr.sbin/ppp/slcompress.h,v 1.7 1997/08/25 00:29:29 brian Exp $  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.h,v 1.7 1997/08/25 00:29:29 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Definitions for tcp compression routines.  *  * $Header: /home/ncvs/src/usr.sbin/ppp/slcompress.h,v 1.8 1997/10/07 00:56:58 brian Exp $  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.h,v 1.8 1997/10/07 00:56:58 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_define
@@ -259,46 +259,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|slstat
-block|{
-name|int
-name|sls_packets
-decl_stmt|;
-comment|/* outbound packets */
-name|int
-name|sls_compressed
-decl_stmt|;
-comment|/* outbound compressed packets */
-name|int
-name|sls_searches
-decl_stmt|;
-comment|/* searches for connection state */
-name|int
-name|sls_misses
-decl_stmt|;
-comment|/* times couldn't find conn. state */
-name|int
-name|sls_uncompressedin
-decl_stmt|;
-comment|/* inbound uncompressed packets */
-name|int
-name|sls_compressedin
-decl_stmt|;
-comment|/* inbound compressed packets */
-name|int
-name|sls_errorin
-decl_stmt|;
-comment|/* inbound unknown type packets */
-name|int
-name|sls_tossed
-decl_stmt|;
-comment|/* inbound packets tossed because of error */
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* flag values */
 end_comment
@@ -324,36 +284,31 @@ name|slcompress
 modifier|*
 parameter_list|,
 name|int
-name|max_state
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|u_char
 name|sl_compress_tcp
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|mbuf
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|ip
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|slcompress
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|compress_cid_flag
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -371,6 +326,16 @@ parameter_list|,
 name|struct
 name|slcompress
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ReportCompress
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: auth.h,v 1.7 1997/08/25 00:29:05 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: auth.h,v 1.8 1997/09/04 00:38:18 brian Exp $  *  *	TODO:  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_AUTH_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_AUTH_H_
-end_define
 
 begin_typedef
 typedef|typedef
@@ -28,22 +16,6 @@ block|}
 name|LOCAL_AUTH_VALID
 typedef|;
 end_typedef
-
-begin_function_decl
-name|LOCAL_AUTH_VALID
-name|LocalAuthValidate
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_struct
 struct|struct
@@ -70,38 +42,19 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|authinfo
-name|AuthPapInfo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|authinfo
-name|AuthChapInfo
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
-name|void
-name|SendPapChallenge
+name|LOCAL_AUTH_VALID
+name|LocalAuthValidate
 parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|SendChapChallenge
-parameter_list|(
-name|int
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -157,10 +110,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|AuthGetSecret
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

@@ -1,14 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_comment
+comment|/*  * $Id: $  */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -21,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/un.h>
 end_include
 
 begin_include
@@ -50,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -62,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
@@ -92,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vars.h"
 end_include
 
@@ -104,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"defs.h"
 end_include
 
@@ -111,7 +127,8 @@ begin_decl_stmt
 name|int
 name|server
 init|=
-name|UNKNOWN_SERVER
+operator|-
+literal|2
 decl_stmt|;
 end_decl_stmt
 
@@ -719,45 +736,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|int
-name|ServerType
-parameter_list|()
-block|{
-if|if
-condition|(
-name|server
-operator|==
-name|UNKNOWN_SERVER
-condition|)
-return|return
-name|UNKNOWN_SERVER
-return|;
-elseif|else
-if|if
-condition|(
-name|server
-operator|==
-name|NO_SERVER
-condition|)
-return|return
-name|NO_SERVER
-return|;
-elseif|else
-if|if
-condition|(
-name|rm
-condition|)
-return|return
-name|LOCAL_SERVER
-return|;
-else|else
-return|return
-name|INET_SERVER
-return|;
 block|}
 end_function
 

@@ -1,13 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * chap.h - Cryptographic Handshake Authentication Protocol definitions.  *  * Copyright (c) 1995 Eric Rosenquist, Strata Software Limited.  * http://www.strataware.com/  *  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Eric Rosenquist.  The name of the author may not be used to  * endorse or promote products derived from this software without  * specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id$  */
+comment|/*  * chap.h - Cryptographic Handshake Authentication Protocol definitions.  *  * Copyright (c) 1995 Eric Rosenquist, Strata Software Limited.  * http://www.strataware.com/  *  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Eric Rosenquist.  The name of the author may not be used to  * endorse or promote products derived from this software without  * specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap_ms.h,v 1.1 1997/09/25 00:58:20 brian Exp $  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_CHAPMS_H_
-end_ifndef
+begin_comment
+comment|/* Max # of (Unicode) chars in an NT password */
+end_comment
 
 begin_define
 define|#
@@ -17,7 +15,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* Max # of (Unicode) chars in an NT password */
+comment|/* Don't rely on sizeof(MS_ChapResponse) in case of struct padding */
 end_comment
 
 begin_define
@@ -26,10 +24,6 @@ directive|define
 name|MS_CHAP_RESPONSE_LEN
 value|49
 end_define
-
-begin_comment
-comment|/* Don't rely on sizeof(MS_ChapResponse) in case of struct padding */
-end_comment
 
 begin_function_decl
 specifier|extern
@@ -46,21 +40,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|_CHAPMS_H_
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _CHAPMS_H_ */
-end_comment
 
 end_unit
 

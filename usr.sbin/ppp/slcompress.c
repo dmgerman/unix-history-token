@@ -1,34 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.11 1997/10/07 00:56:57 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.12 1997/10/12 21:43:55 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-specifier|const
-name|rcsid
-index|[]
-init|=
-literal|"$Id: slcompress.c,v 1.11 1997/10/07 00:56:57 brian Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -58,6 +36,36 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"slcompress.h"
 end_include
 
@@ -70,15 +78,56 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vars.h"
 end_include
 
-begin_decl_stmt
-name|struct
+begin_struct
+specifier|static
+struct|struct
 name|slstat
-name|slstat
+block|{
+name|int
+name|sls_packets
 decl_stmt|;
-end_decl_stmt
+comment|/* outbound packets */
+name|int
+name|sls_compressed
+decl_stmt|;
+comment|/* outbound compressed packets */
+name|int
+name|sls_searches
+decl_stmt|;
+comment|/* searches for connection state */
+name|int
+name|sls_misses
+decl_stmt|;
+comment|/* times couldn't find conn. state */
+name|int
+name|sls_uncompressedin
+decl_stmt|;
+comment|/* inbound uncompressed packets */
+name|int
+name|sls_compressedin
+decl_stmt|;
+comment|/* inbound compressed packets */
+name|int
+name|sls_errorin
+decl_stmt|;
+comment|/* inbound unknown type packets */
+name|int
+name|sls_tossed
+decl_stmt|;
+comment|/* inbound packets tossed because of error */
+block|}
+name|slstat
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -89,52 +138,6 @@ name|counter
 parameter_list|)
 value|slstat.counter++;
 end_define
-
-begin_define
-define|#
-directive|define
-name|BCMP
-parameter_list|(
-name|p1
-parameter_list|,
-name|p2
-parameter_list|,
-name|n
-parameter_list|)
-value|bcmp((char *)(p1), (char *)(p2), (int)(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCOPY
-parameter_list|(
-name|p1
-parameter_list|,
-name|p2
-parameter_list|,
-name|n
-parameter_list|)
-value|bcopy((char *)(p1), (char *)(p2), (int)(n))
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ovbcopy
-value|bcopy
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -163,13 +166,11 @@ name|comp
 operator|->
 name|tstate
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|comp
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -908,7 +909,7 @@ name|deltaS
 operator|>
 literal|5
 operator|&&
-name|BCMP
+name|memcmp
 argument_list|(
 name|ip
 operator|+
@@ -939,7 +940,7 @@ argument_list|)
 operator|>
 literal|5
 operator|&&
-name|BCMP
+name|memcmp
 argument_list|(
 name|th
 operator|+
@@ -1301,14 +1302,14 @@ operator|->
 name|th_sum
 argument_list|)
 expr_stmt|;
-name|BCOPY
+name|memcpy
 argument_list|(
-name|ip
-argument_list|,
 operator|&
 name|cs
 operator|->
 name|cs_ip
+argument_list|,
+name|ip
 argument_list|,
 name|hlen
 argument_list|)
@@ -1422,11 +1423,11 @@ operator|++
 operator|=
 name|deltaA
 expr_stmt|;
-name|BCOPY
+name|memcpy
 argument_list|(
-name|new_seq
-argument_list|,
 name|cp
+argument_list|,
+name|new_seq
 argument_list|,
 name|deltaS
 argument_list|)
@@ -1443,14 +1444,14 @@ return|;
 comment|/*    * Update connection state cs& send uncompressed packet ('uncompressed'    * means a regular ip/tcp packet but with the 'conversation id' we hope to    * use on future compressed packets in the protocol field).    */
 name|uncompressed
 label|:
-name|BCOPY
+name|memcpy
 argument_list|(
-name|ip
-argument_list|,
 operator|&
 name|cs
 operator|->
 name|cs_ip
+argument_list|,
+name|ip
 argument_list|,
 name|hlen
 argument_list|)
@@ -1648,14 +1649,14 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|BCOPY
+name|memcpy
 argument_list|(
-name|ip
-argument_list|,
 operator|&
 name|cs
 operator|->
 name|cs_ip
+argument_list|,
+name|ip
 argument_list|,
 name|hlen
 argument_list|)
@@ -2136,7 +2137,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|ovbcopy
+name|bcopy
 argument_list|(
 name|cp
 argument_list|,
@@ -2198,14 +2199,14 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-name|BCOPY
+name|memcpy
 argument_list|(
+name|cp
+argument_list|,
 operator|&
 name|cs
 operator|->
 name|cs_ip
-argument_list|,
-name|cp
 argument_list|,
 name|cs
 operator|->

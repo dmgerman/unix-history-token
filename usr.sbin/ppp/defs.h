@@ -1,82 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.20 1997/10/23 21:32:48 ache Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.21 1997/10/24 22:36:29 brian Exp $  *  *	TODO:  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_DEFS_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_DEFS_H_
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"log.h"
-end_include
-
 begin_comment
-comment|/*  *  Check follwiing definitions for your machine envirinment  */
+comment|/*  *  Check following definitions for your machine environment  */
 end_comment
 
 begin_ifdef
@@ -203,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|MODEM_CTSRTS
-value|TRUE
+value|1
 end_define
 
 begin_comment
@@ -462,12 +390,14 @@ value|13
 end_define
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|mode
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|BGFiledes
 index|[
@@ -477,67 +407,40 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|modem
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|tun_in
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|tun_out
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|netfd
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|dstsystem
 decl_stmt|;
 end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TRUE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|(1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FALSE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -546,21 +449,21 @@ name|SIGALRM
 end_ifdef
 
 begin_function_decl
+specifier|extern
 name|u_int
 name|nointr_sleep
 parameter_list|(
 name|u_int
-name|sec
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|nointr_usleep
 parameter_list|(
 name|u_int
-name|usec
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -570,14 +473,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _DEFS_H_ */
-end_comment
+begin_function_decl
+specifier|extern
+name|void
+name|randinit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

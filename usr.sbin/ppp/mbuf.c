@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.8 1997/06/25 19:30:02 brian Exp $  *  */
+comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.9 1997/08/25 00:29:20 brian Exp $  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -18,13 +18,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_include
@@ -37,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"loadalias.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -203,9 +233,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|bp
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -440,14 +472,14 @@ name|nb
 operator|=
 name|len
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|ptr
+argument_list|,
 name|MBUF_CTOP
 argument_list|(
 name|bp
 argument_list|)
-argument_list|,
-name|ptr
 argument_list|,
 name|nb
 argument_list|)
@@ -574,14 +606,14 @@ name|bp
 operator|->
 name|cnt
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|ptr
-argument_list|,
 name|MBUF_CTOP
 argument_list|(
 name|bp
 argument_list|)
+argument_list|,
+name|ptr
 argument_list|,
 name|nb
 argument_list|)

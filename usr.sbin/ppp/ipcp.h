@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.9 1997/08/25 00:29:15 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.10 1997/09/03 02:08:19 brian Exp $  *  *	TODO:  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IPCP_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_IPCP_H_
-end_define
 
 begin_define
 define|#
@@ -80,6 +68,28 @@ directive|define
 name|TY_SECONDARY_NBNS
 value|132
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in_addr
+name|ns_entries
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in_addr
+name|nbns_entries
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -197,38 +207,21 @@ name|HaveTriggerAddress
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOMSEXT
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|struct
-name|in_addr
-name|ns_entries
-index|[
-literal|2
-index|]
+name|fsm
+name|IpcpFsm
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|in_addr
-name|nbns_entries
-index|[
-literal|2
-index|]
+name|pppTimer
+name|IpcpReportTimer
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -252,8 +245,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|IpcpOctetsIn
+name|void
+name|IpcpUp
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|IpcpOpen
 parameter_list|(
 name|void
 parameter_list|)
@@ -263,17 +266,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|IpcpOctetsOut
+name|ReportIpcpStatus
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

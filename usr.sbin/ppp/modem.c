@@ -1,42 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.58 1997/09/23 22:07:51 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.59 1997/10/24 22:36:31 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"fsm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/tty.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
 end_include
 
 begin_include
@@ -60,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -72,7 +54,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_ifdef
@@ -102,6 +126,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"timer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fsm.h"
+end_include
 
 begin_include
 include|#
@@ -136,13 +196,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"command.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vars.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"command.h"
+file|"main.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"chat.h"
 end_include
 
 begin_ifndef
@@ -174,14 +246,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|int
-name|DoChat
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -205,27 +269,6 @@ specifier|static
 name|struct
 name|pppTimer
 name|ModemTimer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|PacketMode
-argument_list|()
-decl_stmt|,
-name|TtyTermMode
-argument_list|()
-decl_stmt|,
-name|TtyCommandMode
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|TermMode
 decl_stmt|;
 end_decl_stmt
 
@@ -726,6 +769,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|SpeedToInt
 parameter_list|(
@@ -1088,6 +1132,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|StartModemTimer
 parameter_list|()
@@ -1194,6 +1239,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|GetParityValue
 parameter_list|(
@@ -1356,6 +1402,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|OpenConnection
 parameter_list|(
@@ -1425,21 +1472,21 @@ condition|(
 name|hp
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
-name|hp
-operator|->
-name|h_addr_list
-index|[
-literal|0
-index|]
-argument_list|,
 operator|&
 name|dest
 operator|.
 name|sin_addr
 operator|.
 name|s_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr_list
+index|[
+literal|0
+index|]
 argument_list|,
 literal|4
 argument_list|)
@@ -1617,13 +1664,6 @@ block|}
 end_function
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|tunno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|char
 name|fn
@@ -1634,6 +1674,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|LockModem
 parameter_list|()
@@ -1788,6 +1829,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|UnlockModem
 parameter_list|()
@@ -2091,10 +2133,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX: PPP over TCP */
+comment|/* PPP over TCP */
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|VarDevice
 argument_list|,
@@ -2753,6 +2795,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|UnrawModem
 parameter_list|(
@@ -2874,22 +2917,6 @@ operator|&=
 operator|~
 name|TIOCM_DTR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__bsdi__
-comment|/* not a POSIX way */
-name|ioctl
-argument_list|(
-name|modem
-argument_list|,
-name|TIOCMSET
-argument_list|,
-operator|&
-name|mbits
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tcgetattr
 argument_list|(
 name|modem
@@ -2930,8 +2957,6 @@ operator|&
 name|tio
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|nointr_sleep
 argument_list|(
 literal|1
@@ -3235,14 +3260,14 @@ argument_list|,
 name|MB_MODEM
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|ptr
-argument_list|,
 name|MBUF_CTOP
 argument_list|(
 name|bp
 argument_list|)
+argument_list|,
+name|ptr
 argument_list|,
 name|count
 argument_list|)
