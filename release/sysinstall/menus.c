@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.211 1999/07/16 22:03:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.212 1999/07/19 11:49:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2319,6 +2319,14 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select the XFree86 configuration tool you want to use."
 block|,
+ifdef|#
+directive|ifdef
+name|__alpha__
+literal|"Due to problems with the VGA16 server right now, only the\n"
+literal|"text-mode configuration tool (xf86config) is currently supported."
+block|,
+else|#
+directive|else
 literal|"The first tool, XF86Setup, is fully graphical and requires the\n"
 literal|"VGA16 server in order to work (should have been selected by\n"
 literal|"default, but if you de-selected it then you won't be able to\n"
@@ -2327,10 +2335,33 @@ literal|"a more simplistic shell-script based tool and less friendly to\n"
 literal|"new users, but it may work in situations where the fancier one\n"
 literal|"does not."
 block|,
+endif|#
+directive|endif
 name|NULL
 block|,
 name|NULL
 block|,
+ifdef|#
+directive|ifdef
+name|__alpha__
+block|{
+block|{
+literal|"xf86config"
+block|,
+literal|"Shell-script based XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=xf86config"
+block|}
+block|,
+else|#
+directive|else
 block|{
 block|{
 literal|"XF86Setup"
@@ -2377,6 +2408,8 @@ name|VAR_XF86_CONFIG
 literal|"=XF98Setup"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"XDesktop"
 block|,
@@ -2397,13 +2430,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXDesktops
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2519,13 +2549,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaCDROM
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2548,13 +2575,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaFloppy
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2575,13 +2599,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaDOS
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2608,13 +2629,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaFTP
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4092,13 +4110,10 @@ name|NULL
 block|}
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuMediaTape
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4123,13 +4138,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNetworkDevice
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4156,17 +4168,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The media selection menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuMedia
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4280,17 +4286,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The distributions menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4457,13 +4457,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSubDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4909,13 +4906,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuDESDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5073,13 +5067,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSrcDistributions
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5505,13 +5496,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86Select
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -5615,13 +5603,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectCore
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6001,13 +5986,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectFonts
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6225,13 +6207,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectServer
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6659,13 +6638,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuXF86SelectPC98Server
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7027,13 +7003,10 @@ name|NULL
 block|}
 block|}
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuDiskDevices
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7059,13 +7032,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuHTMLDoc
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7125,17 +7095,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* The main installation menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuInstallCustom
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7292,17 +7256,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* MBR type menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuMBRType
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -7392,17 +7350,11 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/* Final configuration menu */
-end_comment
-
-begin_decl_stmt
 name|DMenu
 name|MenuConfigure
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7634,13 +7586,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuStartup
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7924,13 +7873,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNetworking
-init|=
+operator|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -8146,13 +8092,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuNTP
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -8426,13 +8369,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSyscons
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -8538,13 +8478,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsKeymap
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9088,13 +9025,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsKeyrate
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9171,13 +9105,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsSaver
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9360,13 +9291,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsScrnmap
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9438,13 +9366,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuSysconsFont
-init|=
+operator|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9570,13 +9495,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuUsermgmt
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -9625,13 +9547,10 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|DMenu
 name|MenuFixit
-init|=
+operator|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -9684,7 +9603,7 @@ name|NULL
 block|}
 block|}
 block|, }
-decl_stmt|;
+block|;
 end_decl_stmt
 
 end_unit
