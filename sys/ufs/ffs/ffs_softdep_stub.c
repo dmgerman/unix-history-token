@@ -455,7 +455,7 @@ decl_stmt|;
 name|off_t
 name|diroffset
 decl_stmt|;
-name|long
+name|ino_t
 name|newinum
 decl_stmt|;
 name|struct
@@ -583,7 +583,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|long
+name|ino_t
 name|newinum
 decl_stmt|;
 name|int
