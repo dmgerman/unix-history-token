@@ -1,142 +1,249 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"quota.h"
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fs.h"
+file|<ufs/ffs/fs.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|u_long
-name|hashalloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|ino_t
-name|ialloccg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|daddr_t
-name|alloccg
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|daddr_t
-name|alloccgblk
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|daddr_t
-name|fragextend
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|daddr_t
-name|blkpref
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|daddr_t
-name|mapsearch
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/ffs_extern.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|inside
-index|[]
-decl_stmt|,
-name|around
-index|[]
+name|u_long
+name|nextgennumber
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|unsigned
+specifier|static
+name|daddr_t
+name|ffs_alloccg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|,
+name|int
+operator|,
+name|daddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|daddr_t
+name|ffs_alloccgblk
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|,
+expr|struct
+name|cg
+operator|*
+operator|,
+name|daddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ino_t
+name|ffs_dirpref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|daddr_t
+name|ffs_fragextend
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|,
+name|int
+operator|,
+name|long
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ffs_fserr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|,
+name|u_int
+operator|,
 name|char
-modifier|*
-name|fragtbl
-index|[]
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|ffs_hashalloc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|,
+name|int
+operator|,
+name|long
+operator|,
+name|int
+operator|,
+name|u_long
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|ino_t
+name|ffs_ialloccg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inode
+operator|*
+operator|,
+name|int
+operator|,
+name|daddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|daddr_t
+name|ffs_mapsearch
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|,
+expr|struct
+name|cg
+operator|*
+operator|,
+name|daddr_t
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -145,7 +252,7 @@ comment|/*  * Allocate a block in the file system.  *   * The size of the reques
 end_comment
 
 begin_expr_stmt
-name|alloc
+name|ffs_alloc
 argument_list|(
 name|ip
 argument_list|,
@@ -271,7 +378,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"alloc: bad size"
+literal|"ffs_alloc: bad size"
 argument_list|)
 expr_stmt|;
 block|}
@@ -391,7 +498,7 @@ operator|=
 operator|(
 name|daddr_t
 operator|)
-name|hashalloc
+name|ffs_hashalloc
 argument_list|(
 name|ip
 argument_list|,
@@ -411,7 +518,7 @@ operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|alloccg
+name|ffs_alloccg
 argument_list|)
 expr_stmt|;
 if|if
@@ -478,7 +585,7 @@ endif|#
 directive|endif
 name|nospace
 label|:
-name|fserr
+name|ffs_fserr
 argument_list|(
 name|fs
 argument_list|,
@@ -511,7 +618,7 @@ comment|/*  * Reallocate a fragment to a bigger size  *  * The number and size o
 end_comment
 
 begin_expr_stmt
-name|realloccg
+name|ffs_realloccg
 argument_list|(
 name|ip
 argument_list|,
@@ -673,7 +780,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"realloccg: bad size"
+literal|"ffs_realloccg: bad size"
 argument_list|)
 expr_stmt|;
 block|}
@@ -736,7 +843,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"realloccg: bad bprev"
+literal|"ffs_realloccg: bad bprev"
 argument_list|)
 expr_stmt|;
 block|}
@@ -828,7 +935,7 @@ if|if
 condition|(
 name|bno
 operator|=
-name|fragextend
+name|ffs_fragextend
 argument_list|(
 name|ip
 argument_list|,
@@ -1005,7 +1112,7 @@ break|break;
 case|case
 name|FS_OPTTIME
 case|:
-comment|/* 		 * At this point we have discovered a file that is trying 		 * to grow a small fragment to a larger fragment. To save 		 * time, we allocate a full sized block, then free the  		 * unused portion. If the file continues to grow, the  		 * `fragextend' call above will be able to grow it in place 		 * without further copying. If aberrant programs cause 		 * disk fragmentation to grow within 2% of the free reserve, 		 * we choose to begin optimizing for space. 		 */
+comment|/* 		 * At this point we have discovered a file that is trying to 		 * grow a small fragment to a larger fragment. To save time, 		 * we allocate a full sized block, then free the unused portion. 		 * If the file continues to grow, the `ffs_fragextend' call 		 * above will be able to grow it in place without further 		 * copying. If aberrant programs cause disk fragmentation to 		 * grow within 2% of the free reserve, we choose to begin 		 * optimizing for space. 		 */
 name|request
 operator|=
 name|fs
@@ -1073,7 +1180,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"realloccg: bad optim"
+literal|"ffs_realloccg: bad optim"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -1083,7 +1190,7 @@ operator|=
 operator|(
 name|daddr_t
 operator|)
-name|hashalloc
+name|ffs_hashalloc
 argument_list|(
 name|ip
 argument_list|,
@@ -1103,7 +1210,7 @@ operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|alloccg
+name|ffs_alloccg
 argument_list|)
 expr_stmt|;
 if|if
@@ -1204,7 +1311,7 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|SECSIZE
-name|blkfree
+name|ffs_blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -1222,7 +1329,7 @@ name|nsize
 operator|<
 name|request
 condition|)
-name|blkfree
+name|ffs_blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -1343,7 +1450,7 @@ expr_stmt|;
 name|nospace
 label|:
 comment|/* 	 * no space available 	 */
-name|fserr
+name|ffs_fserr
 argument_list|(
 name|fs
 argument_list|,
@@ -1372,15 +1479,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Allocate an inode in the file system.  *   * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate an inode:  *   1) allocate the requested inode.  *   2) allocate an inode in the same cylinder group.  *   3) quadradically rehash into other cylinder groups, until an  *      available inode is located.  * If no inode preference is given the following heirarchy is used  * to allocate an inode:  *   1) allocate an inode in cylinder group 0.  *   2) quadradically rehash into other cylinder groups, until an  *      available inode is located.  */
+comment|/*  * Allocate an inode in the file system.  *   * If allocating a directory, use ffs_dirpref to select the inode.  * If allocating in a directory, the following hierarchy is followed:  *   1) allocate the preferred inode.  *   2) allocate an inode in the same cylinder group.  *   3) quadradically rehash into other cylinder groups, until an  *      available inode is located.  * If no inode preference is given the following heirarchy is used  * to allocate an inode:  *   1) allocate an inode in cylinder group 0.  *   2) quadradically rehash into other cylinder groups, until an  *      available inode is located.  */
 end_comment
 
 begin_expr_stmt
-name|ialloc
+name|ffs_ialloc
 argument_list|(
 name|pip
-argument_list|,
-name|ipref
 argument_list|,
 name|mode
 argument_list|,
@@ -1395,12 +1500,6 @@ operator|*
 name|pip
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|ino_t
-name|ipref
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1427,9 +1526,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|ino_t
-name|ino
-decl_stmt|;
 specifier|register
 name|struct
 name|fs
@@ -1442,6 +1538,11 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+name|ino_t
+name|ino
+decl_stmt|,
+name|ipref
+decl_stmt|;
 name|int
 name|cg
 decl_stmt|,
@@ -1450,7 +1551,7 @@ decl_stmt|;
 operator|*
 name|ipp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|fs
 operator|=
@@ -1471,6 +1572,32 @@ condition|)
 goto|goto
 name|noinodes
 goto|;
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
+condition|)
+name|ipref
+operator|=
+name|ffs_dirpref
+argument_list|(
+name|pip
+operator|->
+name|i_fs
+argument_list|)
+expr_stmt|;
+else|else
+name|ipref
+operator|=
+name|pip
+operator|->
+name|i_number
+expr_stmt|;
 if|if
 condition|(
 name|ipref
@@ -1501,7 +1628,7 @@ operator|=
 operator|(
 name|ino_t
 operator|)
-name|hashalloc
+name|ffs_hashalloc
 argument_list|(
 name|pip
 argument_list|,
@@ -1514,7 +1641,7 @@ name|ipref
 argument_list|,
 name|mode
 argument_list|,
-name|ialloccg
+name|ffs_ialloccg
 argument_list|)
 expr_stmt|;
 if|if
@@ -1528,7 +1655,7 @@ name|noinodes
 goto|;
 name|error
 operator|=
-name|iget
+name|ffs_iget
 argument_list|(
 name|pip
 argument_list|,
@@ -1542,7 +1669,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|ifree
+name|ffs_ifree
 argument_list|(
 name|pip
 argument_list|,
@@ -1551,6 +1678,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+comment|/* XXX already freed? */
 return|return
 operator|(
 name|error
@@ -1588,7 +1716,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ialloc: dup alloc"
+literal|"ffs_ialloc: dup alloc"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1660,7 +1788,7 @@ operator|)
 return|;
 name|noinodes
 label|:
-name|fserr
+name|ffs_fserr
 argument_list|(
 name|fs
 argument_list|,
@@ -1693,8 +1821,9 @@ comment|/*  * Find a cylinder to place a directory.  *  * The policy implemented
 end_comment
 
 begin_function
+specifier|static
 name|ino_t
-name|dirpref
+name|ffs_dirpref
 parameter_list|(
 name|fs
 parameter_list|)
@@ -1821,7 +1950,7 @@ end_comment
 
 begin_function
 name|daddr_t
-name|blkpref
+name|ffs_blkpref
 parameter_list|(
 name|ip
 parameter_list|,
@@ -2200,8 +2329,9 @@ comment|/*VARARGS5*/
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_long
-name|hashalloc
+name|ffs_hashalloc
 argument_list|(
 name|ip
 argument_list|,
@@ -2447,8 +2577,9 @@ comment|/*  * Determine whether a fragment can be extended.  *  * Check to see i
 end_comment
 
 begin_function
+specifier|static
 name|daddr_t
-name|fragextend
+name|ffs_fragextend
 parameter_list|(
 name|ip
 parameter_list|,
@@ -2909,7 +3040,7 @@ end_comment
 
 begin_function
 name|daddr_t
-name|alloccg
+name|ffs_alloccg
 parameter_list|(
 name|ip
 parameter_list|,
@@ -3149,7 +3280,7 @@ condition|)
 block|{
 name|bno
 operator|=
-name|alloccgblk
+name|ffs_alloccgblk
 argument_list|(
 name|fs
 argument_list|,
@@ -3240,7 +3371,7 @@ return|;
 block|}
 name|bno
 operator|=
-name|alloccgblk
+name|ffs_alloccgblk
 argument_list|(
 name|fs
 argument_list|,
@@ -3349,7 +3480,7 @@ return|;
 block|}
 name|bno
 operator|=
-name|mapsearch
+name|ffs_mapsearch
 argument_list|(
 name|fs
 argument_list|,
@@ -3486,8 +3617,9 @@ comment|/*  * Allocate a block in a cylinder group.  *  * This algorithm impleme
 end_comment
 
 begin_function
+specifier|static
 name|daddr_t
-name|alloccgblk
+name|ffs_alloccgblk
 parameter_list|(
 name|fs
 parameter_list|,
@@ -3567,7 +3699,7 @@ expr_stmt|;
 comment|/* 	 * if the requested block is available, use it 	 */
 if|if
 condition|(
-name|isblock
+name|ffs_isblock
 argument_list|(
 name|fs
 argument_list|,
@@ -3792,7 +3924,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"alloccgblk: cyl groups corrupted"
+literal|"ffs_alloccgblk: cyl groups corrupted"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3815,7 +3947,7 @@ control|)
 block|{
 if|if
 condition|(
-name|isblock
+name|ffs_isblock
 argument_list|(
 name|fs
 argument_list|,
@@ -3897,7 +4029,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"alloccgblk: can't find blk in cyl"
+literal|"ffs_alloccgblk: can't find blk in cyl"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3906,7 +4038,7 @@ label|:
 comment|/* 	 * no blocks in the requested cylinder, so take next 	 * available one in this cylinder group. 	 */
 name|bno
 operator|=
-name|mapsearch
+name|ffs_mapsearch
 argument_list|(
 name|fs
 argument_list|,
@@ -3941,7 +4073,7 @@ name|bno
 expr_stmt|;
 name|gotit
 label|:
-name|clrblock
+name|ffs_clrblock
 argument_list|(
 name|fs
 argument_list|,
@@ -4052,8 +4184,9 @@ comment|/*  * Determine whether an inode can be allocated.  *  * Check to see if
 end_comment
 
 begin_function
+specifier|static
 name|ino_t
-name|ialloccg
+name|ffs_ialloccg
 parameter_list|(
 name|ip
 parameter_list|,
@@ -4395,7 +4528,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ialloccg: map corrupted"
+literal|"ffs_ialloccg: map corrupted"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -4480,7 +4613,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ialloccg: block not in map"
+literal|"ffs_ialloccg: block not in map"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -4590,7 +4723,7 @@ comment|/*  * Free a block or fragment.  *  * The specified block or fragment is
 end_comment
 
 begin_expr_stmt
-name|blkfree
+name|ffs_blkfree
 argument_list|(
 name|ip
 argument_list|,
@@ -4746,7 +4879,7 @@ operator|->
 name|i_number
 argument_list|)
 expr_stmt|;
-name|fserr
+name|ffs_fserr
 argument_list|(
 name|fs
 argument_list|,
@@ -4897,7 +5030,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|isblock
+name|ffs_isblock
 argument_list|(
 name|fs
 argument_list|,
@@ -4936,7 +5069,7 @@ literal|"blkfree: freeing free block"
 argument_list|)
 expr_stmt|;
 block|}
-name|setblock
+name|ffs_setblock
 argument_list|(
 name|fs
 argument_list|,
@@ -5044,7 +5177,7 @@ argument_list|,
 name|bbase
 argument_list|)
 expr_stmt|;
-name|fragacct
+name|ffs_fragacct
 argument_list|(
 name|fs
 argument_list|,
@@ -5177,7 +5310,7 @@ argument_list|,
 name|bbase
 argument_list|)
 expr_stmt|;
-name|fragacct
+name|ffs_fragacct
 argument_list|(
 name|fs
 argument_list|,
@@ -5193,7 +5326,7 @@ expr_stmt|;
 comment|/* 		 * if a complete block has been reassembled, account for it 		 */
 if|if
 condition|(
-name|isblock
+name|ffs_isblock
 argument_list|(
 name|fs
 argument_list|,
@@ -5331,38 +5464,27 @@ begin_comment
 comment|/*  * Free an inode.  *  * The specified inode is placed back in the free map.  */
 end_comment
 
-begin_macro
-name|ifree
-argument_list|(
-argument|ip
-argument_list|,
-argument|ino
-argument_list|,
-argument|mode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|void
+name|ffs_ifree
+parameter_list|(
+name|pip
+parameter_list|,
+name|ino
+parameter_list|,
+name|mode
+parameter_list|)
 name|struct
 name|inode
 modifier|*
-name|ip
+name|pip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -5388,14 +5510,14 @@ name|cg
 decl_stmt|;
 name|fs
 operator|=
-name|ip
+name|pip
 operator|->
 name|i_fs
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|ino
 operator|>=
@@ -5407,12 +5529,11 @@ name|fs
 operator|->
 name|fs_ncg
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"dev = 0x%x, ino = %d, fs = %s\n"
+literal|"ifree: range: dev = 0x%x, ino = %d, fs = %s\n"
 argument_list|,
-name|ip
+name|pip
 operator|->
 name|i_dev
 argument_list|,
@@ -5423,12 +5544,6 @@ operator|->
 name|fs_fsmnt
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"ifree: range"
-argument_list|)
-expr_stmt|;
-block|}
 name|cg
 operator|=
 name|itog
@@ -5480,7 +5595,7 @@ name|error
 operator|=
 name|bread
 argument_list|(
-name|ip
+name|pip
 operator|->
 name|i_devvp
 argument_list|,
@@ -5579,7 +5694,7 @@ name|printf
 argument_list|(
 literal|"dev = 0x%x, ino = %d, fs = %s\n"
 argument_list|,
-name|ip
+name|pip
 operator|->
 name|i_dev
 argument_list|,
@@ -5704,15 +5819,16 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Find a block of the specified size in the specified cylinder group.  *  * It is a panic if a request is made to find a block if none are  * available.  */
 end_comment
 
 begin_function
+specifier|static
 name|daddr_t
-name|mapsearch
+name|ffs_mapsearch
 parameter_list|(
 name|fs
 parameter_list|,
@@ -5949,7 +6065,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"alloccg: map corrupted"
+literal|"ffs_alloccg: map corrupted"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -6083,7 +6199,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"alloccg: block not in map"
+literal|"ffs_alloccg: block not in map"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6099,39 +6215,29 @@ begin_comment
 comment|/*  * Fserr prints the name of a file system with an error diagnostic.  *   * The form of the error message is:  *	fs: error message  */
 end_comment
 
-begin_macro
-name|fserr
-argument_list|(
-argument|fs
-argument_list|,
-argument|uid
-argument_list|,
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+specifier|static
+name|void
+name|ffs_fserr
+parameter_list|(
+name|fs
+parameter_list|,
+name|uid
+parameter_list|,
+name|cp
+parameter_list|)
 name|struct
 name|fs
 modifier|*
 name|fs
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uid_t
+name|u_int
 name|uid
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|log
 argument_list|(
@@ -6149,7 +6255,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
