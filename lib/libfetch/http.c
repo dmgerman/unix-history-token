@@ -1229,6 +1229,8 @@ name|enc
 init|=
 name|ENC_NONE
 decl_stmt|,
+name|direct
+decl_stmt|,
 name|verbose
 decl_stmt|;
 name|struct
@@ -1259,17 +1261,30 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|direct
+operator|=
+operator|(
+name|flags
+operator|&&
+name|strchr
+argument_list|(
+name|flags
+argument_list|,
+literal|'d'
+argument_list|)
+operator|)
+expr_stmt|;
 name|verbose
 operator|=
 operator|(
+name|flags
+operator|&&
 name|strchr
 argument_list|(
 name|flags
 argument_list|,
 literal|'v'
 argument_list|)
-operator|!=
-name|NULL
 operator|)
 expr_stmt|;
 comment|/* allocate cookie */
@@ -1313,6 +1328,9 @@ comment|/* default HTTP port */
 comment|/* attempt to connect to proxy server */
 if|if
 condition|(
+operator|!
+name|direct
+operator|&&
 operator|(
 name|px
 operator|=
@@ -1347,7 +1365,7 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-comment|/* get port (atoi is a little too tolerant perhaps?) */
+comment|/* get port (XXX atoi is a little too tolerant perhaps?) */
 if|if
 condition|(
 name|px

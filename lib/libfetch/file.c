@@ -111,6 +111,8 @@ name|f
 decl_stmt|;
 if|if
 condition|(
+name|flags
+operator|&&
 name|strchr
 argument_list|(
 name|flags

@@ -542,13 +542,21 @@ name|char
 modifier|*
 name|mode
 parameter_list|,
-name|int
-name|pasv
+name|char
+modifier|*
+name|flags
 parameter_list|)
 block|{
 name|struct
 name|sockaddr_in
 name|sin
+decl_stmt|;
+name|int
+name|pasv
+decl_stmt|,
+name|high
+decl_stmt|,
+name|verbose
 decl_stmt|;
 name|int
 name|e
@@ -557,7 +565,8 @@ name|sd
 init|=
 operator|-
 literal|1
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|l
 decl_stmt|;
 name|char
@@ -568,6 +577,46 @@ name|FILE
 modifier|*
 name|df
 decl_stmt|;
+comment|/* check flags */
+name|pasv
+operator|=
+operator|(
+name|flags
+operator|&&
+name|strchr
+argument_list|(
+name|flags
+argument_list|,
+literal|'p'
+argument_list|)
+operator|)
+expr_stmt|;
+name|high
+operator|=
+operator|(
+name|flags
+operator|&&
+name|strchr
+argument_list|(
+name|flags
+argument_list|,
+literal|'h'
+argument_list|)
+operator|)
+expr_stmt|;
+name|verbose
+operator|=
+operator|(
+name|flags
+operator|&&
+name|strchr
+argument_list|(
+name|flags
+argument_list|,
+literal|'v'
+argument_list|)
+operator|)
+expr_stmt|;
 comment|/* change directory */
 if|if
 condition|(
@@ -597,6 +646,17 @@ operator|*
 name|s
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"changing directory to %s"
+argument_list|,
+name|file
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -640,6 +700,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"changing directory to /"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -719,6 +788,15 @@ decl_stmt|;
 comment|/* send PASV command */
 if|if
 condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"setting passive mode"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|e
 operator|=
@@ -736,7 +814,7 @@ condition|)
 goto|goto
 name|ouch
 goto|;
-comment|/* find address and port number. The reply to the PASV command            is IMHO the one and only weak point in the FTP protocol. */
+comment|/* 	 * Find address and port number. The reply to the PASV command          * is IMHO the one and only weak point in the FTP protocol. 	 */
 name|ln
 operator|=
 name|_ftp_last_reply
@@ -870,6 +948,15 @@ expr_stmt|;
 comment|/* connect to data port */
 if|if
 condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"opening data connection"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|connect
 argument_list|(
 name|sd
@@ -895,6 +982,15 @@ goto|goto
 name|sysouch
 goto|;
 comment|/* make the server initiate the transfer */
+if|if
+condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"initiating transfer"
+argument_list|)
+expr_stmt|;
 name|e
 operator|=
 name|_ftp_cmd
@@ -928,6 +1024,8 @@ name|u_short
 name|p
 decl_stmt|;
 name|int
+name|arg
+decl_stmt|,
 name|d
 decl_stmt|;
 comment|/* find our own address, bind, and listen */
@@ -970,6 +1068,52 @@ operator|.
 name|sin_port
 operator|=
 literal|0
+expr_stmt|;
+name|arg
+operator|=
+name|high
+condition|?
+name|IP_PORTRANGE_HIGH
+else|:
+name|IP_PORTRANGE_DEFAULT
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|sd
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_PORTRANGE
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|arg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|arg
+argument_list|)
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|sysouch
+goto|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"binding data socket"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1114,6 +1258,15 @@ goto|goto
 name|ouch
 goto|;
 comment|/* make the server initiate the transfer */
+if|if
+condition|(
+name|verbose
+condition|)
+name|_fetch_info
+argument_list|(
+literal|"initiating transfer"
+argument_list|)
+expr_stmt|;
 name|e
 operator|=
 name|_ftp_cmd
@@ -1246,8 +1399,9 @@ name|char
 modifier|*
 name|pwd
 parameter_list|,
-name|int
-name|verbose
+name|char
+modifier|*
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -1258,6 +1412,10 @@ decl_stmt|,
 name|pp
 init|=
 name|FTP_DEFAULT_PORT
+decl_stmt|,
+name|direct
+decl_stmt|,
+name|verbose
 decl_stmt|;
 name|char
 modifier|*
@@ -1270,9 +1428,38 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|direct
+operator|=
+operator|(
+name|flags
+operator|&&
+name|strchr
+argument_list|(
+name|flags
+argument_list|,
+literal|'d'
+argument_list|)
+operator|)
+expr_stmt|;
+name|verbose
+operator|=
+operator|(
+name|flags
+operator|&&
+name|strchr
+argument_list|(
+name|flags
+argument_list|,
+literal|'v'
+argument_list|)
+operator|)
+expr_stmt|;
 comment|/* check for proxy */
 if|if
 condition|(
+operator|!
+name|direct
+operator|&&
 operator|(
 name|p
 operator|=
@@ -1355,6 +1542,10 @@ name|port
 argument_list|,
 name|verbose
 argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 comment|/* check connection */
@@ -1788,16 +1979,7 @@ name|url
 operator|->
 name|pwd
 argument_list|,
-operator|(
-name|strchr
-argument_list|(
 name|flags
-argument_list|,
-literal|'v'
-argument_list|)
-operator|!=
-name|NULL
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1898,16 +2080,7 @@ name|doc
 argument_list|,
 literal|"r"
 argument_list|,
-operator|(
 name|flags
-operator|&&
-name|strchr
-argument_list|(
-name|flags
-argument_list|,
-literal|'p'
-argument_list|)
-operator|)
 argument_list|)
 return|;
 block|}
@@ -1982,16 +2155,7 @@ name|doc
 argument_list|,
 literal|"w"
 argument_list|,
-operator|(
 name|flags
-operator|&&
-name|strchr
-argument_list|(
-name|flags
-argument_list|,
-literal|'p'
-argument_list|)
-operator|)
 argument_list|)
 return|;
 block|}
