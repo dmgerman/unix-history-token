@@ -6,6 +6,12 @@ end_comment
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|LIBC_SCCS
@@ -18,21 +24,19 @@ name|lint
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)getgrouplist.c	8.2 (Berkeley) 12/8/94"
-decl_stmt|;
-end_decl_stmt
+begin_endif
+unit|static char sccsid[] = "@(#)getgrouplist.c	8.2 (Berkeley) 12/8/94";
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-comment|/* LIBC_SCCS and not lint */
-endif|$
 end_endif
 
 begin_include
@@ -108,12 +112,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|ngroups
-decl_stmt|;
-name|int
-name|ret
-decl_stmt|,
 name|maxgroups
+decl_stmt|,
+name|ngroups
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|ret
 operator|=
