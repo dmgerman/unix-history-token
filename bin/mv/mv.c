@@ -232,7 +232,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|baselen
 decl_stmt|,
@@ -240,7 +239,6 @@ name|len
 decl_stmt|,
 name|rval
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1074,7 +1072,6 @@ decl_stmt|;
 name|mode_t
 name|oldmode
 decl_stmt|;
-specifier|register
 name|int
 name|nread
 decl_stmt|,
