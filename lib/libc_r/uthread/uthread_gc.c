@@ -557,6 +557,7 @@ name|pthread_cln
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|pthread_cln
@@ -581,6 +582,7 @@ argument_list|(
 name|pthread_cln
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
