@@ -2563,6 +2563,8 @@ operator|(
 name|l
 operator|>
 name|UCHAR_MAX
+operator|-
+literal|3
 operator|)
 condition|)
 block|{
@@ -2571,6 +2573,8 @@ argument_list|(
 literal|"argument to -M must be 0 through %d"
 argument_list|,
 name|UCHAR_MAX
+operator|-
+literal|3
 argument_list|)
 expr_stmt|;
 return|return;
