@@ -3938,7 +3938,7 @@ name|mtag
 argument_list|)
 expr_stmt|;
 block|}
-name|NET_PICKUP_GIANT
+name|NET_LOCK_GIANT
 argument_list|()
 expr_stmt|;
 operator|(
@@ -3961,7 +3961,7 @@ operator|,
 name|hlen
 operator|)
 expr_stmt|;
-name|NET_DROP_GIANT
+name|NET_UNLOCK_GIANT
 argument_list|()
 expr_stmt|;
 return|return;
