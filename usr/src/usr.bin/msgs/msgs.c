@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.6 %G%"
+literal|"@(#)msgs.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -630,7 +630,7 @@ name|rcback
 init|=
 literal|0
 decl_stmt|;
-comment|/* amount to back off of rcfirst*/
+comment|/* amount to back off of rcfirst */
 name|int
 name|firstmsg
 decl_stmt|,
@@ -1783,11 +1783,16 @@ block|}
 if|if
 condition|(
 name|rcfirst
+operator|&&
+name|rcfirst
+operator|>
+name|firstmsg
 condition|)
 name|firstmsg
 operator|=
 name|rcfirst
 expr_stmt|;
+comment|/* don't set below first msg */
 if|if
 condition|(
 name|newrc
