@@ -1028,7 +1028,7 @@ name|nfds
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 comment|/* 				 * Remove this thread from the waiting queue 				 * (and work queue if necessary) and place it 				 * in the ready queue. 				 */
 name|PTHREAD_WAITQ_CLEARACTIVE

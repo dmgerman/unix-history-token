@@ -2836,7 +2836,7 @@ name|state
 operator||=
 name|WS_ST_QUERY
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|OUT_BROADCAST
 case|:

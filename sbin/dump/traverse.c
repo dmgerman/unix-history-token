@@ -2136,7 +2136,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|S_IFDIR
 case|:
@@ -2155,7 +2155,7 @@ operator|>
 literal|0
 condition|)
 break|break;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|S_IFIFO
 case|:

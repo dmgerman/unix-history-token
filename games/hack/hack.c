@@ -7,9 +7,19 @@ begin_comment
 comment|/* hack.c - version 1.0.3 */
 end_comment
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -3161,7 +3171,7 @@ condition|)
 goto|goto
 name|stop
 goto|;
-comment|/* fall into next case */
+comment|/* FALLTHROUGH */
 case|case
 name|CORR_SYM
 case|:

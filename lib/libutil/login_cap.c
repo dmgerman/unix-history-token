@@ -974,7 +974,7 @@ operator|>=
 literal|0
 condition|)
 break|break;
-comment|/* Fallthru - just return system defaults */
+comment|/* FALLTHROUGH - just return system defaults */
 case|case
 literal|0
 case|:

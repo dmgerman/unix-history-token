@@ -3681,7 +3681,7 @@ argument_list|,
 literal|5.0
 argument_list|)
 expr_stmt|;
-comment|/* fall through for check */
+comment|/* FALLTHROUGH for check */
 case|case
 name|A_SPECIFIC
 case|:

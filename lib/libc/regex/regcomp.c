@@ -8891,7 +8891,7 @@ operator|!=
 name|O_CH
 condition|)
 do|;
-comment|/* fallthrough */
+comment|/* FALLTHROUGH */
 case|case
 name|OBOW
 case|:

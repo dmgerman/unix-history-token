@@ -5605,7 +5605,7 @@ break|break;
 block|}
 block|}
 comment|/* end treasure types 10 - 13 */
-comment|/* fall through to treasure type 9 if no treasure from above */
+comment|/* FALLTHROUGH to treasure type 9 if no treasure from above */
 case|case
 literal|9
 case|:
@@ -5651,7 +5651,7 @@ name|p_crowns
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall through otherwise */
+comment|/* FALLTHROUGH */
 case|case
 literal|2
 case|:

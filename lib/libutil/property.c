@@ -314,7 +314,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Fall through deliberately since we already have a character and state == LOOK */
+comment|/* FALLTHROUGH deliberately since we already have a character and state == LOOK */
 case|case
 name|LOOK
 case|:

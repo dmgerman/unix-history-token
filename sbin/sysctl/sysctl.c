@@ -3000,7 +3000,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(

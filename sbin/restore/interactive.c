@@ -2819,7 +2819,7 @@ operator|->
 name|d_type
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|DT_REG
 case|:

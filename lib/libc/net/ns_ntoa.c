@@ -374,7 +374,7 @@ operator|-
 literal|'a'
 operator|)
 expr_stmt|;
-comment|/* fall into . . . */
+comment|/* FALLTHROUGH */
 case|case
 literal|'A'
 case|:

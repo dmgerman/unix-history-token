@@ -817,7 +817,7 @@ name|base16
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fall into */
+comment|/* FALLTHROUGH */
 default|default:
 operator|*
 operator|--

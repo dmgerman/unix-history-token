@@ -2585,7 +2585,7 @@ name|done
 goto|;
 comment|/* EOF. . . .*/
 block|}
-comment|/* else fall through */
+comment|/* FALLTHROUGH */
 default|default:
 operator|*
 name|buffer
@@ -2718,7 +2718,7 @@ goto|;
 comment|/* Backslash-newline continuation */
 block|}
 block|}
-comment|/* fall through if "other" character */
+comment|/* FALLTHROUGH if "other" character */
 default|default:
 operator|*
 name|buffer
