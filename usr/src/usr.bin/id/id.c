@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)id.c	5.1 (Berkeley) %G%"
+literal|"@(#)id.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -361,19 +361,37 @@ argument_list|)
 else|:
 name|NULL
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|Gflag
 operator|+
 name|gflag
 operator|+
 name|uflag
-operator|>
-literal|1
 condition|)
+block|{
+case|case
+literal|1
+case|:
+break|break;
+case|case
+literal|0
+case|:
+if|if
+condition|(
+operator|!
+name|nflag
+operator|&&
+operator|!
+name|rflag
+condition|)
+break|break;
+comment|/* FALLTHROUGH */
+default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Gflag
