@@ -4311,7 +4311,7 @@ operator|=
 name|PAGE_SIZE
 init|;
 name|i
-operator|<
+operator|>
 literal|0
 condition|;
 name|i
