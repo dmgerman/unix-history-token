@@ -6439,15 +6439,9 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|size
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|uap
 operator|->
 name|size

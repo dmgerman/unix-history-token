@@ -4016,9 +4016,6 @@ while|while
 condition|(
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ps
 argument_list|,
 operator|&
@@ -4199,9 +4196,6 @@ while|while
 condition|(
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ps
 argument_list|,
 operator|&
@@ -6617,9 +6611,6 @@ name|P_CONTINUED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|p
 operator|->
 name|p_pptr
@@ -7513,9 +7504,6 @@ name|P_WAITED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|p
 operator|->
 name|p_pptr

@@ -1162,14 +1162,8 @@ name|error
 operator|=
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|domainname
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|uap
 operator|->
 name|domainname
@@ -1306,9 +1300,6 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|uap
 operator|->
 name|domainname

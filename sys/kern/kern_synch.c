@@ -1080,9 +1080,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|lbolt
 argument_list|)
@@ -2415,9 +2412,6 @@ name|PS_SWAPINREQ
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|proc0
 argument_list|)
@@ -2653,9 +2647,6 @@ name|PS_SWAPINREQ
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|proc0
 argument_list|)
@@ -3118,9 +3109,6 @@ name|PS_SWAPINREQ
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|proc0
 argument_list|)

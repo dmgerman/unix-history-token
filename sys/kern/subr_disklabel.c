@@ -231,9 +231,6 @@ argument_list|)
 expr_stmt|;
 name|msleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|dksort_mtx
 argument_list|,

@@ -2514,9 +2514,6 @@ name|copyin
 argument_list|(
 name|addr
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|v
 argument_list|,
@@ -2537,9 +2534,6 @@ if|if
 condition|(
 name|copyout
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|v
 argument_list|,
