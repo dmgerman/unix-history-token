@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)split.c	4.3 (Berkeley) %G%"
+literal|"@(#)split.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,7 +344,7 @@ index|[
 name|cnt
 index|]
 operator|+
-literal|2
+literal|1
 argument_list|)
 operator|)
 operator|<=
