@@ -216,10 +216,6 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/*  * FlowControl  * Valid Range: 0-3 (0=none, 1=Rx only, 2=Tx only, 3=Rx&Tx)  * Default: Read flow control settings from the EEPROM  *   This parameter controls the automatic generation(Tx) and response(Rx) to  *   Ethernet PAUSE frames.  */
-end_comment
-
-begin_comment
 comment|/*  * TxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  */
 end_comment
 
@@ -294,17 +290,6 @@ define|#
 directive|define
 name|EM_MAX_INTR
 value|3
-end_define
-
-begin_comment
-comment|/*  * This parameter determines when the hardware will report that it is  * done with the packet.  *           0 - "Done" is reported when the packet has been sent on the wire  *           1 - "Done" is reported when the packet has been DMA'ed and is on chip.  *           2 -  Determine the best method.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_REPORT_TX_EARLY
-value|2
 end_define
 
 begin_comment
@@ -424,8 +409,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|IOCTL_CMD_TYPE
-value|u_long
+name|EM_SMARTSPEED_DOWNSHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_SMARTSPEED_MAX
+value|15
 end_define
 
 begin_define
@@ -442,29 +434,11 @@ name|PCI_ANY_ID
 value|(~0U)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ETHER_ALIGN
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|ETHER_ALIGN
 value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|QTAG_TYPE
-value|0x8100
 end_define
 
 begin_comment
@@ -788,6 +762,10 @@ name|struct
 name|callout_handle
 name|timer_handle
 decl_stmt|;
+name|struct
+name|callout_handle
+name|tx_fifo_timer_handle
+decl_stmt|;
 name|int
 name|io_rid
 decl_stmt|;
@@ -806,6 +784,9 @@ name|link_speed
 decl_stmt|;
 name|u_int16_t
 name|link_duplex
+decl_stmt|;
+name|u_int32_t
+name|smartspeed
 decl_stmt|;
 name|u_int32_t
 name|tx_int_delay
@@ -880,6 +861,9 @@ name|mbuf
 modifier|*
 name|lmp
 decl_stmt|;
+name|u_int16_t
+name|tx_fifo_head
+decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long
@@ -900,6 +884,12 @@ decl_stmt|;
 name|unsigned
 name|long
 name|no_tx_desc_avail2
+decl_stmt|;
+name|u_int64_t
+name|tx_fifo_reset
+decl_stmt|;
+name|u_int64_t
+name|tx_fifo_wrk
 decl_stmt|;
 ifdef|#
 directive|ifdef
