@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.h	4.4	82/04/10	*/
+comment|/*	raw_cb.h	4.5	83/06/30	*/
 end_comment
 
 begin_comment
@@ -42,6 +42,11 @@ name|caddr_t
 name|rcb_pcb
 decl_stmt|;
 comment|/* protocol specific stuff */
+name|struct
+name|route
+name|rcb_route
+decl_stmt|;
+comment|/* routing information */
 name|short
 name|rcb_flags
 decl_stmt|;
@@ -66,6 +71,17 @@ directive|define
 name|RAW_FADDR
 value|02
 end_define
+
+begin_define
+define|#
+directive|define
+name|RAW_DONTROUTE
+value|04
+end_define
+
+begin_comment
+comment|/* no routing, default */
+end_comment
 
 begin_define
 define|#
