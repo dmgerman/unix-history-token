@@ -1622,20 +1622,13 @@ name|NULL
 condition|)
 block|{
 comment|/* Copy the prefix */
-name|Buf_AddBytes
+name|Buf_AppendRange
 argument_list|(
 name|buf
 argument_list|,
-name|m
-operator|-
 name|pat
 argument_list|,
-operator|(
-specifier|const
-name|Byte
-operator|*
-operator|)
-name|pat
+name|m
 argument_list|)
 expr_stmt|;
 comment|/* skip the % */
