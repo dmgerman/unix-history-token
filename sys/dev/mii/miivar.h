@@ -707,6 +707,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|mii_phy_add_media
+parameter_list|(
+name|struct
+name|mii_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|mii_media_from_bmcr
 parameter_list|(

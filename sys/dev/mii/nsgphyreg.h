@@ -161,6 +161,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PHY_SUP_SPEED1
+value|0x0010
+end_define
+
+begin_comment
+comment|/* speed bit 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_SUP_SPEED0
+value|0x0008
+end_define
+
+begin_comment
+comment|/* speed bit 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NSGPHY_PHYSUP_SPEED1
 value|0x0010
 end_define
@@ -196,6 +218,28 @@ end_define
 
 begin_comment
 comment|/* link status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_SUP_LINK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* link status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_SUP_DUPLEX
+value|0x0002
+end_define
+
+begin_comment
+comment|/* 1 == full-duplex */
 end_comment
 
 begin_define
