@@ -2593,13 +2593,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Enable interrupts on first release (in switch_trampoline). 	 */
-block|sched_lock.mtx_saveipl = ALPHA_PSL_IPL_0;
-endif|#
-directive|endif
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
 operator|=
