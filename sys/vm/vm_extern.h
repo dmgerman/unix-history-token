@@ -808,8 +808,6 @@ operator|(
 name|caddr_t
 operator|,
 name|u_int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

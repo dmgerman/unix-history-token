@@ -542,8 +542,6 @@ parameter_list|(
 name|addr
 parameter_list|,
 name|len
-parameter_list|,
-name|dirtied
 parameter_list|)
 name|caddr_t
 name|addr
@@ -551,19 +549,7 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
-name|int
-name|dirtied
-decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|dirtied
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* lint */
 name|vm_map_pageable
 argument_list|(
 operator|&

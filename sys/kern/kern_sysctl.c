@@ -2703,8 +2703,6 @@ argument_list|,
 name|req
 operator|.
 name|oldlen
-argument_list|,
-name|B_WRITE
 argument_list|)
 expr_stmt|;
 name|memlock
@@ -3985,8 +3983,6 @@ argument_list|,
 name|req
 operator|.
 name|oldlen
-argument_list|,
-name|B_WRITE
 argument_list|)
 expr_stmt|;
 name|memlock
