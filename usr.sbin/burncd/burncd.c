@@ -1104,7 +1104,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|err
+name|errx
 argument_list|(
 name|EX_NOINPUT
 argument_list|,
@@ -1323,7 +1323,7 @@ condition|(
 operator|!
 name|block_size
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_NOINPUT
 argument_list|,
@@ -1492,7 +1492,7 @@ name|notracks
 operator|>
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
@@ -2280,7 +2280,7 @@ index|]
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_IOERR
 argument_list|,
@@ -3301,7 +3301,7 @@ name|i
 operator|==
 name|count
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_IOERR
 argument_list|,
@@ -3364,7 +3364,7 @@ name|type
 operator|==
 literal|2
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_IOERR
 argument_list|,
