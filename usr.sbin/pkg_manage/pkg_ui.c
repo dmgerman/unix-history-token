@@ -115,11 +115,12 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-name|dialog_notify
-argument_list|(
-literal|"No packages installed or no info available"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|dialog_notify("No packages installed or no info available");
+endif|#
+directive|endif
 return|return;
 block|}
 name|use_helpfile
@@ -1473,9 +1474,16 @@ name|sprintf
 argument_list|(
 name|tmp_dir
 argument_list|,
-literal|"/tmp/%s"
+literal|"/usr/tmp/%s"
 argument_list|,
 name|tmp_file
+argument_list|)
+expr_stmt|;
+name|mkdir
+argument_list|(
+literal|"/usr/tmp"
+argument_list|,
+name|S_IRWXU
 argument_list|)
 expr_stmt|;
 block|}
@@ -1496,7 +1504,7 @@ condition|)
 block|{
 name|dialog_notify
 argument_list|(
-literal|"Could not create temporary directory in /tmp, exiting"
+literal|"Could not create temporary directory in /usr/tmp, exiting"
 argument_list|)
 expr_stmt|;
 name|free
@@ -2584,6 +2592,11 @@ condition|(
 name|install
 condition|)
 block|{
+name|int
+name|ninstalled
+init|=
+literal|0
+decl_stmt|;
 comment|/* check if any of the packages marked for installation are */
 comment|/* already installed */
 name|i
@@ -2742,14 +2755,11 @@ call|(
 name|int
 call|)
 argument_list|(
-call|(
+operator|(
 name|float
-call|)
-argument_list|(
-name|i
-operator|+
-literal|1
-argument_list|)
+operator|)
+operator|++
+name|ninstalled
 operator|/
 name|n
 operator|*
