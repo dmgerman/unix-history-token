@@ -9604,7 +9604,7 @@ name|vp
 operator|->
 name|v_rdev
 expr_stmt|;
-name|VOP_STRATEGY
+name|VOP_SPECSTRATEGY
 argument_list|(
 name|vp
 argument_list|,

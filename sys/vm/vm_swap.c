@@ -623,7 +623,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|VOP_STRATEGY
+name|VOP_SPECSTRATEGY
 argument_list|(
 name|bp
 operator|->
