@@ -1765,13 +1765,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WI_PORTTYPE_IBSS
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
 name|WI_PORTTYPE_BSS
 value|0x1
 end_define
@@ -1788,6 +1781,13 @@ define|#
 directive|define
 name|WI_PORTTYPE_ADHOC
 value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_PORTTYPE_IBSS
+value|0x4
 end_define
 
 begin_define
@@ -1924,6 +1924,13 @@ define|#
 directive|define
 name|WI_SUPPRATES_11M
 value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RATES_BITS
+value|"\20\0011M\0022M\0035.5M\00411M"
 end_define
 
 begin_comment
