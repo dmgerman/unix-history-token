@@ -282,6 +282,10 @@ name|int
 name|mii_active
 decl_stmt|;
 comment|/* last active media */
+name|int
+name|mii_status
+decl_stmt|;
+comment|/* last active status */
 block|}
 struct|;
 end_struct
@@ -582,6 +586,36 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|mii_phy_reset
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mii_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|mii_phy_update
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mii_softc
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mii_phy_tick
 name|__P
 argument_list|(
 operator|(
