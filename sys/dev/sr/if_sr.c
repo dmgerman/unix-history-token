@@ -4928,11 +4928,7 @@ literal|"sr%d: External Clock Selected.\n"
 argument|, portndx);
 endif|#
 directive|endif
-argument|SRC_PUT8(hc->sca_base, msci->rxs,
-literal|0
-argument|); 		SRC_PUT8(hc->sca_base, msci->txs,
-literal|0
-argument|); 		break;  	case SR_FLAGS_EXT_SEP_CLK:
+argument|SRC_PUT8(hc->sca_base, msci->rxs, 			 SCA_RXS_CLK_RXC0 | SCA_RXS_DIV1); 		SRC_PUT8(hc->sca_base, msci->txs, 			 SCA_TXS_CLK_RX | SCA_TXS_DIV1); 		break;  	case SR_FLAGS_EXT_SEP_CLK:
 if|#
 directive|if
 name|BUGGY
@@ -4943,22 +4939,7 @@ literal|"sr%d: Split Clocking Selected.\n"
 argument|, portndx);
 endif|#
 directive|endif
-if|#
-directive|if
-literal|1
-argument|SRC_PUT8(hc->sca_base, msci->rxs,
-literal|0
-argument|); 		SRC_PUT8(hc->sca_base, msci->txs,
-literal|0
-argument|);
-else|#
-directive|else
-argument|SRC_PUT8(hc->sca_base, msci->rxs, 			 SCA_RXS_CLK_RXC0 | SCA_RXS_DIV1);
-comment|/* 		 * We need to configure the internal bit clock for the 		 * transmitter's channel... 		 */
-argument|SRC_PUT8(hc->sca_base, msci->txs, 			 SCA_TXS_CLK_RX | SCA_TXS_DIV1);
-endif|#
-directive|endif
-argument|break;  	case SR_FLAGS_INT_CLK:
+argument|SRC_PUT8(hc->sca_base, msci->rxs, 			 SCA_RXS_CLK_RXC0 | SCA_RXS_DIV1); 		SRC_PUT8(hc->sca_base, msci->txs, 			 SCA_TXS_CLK_TXC | SCA_TXS_DIV1); 		break;  	case SR_FLAGS_INT_CLK:
 if|#
 directive|if
 name|BUGGY
