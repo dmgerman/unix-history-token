@@ -1574,7 +1574,7 @@ if|if
 condition|(
 name|badport_bandlim
 argument_list|(
-name|BANDLIM_UNREACH
+name|BANDLIM_ICMP_UNREACH
 argument_list|)
 operator|<
 literal|0

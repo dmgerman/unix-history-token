@@ -2003,7 +2003,7 @@ if|if
 condition|(
 name|badport_bandlim
 argument_list|(
-name|BANDLIM_ECHO
+name|BANDLIM_ICMP_ECHO
 argument_list|)
 operator|<
 literal|0
@@ -2085,7 +2085,7 @@ if|if
 condition|(
 name|badport_bandlim
 argument_list|(
-name|BANDLIM_TSTAMP
+name|BANDLIM_ICMP_TSTAMP
 argument_list|)
 operator|<
 literal|0
@@ -3927,13 +3927,13 @@ init|=
 block|{
 literal|"Limiting icmp unreach response"
 block|,
-literal|"Limiting closed port RST response"
-block|,
-literal|"Limiting open port RST response"
-block|,
 literal|"Limiting icmp ping response"
 block|,
 literal|"Limiting icmp tstamp response"
+block|,
+literal|"Limiting closed port RST response"
+block|,
+literal|"Limiting open port RST response"
 block|}
 decl_stmt|;
 comment|/* 	 * Return ok status if feature disabled or argument out of 	 * ranage. 	 */

@@ -162,37 +162,52 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|BANDLIM_UNREACH
+name|BANDLIM_UNLIMITED
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BANDLIM_ICMP_UNREACH
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|BANDLIM_RST_NOTOPEN
+name|BANDLIM_ICMP_ECHO
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|BANDLIM_RST_OPEN
+name|BANDLIM_ICMP_TSTAMP
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|BANDLIM_ECHO
+name|BANDLIM_RST_CLOSEDPORT
 value|3
 end_define
+
+begin_comment
+comment|/* No connection, and no listeners */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|BANDLIM_TSTAMP
+name|BANDLIM_RST_OPENPORT
 value|4
 end_define
+
+begin_comment
+comment|/* No connection, listener */
+end_comment
 
 begin_define
 define|#
