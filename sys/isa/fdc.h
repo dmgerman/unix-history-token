@@ -34,9 +34,6 @@ name|fdcu
 decl_stmt|;
 comment|/* our unit number */
 name|int
-name|baseport
-decl_stmt|;
-name|int
 name|dmachan
 decl_stmt|;
 name|int
@@ -79,6 +76,10 @@ name|FDC_UNLOADED
 value|0x80
 endif|#
 directive|endif
+define|#
+directive|define
+name|FDC_ISPNP
+value|0x100
 name|struct
 name|fd_data
 modifier|*
@@ -130,6 +131,9 @@ modifier|*
 name|res_ioport
 decl_stmt|,
 modifier|*
+name|res_ctl
+decl_stmt|,
+modifier|*
 name|res_irq
 decl_stmt|,
 modifier|*
@@ -138,9 +142,26 @@ decl_stmt|;
 name|int
 name|rid_ioport
 decl_stmt|,
+name|rid_ctl
+decl_stmt|,
 name|rid_irq
 decl_stmt|,
 name|rid_drq
+decl_stmt|;
+name|int
+name|port_off
+decl_stmt|;
+name|bus_space_tag_t
+name|portt
+decl_stmt|;
+name|bus_space_handle_t
+name|porth
+decl_stmt|;
+name|bus_space_tag_t
+name|ctlt
+decl_stmt|;
+name|bus_space_handle_t
+name|ctlh
 decl_stmt|;
 name|void
 modifier|*
