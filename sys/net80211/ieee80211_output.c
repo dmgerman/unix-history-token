@@ -6591,6 +6591,13 @@ operator|->
 name|ic_wme
 argument_list|)
 expr_stmt|;
+name|ic
+operator|->
+name|ic_flags
+operator|&=
+operator|~
+name|IEEE80211_F_WMEUPDATE
+expr_stmt|;
 block|}
 if|if
 condition|(
