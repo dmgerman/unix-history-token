@@ -2673,7 +2673,7 @@ name|printf
 argument_list|(
 literal|"%6s"
 argument_list|,
-literal|"unix"
+literal|"local"
 argument_list|)
 expr_stmt|;
 else|else
