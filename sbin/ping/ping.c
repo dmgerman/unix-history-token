@@ -2718,6 +2718,8 @@ literal|"ping: sendto"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -2733,13 +2735,10 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+block|}
 name|ntransmitted
 operator|++
 expr_stmt|;
-comment|/* only count ones that made it out */
-block|}
 if|if
 condition|(
 operator|!
