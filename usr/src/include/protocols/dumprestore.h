@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -102,11 +102,11 @@ comment|/* record type (see below) */
 name|time_t
 name|c_date
 decl_stmt|;
-comment|/* date of previous dump */
+comment|/* date of this dump */
 name|time_t
 name|c_ddate
 decl_stmt|;
-comment|/* date of this dump */
+comment|/* date of previous dump */
 name|long
 name|c_volume
 decl_stmt|;
