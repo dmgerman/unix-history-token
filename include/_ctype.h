@@ -15,14 +15,16 @@ directive|define
 name|_CTYPE_H_
 end_define
 
-begin_comment
-comment|/*  * XXX<runetype.h> brings namespace pollution (struct member names).  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<runetype.h>
+file|<sys/_types.h>
 end_include
 
 begin_define
@@ -707,6 +709,29 @@ directive|define
 name|__inline
 endif|#
 directive|endif
+comment|/*  *<runetype.h> brings namespace pollution (struct member names).  This prevents  * us from using the inline optimizations in the more strict __POSIX_VISIBLE and  * __XSI_VISIBLE namespaces.  To fix this properly would require that we rename  * member names of long-standing structs, or something equally evil.  */
+if|#
+directive|if
+operator|!
+name|__BSD_VISIBLE
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_USE_CTYPE_INLINE_
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|_DONT_USE_CTYPE_INLINE_
+argument_list|)
+define|#
+directive|define
+name|_DONT_USE_CTYPE_INLINE_
+endif|#
+directive|endif
 comment|/*  * Use inline functions if we are allowed to and the compiler supports them.  */
 if|#
 directive|if
@@ -733,6 +758,9 @@ argument_list|(
 name|__cplusplus
 argument_list|)
 operator|)
+include|#
+directive|include
+file|<runetype.h>
 specifier|static
 name|__inline
 name|int
