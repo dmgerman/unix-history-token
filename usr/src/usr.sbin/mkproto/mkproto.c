@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	5.5 (Berkeley) %G%"
+literal|"@(#)mkproto.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,25 +59,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/dinode.h>
 end_include
 
 begin_include
@@ -215,6 +203,13 @@ begin_function_decl
 name|char
 modifier|*
 name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ino_t
+name|ialloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -450,10 +445,12 @@ name|descend
 argument_list|(
 operator|(
 expr|struct
-name|inode
+name|dinode
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|ROOTINO
 argument_list|)
 expr_stmt|;
 name|wtfs
@@ -557,22 +554,33 @@ begin_macro
 name|descend
 argument_list|(
 argument|par
+argument_list|,
+argument|parinum
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|inode
+name|dinode
 modifier|*
 name|par
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ino_t
+name|parinum
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 name|struct
-name|inode
+name|dinode
 name|in
+decl_stmt|;
+name|ino_t
+name|inum
 decl_stmt|;
 name|int
 name|ibc
@@ -624,7 +632,7 @@ argument_list|()
 expr_stmt|;
 name|in
 operator|.
-name|i_mode
+name|di_mode
 operator|=
 name|gmode
 argument_list|(
@@ -646,7 +654,7 @@ argument_list|)
 expr_stmt|;
 name|in
 operator|.
-name|i_mode
+name|di_mode
 operator||=
 name|gmode
 argument_list|(
@@ -668,7 +676,7 @@ argument_list|)
 expr_stmt|;
 name|in
 operator|.
-name|i_mode
+name|di_mode
 operator||=
 name|gmode
 argument_list|(
@@ -739,7 +747,7 @@ expr_stmt|;
 block|}
 name|in
 operator|.
-name|i_mode
+name|di_mode
 operator||=
 operator|(
 name|c
@@ -758,14 +766,14 @@ expr_stmt|;
 block|}
 name|in
 operator|.
-name|i_uid
+name|di_uid
 operator|=
 name|getnum
 argument_list|()
 expr_stmt|;
 name|in
 operator|.
-name|i_gid
+name|di_gid
 operator|=
 name|getnum
 argument_list|()
@@ -820,13 +828,13 @@ literal|0
 expr_stmt|;
 name|in
 operator|.
-name|i_nlink
+name|di_nlink
 operator|=
 literal|1
 expr_stmt|;
 name|in
 operator|.
-name|i_size
+name|di_size
 operator|=
 literal|0
 expr_stmt|;
@@ -845,7 +853,7 @@ operator|++
 control|)
 name|in
 operator|.
-name|i_db
+name|di_db
 index|[
 name|i
 index|]
@@ -870,7 +878,7 @@ operator|++
 control|)
 name|in
 operator|.
-name|i_ib
+name|di_ib
 index|[
 name|i
 index|]
@@ -886,12 +894,14 @@ name|par
 operator|!=
 operator|(
 expr|struct
-name|inode
+name|dinode
 operator|*
 operator|)
 literal|0
 condition|)
 block|{
+name|inum
+operator|=
 name|ialloc
 argument_list|(
 operator|&
@@ -948,15 +958,13 @@ name|fs
 argument_list|)
 index|]
 expr_stmt|;
-name|in
-operator|.
-name|i_number
+name|inum
 operator|=
 name|ROOTINO
 expr_stmt|;
 name|in
 operator|.
-name|i_nlink
+name|di_nlink
 operator|=
 name|dip
 operator|->
@@ -964,7 +972,7 @@ name|di_nlink
 expr_stmt|;
 name|in
 operator|.
-name|i_size
+name|di_size
 operator|=
 name|dip
 operator|->
@@ -972,7 +980,7 @@ name|di_size
 expr_stmt|;
 name|in
 operator|.
-name|i_db
+name|di_db
 index|[
 literal|0
 index|]
@@ -992,7 +1000,7 @@ name|fs
 argument_list|,
 name|in
 operator|.
-name|i_db
+name|di_db
 index|[
 literal|0
 index|]
@@ -1010,7 +1018,7 @@ switch|switch
 condition|(
 name|in
 operator|.
-name|i_mode
+name|di_mode
 operator|&
 name|IFMT
 condition|)
@@ -1074,7 +1082,7 @@ condition|)
 block|{
 name|in
 operator|.
-name|i_size
+name|di_size
 operator|+=
 name|i
 expr_stmt|;
@@ -1090,7 +1098,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|blksize
+name|dblksize
 argument_list|(
 name|fs
 argument_list|,
@@ -1131,7 +1139,7 @@ literal|0377
 expr_stmt|;
 name|in
 operator|.
-name|i_rdev
+name|di_rdev
 operator|=
 operator|(
 name|i
@@ -1148,21 +1156,19 @@ case|:
 comment|/* 		 * directory 		 * put in extra links 		 * call recursively until 		 * name of "$" found 		 */
 if|if
 condition|(
-name|in
-operator|.
-name|i_number
+name|inum
 operator|!=
 name|ROOTINO
 condition|)
 block|{
 name|par
 operator|->
-name|i_nlink
+name|di_nlink
 operator|++
 expr_stmt|;
 name|in
 operator|.
-name|i_nlink
+name|di_nlink
 operator|++
 expr_stmt|;
 name|entry
@@ -1170,9 +1176,7 @@ argument_list|(
 operator|&
 name|in
 argument_list|,
-name|in
-operator|.
-name|i_number
+name|inum
 argument_list|,
 literal|"."
 argument_list|,
@@ -1184,9 +1188,7 @@ argument_list|(
 operator|&
 name|in
 argument_list|,
-name|par
-operator|->
-name|i_number
+name|parinum
 argument_list|,
 literal|".."
 argument_list|,
@@ -1243,14 +1245,14 @@ name|descend
 argument_list|(
 operator|&
 name|in
+argument_list|,
+name|inum
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|in
-operator|.
-name|i_number
+name|inum
 operator|!=
 name|ROOTINO
 condition|)
@@ -1266,7 +1268,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|blksize
+name|dblksize
 argument_list|(
 name|fs
 argument_list|,
@@ -1286,7 +1288,7 @@ name|fs
 argument_list|,
 name|in
 operator|.
-name|i_db
+name|di_db
 index|[
 literal|0
 index|]
@@ -1313,6 +1315,8 @@ operator|&
 name|ibc
 argument_list|,
 name|ib
+argument_list|,
+name|inum
 argument_list|)
 expr_stmt|;
 block|}
@@ -1631,7 +1635,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|inode
+name|dinode
 modifier|*
 name|ip
 decl_stmt|;
@@ -1700,7 +1704,7 @@ name|buf
 operator|<
 name|ip
 operator|->
-name|i_size
+name|di_size
 condition|)
 block|{
 name|odp
@@ -1891,7 +1895,7 @@ argument_list|)
 expr_stmt|;
 name|ip
 operator|->
-name|i_size
+name|di_size
 operator|=
 operator|(
 name|int
@@ -2054,12 +2058,14 @@ argument_list|,
 argument|aibc
 argument_list|,
 argument|ib
+argument_list|,
+argument|inum
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|inode
+name|dinode
 modifier|*
 name|ip
 decl_stmt|;
@@ -2076,6 +2082,12 @@ begin_decl_stmt
 name|daddr_t
 modifier|*
 name|ib
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ino_t
+name|inum
 decl_stmt|;
 end_decl_stmt
 
@@ -2109,15 +2121,15 @@ parameter_list|()
 function_decl|;
 name|ip
 operator|->
-name|i_atime
+name|di_atime
 operator|=
 name|ip
 operator|->
-name|i_mtime
+name|di_mtime
 operator|=
 name|ip
 operator|->
-name|i_ctime
+name|di_ctime
 operator|=
 name|time
 argument_list|(
@@ -2132,7 +2144,7 @@ switch|switch
 condition|(
 name|ip
 operator|->
-name|i_mode
+name|di_mode
 operator|&
 name|IFMT
 condition|)
@@ -2167,7 +2179,7 @@ condition|)
 break|break;
 name|ip
 operator|->
-name|i_db
+name|di_db
 index|[
 name|i
 index|]
@@ -2188,7 +2200,7 @@ condition|)
 block|{
 name|ip
 operator|->
-name|i_ib
+name|di_ib
 index|[
 literal|0
 index|]
@@ -2255,7 +2267,7 @@ name|fs
 argument_list|,
 name|ip
 operator|->
-name|i_ib
+name|di_ib
 index|[
 literal|0
 index|]
@@ -2291,7 +2303,7 @@ literal|"bad mode %o\n"
 argument_list|,
 name|ip
 operator|->
-name|i_mode
+name|di_mode
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2310,9 +2322,7 @@ name|itod
 argument_list|(
 name|fs
 argument_list|,
-name|ip
-operator|->
-name|i_number
+name|inum
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2340,17 +2350,12 @@ name|itoo
 argument_list|(
 name|fs
 argument_list|,
-name|ip
-operator|->
-name|i_number
+name|inum
 argument_list|)
 index|]
-operator|.
-name|di_ic
 operator|=
+operator|*
 name|ip
-operator|->
-name|i_ic
 expr_stmt|;
 name|wtfs
 argument_list|(
@@ -2786,27 +2791,26 @@ begin_comment
 comment|/*  * Allocate an inode on the disk  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|ino_t
 name|ialloc
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
-name|inode
-operator|*
+name|struct
+name|dinode
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
+name|ino_t
+name|inum
+decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|ip
-operator|->
-name|i_number
+name|inum
 operator|=
 operator|++
 name|ino
@@ -2818,9 +2822,7 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|ip
-operator|->
-name|i_number
+name|inum
 argument_list|)
 expr_stmt|;
 name|rdfs
@@ -2881,7 +2883,7 @@ if|if
 condition|(
 name|ip
 operator|->
-name|i_mode
+name|di_mode
 operator|&
 name|IFDIR
 condition|)
@@ -2924,9 +2926,7 @@ operator|&
 name|acg
 argument_list|)
 argument_list|,
-name|ip
-operator|->
-name|i_number
+name|inum
 argument_list|)
 expr_stmt|;
 name|wtfs
@@ -2977,9 +2977,7 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|ip
-operator|->
-name|i_number
+name|inum
 operator|>=
 name|sblock
 operator|.
@@ -2994,9 +2992,7 @@ name|printf
 argument_list|(
 literal|"fsinit: inode value out of range (%lu).\n"
 argument_list|,
-name|ip
-operator|->
-name|i_number
+name|inum
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3005,9 +3001,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* return (ip->i_number); */
+return|return
+operator|(
+name|inum
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * read a block from the file system  */
