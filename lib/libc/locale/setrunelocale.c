@@ -387,7 +387,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENOENT
+name|errno
 operator|)
 return|;
 if|if
@@ -432,7 +432,7 @@ index|]
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EFTYPE
 operator|)
 return|;
 elseif|else
@@ -543,7 +543,7 @@ return|;
 else|else
 return|return
 operator|(
-name|EINVAL
+name|EFTYPE
 operator|)
 return|;
 block|}
