@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.34 1999/11/18 23:32:29 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.47 2000/09/24 02:08:38 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -419,7 +419,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_suspend
+name|bus_generic_resume
 argument_list|)
 block|,
 name|DEVMETHOD
