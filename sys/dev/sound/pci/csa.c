@@ -172,6 +172,9 @@ modifier|*
 name|pcmintr_arg
 decl_stmt|;
 comment|/* pcm intr arg */
+if|#
+directive|if
+name|notyet
 name|device_t
 name|midi
 decl_stmt|;
@@ -186,6 +189,9 @@ modifier|*
 name|midiintr_arg
 decl_stmt|;
 comment|/* midi intr arg */
+endif|#
+directive|endif
+comment|/* notyet */
 name|void
 modifier|*
 name|ih
@@ -520,6 +526,9 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|notyet
 comment|/* Midi Interface */
 name|func
 operator|=
@@ -576,6 +585,9 @@ argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* notyet */
 return|return
 operator|(
 literal|0
