@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: $  */
+comment|/*  * $Id: log.h,v 1.14 1997/10/26 01:03:06 brian Exp $  */
 end_comment
 
 begin_define
@@ -203,7 +203,27 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|LogKeepLocal
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|LogDiscard
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|LogDiscardLocal
 parameter_list|(
 name|int
 parameter_list|)
@@ -219,6 +239,38 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|LogDiscardAllLocal
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|LOG_KEPT_SYSLOG
+value|(1)
+end_define
+
+begin_comment
+comment|/* Results of LogIsKept() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_KEPT_LOCAL
+value|(2)
+end_define
+
+begin_comment
+comment|/* Results of LogIsKept() */
+end_comment
 
 begin_function_decl
 specifier|extern
