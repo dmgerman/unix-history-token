@@ -315,6 +315,10 @@ begin_comment
 comment|/*  * It looks like there is no input interrupts in the UART mode. Let's try  * polling.  */
 end_comment
 
+begin_comment
+comment|/* XXX WARNING:  FreeBSD doesn't seem to have timer_lists like this,  * so until I figure out how to do the analogous thing in FreeBSD, I'm  * not all that sure WHAT this driver will do!  It might work, depending  * on the condition taken, but then again it might not!  -jkh  * XXX WARNING  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -329,6 +333,9 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|linux
 specifier|static
 name|struct
 name|timer_list
@@ -344,6 +351,8 @@ block|,
 name|poll_mpu401
 block|}
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -368,6 +377,9 @@ condition|)
 name|mpu401_input_loop
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|linux
 name|mpu401_timer
 operator|.
 name|expires
@@ -381,6 +393,8 @@ name|mpu401_timer
 argument_list|)
 expr_stmt|;
 comment|/* Come back later */
+endif|#
+directive|endif
 name|RESTORE_INTR
 argument_list|(
 name|flags
@@ -889,10 +903,15 @@ name|my_dev
 operator|=
 name|num_midis
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|linux
 name|mpu401_dev
 operator|=
 name|num_midis
 expr_stmt|;
+endif|#
+directive|endif
 name|midi_devs
 index|[
 name|num_midis
