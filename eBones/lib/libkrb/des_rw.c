@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Geoffrey M. Rehmet, Rhodes University  * All rights reserved.  *  * This code is derived from a specification based on software  * which forms part of the 4.4BSD-Lite distribution, which was developed  * by the University of California and its contributors.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the entire comment,  *    including the above copyright notice, this list of conditions  *    and the following disclaimer, verbatim, at the beginning of  *    the source file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Geoffrey M. Rehmet  * 4. Neither the name of Geoffrey M. Rehmet nor that of Rhodes University  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL GEOFFREY M. REHMET OR RHODES UNIVERSITY BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: des_rw.c,v 1.8 1997/03/24 14:52:51 ache Exp $  */
+comment|/*  * Copyright (c) 1994 Geoffrey M. Rehmet, Rhodes University  * All rights reserved.  *  * This code is derived from a specification based on software  * which forms part of the 4.4BSD-Lite distribution, which was developed  * by the University of California and its contributors.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the entire comment,  *    including the above copyright notice, this list of conditions  *    and the following disclaimer, verbatim, at the beginning of  *    the source file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Geoffrey M. Rehmet  * 4. Neither the name of Geoffrey M. Rehmet nor that of Rhodes University  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL GEOFFREY M. REHMET OR RHODES UNIVERSITY BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: des_rw.c,v 1.9 1997/06/14 02:29:19 ache Exp $  */
 end_comment
 
 begin_comment
@@ -557,12 +557,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-specifier|static
-name|int
-name|seeded
-init|=
-literal|0
-decl_stmt|;
 name|char
 name|garbage
 index|[
@@ -593,20 +587,6 @@ literal|8
 condition|)
 block|{
 comment|/* 		 * Right justify the message in 8 bytes of random garbage. 		 */
-if|if
-condition|(
-operator|!
-name|seeded
-condition|)
-block|{
-name|seeded
-operator|=
-literal|1
-expr_stmt|;
-name|srandomdev
-argument_list|()
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -627,7 +607,7 @@ control|)
 block|{
 name|rnd
 operator|=
-name|random
+name|arc4random
 argument_list|()
 expr_stmt|;
 name|bcopy
