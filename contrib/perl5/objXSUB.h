@@ -122,6 +122,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|PL_cred_mutex
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_cred_mutex
+value|pPerl->PL_cred_mutex
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|PL_curcop
 end_undef
 
@@ -2873,6 +2886,19 @@ define|#
 directive|define
 name|PL_strtab
 value|pPerl->PL_strtab
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PL_strtab_mutex
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PL_strtab_mutex
+value|pPerl->PL_strtab_mutex
 end_define
 
 begin_undef
@@ -5846,6 +5872,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|dofile
+end_undef
+
+begin_define
+define|#
+directive|define
+name|dofile
+value|pPerl->Perl_dofile
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|dowantarray
 end_undef
 
@@ -6257,6 +6296,19 @@ define|#
 directive|define
 name|get_specialsv_list
 value|pPerl->Perl_get_specialsv_list
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|get_vtbl
+end_undef
+
+begin_define
+define|#
+directive|define
+name|get_vtbl
+value|pPerl->Perl_get_vtbl
 end_define
 
 begin_undef
@@ -10181,6 +10233,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|save_generic_svref
+end_undef
+
+begin_define
+define|#
+directive|define
+name|save_generic_svref
+value|pPerl->Perl_generic_save_svref
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|save_gp
 end_undef
 
@@ -12879,14 +12944,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ntohs
+name|ntohl
 value|PerlSock_ntohl
 end_define
 
 begin_define
 define|#
 directive|define
-name|ntohl
+name|ntohs
 value|PerlSock_ntohs
 end_define
 

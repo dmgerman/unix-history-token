@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    dump.c  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    dump.c  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -1282,6 +1282,9 @@ operator|->
 name|op_gv
 condition|)
 block|{
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|SV
 modifier|*
 name|tmpsv
@@ -1319,7 +1322,7 @@ name|SvPV
 argument_list|(
 name|tmpsv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|)
 expr_stmt|;

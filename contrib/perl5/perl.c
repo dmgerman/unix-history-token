@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    perl.c  *  *    Copyright (c) 1987-1998 Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    perl.c  *  *    Copyright (c) 1987-1999 Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -465,6 +465,30 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IAMSUID
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fd_on_nosuid_fs
+name|_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -763,6 +787,12 @@ name|MUTEX_INIT
 argument_list|(
 operator|&
 name|PL_sv_mutex
+argument_list|)
+expr_stmt|;
+name|MUTEX_INIT
+argument_list|(
+operator|&
+name|PL_cred_mutex
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Safe to use basic SV functions from now on (though 	 * not things like mortals or tainting yet). 	 */
@@ -2838,7 +2868,25 @@ begin_expr_stmt
 name|MUTEX_DESTROY
 argument_list|(
 operator|&
+name|PL_strtab_mutex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MUTEX_DESTROY
+argument_list|(
+operator|&
 name|PL_sv_mutex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MUTEX_DESTROY
+argument_list|(
+operator|&
+name|PL_cred_mutex
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2860,6 +2908,30 @@ name|PL_eval_cond
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EMULATE_ATOMIC_REFCOUNTS
+end_ifdef
+
+begin_expr_stmt
+name|MUTEX_DESTROY
+argument_list|(
+operator|&
+name|PL_svref_mutex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EMULATE_ATOMIC_REFCOUNTS */
+end_comment
 
 begin_comment
 comment|/* As the penultimate thing, free the non-arena SV for thrsv */
@@ -3635,6 +3707,14 @@ operator|*
 name|s
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|PERL_STRICT_CR
+case|case
+literal|'\r'
+case|:
+endif|#
+directive|endif
 case|case
 literal|' '
 case|:
@@ -5730,6 +5810,7 @@ argument_list|,
 name|SVt_PVCV
 argument_list|)
 block|;
+comment|/* XXX unsafe for threads if eval_owner isn't held */
 if|if
 condition|(
 name|create
@@ -6930,16 +7011,21 @@ argument_list|(
 name|ERRSV
 argument_list|)
 condition|)
+block|{
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|croak
 argument_list|(
 name|SvPVx
 argument_list|(
 name|ERRSV
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|sv
 return|;
@@ -8184,7 +8270,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"\n\nCopyright 1987-1998, Larry Wall\n"
+literal|"\n\nCopyright 1987-1999, Larry Wall\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8265,6 +8351,26 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|__VOS__
+name|printf
+argument_list|(
+literal|"Stratus VOS port by Paul_Green@stratus.com, 1997-1999\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__MINT__
+name|printf
+argument_list|(
+literal|"MiNT port by Guido Flohr, 1997\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|BINARY_BUILD_NOTICE
 name|BINARY_BUILD_NOTICE
 expr_stmt|;
@@ -8321,9 +8427,18 @@ case|:
 case|case
 literal|0
 case|:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WIN32
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|PERL_STRICT_CR
+argument_list|)
 case|case
 literal|'\r'
 case|:
@@ -8658,6 +8773,17 @@ operator|=
 name|newHV
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_THREADS
+name|MUTEX_INIT
+argument_list|(
+operator|&
+name|PL_strtab_mutex
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|HvSHAREKEYS_off
 argument_list|(
 name|PL_strtab
@@ -8890,16 +9016,11 @@ expr_stmt|;
 comment|/* We must init $/ before switches are processed. */
 name|sv_setpvn
 argument_list|(
-name|GvSV
-argument_list|(
-name|gv_fetchpv
+name|perl_get_sv
 argument_list|(
 literal|"/"
 argument_list|,
 name|TRUE
-argument_list|,
-name|SVt_PV
-argument_list|)
 argument_list|)
 argument_list|,
 literal|"\n"
@@ -9320,7 +9441,154 @@ endif|#
 directive|endif
 argument|croak(
 literal|"Can't open perl script \"%s\": %s\n"
-argument|, 	  SvPVX(GvSV(PL_curcop->cop_filegv)), Strerror(errno));     } }  STATIC void validate_suid(char *validarg, char *scriptname, int fdscript) {     int which;
+argument|, 	  SvPVX(GvSV(PL_curcop->cop_filegv)), Strerror(errno));     } }
+ifdef|#
+directive|ifdef
+name|IAMSUID
+argument|static int fd_on_nosuid_fs(int fd) {     int on_nosuid  =
+literal|0
+argument|;     int check_okay =
+literal|0
+argument|;
+comment|/*  * Preferred order: fstatvfs(), fstatfs(), getmntent().  * fstatvfs() is UNIX98.  * fstatfs() is BSD.  * getmntent() is O(number-of-mounted-filesystems) and can hang.  */
+ifdef|#
+directive|ifdef
+name|HAS_FSTATVFS
+argument|struct statvfs stfs;     check_okay = fstatvfs(fd,&stfs) ==
+literal|0
+argument|;     on_nosuid  = check_okay&& (stfs.f_flag& ST_NOSUID);
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_FSTATFS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAS_STRUCT_STATFS_FLAGS
+argument_list|)
+argument|struct statfs  stfs;     check_okay = fstatfs(fd,&stfs)  ==
+literal|0
+argument|;
+undef|#
+directive|undef
+name|PERL_MOUNT_NOSUID
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PERL_MOUNT_NOSUID
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MNT_NOSUID
+argument_list|)
+define|#
+directive|define
+name|PERL_MOUNT_NOSUID
+value|MNT_NOSUID
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PERL_MOUNT_NOSUID
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MS_NOSUID
+argument_list|)
+define|#
+directive|define
+name|PERL_MOUNT_NOSUID
+value|MS_NOSUID
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PERL_MOUNT_NOSUID
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|M_NOSUID
+argument_list|)
+define|#
+directive|define
+name|PERL_MOUNT_NOSUID
+value|M_NOSUID
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PERL_MOUNT_NOSUID
+argument|on_nosuid  = check_okay&& (stfs.f_flags& PERL_MOUNT_NOSUID);
+endif|#
+directive|endif
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAS_GETMNTENT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAS_HASMNTOPT
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MNTOPT_NOSUID
+argument_list|)
+argument|FILE		*mtab = fopen(
+literal|"/etc/mtab"
+argument|,
+literal|"r"
+argument|);     struct mntent	*entry;     struct stat		stb
+argument_list|,
+argument|fsb;      if (mtab&& (fstat(fd,&stb) ==
+literal|0
+argument|)) { 	while (entry = getmntent(mtab)) { 	    if (stat(entry->mnt_dir,&fsb) ==
+literal|0
+argument|&& fsb.st_dev == stb.st_dev) 	    {
+comment|/* found the filesystem */
+argument|check_okay =
+literal|1
+argument|; 		if (hasmntopt(entry, MNTOPT_NOSUID)) 		    on_nosuid =
+literal|1
+argument|; 		break; 	    }
+comment|/* A single fs may well fail its stat(). */
+argument|}     }     if (mtab) 	fclose(mtab);
+endif|#
+directive|endif
+comment|/* mntent */
+endif|#
+directive|endif
+comment|/* statfs */
+endif|#
+directive|endif
+comment|/* statvfs */
+argument|if (!check_okay)  	croak(
+literal|"Can't check filesystem of script \"%s\" for nosuid"
+argument|, 	      PL_origfilename);     return on_nosuid; }
+endif|#
+directive|endif
+comment|/* IAMSUID */
+argument|STATIC void validate_suid(char *validarg, char *scriptname, int fdscript) {     int which;
 comment|/* do we need to emulate setuid on scripts? */
 comment|/* This code is for those BSD systems that have setuid #! scripts disabled      * in the kernel because of a security problem.  Merely defining DOSUID      * in perl will not fix that problem, but if you have disabled setuid      * scripts in the kernel, this will attempt to emulate setuid and setgid      * on scripts that have those now-otherwise-useless bits set.  The setuid      * root version must be called suidperl or sperlN.NNN.  If regular perl      * discovers that it has opened a setuid script, it calls suidperl with      * the same argv that it had.  If suidperl finds that the script it has      * just opened is NOT setuid root, it sets the effective uid back to the      * uid.  We don't just make perl setuid root because that loses the      * effective uid we had before invoking perl, if it was different from the      * uid.      *      * DOSUID must be defined in both perl and suidperl, and IAMSUID must      * be defined in suidperl only.  suidperl must be setuid root.  The      * Configure script will set this up for you if you want it.      */
 ifdef|#
@@ -9336,7 +9604,7 @@ argument|croak(
 literal|"Can't stat script \"%s\""
 argument|,PL_origfilename);     if (fdscript<
 literal|0
-argument|&& PL_statbuf.st_mode& (S_ISUID|S_ISGID)) { 	I32 len;
+argument|&& PL_statbuf.st_mode& (S_ISUID|S_ISGID)) { 	I32 len; 	STRLEN n_a;
 ifdef|#
 directive|ifdef
 name|IAMSUID
@@ -9383,6 +9651,23 @@ argument|) 		croak(
 literal|"Permission denied"
 argument|);
 comment|/* testing full pathname here */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IAMSUID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_NOSUID_CHECK
+argument_list|)
+argument|if (fd_on_nosuid_fs(PerlIO_fileno(PL_rsfp))) 		croak(
+literal|"Permission denied"
+argument|);
+endif|#
+directive|endif
 argument|if (tmpstatbuf.st_dev != PL_statbuf.st_dev || 		tmpstatbuf.st_ino != PL_statbuf.st_ino) { 		(void)PerlIO_close(PL_rsfp); 		if (PL_rsfp = PerlProc_popen(
 literal|"/bin/mail root"
 argument|,
@@ -9436,7 +9721,7 @@ argument|); 	PL_doswitches = FALSE;
 comment|/* -s is insecure in suid */
 argument|PL_curcop->cop_line++; 	if (sv_gets(PL_linestr, PL_rsfp,
 literal|0
-argument|) == Nullch || 	  strnNE(SvPV(PL_linestr,PL_na),
+argument|) == Nullch || 	  strnNE(SvPV(PL_linestr,n_a),
 literal|"#!"
 argument|,
 literal|2
@@ -9444,11 +9729,11 @@ argument|) )
 comment|/* required even on Sys V */
 argument|croak(
 literal|"No #! line"
-argument|); 	s = SvPV(PL_linestr,PL_na)+
+argument|); 	s = SvPV(PL_linestr,n_a)+
 literal|2
 argument|; 	if (*s ==
 literal|' '
-argument|) s++; 	while (!isSPACE(*s)) s++; 	for (s2 = s;  (s2> SvPV(PL_linestr,PL_na)+
+argument|) s++; 	while (!isSPACE(*s)) s++; 	for (s2 = s;  (s2> SvPV(PL_linestr,n_a)+
 literal|2
 argument|&& 		       (isDIGIT(s2[-
 literal|1
@@ -10209,7 +10494,7 @@ argument|if (addsubdirs) { 	    struct stat tmpstatbuf;
 ifdef|#
 directive|ifdef
 name|VMS
-argument|char *unix; 	    STRLEN len;  	    if ((unix = tounixspec_ts(SvPV(libdir,PL_na),Nullch)) != Nullch) { 		len = strlen(unix); 		while (unix[len-
+argument|char *unix; 	    STRLEN len;  	    if ((unix = tounixspec_ts(SvPV(libdir,len),Nullch)) != Nullch) { 		len = strlen(unix); 		while (unix[len-
 literal|1
 argument|] ==
 literal|'/'
@@ -10217,7 +10502,7 @@ argument|) len--;
 comment|/* Cosmetic */
 argument|sv_usepvn(libdir,unix,len); 	    } 	    else 		PerlIO_printf(PerlIO_stderr(),
 literal|"Failed to unixify @INC element \"%s\"\n"
-argument|, 			      SvPV(libdir,PL_na));
+argument|, 			      SvPV(libdir,len));
 endif|#
 directive|endif
 comment|/* .../archname/version if -d .../archname/version/auto */

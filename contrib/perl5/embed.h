@@ -1022,6 +1022,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|dofile
+value|Perl_dofile
+end_define
+
+begin_define
+define|#
+directive|define
 name|dofindlabel
 value|Perl_dofindlabel
 end_define
@@ -1332,6 +1339,13 @@ define|#
 directive|define
 name|get_specialsv_list
 value|Perl_get_specialsv_list
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_vtbl
+value|Perl_get_vtbl
 end_define
 
 begin_define
@@ -5917,6 +5931,13 @@ define|#
 directive|define
 name|save_freesv
 value|Perl_save_freesv
+end_define
+
+begin_define
+define|#
+directive|define
+name|save_generic_svref
+value|Perl_save_generic_svref
 end_define
 
 begin_define

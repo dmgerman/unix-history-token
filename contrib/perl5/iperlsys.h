@@ -629,7 +629,7 @@ parameter_list|(
 name|PerlIO
 modifier|*
 parameter_list|,
-name|off_t
+name|Off_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -2299,7 +2299,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|long
+name|Off_t
 name|PerlIO_tell
 name|_
 argument_list|(
@@ -2332,7 +2332,7 @@ operator|(
 name|PerlIO
 operator|*
 operator|,
-name|off_t
+name|Off_t
 operator|,
 name|int
 operator|)
@@ -7505,6 +7505,22 @@ parameter_list|,
 name|b
 parameter_list|)
 value|listen(s, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PerlSock_recv
+parameter_list|(
+name|s
+parameter_list|,
+name|b
+parameter_list|,
+name|l
+parameter_list|,
+name|f
+parameter_list|)
+value|recv(s, b, l, f)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    doop.c  *  *    Copyright (c) 1991-1997, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    doop.c  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -1974,13 +1974,16 @@ operator|>
 name|SVt_PVMG
 condition|)
 block|{
+name|STRLEN
+name|n_a
+decl_stmt|;
 name|dc
 operator|=
 name|SvPV_force
 argument_list|(
 name|sv
 argument_list|,
-name|PL_na
+name|n_a
 argument_list|)
 expr_stmt|;
 if|if
@@ -2833,13 +2836,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|SvRMAGICAL
-argument_list|(
-name|keys
-argument_list|)
-operator|||
-operator|!
-name|mg_find
+name|SvTIED_mg
 argument_list|(
 operator|(
 name|SV

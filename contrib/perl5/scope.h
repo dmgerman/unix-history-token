@@ -195,6 +195,21 @@ name|SAVEt_HINTS
 value|27
 end_define
 
+begin_comment
+comment|/* #define SAVEt_ALLOC		28 */
+end_comment
+
+begin_comment
+comment|/* defined in 5.005_5x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAVEt_GENERIC_SVREF
+value|29
+end_define
+
 begin_define
 define|#
 directive|define
@@ -361,7 +376,7 @@ value|if (PL_savestack_ix> old) leave_scope(old)
 end_define
 
 begin_comment
-comment|/*  * Not using SOFT_CAST on SAVEFREESV and SAVEFREESV  * because these are used for several kinds of pointer values  */
+comment|/*  * Not using SOFT_CAST on SAVESPTR, SAVEGENERICSV and SAVEFREESV  * because these are used for several kinds of pointer values  */
 end_comment
 
 begin_define
@@ -472,6 +487,16 @@ parameter_list|(
 name|sv
 parameter_list|)
 value|save_clearsv(SOFT_CAST(SV**)&(sv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVEGENERICSV
+parameter_list|(
+name|s
+parameter_list|)
+value|save_generic_svref((SV**)&(s))
 end_define
 
 begin_define

@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|SUBVERSION
-value|2
+value|3
 end_define
 
 begin_comment
