@@ -1577,7 +1577,7 @@ name|use_polling
 condition|)
 name|panic
 argument_list|(
-literal|"usbd_transfer: not done\n"
+literal|"usbd_transfer: not done"
 argument_list|)
 expr_stmt|;
 name|tsleep

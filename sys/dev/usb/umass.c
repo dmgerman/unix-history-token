@@ -4128,7 +4128,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"%s:%d: Unknown proto 0x%02x\n"
+literal|"%s:%d: Unknown proto 0x%02x"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -4207,7 +4207,7 @@ name|USB_DEBUG
 else|else
 name|panic
 argument_list|(
-literal|"No transformation defined for command proto 0x%02x\n"
+literal|"No transformation defined for command proto 0x%02x"
 argument_list|,
 name|sc
 operator|->
@@ -4365,7 +4365,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"%s:%d: Unknown proto 0x%02x\n"
+literal|"%s:%d: Unknown proto 0x%02x"
 argument_list|,
 name|__FILE__
 argument_list|,
@@ -6604,7 +6604,7 @@ block|{
 comment|/* Buffer overrun! Don't let this go by unnoticed */
 name|panic
 argument_list|(
-literal|"%s: transferred %db instead of %db\n"
+literal|"%s: transferred %db instead of %db"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -6864,7 +6864,7 @@ comment|/***** Default *****/
 default|default:
 name|panic
 argument_list|(
-literal|"%s: Unknown state %d\n"
+literal|"%s: Unknown state %d"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -8753,7 +8753,7 @@ comment|/***** Default *****/
 default|default:
 name|panic
 argument_list|(
-literal|"%s: Unknown state %d\n"
+literal|"%s: Unknown state %d"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -11032,7 +11032,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"transform(REQUEST_SENSE) failed\n"
+literal|"transform(REQUEST_SENSE) failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11059,7 +11059,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"umass_cam_cb called for func_code %d\n"
+literal|"umass_cam_cb called for func_code %d"
 argument_list|,
 name|ccb
 operator|->
@@ -11091,7 +11091,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: Unknown status %d in umass_cam_cb\n"
+literal|"%s: Unknown status %d in umass_cam_cb"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -11418,7 +11418,7 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"transform(TEST_UNIT_READY) failed\n"
+literal|"transform(TEST_UNIT_READY) failed"
 argument_list|)
 expr_stmt|;
 block|}

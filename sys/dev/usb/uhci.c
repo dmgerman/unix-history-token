@@ -7620,7 +7620,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_waitintr: lost intr_info\n"
+literal|"uhci_waitintr: lost intr_info"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9143,7 +9143,7 @@ name|URQ_REQUEST
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_device_bulk_transfer: a request\n"
+literal|"uhci_device_bulk_transfer: a request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9620,7 +9620,7 @@ name|curproc
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_abort_xfer: not in process context\n"
+literal|"uhci_abort_xfer: not in process context"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 1: Make interrupt routine and hardware ignore xfer. 	 */
@@ -9981,7 +9981,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_device_ctrl_transfer: not a request\n"
+literal|"uhci_device_ctrl_transfer: not a request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -10195,7 +10195,7 @@ name|URQ_REQUEST
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_device_intr_transfer: a request\n"
+literal|"uhci_device_intr_transfer: a request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -13726,7 +13726,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_ctrl_done: not a request\n"
+literal|"uhci_ctrl_done: not a request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -15433,7 +15433,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_root_ctrl_transfer: not a request\n"
+literal|"uhci_root_ctrl_transfer: not a request"
 argument_list|)
 expr_stmt|;
 endif|#

@@ -3410,7 +3410,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"ohci_free_sitd: sitd=%p not done\n"
+literal|"ohci_free_sitd: sitd=%p not done"
 argument_list|,
 name|sitd
 argument_list|)
@@ -6587,7 +6587,7 @@ continue|continue;
 block|}
 name|panic
 argument_list|(
-literal|"ohci_add_done: addr 0x%08lx not found\n"
+literal|"ohci_add_done: addr 0x%08lx not found"
 argument_list|,
 operator|(
 name|u_long
@@ -7491,7 +7491,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"ohci_ctrl_done: not a request\n"
+literal|"ohci_ctrl_done: not a request"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9273,7 +9273,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ohci_rem_ed: ED not found\n"
+literal|"ohci_rem_ed: ED not found"
 argument_list|)
 expr_stmt|;
 name|p
@@ -11349,7 +11349,7 @@ name|curproc
 condition|)
 name|panic
 argument_list|(
-literal|"ohci_abort_xfer: not in process context\n"
+literal|"ohci_abort_xfer: not in process context"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 1: Make interrupt routine and hardware ignore xfer. 	 */
@@ -14974,7 +14974,7 @@ name|URQ_REQUEST
 condition|)
 name|panic
 argument_list|(
-literal|"ohci_device_intr_transfer: a request\n"
+literal|"ohci_device_intr_transfer: a request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -15461,7 +15461,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"%s: Intr pipe %p still has TDs queued\n"
+literal|"%s: Intr pipe %p still has TDs queued"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -15514,7 +15514,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"ohci_device_intr_close: ED not found\n"
+literal|"ohci_device_intr_close: ED not found"
 argument_list|)
 expr_stmt|;
 endif|#
