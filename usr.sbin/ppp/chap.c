@@ -999,6 +999,7 @@ argument_list|,
 name|MPPE_MasterKey
 argument_list|)
 expr_stmt|;
+comment|/* XXX Global ! */
 comment|/* Generate AUTHRESPONSE to verify on auth success */
 name|GenerateAuthenticatorResponse
 argument_list|(
@@ -2052,6 +2053,11 @@ operator|=
 operator|!
 name|lm
 expr_stmt|;
+name|MPPE_IsServer
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX Global ! */
 endif|#
 directive|endif
 name|free
@@ -3183,6 +3189,7 @@ name|MPPE_MasterKeyValid
 operator|=
 literal|1
 expr_stmt|;
+comment|/* XXX Global ! */
 block|}
 else|else
 endif|#
@@ -5155,10 +5162,19 @@ operator|->
 name|authresponse
 argument_list|,
 name|lanman
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
+name|MPPE_IsServer
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX Global ! */
+else|#
+directive|else
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|myans
@@ -5338,6 +5354,7 @@ name|MPPE_MasterKeyValid
 operator|=
 literal|1
 expr_stmt|;
+comment|/* XXX Global ! */
 name|datalink_AuthOk
 argument_list|(
 name|p
@@ -5379,16 +5396,22 @@ name|ans
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|m_freem
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_function
+end_return
 
+unit|}
 end_unit
 

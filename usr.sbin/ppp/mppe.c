@@ -174,6 +174,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|MPPE_IsServer
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|MPPE_MasterKey
 index|[
@@ -1501,7 +1509,7 @@ name|keylen
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|MPPE_IsServer
 argument_list|)
 expr_stmt|;
 name|GetNewKeyFromSHA
@@ -1710,7 +1718,7 @@ name|keylen
 argument_list|,
 literal|1
 argument_list|,
-literal|0
+name|MPPE_IsServer
 argument_list|)
 expr_stmt|;
 name|GetNewKeyFromSHA

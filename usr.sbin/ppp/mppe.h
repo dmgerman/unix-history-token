@@ -28,6 +28,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|MPPE_IsServer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|MPPE_MasterKey
 index|[]
