@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.19 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1280,12 +1280,7 @@ case|:
 comment|/* leave the locked queue& transcript files around */
 name|syserr
 argument_list|(
-literal|"554 savemail: cannot save rejected email anywhere"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_SOFTWARE
+literal|"!554 savemail: cannot save rejected email anywhere"
 argument_list|)
 expr_stmt|;
 block|}
