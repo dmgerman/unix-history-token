@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.84 1998/05/25 02:22:37 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.85 1998/05/25 10:37:02 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -5784,18 +5784,6 @@ name|len
 expr_stmt|;
 name|p
 operator|->
-name|mbits
-operator|=
-literal|0
-expr_stmt|;
-name|p
-operator|->
-name|dev_is_modem
-operator|=
-literal|1
-expr_stmt|;
-name|p
-operator|->
 name|out
 operator|=
 name|NULL
@@ -6209,8 +6197,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Don't need to lock the device in -direct mode */
-comment|/* XXX: What if it's not a -direct link ! */
 return|return
 name|p
 return|;
@@ -6237,6 +6223,9 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+parameter_list|,
+name|pid_t
+name|newpid
 parameter_list|)
 block|{
 if|if
@@ -6394,6 +6383,13 @@ operator|.
 name|Timer
 argument_list|)
 expr_stmt|;
+name|modem_ChangedPid
+argument_list|(
+name|p
+argument_list|,
+name|newpid
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -6470,6 +6466,66 @@ name|fd
 else|:
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|modem_ChangedPid
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+name|p
+parameter_list|,
+name|pid_t
+name|newpid
+parameter_list|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|type
+operator|!=
+name|PHYS_DIRECT
+condition|)
+block|{
+name|int
+name|res
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|res
+operator|=
+name|ID0uu_lock_txfr
+argument_list|(
+name|p
+operator|->
+name|name
+operator|.
+name|base
+argument_list|,
+name|newpid
+argument_list|)
+operator|)
+operator|!=
+name|UU_LOCK_OK
+condition|)
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"uu_lock_txfr: %s\n"
+argument_list|,
+name|uu_lockerr
+argument_list|(
+name|res
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
