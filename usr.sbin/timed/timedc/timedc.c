@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)timedc.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)timedc.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id: timedc.c,v 1.2 1997/10/22 06:20:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,37 +67,10 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_empty
-empty|#ident "$Revision: 1.6 $"
-end_empty
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|"timedc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -95,13 +82,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<setjmp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -113,7 +106,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -226,20 +231,13 @@ argument_list|()
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Could not get privileged resources\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"could not get privileged resources"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)timed.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)timed.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,25 +65,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_empty
-empty|#ident "$Revision: 1.2.6.1 $"
-end_empty
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* sgi */
 end_comment
 
 begin_define
@@ -360,8 +355,6 @@ name|char
 name|name
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -506,6 +499,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The timedaemons synchronize the clocks of hosts in a local area network.  * One daemon runs as master, all the others as slaves. The master  * performs the task of computing clock differences and sends correction  * values to the slaves.  * Slaves start an election to choose a new master when the latter disappears  * because of a machine crash, network partition, or when killed.  * A resolution protocol is used to kill all but one of the masters  * that happen to exist in segments of a partitioned network when the  * network partition is fixed.  *  * Authors: Riccardo Gusella& Stefano Zatti  *  * overhauled at Silicon Graphics  */
 end_comment
@@ -608,17 +614,6 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|,
-name|opterr
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|sgi
@@ -628,10 +623,6 @@ name|timetrim_st
 decl_stmt|;
 endif|#
 directive|endif
-define|#
-directive|define
-name|IN_MSG
-value|"timed: -i and -n make no sense together\n"
 ifdef|#
 directive|ifdef
 name|sgi
@@ -639,28 +630,6 @@ name|struct
 name|tms
 name|tms
 decl_stmt|;
-define|#
-directive|define
-name|USAGE
-value|"timed: [-dtM] [-i net|-n net] [-F host1 host2 ...] [-G netgp] [-P trimfile]\n"
-else|#
-directive|else
-ifdef|#
-directive|ifdef
-name|HAVENIS
-define|#
-directive|define
-name|USAGE
-value|"timed: [-dtM] [-i net|-n net] [-F host1 host2 ...] [-G netgp]\n"
-else|#
-directive|else
-define|#
-directive|define
-name|USAGE
-value|"timed: [-dtM] [-i net|-n net] [-F host1 host2 ...]\n"
-endif|#
-directive|endif
-comment|/* HAVENIS */
 endif|#
 directive|endif
 comment|/* sgi */
@@ -701,9 +670,9 @@ name|timetrim
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"timed: syssgi(GETTIMETRIM)"
+literal|"syssgi(GETTIMETRIM)"
 argument_list|)
 expr_stmt|;
 name|timetrim
@@ -776,16 +745,11 @@ condition|(
 name|iflag
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|IN_MSG
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-i and -n make no sense together"
 argument_list|)
 expr_stmt|;
 block|}
@@ -810,16 +774,11 @@ condition|(
 name|nflag
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|IN_MSG
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-i and -n make no sense together"
 argument_list|)
 expr_stmt|;
 block|}
@@ -891,20 +850,13 @@ name|goodgroup
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"timed: only one net group\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"only one net group"
 argument_list|)
 expr_stmt|;
-block|}
 name|goodgroup
 operator|=
 name|optarg
@@ -943,18 +895,10 @@ operator|!=
 name|ENOENT
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"timed: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|timetrim_fn
 argument_list|)
 expr_stmt|;
@@ -1040,14 +984,9 @@ name|i
 operator|!=
 name|EOF
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"timed: unrecognized contents in %s\n"
+literal|"unrecognized contents in %s"
 argument_list|,
 name|timetrim_fn
 argument_list|)
@@ -1067,9 +1006,9 @@ name|trim
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"timed: syssgi(SETTIMETRIM)"
+literal|"syssgi(SETTIMETRIM)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1111,17 +1050,8 @@ endif|#
 directive|endif
 comment|/* sgi */
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|USAGE
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -1132,20 +1062,9 @@ name|optind
 operator|<
 name|argc
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|USAGE
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* If we care about which machine is the master, then we must 	 *	be willing to be a master 	 */
 if|if
 condition|(
@@ -1177,18 +1096,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"gethostname"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|self
 operator|.
 name|l_bak
@@ -1258,20 +1172,13 @@ name|srvp
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown service 'timed/udp'\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unknown service 'timed/udp'"
 argument_list|)
 expr_stmt|;
-block|}
 name|port
 operator|=
 name|srvp
@@ -1321,18 +1228,13 @@ name|sock
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|setsockopt
@@ -1358,18 +1260,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"setsockopt"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|bind
@@ -1397,15 +1294,13 @@ name|errno
 operator|==
 name|EADDRINUSE
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"timed: time daemon already running\n"
+literal|"time daemon already running"
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
+name|warn
 argument_list|(
 literal|"bind"
 argument_list|)
@@ -1445,18 +1340,13 @@ name|bufspace
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"setsockopt"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* sgi */
@@ -1625,20 +1515,15 @@ operator|==
 name|INADDR_NONE
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"timed: unknown net %s\n"
+literal|"unknown net %s"
 argument_list|,
 name|nt
 operator|->
 name|name
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1652,30 +1537,23 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"timed: bad net %s\n"
+literal|"bad net %s"
 argument_list|,
 name|nt
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"timed: warning: %s unknown in /etc/networks\n"
+literal|"warning: %s unknown in /etc/networks"
 argument_list|,
 name|nt
 operator|->
@@ -1771,18 +1649,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"timed: get interface configuration"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"get interface configuration"
 argument_list|)
 expr_stmt|;
-block|}
 name|ntp
 operator|=
 name|NULL
@@ -1950,7 +1823,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"get interface flags"
 argument_list|)
@@ -2014,7 +1887,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"get netmask"
 argument_list|)
@@ -2069,7 +1942,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"get broadaddr"
 argument_list|)
@@ -2132,7 +2005,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"get destaddr"
 argument_list|)
@@ -2207,14 +2080,18 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|nflag
 operator|&&
 operator|!
 name|nt
+operator|)
 operator|||
+operator|(
 name|iflag
 operator|&&
 name|nt
+operator|)
 condition|)
 continue|continue;
 name|ntp
@@ -2275,20 +2152,13 @@ name|nettab
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"timed: no network usable\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no network usable"
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|sgi
@@ -2641,16 +2511,66 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* NOTREACHED */
-ifdef|#
-directive|ifdef
-name|lint
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|sgi
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: timed [-dtM] [-i net|-n net] [-F host1 host2 ...]"
+argument_list|,
+literal|"             [-G netgp] [-P trimfile]"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|HAVENIS
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: timed [-dtM] [-i net|-n net] [-F host1 host2 ...] [-G netgp]\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: timed [-dtM] [-i net|-n net] [-F host1 host2 ...]\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* HAVENIS */
+endif|#
+directive|endif
+comment|/* sgi */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3934,20 +3854,13 @@ name|netlist
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"malloc failed\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|(
@@ -4115,14 +4028,9 @@ name|hentp
 operator|&&
 name|perm
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"unknown host %s\n"
+literal|"unknown host %s"
 argument_list|,
 name|name
 argument_list|)
@@ -4162,11 +4070,6 @@ name|long
 name|new_update
 decl_stmt|;
 name|struct
-name|hosttbl
-modifier|*
-name|htp
-decl_stmt|;
-name|struct
 name|goodhost
 modifier|*
 name|ghp
@@ -4174,6 +4077,14 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|ghpp
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVENIS
+name|struct
+name|hosttbl
+modifier|*
+name|htp
 decl_stmt|;
 name|char
 modifier|*
@@ -4185,6 +4096,9 @@ decl_stmt|,
 modifier|*
 name|dom
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* HAVENIS */
 name|struct
 name|tms
 name|tm
