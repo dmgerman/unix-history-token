@@ -6231,6 +6231,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FM_TRAP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|EX_TRAPSTK
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -6273,6 +6287,11 @@ comment|/* lies: no ds, es, fs or gs */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
