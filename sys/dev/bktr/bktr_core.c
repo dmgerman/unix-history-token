@@ -3861,7 +3861,7 @@ operator||
 name|BT848_IFORM_M_MUX1
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTB
 argument_list|(
 name|bktr
 argument_list|,
@@ -5591,7 +5591,7 @@ operator|)
 operator||
 name|METEOR_NTSC
 expr_stmt|;
-name|OUTL
+name|OUTB
 argument_list|(
 name|bktr
 argument_list|,
@@ -5656,7 +5656,7 @@ operator|)
 operator||
 name|METEOR_PAL
 expr_stmt|;
-name|OUTL
+name|OUTB
 argument_list|(
 name|bktr
 argument_list|,
@@ -5775,7 +5775,7 @@ operator|.
 name|iform_xtsel
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTB
 argument_list|(
 name|bktr
 argument_list|,
@@ -5846,7 +5846,7 @@ operator|.
 name|iform_xtsel
 argument_list|)
 expr_stmt|;
-name|OUTL
+name|OUTB
 argument_list|(
 name|bktr
 argument_list|,
@@ -10939,12 +10939,15 @@ name|BT848_GSTATUS
 case|:
 comment|/* reap status */
 block|{
-name|int
+name|DECLARE_INTR_MASK
+argument_list|(
 name|s
-decl_stmt|;
-name|s
-operator|=
+argument_list|)
+expr_stmt|;
 name|DISABLE_INTR
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|temp
 operator|=

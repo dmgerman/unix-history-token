@@ -3041,9 +3041,6 @@ block|{
 name|int
 name|unit
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|bktr_ptr_t
 name|bktr
 decl_stmt|;
@@ -3052,6 +3049,11 @@ name|revents
 init|=
 literal|0
 decl_stmt|;
+name|DECLARE_INTR_MASK
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|unit
 operator|=
 name|UNIT
@@ -3091,9 +3093,10 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|s
-operator|=
 name|DISABLE_INTR
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

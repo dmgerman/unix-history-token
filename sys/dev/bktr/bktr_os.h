@@ -123,14 +123,27 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|__XFreeBSD__
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
+name|DECLARE_INTR_MASK
+parameter_list|(
+name|s
+parameter_list|)
+value|intrmask_t s
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISABLE_INTR
+parameter_list|(
+name|s
+parameter_list|)
 value|s=spltty()
 end_define
 
@@ -152,7 +165,23 @@ end_else
 begin_define
 define|#
 directive|define
+name|DECLARE_INTR_MASK
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* no need to declare 's' */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DISABLE_INTR
+parameter_list|(
+name|s
+parameter_list|)
 value|disable_intr()
 end_define
 
@@ -160,6 +189,9 @@ begin_define
 define|#
 directive|define
 name|ENABLE_INTR
+parameter_list|(
+name|s
+parameter_list|)
 value|enable_intr()
 end_define
 
