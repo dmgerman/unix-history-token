@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.22 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1495,6 +1495,17 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"FTP LOGIN REFUSED FROM %s, %s"
+argument_list|,
+name|remotehost
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|pw
 operator|=
 operator|(
@@ -1576,6 +1587,17 @@ argument_list|(
 literal|530
 argument_list|,
 literal|"User %s access denied."
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"FTP LOGIN REFUSED FROM %s, %s"
+argument_list|,
+name|remotehost
 argument_list|,
 name|name
 argument_list|)
@@ -1985,6 +2007,7 @@ if|if
 condition|(
 name|guest
 condition|)
+block|{
 name|reply
 argument_list|(
 literal|230
@@ -1992,7 +2015,20 @@ argument_list|,
 literal|"Guest login ok, access restrictions apply."
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"ANONYMOUS FTP LOGIN FROM %s, %s"
+argument_list|,
+name|remotehost
+argument_list|,
+name|passwd
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|reply
 argument_list|(
 literal|230
@@ -2004,6 +2040,20 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"FTP LOGIN FROM %s, %s"
+argument_list|,
+name|remotehost
+argument_list|,
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+block|}
 name|home
 operator|=
 name|pw
