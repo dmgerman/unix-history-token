@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.7 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,17 @@ begin_comment
 comment|/* number of retries on reading old sectors */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RAWPART
+value|"c"
+end_define
+
+begin_comment
+comment|/* disk partition containing badsector tables */
+end_comment
+
 begin_decl_stmt
 name|int
 name|fflag
@@ -129,6 +140,12 @@ name|compare
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|dups
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -422,7 +439,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"to read or overwrite bad-sector table, e.g.: bad144 rk07 hk0\n"
+literal|"to read or overwrite bad-sector table, e.g.: bad144 hp0\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -482,12 +499,14 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"/dev/r%sc"
+literal|"/dev/r%s%s"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+name|RAWPART
 argument_list|)
 expr_stmt|;
 else|else
@@ -1176,6 +1195,24 @@ argument_list|,
 name|compare
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dups
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"bad144: bad sectors have been duplicated; can't add existing sectors\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+block|}
 name|shift
 argument_list|(
 name|f
@@ -1591,10 +1628,6 @@ name|errors
 operator|++
 expr_stmt|;
 block|}
-name|lsn
-operator|=
-literal|0
-expr_stmt|;
 name|bt
 operator|=
 name|oldbad
@@ -1749,6 +1782,10 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|i
+operator|>
+literal|0
+operator|&&
 name|sn
 operator|<
 name|lsn
@@ -1768,6 +1805,28 @@ name|errors
 operator|++
 expr_stmt|;
 name|warned
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+operator|&&
+name|sn
+operator|==
+name|lsn
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"bad144: bad sector file contains duplicates\n"
+argument_list|)
+expr_stmt|;
+name|errors
 operator|++
 expr_stmt|;
 block|}
@@ -2421,6 +2480,19 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|b1
+operator|->
+name|bt_trksec
+operator|==
+name|b2
+operator|->
+name|bt_trksec
+condition|)
+name|dups
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|b1
