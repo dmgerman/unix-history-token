@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.27 1998/07/15 09:01:18 bde Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.28 1998/10/16 03:54:59 peter Exp $  */
 end_comment
 
 begin_comment
@@ -8162,15 +8162,28 @@ if|if
 condition|(
 name|pmath_emulate
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Another Math emulator already present\n"
 argument_list|)
 expr_stmt|;
-else|else
+return|return
+name|EBUSY
+return|;
+block|}
 name|pmath_emulate
 operator|=
 name|math_emulate
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Math emulator present\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -8196,6 +8209,16 @@ name|pmath_emulate
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Math emulator unloaded\n"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -8226,7 +8249,7 @@ name|fpu
 argument_list|,
 name|fpumod
 argument_list|,
-name|SI_SUB_PSEUDO
+name|SI_SUB_DRIVERS
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
