@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.39	82/04/04	*/
+comment|/*	ip_input.c	1.40	82/04/07	*/
 end_comment
 
 begin_include
@@ -703,6 +703,18 @@ condition|)
 goto|goto
 name|ours
 goto|;
+name|sin
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|ifinet
+operator|->
+name|if_broadaddr
+expr_stmt|;
 if|if
 condition|(
 operator|(
