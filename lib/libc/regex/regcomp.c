@@ -9981,7 +9981,11 @@ literal|0
 init|;
 name|ch
 operator|<
-literal|256
+operator|(
+name|UCHAR_MAX
+operator|+
+literal|1
+operator|)
 condition|;
 name|ch
 operator|++
