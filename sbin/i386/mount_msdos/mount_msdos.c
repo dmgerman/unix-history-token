@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.2 1994/09/22 22:16:35 wollman Exp $"
+literal|"$Id: mount_msdos.c,v 1.3 1994/11/01 23:51:42 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -113,6 +120,7 @@ file|"mntopts.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntopt
 name|mopts
@@ -129,6 +137,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|gid_t
 name|a_gid
 name|__P
@@ -142,6 +151,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uid_t
 name|a_uid
 name|__P
@@ -155,6 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|mode_t
 name|a_mask
 name|__P
@@ -168,6 +179,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|__dead
 name|void
 name|usage
 name|__P
@@ -176,6 +189,7 @@ operator|(
 name|void
 operator|)
 argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +413,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"\"%s\" is a relative path."
+literal|"\"%s\" is a relative path"
 argument_list|,
 name|dir
 argument_list|)
@@ -420,7 +434,7 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"getcwd"
 argument_list|)
@@ -469,7 +483,7 @@ name|ndir
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"using \"%s\" instead."
+literal|"using \"%s\" instead"
 argument_list|,
 name|dir
 argument_list|)
@@ -541,7 +555,7 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"stat %s"
 argument_list|,
@@ -623,7 +637,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
 literal|"vfsload(msdos)"
 argument_list|)
@@ -642,15 +656,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|vfc
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"msdos filesystem is not available"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
 operator|->
 name|vfc_index
-else|:
-name|MOUNT_MSDOS
 argument_list|,
 name|dir
 argument_list|,
@@ -664,9 +686,11 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_OSERR
 argument_list|,
-literal|"mount"
+literal|"%s"
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 name|exit
@@ -756,7 +780,7 @@ expr_stmt|;
 else|else
 name|errx
 argument_list|(
-literal|1
+name|EX_NOUSER
 argument_list|,
 literal|"unknown group id: %s"
 argument_list|,
@@ -851,7 +875,7 @@ expr_stmt|;
 else|else
 name|errx
 argument_list|(
-literal|1
+name|EX_NOUSER
 argument_list|,
 literal|"unknown user id: %s"
 argument_list|,
@@ -935,7 +959,7 @@ name|ep
 condition|)
 name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"invalid file mode: %s"
 argument_list|,
@@ -964,7 +988,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
