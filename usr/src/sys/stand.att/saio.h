@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.5	%G%	*/
+comment|/*	saio.h	4.6	%G%	*/
 end_comment
 
 begin_comment
@@ -211,6 +211,34 @@ name|NFILES
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PHYSUBA0
+value|0x20006000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSMBA0
+value|0x20010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSMBA1
+value|0x20012000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSUMEM
+value|0x2013e000
+end_define
 
 end_unit
 
