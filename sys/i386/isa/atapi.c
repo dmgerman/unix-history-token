@@ -1532,7 +1532,7 @@ operator|!
 operator|(
 name|inb
 argument_list|(
-literal|0x640
+name|port
 operator|+
 name|AR_STATUS
 argument_list|)
