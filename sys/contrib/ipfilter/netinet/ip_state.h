@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.1 2000/07/08 02:15:35 darrenr Exp $  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.1 2000/07/08 02:15:35 darrenr Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -53,12 +53,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPSTATE_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|IPSTATE_SIZE
 value|5737
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IPSTATE_MAX
+end_ifndef
 
 begin_define
 define|#
@@ -70,6 +87,11 @@ end_define
 begin_comment
 comment|/* Maximum number of states held */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
