@@ -1370,6 +1370,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NET_CALLOUT_MPSAFE
+value|(debug_mpsafenet ? CALLOUT_MPSAFE : 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UGAR
 parameter_list|(
 name|rval
