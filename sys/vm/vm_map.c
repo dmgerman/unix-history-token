@@ -5127,11 +5127,6 @@ comment|/* trust me ... */
 block|}
 else|else
 block|{
-name|vm_map_set_recursive
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 name|vm_map_lock_downgrade
 argument_list|(
 name|map
@@ -5233,14 +5228,6 @@ name|kernel_pmap
 condition|)
 block|{
 name|vm_map_lock
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|vm_map_clear_recursive
 argument_list|(
 name|map
 argument_list|)
