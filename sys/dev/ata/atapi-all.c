@@ -288,6 +288,7 @@ operator|->
 name|support_dma
 argument_list|)
 expr_stmt|;
+comment|/* use DMA if allowed and if drive/controller supports it */
 name|ATA_SLEEPLOCK_CH
 argument_list|(
 name|atadev
@@ -300,6 +301,12 @@ expr_stmt|;
 if|if
 condition|(
 name|atapi_dma
+operator|&&
+name|atadev
+operator|->
+name|channel
+operator|->
+name|dma
 operator|&&
 operator|!
 operator|(
