@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scroll.c	5.8 (Berkeley) %G%"
+literal|"@(#)scroll.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|ERR
+name|CURSES_ERR
 operator|)
 return|;
 name|getyx
@@ -161,7 +161,7 @@ directive|endif
 block|}
 return|return
 operator|(
-name|OK
+name|CURSES_OK
 operator|)
 return|;
 block|}

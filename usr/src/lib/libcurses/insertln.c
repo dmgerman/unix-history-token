@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insertln.c	5.12 (Berkeley) %G%"
+literal|"@(#)insertln.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,7 +321,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|OK
+name|CURSES_OK
 operator|)
 return|;
 block|}

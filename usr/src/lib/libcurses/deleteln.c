@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.13 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,7 +306,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|OK
+name|CURSES_OK
 operator|)
 return|;
 block|}

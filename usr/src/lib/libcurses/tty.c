@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.6 (Berkeley) %G%"
+literal|"@(#)tty.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +105,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|ERR
+name|CURSES_ERR
 operator|)
 return|;
 name|GT
@@ -165,9 +165,9 @@ operator|&
 name|norawt
 argument_list|)
 condition|?
-name|ERR
+name|CURSES_ERR
 else|:
-name|OK
+name|CURSES_OK
 operator|)
 return|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mvprintw.c	5.10 (Berkeley) %G%"
+literal|"@(#)mvprintw.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,11 +142,11 @@ argument_list|,
 name|x
 argument_list|)
 operator|!=
-name|OK
+name|CURSES_OK
 condition|)
 return|return
 operator|(
-name|ERR
+name|CURSES_ERR
 operator|)
 return|;
 if|#
@@ -282,11 +282,11 @@ argument_list|,
 name|x
 argument_list|)
 operator|!=
-name|OK
+name|CURSES_OK
 condition|)
 return|return
 operator|(
-name|ERR
+name|CURSES_ERR
 operator|)
 return|;
 if|#

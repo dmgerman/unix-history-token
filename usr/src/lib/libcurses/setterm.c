@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.12 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -617,7 +617,7 @@ literal|4
 condition|)
 return|return
 operator|(
-name|ERR
+name|CURSES_ERR
 operator|)
 return|;
 ifdef|#
@@ -798,9 +798,9 @@ return|return
 operator|(
 name|unknown
 condition|?
-name|ERR
+name|CURSES_ERR
 else|:
-name|OK
+name|CURSES_OK
 operator|)
 return|;
 block|}

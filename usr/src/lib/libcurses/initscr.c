@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.10 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ condition|(
 name|gettmode
 argument_list|()
 operator|==
-name|ERR
+name|CURSES_ERR
 condition|)
 return|return
 operator|(
@@ -122,7 +122,7 @@ argument_list|(
 name|sp
 argument_list|)
 operator|==
-name|ERR
+name|CURSES_ERR
 condition|)
 return|return
 operator|(
@@ -189,7 +189,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|ERR
+name|CURSES_ERR
 condition|)
 return|return
 operator|(
@@ -231,7 +231,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-name|ERR
+name|CURSES_ERR
 condition|)
 block|{
 name|delwin

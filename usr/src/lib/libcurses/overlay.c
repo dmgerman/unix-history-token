@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overlay.c	5.10 (Berkeley) %G%"
+literal|"@(#)overlay.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,7 +202,7 @@ name|endx
 condition|)
 return|return
 operator|(
-name|OK
+name|CURSES_OK
 operator|)
 return|;
 name|y1
@@ -332,7 +332,7 @@ block|}
 block|}
 return|return
 operator|(
-name|OK
+name|CURSES_OK
 operator|)
 return|;
 block|}
