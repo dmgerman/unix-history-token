@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tipout.c	4.5	81/12/16	*/
+comment|/*	tipout.c	4.6	82/01/06	*/
 end_comment
 
 begin_include
@@ -510,9 +510,13 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|fputs
+name|fwrite
 argument_list|(
 name|buf
+argument_list|,
+literal|1
+argument_list|,
+name|cnt
 argument_list|,
 name|fscript
 argument_list|)

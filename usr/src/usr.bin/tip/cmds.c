@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmds.c	4.7	81/11/29	*/
+comment|/*	cmds.c	4.8	82/01/06	*/
 end_comment
 
 begin_include
@@ -3012,7 +3012,7 @@ operator|&=
 operator|~
 name|CHANGED
 expr_stmt|;
-name|signal
+name|kill
 argument_list|(
 name|pid
 argument_list|,
