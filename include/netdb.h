@@ -509,7 +509,7 @@ begin_define
 define|#
 directive|define
 name|EAI_NODATA
-value|EAINONAME
+value|EAI_NONAME
 end_define
 
 begin_comment
