@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Modification history timex.h  *  * 17 Nov 98	David L. Mills  *	Revised for nanosecond kernel and user interface.  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  */
+comment|/*  * $FreeBSD$  *  * Modification history timex.h  *  * 17 Nov 98	David L. Mills  *	Revised for nanosecond kernel and user interface.  *  * 26 Sep 94	David L. Mills  *	Added defines for hybrid phase/frequency-lock loop.  *  * 19 Mar 94	David L. Mills  *	Moved defines from kernel routines to header file and added new  *	defines for PPS phase-lock loop.  *  * 20 Feb 94	David L. Mills  *	Revised status codes and structures for external clock and PPS  *	signal discipline.  *  * 28 Nov 93	David L. Mills  *	Adjusted parameters to improve stability and increase poll  *	interval.  *  * 17 Sep 93    David L. Mills  *      Created file  */
 end_comment
 
 begin_comment
@@ -138,7 +138,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* max time constant in PLL mode */
+comment|/* max time constant */
 end_comment
 
 begin_comment
@@ -214,23 +214,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOD_PLL
-value|0x0400
+name|MOD_PPSMAX
+value|0x0040
 end_define
 
 begin_comment
-comment|/* select default PLL mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOD_FLL
-value|0x0800
-end_define
-
-begin_comment
-comment|/* select default FLL mode */
+comment|/* set PPS maximum averaging time */
 end_comment
 
 begin_define
