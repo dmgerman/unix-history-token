@@ -3644,15 +3644,20 @@ operator|->
 name|len
 argument_list|)
 condition|)
-name|errx
+block|{
+name|warnx
 argument_list|(
-literal|1
-argument_list|,
-literal|"RSDT entry %d is corrupt"
+literal|"RSDT entry %d (sig %.4s) is corrupt"
 argument_list|,
 name|i
+argument_list|,
+name|sdp
+operator|->
+name|signature
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 operator|!
