@@ -1351,7 +1351,7 @@ name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
-literal|"rm -f /etc/wall_cmos_clock /etc/localtime; tzsetup"
+literal|"rm -f /etc/localtime; tzsetup"
 block|}
 block|,
 block|{
@@ -6474,7 +6474,7 @@ name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
-literal|"rm -f /etc/wall_cmos_clock /etc/localtime; tzsetup"
+literal|"rm -f /etc/localtime; tzsetup"
 block|}
 block|,
 block|{
