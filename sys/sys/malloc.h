@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.3 (Berkeley) 1/12/94  * $Id: malloc.h,v 1.10 1995/12/02 20:40:12 phk Exp $  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.5 (Berkeley) 5/3/95  * $Id: malloc.h,v 1.12 1996/02/24 06:24:41 hsu Exp $  */
 end_comment
 
 begin_ifndef
@@ -702,8 +702,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_MSDOSFSMNT
+name|M_NFSRVDESC
 value|59
+end_define
+
+begin_comment
+comment|/* NFS server socket descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NFSDIROFF
+value|60
+end_define
+
+begin_comment
+comment|/* NFS directory offset data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NFSBIGFH
+value|61
+end_define
+
+begin_comment
+comment|/* NFS version 3 file handle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MSDOSFSMNT
+value|67
 end_define
 
 begin_comment
@@ -714,7 +747,7 @@ begin_define
 define|#
 directive|define
 name|M_MSDOSFSNODE
-value|60
+value|68
 end_define
 
 begin_comment
@@ -725,7 +758,7 @@ begin_define
 define|#
 directive|define
 name|M_MSDOSFSFAT
-value|61
+value|69
 end_define
 
 begin_comment
@@ -736,7 +769,7 @@ begin_define
 define|#
 directive|define
 name|M_DEVFSMNT
-value|62
+value|70
 end_define
 
 begin_comment
@@ -747,7 +780,7 @@ begin_define
 define|#
 directive|define
 name|M_DEVFSBACK
-value|63
+value|71
 end_define
 
 begin_comment
@@ -758,7 +791,7 @@ begin_define
 define|#
 directive|define
 name|M_DEVFSFRONT
-value|64
+value|72
 end_define
 
 begin_comment
@@ -769,7 +802,7 @@ begin_define
 define|#
 directive|define
 name|M_DEVFSNODE
-value|65
+value|73
 end_define
 
 begin_comment
@@ -986,21 +1019,27 @@ value|\ 	"ISOFS mount",
 comment|/* 57 M_ISOFSMNT */
 value|\ 	"ISOFS node",
 comment|/* 58 M_ISOFSNODE */
-value|\ 	"MSDOSFS mount",
-comment|/* 59 M_MSDOSFSMNT */
+value|\ 	"NFSV3 srvdesc",
+comment|/* 59 M_NFSRVDESC */
+value|\ 	"NFSV3 diroff",
+comment|/* 60 M_NFSDIROFF */
+value|\ 	"NFSV3 bigfh",
+comment|/* 61 M_NFSBIGFH */
+value|\ 	NULL, \ 	NULL, NULL, NULL, NULL, \ 	"MSDOSFS mount",
+comment|/* 67 M_MSDOSFSMNT */
 value|\ 	"MSDOSFS node",
-comment|/* 60 M_MSDOSFSNODE */
+comment|/* 68 M_MSDOSFSNODE */
 value|\ 	"MSDOSFS FAT",
-comment|/* 61 M_MSDOSFSFAR */
+comment|/* 69 M_MSDOSFSFAR */
 value|\ 	"DEVFS mount",
-comment|/* 62 M_DEVFSMNT */
+comment|/* 70 M_DEVFSMNT */
 value|\ 	"DEVFS back",
-comment|/* 63 M_DEVFSBACK */
+comment|/* 71 M_DEVFSBACK */
 value|\ 	"DEVFS front",
-comment|/* 64 M_DEVFSFRONT */
+comment|/* 72 M_DEVFSFRONT */
 value|\ 	"DEVFS node",
-comment|/* 65 M_DEVFSNODE */
-value|\ 	NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, \ 	"temp",
+comment|/* 73 M_DEVFSNODE */
+value|\ 	"temp",
 comment|/* 74 M_TEMP */
 value|\ 	"ttys",
 comment|/* 75 M_TTYS */
@@ -1168,7 +1207,7 @@ parameter_list|(
 name|size
 parameter_list|)
 define|\
-value|(size)<= (MINALLOCSIZE * 128) \ 		? (size)<= (MINALLOCSIZE * 8) \ 			? (size)<= (MINALLOCSIZE * 2) \ 				? (size)<= (MINALLOCSIZE * 1) \ 					? (MINBUCKET + 0) \ 					: (MINBUCKET + 1) \ 				: (size)<= (MINALLOCSIZE * 4) \ 					? (MINBUCKET + 2) \ 					: (MINBUCKET + 3) \ 			: (size)<= (MINALLOCSIZE* 32) \ 				? (size)<= (MINALLOCSIZE * 16) \ 					? (MINBUCKET + 4) \ 					: (MINBUCKET + 5) \ 				: (size)<= (MINALLOCSIZE * 64) \ 					? (MINBUCKET + 6) \ 					: (MINBUCKET + 7) \ 		: (size)<= (MINALLOCSIZE * 2048) \ 			? (size)<= (MINALLOCSIZE * 512) \ 				? (size)<= (MINALLOCSIZE * 256) \ 					? (MINBUCKET + 8) \ 					: (MINBUCKET + 9) \ 				: (size)<= (MINALLOCSIZE * 1024) \ 					? (MINBUCKET + 10) \ 					: (MINBUCKET + 11) \ 			: (size)<= (MINALLOCSIZE * 8192) \ 				? (size)<= (MINALLOCSIZE * 4096) \ 					? (MINBUCKET + 12) \ 					: (MINBUCKET + 13) \ 				: (size)<= (MINALLOCSIZE * 16384) \ 					? (MINBUCKET + 14) \ 					: (MINBUCKET + 15)
+value|((size)<= (MINALLOCSIZE * 128) \ 		? (size)<= (MINALLOCSIZE * 8) \ 			? (size)<= (MINALLOCSIZE * 2) \ 				? (size)<= (MINALLOCSIZE * 1) \ 					? (MINBUCKET + 0) \ 					: (MINBUCKET + 1) \ 				: (size)<= (MINALLOCSIZE * 4) \ 					? (MINBUCKET + 2) \ 					: (MINBUCKET + 3) \ 			: (size)<= (MINALLOCSIZE* 32) \ 				? (size)<= (MINALLOCSIZE * 16) \ 					? (MINBUCKET + 4) \ 					: (MINBUCKET + 5) \ 				: (size)<= (MINALLOCSIZE * 64) \ 					? (MINBUCKET + 6) \ 					: (MINBUCKET + 7) \ 		: (size)<= (MINALLOCSIZE * 2048) \ 			? (size)<= (MINALLOCSIZE * 512) \ 				? (size)<= (MINALLOCSIZE * 256) \ 					? (MINBUCKET + 8) \ 					: (MINBUCKET + 9) \ 				: (size)<= (MINALLOCSIZE * 1024) \ 					? (MINBUCKET + 10) \ 					: (MINBUCKET + 11) \ 			: (size)<= (MINALLOCSIZE * 8192) \ 				? (size)<= (MINALLOCSIZE * 4096) \ 					? (MINBUCKET + 12) \ 					: (MINBUCKET + 13) \ 				: (size)<= (MINALLOCSIZE * 16384) \ 					? (MINBUCKET + 14) \ 					: (MINBUCKET + 15))
 end_define
 
 begin_comment
