@@ -197,7 +197,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{!pg:-lc}%{pg:-lc_p}"
+value|"%{!shared:%{!pg:-lc}%{pg:-lc_p}}"
 end_define
 
 begin_define
@@ -205,7 +205,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{p:%e`-p' not supported; use `-pg' and gprof(1)} \    %{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{pg:-Bstatic} %{Z} %{R*}"
+value|"%{p:%e`-p' not supported; use `-pg' and gprof(1)} \    %{shared:-Bshareable} \    %{!shared:%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} \    %{pg:-Bstatic} %{Z}} \    %{assert*} %{R*}"
 end_define
 
 begin_define
@@ -220,7 +220,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{pg:gcrt0.o%s}%{!pg:%{static:scrt0.o%s}%{!static:crt0.o%s}}"
+value|"%{shared:c++rt0.o%s} \    %{!shared:%{pg:gcrt0.o%s}%{!pg:%{static:scrt0.o%s}%{!static:crt0.o%s}}}"
 end_define
 
 begin_comment
