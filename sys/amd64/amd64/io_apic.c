@@ -2754,13 +2754,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ioapic%u<Version %u> irqs %u-%u on motherboard\n"
+literal|"ioapic%u<Version %u.%u> irqs %u-%u on motherboard\n"
 argument_list|,
 name|io
 operator|->
 name|io_id
 argument_list|,
 name|flags
+operator|>>
+literal|4
+argument_list|,
+name|flags
+operator|&
+literal|0xf
 argument_list|,
 name|io
 operator|->
