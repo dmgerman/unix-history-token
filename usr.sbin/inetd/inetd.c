@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$Id: inetd.c,v 1.15.2.1 1996/11/11 23:42:30 phk Exp $"
+literal|"$Id: inetd.c,v 1.15.2.2 1997/02/05 23:25:10 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,6 +210,23 @@ include|#
 directive|include
 file|<sysexits.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<login_cap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1245,6 +1262,17 @@ name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
+name|LOGIN_CAP
+name|login_cap_t
+modifier|*
+name|lc
+init|=
+name|NULL
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|OLD_SETPROCTITLE
 name|Argv
 operator|=
@@ -1327,7 +1355,8 @@ literal|"dlR:a:p:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -2494,6 +2523,19 @@ name|EX_NOUSER
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+comment|/* 				 * Establish the class now, falls back to 				 * the "default" if unavailable. 				 */
+name|lc
+operator|=
+name|login_getpwclass
+argument_list|(
+name|pwd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|setsid
@@ -2515,6 +2557,50 @@ argument_list|)
 expr_stmt|;
 comment|/* _exit(EX_OSERR); not fatal yet */
 block|}
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+if|if
+condition|(
+name|setusercontext
+argument_list|(
+name|lc
+argument_list|,
+name|pwd
+argument_list|,
+name|pwd
+operator|->
+name|pw_uid
+argument_list|,
+name|LOGIN_SETALL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: can't setusercontext(..%s..): %m"
+argument_list|,
+name|sep
+operator|->
+name|se_service
+argument_list|,
+name|sep
+operator|->
+name|se_user
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|pwd
@@ -2632,6 +2718,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|execv
 argument_list|(
 name|sep
@@ -4164,6 +4252,9 @@ argument_list|,
 literal|"setsockopt (SO_REUSEADDR): %m"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SO_PRIVSTATE
 if|if
 condition|(
 name|turnon
@@ -4184,6 +4275,8 @@ argument_list|,
 literal|"setsockopt (SO_PRIVSTATE): %m"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 undef|#
 directive|undef
 name|turnon
