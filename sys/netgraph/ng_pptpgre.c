@@ -350,11 +350,11 @@ begin_define
 define|#
 directive|define
 name|PPTP_MAX_TIMEOUT
-value|(10 * PPTP_TIME_SCALE)
+value|(1 * PPTP_TIME_SCALE)
 end_define
 
 begin_comment
-comment|/* 10 seconds */
+comment|/* 1 second */
 end_comment
 
 begin_comment
