@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -571,6 +571,8 @@ name|VAX8600
 block|{
 name|VAX_8600
 block|,
+literal|4
+block|,
 literal|2
 block|,
 name|ioaaddr8600
@@ -591,6 +593,8 @@ directive|if
 name|VAX780
 block|{
 name|VAX_780
+block|,
+literal|2
 block|,
 literal|1
 block|,
@@ -615,6 +619,8 @@ name|VAX_750
 block|,
 literal|1
 block|,
+literal|1
+block|,
 operator|(
 name|caddr_t
 operator|*
@@ -633,6 +639,8 @@ directive|if
 name|VAX730
 block|{
 name|VAX_730
+block|,
+literal|1
 block|,
 literal|1
 block|,
