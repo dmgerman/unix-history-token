@@ -4804,16 +4804,9 @@ operator|>=
 name|nfiles
 condition|)
 block|{
-comment|/* XXX uma_large_free() needs Giant. */
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|free
@@ -4821,12 +4814,6 @@ argument_list|(
 name|newofile
 argument_list|,
 name|M_FILEDESC
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
@@ -4980,16 +4967,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX uma_large_free() needs Giant. */
 name|FILEDESC_UNLOCK
 argument_list|(
 name|fdp
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|free
@@ -4997,12 +4977,6 @@ argument_list|(
 name|oldofile
 argument_list|,
 name|M_FILEDESC
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|FILEDESC_LOCK
