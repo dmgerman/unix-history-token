@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	2.7 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	2.8 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -518,6 +518,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* Pointer to active groups */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ignore
+modifier|*
+name|ignore
+index|[
+name|HSHSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pointer to ignored fields */
 end_comment
 
 begin_decl_stmt
