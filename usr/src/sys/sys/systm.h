@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	3.1	%H%	*/
+comment|/*	systm.h	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Number of character switch entries.  * Set by cinit/tty.c  */
+comment|/*  * Number of character switch entries.  * Set by cinit/prim.c  */
 end_comment
 
 begin_decl_stmt
