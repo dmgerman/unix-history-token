@@ -5953,6 +5953,8 @@ argument_list|,
 name|UMA_ALIGN_PTR
 argument_list|,
 name|UMA_ZFLAG_INTERNAL
+operator||
+name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
 name|hashzone
