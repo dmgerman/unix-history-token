@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.15	%G%"
+literal|"@(#)recipient.c	3.16	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -925,6 +925,9 @@ name|bool
 name|sameword
 parameter_list|()
 function_decl|;
+name|bool
+name|gotaspace
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -956,6 +959,10 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|gotaspace
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -976,6 +983,7 @@ operator|!=
 name|NULL
 condition|;
 control|)
+block|{
 operator|*
 name|p
 operator|++
@@ -984,8 +992,15 @@ name|SPACESUB
 operator|&
 literal|0177
 expr_stmt|;
+name|gotaspace
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
+name|gotaspace
+operator|&&
 name|sameword
 argument_list|(
 name|buf
