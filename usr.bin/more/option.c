@@ -259,7 +259,8 @@ literal|"0123456789/:ceinst:ux:f"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

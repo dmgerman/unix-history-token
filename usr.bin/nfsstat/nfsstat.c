@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: nfsstat.c,v 1.8 1997/02/22 19:56:25 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,7 +325,8 @@ literal|"M:N:w:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

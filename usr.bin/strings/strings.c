@@ -303,7 +303,8 @@ literal|"-0123456789an:of"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -27,7 +27,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"$Header: /usr/src/docbook-to-man/Instant/RCS/main.c,v 1.8 1996/06/12 03:32:48 fld Exp $"
+literal|"$Header: /home/ncvs/src/usr.bin/sgmls/instant/main.c,v 1.1.1.1 1996/09/08 01:55:10 jfieber Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -973,7 +973,8 @@ literal|"df:t:v:o:huSxIl:bHVWi:D:Z"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

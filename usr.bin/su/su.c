@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.17 1997/01/14 09:24:09 davidn Exp $"
+literal|"$Id: su.c,v 1.18 1997/02/24 20:32:24 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -506,7 +506,8 @@ name|ARGSTR
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

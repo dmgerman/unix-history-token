@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: chpass.c,v 1.13 1997/02/22 19:54:25 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,7 +337,8 @@ literal|"a:p:s:e:d:h:oly"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 else|#
 directive|else
@@ -356,7 +357,8 @@ literal|"a:p:s:e:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 endif|#
 directive|endif

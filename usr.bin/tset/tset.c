@@ -397,7 +397,8 @@ literal|"-a:d:e:Ii:k:m:np:QSrs"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ruptime.c,v 1.9 1997/02/22 19:56:50 peter Exp $ */
 end_comment
 
 begin_ifndef
@@ -418,7 +418,8 @@ literal|"alrut"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

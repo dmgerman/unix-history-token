@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: file.c,v 1.1.1.3 1997/03/18 17:58:41 mpp Exp $"
+literal|"@(#)$Id: file.c,v 1.7 1997/03/18 19:37:18 mpp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,7 +424,8 @@ literal|"vcdf:Lm:z"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: xinstall.c,v 1.21 1997/02/22 19:57:55 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,7 +569,8 @@ literal|"CcdDf:g:m:o:psv"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

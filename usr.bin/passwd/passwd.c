@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: passwd.c,v 1.11 1997/02/22 19:56:35 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -334,7 +334,8 @@ name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

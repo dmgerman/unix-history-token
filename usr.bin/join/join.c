@@ -550,7 +550,8 @@ literal|"\01a:e:j:1:2:o:t:v:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

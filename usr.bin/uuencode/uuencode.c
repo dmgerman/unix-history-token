@@ -122,7 +122,8 @@ argument_list|,
 literal|""
 argument_list|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 name|usage
 argument_list|()
