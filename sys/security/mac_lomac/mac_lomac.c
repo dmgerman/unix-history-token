@@ -2695,19 +2695,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_lomac_destroy
-parameter_list|(
-name|struct
-name|mac_policy_conf
-modifier|*
-name|conf
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
-name|void
 name|mac_lomac_init
 parameter_list|(
 name|struct
@@ -11635,11 +11622,6 @@ name|mac_policy_ops
 name|mac_lomac_ops
 init|=
 block|{
-operator|.
-name|mpo_destroy
-operator|=
-name|mac_lomac_destroy
-block|,
 operator|.
 name|mpo_init
 operator|=

@@ -1954,19 +1954,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|mac_mls_destroy
-parameter_list|(
-name|struct
-name|mac_policy_conf
-modifier|*
-name|conf
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-specifier|static
-name|void
 name|mac_mls_init
 parameter_list|(
 name|struct
@@ -10566,11 +10553,6 @@ name|mac_policy_ops
 name|mac_mls_ops
 init|=
 block|{
-operator|.
-name|mpo_destroy
-operator|=
-name|mac_mls_destroy
-block|,
 operator|.
 name|mpo_init
 operator|=
