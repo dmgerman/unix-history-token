@@ -255,6 +255,9 @@ decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|;
+name|long
+name|luid
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -555,46 +558,6 @@ literal|0
 operator|)
 return|;
 comment|/* wrong domain */
-comment|/* XXX: uid_t have different sizes on different OS's. sigh! */
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|uid_t
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|short
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|sscanf
-argument_list|(
-name|val
-argument_list|,
-literal|"%hd"
-argument_list|,
-operator|(
-name|short
-operator|*
-operator|)
-operator|&
-name|uid
-argument_list|)
-operator|!=
-literal|1
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-else|else
-block|{
 if|if
 condition|(
 name|sscanf
@@ -604,7 +567,7 @@ argument_list|,
 literal|"%ld"
 argument_list|,
 operator|&
-name|uid
+name|luid
 argument_list|)
 operator|!=
 literal|1
@@ -614,7 +577,10 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
+name|uid
+operator|=
+name|luid
+expr_stmt|;
 comment|/* use initgroups method */
 name|pwd
 operator|=
