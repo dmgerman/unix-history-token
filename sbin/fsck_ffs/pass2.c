@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -510,7 +516,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: phase 2: dir %d of %d (%d%%)\n"
+literal|"%s: phase 2: dir %td of %d (%d%%)\n"
 argument_list|,
 name|cdevname
 argument_list|,
@@ -659,12 +665,15 @@ name|usedsoftdep
 condition|)
 name|pfatal
 argument_list|(
-literal|"%s %s: LENGTH %d NOT MULTIPLE OF %d"
+literal|"%s %s: LENGTH %jd NOT MULTIPLE OF %d"
 argument_list|,
 literal|"DIRECTORY"
 argument_list|,
 name|pathbuf
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|inp
 operator|->
 name|i_isize
@@ -675,12 +684,15 @@ expr_stmt|;
 else|else
 name|pwarn
 argument_list|(
-literal|"%s %s: LENGTH %d NOT MULTIPLE OF %d"
+literal|"%s %s: LENGTH %jd NOT MULTIPLE OF %d"
 argument_list|,
 literal|"DIRECTORY"
 argument_list|,
 name|pathbuf
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|inp
 operator|->
 name|i_isize

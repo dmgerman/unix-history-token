@@ -3198,8 +3198,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SIZE=%qu "
+literal|"SIZE=%ju "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
@@ -3263,7 +3266,7 @@ parameter_list|)
 block|{
 name|pfatal
 argument_list|(
-literal|"%lld %s I=%lu"
+literal|"%jd %s I=%ju"
 argument_list|,
 operator|(
 name|intmax_t
@@ -3273,7 +3276,7 @@ argument_list|,
 name|type
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|ino
 argument_list|)

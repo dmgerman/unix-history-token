@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -1117,8 +1123,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad size %qu:"
+literal|"bad size %ju:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
@@ -1217,8 +1226,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad special-file size %qu:"
+literal|"bad special-file size %ju:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
@@ -1298,8 +1310,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad size %qu ndb %qu:"
+literal|"bad size %ju ndb %ju:"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
@@ -1307,6 +1322,9 @@ argument_list|,
 name|di_size
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ndb
 argument_list|)
 expr_stmt|;
@@ -1474,12 +1492,12 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad direct addr[%d]: %qu\n"
+literal|"bad direct addr[%d]: %ju\n"
 argument_list|,
 name|j
 argument_list|,
 operator|(
-name|ufs2_daddr_t
+name|uintmax_t
 operator|)
 name|DIP
 argument_list|(
@@ -1552,8 +1570,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad indirect addr: %qu\n"
+literal|"bad indirect addr: %ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
@@ -1821,13 +1842,16 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"INCORRECT BLOCK COUNT I=%lu (%qu should be %qu)"
+literal|"INCORRECT BLOCK COUNT I=%lu (%ju should be %ju)"
 argument_list|,
 operator|(
 name|u_long
 operator|)
 name|inumber
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|DIP
 argument_list|(
 name|dp
@@ -1835,6 +1859,9 @@ argument_list|,
 name|di_blocks
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|idesc
 operator|->
 name|id_entryno
@@ -1920,8 +1947,11 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adjblkcnt ino %qu amount %lld\n"
+literal|"adjblkcnt ino %ju amount %lld\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|cmd
 operator|.
 name|value

@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1977,11 +1983,10 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|" %lld (%lld),"
+literal|" %jd (%jd),"
 argument_list|,
 call|(
-name|long
-name|long
+name|intmax_t
 call|)
 argument_list|(
 name|blk
@@ -1994,8 +1999,7 @@ operator|/
 name|secsize
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|blk
 operator|+
@@ -2007,11 +2011,10 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %lld,"
+literal|" %jd,"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|blk
 operator|+
@@ -2226,11 +2229,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %lld,"
+literal|" %jd,"
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|blk
 operator|+

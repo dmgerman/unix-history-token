@@ -163,6 +163,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -704,12 +710,13 @@ decl_stmt|;
 name|int
 name|cylno
 decl_stmt|,
-name|size
-decl_stmt|,
 name|ret
 decl_stmt|;
 name|ino_t
 name|files
+decl_stmt|;
+name|size_t
+name|size
 decl_stmt|;
 name|cdevname
 operator|=
@@ -1531,7 +1538,7 @@ expr_stmt|;
 block|}
 name|pwarn
 argument_list|(
-literal|"%ld files, %lld used, %llu free "
+literal|"%ld files, %jd used, %ju free "
 argument_list|,
 operator|(
 name|long
@@ -1539,11 +1546,13 @@ operator|)
 name|n_files
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|n_blks
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|n_ffree
 operator|+
 name|sblock
@@ -1555,10 +1564,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%qu frags, %qu blocks, %.1f%% fragmentation)\n"
+literal|"(%ju frags, %ju blocks, %.1f%% fragmentation)\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|n_ffree
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|n_bfree
 argument_list|,
 name|n_ffree

@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -1383,10 +1389,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot alloc %u bytes for inphead\n"
+literal|"cannot alloc %ju bytes for inphead\n"
 argument_list|,
 operator|(
-name|unsigned
+name|uintmax_t
 operator|)
 name|numdirs
 operator|*
