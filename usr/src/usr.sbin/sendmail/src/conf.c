@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.13 (Berkeley) %G%"
+literal|"@(#)conf.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3889,11 +3889,6 @@ modifier|*
 name|oli
 decl_stmt|;
 comment|/* option letter list index */
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|atend
@@ -3994,7 +3989,7 @@ operator|!
 operator|(
 name|oli
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ostr
 argument_list|,

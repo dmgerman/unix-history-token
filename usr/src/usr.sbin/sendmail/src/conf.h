@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -617,6 +617,28 @@ end_include
 begin_define
 define|#
 directive|define
+name|gethostbyname
+value|__switch_gethostbyname
+end_define
+
+begin_comment
+comment|/* get working version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|gethostbyaddr
+value|__switch_gethostbyaddr
+end_define
+
+begin_comment
+comment|/* get working version */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_PATH_UNIX
 value|"/kernel/unix"
 end_define
@@ -887,6 +909,17 @@ end_define
 
 begin_comment
 comment|/* has flock(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
 end_comment
 
 begin_define
