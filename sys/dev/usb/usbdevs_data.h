@@ -211,6 +211,18 @@ literal|"QuickCam"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_LUCENT
+block|,
+name|USB_PRODUCT_LUCENT_EVALKIT
+block|,
+literal|0
+block|,
+literal|"Lucent"
+block|,
+literal|"USS-720 evaluation kit"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ACER
 block|,
 name|USB_PRODUCT_ACER_ACERSCAN_C310U
@@ -243,7 +255,7 @@ literal|0
 block|,
 literal|"Epson"
 block|,
-literal|"printer adapter"
+literal|"ISD USB Smart Cable"
 block|, 	}
 block|,
 block|{
@@ -662,6 +674,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Connectix"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LUCENT
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Lucent"
 block|,
 name|NULL
 block|, 	}

@@ -158,6 +158,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_LUCENT
+value|0x047e
+end_define
+
+begin_comment
+comment|/* Lucent */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ACER
 value|0x04a5
 end_define
@@ -644,6 +655,21 @@ comment|/* QuickCam */
 end_comment
 
 begin_comment
+comment|/* Lucent products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LUCENT_EVALKIT
+value|0x1001
+end_define
+
+begin_comment
+comment|/* USS-720 evaluation kit */
+end_comment
+
+begin_comment
 comment|/* Acer products */
 end_comment
 
@@ -685,7 +711,7 @@ value|0x0003
 end_define
 
 begin_comment
-comment|/* printer adapter */
+comment|/* ISD USB Smart Cable */
 end_comment
 
 begin_comment
