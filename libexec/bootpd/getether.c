@@ -15,6 +15,23 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_UNISTD
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -25,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"getether.h"
 end_include
 
 begin_include
@@ -908,6 +931,12 @@ directive|include
 file|<stropts.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -926,38 +955,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|int
 name|getether
-argument_list|(
-argument|ifname
-argument_list|,
-argument|eap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifname
+parameter_list|,
+name|eap
+parameter_list|)
 name|char
 modifier|*
 name|ifname
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* interface name from ifconfig structure */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|eap
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Ether address (output) */
-end_comment
-
-begin_block
 block|{
 name|int
 name|rc
@@ -1571,7 +1586,7 @@ return|return
 name|rc
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1594,12 +1609,18 @@ end_escape
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|linux
+name|__linux__
 end_ifdef
 
 begin_comment
-comment|/*  * This is really easy on Linux!  This version (for linux)  * written by Nigel Metheringham<nigelm@ohm.york.ac.uk>  *  * The code is almost identical to the Ultrix code - however  * the names are different to confuse the innocent :-)  * Most of this code was stolen from the Ultrix bit above.  */
+comment|/*  * This is really easy on Linux!  This version (for linux)  * written by Nigel Metheringham<nigelm@ohm.york.ac.uk> and  * updated by Pauline Middelink<middelin@polyware.iaf.nl>  *  * The code is almost identical to the Ultrix code - however  * the names are different to confuse the innocent :-)  * Most of this code was stolen from the Ultrix bit above.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<memory.h>
+end_include
 
 begin_include
 include|#
@@ -1617,38 +1638,32 @@ begin_comment
 comment|/* struct ifreq */
 end_comment
 
-begin_comment
-comment|/* In a properly configured system this should be either sys/socketio.h    or sys/sockios.h, but on my distribution these don't line up correctly */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<linux/sockios.h>
+file|<sys/socketio.h>
 end_include
 
 begin_comment
 comment|/* Needed for IOCTL defs */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getether
-argument_list|(
-argument|ifname
-argument_list|,
-argument|eap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifname
+parameter_list|,
+name|eap
+parameter_list|)
 name|char
 modifier|*
 name|ifname
 decl_stmt|,
-modifier|*
+decl|*
 name|eap
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1665,10 +1680,12 @@ name|struct
 name|ifreq
 name|phys
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|phys
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1740,13 +1757,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
+name|eap
+argument_list|,
+operator|&
 name|phys
 operator|.
 name|ifr_hwaddr
-argument_list|,
-name|eap
+operator|.
+name|sa_data
 argument_list|,
 name|EALEN
 argument_list|)
@@ -1779,7 +1799,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* linux */
+comment|/* __linux__ */
 end_comment
 
 begin_comment
@@ -1792,24 +1812,22 @@ directive|ifndef
 name|GETETHER
 end_ifndef
 
-begin_macro
+begin_function
+name|int
 name|getether
-argument_list|(
-argument|ifname
-argument_list|,
-argument|eap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifname
+parameter_list|,
+name|eap
+parameter_list|)
 name|char
 modifier|*
 name|ifname
 decl_stmt|,
-modifier|*
+decl|*
 name|eap
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
