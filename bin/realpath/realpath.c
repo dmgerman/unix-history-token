@@ -74,7 +74,7 @@ block|{
 name|char
 name|buf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|char

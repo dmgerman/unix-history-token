@@ -106,7 +106,7 @@ file|"un-namespace.h"
 end_include
 
 begin_comment
-comment|/*  * char *realpath(const char *path, char resolved_path[MAXPATHLEN]);  *  * Find the real name of path, by removing all ".", ".." and symlink  * components.  Returns (resolved) on success, or (NULL) on failure,  * in which case the path which caused trouble is left in (resolved).  */
+comment|/*  * char *realpath(const char *path, char resolved_path[PATH_MAX]);  *  * Find the real name of path, by removing all ".", ".." and symlink  * components.  Returns (resolved) on success, or (NULL) on failure,  * in which case the path which caused trouble is left in (resolved).  */
 end_comment
 
 begin_function
@@ -150,7 +150,7 @@ name|q
 decl_stmt|,
 name|wbuf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int
@@ -201,14 +201,14 @@ name|resolved
 argument_list|,
 name|path
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
 name|resolved
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 operator|-
 literal|1
 index|]
@@ -352,7 +352,7 @@ name|p
 argument_list|,
 name|resolved
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 operator|-
 literal|1
 argument_list|)
@@ -422,7 +422,7 @@ name|getcwd
 argument_list|(
 name|resolved
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 operator|==
 literal|0
@@ -478,7 +478,7 @@ name|rootd
 operator|+
 literal|1
 operator|>
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|errno
