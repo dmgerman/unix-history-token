@@ -2174,10 +2174,6 @@ name|imask
 operator|)
 condition|)
 continue|continue;
-if|if
-condition|(
-name|maskp
-condition|)
 name|INTRMASK
 argument_list|(
 operator|*
@@ -2207,6 +2203,10 @@ literal|0
 condition|)
 block|{
 comment|/* add this to the PCIC controller's mask */
+if|if
+condition|(
+name|pcic_imask
+condition|)
 name|INTRMASK
 argument_list|(
 operator|*
@@ -2218,6 +2218,9 @@ operator|<<
 name|irq
 operator|)
 argument_list|)
+expr_stmt|;
+name|update_intr_masks
+argument_list|()
 expr_stmt|;
 name|INTREN
 argument_list|(
@@ -2231,10 +2234,6 @@ operator|)
 return|;
 block|}
 comment|/* No luck, remove from mask again... */
-if|if
-condition|(
-name|maskp
-condition|)
 name|INTRUNMASK
 argument_list|(
 operator|*
@@ -2242,6 +2241,9 @@ name|maskp
 argument_list|,
 name|mask
 argument_list|)
+expr_stmt|;
+name|update_intr_masks
+argument_list|()
 expr_stmt|;
 block|}
 return|return
