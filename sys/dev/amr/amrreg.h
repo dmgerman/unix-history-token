@@ -2116,8 +2116,11 @@ end_endif
 begin_endif
 endif|#
 directive|endif
-endif|_KERNEL
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 end_unit
 

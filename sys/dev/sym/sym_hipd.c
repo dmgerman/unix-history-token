@@ -41372,19 +41372,19 @@ block|}
 undef|#
 directive|undef
 name|SET_BIT
-name|0
+comment|/* 0 */
 undef|#
 directive|undef
 name|CLR_BIT
-name|1
+comment|/* 1 */
 undef|#
 directive|undef
 name|SET_CLK
-name|2
+comment|/* 2 */
 undef|#
 directive|undef
 name|CLR_CLK
-name|3
+comment|/* 3 */
 comment|/*  *  Try reading Symbios NVRAM.  *  Return 0 if OK.  */
 specifier|static
 name|int
