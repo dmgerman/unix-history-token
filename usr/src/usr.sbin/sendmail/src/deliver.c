@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.34 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1757,6 +1757,14 @@ condition|(
 name|rcode
 operator|!=
 name|EX_TEMPFAIL
+operator|&&
+name|rcode
+operator|!=
+name|EX_IOERR
+operator|&&
+name|rcode
+operator|!=
+name|EX_OSERR
 condition|)
 name|q
 operator|->
@@ -5514,6 +5522,11 @@ argument_list|,
 name|qq
 operator|->
 name|q_user
+argument_list|)
+expr_stmt|;
+name|makelower
+argument_list|(
+name|obuf
 argument_list|)
 expr_stmt|;
 if|if
