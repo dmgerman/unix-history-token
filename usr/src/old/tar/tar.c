@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tar.c	4.2 (Berkeley) %G%"
+literal|"@(#)tar.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|NBLOCK
-value|40
+value|20
 end_define
 
 begin_define
