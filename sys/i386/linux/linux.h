@@ -232,6 +232,33 @@ name|linux_new_sigaction_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|linux_size_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|ss_sp
+decl_stmt|;
+name|int
+name|ss_flags
+decl_stmt|;
+name|linux_size_t
+name|ss_size
+decl_stmt|;
+block|}
+name|linux_stack_t
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * The Linux sigcontext, pretty much a standard 386 trapframe.  */
 end_comment

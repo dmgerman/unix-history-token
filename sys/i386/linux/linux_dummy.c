@@ -545,36 +545,6 @@ end_function
 
 begin_function
 name|int
-name|linux_ustat
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|linux_ustat_args
-modifier|*
-name|args
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Linux-emul(%d): ustat() not supported\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOSYS
-return|;
-block|}
-end_function
-
-begin_function
-name|int
 name|linux_ioperm
 parameter_list|(
 name|struct

@@ -1675,6 +1675,9 @@ name|msgctl_args
 comment|/* { 	int     msqid;  	int     cmd; 	struct	msqid_ds *buf;     } */
 name|bsd_args
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|bsd_args
 operator|.
 name|msqid
@@ -1704,7 +1707,8 @@ name|args
 operator|->
 name|ptr
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|msgctl
 argument_list|(
 name|p
@@ -1712,6 +1716,25 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|args
+operator|->
+name|arg2
+operator|==
+name|LINUX_IPC_RMID
+operator|&&
+name|error
+operator|==
+name|EINVAL
+operator|)
+condition|?
+literal|0
+else|:
+name|error
+operator|)
 return|;
 block|}
 end_function
