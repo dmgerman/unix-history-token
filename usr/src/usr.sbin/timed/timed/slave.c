@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.10 (Berkeley) %G%"
+literal|"@(#)slave.c	2.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,8 @@ name|timeval
 name|time
 decl_stmt|,
 name|mytime
+decl_stmt|,
+name|otime
 decl_stmt|;
 name|struct
 name|tsp
@@ -1072,6 +1074,22 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|gettimeofday
+argument_list|(
+operator|&
+name|otime
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|settimeofday
 argument_list|(
 operator|&
@@ -1098,6 +1116,15 @@ operator|->
 name|tsp_name
 argument_list|,
 name|olddate
+argument_list|)
+expr_stmt|;
+name|logwtmp
+argument_list|(
+name|otime
+argument_list|,
+name|msg
+operator|->
+name|tsp_time
 argument_list|)
 expr_stmt|;
 if|if
