@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.15	81/11/08	*/
+comment|/*	kern_synch.c	4.16	82/01/24	*/
 end_comment
 
 begin_include
@@ -1349,8 +1349,6 @@ name|p_flag
 operator|&
 operator|(
 name|SPAGI
-operator||
-name|SDETACH
 operator||
 name|SNUSIG
 operator|)

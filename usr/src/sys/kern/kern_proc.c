@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.18	82/01/19	*/
+comment|/*	kern_proc.c	4.19	82/01/24	*/
 end_comment
 
 begin_include
@@ -3088,7 +3088,7 @@ name|SIGCONT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Protect this process from future 			 * tty signals, clear TSTP/TTIN/TTOU if pending, 			 * and set SDETACH bit on procs. 			 */
+comment|/* 			 * Protect this process from future 			 * tty signals, clear TSTP/TTIN/TTOU if pending. 			 */
 operator|(
 name|void
 operator|)
