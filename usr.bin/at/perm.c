@@ -177,13 +177,26 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|buffer
 operator|=
-name|mymalloc
+name|malloc
 argument_list|(
 name|len
 operator|+
 literal|2
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"virtual memory exhausted"
 argument_list|)
 expr_stmt|;
 while|while
