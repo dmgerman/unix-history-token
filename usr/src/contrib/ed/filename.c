@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)filename.c	5.5 (Berkeley) %G%"
+literal|"@(#)filename.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,8 +139,6 @@ decl_stmt|,
 name|l_bang_flag
 init|=
 literal|0
-decl_stmt|,
-name|l_len
 decl_stmt|;
 name|l_fname
 operator|=
