@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.67 1999/07/22 16:10:40 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.68 1999/07/22 16:29:48 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5145,6 +5145,22 @@ name|se
 decl_stmt|;
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|name1
+argument_list|,
+name|name2
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|se
 operator|=
@@ -6712,7 +6728,6 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
 name|bi
 operator|->
 name|bi_socktype
@@ -6721,20 +6736,6 @@ name|sep
 operator|->
 name|se_socktype
 operator|&&
-name|strcmp
-argument_list|(
-name|bi
-operator|->
-name|bi_service
-argument_list|,
-name|sep
-operator|->
-name|se_service
-argument_list|)
-operator|==
-literal|0
-operator|)
-operator|||
 name|matchservent
 argument_list|(
 name|bi
