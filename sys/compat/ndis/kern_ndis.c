@@ -3015,7 +3015,7 @@ argument|].ipt_wrap; 	block->nmb_sendrsrc_func = kernndis_functbl[
 literal|5
 argument|].ipt_wrap;  	ndis_enlarge_thrqueue(
 literal|8
-argument|);  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	ndis_shrink_thrqueue(
+argument|);  	TAILQ_INSERT_TAIL(&ndis_devhead, block, link);  	return (STATUS_SUCCESS); }  int ndis_unload_driver(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	device_object		*fdo;  	sc = arg;  	if (sc->ndis_block->nmb_rlist != NULL) 		free(sc->ndis_block->nmb_rlist, M_DEVBUF);  	ndis_flush_sysctls(sc);  	ndis_shrink_thrqueue(
 literal|8
 argument|); 	TAILQ_REMOVE(&ndis_devhead, sc->ndis_block, link);  	fdo = sc->ndis_block->nmb_deviceobj; 	IoDetachDevice(sc->ndis_block->nmb_nextdeviceobj); 	IoDeleteDevice(fdo);  	return(
 literal|0

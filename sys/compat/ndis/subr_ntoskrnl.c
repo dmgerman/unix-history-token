@@ -3909,7 +3909,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|i
 operator|)
 return|;
 block|}
@@ -11602,6 +11602,16 @@ block|,
 name|IMPORT_FUNC
 argument_list|(
 name|ExInterlockedPushEntrySList
+argument_list|)
+block|,
+name|IMPORT_FUNC
+argument_list|(
+name|ExAllocatePoolWithTag
+argument_list|)
+block|,
+name|IMPORT_FUNC
+argument_list|(
+name|ExFreePool
 argument_list|)
 block|,
 name|IMPORT_FUNC
