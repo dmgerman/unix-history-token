@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	4.2 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|setglob
+argument_list|()
+decl_stmt|,
 name|setmode
 argument_list|()
 decl_stmt|,
@@ -62,14 +65,14 @@ argument_list|()
 decl_stmt|,
 name|setstruct
 argument_list|()
-decl_stmt|,
-name|settenex
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|settenex
+argument_list|()
+decl_stmt|,
 name|settrace
 argument_list|()
 decl_stmt|,
@@ -112,10 +115,16 @@ decl_stmt|,
 name|get
 argument_list|()
 decl_stmt|,
+name|mget
+argument_list|()
+decl_stmt|,
 name|help
 argument_list|()
 decl_stmt|,
 name|put
+argument_list|()
+decl_stmt|,
+name|mput
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -251,6 +260,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|globhelp
+index|[]
+init|=
+literal|"toggle metacharacter expansion of local file names"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|helphelp
 index|[]
 init|=
@@ -278,6 +296,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|mgethelp
+index|[]
+init|=
+literal|"get multiple files"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|mkdirhelp
 index|[]
 init|=
@@ -291,6 +318,15 @@ name|modehelp
 index|[]
 init|=
 literal|"set file transfer mode"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|mputhelp
+index|[]
+init|=
+literal|"send multiple files"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,7 +407,7 @@ name|char
 name|sendhelp
 index|[]
 init|=
-literal|"send file"
+literal|"send one file"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,6 +611,16 @@ name|get
 block|}
 block|,
 block|{
+literal|"glob"
+block|,
+name|globhelp
+block|,
+literal|0
+block|,
+name|setglob
+block|}
+block|,
+block|{
 literal|"help"
 block|,
 name|helphelp
@@ -605,13 +651,13 @@ name|ls
 block|}
 block|,
 block|{
-literal|"mode"
+literal|"mget"
 block|,
-name|modehelp
+name|mgethelp
 block|,
-literal|0
+literal|1
 block|,
-name|setmode
+name|mget
 block|}
 block|,
 block|{
@@ -622,6 +668,26 @@ block|,
 literal|0
 block|,
 name|makedir
+block|}
+block|,
+block|{
+literal|"mode"
+block|,
+name|modehelp
+block|,
+literal|0
+block|,
+name|setmode
+block|}
+block|,
+block|{
+literal|"mput"
+block|,
+name|mputhelp
+block|,
+literal|1
+block|,
+name|mput
 block|}
 block|,
 block|{
