@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.8 83/08/26"
+literal|"@(#)cmd.c	3.9 83/08/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,6 +317,26 @@ literal|'w'
 case|:
 name|c_window
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+if|if
+condition|(
+operator|(
+name|w
+operator|=
+name|getwin
+argument_list|()
+operator|)
+operator|!=
+literal|0
+condition|)
+name|c_move
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
