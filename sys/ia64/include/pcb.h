@@ -143,20 +143,48 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. For the Alpha, that's a trap frame.  */
+comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. Not applicable...  */
 end_comment
 
 begin_struct
 struct|struct
 name|md_coredump
-block|{
-name|struct
-name|trapframe
-name|md_tf
-decl_stmt|;
-block|}
+block|{ }
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_function_decl
+name|void
+name|restorectx
+parameter_list|(
+name|struct
+name|pcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|savectx
+parameter_list|(
+name|struct
+name|pcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
