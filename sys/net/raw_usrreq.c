@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -74,6 +80,21 @@ include|#
 directive|include
 file|<net/raw_cb.h>
 end_include
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|rawcb_mtx
+argument_list|,
+operator|&
+name|rawcb_mtx
+argument_list|,
+literal|"rawcb"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Initialize raw connection block q.  */
@@ -158,6 +179,12 @@ decl_stmt|;
 name|last
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|rawcb_mtx
+argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -366,6 +393,12 @@ else|else
 name|m_freem
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|rawcb_mtx
 argument_list|)
 expr_stmt|;
 block|}

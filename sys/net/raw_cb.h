@@ -108,6 +108,14 @@ name|rawcb_list
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|rawcb_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* protosw entries */
 end_comment

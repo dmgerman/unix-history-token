@@ -69,6 +69,13 @@ end_comment
 
 begin_decl_stmt
 name|struct
+name|mtx
+name|rawcb_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
 name|rawcb_list_head
 name|rawcb_list
 decl_stmt|;
@@ -190,6 +197,12 @@ name|sp_protocol
 operator|=
 name|proto
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|rawcb_mtx
+argument_list|)
+expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -198,6 +211,12 @@ argument_list|,
 name|rp
 argument_list|,
 name|list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|rawcb_mtx
 argument_list|)
 expr_stmt|;
 return|return
