@@ -922,7 +922,9 @@ name|prthumanval
 argument_list|(
 name|howmany
 argument_list|(
-name|savednumber
+name|p
+operator|->
+name|fts_number
 argument_list|,
 name|blocksize
 argument_list|)
