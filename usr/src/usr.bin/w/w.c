@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.3 (Berkeley) %G%"
+literal|"@(#)w.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2850,7 +2850,7 @@ name|vstodb
 argument_list|(
 literal|0
 argument_list|,
-literal|1
+name|CLSIZE
 argument_list|,
 operator|&
 name|up
@@ -3230,7 +3230,9 @@ specifier|static
 name|int
 name|abuf
 index|[
-literal|512
+name|CLSIZE
+operator|*
+name|NBPG
 operator|/
 sizeof|sizeof
 argument_list|(
@@ -3352,7 +3354,7 @@ name|pagetbl
 index|[
 name|NPTEPG
 operator|-
-literal|1
+name|CLSIZE
 operator|-
 name|UPAGES
 index|]
@@ -3365,7 +3367,7 @@ name|pagetbl
 index|[
 name|NPTEPG
 operator|-
-literal|1
+name|CLSIZE
 operator|-
 name|UPAGES
 index|]
@@ -3383,7 +3385,7 @@ name|pagetbl
 index|[
 name|NPTEPG
 operator|-
-literal|1
+name|CLSIZE
 operator|-
 name|UPAGES
 index|]
@@ -3464,7 +3466,20 @@ block|}
 block|}
 name|abuf
 index|[
-literal|127
+sizeof|sizeof
+argument_list|(
+name|abuf
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|abuf
+index|[
+literal|0
+index|]
+argument_list|)
+operator|-
+literal|1
 index|]
 operator|=
 literal|0
@@ -3476,7 +3491,20 @@ operator|=
 operator|&
 name|abuf
 index|[
-literal|126
+sizeof|sizeof
+argument_list|(
+name|abuf
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|abuf
+index|[
+literal|0
+index|]
+argument_list|)
+operator|-
+literal|2
 index|]
 init|;
 name|ip
@@ -3543,7 +3571,18 @@ operator|)
 operator|&
 name|abuf
 index|[
-literal|128
+sizeof|sizeof
+argument_list|(
+name|abuf
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|abuf
+index|[
+literal|0
+index|]
+argument_list|)
 index|]
 condition|;
 name|cp1
