@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.30 2002/04/02 05:46:10 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.31 2002/04/05 16:25:03 imp Exp   */
 end_comment
 
 begin_comment
@@ -923,6 +923,27 @@ define|#
 directive|define
 name|PCMCIA_STR_3COM_3C574
 value|"3Com 3c574-TX 10/100Mbps Ethernet"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_3COM_3CRWE777A
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_3COM_3CRWE777A
+value|0x0777
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_3COM_3CRWE777A
+value|"3Com 3CRWE777A Airconnect"
 end_define
 
 begin_define
