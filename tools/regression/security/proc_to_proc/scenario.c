@@ -6,7 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktrace.h>
 end_include
 
 begin_include
@@ -118,6 +130,10 @@ name|int
 name|sc_canptrace_errno
 decl_stmt|;
 comment|/* desired ptrace failure */
+name|int
+name|sc_canktrace_errno
+decl_stmt|;
+comment|/* desired ktrace failure */
 name|int
 name|sc_cansighup_errno
 decl_stmt|;
@@ -341,7 +357,7 @@ name|scenarios
 index|[]
 init|=
 block|{
-comment|/*	cred1		cred2		ptrace	sighup	sigsegv	see	sched	name */
+comment|/*	cred1		cred2		ptrace	ktrace, sighup	sigsegv	see	sched	name */
 block|{
 operator|&
 name|creds
@@ -354,6 +370,8 @@ name|creds
 index|[
 literal|0
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -391,6 +409,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"1. priv on priv"
 block|}
 block|,
@@ -417,6 +437,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"2. priv on priv"
 block|}
 block|,
@@ -432,6 +454,8 @@ name|creds
 index|[
 literal|1
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -470,6 +494,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"4. priv on unpriv1"
 block|}
 block|,
@@ -485,6 +511,8 @@ name|creds
 index|[
 literal|3
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -522,6 +550,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"6. priv on unpriv1"
 block|}
 block|,
@@ -537,6 +567,8 @@ name|creds
 index|[
 literal|3
 index|]
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -571,6 +603,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -590,6 +624,8 @@ name|creds
 index|[
 literal|1
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -623,6 +659,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -642,6 +680,8 @@ name|creds
 index|[
 literal|1
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -680,6 +720,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"12. unpriv1 on unpriv1"
 block|}
 block|,
@@ -695,6 +737,8 @@ name|creds
 index|[
 literal|3
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -732,6 +776,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|"14. unpriv1 on unpriv1"
 block|}
 block|,
@@ -747,6 +793,8 @@ name|creds
 index|[
 literal|3
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -781,6 +829,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -800,6 +850,8 @@ name|creds
 index|[
 literal|5
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -833,6 +885,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -852,6 +906,8 @@ name|creds
 index|[
 literal|5
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -886,6 +942,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -905,6 +963,8 @@ name|creds
 index|[
 literal|7
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -938,6 +998,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -957,6 +1019,8 @@ name|creds
 index|[
 literal|7
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -991,6 +1055,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -1010,6 +1076,8 @@ name|creds
 index|[
 literal|9
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1043,6 +1111,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -1062,6 +1132,8 @@ name|creds
 index|[
 literal|9
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1092,6 +1164,8 @@ index|]
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 literal|0
@@ -1115,6 +1189,8 @@ name|creds
 index|[
 literal|11
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1144,6 +1220,8 @@ index|]
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 literal|0
@@ -1167,6 +1245,8 @@ name|creds
 index|[
 literal|11
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1201,6 +1281,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -1220,6 +1302,8 @@ name|creds
 index|[
 literal|13
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1253,6 +1337,8 @@ name|EPERM
 block|,
 name|EPERM
 block|,
+name|EPERM
+block|,
 literal|0
 block|,
 name|EPERM
@@ -1272,6 +1358,8 @@ name|creds
 index|[
 literal|13
 index|]
+block|,
+name|EPERM
 block|,
 name|EPERM
 block|,
@@ -1382,6 +1470,13 @@ literal|"0"
 operator|)
 return|;
 default|default:
+name|printf
+argument_list|(
+literal|"%d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|"unknown"
@@ -1720,29 +1815,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_SIGHUP
+name|LOOP_KTRACE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SIGSEGV
+name|LOOP_SIGHUP
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SEE
+name|LOOP_SIGSEGV
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOOP_SCHED
+name|LOOP_SEE
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOOP_SCHED
+value|5
 end_define
 
 begin_define
@@ -1773,6 +1875,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+decl_stmt|,
+modifier|*
+name|tracefile
 decl_stmt|;
 name|int
 name|error
@@ -1965,6 +2070,70 @@ name|scenario
 index|]
 operator|.
 name|sc_canptrace_errno
+expr_stmt|;
+break|break;
+case|case
+name|LOOP_KTRACE
+case|:
+name|tracefile
+operator|=
+name|mktemp
+argument_list|(
+literal|"/tmp/testuid_ktrace.XXXXXX"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tracefile
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"mktemp"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|error
+operator|=
+name|ktrace
+argument_list|(
+name|tracefile
+argument_list|,
+name|KTROP_SET
+argument_list|,
+name|KTRFAC_SYSCALL
+argument_list|,
+name|pid1
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|errno
+expr_stmt|;
+name|name
+operator|=
+literal|"ktrace"
+expr_stmt|;
+name|desirederror
+operator|=
+name|scenarios
+index|[
+name|scenario
+index|]
+operator|.
+name|sc_canktrace_errno
+expr_stmt|;
+name|unlink
+argument_list|(
+name|tracefile
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
