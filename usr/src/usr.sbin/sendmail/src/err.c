@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.7	%G%"
+literal|"@(#)err.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,11 @@ name|eb
 init|=
 name|errbuf
 decl_stmt|;
+specifier|extern
+name|char
+name|Arpa_Syserr
+index|[]
+decl_stmt|;
 comment|/* add arpanet error number if not present */
 if|if
 condition|(
@@ -156,8 +161,15 @@ name|strcpy
 argument_list|(
 name|eb
 argument_list|,
-literal|"455 "
+name|Arpa_Syserr
 argument_list|)
+expr_stmt|;
+name|eb
+index|[
+literal|3
+index|]
+operator|=
+literal|' '
 expr_stmt|;
 name|eb
 operator|+=
@@ -370,6 +382,11 @@ specifier|extern
 name|char
 name|SuprErrs
 decl_stmt|;
+specifier|extern
+name|char
+name|Arpa_Usrerr
+index|[]
+decl_stmt|;
 if|if
 condition|(
 name|SuprErrs
@@ -380,7 +397,7 @@ operator|++
 expr_stmt|;
 name|message
 argument_list|(
-literal|"450"
+name|Arpa_Usrerr
 argument_list|,
 name|fmt
 argument_list|,

@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.20	%G%"
+literal|"@(#)main.c	3.21	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1770,13 +1770,20 @@ name|ArpaMode
 operator|==
 name|ARPA_MAIL
 condition|)
+block|{
+specifier|extern
+name|char
+name|Arpa_Enter
+index|[]
+decl_stmt|;
 name|message
 argument_list|(
-literal|"350"
+name|Arpa_Enter
 argument_list|,
 literal|"Enter mail, end with \".\" on a line by itself"
 argument_list|)
 expr_stmt|;
+block|}
 name|errno
 operator|=
 literal|0
@@ -1928,12 +1935,20 @@ name|okmsg
 init|=
 literal|"Mail accepted"
 decl_stmt|;
+specifier|extern
+name|char
+name|Arpa_Fmsg
+index|[]
+decl_stmt|,
+name|Arpa_Mmsg
+index|[]
+decl_stmt|;
 case|case
 name|ARPA_FILE
 case|:
 name|message
 argument_list|(
-literal|"252"
+name|Arpa_Fmsg
 argument_list|,
 name|okmsg
 argument_list|)
@@ -1944,7 +1959,7 @@ name|ARPA_MAIL
 case|:
 name|message
 argument_list|(
-literal|"256"
+name|Arpa_Mmsg
 argument_list|,
 name|okmsg
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.25	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.26	%G% */
 end_comment
 
 begin_include
@@ -158,6 +158,18 @@ end_define
 
 begin_comment
 comment|/* reading over data connection */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|Arpa_Info
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the message number for Arpanet info */
 end_comment
 
 begin_comment

@@ -59,7 +59,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.22	%G%"
+literal|"@(#)deliver.c	3.23	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1767,7 +1767,7 @@ name|Verbose
 condition|)
 name|message
 argument_list|(
-literal|"050"
+name|Arpa_Info
 argument_list|,
 name|statmsg
 argument_list|)
@@ -2643,7 +2643,7 @@ argument_list|)
 condition|)
 name|message
 argument_list|(
-literal|"050"
+name|Arpa_Info
 argument_list|,
 literal|"duplicate supressed"
 argument_list|)
@@ -2926,7 +2926,7 @@ name|Verbose
 condition|)
 name|message
 argument_list|(
-literal|"050"
+name|Arpa_Info
 argument_list|,
 literal|"Including file %s"
 argument_list|,
@@ -3017,7 +3017,7 @@ name|Verbose
 condition|)
 name|message
 argument_list|(
-literal|"050"
+name|Arpa_Info
 argument_list|,
 literal|">> %s"
 argument_list|,

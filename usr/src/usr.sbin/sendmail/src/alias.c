@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.13	%G%	(with DBM)"
+literal|"@(#)alias.c	3.14	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.13	%G%	(without DBM)"
+literal|"@(#)alias.c	3.14	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,7 +294,7 @@ name|Verbose
 condition|)
 name|message
 argument_list|(
-literal|"050"
+name|Arpa_Info
 argument_list|,
 literal|"aliased to %s"
 argument_list|,
@@ -1259,7 +1259,7 @@ name|Verbose
 condition|)
 name|message
 argument_list|(
-literal|"050"
+name|Arpa_Info
 argument_list|,
 literal|"forwarded to %s"
 argument_list|,

@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.17	%G%"
+literal|"@(#)conf.c	3.18	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,188 @@ literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* **  ARPANET error message numbers. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEWFTP
+end_ifdef
+
+begin_comment
+comment|/* these are almost all unchecked */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Info
+index|[]
+init|=
+literal|"010"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* arbitrary info: this is WRONG! */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Enter
+index|[]
+init|=
+literal|"354"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start mail input */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Mmsg
+index|[]
+init|=
+literal|"250"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail successful (MAIL cmd) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Fmsg
+index|[]
+init|=
+literal|"250"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail successful (MLFL cmd) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Syserr
+index|[]
+init|=
+literal|"450"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* some (transient) system error */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Usrerr
+index|[]
+init|=
+literal|"550"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* some (fatal) user error */
+end_comment
+
+begin_else
+else|#
+directive|else
+else|NEWFTP
+end_else
+
+begin_decl_stmt
+name|char
+name|Arpa_Info
+index|[]
+init|=
+literal|"050"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* arbitrary info */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Enter
+index|[]
+init|=
+literal|"350"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* start mail input */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Mmsg
+index|[]
+init|=
+literal|"256"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail successful (MAIL cmd) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Fmsg
+index|[]
+init|=
+literal|"250"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail successful (MLFL cmd) */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Syserr
+index|[]
+init|=
+literal|"455"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* some (transient) system error */
+end_comment
+
+begin_decl_stmt
+name|char
+name|Arpa_Usrerr
+index|[]
+init|=
+literal|"450"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* some (fatal) user error */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|NEWFTP
+end_endif
 
 begin_escape
 end_escape

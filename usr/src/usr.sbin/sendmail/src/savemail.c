@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.11	%G%"
+literal|"@(#)savemail.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,7 +605,7 @@ block|{
 comment|/* we have a home directory; open dead.letter */
 name|message
 argument_list|(
-literal|"050"
+name|Arpa_Info
 argument_list|,
 literal|"Saving message in dead.letter"
 argument_list|)
