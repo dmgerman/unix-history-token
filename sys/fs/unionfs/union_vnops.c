@@ -6686,18 +6686,12 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|struct
-name|union_node
-modifier|*
-name|un
-init|=
-name|VTOUNION
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct union_node *un = VTOUNION(ap->a_vp);
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
