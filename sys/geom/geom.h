@@ -1454,6 +1454,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|DECLARE_GEOM_CLASS_INIT
+parameter_list|(
+name|class
+parameter_list|,
+name|name
+parameter_list|,
+name|init
+parameter_list|)
+define|\
+value|SYSINIT(name, SI_SUB_PSEUDO, SI_ORDER_FIRST, init, NULL);
+end_define
+
+begin_define
+define|#
+directive|define
 name|DECLARE_GEOM_CLASS
 parameter_list|(
 name|class
@@ -1461,7 +1476,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|static void				\ 	name##init(void)			\ 	{					\ 		mtx_unlock(&Giant);		\ 		g_add_class(&class);		\ 		mtx_lock(&Giant);		\ 	}					\ 	SYSINIT(name, SI_SUB_PSEUDO, SI_ORDER_FIRST, name##init, NULL);
+value|static void				\ 	name##init(void)			\ 	{					\ 		mtx_unlock(&Giant);		\ 		g_add_class(&class);		\ 		mtx_lock(&Giant);		\ 	}					\ 	DECLARE_GEOM_CLASS_INIT(class, name, name##init);
 end_define
 
 begin_endif
