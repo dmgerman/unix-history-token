@@ -17,115 +17,110 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Intel 386 Context Data Type  */
+comment|/*  * amd64 Context Data Type  *  * The alignment is pretty messed up here due to reuse of the original 32 bit  * fields.  It might be worth trying to set the tss on a +4 byte offset to  * make the 64 bit fields aligned in practice.  */
 end_comment
 
 begin_struct
 struct|struct
-name|i386tss
+name|amd64tss
 block|{
-name|int
-name|tss_link
+name|u_int32_t
+name|tss_rsvd0
 decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_esp0
+name|u_int64_t
+name|tss_rsp0
+name|__packed
 decl_stmt|;
-comment|/* kernel stack pointer privilege level 0 */
-name|int
-name|tss_ss0
+comment|/* kernel stack pointer ring 0 */
+name|u_int64_t
+name|tss_rsp1
+name|__packed
 decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_esp1
+comment|/* kernel stack pointer ring 1 */
+name|u_int64_t
+name|tss_rsp2
+name|__packed
 decl_stmt|;
-comment|/* kernel stack pointer privilege level 1 */
-name|int
-name|tss_ss1
+comment|/* kernel stack pointer ring 2 */
+name|u_int32_t
+name|tss_rsvd1
 decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_esp2
+name|u_int32_t
+name|tss_rsvd2
 decl_stmt|;
-comment|/* kernel stack pointer privilege level 2 */
-name|int
-name|tss_ss2
+name|u_int32_t
+name|tss_rsvd3
 decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_cr3
+name|u_int64_t
+name|tss_ist1
+name|__packed
 decl_stmt|;
-comment|/* page table directory */
-name|int
-name|tss_eip
+comment|/* Interrupt stack table 1 */
+name|u_int64_t
+name|tss_ist2
+name|__packed
 decl_stmt|;
-comment|/* program counter */
-name|int
-name|tss_eflags
+comment|/* Interrupt stack table 2 */
+name|u_int64_t
+name|tss_ist3
+name|__packed
 decl_stmt|;
-comment|/* program status longword */
-name|int
-name|tss_eax
+comment|/* Interrupt stack table 3 */
+name|u_int64_t
+name|tss_ist4
+name|__packed
 decl_stmt|;
-name|int
-name|tss_ecx
+comment|/* Interrupt stack table 4 */
+name|u_int64_t
+name|tss_ist5
+name|__packed
 decl_stmt|;
-name|int
-name|tss_edx
+comment|/* Interrupt stack table 5 */
+name|u_int64_t
+name|tss_ist6
+name|__packed
 decl_stmt|;
-name|int
-name|tss_ebx
+comment|/* Interrupt stack table 6 */
+name|u_int64_t
+name|tss_ist7
+name|__packed
 decl_stmt|;
-name|int
-name|tss_esp
+comment|/* Interrupt stack table 7 */
+name|u_int32_t
+name|tss_rsvd4
 decl_stmt|;
-comment|/* user stack pointer */
-name|int
-name|tss_ebp
+name|u_int32_t
+name|tss_rsvd5
 decl_stmt|;
-comment|/* user frame pointer */
-name|int
-name|tss_esi
+name|u_int16_t
+name|tss_rsvd6
 decl_stmt|;
-name|int
-name|tss_edi
+name|u_int16_t
+name|tss_iobase
 decl_stmt|;
-name|int
-name|tss_es
-decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_cs
-decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_ss
-decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_ds
-decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_fs
-decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_gs
-decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_ldt
-decl_stmt|;
-comment|/* actually 16 bits: top 16 bits must be zero */
-name|int
-name|tss_ioopt
-decl_stmt|;
-comment|/* options& io offset bitmap: currently zero */
-comment|/* XXX unimplemented .. i/o permission bitmap */
+comment|/* io bitmap offset */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|amd64tss
+name|common_tss
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -22,50 +22,6 @@ begin_comment
 comment|/* timer 0 counter port */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TIMER_CNTR1
-value|0x3fdb
-end_define
-
-begin_comment
-comment|/* timer 1 counter port */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_CNTR2
-value|(IO_TIMER1 + 4)
-end_define
-
-begin_comment
-comment|/* timer 2 counter port */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_MODE
-value|(IO_TIMER1 + 6)
-end_define
-
-begin_comment
-comment|/* timer mode port */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -98,11 +54,6 @@ end_define
 begin_comment
 comment|/* timer mode port */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

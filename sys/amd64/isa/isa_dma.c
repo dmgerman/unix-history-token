@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa.h>
+file|<amd64/isa/isa.h>
 end_include
 
 begin_include
@@ -198,6 +198,13 @@ end_define
 begin_comment
 comment|/* clear first/last FF */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ISARAM_END
+value|0x1000000
+end_define
 
 begin_function_decl
 specifier|static
@@ -1594,10 +1601,6 @@ name|va
 argument_list|)
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|ISARAM_END
-value|RAM_END
 if|if
 condition|(
 name|phys

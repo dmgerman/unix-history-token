@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|_JBLEN
-value|11
+value|22
 end_define
 
 begin_comment

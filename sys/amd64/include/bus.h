@@ -15,41 +15,11 @@ directive|define
 name|_I386_BUS_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_comment
-comment|/* NEC PC-98 */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_pc98.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* IBM-PC */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<machine/bus_at386.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -58,7 +28,7 @@ file|<machine/bus_dma.h>
 end_include
 
 begin_comment
-comment|/*  * Stream accesses are the same as normal accesses on i386/pc98; there are no  * supported bus systems with an endianess different from the host one.  */
+comment|/*  * Stream accesses are the same as normal accesses on i386; there are no  * supported bus systems with an endianess different from the host one.  */
 end_comment
 
 begin_define

@@ -148,7 +148,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = read_eflags(); disable_intr(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1)) \
+value|{ s = read_rflags(); disable_intr(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1)) \
 comment|/* nothing */
 value|; }
 end_define
@@ -160,7 +160,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|{ atomic_store_rel_int(&mcount_lock, 0); \ 			  write_eflags(s); }
+value|{ atomic_store_rel_int(&mcount_lock, 0); \ 			  write_rflags(s); }
 end_define
 
 begin_else
@@ -175,7 +175,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = read_eflags(); disable_intr(); }
+value|{ s = read_rflags(); disable_intr(); }
 end_define
 
 begin_define
@@ -185,7 +185,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(write_eflags(s))
+value|(write_rflags(s))
 end_define
 
 begin_endif
@@ -238,9 +238,9 @@ name|MCOUNT
 define|\
 value|void									\ mcount()								\ {									\ 	uintfptr_t selfpc, frompc;					\
 comment|/*								\ 	 * Find the return address for mcount,				\ 	 * and the return address for mcount's caller.			\ 	 *								\ 	 * selfpc = pc pushed by call to mcount				\ 	 */
-value|\ 	asm("movl 4(%%ebp),%0" : "=r" (selfpc));			\
+value|\ 	asm("movq 8(%%rbp),%0" : "=r" (selfpc));			\
 comment|/*								\ 	 * frompc = pc pushed by call to mcount's caller.		\ 	 * The caller's stack frame has already been built, so %ebp is	\ 	 * the caller's frame pointer.  The caller's raddr is in the	\ 	 * caller's frame following the caller's caller's frame pointer.\ 	 */
-value|\ 	asm("movl (%%ebp),%0" : "=r" (frompc));				\ 	frompc = ((uintfptr_t *)frompc)[1];				\ 	_mcount(frompc, selfpc);					\ }
+value|\ 	asm("movq (%%rbp),%0" : "=r" (frompc));				\ 	frompc = ((uintfptr_t *)frompc)[1];				\ 	_mcount(frompc, selfpc);					\ }
 end_define
 
 begin_else
@@ -272,7 +272,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|unsigned
-name|int
+name|long
 name|uintfptr_t
 typedef|;
 end_typedef

@@ -53,11 +53,11 @@ begin_define
 define|#
 directive|define
 name|ALIGN_DATA
-value|.p2align 2
+value|.p2align 3
 end_define
 
 begin_comment
-comment|/* 4 byte alignment, zero filled */
+comment|/* 8 byte alignment, zero filled */
 end_comment
 
 begin_ifdef
@@ -86,11 +86,11 @@ begin_define
 define|#
 directive|define
 name|ALIGN_TEXT
-value|.p2align 2,0x90
+value|.p2align 4,0x90
 end_define
 
 begin_comment
-comment|/* 4-byte alignment, nop filled */
+comment|/* 16-byte alignment, nop filled */
 end_comment
 
 begin_endif
@@ -153,7 +153,7 @@ name|PCPU
 parameter_list|(
 name|member
 parameter_list|)
-value|%fs:PC_ ## member
+value|%gs:PC_ ## member
 end_define
 
 begin_define
@@ -165,7 +165,7 @@ name|member
 parameter_list|,
 name|reg
 parameter_list|)
-value|movl %fs:PC_PRVSPACE,reg; \ 			addl $PC_ ## member,reg
+value|movq %gs:PC_PRVSPACE,reg; \ 			addq $PC_ ## member,reg
 end_define
 
 begin_endif
@@ -236,7 +236,7 @@ name|FAKE_MCOUNT
 parameter_list|(
 name|caller
 parameter_list|)
-value|pushl caller ; call __mcount ; popl %ecx
+value|pushq caller ; call __mcount ; popl %ecx
 end_define
 
 begin_define

@@ -20,187 +20,19 @@ name|_MACHINE_NPX_H_
 end_define
 
 begin_comment
-comment|/* Environment information of floating point unit */
-end_comment
-
-begin_struct
-struct|struct
-name|env87
-block|{
-name|long
-name|en_cw
-decl_stmt|;
-comment|/* control word (16bits) */
-name|long
-name|en_sw
-decl_stmt|;
-comment|/* status word (16bits) */
-name|long
-name|en_tw
-decl_stmt|;
-comment|/* tag word (16bits) */
-name|long
-name|en_fip
-decl_stmt|;
-comment|/* floating point instruction pointer */
-name|u_short
-name|en_fcs
-decl_stmt|;
-comment|/* floating code segment selector */
-name|u_short
-name|en_opcode
-decl_stmt|;
-comment|/* opcode last executed (11 bits ) */
-name|long
-name|en_foo
-decl_stmt|;
-comment|/* floating operand offset */
-name|long
-name|en_fos
-decl_stmt|;
-comment|/* floating operand segment selector */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Contents of each floating point accumulator */
+comment|/* Contents of each x87 floating point accumulator */
 end_comment
 
 begin_struct
 struct|struct
 name|fpacc87
 block|{
-ifdef|#
-directive|ifdef
-name|dontdef
-comment|/* too unportable */
-name|u_long
-name|fp_mantlo
-decl_stmt|;
-comment|/* mantissa low (31:0) */
-name|u_long
-name|fp_manthi
-decl_stmt|;
-comment|/* mantissa high (63:32) */
-name|int
-name|fp_exp
-range|:
-literal|15
-decl_stmt|;
-comment|/* exponent */
-name|int
-name|fp_sgn
-range|:
-literal|1
-decl_stmt|;
-comment|/* mantissa sign */
-else|#
-directive|else
 name|u_char
 name|fp_bytes
 index|[
 literal|10
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Floating point context */
-end_comment
-
-begin_struct
-struct|struct
-name|save87
-block|{
-name|struct
-name|env87
-name|sv_env
-decl_stmt|;
-comment|/* floating point control/status */
-name|struct
-name|fpacc87
-name|sv_ac
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* accumulator contents, 0-7 */
-name|u_char
-name|sv_pad0
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* padding for (now unused) saved status word */
-comment|/* 	 * Bogus padding for emulators.  Emulators should use their own 	 * struct and arrange to store into this struct (ending here) 	 * before it is inspected for ptracing or for core dumps.  Some 	 * emulators overwrite the whole struct.  We have no good way of 	 * knowing how much padding to leave.  Leave just enough for the 	 * GPL emulator's i387_union (176 bytes total). 	 */
-name|u_char
-name|sv_pad
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* padding; used by emulators */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|envxmm
-block|{
-name|u_int16_t
-name|en_cw
-decl_stmt|;
-comment|/* control word (16bits) */
-name|u_int16_t
-name|en_sw
-decl_stmt|;
-comment|/* status word (16bits) */
-name|u_int16_t
-name|en_tw
-decl_stmt|;
-comment|/* tag word (16bits) */
-name|u_int16_t
-name|en_opcode
-decl_stmt|;
-comment|/* opcode last executed (11 bits ) */
-name|u_int32_t
-name|en_fip
-decl_stmt|;
-comment|/* floating point instruction pointer */
-name|u_int16_t
-name|en_fcs
-decl_stmt|;
-comment|/* floating code segment selector */
-name|u_int16_t
-name|en_pad0
-decl_stmt|;
-comment|/* padding */
-name|u_int32_t
-name|en_foo
-decl_stmt|;
-comment|/* floating operand offset */
-name|u_int16_t
-name|en_fos
-decl_stmt|;
-comment|/* floating operand segment selector */
-name|u_int16_t
-name|en_pad1
-decl_stmt|;
-comment|/* padding */
-name|u_int32_t
-name|en_mxcsr
-decl_stmt|;
-comment|/* SSE sontorol/status register */
-name|u_int32_t
-name|en_pad2
-decl_stmt|;
-comment|/* padding */
 block|}
 struct|;
 end_struct
@@ -225,7 +57,50 @@ end_struct
 
 begin_struct
 struct|struct
-name|savexmm
+name|envxmm
+block|{
+name|u_int16_t
+name|en_cw
+decl_stmt|;
+comment|/* control word (16bits) */
+name|u_int16_t
+name|en_sw
+decl_stmt|;
+comment|/* status word (16bits) */
+name|u_int8_t
+name|en_tw
+decl_stmt|;
+comment|/* tag word (8bits) */
+name|u_int8_t
+name|en_zero
+decl_stmt|;
+name|u_int16_t
+name|en_opcode
+decl_stmt|;
+comment|/* opcode last executed (11 bits ) */
+name|u_int64_t
+name|en_rip
+decl_stmt|;
+comment|/* floating point instruction pointer */
+name|u_int64_t
+name|en_rdp
+decl_stmt|;
+comment|/* floating operand pointer */
+name|u_int32_t
+name|en_mxcsr
+decl_stmt|;
+comment|/* SSE sontorol/status register */
+name|u_int32_t
+name|en_mxcsr_mask
+decl_stmt|;
+comment|/* valid bits in mxcsr */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|savefpu
 block|{
 name|struct
 name|envxmm
@@ -254,13 +129,13 @@ name|struct
 name|xmmacc
 name|sv_xmm
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
 name|u_char
 name|sv_pad
 index|[
-literal|224
+literal|96
 index|]
 decl_stmt|;
 block|}
@@ -270,22 +145,6 @@ literal|16
 argument_list|)
 struct|;
 end_struct
-
-begin_union
-union|union
-name|savefpu
-block|{
-name|struct
-name|save87
-name|sv_87
-decl_stmt|;
-name|struct
-name|savexmm
-name|sv_xmm
-decl_stmt|;
-block|}
-union|;
-end_union
 
 begin_comment
 comment|/*  * The hardware default control word for i387's and later coprocessors is  * 0x37F, giving:  *  *	round to nearest  *	64-bit precision  *	all exceptions masked.  *  * We modify the affine mode bit and precision bits in this to give:  *  *	affine mode for 287's (if they work at all) (1 in bitfield 1<<12)  *	53-bit precision (2 in bitfield 3<<8)  *  * 64-bit precision often gives bad results with high level languages  * because it makes the results of calculations depend on whether  * intermediate values are stored in memory or in FPU registers.  */
@@ -352,7 +211,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|union
+name|struct
 name|savefpu
 modifier|*
 name|addr
@@ -374,7 +233,7 @@ begin_function_decl
 name|void
 name|npxsave
 parameter_list|(
-name|union
+name|struct
 name|savefpu
 modifier|*
 name|addr
@@ -391,7 +250,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|union
+name|struct
 name|savefpu
 modifier|*
 name|addr

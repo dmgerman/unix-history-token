@@ -100,12 +100,6 @@ begin_comment
 comment|/*  * Bus address and size types  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|uint64_t
@@ -113,26 +107,9 @@ name|bus_addr_t
 typedef|;
 end_typedef
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_typedef
 typedef|typedef
-name|uint32_t
-name|bus_addr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_typedef
-typedef|typedef
-name|uint32_t
+name|uint64_t
 name|bus_size_t
 typedef|;
 end_typedef
@@ -172,35 +149,12 @@ name|BUS_SPACE_MAXADDR_32BIT
 value|0xFFFFFFFF
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|BUS_SPACE_MAXADDR
 value|0xFFFFFFFFFFFFFFFFULL
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BUS_SPACE_MAXADDR
-value|0xFFFFFFFF
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -215,14 +169,14 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|uint64_t
 name|bus_space_tag_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int
+name|uint64_t
 name|bus_space_handle_t
 typedef|;
 end_typedef
@@ -5234,7 +5188,7 @@ name|flags
 operator|&
 name|BUS_SPACE_BARRIER_READ
 condition|)
-asm|__asm __volatile("lock; addl $0,0(%%esp)" : : : "memory");
+asm|__asm __volatile("lock; addl $0,0(%%rsp)" : : : "memory");
 else|else
 asm|__asm __volatile("" : : : "memory");
 endif|#

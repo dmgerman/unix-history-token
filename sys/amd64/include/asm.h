@@ -30,22 +30,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|PIC_PROLOGUE
-define|\
-value|pushl	%ebx;	\ 	call	1f;	\ 1:			\ 	popl	%ebx;	\ 	addl	$_GLOBAL_OFFSET_TABLE_+[.-1b],%ebx
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_EPILOGUE
-define|\
-value|popl	%ebx
-end_define
-
-begin_define
-define|#
-directive|define
 name|PIC_PLT
 parameter_list|(
 name|x
@@ -60,25 +44,13 @@ name|PIC_GOT
 parameter_list|(
 name|x
 parameter_list|)
-value|x@GOT(%ebx)
+value|x@GOTPCREL(%rip)
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|PIC_PROLOGUE
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_EPILOGUE
-end_define
 
 begin_define
 define|#
@@ -163,7 +135,7 @@ name|ALTENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|_ENTRY(x); \ 			pushl %ebp; movl %esp,%ebp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %ebp; \ 			jmp 9f
+value|_ENTRY(x); \ 			pushl %rbp; movl %rsp,%rbp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %rbp; \ 			jmp 9f
 end_define
 
 begin_define
@@ -173,7 +145,7 @@ name|ENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|_ENTRY(x); \ 			pushl %ebp; movl %esp,%ebp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %ebp; \ 			9:
+value|_ENTRY(x); \ 			pushl %rbp; movl %rsp,%rbp; \ 			call PIC_PLT(HIDENAME(mcount)); \ 			popl %rbp; \ 			9:
 end_define
 
 begin_else
@@ -343,7 +315,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			PIC_PROLOGUE; \ 			movl PIC_GOT(AVECNAME(x)),%eax; \ 			PIC_EPILOGUE; \ 			jmpl *(%eax)
+value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			movq PIC_GOT(AVECNAME(x)),%rax; \ 			jmpq *(%rax)
 end_define
 
 begin_define
@@ -353,7 +325,7 @@ name|ARCH_SELECT
 parameter_list|(
 name|x
 parameter_list|)
-value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			PIC_PROLOGUE; \ 			call PIC_PLT(CNAME(__get_hw_float)); \ 			testl %eax,%eax; \ 			movl PIC_GOT(ANAME(x)),%eax; \ 			jne 8f; \ 			movl PIC_GOT(GNAME(x)),%eax; \ 			8: \ 			movl PIC_GOT(AVECNAME(x)),%edx; \ 			movl %eax,(%edx); \ 			PIC_EPILOGUE; \ 			jmpl *%eax
+value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			call PIC_PLT(CNAME(__get_hw_float)); \ 			testq %rax,%rax; \ 			movq PIC_GOT(ANAME(x)),%rax; \ 			jne 8f; \ 			movq PIC_GOT(GNAME(x)),%rax; \ 			8: \ 			movq PIC_GOT(AVECNAME(x)),%rdx; \ 			movq %rax,(%rdx); \ 			jmpq *%rax
 end_define
 
 begin_else
@@ -373,7 +345,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			jmpl *AVECNAME(x)
+value|_START_ENTRY; \ 			.globl CNAME(x); .type CNAME(x),@function; CNAME(x): ; \ 			jmpw *AVECNAME(x)
 end_define
 
 begin_define
@@ -383,7 +355,7 @@ name|ARCH_SELECT
 parameter_list|(
 name|x
 parameter_list|)
-value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			call CNAME(__get_hw_float); \ 			testl %eax,%eax; \ 			movl $ANAME(x),%eax; \ 			jne 8f; \ 			movl $GNAME(x),%eax; \ 			8: \ 			movl %eax,AVECNAME(x); \ 			jmpl *%eax
+value|_START_ENTRY; \ 			.type ASELNAME(x),@function; \ 			ASELNAME(x): \ 			call CNAME(__get_hw_float); \ 			testw %rax,%rax; \ 			movw $ANAME(x),%rax; \ 			jne 8f; \ 			movw $GNAME(x),%rax; \ 			8: \ 			movw %rax,AVECNAME(x); \ 			jmpw *%rax
 end_define
 
 begin_endif

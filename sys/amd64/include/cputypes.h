@@ -22,37 +22,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPUCLASS_286
+name|CPUCLASS_X86
 value|0
 end_define
 
+begin_comment
+comment|/* X86 */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|CPUCLASS_386
+name|CPUCLASS_K8
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|CPUCLASS_486
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPUCLASS_586
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPUCLASS_686
-value|4
-end_define
+begin_comment
+comment|/* K8 AMD64 class */
+end_comment
 
 begin_comment
 comment|/*  * Kinds of processor.  */
@@ -61,188 +48,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_286
+name|CPU_X86
 value|0
 end_define
 
 begin_comment
-comment|/* Intel 80286 */
+comment|/* Intel */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_386SX
+name|CPU_CLAWHAMMER
 value|1
 end_define
 
 begin_comment
-comment|/* Intel 80386SX */
+comment|/* AMD Clawhammer */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CPU_386
+name|CPU_SLEDGEHAMMER
 value|2
 end_define
 
 begin_comment
-comment|/* Intel 80386DX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_486SX
-value|3
-end_define
-
-begin_comment
-comment|/* Intel 80486SX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_486
-value|4
-end_define
-
-begin_comment
-comment|/* Intel 80486DX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_586
-value|5
-end_define
-
-begin_comment
-comment|/* Intel P.....m (I hate lawyers; it's TM) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_486DLC
-value|6
-end_define
-
-begin_comment
-comment|/* Cyrix 486DLC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_686
-value|7
-end_define
-
-begin_comment
-comment|/* Pentium Pro */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_M1SC
-value|8
-end_define
-
-begin_comment
-comment|/* Cyrix M1sc (aka 5x86) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_M1
-value|9
-end_define
-
-begin_comment
-comment|/* Cyrix M1 (aka 6x86) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_BLUE
-value|10
-end_define
-
-begin_comment
-comment|/* IBM BlueLighting CPU */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_M2
-value|11
-end_define
-
-begin_comment
-comment|/* Cyrix M2 (aka enhanced 6x86 with MMX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_NX586
-value|12
-end_define
-
-begin_comment
-comment|/* NexGen (now AMD) 586 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_CY486DX
-value|13
-end_define
-
-begin_comment
-comment|/* Cyrix 486S/DX/DX2/DX4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_PII
-value|14
-end_define
-
-begin_comment
-comment|/* Intel Pentium II */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_PIII
-value|15
-end_define
-
-begin_comment
-comment|/* Intel Pentium III */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_P4
-value|16
-end_define
-
-begin_comment
-comment|/* Intel Pentium 4 */
+comment|/* AMD Sledgehammer */
 end_comment
 
 begin_ifndef

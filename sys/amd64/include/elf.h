@@ -17,24 +17,24 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * ELF definitions for the i386 architecture.  */
+comment|/*  * ELF definitions for the AMD64 architecture.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/elf32.h>
+file|<sys/elf64.h>
 end_include
 
 begin_comment
-comment|/* Definitions common to all 32 bit architectures. */
+comment|/* Definitions common to all 64 bit architectures. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|__ELF_WORD_SIZE
-value|32
+value|64
 end_define
 
 begin_comment
@@ -51,7 +51,7 @@ begin_define
 define|#
 directive|define
 name|ELF_ARCH
-value|EM_386
+value|EM_X86_64
 end_define
 
 begin_define
@@ -61,7 +61,7 @@ name|ELF_MACHINE_OK
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) == EM_386 || (x) == EM_486)
+value|((x) == EM_X86_64)
 end_define
 
 begin_comment
@@ -73,7 +73,7 @@ typedef|typedef
 struct|struct
 block|{
 comment|/* Auxiliary vector entry on initial stack */
-name|int
+name|long
 name|a_type
 decl_stmt|;
 comment|/* Entry type. */
@@ -102,7 +102,7 @@ block|}
 name|a_un
 union|;
 block|}
-name|Elf32_Auxinfo
+name|Elf64_Auxinfo
 typedef|;
 end_typedef
 
@@ -331,7 +331,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_386_NONE
+name|R_X86_64_NONE
 value|0
 end_define
 
@@ -342,51 +342,51 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_386_32
+name|R_X86_64_64
 value|1
 end_define
 
 begin_comment
-comment|/* Add symbol value. */
+comment|/* Add 64 bit symbol value. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_PC32
+name|R_X86_64_PC32
 value|2
 end_define
 
 begin_comment
-comment|/* Add PC-relative symbol value. */
+comment|/* PC-relative 32 bit signed sym value. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_GOT32
+name|R_X86_64_GOT32
 value|3
 end_define
 
 begin_comment
-comment|/* Add PC-relative GOT offset. */
+comment|/* PC-relative 32 bit GOT offset. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_PLT32
+name|R_X86_64_PLT32
 value|4
 end_define
 
 begin_comment
-comment|/* Add PC-relative PLT offset. */
+comment|/* PC-relative 32 bit PLT offset. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_COPY
+name|R_X86_64_COPY
 value|5
 end_define
 
@@ -397,7 +397,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_386_GLOB_DAT
+name|R_X86_64_GLOB_DAT
 value|6
 end_define
 
@@ -408,7 +408,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_386_JMP_SLOT
+name|R_X86_64_JMP_SLOT
 value|7
 end_define
 
@@ -419,7 +419,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_386_RELATIVE
+name|R_X86_64_RELATIVE
 value|8
 end_define
 
@@ -430,30 +430,85 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_386_GOTOFF
+name|R_X86_64_GOTPCREL
 value|9
 end_define
 
 begin_comment
-comment|/* Add GOT-relative symbol address. */
+comment|/* Add 32 bit signed pcrel offset to GOT. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_GOTPC
+name|R_X86_64_32
 value|10
 end_define
 
 begin_comment
-comment|/* Add PC-relative GOT table address. */
+comment|/* Add 32 bit zero extended symbol value */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_COUNT
+name|R_X86_64_32S
 value|11
+end_define
+
+begin_comment
+comment|/* Add 32 bit sign extended symbol value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_16
+value|12
+end_define
+
+begin_comment
+comment|/* Add 16 bit zero extended symbol value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_PC16
+value|13
+end_define
+
+begin_comment
+comment|/* Add 16 bit signed extended pc relative symbol value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_8
+value|14
+end_define
+
+begin_comment
+comment|/* Add 8 bit zero extended symbol value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_PC8
+value|15
+end_define
+
+begin_comment
+comment|/* Add 8 bit signed extended pc relative symbol value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_COUNT
+value|16
 end_define
 
 begin_comment
@@ -468,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|ELF_TARG_CLASS
-value|ELFCLASS32
+value|ELFCLASS64
 end_define
 
 begin_define
@@ -482,7 +537,7 @@ begin_define
 define|#
 directive|define
 name|ELF_TARG_MACH
-value|EM_386
+value|EM_X86_64
 end_define
 
 begin_define

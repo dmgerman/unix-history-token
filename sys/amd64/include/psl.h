@@ -151,12 +151,9 @@ begin_comment
 comment|/* resume flag bit */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PSL_VM
-value|0x00020000
-end_define
+begin_comment
+comment|/* #define PSL_VM	0x00020000 */
+end_comment
 
 begin_comment
 comment|/* virtual 8086 mode bit */
@@ -173,23 +170,17 @@ begin_comment
 comment|/* alignment checking */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PSL_VIF
-value|0x00080000
-end_define
+begin_comment
+comment|/* #define PSL_VIF	0x00080000 */
+end_comment
 
 begin_comment
 comment|/* virtual interrupt enable */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PSL_VIP
-value|0x00100000
-end_define
+begin_comment
+comment|/* #define PSL_VIP	0x00100000 */
+end_comment
 
 begin_comment
 comment|/* virtual interrupt pending */

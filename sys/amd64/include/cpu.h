@@ -84,7 +84,7 @@ name|cpu_getstack
 parameter_list|(
 name|td
 parameter_list|)
-value|((td)->td_frame->tf_esp)
+value|((td)->td_frame->tf_rsp)
 end_define
 
 begin_define
@@ -96,7 +96,7 @@ name|td
 parameter_list|,
 name|ap
 parameter_list|)
-value|((td)->td_frame->tf_esp = (ap))
+value|((td)->td_frame->tf_rsp = (ap))
 end_define
 
 begin_define
@@ -107,7 +107,7 @@ parameter_list|(
 name|framep
 parameter_list|)
 define|\
-value|((ISPL((framep)->tf_cs) == SEL_UPL) || ((framep)->tf_eflags& PSL_VM))
+value|(ISPL((framep)->tf_cs) == SEL_UPL)
 end_define
 
 begin_define
@@ -117,7 +117,7 @@ name|TRAPF_PC
 parameter_list|(
 name|framep
 parameter_list|)
-value|((framep)->tf_eip)
+value|((framep)->tf_rip)
 end_define
 
 begin_define
@@ -128,7 +128,7 @@ parameter_list|(
 name|framep
 parameter_list|)
 define|\
-value|((ISPL((framep)->cf_cs) == SEL_UPL) || ((framep)->cf_eflags& PSL_VM))
+value|(ISPL((framep)->cf_cs) == SEL_UPL)
 end_define
 
 begin_define
@@ -138,7 +138,7 @@ name|CLKF_PC
 parameter_list|(
 name|framep
 parameter_list|)
-value|((framep)->cf_eip)
+value|((framep)->cf_rip)
 end_define
 
 begin_comment
@@ -181,17 +181,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_BOOTINFO
-value|4
-end_define
-
-begin_comment
-comment|/* struct: bootinfo */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_WALLCLOCK
 value|5
 end_define
@@ -210,13 +199,6 @@ end_define
 begin_comment
 comment|/* number of valid machdep ids */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_MACHDEP_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ 	{ "adjkerntz", CTLTYPE_INT }, \ 	{ "disable_rtc_set", CTLTYPE_INT }, \ 	{ "bootinfo", CTLTYPE_STRUCT }, \ 	{ "wall_cmos_clock", CTLTYPE_INT }, \ }
-end_define
 
 begin_ifdef
 ifdef|#
@@ -269,47 +251,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I386_CPU
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|I486_CPU
-argument_list|)
-name|struct
-name|bintime
-name|bt
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|tsc_present
-condition|)
-block|{
-name|binuptime
-argument_list|(
-operator|&
-name|bt
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|bt
-operator|.
-name|frac
-operator|^
-name|bt
-operator|.
-name|sec
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|rdtsc

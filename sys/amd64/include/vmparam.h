@@ -17,17 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Machine dependent constants for 386.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_PROT_READ_IS_EXEC
-end_define
-
-begin_comment
-comment|/* if you can read -- then you can exec */
+comment|/*  * Machine dependent constants for AMD64.  */
 end_comment
 
 begin_comment
@@ -155,17 +145,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|USRTEXT
-value|(1*PAGE_SIZE)
-end_define
-
-begin_comment
-comment|/* base of user text XXX bogus */
-end_comment
-
 begin_comment
 comment|/*  * The time for a process to be blocked before being very swappable.  * This is a number of seconds which the system takes as being a non-trivial  * amount of real time.  You probably shouldn't change this;  * it is used in subtle ways (fractions and multiples of it are, that is, like  * half of a ``long time'', almost a long time, etc.)  * It is related to human patience and other factors which don't really  * change over time.  */
 end_comment
@@ -185,56 +164,42 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|VADDR(KPTDI+NKPDE-1, NPTEPG-1)
+value|VADDR(0, 0, KPTDI+NKPDE-1, NPTEPG-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|VADDR(PTDPTDI, PTDPTDI)
+value|VADDR(0, 0, PTDPTDI, PTDPTDI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|VADDR(KPTDI, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KPT_MAX_ADDRESS
-value|VADDR(PTDPTDI, KPTDI+NKPT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KPT_MIN_ADDRESS
-value|VADDR(PTDPTDI, KPTDI)
+value|VADDR(0, 0, KPTDI, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UPT_MAX_ADDRESS
-value|VADDR(PTDPTDI, PTDPTDI)
+value|VADDR(0, 0, PTDPTDI, PTDPTDI)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UPT_MIN_ADDRESS
-value|VADDR(PTDPTDI, 0)
+value|VADDR(0, 0, PTDPTDI, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|VADDR(PTDPTDI, 0)
+value|UPT_MIN_ADDRESS
 end_define
 
 begin_define
@@ -248,14 +213,14 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_ADDRESS
-value|VADDR(PTDPTDI, PTDPTDI)
+value|UPT_MAX_ADDRESS
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_ADDRESS
-value|((vm_offset_t)0)
+value|(0)
 end_define
 
 begin_comment

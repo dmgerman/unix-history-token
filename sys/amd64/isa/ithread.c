@@ -40,13 +40,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/icu.h>
+file|<amd64/isa/icu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/intr_machdep.h>
+file|<amd64/isa/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<amd64/isa/isa.h>
 end_include
 
 begin_struct
@@ -75,6 +81,20 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_int
+name|glitchcount7
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|glitchcount15
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -99,7 +119,7 @@ name|int
 name|irq
 init|=
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|cookie
 decl_stmt|;
@@ -117,6 +137,8 @@ decl_stmt|;
 comment|/* and the process that does it */
 name|int
 name|error
+decl_stmt|,
+name|isr
 decl_stmt|;
 comment|/* This used to be in icu_vector.s */
 comment|/* 	 * We count software interrupts when we process them.  The 	 * code here follows previous practice, but there's an 	 * argument for counting hardware interrupts when they're 	 * processed too. 	 */
@@ -160,6 +182,106 @@ name|error
 operator|==
 name|EINVAL
 condition|)
+block|{
+comment|/* Determine if it is a stray interrupt or simply a glitch */
+if|if
+condition|(
+name|irq
+operator|==
+literal|7
+condition|)
+block|{
+name|outb
+argument_list|(
+name|IO_ICU1
+argument_list|,
+name|OCW3_SEL
+argument_list|)
+expr_stmt|;
+comment|/* select IS register */
+name|isr
+operator|=
+name|inb
+argument_list|(
+name|IO_ICU1
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|IO_ICU1
+argument_list|,
+name|OCW3_SEL
+operator||
+name|OCW3_RIS
+argument_list|)
+expr_stmt|;
+comment|/* reselect IIR */
+if|if
+condition|(
+operator|(
+name|isr
+operator|&
+literal|0x80
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|glitchcount7
+operator|++
+expr_stmt|;
+return|return;
+block|}
+block|}
+if|if
+condition|(
+name|irq
+operator|==
+literal|15
+condition|)
+block|{
+name|outb
+argument_list|(
+name|IO_ICU2
+argument_list|,
+name|OCW3_SEL
+argument_list|)
+expr_stmt|;
+comment|/* select IS register */
+name|isr
+operator|=
+name|inb
+argument_list|(
+name|IO_ICU2
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|IO_ICU2
+argument_list|,
+name|OCW3_SEL
+operator||
+name|OCW3_RIS
+argument_list|)
+expr_stmt|;
+comment|/* reselect IIR */
+if|if
+condition|(
+operator|(
+name|isr
+operator|&
+literal|0x80
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|glitchcount15
+operator|++
+expr_stmt|;
+return|return;
+block|}
+block|}
 if|if
 condition|(
 name|straycount
@@ -196,6 +318,7 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

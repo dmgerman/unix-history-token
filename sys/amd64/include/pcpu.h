@@ -21,18 +21,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<machine/segments.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/tss.h>
-end_include
-
 begin_comment
 comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
@@ -44,17 +32,11 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct	pcpu *pc_prvspace;
 comment|/* Self-reference */
-value|\ 	struct	i386tss pc_common_tss;					\ 	struct	segment_descriptor pc_common_tssd;			\ 	struct	segment_descriptor *pc_tss_gdt;				\ 	int	pc_currentldt;						\ 	u_int32_t pc_int_pending;
-comment|/* master int pending flag */
-value|\ 	u_int32_t pc_ipending;
-comment|/* pending slow interrupts */
-value|\ 	u_int32_t pc_fpending;
-comment|/* pending fast interrupts */
-value|\ 	u_int32_t pc_spending
+value|\ 	register_t pc_scratch_rsp;
 end_define
 
 begin_comment
-comment|/* pending soft interrupts */
+comment|/* User %rsp in syscall */
 end_comment
 
 begin_if
@@ -157,7 +139,7 @@ name|__PCPU_PTR
 parameter_list|(
 name|name
 parameter_list|)
-value|({						\ 	__pcpu_type(name) *__p;						\ 									\ 	__asm __volatile("movl %%fs:%1,%0; addl %2,%0"			\ 	    : "=r" (__p)						\ 	    : "m" (*(struct pcpu *)(__pcpu_offset(pc_prvspace))),	\ 	      "i" (__pcpu_offset(name)));				\ 									\ 	__p;								\ })
+value|({						\ 	__pcpu_type(name) *__p;						\ 									\ 	__asm __volatile("movq %%gs:%1,%0; addq %2,%0"			\ 	    : "=r" (__p)						\ 	    : "m" (*(struct pcpu *)(__pcpu_offset(pc_prvspace))),	\ 	      "i" (__pcpu_offset(name)));				\ 									\ 	__p;								\ })
 end_define
 
 begin_comment
@@ -171,7 +153,7 @@ name|__PCPU_GET
 parameter_list|(
 name|name
 parameter_list|)
-value|({						\ 	__pcpu_type(name) __result;					\ 									\ 	if (sizeof(__result) == 1) {					\ 		u_char __b;						\ 		__asm __volatile("movb %%fs:%1,%0"			\ 		    : "=r" (__b)					\ 		    : "m" (*(u_char *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__b;			\ 	} else if (sizeof(__result) == 2) {				\ 		u_short __w;						\ 		__asm __volatile("movw %%fs:%1,%0"			\ 		    : "=r" (__w)					\ 		    : "m" (*(u_short *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__w;			\ 	} else if (sizeof(__result) == 4) {				\ 		u_int __i;						\ 		__asm __volatile("movl %%fs:%1,%0"			\ 		    : "=r" (__i)					\ 		    : "m" (*(u_int *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__i;			\ 	} else {							\ 		__result = *__PCPU_PTR(name);				\ 	}								\ 									\ 	__result;							\ })
+value|({						\ 	__pcpu_type(name) __result;					\ 									\ 	if (sizeof(__result) == 1) {					\ 		u_char __b;						\ 		__asm __volatile("movb %%gs:%1,%0"			\ 		    : "=r" (__b)					\ 		    : "m" (*(u_char *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__b;			\ 	} else if (sizeof(__result) == 2) {				\ 		u_short __w;						\ 		__asm __volatile("movw %%gs:%1,%0"			\ 		    : "=r" (__w)					\ 		    : "m" (*(u_short *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__w;			\ 	} else if (sizeof(__result) == 4) {				\ 		u_int __i;						\ 		__asm __volatile("movl %%gs:%1,%0"			\ 		    : "=r" (__i)					\ 		    : "m" (*(u_int *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__i;			\ 	} else if (sizeof(__result) == 8) {				\ 		u_long __l;						\ 		__asm __volatile("movq %%gs:%1,%0"			\ 		    : "=r" (__l)					\ 		    : "m" (*(u_long *)(__pcpu_offset(name))));		\ 		__result = *(__pcpu_type(name) *)&__l;			\ 	} else {							\ 		__result = *__PCPU_PTR(name);				\ 	}								\ 									\ 	__result;							\ })
 end_define
 
 begin_comment
@@ -187,7 +169,7 @@ name|name
 parameter_list|,
 name|val
 parameter_list|)
-value|({					\ 	__pcpu_type(name) __val = (val);				\ 									\ 	if (sizeof(__val) == 1) {					\ 		u_char __b;						\ 		__b = *(u_char *)&__val;				\ 		__asm __volatile("movb %1,%%fs:%0"			\ 		    : "=m" (*(u_char *)(__pcpu_offset(name)))		\ 		    : "r" (__b));					\ 	} else if (sizeof(__val) == 2) {				\ 		u_short __w;						\ 		__w = *(u_short *)&__val;				\ 		__asm __volatile("movw %1,%%fs:%0"			\ 		    : "=m" (*(u_short *)(__pcpu_offset(name)))		\ 		    : "r" (__w));					\ 	} else if (sizeof(__val) == 4) {				\ 		u_int __i;						\ 		__i = *(u_int *)&__val;					\ 		__asm __volatile("movl %1,%%fs:%0"			\ 		    : "=m" (*(u_int *)(__pcpu_offset(name)))		\ 		    : "r" (__i));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ })
+value|({					\ 	__pcpu_type(name) __val = (val);				\ 									\ 	if (sizeof(__val) == 1) {					\ 		u_char __b;						\ 		__b = *(u_char *)&__val;				\ 		__asm __volatile("movb %1,%%gs:%0"			\ 		    : "=m" (*(u_char *)(__pcpu_offset(name)))		\ 		    : "r" (__b));					\ 	} else if (sizeof(__val) == 2) {				\ 		u_short __w;						\ 		__w = *(u_short *)&__val;				\ 		__asm __volatile("movw %1,%%gs:%0"			\ 		    : "=m" (*(u_short *)(__pcpu_offset(name)))		\ 		    : "r" (__w));					\ 	} else if (sizeof(__val) == 4) {				\ 		u_int __i;						\ 		__i = *(u_int *)&__val;					\ 		__asm __volatile("movl %1,%%gs:%0"			\ 		    : "=m" (*(u_int *)(__pcpu_offset(name)))		\ 		    : "r" (__i));					\ 	} else if (sizeof(__val) == 8) {				\ 		u_long __l;						\ 		__l = *(u_long *)&__val;				\ 		__asm __volatile("movq %1,%%gs:%0"			\ 		    : "=m" (*(u_long *)(__pcpu_offset(name)))		\ 		    : "r" (__l));					\ 	} else {							\ 		*__PCPU_PTR(name) = __val;				\ 	}								\ })
 end_define
 
 begin_define

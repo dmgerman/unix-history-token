@@ -16,7 +16,7 @@ name|_MACHINE_SEGMENTS_H_
 end_define
 
 begin_comment
-comment|/*  * 386 Segmentation Data Structures and definitions  *	William F. Jolitz (william@ernie.berkeley.edu) 6/20/1989  */
+comment|/*  * AMD64 Segmentation Data Structures and definitions  */
 end_comment
 
 begin_comment
@@ -131,157 +131,234 @@ comment|/* a global selector */
 end_comment
 
 begin_comment
-comment|/*  * Memory and System segment descriptors  */
+comment|/*  * User segment descriptors (%cs, %ds etc for compatability apps. 64 bit wide)  * For long-mode apps, %cs only has the conforming bit in sd_type, the sd_dpl,  * sd_p, sd_l and sd_def32 which must be zero).  %ds only has sd_p.  */
 end_comment
 
 begin_struct
 struct|struct
-name|segment_descriptor
+name|user_segment_descriptor
 block|{
-name|unsigned
+name|u_int64_t
 name|sd_lolimit
 range|:
 literal|16
 decl_stmt|;
 comment|/* segment extent (lsb) */
-name|unsigned
+name|u_int64_t
 name|sd_lobase
 range|:
 literal|24
-name|__packed
 decl_stmt|;
 comment|/* segment base address (lsb) */
-name|unsigned
+name|u_int64_t
 name|sd_type
 range|:
 literal|5
 decl_stmt|;
 comment|/* segment type */
-name|unsigned
+name|u_int64_t
 name|sd_dpl
 range|:
 literal|2
 decl_stmt|;
 comment|/* segment descriptor priority level */
-name|unsigned
+name|u_int64_t
 name|sd_p
 range|:
 literal|1
 decl_stmt|;
 comment|/* segment descriptor present */
-name|unsigned
+name|u_int64_t
 name|sd_hilimit
 range|:
 literal|4
 decl_stmt|;
 comment|/* segment extent (msb) */
-name|unsigned
+name|u_int64_t
 name|sd_xx
 range|:
-literal|2
+literal|1
 decl_stmt|;
 comment|/* unused */
-name|unsigned
+name|u_int64_t
+name|sd_long
+range|:
+literal|1
+decl_stmt|;
+comment|/* long mode (cs only) */
+name|u_int64_t
 name|sd_def32
 range|:
 literal|1
 decl_stmt|;
 comment|/* default 32 vs 16 bit size */
-name|unsigned
+name|u_int64_t
 name|sd_gran
 range|:
 literal|1
 decl_stmt|;
 comment|/* limit granularity (byte/page units)*/
-name|unsigned
+name|u_int64_t
 name|sd_hibase
 range|:
 literal|8
 decl_stmt|;
 comment|/* segment base address  (msb) */
 block|}
+name|__packed
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Gate descriptors (e.g. indirect descriptors)  */
+comment|/*  * System segment descriptors (128 bit wide)  */
+end_comment
+
+begin_struct
+struct|struct
+name|system_segment_descriptor
+block|{
+name|u_int64_t
+name|sd_lolimit
+range|:
+literal|16
+decl_stmt|;
+comment|/* segment extent (lsb) */
+name|u_int64_t
+name|sd_lobase
+range|:
+literal|24
+decl_stmt|;
+comment|/* segment base address (lsb) */
+name|u_int64_t
+name|sd_type
+range|:
+literal|5
+decl_stmt|;
+comment|/* segment type */
+name|u_int64_t
+name|sd_dpl
+range|:
+literal|2
+decl_stmt|;
+comment|/* segment descriptor priority level */
+name|u_int64_t
+name|sd_p
+range|:
+literal|1
+decl_stmt|;
+comment|/* segment descriptor present */
+name|u_int64_t
+name|sd_hilimit
+range|:
+literal|4
+decl_stmt|;
+comment|/* segment extent (msb) */
+name|u_int64_t
+name|sd_xx0
+range|:
+literal|3
+decl_stmt|;
+comment|/* unused */
+name|u_int64_t
+name|sd_gran
+range|:
+literal|1
+decl_stmt|;
+comment|/* limit granularity (byte/page units)*/
+name|u_int64_t
+name|sd_hibase
+range|:
+literal|40
+name|__packed
+decl_stmt|;
+comment|/* segment base address  (msb) */
+name|u_int64_t
+name|sd_xx1
+range|:
+literal|8
+decl_stmt|;
+name|u_int64_t
+name|sd_mbz
+range|:
+literal|5
+decl_stmt|;
+comment|/* MUST be zero */
+name|u_int64_t
+name|sd_xx2
+range|:
+literal|19
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Gate descriptors (e.g. indirect descriptors, trap, interrupt etc. 128 bit)  * Only interrupt and trap gates have gd_ist.  */
 end_comment
 
 begin_struct
 struct|struct
 name|gate_descriptor
 block|{
-name|unsigned
+name|u_int64_t
 name|gd_looffset
 range|:
 literal|16
 decl_stmt|;
 comment|/* gate offset (lsb) */
-name|unsigned
+name|u_int64_t
 name|gd_selector
 range|:
 literal|16
 decl_stmt|;
 comment|/* gate segment selector */
-name|unsigned
-name|gd_stkcpy
-range|:
-literal|5
-decl_stmt|;
-comment|/* number of stack wds to cpy */
-name|unsigned
-name|gd_xx
+name|u_int64_t
+name|gd_ist
 range|:
 literal|3
 decl_stmt|;
+comment|/* IST table index */
+name|u_int64_t
+name|gd_xx
+range|:
+literal|5
+decl_stmt|;
 comment|/* unused */
-name|unsigned
+name|u_int64_t
 name|gd_type
 range|:
 literal|5
 decl_stmt|;
 comment|/* segment type */
-name|unsigned
+name|u_int64_t
 name|gd_dpl
 range|:
 literal|2
 decl_stmt|;
 comment|/* segment descriptor priority level */
-name|unsigned
+name|u_int64_t
 name|gd_p
 range|:
 literal|1
 decl_stmt|;
 comment|/* segment descriptor present */
-name|unsigned
+name|u_int64_t
 name|gd_hioffset
 range|:
-literal|16
+literal|48
+name|__packed
 decl_stmt|;
 comment|/* gate offset (msb) */
+name|u_int64_t
+name|sd_xx1
+range|:
+literal|32
+decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Generic descriptor  */
-end_comment
-
-begin_union
-union|union
-name|descriptor
-block|{
-name|struct
-name|segment_descriptor
-name|sd
-decl_stmt|;
-name|struct
-name|gate_descriptor
-name|gd
-decl_stmt|;
-block|}
-union|;
-end_union
 
 begin_comment
 comment|/* system segments and gate types */
@@ -301,166 +378,67 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SDT_SYS286TSS
-value|1
-end_define
-
-begin_comment
-comment|/* system 286 TSS available */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SDT_SYSLDT
 value|2
 end_define
 
 begin_comment
-comment|/* system local descriptor table */
+comment|/* system 64 bit local descriptor table */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDT_SYS286BSY
-value|3
-end_define
-
-begin_comment
-comment|/* system 286 TSS busy */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYS286CGT
-value|4
-end_define
-
-begin_comment
-comment|/* system 286 call gate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYSTASKGT
-value|5
-end_define
-
-begin_comment
-comment|/* system task gate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYS286IGT
-value|6
-end_define
-
-begin_comment
-comment|/* system 286 interrupt gate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYS286TGT
-value|7
-end_define
-
-begin_comment
-comment|/* system 286 trap gate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYSNULL2
-value|8
-end_define
-
-begin_comment
-comment|/* system null again */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYS386TSS
+name|SDT_SYSTSS
 value|9
 end_define
 
 begin_comment
-comment|/* system 386 TSS available */
+comment|/* system available 64 bit TSS */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDT_SYSNULL3
-value|10
-end_define
-
-begin_comment
-comment|/* system null again */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYS386BSY
+name|SDT_SYSBSY
 value|11
 end_define
 
 begin_comment
-comment|/* system 386 TSS busy */
+comment|/* system busy 64 bit TSS */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDT_SYS386CGT
+name|SDT_SYSCGT
 value|12
 end_define
 
 begin_comment
-comment|/* system 386 call gate */
+comment|/* system 64 bit call gate */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDT_SYSNULL4
-value|13
-end_define
-
-begin_comment
-comment|/* system null again */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SDT_SYS386IGT
+name|SDT_SYSIGT
 value|14
 end_define
 
 begin_comment
-comment|/* system 386 interrupt gate */
+comment|/* system 64 bit interrupt gate */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SDT_SYS386TGT
+name|SDT_SYSTGT
 value|15
 end_define
 
 begin_comment
-comment|/* system 386 trap gate */
+comment|/* system 64 bit trap gate */
 end_comment
 
 begin_comment
@@ -652,56 +630,59 @@ struct|struct
 name|soft_segment_descriptor
 block|{
 name|unsigned
+name|long
 name|ssd_base
 decl_stmt|;
 comment|/* segment base address  */
 name|unsigned
+name|long
 name|ssd_limit
 decl_stmt|;
 comment|/* segment extent */
 name|unsigned
+name|long
 name|ssd_type
 range|:
 literal|5
 decl_stmt|;
 comment|/* segment type */
 name|unsigned
+name|long
 name|ssd_dpl
 range|:
 literal|2
 decl_stmt|;
 comment|/* segment descriptor priority level */
 name|unsigned
+name|long
 name|ssd_p
 range|:
 literal|1
 decl_stmt|;
 comment|/* segment descriptor present */
 name|unsigned
-name|ssd_xx
+name|long
+name|ssd_long
 range|:
-literal|4
+literal|1
 decl_stmt|;
-comment|/* unused */
+comment|/* long mode (for %cs) */
 name|unsigned
-name|ssd_xx1
-range|:
-literal|2
-decl_stmt|;
-comment|/* unused */
-name|unsigned
+name|long
 name|ssd_def32
 range|:
 literal|1
 decl_stmt|;
 comment|/* default 32 vs 16 bit size */
 name|unsigned
+name|long
 name|ssd_gran
 range|:
 literal|1
 decl_stmt|;
 comment|/* limit granularity (byte/page units)*/
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -714,106 +695,28 @@ struct|struct
 name|region_descriptor
 block|{
 name|unsigned
+name|long
 name|rd_limit
 range|:
 literal|16
 decl_stmt|;
 comment|/* segment extent */
 name|unsigned
+name|long
 name|rd_base
 range|:
-literal|32
+literal|64
 name|__packed
 decl_stmt|;
 comment|/* base address  */
 block|}
+name|__packed
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Segment Protection Exception code bits  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGEX_EXT
-value|0x01
-end_define
-
-begin_comment
-comment|/* recursive or externally induced */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGEX_IDT
-value|0x02
-end_define
-
-begin_comment
-comment|/* interrupt descriptor table */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGEX_TI
-value|0x04
-end_define
-
-begin_comment
-comment|/* local descriptor table */
-end_comment
-
-begin_comment
-comment|/* other bits are affected descriptor index */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGEX_IDX
-parameter_list|(
-name|s
-parameter_list|)
-value|(((s)>>3)&0x1fff)
-end_define
-
-begin_comment
 comment|/*  * Size of IDT table  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SMP
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|APIC_IO
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NIDT
-value|256
-end_define
-
-begin_comment
-comment|/* we use them all */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -824,15 +727,6 @@ end_define
 
 begin_comment
 comment|/* 32 reserved, 16 h/w, 0 s/w, linux's 0x80 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP || APIC_IO */
 end_comment
 
 begin_define
@@ -886,228 +780,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GPRIV_SEL
+name|GUCODE32_SEL
 value|3
 end_define
 
 begin_comment
-comment|/* SMP Per-Processor Private Data */
+comment|/* User 32 bit code Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUDATA_SEL
+value|4
+end_define
+
+begin_comment
+comment|/* User 32/64 bit Data Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GUCODE_SEL
+value|5
+end_define
+
+begin_comment
+comment|/* User 64 bit Code Descriptor */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|GPROC0_SEL
-value|4
-end_define
-
-begin_comment
-comment|/* Task state process slot zero and up */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GLDT_SEL
-value|5
-end_define
-
-begin_comment
-comment|/* LDT - eventually one per process */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GUSERLDT_SEL
 value|6
 end_define
 
 begin_comment
-comment|/* User LDT */
+comment|/* TSS for entering kernel etc  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GTGATE_SEL
-value|7
-end_define
-
 begin_comment
-comment|/* Process task switch gate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GBIOSLOWMEM_SEL
-value|8
-end_define
-
-begin_comment
-comment|/* BIOS low memory access (must be entry 8) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GPANIC_SEL
-value|9
-end_define
-
-begin_comment
-comment|/* Task state to consider panic from */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GBIOSCODE32_SEL
-value|10
-end_define
-
-begin_comment
-comment|/* BIOS interface (32bit Code) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GBIOSCODE16_SEL
-value|11
-end_define
-
-begin_comment
-comment|/* BIOS interface (16bit Code) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GBIOSDATA_SEL
-value|12
-end_define
-
-begin_comment
-comment|/* BIOS interface (Data) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GBIOSUTIL_SEL
-value|13
-end_define
-
-begin_comment
-comment|/* BIOS interface (Utility) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GBIOSARGS_SEL
-value|14
-end_define
-
-begin_comment
-comment|/* BIOS interface (Arguments) */
+comment|/* slot 6 is second half of GPROC0_SEL */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NGDT
-value|15
-end_define
-
-begin_comment
-comment|/*  * Entries in the Local Descriptor Table (LDT)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSYS5CALLS_SEL
-value|0
-end_define
-
-begin_comment
-comment|/* forced by intel BCS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LSYS5SIGR_SEL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|L43BSDCALLS_SEL
-value|2
-end_define
-
-begin_comment
-comment|/* notyet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LUCODE_SEL
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|LSOL26CALLS_SEL
-value|4
-end_define
-
-begin_comment
-comment|/* Solaris>= 2.6 system call gate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LUDATA_SEL
-value|5
-end_define
-
-begin_comment
-comment|/* separate stack, es,fs,gs sels ? */
-end_comment
-
-begin_comment
-comment|/* #define	LPOSIXCALLS_SEL	5*/
-end_comment
-
-begin_comment
-comment|/* notyet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LBSDICALLS_SEL
-value|16
-end_define
-
-begin_comment
-comment|/* BSDI system call gate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NLDT
-value|(LBSDICALLS_SEL + 1)
+value|8
 end_define
 
 begin_ifdef
@@ -1118,15 +840,8 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|_default_ldt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|union
-name|descriptor
+name|struct
+name|user_segment_descriptor
 name|gdt
 index|[]
 decl_stmt|;
@@ -1150,17 +865,6 @@ name|idt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|union
-name|descriptor
-name|ldt
-index|[
-name|NLDT
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|void
 name|lgdt
@@ -1178,7 +882,7 @@ name|void
 name|sdtossd
 parameter_list|(
 name|struct
-name|segment_descriptor
+name|user_segment_descriptor
 modifier|*
 name|sdp
 parameter_list|,
@@ -1200,7 +904,24 @@ modifier|*
 name|ssdp
 parameter_list|,
 name|struct
-name|segment_descriptor
+name|user_segment_descriptor
+modifier|*
+name|sdp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ssdtosyssd
+parameter_list|(
+name|struct
+name|soft_segment_descriptor
+modifier|*
+name|ssdp
+parameter_list|,
+name|struct
+name|system_segment_descriptor
 modifier|*
 name|sdp
 parameter_list|)

@@ -102,7 +102,7 @@ end_include
 begin_decl_stmt
 name|struct
 name|sysentvec
-name|elf32_freebsd_sysvec
+name|elf64_freebsd_sysvec
 init|=
 block|{
 name|SYS_MAXSYSCALL
@@ -135,7 +135,7 @@ name|szsigcode
 block|,
 name|NULL
 block|,
-literal|"FreeBSD ELF32"
+literal|"FreeBSD ELF64"
 block|,
 name|__elfN
 argument_list|(
@@ -167,13 +167,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|Elf32_Brandinfo
+name|Elf64_Brandinfo
 name|freebsd_brand_info
 init|=
 block|{
 name|ELFOSABI_FREEBSD
 block|,
-name|EM_386
+name|EM_X86_64
 block|,
 literal|"FreeBSD"
 block|,
@@ -182,7 +182,7 @@ block|,
 literal|"/usr/libexec/ld-elf.so.1"
 block|,
 operator|&
-name|elf32_freebsd_sysvec
+name|elf64_freebsd_sysvec
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -190,7 +190,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|elf32
+name|elf64
 argument_list|,
 name|SI_SUB_EXEC
 argument_list|,
@@ -199,7 +199,7 @@ argument_list|,
 operator|(
 name|sysinit_cfunc_t
 operator|)
-name|elf32_insert_brand_entry
+name|elf64_insert_brand_entry
 argument_list|,
 operator|&
 name|freebsd_brand_info
@@ -390,7 +390,7 @@ if|if
 condition|(
 name|rtype
 operator|==
-name|R_386_RELATIVE
+name|R_X86_64_RELATIVE
 condition|)
 block|{
 comment|/* A + B */
@@ -425,12 +425,12 @@ name|rtype
 condition|)
 block|{
 case|case
-name|R_386_NONE
+name|R_X86_64_NONE
 case|:
 comment|/* none */
 break|break;
 case|case
-name|R_386_32
+name|R_X86_64_64
 case|:
 comment|/* S + A */
 name|addr
@@ -472,7 +472,7 @@ name|addr
 expr_stmt|;
 break|break;
 case|case
-name|R_386_PC32
+name|R_X86_64_PC32
 case|:
 comment|/* S + A - P */
 name|addr
@@ -505,6 +505,7 @@ name|Elf_Addr
 operator|)
 name|where
 expr_stmt|;
+comment|/* XXX needs to be 32 bit *where, not 64 bit */
 if|if
 condition|(
 operator|*
@@ -519,7 +520,7 @@ name|addr
 expr_stmt|;
 break|break;
 case|case
-name|R_386_COPY
+name|R_X86_64_COPY
 case|:
 comment|/* none */
 comment|/* 			 * There shouldn't be copy relocations in kernel 			 * objects. 			 */
@@ -534,7 +535,7 @@ literal|1
 return|;
 break|break;
 case|case
-name|R_386_GLOB_DAT
+name|R_X86_64_GLOB_DAT
 case|:
 comment|/* S */
 name|addr
@@ -572,8 +573,9 @@ name|addr
 expr_stmt|;
 break|break;
 case|case
-name|R_386_RELATIVE
+name|R_X86_64_RELATIVE
 case|:
+comment|/* B + A */
 break|break;
 default|default:
 name|printf

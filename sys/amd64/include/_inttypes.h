@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|PRId64
-value|"lld"
+value|"ld"
 end_define
 
 begin_comment
@@ -104,7 +104,7 @@ begin_define
 define|#
 directive|define
 name|PRIdLEAST64
-value|"lld"
+value|"ld"
 end_define
 
 begin_comment
@@ -148,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|PRIdFAST64
-value|"lld"
+value|"ld"
 end_define
 
 begin_comment
@@ -170,7 +170,7 @@ begin_define
 define|#
 directive|define
 name|PRIdPTR
-value|"d"
+value|"ld"
 end_define
 
 begin_comment
@@ -214,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|PRIi64
-value|"lli"
+value|"li"
 end_define
 
 begin_comment
@@ -258,7 +258,7 @@ begin_define
 define|#
 directive|define
 name|PRIiLEAST64
-value|"lli"
+value|"li"
 end_define
 
 begin_comment
@@ -302,7 +302,7 @@ begin_define
 define|#
 directive|define
 name|PRIiFAST64
-value|"lli"
+value|"li"
 end_define
 
 begin_comment
@@ -324,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|PRIiPTR
-value|"i"
+value|"li"
 end_define
 
 begin_comment
@@ -372,7 +372,7 @@ begin_define
 define|#
 directive|define
 name|PRIo64
-value|"llo"
+value|"lo"
 end_define
 
 begin_comment
@@ -416,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|PRIoLEAST64
-value|"llo"
+value|"lo"
 end_define
 
 begin_comment
@@ -460,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|PRIoFAST64
-value|"llo"
+value|"lo"
 end_define
 
 begin_comment
@@ -482,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|PRIoPTR
-value|"o"
+value|"lo"
 end_define
 
 begin_comment
@@ -526,7 +526,7 @@ begin_define
 define|#
 directive|define
 name|PRIu64
-value|"llu"
+value|"lu"
 end_define
 
 begin_comment
@@ -570,7 +570,7 @@ begin_define
 define|#
 directive|define
 name|PRIuLEAST64
-value|"llu"
+value|"lu"
 end_define
 
 begin_comment
@@ -614,7 +614,7 @@ begin_define
 define|#
 directive|define
 name|PRIuFAST64
-value|"llu"
+value|"lu"
 end_define
 
 begin_comment
@@ -636,7 +636,7 @@ begin_define
 define|#
 directive|define
 name|PRIuPTR
-value|"u"
+value|"lu"
 end_define
 
 begin_comment
@@ -680,7 +680,7 @@ begin_define
 define|#
 directive|define
 name|PRIx64
-value|"llx"
+value|"lx"
 end_define
 
 begin_comment
@@ -724,7 +724,7 @@ begin_define
 define|#
 directive|define
 name|PRIxLEAST64
-value|"llx"
+value|"lx"
 end_define
 
 begin_comment
@@ -768,7 +768,7 @@ begin_define
 define|#
 directive|define
 name|PRIxFAST64
-value|"llx"
+value|"lx"
 end_define
 
 begin_comment
@@ -790,7 +790,7 @@ begin_define
 define|#
 directive|define
 name|PRIxPTR
-value|"x"
+value|"lx"
 end_define
 
 begin_comment
@@ -834,7 +834,7 @@ begin_define
 define|#
 directive|define
 name|PRIX64
-value|"llX"
+value|"lX"
 end_define
 
 begin_comment
@@ -878,7 +878,7 @@ begin_define
 define|#
 directive|define
 name|PRIXLEAST64
-value|"llX"
+value|"lX"
 end_define
 
 begin_comment
@@ -922,7 +922,7 @@ begin_define
 define|#
 directive|define
 name|PRIXFAST64
-value|"llX"
+value|"lX"
 end_define
 
 begin_comment
@@ -944,7 +944,7 @@ begin_define
 define|#
 directive|define
 name|PRIXPTR
-value|"X"
+value|"lX"
 end_define
 
 begin_comment
@@ -992,7 +992,7 @@ begin_define
 define|#
 directive|define
 name|SCNd64
-value|"lld"
+value|"ld"
 end_define
 
 begin_comment
@@ -1036,7 +1036,7 @@ begin_define
 define|#
 directive|define
 name|SCNdLEAST64
-value|"lld"
+value|"ld"
 end_define
 
 begin_comment
@@ -1080,7 +1080,7 @@ begin_define
 define|#
 directive|define
 name|SCNdFAST64
-value|"lld"
+value|"ld"
 end_define
 
 begin_comment
@@ -1102,7 +1102,7 @@ begin_define
 define|#
 directive|define
 name|SCNdPTR
-value|"d"
+value|"ld"
 end_define
 
 begin_comment
@@ -1146,7 +1146,7 @@ begin_define
 define|#
 directive|define
 name|SCNi64
-value|"lli"
+value|"li"
 end_define
 
 begin_comment
@@ -1190,7 +1190,7 @@ begin_define
 define|#
 directive|define
 name|SCNiLEAST64
-value|"lli"
+value|"li"
 end_define
 
 begin_comment
@@ -1234,7 +1234,7 @@ begin_define
 define|#
 directive|define
 name|SCNiFAST64
-value|"lli"
+value|"li"
 end_define
 
 begin_comment
@@ -1256,7 +1256,7 @@ begin_define
 define|#
 directive|define
 name|SCNiPTR
-value|"i"
+value|"li"
 end_define
 
 begin_comment
@@ -1304,7 +1304,7 @@ begin_define
 define|#
 directive|define
 name|SCNo64
-value|"llo"
+value|"lo"
 end_define
 
 begin_comment
@@ -1348,7 +1348,7 @@ begin_define
 define|#
 directive|define
 name|SCNoLEAST64
-value|"llo"
+value|"lo"
 end_define
 
 begin_comment
@@ -1392,7 +1392,7 @@ begin_define
 define|#
 directive|define
 name|SCNoFAST64
-value|"llo"
+value|"lo"
 end_define
 
 begin_comment
@@ -1414,7 +1414,7 @@ begin_define
 define|#
 directive|define
 name|SCNoPTR
-value|"o"
+value|"lo"
 end_define
 
 begin_comment
@@ -1458,7 +1458,7 @@ begin_define
 define|#
 directive|define
 name|SCNu64
-value|"llu"
+value|"lu"
 end_define
 
 begin_comment
@@ -1502,7 +1502,7 @@ begin_define
 define|#
 directive|define
 name|SCNuLEAST64
-value|"llu"
+value|"lu"
 end_define
 
 begin_comment
@@ -1546,7 +1546,7 @@ begin_define
 define|#
 directive|define
 name|SCNuFAST64
-value|"llu"
+value|"lu"
 end_define
 
 begin_comment
@@ -1568,7 +1568,7 @@ begin_define
 define|#
 directive|define
 name|SCNuPTR
-value|"u"
+value|"lu"
 end_define
 
 begin_comment
@@ -1612,7 +1612,7 @@ begin_define
 define|#
 directive|define
 name|SCNx64
-value|"llx"
+value|"lx"
 end_define
 
 begin_comment
@@ -1656,7 +1656,7 @@ begin_define
 define|#
 directive|define
 name|SCNxLEAST64
-value|"llx"
+value|"lx"
 end_define
 
 begin_comment
@@ -1700,7 +1700,7 @@ begin_define
 define|#
 directive|define
 name|SCNxFAST64
-value|"llx"
+value|"lx"
 end_define
 
 begin_comment
@@ -1722,7 +1722,7 @@ begin_define
 define|#
 directive|define
 name|SCNxPTR
-value|"x"
+value|"lx"
 end_define
 
 begin_comment

@@ -53,7 +53,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|long
 name|db_expr_t
 typedef|;
 end_typedef
@@ -95,7 +95,7 @@ name|PC_REGS
 parameter_list|(
 name|regs
 parameter_list|)
-value|((db_addr_t)(regs)->tf_eip)
+value|((db_addr_t)(regs)->tf_rip)
 end_define
 
 begin_define

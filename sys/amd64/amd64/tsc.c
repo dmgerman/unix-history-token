@@ -90,6 +90,8 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int
 name|tsc_present
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -197,27 +199,6 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|cpu_feature
-operator|&
-name|CPUID_TSC
-condition|)
-name|tsc_present
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|tsc_present
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tsc_present
-condition|)
-return|return;
-if|if
-condition|(
 name|bootverbose
 condition|)
 name|printf
@@ -264,54 +245,13 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"TSC clock: %ju Hz\n"
+literal|"TSC clock: %lu Hz\n"
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|tsc_freq
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs 	 * are somehow synchronized.  Some hardware configurations do 	 * this, but we have no way of determining whether this is the 	 * case, so we do not use the TSC in multi-processor systems 	 * unless the user indicated (by setting kern.timecounter.smp_tsc 	 * to 1) that he believes that his TSCs are synchronized. 	 */
 if|if
 condition|(
-name|mp_ncpus
-operator|>
-literal|1
-operator|&&
-operator|!
-name|smp_tsc
-condition|)
-return|return;
-endif|#
-directive|endif
-comment|/* 	 * We can not use the TSC if we support APM. Precise timekeeping 	 * on an APM'ed machine is at best a fools pursuit, since  	 * any and all of the time spent in various SMM code can't  	 * be reliably accounted for.  Reading the RTC is your only 	 * source of reliable time info.  The i8254 looses too of course 	 * but we need to have some kind of time... 	 * We don't know at this point whether APM is going to be used 	 * or not, nor when it might be activated.  Play it safe. 	 */
-if|if
-condition|(
-name|power_pm_get_type
-argument_list|()
-operator|==
-name|POWER_PM_TYPE_APM
-condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"TSC timecounter disabled: APM enabled.\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|tsc_present
-operator|&&
 name|tsc_freq
 operator|!=
 literal|0
@@ -426,7 +366,7 @@ name|OID_AUTO
 argument_list|,
 name|tsc_freq
 argument_list|,
-name|CTLTYPE_QUAD
+name|CTLTYPE_LONG
 operator||
 name|CTLFLAG_RW
 argument_list|,

@@ -71,7 +71,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|pushl $0 ;							\ 	pushl $0 ;							\ 	pushl $flags ;							\ 	pushl $lck ;							\ 	call _mtx_lock_spin_flags ;					\ 	addl $0x10, %esp ;						\  #define MTX_UNLOCK_SPIN(lck)						\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl $lck ;							\ 	call _mtx_unlock_spin_flags ;					\ 	addl $0x10, %esp ;						\  #endif
+value|pushq $0 ;							\ 	pushq $0 ;							\ 	pushq $flags ;							\ 	pushq $lck ;							\ 	call _mtx_lock_spin_flags ;					\ 	addq $0x20, %rsp ;						\  #define MTX_UNLOCK_SPIN(lck)						\ 	pushq $0 ;							\ 	pushq $0 ;							\ 	pushq $0 ;							\ 	pushq $lck ;							\ 	call _mtx_unlock_spin_flags ;					\ 	addq $0x20, %rsp ;						\  #endif
 end_define
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 David E. O'Brien.  All rights reserved.  * Copy
 end_comment
 
 begin_comment
-comment|/*  * Machine dependent constants for the AMD64.  */
+comment|/*  * Machine dependent constants for AMD64.  */
 end_comment
 
 begin_comment
@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|_ALIGNBYTES
-value|(sizeof(int) - 1)
+value|(sizeof(long) - 1)
 end_define
 
 begin_endif
@@ -163,39 +163,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXCPU
-value|16
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|MAXCPU
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 begin_define
 define|#
@@ -224,6 +197,17 @@ parameter_list|,
 name|t
 parameter_list|)
 value|_ALIGNED_POINTER((p),(t))
+end_define
+
+begin_comment
+comment|/* Size of the level 1 page table units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPTEPG
+value|(PAGE_SIZE/(sizeof (pt_entry_t)))
 end_define
 
 begin_define
@@ -255,29 +239,167 @@ name|PAGE_MASK
 value|(PAGE_SIZE-1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NPTEPG
-value|(PAGE_SIZE/(sizeof (pt_entry_t)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|0x0000000000000000LL
-end_define
-
 begin_comment
-comment|/* start of kernel virtual */
+comment|/* Size of the level 2 page directory units */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BTOPKERNBASE
-value|((u_long)KERNBASE>> PGSHIFT)
+name|NPDEPG
+value|(PAGE_SIZE/(sizeof (pd_entry_t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDRSHIFT
+value|21
+end_define
+
+begin_comment
+comment|/* LOG2(NBPDR) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBPDR
+value|(1<<PDRSHIFT)
+end_define
+
+begin_comment
+comment|/* bytes/page dir */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDRMASK
+value|(NBPDR-1)
+end_define
+
+begin_comment
+comment|/* Size of the level 3 page directory pointer table units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPDPEPG
+value|(PAGE_SIZE/(sizeof (pdp_entry_t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDPSHIFT
+value|30
+end_define
+
+begin_comment
+comment|/* LOG2(NBPDP) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBPDP
+value|(1<<PDPSHIFT)
+end_define
+
+begin_comment
+comment|/* bytes/page dir ptr table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDPMASK
+value|(NBPDP-1)
+end_define
+
+begin_comment
+comment|/* Size of the level 4 page-map level-4 table units */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPML4EPG
+value|(PAGE_SIZE/(sizeof (pml4_entry_t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PML4SHIFT
+value|39
+end_define
+
+begin_comment
+comment|/* LOG2(NBPML4T) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NBPML4T
+value|(1ul<<PML4SHIFT)
+end_define
+
+begin_comment
+comment|/* bytes/page map lev4 table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PML4MASK
+value|(NBPML4T-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NKPML4E
+value|1
+end_define
+
+begin_comment
+comment|/* addressable number of page tables/pde's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NKPDPE
+value|1
+end_define
+
+begin_comment
+comment|/* addressable number of page tables/pde's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPGPTD
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NBPTD
+value|(NPGPTD<<PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPDEPTD
+value|(NBPTD/(sizeof (pd_entry_t)))
 end_define
 
 begin_define
@@ -291,27 +413,16 @@ begin_comment
 comment|/* pages of i/o permission bitmap */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KSTACK_PAGES
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|KSTACK_PAGES
-value|2
+value|4
 end_define
 
 begin_comment
 comment|/* pages of kstack (with pcb) */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -334,6 +445,50 @@ end_define
 begin_comment
 comment|/* compile in the kstack guard page */
 end_comment
+
+begin_comment
+comment|/*  * Ceiling on amount of swblock kva space, can be changed via  * the kern.maxswzone /boot/loader.conf variable.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_SWZONE_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_SWZONE_SIZE_MAX
+value|(32 * 1024 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Ceiling on size of buffer cache (really only effects write queueing,  * the VM page cache is not effected), can be changed via  * the kern.maxbcache /boot/loader.conf variable.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_BCACHE_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_BCACHE_SIZE_MAX
+value|(200 * 1024 * 1024)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Mach derived conversion macros  */
@@ -362,21 +517,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|trunc_4mpage
+name|trunc_2mpage
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& ~PDRMASK)
+value|((unsigned long)(x)& ~PDRMASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|round_4mpage
+name|round_2mpage
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned)(x)) + PDRMASK)& ~PDRMASK)
+value|((((unsigned long)(x)) + PDRMASK)& ~PDRMASK)
 end_define
 
 begin_define
@@ -426,7 +581,7 @@ name|pgtok
 parameter_list|(
 name|x
 parameter_list|)
-value|((x) * (PAGE_SIZE / 1024))
+value|((unsigned long)(x) * (PAGE_SIZE / 1024))
 end_define
 
 begin_endif

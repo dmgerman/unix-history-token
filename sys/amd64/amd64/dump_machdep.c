@@ -147,7 +147,7 @@ name|kdh
 operator|.
 name|architecture
 argument_list|,
-literal|"i386"
+literal|"amd64"
 argument_list|)
 expr_stmt|;
 name|kdh
