@@ -776,6 +776,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"MAKE_JOBS_FIFO"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'P'
