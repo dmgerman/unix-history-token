@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_vnops.c,v 1.3 1993/11/25 01:32:31 wollman Exp $  */
+comment|/*  *	$Id: isofs_vnops.c,v 1.4 1993/12/19 00:51:08 wollman Exp $  */
 end_comment
 
 begin_include
@@ -323,21 +323,7 @@ name|ip
 operator|->
 name|i_number
 expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VDIR
-condition|)
-name|vap
-operator|->
-name|va_nlink
-operator|=
-literal|2
-expr_stmt|;
-else|else
+comment|/* 	 * This should be set properly if a RR filesystem, but this is 	 * the safest value for now. Note that previously this was conditionally 	 * set to 2 if the file is a directory, but this causes problems 	 * with find. 	 */
 name|vap
 operator|->
 name|va_nlink
