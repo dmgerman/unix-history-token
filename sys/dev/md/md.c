@@ -3427,6 +3427,13 @@ name|object
 operator|!=
 name|NULL
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|vm_pager_deallocate
 argument_list|(
 name|sc
@@ -3434,6 +3441,13 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -3623,6 +3637,12 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Allocate an OBJT_SWAP object. 	 * 	 * sc_secsize is PAGE_SIZE'd 	 * 	 * mdio->size is in DEV_BSIZE'd chunks. 	 * Note the truncation. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|secsize
@@ -3703,6 +3723,12 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|object
@@ -3725,6 +3751,12 @@ operator|)
 return|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|mdsetcred
