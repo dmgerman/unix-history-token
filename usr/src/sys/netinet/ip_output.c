@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_output.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_output.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,25 +66,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"in_pcb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in_var.h"
+file|"ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip.h"
+file|"in_pcb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"in_var.h"
 end_include
 
 begin_include
@@ -218,6 +218,11 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|dst
+decl_stmt|;
+name|struct
+name|in_ifaddr
+modifier|*
+name|ia
 decl_stmt|;
 if|if
 condition|(
@@ -463,11 +468,6 @@ operator|&
 name|IP_ROUTETOIF
 condition|)
 block|{
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-decl_stmt|;
 name|ia
 operator|=
 operator|(
@@ -583,6 +583,19 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|ia
+operator|=
+operator|(
+expr|struct
+name|in_ifaddr
+operator|*
+operator|)
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_ifa
+expr_stmt|;
 name|ro
 operator|->
 name|ro_rt
@@ -628,36 +641,6 @@ name|s_addr
 operator|==
 name|INADDR_ANY
 condition|)
-block|{
-specifier|register
-name|struct
-name|in_ifaddr
-modifier|*
-name|ia
-decl_stmt|;
-for|for
-control|(
-name|ia
-operator|=
-name|in_ifaddr
-init|;
-name|ia
-condition|;
-name|ia
-operator|=
-name|ia
-operator|->
-name|ia_next
-control|)
-if|if
-condition|(
-name|ia
-operator|->
-name|ia_ifp
-operator|==
-name|ifp
-condition|)
-block|{
 name|ip
 operator|->
 name|ip_src
@@ -669,9 +652,6 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
-break|break;
-block|}
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Look for broadcast address and 	 * and verify user is allowed to send 	 * such a packet. 	 */
@@ -828,6 +808,10 @@ name|sockaddr
 operator|*
 operator|)
 name|dst
+argument_list|,
+name|ro
+operator|->
+name|ro_rt
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1336,6 +1320,10 @@ name|sockaddr
 operator|*
 operator|)
 name|dst
+argument_list|,
+name|ro
+operator|->
+name|ro_rt
 argument_list|)
 expr_stmt|;
 else|else
