@@ -1,6 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * packet_tr.c - token ring interface code, contributed in May of 1999  * by Andrew Chittenden  */
+comment|/* tr.c     token ring interface support    Contributed in May of 1999 by Andrew Chittenden */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1996-2000 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|copyright
+index|[]
+init|=
+literal|"$Id: tr.c,v 1.7 2001/04/27 22:23:02 mellon Exp $ Copyright (c) 1996-2000 The Internet Software Consortium.  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -217,7 +246,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 modifier|*
 name|bufix
 decl_stmt|;
@@ -262,6 +291,8 @@ operator|->
 name|hw_address
 operator|.
 name|hlen
+operator|-
+literal|1
 operator|==
 sizeof|sizeof
 argument_list|(
@@ -276,11 +307,15 @@ name|trh
 operator|->
 name|saddr
 argument_list|,
+operator|&
 name|interface
 operator|->
 name|hw_address
 operator|.
-name|haddr
+name|hbuf
+index|[
+literal|1
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -315,7 +350,7 @@ name|to
 operator|->
 name|hlen
 operator|==
-literal|6
+literal|7
 condition|)
 comment|/* XXX */
 name|memcpy
@@ -324,9 +359,13 @@ name|trh
 operator|->
 name|daddr
 argument_list|,
+operator|&
 name|to
 operator|->
-name|haddr
+name|hbuf
+index|[
+literal|1
+index|]
 argument_list|,
 sizeof|sizeof
 name|trh
@@ -510,7 +549,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 name|bufix
 decl_stmt|;
 name|struct
@@ -791,11 +830,10 @@ operator|*
 operator|)
 name|ip
 operator|+
+name|IP_HL
+argument_list|(
 name|ip
-operator|->
-name|ip_hl
-operator|*
-literal|4
+argument_list|)
 operator|)
 expr_stmt|;
 comment|/* make sure it is a snap encoded, IP, UDP, unfragmented packet sent          * to our port */
@@ -823,9 +861,12 @@ operator|!=
 name|IPPROTO_UDP
 operator|||
 operator|(
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_off
+argument_list|)
 operator|&
 name|IP_OFFMASK
 operator|)
@@ -1339,7 +1380,6 @@ operator|)
 operator|&&
 operator|(
 operator|(
-operator|(
 name|ntohs
 argument_list|(
 name|trh
@@ -1354,7 +1394,6 @@ literal|8
 operator|)
 operator|>
 literal|2
-operator|)
 condition|)
 block|{
 name|rcf
@@ -1410,13 +1449,15 @@ block|}
 comment|/* no entry found, so create one */
 name|rover
 operator|=
-name|malloc
+name|dmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|routing_entry
 argument_list|)
+argument_list|,
+name|MDL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1631,9 +1672,11 @@ name|rover
 operator|->
 name|next
 expr_stmt|;
-name|free
+name|dfree
 argument_list|(
 name|rover
+argument_list|,
+name|MDL
 argument_list|)
 expr_stmt|;
 block|}

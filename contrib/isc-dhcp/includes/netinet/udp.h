@@ -23,7 +23,7 @@ name|u_int16_t
 name|uh_dport
 decl_stmt|;
 comment|/* destination port */
-name|int16_t
+name|u_int16_t
 name|uh_ulen
 decl_stmt|;
 comment|/* udp length */

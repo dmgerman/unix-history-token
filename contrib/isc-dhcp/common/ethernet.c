@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* packet.c     Packet assembly code, originally contributed by Archie Cobbs. */
+comment|/* ethernet.c     Packet assembly code, originally contributed by Archie Cobbs. */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996 The Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
+comment|/*  * Copyright (c) 1996-2000 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon in cooperation with Vixie Enterprises and Nominum, Inc.  * To learn more about the Internet Software Consortium, see  * ``http://www.isc.org/''.  To learn more about Vixie Enterprises,  * see ``http://www.vix.com''.   To learn more about Nominum, Inc., see  * ``http://www.nominum.com''.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: ethernet.c,v 1.1.2.2 1999/11/11 16:10:41 mellon Exp $ Copyright (c) 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: ethernet.c,v 1.6.2.1 2001/06/14 19:15:27 mellon Exp $ Copyright (c) 1996-2000 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,10 +80,6 @@ begin_comment
 comment|/* Assemble an hardware header... */
 end_comment
 
-begin_comment
-comment|/* XXX currently only supports ethernet; doesn't check for other types. */
-end_comment
-
 begin_function
 name|void
 name|assemble_ethernet_header
@@ -106,7 +102,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 modifier|*
 name|bufix
 decl_stmt|;
@@ -117,7 +113,7 @@ name|to
 decl_stmt|;
 block|{
 name|struct
-name|ether_header
+name|isc_ether_header
 name|eh
 decl_stmt|;
 if|if
@@ -128,7 +124,7 @@ name|to
 operator|->
 name|hlen
 operator|==
-literal|6
+literal|7
 condition|)
 comment|/* XXX */
 name|memcpy
@@ -137,9 +133,13 @@ name|eh
 operator|.
 name|ether_dhost
 argument_list|,
+operator|&
 name|to
 operator|->
-name|haddr
+name|hbuf
+index|[
+literal|1
+index|]
 argument_list|,
 sizeof|sizeof
 name|eh
@@ -171,6 +171,8 @@ operator|->
 name|hw_address
 operator|.
 name|hlen
+operator|-
+literal|1
 operator|==
 sizeof|sizeof
 argument_list|(
@@ -185,11 +187,15 @@ name|eh
 operator|.
 name|ether_shost
 argument_list|,
+operator|&
 name|interface
 operator|->
 name|hw_address
 operator|.
-name|haddr
+name|hbuf
+index|[
+literal|1
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -216,18 +222,6 @@ name|ether_shost
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BROKEN_FREEBSD_BPF
-comment|/* Fixed in FreeBSD 2.2 */
-name|eh
-operator|.
-name|ether_type
-operator|=
-name|ETHERTYPE_IP
-expr_stmt|;
-else|#
-directive|else
 name|eh
 operator|.
 name|ether_type
@@ -237,8 +231,6 @@ argument_list|(
 name|ETHERTYPE_IP
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|memcpy
 argument_list|(
 operator|&
@@ -303,7 +295,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 name|bufix
 decl_stmt|;
 name|struct
@@ -313,7 +305,7 @@ name|from
 decl_stmt|;
 block|{
 name|struct
-name|ether_header
+name|isc_ether_header
 name|eh
 decl_stmt|;
 name|memcpy
@@ -350,9 +342,13 @@ endif|#
 directive|endif
 name|memcpy
 argument_list|(
+operator|&
 name|from
 operator|->
-name|haddr
+name|hbuf
+index|[
+literal|1
+index|]
 argument_list|,
 name|eh
 operator|.
@@ -368,7 +364,10 @@ argument_list|)
 expr_stmt|;
 name|from
 operator|->
-name|htype
+name|hbuf
+index|[
+literal|0
+index|]
 operator|=
 name|ARPHRD_ETHER
 expr_stmt|;
@@ -376,14 +375,17 @@ name|from
 operator|->
 name|hlen
 operator|=
+operator|(
 sizeof|sizeof
 name|eh
 operator|.
 name|ether_shost
+operator|)
+operator|+
+literal|1
 expr_stmt|;
 return|return
-sizeof|sizeof
-name|eh
+name|ETHER_HEADER_SIZE
 return|;
 block|}
 end_function

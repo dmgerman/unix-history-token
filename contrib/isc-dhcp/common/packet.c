@@ -4,7 +4,7 @@ comment|/* packet.c     Packet assembly code, originally contributed by Archie C
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1999 The Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This software has been written for the Internet Software Consortium  * by Ted Lemon<mellon@fugue.com> in cooperation with Vixie  * Enterprises.  To learn more about the Internet Software Consortium,  * see ``http://www.vix.com/isc''.  To learn more about Vixie  * Enterprises, see ``http://www.vix.com''.  */
+comment|/*  * Copyright (c) 1996-2001 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of The Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This code was originally contributed by Archie Cobbs, and is still  * very similar to that contribution, although the packet checksum code  * has been hacked significantly with the help of quite a few ISC DHCP  * users, without whose gracious and thorough help the checksum code would  * still be disabled.  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: packet.c,v 1.18.2.6 1999/06/10 00:58:16 mellon Exp $ Copyright (c) 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: packet.c,v 1.40.2.1 2001/05/31 19:28:51 mellon Exp $ Copyright (c) 1996-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ directive|include
 file|"includes/netinet/udp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"includes/netinet/if_ether.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -92,20 +98,20 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 name|nbytes
 decl_stmt|;
 name|u_int32_t
 name|sum
 decl_stmt|;
 block|{
-name|int
+name|unsigned
 name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_CHECKSUM
-name|debug
+name|log_debug
 argument_list|(
 literal|"checksum (%x %d %x)"
 argument_list|,
@@ -131,7 +137,7 @@ operator|(
 name|nbytes
 operator|&
 operator|~
-literal|1
+literal|1U
 operator|)
 condition|;
 name|i
@@ -142,7 +148,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG_CHECKSUM_VERBOSE
-name|debug
+name|log_debug
 argument_list|(
 literal|"sum = %x"
 argument_list|,
@@ -195,7 +201,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG_CHECKSUM_VERBOSE
-name|debug
+name|log_debug
 argument_list|(
 literal|"sum = %x"
 argument_list|,
@@ -232,7 +238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Finish computing the sum, and then put it into network byte order. */
+comment|/* Finish computing the checksum, and then put it into network byte order. */
 end_comment
 
 begin_function
@@ -248,7 +254,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG_CHECKSUM
-name|debug
+name|log_debug
 argument_list|(
 literal|"wrapsum (%x)"
 argument_list|,
@@ -267,7 +273,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_CHECKSUM_VERBOSE
-name|debug
+name|log_debug
 argument_list|(
 literal|"sum = %x"
 argument_list|,
@@ -279,7 +285,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG_CHECKSUM
-name|debug
+name|log_debug
 argument_list|(
 literal|"wrapsum returns %x"
 argument_list|,
@@ -306,14 +312,6 @@ directive|ifdef
 name|PACKET_ASSEMBLY
 end_ifdef
 
-begin_comment
-comment|/* Assemble an hardware header... */
-end_comment
-
-begin_comment
-comment|/* XXX currently only supports ethernet; doesn't check for other types. */
-end_comment
-
 begin_function
 name|void
 name|assemble_hw_header
@@ -336,7 +334,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 modifier|*
 name|bufix
 decl_stmt|;
@@ -358,11 +356,47 @@ name|interface
 operator|->
 name|hw_address
 operator|.
-name|htype
+name|hbuf
+index|[
+literal|0
+index|]
 operator|==
 name|HTYPE_IEEE802
 condition|)
 name|assemble_tr_header
+argument_list|(
+name|interface
+argument_list|,
+name|buf
+argument_list|,
+name|bufix
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+elseif|else
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEC_FDDI
+argument_list|)
+if|if
+condition|(
+name|interface
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|0
+index|]
+operator|==
+name|HTYPE_FDDI
+condition|)
+name|assemble_fddi_header
 argument_list|(
 name|interface
 argument_list|,
@@ -424,7 +458,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 modifier|*
 name|bufix
 decl_stmt|;
@@ -434,8 +468,7 @@ decl_stmt|;
 name|u_int32_t
 name|to
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int32_t
 name|port
 decl_stmt|;
 name|unsigned
@@ -443,7 +476,7 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|unsigned
 name|len
 decl_stmt|;
 block|{
@@ -456,17 +489,21 @@ name|udphdr
 name|udp
 decl_stmt|;
 comment|/* Fill out the IP header */
+name|IP_V_SET
+argument_list|(
+operator|&
 name|ip
-operator|.
-name|ip_v
-operator|=
+argument_list|,
 literal|4
+argument_list|)
 expr_stmt|;
+name|IP_HL_SET
+argument_list|(
+operator|&
 name|ip
-operator|.
-name|ip_hl
-operator|=
-literal|5
+argument_list|,
+literal|20
+argument_list|)
 expr_stmt|;
 name|ip
 operator|.
@@ -736,6 +773,10 @@ begin_comment
 comment|/* Decode a hardware header... */
 end_comment
 
+begin_comment
+comment|/* XXX currently only supports ethernet; doesn't check for other types. */
+end_comment
+
 begin_function
 name|ssize_t
 name|decode_hw_header
@@ -758,7 +799,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 name|bufix
 decl_stmt|;
 name|struct
@@ -779,12 +820,49 @@ name|interface
 operator|->
 name|hw_address
 operator|.
-name|htype
+name|hbuf
+index|[
+literal|0
+index|]
 operator|==
 name|HTYPE_IEEE802
 condition|)
 return|return
 name|decode_tr_header
+argument_list|(
+name|interface
+argument_list|,
+name|buf
+argument_list|,
+name|bufix
+argument_list|,
+name|from
+argument_list|)
+return|;
+elseif|else
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEC_FDDI
+argument_list|)
+if|if
+condition|(
+name|interface
+operator|->
+name|hw_address
+operator|.
+name|hbuf
+index|[
+literal|0
+index|]
+operator|==
+name|HTYPE_FDDI
+condition|)
+return|return
+name|decode_fddi_header
 argument_list|(
 name|interface
 argument_list|,
@@ -843,7 +921,7 @@ name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|int
+name|unsigned
 name|bufix
 decl_stmt|;
 name|struct
@@ -856,7 +934,7 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|int
+name|unsigned
 name|buflen
 decl_stmt|;
 block|{
@@ -913,8 +991,16 @@ specifier|static
 name|int
 name|udp_packets_length_overflow
 decl_stmt|;
-name|int
+name|unsigned
 name|len
+decl_stmt|;
+name|unsigned
+name|ulen
+decl_stmt|;
+name|int
+name|ignore
+init|=
+literal|0
 decl_stmt|;
 name|ip
 operator|=
@@ -976,6 +1062,53 @@ return|;
 endif|#
 directive|endif
 comment|/* USERLAND_FILTER */
+name|ulen
+operator|=
+name|ntohs
+argument_list|(
+name|udp
+operator|->
+name|uh_ulen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ulen
+operator|<
+sizeof|sizeof
+expr|*
+name|udp
+operator|||
+operator|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|udp
+operator|)
+operator|+
+name|ulen
+operator|>
+name|buf
+operator|+
+name|bufix
+operator|+
+name|buflen
+condition|)
+block|{
+name|log_info
+argument_list|(
+literal|"bogus UDP packet length: %d"
+argument_list|,
+name|ulen
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* Check the IP header checksum - it should be zero. */
 operator|++
 name|ip_packets_seen
@@ -1015,7 +1148,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|note
+name|log_info
 argument_list|(
 literal|"%d bad IP checksums seen in %d packets"
 argument_list|,
@@ -1048,7 +1181,31 @@ argument_list|)
 operator|!=
 name|buflen
 condition|)
-name|debug
+block|{
+if|if
+condition|(
+operator|(
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+operator|+
+literal|2
+argument_list|)
+operator|&
+operator|~
+literal|1
+operator|)
+operator|==
+name|buflen
+condition|)
+name|ignore
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|log_debug
 argument_list|(
 literal|"ip length %d disagrees with bytes received %d."
 argument_list|,
@@ -1062,6 +1219,7 @@ argument_list|,
 name|buflen
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Copy out the IP source address... */
 name|memcpy
 argument_list|(
@@ -1099,12 +1257,7 @@ name|udp
 expr_stmt|;
 name|len
 operator|=
-name|ntohs
-argument_list|(
-name|udp
-operator|->
-name|uh_ulen
-argument_list|)
+name|ulen
 operator|-
 sizeof|sizeof
 expr|*
@@ -1144,7 +1297,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|note
+name|log_info
 argument_list|(
 literal|"%d udp packets in %d too long - dropped"
 argument_list|,
@@ -1170,18 +1323,65 @@ condition|(
 name|len
 operator|+
 name|data
+operator|<
+name|buf
+operator|+
+name|bufix
+operator|+
+name|buflen
+operator|&&
+name|len
+operator|+
+name|data
 operator|!=
 name|buf
 operator|+
 name|bufix
 operator|+
 name|buflen
+operator|&&
+operator|!
+name|ignore
 condition|)
-name|debug
+name|log_debug
 argument_list|(
 literal|"accepting packet with data after udp payload."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|+
+name|data
+operator|>
+name|buf
+operator|+
+name|bufix
+operator|+
+name|buflen
+condition|)
+block|{
+name|log_debug
+argument_list|(
+literal|"dropping packet with bogus uh_ulen %ld"
+argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
+name|len
+operator|+
+sizeof|sizeof
+expr|*
+name|udp
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 name|usum
 operator|=
@@ -1242,12 +1442,7 @@ operator|+
 operator|(
 name|u_int32_t
 operator|)
-name|ntohs
-argument_list|(
-name|udp
-operator|->
-name|uh_ulen
-argument_list|)
+name|ulen
 argument_list|)
 argument_list|)
 argument_list|)
@@ -1283,7 +1478,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|note
+name|log_info
 argument_list|(
 literal|"%d bad udp checksums in %d packets"
 argument_list|,
