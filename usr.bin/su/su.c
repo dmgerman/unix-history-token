@@ -1991,11 +1991,16 @@ name|ontty
 argument_list|()
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
 name|login_close
 argument_list|(
 name|lc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|execv
 argument_list|(
 name|shell
