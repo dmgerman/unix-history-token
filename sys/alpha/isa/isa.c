@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: isa.c,v 1.5 1998/10/25 01:30:16 paul Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: isa.c,v 1.6 1998/11/15 18:25:16 dfr Exp $  */
 end_comment
 
 begin_include
@@ -2673,12 +2673,23 @@ name|struct
 name|isa_device
 modifier|*
 name|id
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|child
+condition|)
+name|id
+operator|=
 name|DEVTOISA
 argument_list|(
 name|child
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+else|else
+name|id
+operator|=
+name|NULL
+expr_stmt|;
 name|isdefault
 operator|=
 operator|(
@@ -2715,10 +2726,16 @@ block|{
 case|case
 name|SYS_RES_IRQ
 case|:
+comment|/* 		 * The hack implementation of intr_create() passes a 		 * NULL child device. 		 */
 if|if
 condition|(
 name|isdefault
 operator|&&
+operator|(
+name|id
+operator|==
+name|NULL
+operator|||
 name|id
 operator|->
 name|id_irq
@@ -2727,6 +2744,7 @@ literal|0
 index|]
 operator|>=
 literal|0
+operator|)
 condition|)
 block|{
 name|start
@@ -2752,17 +2770,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|rvp
-operator|=
-operator|&
-name|id
-operator|->
-name|id_irqres
-index|[
-operator|*
-name|rid
-index|]
-expr_stmt|;
 name|rv
 operator|=
 name|rman_reserve_resource
@@ -2789,8 +2796,18 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|id
+condition|)
+block|{
+name|id
+operator|->
+name|id_irqres
+index|[
 operator|*
-name|rvp
+name|rid
+index|]
 operator|=
 name|rv
 expr_stmt|;
@@ -2806,6 +2823,7 @@ name|rv
 operator|->
 name|r_start
 expr_stmt|;
+block|}
 return|return
 name|rv
 return|;
