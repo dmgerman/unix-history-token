@@ -81,11 +81,15 @@ directive|include
 file|<geom/bde/g_bde.h>
 end_include
 
-begin_define
-define|#
-directive|define
+begin_comment
+comment|/*  * XXX: Debugging DO NOT ENABLE  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
 name|MD5_KEY
-end_define
+end_undef
 
 begin_comment
 comment|/*  * Derive kkey from mkey + sector offset.  *  * Security objective: Derive a potentially very large number of distinct skeys  * from the comparatively small key material in our mkey, in such a way that  * if one, more or even many of the kkeys are compromised, this does not  * significantly help an attack on other kkeys and in particular does not  * weaken or compromised the mkey.  *  * First we MD5 hash the sectornumber with the salt from the lock sector.  * The salt prevents the precalculation and statistical analysis of the MD5  * output which would be possible if we only gave it the sectornumber.  *  * The MD5 hash is used to pick out 16 bytes from the masterkey, which  * are then hashed with MD5 together with the sector number.  *  * The resulting MD5 hash is the kkey.  */
