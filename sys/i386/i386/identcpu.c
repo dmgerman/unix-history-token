@@ -523,6 +523,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Initialized so that it can be patched. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
