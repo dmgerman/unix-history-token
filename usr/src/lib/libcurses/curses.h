@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -163,6 +163,39 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|char
+name|GT
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Gtty indicates tabs. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|NONL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Term can't hack LF doing a CR. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|UPPERCASE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Terminal is uppercase only. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|My_term
 decl_stmt|;
@@ -183,228 +216,6 @@ end_decl_stmt
 begin_comment
 comment|/* Default terminal type. */
 end_comment
-
-begin_comment
-comment|/* END BACKWARD COMPATIBILITY ONLY. */
-end_comment
-
-begin_comment
-comment|/* 7-bit ASCII characters. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|unctrl
-parameter_list|(
-name|c
-parameter_list|)
-value|__unctrl[(c)& 0x7f]
-end_define
-
-begin_define
-define|#
-directive|define
-name|unctrllen
-parameter_list|(
-name|ch
-parameter_list|)
-value|__unctrllen[(ch)& 0x7f]
-end_define
-
-begin_comment
-comment|/*  * A window an array of __LINE structures pointed to by the 'lines' pointer.  * A line is an array of __LDATA structures pointed to by the 'line' pointer.  *  * IMPORTANT: the __LDATA structure must NOT induce any padding, so if new  * fields are added -- padding fields with *constant values* should ensure   * that the compiler will not generate any padding when storing an array of  *  __LDATA structures.  This is to enable consistent use of bcmp, and bcopy  * for comparing and copying arrays.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|char
-name|ch
-decl_stmt|;
-comment|/* the actual character */
-define|#
-directive|define
-name|__STANDOUT
-value|0x01
-comment|/* Added characters are standout. */
-name|char
-name|attr
-decl_stmt|;
-comment|/* attributes of character */
-block|}
-name|__LDATA
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|__LDATASIZE
-value|(sizeof(__LDATA))
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-define|#
-directive|define
-name|__ISDIRTY
-value|0x01
-comment|/* Line is dirty. */
-define|#
-directive|define
-name|__ISPASTEOL
-value|0x02
-comment|/* Cursor is past end of line */
-define|#
-directive|define
-name|__FORCEPAINT
-value|0x04
-comment|/* Force a repaint of the line */
-name|u_int
-name|flags
-decl_stmt|;
-name|u_int
-name|hash
-decl_stmt|;
-comment|/* Hash value for the line. */
-name|size_t
-modifier|*
-name|firstchp
-decl_stmt|,
-modifier|*
-name|lastchp
-decl_stmt|;
-comment|/* First and last chngd columns ptrs */
-name|size_t
-name|firstch
-decl_stmt|,
-name|lastch
-decl_stmt|;
-comment|/* First and last changed columns. */
-name|__LDATA
-modifier|*
-name|line
-decl_stmt|;
-comment|/* Pointer to the line text. */
-block|}
-name|__LINE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|__window
-block|{
-comment|/* Window structure. */
-name|struct
-name|__window
-modifier|*
-name|nextp
-decl_stmt|,
-modifier|*
-name|orig
-decl_stmt|;
-comment|/* Subwindows list and parent. */
-name|size_t
-name|begy
-decl_stmt|,
-name|begx
-decl_stmt|;
-comment|/* Window home. */
-name|size_t
-name|cury
-decl_stmt|,
-name|curx
-decl_stmt|;
-comment|/* Current x, y coordinates. */
-name|size_t
-name|maxy
-decl_stmt|,
-name|maxx
-decl_stmt|;
-comment|/* Maximum values for curx, cury. */
-name|short
-name|ch_off
-decl_stmt|;
-comment|/* x offset for firstch/lastch. */
-name|__LINE
-modifier|*
-modifier|*
-name|lines
-decl_stmt|;
-comment|/* Array of pointers to the lines */
-name|__LINE
-modifier|*
-name|lspace
-decl_stmt|;
-comment|/* line space (for cleanup) */
-name|__LDATA
-modifier|*
-name|wspace
-decl_stmt|;
-comment|/* window space (for cleanup) */
-define|#
-directive|define
-name|__ENDLINE
-value|0x001
-comment|/* End of screen. */
-define|#
-directive|define
-name|__FLUSH
-value|0x002
-comment|/* Fflush(stdout) after refresh. */
-define|#
-directive|define
-name|__FULLLINE
-value|0x004
-comment|/* Line width = terminal width. */
-define|#
-directive|define
-name|__FULLWIN
-value|0x008
-comment|/* Window is a screen. */
-define|#
-directive|define
-name|__IDLINE
-value|0x010
-comment|/* Insert/delete sequences. */
-define|#
-directive|define
-name|__SCROLLWIN
-value|0x020
-comment|/* Last char will scroll window. */
-define|#
-directive|define
-name|__SCROLLOK
-value|0x040
-comment|/* Scrolling ok. */
-define|#
-directive|define
-name|__CLEAROK
-value|0x080
-comment|/* Clear on next refresh. */
-define|#
-directive|define
-name|__WSTANDOUT
-value|0x100
-comment|/* Standout window */
-define|#
-directive|define
-name|__LEAVEOK
-value|0x200
-comment|/* If curser left */
-name|u_int
-name|flags
-decl_stmt|;
-block|}
-name|WINDOW
-typedef|;
-end_typedef
 
 begin_comment
 comment|/* Termcap capabilities. */
@@ -659,6 +470,257 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* END BACKWARD COMPATIBILITY ONLY. */
+end_comment
+
+begin_comment
+comment|/* 7-bit ASCII characters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|unctrl
+parameter_list|(
+name|c
+parameter_list|)
+value|__unctrl[(c)& 0x7f]
+end_define
+
+begin_define
+define|#
+directive|define
+name|unctrllen
+parameter_list|(
+name|ch
+parameter_list|)
+value|__unctrllen[(ch)& 0x7f]
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__unctrl
+index|[
+literal|0x80
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Control strings. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|__unctrllen
+index|[
+literal|0x80
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Control strings length. */
+end_comment
+
+begin_comment
+comment|/*  * A window an array of __LINE structures pointed to by the 'lines' pointer.  * A line is an array of __LDATA structures pointed to by the 'line' pointer.  *  * IMPORTANT: the __LDATA structure must NOT induce any padding, so if new  * fields are added -- padding fields with *constant values* should ensure   * that the compiler will not generate any padding when storing an array of  *  __LDATA structures.  This is to enable consistent use of bcmp, and bcopy  * for comparing and copying arrays.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+name|ch
+decl_stmt|;
+comment|/* the actual character */
+define|#
+directive|define
+name|__STANDOUT
+value|0x01
+comment|/* Added characters are standout. */
+name|char
+name|attr
+decl_stmt|;
+comment|/* attributes of character */
+block|}
+name|__LDATA
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|__LDATASIZE
+value|(sizeof(__LDATA))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+define|#
+directive|define
+name|__ISDIRTY
+value|0x01
+comment|/* Line is dirty. */
+define|#
+directive|define
+name|__ISPASTEOL
+value|0x02
+comment|/* Cursor is past end of line */
+define|#
+directive|define
+name|__FORCEPAINT
+value|0x04
+comment|/* Force a repaint of the line */
+name|u_int
+name|flags
+decl_stmt|;
+name|u_int
+name|hash
+decl_stmt|;
+comment|/* Hash value for the line. */
+name|size_t
+modifier|*
+name|firstchp
+decl_stmt|,
+modifier|*
+name|lastchp
+decl_stmt|;
+comment|/* First and last chngd columns ptrs */
+name|size_t
+name|firstch
+decl_stmt|,
+name|lastch
+decl_stmt|;
+comment|/* First and last changed columns. */
+name|__LDATA
+modifier|*
+name|line
+decl_stmt|;
+comment|/* Pointer to the line text. */
+block|}
+name|__LINE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|__window
+block|{
+comment|/* Window structure. */
+name|struct
+name|__window
+modifier|*
+name|nextp
+decl_stmt|,
+modifier|*
+name|orig
+decl_stmt|;
+comment|/* Subwindows list and parent. */
+name|size_t
+name|begy
+decl_stmt|,
+name|begx
+decl_stmt|;
+comment|/* Window home. */
+name|size_t
+name|cury
+decl_stmt|,
+name|curx
+decl_stmt|;
+comment|/* Current x, y coordinates. */
+name|size_t
+name|maxy
+decl_stmt|,
+name|maxx
+decl_stmt|;
+comment|/* Maximum values for curx, cury. */
+name|short
+name|ch_off
+decl_stmt|;
+comment|/* x offset for firstch/lastch. */
+name|__LINE
+modifier|*
+modifier|*
+name|lines
+decl_stmt|;
+comment|/* Array of pointers to the lines */
+name|__LINE
+modifier|*
+name|lspace
+decl_stmt|;
+comment|/* line space (for cleanup) */
+name|__LDATA
+modifier|*
+name|wspace
+decl_stmt|;
+comment|/* window space (for cleanup) */
+define|#
+directive|define
+name|__ENDLINE
+value|0x001
+comment|/* End of screen. */
+define|#
+directive|define
+name|__FLUSH
+value|0x002
+comment|/* Fflush(stdout) after refresh. */
+define|#
+directive|define
+name|__FULLLINE
+value|0x004
+comment|/* Line width = terminal width. */
+define|#
+directive|define
+name|__FULLWIN
+value|0x008
+comment|/* Window is a screen. */
+define|#
+directive|define
+name|__IDLINE
+value|0x010
+comment|/* Insert/delete sequences. */
+define|#
+directive|define
+name|__SCROLLWIN
+value|0x020
+comment|/* Last char will scroll window. */
+define|#
+directive|define
+name|__SCROLLOK
+value|0x040
+comment|/* Scrolling ok. */
+define|#
+directive|define
+name|__CLEAROK
+value|0x080
+comment|/* Clear on next refresh. */
+define|#
+directive|define
+name|__WSTANDOUT
+value|0x100
+comment|/* Standout window */
+define|#
+directive|define
+name|__LEAVEOK
+value|0x200
+comment|/* If curser left */
+name|u_int
+name|flags
+decl_stmt|;
+block|}
+name|WINDOW
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Curses external declarations. */
 end_comment
 
@@ -723,39 +785,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-name|GT
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Gtty indicates tabs. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|NONL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Term can't hack LF doing a CR. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|UPPERCASE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Terminal is uppercase only. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
 modifier|*
 name|ttytype
 decl_stmt|;
@@ -763,35 +792,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Full name of current terminal. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__unctrl
-index|[
-literal|0x80
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Control strings. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|__unctrllen
-index|[
-literal|0x80
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Control strings length. */
 end_comment
 
 begin_define
@@ -933,7 +933,7 @@ name|insch
 parameter_list|(
 name|ch
 parameter_list|)
-value|)		winsch(stdscr, ch)
+value|)			winsch(stdscr, ch)
 end_define
 
 begin_define
@@ -997,7 +997,6 @@ name|da
 parameter_list|,
 name|co
 parameter_list|)
-define|\
 value|mvwaddbytes(stdscr, y, x, da, co)
 end_define
 
@@ -1109,7 +1108,7 @@ parameter_list|,
 name|co
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? \ 				    ERR : waddbytes(win, da, co))
+value|(wmove(win, y, x) == ERR ? ERR : waddbytes(win, da, co))
 end_define
 
 begin_define
@@ -1125,7 +1124,8 @@ name|x
 parameter_list|,
 name|ch
 parameter_list|)
-value|(wmove(win, y, x) == ERR ? \ 				    ERR : waddch(win, ch))
+define|\
+value|(wmove(win, y, x) == ERR ? ERR : waddch(win, ch))
 end_define
 
 begin_define
@@ -1142,7 +1142,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? \ 				    ERR : waddbytes(win, str, strlen(str)))
+value|(wmove(win, y, x) == ERR ? ERR : waddbytes(win, str, strlen(str)))
 end_define
 
 begin_define
@@ -1156,6 +1156,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
+define|\
 value|(wmove(win, y, x) == ERR ? ERR : wdelch(win))
 end_define
 
@@ -1170,6 +1171,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
+define|\
 value|(wmove(win, y, x) == ERR ? ERR : wgetch(win))
 end_define
 
@@ -1187,7 +1189,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? \ 				    ERR : wgetstr(win, str))
+value|(wmove(win, y, x) == ERR ? ERR : wgetstr(win, str))
 end_define
 
 begin_define
@@ -1201,6 +1203,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
+define|\
 value|(wmove(win, y, x) == ERR ? ERR : winch(win))
 end_define
 
@@ -1217,11 +1220,12 @@ name|x
 parameter_list|,
 name|c
 parameter_list|)
+define|\
 value|(wmove(win, y, x) == ERR ? ERR : winsch(win, c))
 end_define
 
 begin_comment
-comment|/* Random psuedo functions. */
+comment|/* Psuedo functions. */
 end_comment
 
 begin_define
@@ -1233,7 +1237,8 @@ name|win
 parameter_list|,
 name|bf
 parameter_list|)
-value|((bf) ? (win->flags |= __CLEAROK) : \ 				  (win->flags&= ~__CLEAROK))
+define|\
+value|((bf) ? (win->flags |= __CLEAROK) : (win->flags&= ~__CLEAROK))
 end_define
 
 begin_define
@@ -1245,31 +1250,8 @@ name|win
 parameter_list|,
 name|bf
 parameter_list|)
-value|((bf) ? (win->flags |= __FLUSH) : \ 				  (win->flags&= ~__FLUSH))
-end_define
-
-begin_define
-define|#
-directive|define
-name|scrollok
-parameter_list|(
-name|win
-parameter_list|,
-name|bf
-parameter_list|)
-value|((bf) ? (win->flags |= __SCROLLOK) : \ 				  (win->flags&= ~__SCROLLOK))
-end_define
-
-begin_define
-define|#
-directive|define
-name|leaveok
-parameter_list|(
-name|win
-parameter_list|,
-name|bf
-parameter_list|)
-value|((bf) ? (win->flags |= __LEAVEOK) : \ 				  (win->flags&= ~__LEAVEOK))
+define|\
+value|((bf) ? (win->flags |= __FLUSH) : (win->flags&= ~__FLUSH))
 end_define
 
 begin_define
@@ -1283,7 +1265,34 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
+define|\
 value|(y) = win->cury, (x) = win->curx
+end_define
+
+begin_define
+define|#
+directive|define
+name|leaveok
+parameter_list|(
+name|win
+parameter_list|,
+name|bf
+parameter_list|)
+define|\
+value|((bf) ? (win->flags |= __LEAVEOK) : (win->flags&= ~__LEAVEOK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|scrollok
+parameter_list|(
+name|win
+parameter_list|,
+name|bf
+parameter_list|)
+define|\
+value|((bf) ? (win->flags |= __SCROLLOK) : (win->flags&= ~__SCROLLOK))
 end_define
 
 begin_define
@@ -1293,24 +1302,13 @@ name|winch
 parameter_list|(
 name|win
 parameter_list|)
+define|\
 value|(win->lines[win->cury]->line[win->curx].ch& 0177)
 end_define
 
 begin_comment
 comment|/* Public function prototypes. */
 end_comment
-
-begin_decl_stmt
-name|void
-name|__cputchar
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1945,6 +1943,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|waddbytes
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|waddch
 name|__P
 argument_list|(
@@ -2205,6 +2221,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|vwprintw
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|_BSD_VA_LIST_
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2214,6 +2249,18 @@ end_ifdef
 begin_comment
 comment|/* Private function prototypes. */
 end_comment
+
+begin_decl_stmt
+name|void
+name|__cputchar
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -2310,7 +2357,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|tscroll
+name|__tscroll
 name|__P
 argument_list|(
 operator|(
@@ -2326,7 +2373,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|waddbytes
+name|__waddbytes
 name|__P
 argument_list|(
 operator|(
@@ -2335,6 +2382,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)
