@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Copyright (C) 2000 Benno Rice.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Benno Rice ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL TOOLS GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"openfirm.h"
+end_include
+
 begin_comment
 comment|/* Note: Must match the 'struct devdesc' in bootstrap.h */
 end_comment
@@ -23,24 +29,38 @@ union|union
 block|{
 struct|struct
 block|{
+name|phandle_t
+name|handle
+decl_stmt|;
+comment|/* OFW handle */
+name|unsigned
+name|long
+name|partoff
+decl_stmt|;
+comment|/* sector offset */
 name|int
 name|unit
 decl_stmt|;
+comment|/* disk number */
 name|char
 name|path
 index|[
 literal|64
 index|]
 decl_stmt|;
-name|int
-name|partition
-decl_stmt|;
+comment|/* OFW path */
 name|int
 name|slice
 decl_stmt|;
+comment|/* slice# */
+name|int
+name|partition
+decl_stmt|;
+comment|/* partition in slice */
 name|int
 name|bsize
 decl_stmt|;
+comment|/* block size */
 block|}
 name|ofwdisk
 struct|;
@@ -65,7 +85,7 @@ struct|;
 block|}
 name|d_kind
 union|;
-comment|/*  * Keeping this around so I know what came from the NetBSD stuff.  * I've made a wild guess as to what goes where, but I have no idea if it's  * right.  *  *	u_long partoff;  *	int bsize;  *	void *dmabuf;  */
+comment|/*  * Keeping this around so I know what came from the NetBSD stuff.  * I've made a wild guess as to what goes where, but I have no idea if it's  * right.  *  *	void *dmabuf;  */
 block|}
 struct|;
 end_struct
@@ -139,6 +159,23 @@ parameter_list|(
 name|void
 modifier|*
 name|vdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ofw_parseofwdev
+parameter_list|(
+name|struct
+name|ofw_devdesc
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|devspec
 parameter_list|)
 function_decl|;
 end_function_decl
