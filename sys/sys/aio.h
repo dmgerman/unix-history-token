@@ -12,7 +12,7 @@ name|_AIO_H_
 end_define
 
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: aio.h,v 1.1 1997/05/22 00:19:44 toor Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: aio.h,v 1.1 1997/06/16 12:10:21 dyson Exp $  */
 end_comment
 
 begin_include
@@ -456,6 +456,23 @@ name|struct
 name|timespec
 modifier|*
 name|tm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|aio_proc_rundown
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
