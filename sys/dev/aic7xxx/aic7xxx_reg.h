@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.7 1996/03/31 03:02:37 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx_reg.h,v 1.7 1996/03/31 03:02:37 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -2221,8 +2221,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCB_NEXT_WAITING
+name|SCB_TAG
 value|0x0b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_NEXT
+value|0x0ba
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PREV
+value|0x0bb
 end_define
 
 begin_ifdef
@@ -2577,15 +2591,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RETURN_1
-value|0x03e
+name|MAXOFFSET
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|SEND_SENSE
-value|0x80
+name|RETURN_1
+value|0x03f
 end_define
 
 begin_define
@@ -2599,28 +2613,42 @@ begin_define
 define|#
 directive|define
 name|SEND_SDTR
-value|0x80
+value|0x60
 end_define
 
 begin_define
 define|#
 directive|define
-name|SEND_REJ
+name|SEND_SENSE
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
+name|SEND_REJ
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PAGEDIN
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIGSTATE
-value|0x03f
+value|0x040
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAPARAMS
-value|0x040
+value|0x041
 end_define
 
 begin_comment
@@ -2631,14 +2659,14 @@ begin_define
 define|#
 directive|define
 name|SG_COUNT
-value|0x041
+value|0x042
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_NEXT
-value|0x042
+value|0x043
 end_define
 
 begin_comment
@@ -2649,35 +2677,35 @@ begin_define
 define|#
 directive|define
 name|SG_NEXT0
-value|0x042
-end_define
-
-begin_define
-define|#
-directive|define
-name|SG_NEXT1
 value|0x043
 end_define
 
 begin_define
 define|#
 directive|define
-name|SG_NEXT2
+name|SG_NEXT1
 value|0x044
 end_define
 
 begin_define
 define|#
 directive|define
-name|SG_NEXT3
+name|SG_NEXT2
 value|0x045
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCBCOUNT
+name|SG_NEXT3
 value|0x046
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCBCOUNT
+value|0x047
 end_define
 
 begin_comment
@@ -2688,7 +2716,7 @@ begin_define
 define|#
 directive|define
 name|COMP_SCBCOUNT
-value|0x047
+value|0x048
 end_define
 
 begin_comment
@@ -2699,7 +2727,7 @@ begin_define
 define|#
 directive|define
 name|QCNTMASK
-value|0x048
+value|0x049
 end_define
 
 begin_comment
@@ -2710,7 +2738,7 @@ begin_define
 define|#
 directive|define
 name|FLAGS
-value|0x049
+value|0x04a
 end_define
 
 begin_define
@@ -2737,7 +2765,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PAGE_SCBS
+name|PAGESCBS
 value|0x04
 end_define
 
@@ -2751,7 +2779,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXOFFSET
+name|SELECTED
 value|0x20
 end_define
 
@@ -2772,22 +2800,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACTIVE_A
-value|0x050
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACTIVE_B
-value|0x051
-end_define
-
-begin_define
-define|#
-directive|define
 name|SAVED_TCL
-value|0x052
+value|0x04b
 end_define
 
 begin_comment
@@ -2797,8 +2811,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACTIVE_A
+value|0x04c
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACTIVE_B
+value|0x04d
+end_define
+
+begin_define
+define|#
+directive|define
 name|WAITING_SCBH
-value|0x053
+value|0x04e
 end_define
 
 begin_comment
@@ -2809,7 +2837,7 @@ begin_define
 define|#
 directive|define
 name|DISCONNECTED_SCBH
-value|0x053
+value|0x04f
 end_define
 
 begin_comment
@@ -2821,6 +2849,20 @@ define|#
 directive|define
 name|SCB_LIST_NULL
 value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVED_LINKPTR
+value|0x050
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVED_SCBPTR
+value|0x051
 end_define
 
 begin_define
@@ -2944,6 +2986,13 @@ define|#
 directive|define
 name|MSG_BUS_DEVICE_RESET
 value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_ABORT_TAG
+value|0x0d
 end_define
 
 begin_define
