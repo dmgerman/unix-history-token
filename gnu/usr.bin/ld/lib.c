@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.6 1993/12/04 00:52:59 jkh Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.7 1993/12/11 11:58:27 jkh Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -2853,6 +2853,8 @@ name|prev
 operator|=
 name|subentry
 expr_stmt|;
+name|desc
+operator|=
 name|file_open
 argument_list|(
 name|entry

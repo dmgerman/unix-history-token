@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.2 1993/11/09 04:19:06 paul Exp $  */
+comment|/*  * $Id: warnings.c,v 1.3 1993/12/11 11:58:30 jkh Exp $  */
 end_comment
 
 begin_include
@@ -249,6 +249,22 @@ decl_stmt|,
 modifier|*
 name|supfile
 decl_stmt|;
+if|if
+condition|(
+name|entry
+operator|==
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+name|xmalloc
+argument_list|(
+literal|"NULL"
+argument_list|)
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|entry
