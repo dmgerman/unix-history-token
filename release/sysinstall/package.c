@@ -563,6 +563,9 @@ argument_list|,
 name|catch_pipe
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Adding %s%s\nfrom %s"
@@ -943,6 +946,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sigpipe_caught
@@ -1034,6 +1040,9 @@ block|}
 block|}
 else|else
 block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|variable_get
@@ -1072,6 +1081,8 @@ argument_list|)
 expr_stmt|;
 return|return
 name|ret
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function

@@ -1677,7 +1677,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"? Usage"
+literal|" Usage"
 block|,
 literal|"Quick start - How to use this menu system"
 block|,
@@ -1863,6 +1863,16 @@ literal|"usage"
 block|,
 block|{
 block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
+block|{
 literal|"1 README"
 block|,
 literal|"A general description of FreeBSD.  Read this!"
@@ -1954,16 +1964,6 @@ block|,
 name|NULL
 block|,
 name|docBrowser
-block|}
-block|,
-block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
 block|}
 block|,
 block|{
@@ -2296,6 +2296,16 @@ name|NULL
 block|,
 block|{
 block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
+block|{
 literal|"1 Type"
 block|,
 literal|"Select mouse protocol type"
@@ -2354,16 +2364,6 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
@@ -2404,10 +2404,20 @@ name|NULL
 block|,
 name|NULL
 block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 ifdef|#
 directive|ifdef
 name|__alpha__
-block|{
 block|{
 literal|"xf86config"
 block|,
@@ -2425,7 +2435,6 @@ block|}
 block|,
 else|#
 directive|else
-block|{
 block|{
 literal|"XF86Setup"
 block|,
@@ -2493,10 +2502,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXDesktops
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2517,6 +2529,16 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|"1 KDE"
 block|,
@@ -2612,10 +2634,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuMediaCDROM
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2638,10 +2663,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuMediaFloppy
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2662,10 +2690,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuMediaDOS
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -2692,10 +2723,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuMediaFTP
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4209,10 +4243,13 @@ name|NULL
 block|}
 block|}
 block|}
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuMediaTape
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4237,10 +4274,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuNetworkDevice
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4267,11 +4307,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The media selection menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuMedia
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4385,11 +4431,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The distributions menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4410,6 +4462,26 @@ block|,
 literal|"distributions"
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
 block|{
 literal|"All"
 block|,
@@ -4536,10 +4608,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSubDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4556,6 +4631,22 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
 block|{
 literal|"All"
 block|,
@@ -4978,10 +5069,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuDESDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5000,7 +5094,57 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"des"
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+literal|"All"
+block|,
+literal|"Select all of the below"
+block|,
+name|NULL
+block|,
+name|setDES
+block|}
+block|,
+block|{
+literal|"Reset"
+block|,
+literal|"Reset all of the below"
+block|,
+name|NULL
+block|,
+name|clearDES
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|" des"
 block|,
 literal|"Basic DES encryption services"
 block|,
@@ -5028,7 +5172,7 @@ name|__FreeBSD__
 operator|>
 literal|3
 block|{
-literal|"krb4"
+literal|" krb4"
 block|,
 literal|"KerberosIV authentication services"
 block|,
@@ -5053,9 +5197,9 @@ block|,
 else|#
 directive|else
 block|{
-literal|"krb"
+literal|" krb"
 block|,
-literal|"Kerberos encryption services"
+literal|"KerberosIV authentication services"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5078,9 +5222,9 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|"skerbero"
+literal|" skerbero"
 block|,
-literal|"Sources for Kerberos IV"
+literal|"Sources for Kerberos"
 block|,
 name|dmenuFlagCheck
 block|,
@@ -5101,7 +5245,7 @@ name|DIST_DES_SKERBEROS
 block|}
 block|,
 block|{
-literal|"ssecure"
+literal|" ssecure"
 block|,
 literal|"Sources for DES"
 block|,
@@ -5124,7 +5268,7 @@ name|DIST_DES_SSECURE
 block|}
 block|,
 block|{
-literal|"scrypto"
+literal|" scrypto"
 block|,
 literal|"Export controlled crypto sources"
 block|,
@@ -5147,7 +5291,34 @@ name|DIST_DES_SCRYPTO
 block|}
 block|,
 block|{
-literal|"Exit"
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSrcDistributions
+init|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Select the sub-components of src you wish to install."
+block|,
+literal|"Please check off those portions of the FreeBSD source tree\n"
+literal|"you wish to install (remember to use SPACE, not ENTER!)."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
@@ -5166,30 +5337,6 @@ block|,
 literal|'<'
 block|}
 block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-block|;
-name|DMenu
-name|MenuSrcDistributions
-operator|=
-block|{
-name|DMENU_CHECKLIST_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Select the sub-components of src you wish to install."
-block|,
-literal|"Please check off those portions of the FreeBSD source tree\n"
-literal|"you wish to install (remember to use SPACE, not ENTER!)."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
 block|{
 literal|"All"
 block|,
@@ -5570,10 +5717,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86Select
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -5587,6 +5737,16 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|"All"
 block|,
@@ -5653,6 +5813,33 @@ name|MenuXF86SelectFonts
 block|}
 block|,
 block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuXF86SelectCore
+init|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"XFree86 3.3.5 base distribution types"
+block|,
+literal|"Please check off the basic XFree86 components you wish to install.\n"
+literal|"Bin, lib, and set are recommended for a minimum installaion."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
 literal|"X Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
@@ -5672,30 +5859,6 @@ block|,
 literal|'<'
 block|}
 block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-block|;
-name|DMenu
-name|MenuXF86SelectCore
-operator|=
-block|{
-name|DMENU_CHECKLIST_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"XFree86 3.3.5 base distribution types"
-block|,
-literal|"Please check off the basic XFree86 components you wish to install.\n"
-literal|"Bin, lib, and set are recommended for a minimum installaion."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
 block|{
 literal|"All"
 block|,
@@ -6035,10 +6198,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectFonts
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6053,6 +6219,26 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
 block|{
 literal|"All"
 block|,
@@ -6226,10 +6412,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectServer
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -6247,6 +6436,26 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
 block|{
 literal|"All"
 block|,
@@ -6658,13 +6867,19 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__i386__
+end_ifdef
+
+begin_decl_stmt
 name|DMenu
 name|MenuXF86SelectPC98Server
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7006,12 +7221,18 @@ name|NULL
 block|}
 block|}
 block|}
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_decl_stmt
 name|DMenu
 name|MenuDiskDevices
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7037,10 +7258,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuHTMLDoc
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7055,6 +7279,16 @@ block|,
 literal|"html"
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|"1 Handbook"
 block|,
@@ -7096,25 +7330,21 @@ name|docShowDocument
 block|}
 block|,
 block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The main installation menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuInstallCustom
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7129,6 +7359,16 @@ block|,
 literal|"install"
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|"1 Options"
 block|,
@@ -7257,25 +7497,21 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* MBR type menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuMBRType
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -7365,11 +7601,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Final configuration menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuConfigure
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -7386,6 +7628,16 @@ block|,
 literal|"configure"
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|" Distributions"
 block|,
@@ -7592,24 +7844,17 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuStartup
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7626,6 +7871,26 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
 block|{
 literal|" APM"
 block|,
@@ -7887,10 +8152,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuNetworking
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -7908,6 +8176,26 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
 block|{
 literal|" Interfaces"
 block|,
@@ -8086,10 +8374,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuNTP
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -8363,10 +8654,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSyscons
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -8382,6 +8676,16 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|"1 Font"
 block|,
@@ -8458,24 +8762,17 @@ name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSysconsKeymap
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9117,10 +9414,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSysconsKeyrate
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9197,10 +9497,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSysconsSaver
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9383,10 +9686,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSysconsScrnmap
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9458,10 +9764,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSysconsFont
-operator|=
+init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
@@ -9601,10 +9910,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuUsermgmt
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -9618,6 +9930,16 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|"User"
 block|,
@@ -9639,24 +9961,17 @@ name|userAddGroup
 block|}
 block|,
 block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuFixit
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
@@ -9674,6 +9989,16 @@ block|,
 literal|"fixit"
 block|,
 block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
 block|{
 literal|"1 CDROM"
 block|,
@@ -9705,21 +10030,11 @@ name|installFixitHoloShell
 block|}
 block|,
 block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
 end_decl_stmt
 
 end_unit
