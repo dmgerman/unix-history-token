@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.36 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -823,26 +823,23 @@ case|:
 comment|/* 			**  Similar to previous case, but to system postmaster. 			*/
 name|q
 operator|=
-name|parseaddr
-argument_list|(
-literal|"postmaster"
-argument_list|,
-name|q
-argument_list|,
-literal|0
-argument_list|,
-literal|'\0'
-argument_list|,
 name|NULL
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|q
-operator|==
+name|sendtolist
+argument_list|(
+literal|"postmaster"
+argument_list|,
 name|NULL
+argument_list|,
+operator|&
+name|q
+argument_list|,
+name|e
+argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|syserr
