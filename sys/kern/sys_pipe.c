@@ -4885,7 +4885,27 @@ name|pipe
 operator|->
 name|pipe_ctime
 expr_stmt|;
-comment|/* 	 * Left as 0: st_dev, st_ino, st_nlink, st_uid, st_gid, st_rdev, 	 * st_flags, st_gen. 	 * XXX (st_dev, st_ino) should be unique. 	 */
+name|ub
+operator|->
+name|st_uid
+operator|=
+name|fp
+operator|->
+name|f_cred
+operator|->
+name|cr_uid
+expr_stmt|;
+name|ub
+operator|->
+name|st_gid
+operator|=
+name|fp
+operator|->
+name|f_cred
+operator|->
+name|cr_gid
+expr_stmt|;
+comment|/* 	 * Left as 0: st_dev, st_ino, st_nlink, st_rdev, st_flags, st_gen. 	 * XXX (st_dev, st_ino) should be unique. 	 */
 return|return
 literal|0
 return|;
