@@ -390,9 +390,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|tm
-modifier|*
+name|int
 name|gmtime_r
 name|__P
 argument_list|(
@@ -410,9 +408,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|tm
-modifier|*
+name|int
 name|localtime_r
 name|__P
 argument_list|(
