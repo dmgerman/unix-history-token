@@ -707,7 +707,8 @@ name|ref
 index|[
 name|chan
 index|]
-operator|--
+operator|=
+literal|0
 expr_stmt|;
 if|#
 directive|if
@@ -2377,6 +2378,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|*
+name|arg_i
+operator|!=
+name|AFMT_QUERY
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|wrch
 condition|)
 name|ret
@@ -2427,6 +2438,7 @@ name|AFMT_STEREO
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|arg_i
 operator|=
@@ -3356,6 +3368,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 break|break;
+comment|/*     	case SNDCTL_DSP_POST: 		if (wrch) { 			wrch->flags&= ~CHN_F_NOTRIGGER; 			chn_start(wrch, 1); 		} 		break; */
 case|case
 name|SNDCTL_DSP_MAPINBUF
 case|:
