@@ -2599,7 +2599,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * Allocate PTE overflow lists. 	 */
+comment|/* 	 * Allocate pv/overflow lists. 	 */
 end_comment
 
 begin_expr_stmt
