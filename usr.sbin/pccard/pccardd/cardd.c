@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.13.2.8 1998/03/09 12:22:56 jkh Exp $"
+literal|"$Id: cardd.c,v 1.13.2.9 1998/04/18 23:28:48 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,6 +1286,14 @@ operator|->
 name|config
 operator|==
 name|conf
+operator|&&
+name|conf
+operator|->
+name|driver
+operator|->
+name|inuse
+operator|==
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -1308,6 +1316,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|conf
+operator|->
+name|driver
+operator|->
+name|inuse
+operator|=
+literal|1
+expr_stmt|;
+name|conf
+operator|->
+name|inuse
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|conf
