@@ -4,7 +4,7 @@ comment|/* scsi: SCSI user library  */
 end_comment
 
 begin_comment
-comment|/* Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * This product includes software developed by HD Associates  * 4. Neither the name of the HD Associaates nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * $Id: scsi.c,v 1.1.1.1 1995/01/24 12:10:11 dufault Exp $  */
+comment|/* Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * This product includes software developed by HD Associates  * 4. Neither the name of the HD Associaates nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * $Id: scsi.c,v 1.2 1995/01/25 00:33:50 dufault Exp $  */
 end_comment
 
 begin_include
@@ -247,17 +247,6 @@ begin_comment
 comment|/*  * Decode: Decode the data section of a scsireq.  This decodes  * trivial grammar:  *  * fields : field fields  *        ;  *  * field : field_specifier  *       | control  *       ;  *  * control : 's' seek_value  *       | 's' '+' seek_value  *       ;  *  * seek_value : DECIMAL_NUMBER  *       | 'v'				// For indirect seek, i.e., value from the arg list  *       ;  *  * field_specifier : type_specifier field_width  *       | '{' NAME '}' type_specifier field_width  *       ;  *   * field_width : DECIMAL_NUMBER  *       ;  *  * type_specifier : 'i'	// Integral types (i1, i2, i3, i4)  *       | 'b'				// Bits  *       | 'c'				// Character arrays  *       | 'z'				// Character arrays with zeroed trailing spaces  *       ;  *  * Notes:  * 1. Integral types are swapped into host order.  * 2. Bit fields are allocated MSB to LSB to match the SCSI spec documentation.  * 3. 's' permits "seeking" in the string.  "s+DECIMAL" seeks relative to  *    DECIMAL; "sDECIMAL" seeks absolute to decimal.  * 4. 's' permits an indirect reference.  "sv" or "s+v" will get the  *    next integer value from the arg array.  * 5. Field names can be anything between the braces  *  * BUGS:  * i and b types are promoted to ints.  *  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ARG_PUT
-parameter_list|(
-name|ARG
-parameter_list|)
-define|\
-value|do \ { \ 	if (arg_put) \ 		(*arg_put)(puthook, letter, (void *)((long)(ARG)), 1, field_name); \ 	else \ 		*(va_arg(ap, int *)) = (ARG); \ } while (0)
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -303,7 +292,7 @@ name|ap
 parameter_list|)
 block|{
 name|int
-name|decoded
+name|assigned
 init|=
 literal|0
 decl_stmt|;
@@ -364,6 +353,14 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+define|#
+directive|define
+name|ARG_PUT
+parameter_list|(
+name|ARG
+parameter_list|)
+define|\
+value|do \ 	{ \ 		if (!suppress) \ 		{ \ 			if (arg_put) \ 				(*arg_put)(puthook, letter, \ 				(void *)((long)(ARG)), 1, field_name); \ 			else \ 				*(va_arg(ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
 name|u_char
 name|bits
 init|=
@@ -377,6 +374,13 @@ literal|0
 decl_stmt|;
 comment|/* Bits already shifted out */
 name|suppress
+operator|=
+literal|0
+expr_stmt|;
+name|field_name
+index|[
+literal|0
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -397,12 +401,50 @@ block|{
 case|case
 literal|' '
 case|:
+comment|/* White space */
 case|case
 literal|'\t'
+case|:
+case|case
+literal|'\r'
+case|:
+case|case
+literal|'\n'
+case|:
+case|case
+literal|'\f'
 case|:
 name|fmt
 operator|++
 expr_stmt|;
+break|break;
+case|case
+literal|'#'
+case|:
+comment|/* Comment */
+while|while
+condition|(
+operator|*
+name|fmt
+operator|&&
+operator|(
+operator|*
+name|fmt
+operator|!=
+literal|'\n'
+operator|)
+condition|)
+name|fmt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|fmt
+condition|)
+name|fmt
+operator|++
+expr_stmt|;
+comment|/* Skip '\n' */
 break|break;
 case|case
 literal|'*'
@@ -465,6 +507,10 @@ name|fmt
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fmt
+condition|)
 name|fmt
 operator|++
 expr_stmt|;
@@ -550,20 +596,10 @@ literal|0
 block|printf("shift %2d bits %02x value %02x width %2d mask %02x\n", 				shift, bits, value, width, mask[width]);
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|suppress
-condition|)
 name|ARG_PUT
 argument_list|(
 name|value
 argument_list|)
-expr_stmt|;
-else|else
-name|suppress
-operator|=
-literal|0
 expr_stmt|;
 name|shift
 operator|-=
@@ -602,21 +638,11 @@ block|{
 case|case
 literal|1
 case|:
-if|if
-condition|(
-operator|!
-name|suppress
-condition|)
 name|ARG_PUT
 argument_list|(
 operator|*
 name|databuf
 argument_list|)
-expr_stmt|;
-else|else
-name|suppress
-operator|=
-literal|0
 expr_stmt|;
 name|databuf
 operator|++
@@ -625,11 +651,6 @@ break|break;
 case|case
 literal|2
 case|:
-if|if
-condition|(
-operator|!
-name|suppress
-condition|)
 name|ARG_PUT
 argument_list|(
 operator|(
@@ -647,11 +668,6 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-else|else
-name|suppress
-operator|=
-literal|0
-expr_stmt|;
 name|databuf
 operator|+=
 literal|2
@@ -660,11 +676,6 @@ break|break;
 case|case
 literal|3
 case|:
-if|if
-condition|(
-operator|!
-name|suppress
-condition|)
 name|ARG_PUT
 argument_list|(
 operator|(
@@ -693,11 +704,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-else|else
-name|suppress
-operator|=
-literal|0
-expr_stmt|;
 name|databuf
 operator|+=
 literal|3
@@ -706,11 +712,6 @@ break|break;
 case|case
 literal|4
 case|:
-if|if
-condition|(
-operator|!
-name|suppress
-condition|)
 name|ARG_PUT
 argument_list|(
 operator|(
@@ -749,11 +750,6 @@ operator|+
 literal|3
 operator|)
 argument_list|)
-expr_stmt|;
-else|else
-name|suppress
-operator|=
-literal|0
 expr_stmt|;
 name|databuf
 operator|+=
@@ -893,18 +889,24 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-block|}
-else|else
-name|suppress
-operator|=
-literal|0
+name|assigned
+operator|++
 expr_stmt|;
+block|}
 name|databuf
 operator|+=
 name|width
 expr_stmt|;
-name|decoded
-operator|++
+name|field_name
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|suppress
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1000,9 +1002,6 @@ operator|+
 name|width
 expr_stmt|;
 comment|/* Absolute seek */
-name|decoded
-operator|++
-expr_stmt|;
 break|break;
 case|case
 literal|0
@@ -1028,7 +1027,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-name|decoded
+name|assigned
 return|;
 block|}
 end_function
@@ -1348,6 +1347,36 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'#'
+condition|)
+block|{
+while|while
+condition|(
+operator|*
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\n'
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+name|p
+operator|++
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
