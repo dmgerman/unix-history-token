@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, 1997 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	btreeop.c				5-Apr-97  *  */
+comment|/*  * Copyright (c) 1996, 1997 Shigio Yamaguchi. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Shigio Yamaguchi.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	btreeop.c				21-Apr-97  *  */
 end_comment
 
 begin_include
@@ -201,7 +201,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|dbcreate
+name|dbwrite
 name|__P
 argument_list|(
 operator|(
@@ -238,6 +238,36 @@ name|DB
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dbdel
+name|__P
+argument_list|(
+operator|(
+name|DB
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DB
+modifier|*
+name|db
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|key
 decl_stmt|;
 end_decl_stmt
 
@@ -316,7 +346,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-C][-K key][-b][-c cachesize][-l][-p psize][dbname]\n"
+literal|"usage: %s [-A][-C][-D key][-K key][-b][-c cachesize][-l][-p psize][dbname]\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -519,7 +549,7 @@ block|{
 name|char
 name|command
 init|=
-literal|0
+literal|'R'
 decl_stmt|;
 name|char
 modifier|*
@@ -536,6 +566,18 @@ name|info
 decl_stmt|;
 name|int
 name|c
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
 decl_stmt|;
 name|info
 operator|.
@@ -597,7 +639,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CK:bc:lp:"
+literal|"ACD:K:bc:lp:"
 argument_list|)
 operator|)
 operator|!=
@@ -612,13 +654,28 @@ block|{
 case|case
 literal|'K'
 case|:
+case|case
+literal|'D'
+case|:
 name|key
 operator|=
 name|optarg
 expr_stmt|;
 case|case
+literal|'A'
+case|:
+case|case
 literal|'C'
 case|:
+if|if
+condition|(
+name|command
+operator|!=
+literal|'R'
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|command
 operator|=
 name|c
@@ -691,23 +748,55 @@ index|]
 else|:
 name|dbdefault
 expr_stmt|;
+switch|switch
+condition|(
+name|command
+condition|)
+block|{
+case|case
+literal|'A'
+case|:
+case|case
+literal|'D'
+case|:
+name|flags
+operator|=
+name|O_RDWR
+operator||
+name|O_CREAT
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|flags
+operator|=
+name|O_RDWR
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+case|case
+literal|'R'
+case|:
+name|flags
+operator|=
+name|O_RDONLY
+expr_stmt|;
+break|break;
+block|}
 name|db
 operator|=
 name|dbopen
 argument_list|(
 name|dbname
 argument_list|,
-name|command
-operator|==
-literal|'C'
-condition|?
-name|O_RDWR
-operator||
-name|O_CREAT
-operator||
-name|O_TRUNC
-else|:
-name|O_RDONLY
+name|flags
 argument_list|,
 literal|0644
 argument_list|,
@@ -736,19 +825,35 @@ name|command
 condition|)
 block|{
 case|case
+literal|'A'
+case|:
+comment|/* Append records */
+case|case
 literal|'C'
 case|:
 comment|/* Create database */
-name|dbcreate
+name|dbwrite
 argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+comment|/* Delete records */
+name|dbdel
+argument_list|(
+name|db
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'K'
 case|:
-comment|/* Keyed search */
+comment|/* Keyed (indexed) read */
 name|dbkey
 argument_list|(
 name|db
@@ -757,8 +862,10 @@ name|key
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-comment|/* Scan all data */
+case|case
+literal|'R'
+case|:
+comment|/* sequencial Read */
 name|dbscan
 argument_list|(
 name|db
@@ -791,12 +898,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dbcreate: create database  *  *	i)	db  *	r)		0: normal  */
+comment|/*  * dbwrite: write to database  *  *	i)	db  *	r)		0: normal  */
 end_comment
 
 begin_function
 name|int
-name|dbcreate
+name|dbwrite
 parameter_list|(
 name|db
 parameter_list|)
@@ -829,7 +936,7 @@ name|char
 modifier|*
 name|c
 decl_stmt|;
-comment|/* 	 * Input file format: 	 * +------------------ 	 * |Key		Data\n 	 * |Key		Data\n 	 * 	. 	 * 	. 	 * - Key and Data are separated by blank('\t' or ' ').  	 * - Key cannot include blank. 	 * - Data can include blank. 	 * - Null Data not allowed. 	 */
+comment|/* 	 * Input file format: 	 * +------------------ 	 * |Key		Data\n 	 * |Key		Data\n 	 * 	. 	 * 	. 	 * - Key and Data are separated by blank('\t' or ' ').  	 * - Key cannot include blank. 	 * - Data can include blank. 	 * - Null Data not allowed. 	 * 	 * META record: 	 * You can write meta record by making key start with a ' '. 	 * You can read this record only by indexed read ('-K' option). 	 * +------------------ 	 * | __.VERSION 2 	 */
 while|while
 condition|(
 name|fgets
@@ -880,11 +987,35 @@ operator|!=
 literal|'\n'
 condition|)
 empty_stmt|;
-for|for
-control|(
 name|c
 operator|=
 name|buf
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+operator|==
+literal|' '
+condition|)
+block|{
+comment|/* META record */
+if|if
+condition|(
+operator|*
+operator|++
+name|c
+operator|==
+literal|' '
+condition|)
+name|die
+argument_list|(
+literal|"illegal format."
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
 init|;
 operator|*
 name|c
@@ -1206,7 +1337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dbscan: Scan all data  *  *	i)	db  *	r)		0: normal  *			1: not found  */
+comment|/*  * dbscan: Scan all records  *  *	i)	db  *	r)		0: normal  *			1: not found  */
 end_comment
 
 begin_function
@@ -1275,6 +1406,21 @@ name|R_NEXT
 argument_list|)
 control|)
 block|{
+comment|/* skip META record */
+if|if
+condition|(
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+name|key
+operator|.
+name|data
+operator|==
+literal|' '
+condition|)
+continue|continue;
 operator|(
 name|void
 operator|)
@@ -1303,6 +1449,86 @@ condition|)
 name|die
 argument_list|(
 literal|"db->seq failed."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * dbdel: Delete records  *  *	i)	db  *	i)	key	key  *	r)		0: normal  *			1: not found  */
+end_comment
+
+begin_function
+name|int
+name|dbdel
+parameter_list|(
+name|db
+parameter_list|,
+name|skey
+parameter_list|)
+name|DB
+modifier|*
+name|db
+decl_stmt|;
+name|char
+modifier|*
+name|skey
+decl_stmt|;
+block|{
+name|DBT
+name|key
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+name|key
+operator|.
+name|data
+operator|=
+name|skey
+expr_stmt|;
+name|key
+operator|.
+name|size
+operator|=
+name|strlen
+argument_list|(
+name|skey
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|status
+operator|=
+call|(
+modifier|*
+name|db
+operator|->
+name|del
+call|)
+argument_list|(
+name|db
+argument_list|,
+operator|&
+name|key
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|RET_ERROR
+condition|)
+name|die
+argument_list|(
+literal|"db->del failed."
 argument_list|)
 expr_stmt|;
 return|return
