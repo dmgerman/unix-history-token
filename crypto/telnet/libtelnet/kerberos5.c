@@ -816,7 +816,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|krb5_auth_setkeytype
+name|krb5_auth_con_setkeytype
 argument_list|(
 name|context
 argument_list|,

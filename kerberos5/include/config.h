@@ -38,28 +38,28 @@ begin_define
 define|#
 directive|define
 name|BINDIR
-value|"/usr/heimdal/bin"
+value|"/usr/bin"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIBDIR
-value|"/usr/heimdal/lib"
+value|"/usr/lib"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIBEXECDIR
-value|"/usr/heimdal/libexec"
+value|"/usr/libexec"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBINDIR
-value|"/usr/heimdal/sbin"
+value|"/usr/sbin"
 end_define
 
 begin_define
@@ -450,6 +450,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* define if you have a berkeley db1/2 library */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DB1
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have a berkeley db3 library */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DB3 */
+end_comment
+
+begin_comment
 comment|/* Define if you have the `dbm_firstkey' function. */
 end_comment
 
@@ -472,9 +491,12 @@ begin_comment
 comment|/* Define if you have the `dbopen' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_DBOPEN */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_DBOPEN
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<db_185.h> header file. */
@@ -504,15 +526,12 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `des_cbc_encrypt' function. */
+comment|/* define if you have ndbm compat in db */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_DES_CBC_ENCRYPT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_DB_NDBM */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<dirent.h> header file. */
@@ -559,6 +578,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the `ecalloc' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ECALLOC */
+end_comment
+
+begin_comment
 comment|/* Define if you have the `el_init' function. */
 end_comment
 
@@ -570,11 +597,27 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the `emalloc' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EMALLOC */
+end_comment
+
+begin_comment
 comment|/* define if your system declares environ */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_ENVIRON_DECLARATION */
+end_comment
+
+begin_comment
+comment|/* Define if you have the `erealloc' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_EREALLOC */
 end_comment
 
 begin_comment
@@ -620,6 +663,14 @@ directive|define
 name|HAVE_ERR_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the `estrdup' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ESTRDUP */
+end_comment
 
 begin_comment
 comment|/* Define if you have the `fchown' function. */
@@ -691,9 +742,12 @@ begin_comment
 comment|/* Define if el_init takes four arguments. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FOUR_VALUED_EL_INIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FOUR_VALUED_EL_INIT
+value|1
+end_define
 
 begin_comment
 comment|/* define if krb_put_int takes four arguments. */
@@ -1131,6 +1185,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the in6addr_loopback variable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_IN6ADDR_LOOPBACK
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the `inet_aton' function. */
 end_comment
 
@@ -1238,6 +1303,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the `issetugid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISSETUGID
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the `krb_disable_debug' function. */
 end_comment
 
@@ -1271,6 +1347,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<libutil.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBUTIL_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<limits.h> header file. */
 end_comment
 
@@ -1278,6 +1365,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the `logout' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOGOUT
 value|1
 end_define
 
@@ -1323,28 +1421,6 @@ comment|/* #undef HAVE_MAILLOCK_H */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `MD4_Init' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MD4_INIT
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the `MD5_Init' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MD5_INIT
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the `memmove' function. */
 end_comment
 
@@ -1352,6 +1428,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMMOVE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<memory.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMORY_H
 value|1
 end_define
 
@@ -1374,6 +1461,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_MKTIME
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have a ndbm library */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NDBM
 value|1
 end_define
 
@@ -1514,57 +1612,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<openssl/des.h> header file. */
+comment|/* Define if you have the `openpty' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_OPENSSL_DES_H
+name|HAVE_OPENPTY
 value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<openssl/md4.h> header file. */
+comment|/* define to use openssl's libcrypto */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_OPENSSL_MD4_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<openssl/md5.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPENSSL_MD5_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<openssl/rc4.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPENSSL_RC4_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the<openssl/sha.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_OPENSSL_SHA_H
+name|HAVE_OPENSSL
 value|1
 end_define
 
@@ -1711,17 +1776,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `RC4' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_RC4
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the `rcmd' function. */
 end_comment
 
@@ -1797,14 +1851,6 @@ directive|define
 name|HAVE_REVOKE
 value|1
 end_define
-
-begin_comment
-comment|/* Define if you have the<rpcsvc/dbm.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_RPCSVC_DBM_H */
-end_comment
 
 begin_comment
 comment|/* Define if you have the<rpcsvc/ypclnt.h> header file. */
@@ -2078,17 +2124,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the `SHA1_Init' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SHA1_INIT
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the<shadow.h> header file. */
 end_comment
 
@@ -2168,6 +2203,28 @@ comment|/* #undef HAVE_STANDARDS_H */
 end_comment
 
 begin_comment
+comment|/* Define if you have the<stdint.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<stdlib.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDLIB_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the `strcasecmp' function. */
 end_comment
 
@@ -2208,6 +2265,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRFTIME
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<strings.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRINGS_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<string.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRING_H
 value|1
 end_define
 
@@ -3308,14 +3387,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<winsock.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_WINSOCK_H */
-end_comment
-
-begin_comment
 comment|/* Define if you have the `writev' function. */
 end_comment
 
@@ -3444,22 +3515,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HESIOD */
-end_comment
-
-begin_comment
-comment|/* Define if you want to use the KDC as a kaserver. */
-end_comment
-
-begin_comment
-comment|/* #undef KASERVER */
-end_comment
-
-begin_comment
-comment|/* Define if you want support in hprop for reading kaserver databases */
-end_comment
-
-begin_comment
-comment|/* #undef KASERVER_DB */
 end_comment
 
 begin_comment
@@ -3782,7 +3837,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.3f"
+value|"0.4e"
 end_define
 
 begin_comment
@@ -4106,56 +4161,56 @@ begin_define
 define|#
 directive|define
 name|BINDIR
-value|"/usr/heimdal/bin"
+value|"/usr/bin"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIBDIR
-value|"/usr/heimdal/lib"
+value|"/usr/lib"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIBEXECDIR
-value|"/usr/heimdal/libexec"
+value|"/usr/libexec"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBINDIR
-value|"/usr/heimdal/sbin"
+value|"/usr/sbin"
 end_define
 
 begin_define
 define|#
 directive|define
 name|BINDIR
-value|"/usr/heimdal/bin"
+value|"/usr/bin"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIBDIR
-value|"/usr/heimdal/lib"
+value|"/usr/lib"
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIBEXECDIR
-value|"/usr/heimdal/libexec"
+value|"/usr/libexec"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBINDIR
-value|"/usr/heimdal/sbin"
+value|"/usr/sbin"
 end_define
 
 begin_define
@@ -4431,30 +4486,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Define NDBM if you are using the 4.3 ndbm library (which is part of  * libc).  If not defined, 4.2 dbm will be assumed.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_DBM_FIRSTKEY
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NDBM
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* telnet stuff ----------------------------------------------- */
 end_comment
 
@@ -4578,6 +4609,23 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ROKEN_RENAME
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"roken_rename.h"
+end_include
 
 begin_endif
 endif|#
