@@ -11513,6 +11513,14 @@ operator|=
 name|mss
 expr_stmt|;
 comment|/* 	 * If there's a pipesize, change the socket buffer to that size, 	 * don't change if sb_hiwat is different than default (then it 	 * has been changed on purpose with setsockopt). 	 * Make the socket buffers an integral number of mss units; 	 * if the mss is larger than the socket buffer, decrease the mss. 	 */
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11588,7 +11596,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sbreserve
+name|sbreserve_locked
 argument_list|(
 operator|&
 name|so
@@ -11603,11 +11611,27 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_maxseg
 operator|=
 name|mss
+expr_stmt|;
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11679,7 +11703,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sbreserve
+name|sbreserve_locked
 argument_list|(
 operator|&
 name|so
@@ -11694,6 +11718,14 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_rcv
+argument_list|)
+expr_stmt|;
 comment|/* 	 * While we're here, check the others too 	 */
 if|if
 condition|(
