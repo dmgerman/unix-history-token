@@ -308,6 +308,17 @@ name|ucp
 operator|->
 name|uc_mcontext
 operator|.
+name|mc_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|mcontext_t
+argument_list|)
+expr_stmt|;
+name|ucp
+operator|->
+name|uc_mcontext
+operator|.
 name|mc_rdi
 operator|=
 operator|(
