@@ -823,16 +823,6 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|cflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* discovered call graph, too */
-end_comment
-
-begin_decl_stmt
-name|bool
 name|Cflag
 decl_stmt|;
 end_decl_stmt
@@ -1286,10 +1276,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* 		findcalls(); */
-end_comment
 
 begin_function_decl
 name|void

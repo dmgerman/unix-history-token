@@ -822,15 +822,6 @@ modifier|*
 name|nfile
 parameter_list|)
 block|{
-if|if
-condition|(
-name|cflag
-operator|==
-literal|0
-condition|)
-block|{
-return|return;
-block|}
 name|textspace
 operator|=
 operator|(

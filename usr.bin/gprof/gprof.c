@@ -245,25 +245,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
-case|:
-if|#
-directive|if
-literal|0
-block|cflag = TRUE;
-else|#
-directive|else
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-c isn't supported on this architecture yet"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
-case|case
 literal|'d'
 case|:
 name|dflag
