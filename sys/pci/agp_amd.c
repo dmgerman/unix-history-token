@@ -477,10 +477,10 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"gatt -> ag_pdir %8x\n"
+literal|"gatt -> ag_pdir %p\n"
 argument_list|,
 operator|(
-name|vm_offset_t
+name|caddr_t
 operator|)
 name|gatt
 operator|->
