@@ -271,6 +271,7 @@ argument_list|,
 operator|&
 name|_monetary_using_locale
 argument_list|,
+operator|&
 name|_monetary_locale_buf
 argument_list|,
 literal|"LC_MONETARY"

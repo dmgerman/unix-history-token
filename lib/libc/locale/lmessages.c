@@ -128,6 +128,7 @@ argument_list|,
 operator|&
 name|_messages_using_locale
 argument_list|,
+operator|&
 name|_messages_locale_buf
 argument_list|,
 literal|"LC_MESSAGES"

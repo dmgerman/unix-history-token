@@ -49,6 +49,7 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+modifier|*
 parameter_list|,
 specifier|const
 name|char

@@ -142,6 +142,7 @@ argument_list|,
 operator|&
 name|_numeric_using_locale
 argument_list|,
+operator|&
 name|_numeric_locale_buf
 argument_list|,
 literal|"LC_NUMERIC"
