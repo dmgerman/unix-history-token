@@ -337,6 +337,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PS_BARRIER_WAIT
+case|:
+case|case
 name|PS_MUTEX_WAIT
 case|:
 case|case

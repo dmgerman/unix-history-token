@@ -361,6 +361,16 @@ name|state
 condition|)
 block|{
 case|case
+name|PS_BARRIER_WAIT
+case|:
+comment|/* 		 * XXX - The thread has reached the barrier. We can't 		 *	 "back it away" from the barrier. 		 */
+name|_thread_critical_enter
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PS_COND_WAIT
 case|:
 comment|/* 		 * Cache the address, since it will not be available 		 * after it has been backed out. 		 */
