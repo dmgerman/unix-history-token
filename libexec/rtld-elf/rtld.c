@@ -1848,6 +1848,12 @@ operator|->
 name|interp
 argument_list|)
 expr_stmt|;
+name|__progname
+operator|=
+name|obj_rtld
+operator|.
+name|path
+expr_stmt|;
 block|}
 name|digest_dynamic
 argument_list|(
