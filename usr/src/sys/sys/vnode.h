@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.61 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.62 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_comment
 comment|/*  * The vnode is the focus of all file activity in UNIX.  There is a  * unique vnode allocated for each active file, each current directory,  * each mounted-on file, text file, and the root.  */
@@ -148,14 +154,12 @@ name|v_mountb
 decl_stmt|;
 comment|/* vnode mountlist back */
 name|struct
-name|buf
-modifier|*
+name|list_entry
 name|v_cleanblkhd
 decl_stmt|;
 comment|/* clean blocklist head */
 name|struct
-name|buf
-modifier|*
+name|list_entry
 name|v_dirtyblkhd
 decl_stmt|;
 comment|/* dirty blocklist head */

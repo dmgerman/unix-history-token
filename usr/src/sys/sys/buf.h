@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|_BUF_H_
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
 
 begin_comment
 comment|/*  * The header for buffers in the buffer pool and otherwise used  * to describe a block i/o request is given here.  *  * Each buffer in the pool is usually doubly linked into 2 lists:  * hashed into a chain by<dev,blkno> so it can be located in the cache,  * and (usually) on (one of several) queues.  These lists are circular and  * doubly linked for easy removal.  *  * There are currently three queues for buffers:  *	one for buffers which must be kept permanently (super blocks)  * 	one for buffers containing ``useful'' information (the cache)  *	one for buffers containing ``non-useful'' information  *		(and empty buffers, pushed onto the front)  * The latter two queues contain the buffers which are available for  * reallocation, are kept in lru order.  When not on one of these queues,  * the buffers are ``checked out'' to drivers which use the available list  * pointers to keep track of them in their i/o active queues.  */
@@ -29,25 +35,20 @@ name|b_flags
 decl_stmt|;
 comment|/* too much goes here to describe */
 name|struct
-name|buf
-modifier|*
-name|b_forw
-decl_stmt|,
-modifier|*
-modifier|*
-name|b_back
+name|queue_entry
+name|b_hash
 decl_stmt|;
-comment|/* hash chain (2 way street) */
+comment|/* hash chain */
 name|struct
-name|buf
-modifier|*
-name|b_blockf
-decl_stmt|,
-modifier|*
-modifier|*
-name|b_blockb
+name|queue_entry
+name|b_vnbufs
 decl_stmt|;
 comment|/* associated vnode */
+name|struct
+name|queue_entry
+name|b_freelist
+decl_stmt|;
+comment|/* position on free list if not BUSY */
 name|struct
 name|buf
 modifier|*
@@ -57,7 +58,7 @@ modifier|*
 modifier|*
 name|b_actb
 decl_stmt|;
-comment|/* position on free list if not BUSY */
+comment|/* device driver I/O queue when BUSY */
 name|long
 name|b_bcount
 decl_stmt|;
@@ -66,11 +67,6 @@ name|long
 name|b_bufsize
 decl_stmt|;
 comment|/* size of allocated buffer */
-define|#
-directive|define
-name|b_active
-value|b_bcount
-comment|/* driver queue head: drive active */
 name|short
 name|b_error
 decl_stmt|;
@@ -150,11 +146,6 @@ name|long
 name|b_resid
 decl_stmt|;
 comment|/* words not transferred after error */
-define|#
-directive|define
-name|b_errcnt
-value|b_resid
-comment|/* while i/o in progress: # retries */
 name|struct
 name|proc
 modifier|*
@@ -214,6 +205,32 @@ comment|/* offset of end of valid region */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Defines for device drivers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|b_active
+value|b_bcount
+end_define
+
+begin_comment
+comment|/* driver queue head: drive active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|b_errcnt
+value|b_resid
+end_define
+
+begin_comment
+comment|/* while i/o in progress: # retries */
+end_comment
 
 begin_ifdef
 ifdef|#
