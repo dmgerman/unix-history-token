@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.44 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * This module is believed to contain source code proprietary to AT&T.  * Use and redistribution is subject to the Berkeley Software License  * Agreement and your Software Agreement with AT&T (Western Electric).  *  *	@(#)vfs_bio.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -229,6 +229,18 @@ expr_stmt|;
 name|bp
 operator|->
 name|b_dirtyend
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_validoff
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_validend
 operator|=
 literal|0
 expr_stmt|;
@@ -556,11 +568,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Operates like bread, but also starts I/O on the specified  * read-ahead block.  */
+comment|/*  * Operates like bread, but also starts I/O on the N specified  * read-ahead blocks.  */
 end_comment
 
 begin_macro
-name|breada
+name|breadn
 argument_list|(
 argument|vp
 argument_list|,
@@ -571,6 +583,8 @@ argument_list|,
 argument|rablkno
 argument_list|,
 argument|rabsize
+argument_list|,
+argument|num
 argument_list|,
 argument|cred
 argument_list|,
@@ -619,12 +633,20 @@ end_endif
 begin_decl_stmt
 name|daddr_t
 name|rablkno
+index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|rabsize
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|num
 decl_stmt|;
 end_decl_stmt
 
@@ -663,6 +685,10 @@ name|bp
 decl_stmt|,
 modifier|*
 name|rabp
+decl_stmt|;
+specifier|register
+name|int
+name|i
 decl_stmt|;
 name|bp
 operator|=
@@ -732,7 +758,7 @@ name|b_bufsize
 condition|)
 name|panic
 argument_list|(
-literal|"breada"
+literal|"breadn"
 argument_list|)
 expr_stmt|;
 if|if
@@ -806,18 +832,34 @@ name|blkno
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If there is a read-ahead block, start I/O on it too. 	 */
+comment|/* 	 * If there's read-ahead block(s), start I/O 	 * on them also (as above). 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|num
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
-operator|!
 name|incore
 argument_list|(
 name|vp
 argument_list|,
 name|rablkno
+index|[
+name|i
+index|]
 argument_list|)
 condition|)
-block|{
+continue|continue;
 name|rabp
 operator|=
 name|getblk
@@ -825,8 +867,14 @@ argument_list|(
 name|vp
 argument_list|,
 name|rablkno
+index|[
+name|i
+index|]
 argument_list|,
 name|rabsize
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 endif|#
@@ -859,9 +907,15 @@ argument_list|(
 name|vp
 argument_list|,
 name|rabsize
+index|[
+name|i
+index|]
 argument_list|)
 argument_list|,
 name|rablkno
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -929,9 +983,15 @@ argument_list|(
 name|vp
 argument_list|,
 name|rabsize
+index|[
+name|i
+index|]
 argument_list|)
 argument_list|,
 name|rablkno
+index|[
+name|i
+index|]
 argument_list|)
 expr_stmt|;
 name|p
@@ -2828,6 +2888,16 @@ operator|=
 name|bp
 operator|->
 name|b_dirtyend
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
+name|b_validoff
+operator|=
+name|bp
+operator|->
+name|b_validend
 operator|=
 literal|0
 expr_stmt|;
