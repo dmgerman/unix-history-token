@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.15 1996/12/26 03:33:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.16 1997/01/03 06:38:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1016,6 +1016,14 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|RunningAsInit
+condition|)
+return|return
+name|DITEM_SUCCESS
+return|;
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -1046,7 +1054,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Please insert the second CD-ROM and press return"
+literal|"Please insert the second FreeBSD CDROM and press return"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1063,6 +1071,9 @@ name|DITEM_SUCCESS
 operator|||
 operator|!
 name|mediaDevice
+operator|||
+operator|!
+name|mediaDevice
 operator|->
 name|init
 argument_list|(
@@ -1071,15 +1082,28 @@ argument_list|)
 condition|)
 block|{
 comment|/* If we can't initialize it, it's probably not a FreeBSD CDROM so punt on it */
+if|if
+condition|(
+name|mediaDevice
+condition|)
+block|{
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
+argument_list|)
+expr_stmt|;
 name|mediaDevice
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Unable to mount the CD-ROM - do you want to try again?"
+literal|"Unable to mount the CDROM - do you want to try again?"
 argument_list|)
 operator|!=
 literal|0
@@ -1088,6 +1112,8 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
+else|else
+break|break;
 block|}
 comment|/* Since the fixit code expects everything to be in /mnt2, and the CDROM mounting stuff /cdrom, do      * a little kludge dance here..      */
 if|if
@@ -1110,7 +1136,7 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
-comment|/*      * If /tmp points to /mnt2/tmp from a previous fixit floppy session, it's      * not very good for us if we point it to the CD-ROM now.  Rather make it      * a directory in the root MFS then.  Experienced admins will still be      * able to mount their disk's /tmp over this if they need.      */
+comment|/*      * If /tmp points to /mnt2/tmp from a previous fixit floppy session, it's      * not very good for us if we point it to the CDROM now.  Rather make it      * a directory in the root MFS then.  Experienced admins will still be      * able to mount their disk's /tmp over this if they need.      */
 if|if
 condition|(
 name|lstat
@@ -1172,7 +1198,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Warning: ldconfig could not create the ld.so hints file.\n"
-literal|"Dynamic executables from the CD-ROM likely won't work."
+literal|"Dynamic executables from the CDROM likely won't work."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1205,7 +1231,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Warning: could not create the symlink for ld.so.\n"
-literal|"Dynamic executables from the CD-ROM likely won't work."
+literal|"Dynamic executables from the CDROM likely won't work."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1215,7 +1241,14 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Please remove the CD-ROM now."
+literal|"Please remove the FreeBSD CDROM now."
+argument_list|)
+expr_stmt|;
+name|mediaDevice
+operator|->
+name|shutdown
+argument_list|(
+name|mediaDevice
 argument_list|)
 expr_stmt|;
 return|return
@@ -1237,6 +1270,14 @@ name|struct
 name|ufs_args
 name|args
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|RunningAsInit
+condition|)
+return|return
+name|DITEM_SUCCESS
+return|;
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -1363,6 +1404,13 @@ expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Please remove the fixit floppy now."
+argument_list|)
+expr_stmt|;
+name|unmount
+argument_list|(
+literal|"/mnt2"
+argument_list|,
+name|MNT_FORCE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1764,13 +1812,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|unmount
-argument_list|(
-literal|"/mnt2"
-argument_list|,
-name|MNT_FORCE
-argument_list|)
-expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -2409,6 +2450,56 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to add any initial user accounts to the system?\n"
+literal|"Adding at least one account for yourself at this stage is suggested\n"
+literal|"since working as the \"root\" user is dangerous (it is easy to do\n"
+literal|"things which adversely affect the entire system)."
+argument_list|)
+condition|)
+name|configUsers
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to set the system manager's password now?\n\n"
+literal|"This is the password you'll use to log in as \"root\"."
+argument_list|)
+condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|systemExecute
+argument_list|(
+literal|"passwd root"
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure

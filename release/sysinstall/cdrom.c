@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.26.2.2 1996/12/12 19:35:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.26.2.3 1997/01/03 06:38:04 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -106,7 +106,9 @@ modifier|*
 name|cp
 decl_stmt|;
 name|Boolean
-name|dontRead
+name|readInfo
+init|=
+name|TRUE
 decl_stmt|;
 if|if
 condition|(
@@ -157,10 +159,6 @@ expr_stmt|;
 name|cp
 operator|=
 name|NULL
-expr_stmt|;
-name|dontRead
-operator|=
-name|FALSE
 expr_stmt|;
 comment|/* If this cdrom's not already mounted or can't be mounted, yell */
 if|if
@@ -279,13 +277,18 @@ argument_list|,
 name|MNT_FORCE
 argument_list|)
 expr_stmt|;
+name|cdromMounted
+operator|=
+name|CD_UNMOUNTED
+expr_stmt|;
 return|return
 name|FALSE
 return|;
 block|}
-name|dontRead
+else|else
+name|readInfo
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 block|}
 name|cdromMounted
@@ -300,8 +303,7 @@ name|CD_ALREADY_MOUNTED
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|dontRead
+name|readInfo
 operator|&&
 operator|(
 name|DITEM_STATUS
@@ -342,19 +344,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|cdromMounted
-operator|!=
-name|CD_ALREADY_MOUNTED
-condition|)
-name|unmount
-argument_list|(
-literal|"/cdrom"
-argument_list|,
-name|MNT_FORCE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|!
 name|cp
 condition|)
@@ -371,11 +360,12 @@ else|else
 name|msgConfirm
 argument_list|(
 literal|"Warning: The version of the FreeBSD CD currently in the drive\n"
-literal|"(%s) does not match the version of this boot floppy\n"
+literal|"(%s) does not match the version of the boot floppy\n"
 literal|"(%s).\n\n"
-literal|"If this is intentional, then please visit the Options editor\n"
-literal|"to set the boot floppy version string to match that of the CD\n"
-literal|"before selecting it as an installation media."
+literal|"If this is intentional, to avoid this message in the future\n"
+literal|"please visit the Options editor to set the boot floppy version\n"
+literal|"string to match that of the CD before selecting it as your\n"
+literal|"installation media."
 argument_list|,
 name|cp
 argument_list|,
@@ -385,9 +375,31 @@ name|VAR_RELNAME
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"Would you like to try and use this CDROM anyway?"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|unmount
+argument_list|(
+literal|"/cdrom"
+argument_list|,
+name|MNT_FORCE
+argument_list|)
+expr_stmt|;
+name|cdromMounted
+operator|=
+name|CD_UNMOUNTED
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 name|msgDebug
 argument_list|(
@@ -558,12 +570,11 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-comment|/* Only undo it if we did it */
 if|if
 condition|(
 name|cdromMounted
-operator|!=
-name|CD_WE_MOUNTED_IT
+operator|==
+name|CD_UNMOUNTED
 condition|)
 return|return;
 name|msgDebug
@@ -607,7 +618,7 @@ else|else
 block|{
 name|msgDebug
 argument_list|(
-literal|"Unmount successful\n"
+literal|"Unmount of CDROM successful\n"
 argument_list|)
 expr_stmt|;
 name|cdromMounted
