@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  * $FreeBSD$  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -1982,7 +1996,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  * This is a IP packet.  */
+comment|/*  * This is an IP packet.  */
 name|ip
 operator|=
 operator|(
@@ -6070,7 +6084,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown service %s/%s"
+literal|"%s/%s: unknown service"
 argument_list|,
 name|str
 argument_list|,
@@ -6221,7 +6235,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown service %s/%s"
+literal|"%s/%s: unknown service"
 argument_list|,
 name|str
 argument_list|,
