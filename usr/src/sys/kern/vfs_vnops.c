@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.22	82/02/27	*/
+comment|/*	vfs_vnops.c	4.23	82/04/19	*/
+end_comment
+
+begin_comment
+comment|/* merged into kernel:	@(#)fio.c 2.2 4/8/82 */
 end_comment
 
 begin_include
@@ -30,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/filsys.h"
+file|"../h/fs.h"
 end_include
 
 begin_include
@@ -292,8 +296,6 @@ name|dev_t
 operator|)
 name|ip
 operator|->
-name|i_un
-operator|.
 name|i_rdev
 expr_stmt|;
 name|mode
@@ -432,8 +434,6 @@ operator|)
 operator|&&
 name|ip
 operator|->
-name|i_un
-operator|.
 name|i_rdev
 operator|==
 name|dev
@@ -520,8 +520,6 @@ name|dev_t
 operator|)
 name|ip
 operator|->
-name|i_un
-operator|.
 name|i_rdev
 expr_stmt|;
 name|maj
@@ -651,14 +649,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|getfs
-argument_list|(
 name|ip
 operator|->
-name|i_dev
-argument_list|)
+name|i_fs
 operator|->
-name|s_ronly
+name|fs_ronly
 operator|!=
 literal|0
 condition|)

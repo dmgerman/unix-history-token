@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	alloc.c	4.1	82/03/25	*/
-end_comment
-
-begin_comment
-comment|/* merged into kernel:	@(#)lfs_alloc.c 2.3 %G% */
-end_comment
-
-begin_comment
-comment|/* last monet version:	alloc.c	4.8	81/03/08	*/
+comment|/*	lfs_alloc.c	2.4	82/04/19	*/
 end_comment
 
 begin_include
@@ -56,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ndir.h"
+file|"../h/dir.h"
 end_include
 
 begin_include
@@ -339,7 +331,7 @@ expr_stmt|;
 if|if
 condition|(
 name|bno
-operator|==
+operator|<=
 literal|0
 condition|)
 goto|goto
@@ -459,9 +451,6 @@ name|bp
 decl_stmt|,
 modifier|*
 name|obp
-decl_stmt|;
-name|caddr_t
-name|cp
 decl_stmt|;
 name|int
 name|cg
@@ -635,11 +624,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|brealloc
+argument_list|(
 name|bp
-operator|->
-name|b_bcount
-operator|=
+argument_list|,
 name|nsize
+argument_list|)
 expr_stmt|;
 name|blkclr
 argument_list|(
@@ -698,11 +688,10 @@ expr_stmt|;
 if|if
 condition|(
 name|bno
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * make a new copy 		 */
 name|obp
 operator|=
 name|bread
@@ -759,54 +748,20 @@ argument_list|,
 name|nsize
 argument_list|)
 expr_stmt|;
-name|cp
-operator|=
+name|bcopy
+argument_list|(
+name|obp
+operator|->
+name|b_un
+operator|.
+name|b_addr
+argument_list|,
 name|bp
 operator|->
 name|b_un
 operator|.
 name|b_addr
-expr_stmt|;
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-operator|=
-name|obp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-expr_stmt|;
-name|obp
-operator|->
-name|b_un
-operator|.
-name|b_addr
-operator|=
-name|cp
-expr_stmt|;
-name|obp
-operator|->
-name|b_flags
-operator||=
-name|B_INVAL
-expr_stmt|;
-name|brelse
-argument_list|(
-name|obp
-argument_list|)
-expr_stmt|;
-name|fre
-argument_list|(
-name|ip
 argument_list|,
-name|bprev
-argument_list|,
-operator|(
-name|off_t
-operator|)
 name|osize
 argument_list|)
 expr_stmt|;
@@ -822,6 +777,23 @@ name|osize
 argument_list|,
 name|nsize
 operator|-
+name|osize
+argument_list|)
+expr_stmt|;
+name|brelse
+argument_list|(
+name|obp
+argument_list|)
+expr_stmt|;
+name|fre
+argument_list|(
+name|ip
+argument_list|,
+name|bprev
+argument_list|,
+operator|(
+name|off_t
+operator|)
 name|osize
 argument_list|)
 expr_stmt|;
@@ -2338,9 +2310,8 @@ expr_stmt|;
 if|if
 condition|(
 name|bno
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 return|return
 operator|(
@@ -2896,9 +2867,8 @@ expr_stmt|;
 if|if
 condition|(
 name|bno
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 return|return
 operator|(
@@ -3458,7 +3428,20 @@ argument_list|,
 name|bno
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bad block %d, ino %d\n"
+argument_list|,
+name|bno
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|bp
 operator|=
 name|bread
@@ -3549,11 +3532,24 @@ operator|->
 name|fs_frag
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"free block %d, fs %s\n"
+argument_list|,
+name|bno
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"free: freeing free block"
 argument_list|)
 expr_stmt|;
+block|}
 name|setblock
 argument_list|(
 name|fs
@@ -4738,6 +4734,13 @@ operator|->
 name|fs_size
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"bad block %d, "
+argument_list|,
+name|bn
+argument_list|)
+expr_stmt|;
 name|fserr
 argument_list|(
 name|fs
