@@ -786,6 +786,18 @@ comment|/* mark sequence number */
 end_comment
 
 begin_decl_stmt
+name|int
+name|created_lsock
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Flag if local socket created */
+end_comment
+
+begin_decl_stmt
 name|void
 name|cfline
 name|__P
@@ -1313,14 +1325,6 @@ argument_list|(
 name|TIMERINTVL
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|LogName
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|SUN_LEN
@@ -1451,6 +1455,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|created_lsock
+operator|=
+literal|1
+expr_stmt|;
 name|finet
 operator|=
 name|socket
@@ -4690,6 +4699,10 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|created_lsock
+condition|)
 operator|(
 name|void
 operator|)
