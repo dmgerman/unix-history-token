@@ -1026,7 +1026,7 @@ name|char
 modifier|*
 name|newstr
 decl_stmt|;
-name|char
+name|int
 name|str1_length
 init|=
 name|strlen
