@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"errno.h"
 end_include
 
 begin_include
@@ -2514,6 +2520,13 @@ name|flags
 init|=
 name|RTF_UP
 decl_stmt|;
+name|int
+name|ether_output
+argument_list|()
+decl_stmt|,
+name|arp_rtrequest
+argument_list|()
+decl_stmt|;
 name|oldaddr
 operator|=
 name|ia
@@ -2569,6 +2582,33 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_output
+operator|==
+name|ether_output
+condition|)
+block|{
+comment|/* XXX: Another Kludge */
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_rtrequest
+operator|=
+name|arp_rtrequest
+expr_stmt|;
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_flags
+operator||=
+name|RTF_CLONING
+expr_stmt|;
 block|}
 name|splx
 argument_list|(
