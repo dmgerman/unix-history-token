@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.c	6.1	83/07/29	*/
+comment|/*	if_uba.c	6.2	84/08/29	*/
 end_comment
 
 begin_include
@@ -12,49 +12,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cmap.h"
+file|"cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmmac.h"
+file|"vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_uba.h"
+file|"if_uba.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	6.4	84/07/23	*/
+comment|/*	if_ec.c	6.5	84/08/29	*/
 end_comment
 
 begin_include
@@ -22,55 +22,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/protosw.h"
+file|"protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/socket.h"
+file|"socket.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vmmac.h"
+file|"vmmac.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/errno.h"
+file|"errno.h"
 end_include
 
 begin_include
@@ -142,13 +142,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_ecreg.h"
+file|"if_ecreg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vaxif/if_uba.h"
+file|"if_uba.h"
 end_include
 
 begin_include
