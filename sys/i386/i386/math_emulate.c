@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.7 1994/01/29 22:07:16 nate Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.8 1994/04/26 22:51:48 ats Exp $  */
 end_comment
 
 begin_comment
@@ -557,6 +557,7 @@ case|:
 case|case
 literal|0x1d3
 case|:
+comment|/* fst to 32-bit mem */
 case|case
 literal|0x1d4
 case|:
@@ -628,7 +629,7 @@ expr_stmt|;
 case|case
 literal|0x1e4
 case|:
-comment|/* fxtract */
+comment|/* ftst */
 name|ftst
 argument_list|(
 name|PST
@@ -637,7 +638,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* ?????? */
 return|return
 operator|(
 literal|0
@@ -665,6 +665,7 @@ case|:
 case|case
 literal|0x1e7
 case|:
+comment|/* fldenv */
 name|math_abort
 argument_list|(
 name|info
@@ -818,45 +819,59 @@ expr_stmt|;
 case|case
 literal|0x1f0
 case|:
+comment|/* f2xm1 */
 case|case
 literal|0x1f1
 case|:
+comment|/* fyl2x */
 case|case
 literal|0x1f2
 case|:
+comment|/* fptan */
 case|case
 literal|0x1f3
 case|:
+comment|/* fpatan */
 case|case
 literal|0x1f4
 case|:
+comment|/* fxtract */
 case|case
 literal|0x1f5
 case|:
+comment|/* fprem1 */
 case|case
 literal|0x1f6
 case|:
+comment|/* fdecstp */
 case|case
 literal|0x1f7
 case|:
+comment|/* fincstp */
 case|case
 literal|0x1f8
 case|:
+comment|/* fprem */
 case|case
 literal|0x1f9
 case|:
+comment|/* fyl2xp1 */
 case|case
 literal|0x1fa
 case|:
+comment|/* fsqrt */
 case|case
 literal|0x1fb
 case|:
+comment|/* fsincos */
 case|case
 literal|0x1fe
 case|:
+comment|/* fsin */
 case|case
 literal|0x1ff
 case|:
+comment|/* fcos */
 name|uprintf
 argument_list|(
 literal|"math_emulate: instruction %04x not implemented\n"
