@@ -1563,7 +1563,7 @@ argument_list|(
 literal|"\rbut you'll have to do it yourself\r\n"
 argument_list|)
 expr_stmt|;
-name|finish
+name|exit
 argument_list|(
 literal|0
 argument_list|)
