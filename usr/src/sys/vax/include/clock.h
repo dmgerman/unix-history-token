@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	3.2	%G%	*/
+comment|/*	clock.h	3.3	%G%	*/
 end_comment
 
 begin_comment
@@ -49,20 +49,38 @@ name|ICCS_ERR
 value|0x80000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SECDAY
+value|((unsigned)(24*60*60))
+end_define
+
 begin_comment
-comment|/* THIS IS RIDICULOUS */
+comment|/* seconds per day */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|YRCURR
-value|1980
+name|SECYR
+value|((unsigned)(365*SECDAY))
 end_define
 
 begin_comment
-comment|/* current year */
+comment|/* per common year */
 end_comment
+
+begin_comment
+comment|/*  * TODRZERO is the what the TODR should contain when the ``year'' begins.  * The TODR should always contain a number between 0 and SECYR+SECDAY.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TODRZERO
+value|((unsigned)(1<<28))
+end_define
 
 begin_define
 define|#
@@ -71,42 +89,49 @@ name|YRREF
 value|1970
 end_define
 
+begin_define
+define|#
+directive|define
+name|LEAPYEAR
+parameter_list|(
+name|year
+parameter_list|)
+value|((year)%4==0&& year != 2000)
+end_define
+
 begin_comment
-comment|/* reference year for time */
+comment|/* good till 2100 */
+end_comment
+
+begin_comment
+comment|/*  * Start a 60 HZ clock.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SECHR
-value|(60*60)
+name|clkstart
+parameter_list|()
+value|{\ 	mtpr(NICR, -16667);
+comment|/* 16.667 milli-seconds */
+value|\ 	mtpr(ICCS, ICCS_RUN+ICCS_IE+ICCS_TRANS+ICCS_INT+ICCS_ERR);\ }
 end_define
-
-begin_comment
-comment|/* seconds/hr */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|SECDAY
-value|(24*SECHR)
+name|clkreld
+parameter_list|()
+value|mtpr(ICCS, ICCS_RUN+ICCS_IE+ICCS_INT+ICCS_ERR)
 end_define
-
-begin_comment
-comment|/* seconds/day */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|SECYR
-value|(365*SECDAY)
+name|clkwrap
+parameter_list|()
+value|(((unsigned)mfpr(TODR) - TODRZERO)/100> SECYR+SECDAY)
 end_define
-
-begin_comment
-comment|/* seconds/common year */
-end_comment
 
 end_unit
 
