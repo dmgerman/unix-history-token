@@ -1023,6 +1023,25 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|u_int32_t
+name|mn_parse_ts
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_function_decl
+specifier|static
 name|void
 name|m32_dump
 parameter_list|(
@@ -1049,19 +1068,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
-name|mn_parse_ts
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|mn_fmt_ts
 parameter_list|(
@@ -1074,6 +1080,15 @@ name|ts
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -2436,6 +2451,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -2583,6 +2604,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_comment
 comment|/*  * OUTPUT  */
@@ -3975,6 +4005,12 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/*  * Dump Munich32x state  */
 end_comment
@@ -4302,6 +4338,15 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_comment
 comment|/*  * Init Munich32x  */
