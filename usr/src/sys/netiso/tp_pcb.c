@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.8 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
+comment|/*   * ARGO TP  *  * $Header: tp_pcb.c,v 5.4 88/11/18 17:28:24 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_pcb.c,v $  *	@(#)tp_pcb.c	7.9 (Berkeley) %G% *  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
 end_comment
 
 begin_ifndef
@@ -146,20 +146,6 @@ include|#
 directive|include
 file|"tp_clnp.h"
 end_include
-
-begin_comment
-comment|/* list of reference structures */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|tp_ref
-name|tp_ref
-index|[
-name|N_TPREF
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1651,41 +1637,35 @@ name|r
 init|=
 name|tp_ref
 decl_stmt|;
+comment|/* tp_ref[0] is never used */
 specifier|register
 name|int
 name|i
 init|=
 literal|1
 decl_stmt|;
-name|r
-operator|++
-expr_stmt|;
-comment|/* tp_ref[0] is never used */
-comment|/* REF_FREE is zero */
 while|while
 condition|(
+operator|(
+operator|++
 name|r
+operator|)
 operator|->
 name|tpr_state
+operator|!=
+name|REF_FREE
 condition|)
 block|{
-name|r
-operator|++
-expr_stmt|;
 if|if
 condition|(
+operator|++
 name|i
 operator|==
 name|N_TPREF
 condition|)
-block|{
 return|return
 name|TP_ENOREF
 return|;
-block|}
-name|i
-operator|++
-expr_stmt|;
 block|}
 name|r
 operator|->
