@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  *
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	From Id: resolv.h,v 8.12 1998/04/28 19:36:46 halley Exp $  *	$Id: resolv.h,v 1.14 1997/09/01 01:19:10 brian Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	From Id: resolv.h,v 8.12 1998/04/28 19:36:46 halley Exp $  *	$Id: resolv.h,v 1.15 1998/06/11 08:55:13 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -798,20 +798,12 @@ name|fp_resstat
 value|__fp_resstat
 end_define
 
-begin_comment
-comment|/* XXX new divert */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|p_query
 value|__p_query
 end_define
-
-begin_comment
-comment|/* XXX new divert */
-end_comment
 
 begin_define
 define|#
@@ -904,10 +896,6 @@ name|p_section
 value|__p_section
 end_define
 
-begin_comment
-comment|/* XXX new func in 8.1 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -928,10 +916,6 @@ directive|define
 name|p_fqname
 value|__p_fqname
 end_define
-
-begin_comment
-comment|/* XXX p_rr gone */
-end_comment
 
 begin_define
 define|#
@@ -968,20 +952,12 @@ name|dn_expand
 value|__dn_expand
 end_define
 
-begin_comment
-comment|/* XXX unmasked */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|res_init
 value|__res_init
 end_define
-
-begin_comment
-comment|/* XXX unmasked */
-end_comment
 
 begin_define
 define|#
@@ -997,20 +973,12 @@ name|res_query
 value|__res_query
 end_define
 
-begin_comment
-comment|/* XXX unmasked */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|res_search
 value|__res_search
 end_define
-
-begin_comment
-comment|/* XXX unmasked */
-end_comment
 
 begin_define
 define|#
@@ -1019,10 +987,6 @@ name|res_querydomain
 value|__res_querydomain
 end_define
 
-begin_comment
-comment|/* XXX unmasked */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1030,20 +994,12 @@ name|res_mkquery
 value|__res_mkquery
 end_define
 
-begin_comment
-comment|/* XXX unmasked */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|res_send
 value|__res_send
 end_define
-
-begin_comment
-comment|/* XXX unmasked */
-end_comment
 
 begin_define
 define|#
@@ -1080,10 +1036,6 @@ name|res_mkupdate
 value|__res_mkupdate
 end_define
 
-begin_comment
-comment|/* XXX new func in 8.1 */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1091,20 +1043,12 @@ name|res_mkupdrec
 value|__res_mkupdrec
 end_define
 
-begin_comment
-comment|/* XXX new func in 8.1 */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|res_freeupdrec
 value|__res_freeupdrec
 end_define
-
-begin_comment
-comment|/* XXX new func in 8.1 */
-end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -1919,6 +1863,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX The following depend on the ns_updrec typedef in arpa/nameser.h */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_ARPA_NAMESER_H_
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|res_update
@@ -1985,6 +1939,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS
