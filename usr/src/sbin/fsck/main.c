@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.7 (Berkeley) %G%"
+literal|"@(#)main.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1174,6 +1174,26 @@ decl_stmt|,
 modifier|*
 name|unrawname
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inside
+index|[]
+decl_stmt|,
+name|around
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
+name|fragtbl
+index|[]
 decl_stmt|;
 end_decl_stmt
 
