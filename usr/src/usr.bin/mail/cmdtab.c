@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	1.7 %G%"
+literal|"@(#)cmdtab.c	1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,9 @@ name|elsecmd
 argument_list|()
 decl_stmt|,
 name|endifcmd
+argument_list|()
+decl_stmt|,
+name|mboxit
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -356,7 +359,7 @@ literal|0
 block|,
 literal|"mbox"
 block|,
-name|stouch
+name|mboxit
 block|,
 name|W
 operator||
