@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	groups.c	4.1	82/02/28	*/
+comment|/*	groups.c	4.2	82/09/11	*/
 end_comment
 
 begin_comment
@@ -80,10 +80,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|setgrp
+name|getgrp
 argument_list|(
-literal|0
-argument_list|,
 name|grps
 argument_list|)
 expr_stmt|;
