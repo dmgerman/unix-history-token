@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rindex.c	5.8 (Berkeley) %G%"
+literal|"@(#)rindex.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,7 @@ parameter_list|)
 endif|#
 directive|endif
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -104,6 +105,10 @@ name|ch
 condition|)
 name|save
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 expr_stmt|;
 if|if

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strftime.c	5.10 (Berkeley) %G%"
+literal|"@(#)strftime.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,20 @@ name|pt
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|_add
+argument_list|()
+decl_stmt|,
+name|_conv
+argument_list|()
+decl_stmt|,
+name|_secs
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|size_t
 name|strftime
@@ -212,19 +226,22 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|size_t
+name|maxsize
+decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|format
 decl_stmt|;
-name|size_t
-name|maxsize
-decl_stmt|;
+specifier|const
 name|struct
 name|tm
 modifier|*
 name|t
 decl_stmt|;
 block|{
+specifier|static
 name|size_t
 name|_fmt
 parameter_list|()

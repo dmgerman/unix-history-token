@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)index.c	5.6 (Berkeley) %G%"
+literal|"@(#)index.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -72,6 +78,7 @@ parameter_list|)
 endif|#
 directive|endif
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|p
@@ -96,6 +103,10 @@ name|ch
 condition|)
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 operator|)
 return|;

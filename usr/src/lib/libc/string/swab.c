@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swab.c	5.8 (Berkeley) %G%"
+literal|"@(#)swab.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,25 +53,28 @@ name|to
 parameter_list|,
 name|n
 parameter_list|)
+specifier|const
+name|void
+modifier|*
+name|from
+decl_stmt|;
+name|void
+modifier|*
+name|to
+decl_stmt|;
+specifier|register
+name|size_t
+name|n
+decl_stmt|;
+block|{
 specifier|register
 name|char
 modifier|*
-name|from
+name|fp
 decl_stmt|,
-decl|*
-name|to
+modifier|*
+name|tp
 decl_stmt|;
-end_function
-
-begin_decl_stmt
-specifier|register
-name|int
-name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 specifier|register
 name|unsigned
 name|long
@@ -84,10 +87,26 @@ expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
+name|fp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|from
+expr_stmt|;
+name|tp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|to
+expr_stmt|;
 define|#
 directive|define
 name|STEP
-value|temp = *from++,*to++ = *from++,*to++ = temp
+value|temp = *fp++,*tp++ = *fp++,*tp++ = temp
 comment|/* round to multiple of 8 */
 while|while
 condition|(
@@ -130,7 +149,7 @@ name|STEP
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

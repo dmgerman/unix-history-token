@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcmp.c	5.5 (Berkeley) %G%"
+literal|"@(#)bcmp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,24 +47,27 @@ begin_comment
 comment|/*  * bcmp -- vax cmpc3 instruction  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|bcmp
 argument_list|(
-name|b1
+argument|b1
 argument_list|,
-name|b2
+argument|b2
 argument_list|,
-name|length
+argument|length
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
+specifier|const
 name|void
-operator|*
+modifier|*
 name|b1
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|b2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|register
@@ -75,6 +78,14 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|p1
+decl_stmt|,
+modifier|*
+name|p2
+decl_stmt|;
 if|if
 condition|(
 name|length
@@ -86,15 +97,31 @@ operator|(
 literal|0
 operator|)
 return|;
+name|p1
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|b1
+expr_stmt|;
+name|p2
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|b2
+expr_stmt|;
 do|do
 if|if
 condition|(
 operator|*
-name|b1
+name|p1
 operator|++
 operator|!=
 operator|*
-name|b2
+name|p2
 operator|++
 condition|)
 break|break;

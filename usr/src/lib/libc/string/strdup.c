@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strdup.c	5.3 (Berkeley) %G%"
+literal|"@(#)strdup.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -62,6 +62,7 @@ name|strdup
 parameter_list|(
 name|str
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|str
@@ -73,10 +74,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|copy
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 name|len
 operator|=

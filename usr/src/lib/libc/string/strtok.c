@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strtok.c	5.7 (Berkeley) %G%"
+literal|"@(#)strtok.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,13 +62,13 @@ specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
 name|delim
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -122,6 +122,10 @@ for|for
 control|(
 name|spanp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|delim
 init|;
 operator|(
@@ -185,6 +189,10 @@ operator|++
 expr_stmt|;
 name|spanp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|delim
 expr_stmt|;
 do|do
@@ -242,7 +250,7 @@ do|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 end_unit
 

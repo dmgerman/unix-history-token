@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcat.c	5.5 (Berkeley) %G%"
+literal|"@(#)strcat.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,13 +56,13 @@ specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
 name|append
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -97,7 +97,7 @@ name|save
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

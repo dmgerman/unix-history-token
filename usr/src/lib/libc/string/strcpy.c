@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcpy.c	5.6 (Berkeley) %G%"
+literal|"@(#)strcpy.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -56,13 +62,13 @@ specifier|register
 name|char
 modifier|*
 name|to
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|register
+specifier|const
+name|char
+modifier|*
 name|from
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -92,7 +98,7 @@ name|save
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

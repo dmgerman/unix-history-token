@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bzero.c	5.6 (Berkeley) %G%"
+literal|"@(#)bzero.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,6 @@ name|b
 parameter_list|,
 name|length
 parameter_list|)
-specifier|register
 name|void
 modifier|*
 name|b
@@ -65,13 +64,23 @@ name|size_t
 name|length
 decl_stmt|;
 block|{
-while|while
-condition|(
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|b
+init|;
 name|length
 operator|--
-condition|)
+condition|;
+control|)
 operator|*
-name|b
+name|p
 operator|++
 operator|=
 literal|'\0'
