@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_output.c 1.5 81/10/29 */
+comment|/* ip_output.c 1.6 81/10/30 */
 end_comment
 
 begin_include
@@ -190,11 +190,17 @@ condition|(
 name|p
 operator|->
 name|ip_len
-operator|>
+operator|<=
 name|MTU
 condition|)
-block|{
-comment|/* must fragment */
+return|return
+operator|(
+name|ip_send
+argument_list|(
+name|p
+argument_list|)
+operator|)
+return|;
 if|if
 condition|(
 name|p
@@ -214,7 +220,6 @@ name|MTU
 operator|-
 name|hlen
 expr_stmt|;
-comment|/* maximum data length in fragment */
 name|len
 operator|=
 name|p
@@ -223,12 +228,10 @@ name|ip_len
 operator|-
 name|hlen
 expr_stmt|;
-comment|/* data length */
 name|off
 operator|=
 literal|0
 expr_stmt|;
-comment|/* fragment offset */
 name|m
 operator|=
 name|mp
@@ -240,7 +243,6 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* correct the header */
 name|p
 operator|->
 name|ip_off
@@ -249,7 +251,6 @@ name|off
 operator|>>
 literal|3
 expr_stmt|;
-comment|/* find the end of the fragment */
 name|i
 operator|=
 operator|-
@@ -297,7 +298,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* last fragment */
 name|p
 operator|->
 name|ip_off
@@ -317,12 +317,15 @@ name|i
 operator|+
 name|hlen
 expr_stmt|;
-break|break;
+return|return
+operator|(
+name|ip_send
+argument_list|(
+name|p
+argument_list|)
+operator|)
+return|;
 block|}
-else|else
-block|{
-comment|/* more fragments */
-comment|/* allocate header mbuf for next fragment */
 if|if
 condition|(
 operator|(
@@ -348,7 +351,6 @@ name|ip_off
 operator||=
 name|IP_MF
 expr_stmt|;
-comment|/* terminate fragment at 8 byte boundary (round down) */
 name|i
 operator|-=
 name|m
@@ -362,14 +364,12 @@ operator|&
 operator|~
 literal|7
 expr_stmt|;
-comment|/* fragment length */
 name|adj
 operator|=
 name|i
 operator|-
 name|rnd
 expr_stmt|;
-comment|/* leftover in mbuf */
 name|p
 operator|->
 name|ip_len
@@ -378,7 +378,6 @@ name|rnd
 operator|+
 name|hlen
 expr_stmt|;
-comment|/* setup header for next fragment and 				   append remaining fragment data */
 name|n
 operator|->
 name|m_next
@@ -413,7 +412,6 @@ name|hlen
 operator|+
 name|adj
 expr_stmt|;
-comment|/* copy old header to new */
 name|bcopy
 argument_list|(
 name|p
@@ -435,7 +433,6 @@ argument_list|,
 name|hlen
 argument_list|)
 expr_stmt|;
-comment|/* copy leftover data from previous frag */
 if|if
 condition|(
 name|adj
@@ -487,13 +484,11 @@ name|adj
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|ip_send
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* pass frag to local net level */
 name|p
 operator|=
 operator|(
@@ -512,7 +507,6 @@ operator|->
 name|m_off
 operator|)
 expr_stmt|;
-comment|/* -> new hdr */
 name|len
 operator|-=
 name|rnd
@@ -523,16 +517,6 @@ name|rnd
 expr_stmt|;
 block|}
 block|}
-return|return
-operator|(
-name|ip_send
-argument_list|(
-name|p
-argument_list|)
-operator|)
-return|;
-comment|/* pass datagram to local net level */
-block|}
 end_block
 
 begin_macro
@@ -541,10 +525,6 @@ argument_list|(
 argument|p
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* format header and send message to 1822 level */
-end_comment
 
 begin_decl_stmt
 name|struct
@@ -583,8 +563,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* ->header mbuf */
-comment|/* set up 1822 leader fields for transmit */
 name|l
 operator|=
 operator|(
@@ -605,7 +583,6 @@ operator|-
 name|L1822
 operator|)
 expr_stmt|;
-comment|/* 	l->i_hst = p->ip_dst.s_host; 	l->i_impno = p->ip_dst.s_imp; 	l->i_mlen = p->ip_len + L1822; 	l->i_link = IPLINK; 	l->i_type = 0; 	l->i_htype = 0; 	l->i_stype = 0; */
 if|if
 condition|(
 operator|(
@@ -656,7 +633,6 @@ name|i_type
 operator|=
 name|IPTYPE
 expr_stmt|;
-comment|/* finish ip leader by calculating checksum and doing 	   necessary byte-swapping  */
 name|p
 operator|->
 name|ip_sum
@@ -733,7 +709,6 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|IMPLOOP
-comment|/* put output message on queue */
 name|s
 operator|=
 name|splimp
@@ -773,7 +748,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* if no outstanding output, start some */
 if|if
 condition|(
 operator|!
@@ -788,7 +762,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* software looping: put msg chain on input queue */
 if|if
 condition|(
 name|imp_stat
@@ -826,157 +799,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_block
-
-begin_expr_stmt
-name|ip_setup
-argument_list|(
-name|up
-argument_list|,
-name|m
-argument_list|,
-name|len
-argument_list|)
-comment|/* setup an ip header for raw write */
-specifier|register
-expr|struct
-name|ucb
-operator|*
-name|up
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_SETUP
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMAXOFF
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-expr_stmt|;
-name|ip
-operator|=
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-operator|(
-operator|(
-name|int
-operator|)
-name|m
-operator|+
-name|m
-operator|->
-name|m_off
-operator|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_tos
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
-name|ip_id
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
-name|ip_p
-operator|=
-name|up
-operator|->
-name|uc_lolink
-expr_stmt|;
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|len
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_src
-operator|.
-name|s_addr
-operator|=
-name|n_lhost
-operator|.
-name|s_addr
-expr_stmt|;
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-operator|=
-name|up
-operator|->
-name|uc_host
-operator|->
-name|h_addr
-operator|.
-name|s_addr
-expr_stmt|;
 block|}
 end_block
 

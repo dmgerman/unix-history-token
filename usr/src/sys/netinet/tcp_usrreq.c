@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.16 81/10/30 */
+comment|/* tcp_usrreq.c 1.17 81/10/30 */
 end_comment
 
 begin_include
@@ -458,7 +458,7 @@ case|case
 name|LIS_CLS
 case|:
 comment|/* 1 */
-name|t_open
+name|tcp_open
 argument_list|(
 name|tp
 argument_list|,
@@ -474,14 +474,14 @@ case|case
 name|SYS_CLS
 case|:
 comment|/* 2 */
-name|t_open
+name|tcp_open
 argument_list|(
 name|tp
 argument_list|,
 name|ACTIVE
 argument_list|)
 expr_stmt|;
-name|send_ctl
+name|tcp_sndctl
 argument_list|(
 name|tp
 argument_list|)
@@ -495,7 +495,7 @@ case|case
 name|CLS_OPN
 case|:
 comment|/* 10 */
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -517,7 +517,7 @@ name|tc_flags
 operator||=
 name|TC_SND_FIN
 expr_stmt|;
-name|send_ctl
+name|tcp_sndctl
 argument_list|(
 name|tp
 argument_list|)
@@ -564,7 +564,7 @@ name|tp
 argument_list|)
 condition|)
 block|{
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -592,7 +592,7 @@ name|tc_flags
 operator||=
 name|TC_SND_FIN
 expr_stmt|;
-name|send_ctl
+name|tcp_sndctl
 argument_list|(
 name|tp
 argument_list|)
@@ -626,7 +626,7 @@ case|case
 name|SSS_RCV
 case|:
 comment|/* 42 */
-name|send_win
+name|tcp_sndwin
 argument_list|(
 name|tp
 argument_list|)
@@ -642,7 +642,7 @@ case|case
 name|CLS_NSY
 case|:
 comment|/* 44 */
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -664,12 +664,12 @@ name|tc_flags
 operator||=
 name|TC_SND_RST
 expr_stmt|;
-name|send_null
+name|tcp_sndnull
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -685,7 +685,7 @@ case|case
 name|CLS_ACT
 case|:
 comment|/* 47 */
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -781,7 +781,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|t_open
+name|tcp_open
 argument_list|(
 name|tp
 argument_list|,
@@ -970,7 +970,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -1697,7 +1697,7 @@ literal|0
 condition|)
 block|{
 comment|/* 35 */
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -1738,7 +1738,7 @@ name|tp
 argument_list|)
 condition|)
 block|{
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -1879,7 +1879,7 @@ operator|&
 name|TC_USR_CLOSED
 condition|)
 block|{
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.9 81/10/30 */
+comment|/* tcp_input.c 1.10 81/10/30 */
 end_comment
 
 begin_include
@@ -550,7 +550,7 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|send_rst
+name|tcp_sndrst
 argument_list|(
 name|tp
 argument_list|,
@@ -597,7 +597,7 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|send_rst
+name|tcp_sndrst
 argument_list|(
 name|tp
 argument_list|,
@@ -618,7 +618,7 @@ operator|&
 name|TH_RST
 condition|)
 block|{
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -732,7 +732,7 @@ goto|goto
 name|badseg
 goto|;
 default|default:
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -768,7 +768,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|send_rst
+name|tcp_sndrst
 argument_list|(
 name|tp
 argument_list|,
@@ -798,7 +798,7 @@ operator|->
 name|irs
 condition|)
 block|{
-name|send_null
+name|tcp_sndnull
 argument_list|(
 name|tp
 argument_list|)
@@ -1067,7 +1067,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|rcv_ctldat
+name|tcp_ctldat
 argument_list|(
 name|tp
 argument_list|,
@@ -1145,7 +1145,7 @@ goto|goto
 name|done
 goto|;
 block|}
-name|rcv_ctldat
+name|tcp_ctldat
 argument_list|(
 name|tp
 argument_list|,
@@ -1303,7 +1303,7 @@ name|TIME_WAIT
 case|:
 name|input
 label|:
-name|rcv_ctldat
+name|tcp_ctldat
 argument_list|(
 name|tp
 argument_list|,
@@ -1490,7 +1490,7 @@ operator|->
 name|seq_fin
 condition|)
 block|{
-name|rcv_ctldat
+name|tcp_ctldat
 argument_list|(
 name|tp
 argument_list|,
@@ -1515,7 +1515,7 @@ name|TC_WAITED_2_ML
 expr_stmt|;
 block|}
 else|else
-name|send_ctl
+name|tcp_sndctl
 argument_list|(
 name|tp
 argument_list|)
@@ -1549,7 +1549,7 @@ operator|&
 name|TH_FIN
 condition|)
 block|{
-name|rcv_ctldat
+name|tcp_ctldat
 argument_list|(
 name|tp
 argument_list|,
@@ -1605,7 +1605,7 @@ name|tp
 argument_list|)
 condition|)
 block|{
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -1658,7 +1658,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 16 */
-name|t_close
+name|tcp_close
 argument_list|(
 name|tp
 argument_list|,
@@ -1689,7 +1689,7 @@ operator|&
 name|TH_FIN
 condition|)
 block|{
-name|send_ctl
+name|tcp_sndctl
 argument_list|(
 name|tp
 argument_list|)
@@ -1732,7 +1732,7 @@ operator|->
 name|seq_fin
 condition|)
 block|{
-name|rcv_ctldat
+name|tcp_ctldat
 argument_list|(
 name|tp
 argument_list|,
@@ -2014,7 +2014,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|rcv_ctldat
+name|tcp_ctldat
 argument_list|(
 name|tp
 argument_list|,
@@ -2511,7 +2511,7 @@ name|t_len
 operator|!=
 literal|0
 condition|)
-name|rcv_text
+name|tcp_text
 argument_list|(
 name|tp
 argument_list|,
@@ -2806,7 +2806,7 @@ name|TC_ACK_DUE
 condition|)
 name|sent
 operator|=
-name|send_ctl
+name|tcp_sndctl
 argument_list|(
 name|tp
 argument_list|)
@@ -2943,7 +2943,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|rcv_text
+name|tcp_text
 argument_list|(
 name|tp
 argument_list|,
