@@ -18,15 +18,33 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)kvm.c	8.2 (Berkeley) 2/13/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)kvm.c	8.2 (Berkeley) 2/13/94"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -687,8 +705,6 @@ name|uf
 parameter_list|,
 name|mf
 parameter_list|,
-name|sf
-parameter_list|,
 name|flag
 parameter_list|,
 name|errout
@@ -707,11 +723,6 @@ specifier|const
 name|char
 modifier|*
 name|mf
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|sf
 decl_stmt|;
 name|int
 name|flag
@@ -845,16 +856,6 @@ condition|)
 name|mf
 operator|=
 name|_PATH_MEM
-expr_stmt|;
-if|if
-condition|(
-name|sf
-operator|==
-literal|0
-condition|)
-name|sf
-operator|=
-name|_PATH_DRUM
 expr_stmt|;
 if|if
 condition|(
@@ -1277,8 +1278,6 @@ name|uf
 argument_list|,
 name|mf
 argument_list|,
-name|sf
-argument_list|,
 name|flag
 argument_list|,
 name|errout
@@ -1407,8 +1406,6 @@ argument_list|,
 name|uf
 argument_list|,
 name|mf
-argument_list|,
-name|sf
 argument_list|,
 name|flag
 argument_list|,
