@@ -484,7 +484,7 @@ name|INTR_FAST
 condition|)
 name|flags
 operator||=
-name|INTR_FAST
+name|INTR_TYPE_FAST
 expr_stmt|;
 if|if
 condition|(
