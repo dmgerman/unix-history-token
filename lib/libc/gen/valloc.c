@@ -60,7 +60,7 @@ name|size_t
 name|i
 decl_stmt|;
 block|{
-name|int
+name|long
 name|valsiz
 init|=
 name|getpagesize
@@ -87,7 +87,7 @@ name|j
 operator|=
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|cp
 operator|+
