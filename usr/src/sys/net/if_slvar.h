@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_slvar.h	7.1	89/06/29	*/
+comment|/*	@(#)if_slvar.h	7.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
-comment|/*  * Definitions for SLIP "interface" data structure.  *  * (This exists so that programs can interpret the kernel data structures.)  */
+comment|/*  * Definitions for SLIP interface data structures  *   * (this exists so programs like slstats can get at the definition  *  of sl_softc.)  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
 end_comment
 
 begin_struct
@@ -16,69 +16,69 @@ name|ifnet
 name|sc_if
 decl_stmt|;
 comment|/* network-visible interface */
-name|short
-name|sc_flags
+name|struct
+name|ifqueue
+name|sc_fastq
 decl_stmt|;
-comment|/* see below */
-name|short
-name|sc_ilen
-decl_stmt|;
-comment|/* length of input-packet-so-far */
+comment|/* interactive output queue */
 name|struct
 name|tty
 modifier|*
 name|sc_ttyp
 decl_stmt|;
 comment|/* pointer to tty structure */
-name|char
+name|u_char
 modifier|*
 name|sc_mp
 decl_stmt|;
 comment|/* pointer to next available buf char */
-name|char
+name|u_char
+modifier|*
+name|sc_ep
+decl_stmt|;
+comment|/* pointer to last available buf char */
+name|u_char
 modifier|*
 name|sc_buf
 decl_stmt|;
 comment|/* input buffer */
+name|u_int
+name|sc_flags
+decl_stmt|;
+comment|/* see below */
+name|u_int
+name|sc_escape
+decl_stmt|;
+comment|/* =1 if last char input was FRAME_ESCAPE */
+name|u_int
+name|sc_bytessent
+decl_stmt|;
+name|u_int
+name|sc_bytesrcvd
+decl_stmt|;
 name|long
 name|sc_lasttime
 decl_stmt|;
-comment|/* last time a char arrived - seconds */
+comment|/* last time a char arrived */
 name|long
 name|sc_starttime
 decl_stmt|;
-comment|/* last time a char arrived - seconds */
+comment|/* last time a char arrived */
 name|long
 name|sc_abortcount
 decl_stmt|;
 comment|/* number of abort esacpe chars */
-ifdef|#
-directive|ifdef
-name|INET
 name|struct
 name|slcompress
 name|sc_comp
 decl_stmt|;
-comment|/* tcp compression state */
-endif|#
-directive|endif
+comment|/* tcp compression data */
 block|}
 struct|;
 end_struct
 
 begin_comment
 comment|/* flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_ESCAPED
-value|0x0001
-end_define
-
-begin_comment
-comment|/* saw a FRAME_ESCAPE */
 end_comment
 
 begin_define
@@ -112,17 +112,6 @@ end_define
 
 begin_comment
 comment|/* have been sent an abort request */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_OACTIVE
-value|0x0010
-end_define
-
-begin_comment
-comment|/* output is active */
 end_comment
 
 begin_comment
