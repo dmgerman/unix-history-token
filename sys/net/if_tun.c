@@ -312,7 +312,7 @@ name|OID_AUTO
 argument_list|,
 name|if_tun_debug
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|tundebug
