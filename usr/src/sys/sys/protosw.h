@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.8	81/12/12	*/
+comment|/*	protosw.h	4.9	81/12/21	*/
 end_comment
 
 begin_comment
-comment|/*  * Protocol switch table.  *  * Each protocol has a handle initializing one of these structures,  * which is used for protocol-protocol and system-protocol communication.  *  * A protocol is called through the pr_init entry before any other.  * Thereafter it is called every 100ms through the pr_fasttimo entry and  * every 500ms through the pr_slowtimo for timer based actions.  * The system will call the pr_drain entry if it is low on space and  * this should throw away any non-critical data.  *  * Protocols pass data between themselves as chains of mbufs using  * the pr_input and pr_output hooks.  Pr_input passes data up (towards  * UNIX) and pr_output passes it down (towards the imps); control  * information passes up and down on pr_ctlinput and pr_ctloutput.  * The protocol is responsible for the space occupied by any the  * arguments to these entries and must dispose it.  *  * The userreq routine interfaces protocols to the system and is  * described below.  */
+comment|/*  * Protocol switch table.  *  * Each protocol has a handle initializing one of these structures,  * which is used for protocol-protocol and system-protocol communication.  *  * A protocol is called through the pr_init entry before any other.  * Thereafter it is called every 200ms through the pr_fasttimo entry and  * every 500ms through the pr_slowtimo for timer based actions.  * The system will call the pr_drain entry if it is low on space and  * this should throw away any non-critical data.  *  * Protocols pass data between themselves as chains of mbufs using  * the pr_input and pr_output hooks.  Pr_input passes data up (towards  * UNIX) and pr_output passes it down (towards the imps); control  * information passes up and down on pr_ctlinput and pr_ctloutput.  * The protocol is responsible for the space occupied by any the  * arguments to these entries and must dispose it.  *  * The userreq routine interfaces protocols to the system and is  * described below.  */
 end_comment
 
 begin_struct
@@ -85,7 +85,7 @@ name|pr_fasttimo
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* fast timeout (100ms) */
+comment|/* fast timeout (200ms) */
 name|int
 function_decl|(
 modifier|*
@@ -121,11 +121,11 @@ begin_define
 define|#
 directive|define
 name|PR_FASTHZ
-value|10
+value|5
 end_define
 
 begin_comment
-comment|/* 10 fast timeouts per second */
+comment|/* 5 fast timeouts per second */
 end_comment
 
 begin_comment
@@ -339,7 +339,7 @@ value|13
 end_define
 
 begin_comment
-comment|/* 100ms timeout */
+comment|/* 200ms timeout */
 end_comment
 
 begin_define
