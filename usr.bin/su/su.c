@@ -258,6 +258,19 @@ name|passwd
 modifier|*
 name|pwd
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WHEELSU
+name|char
+modifier|*
+name|targetpass
+decl_stmt|;
+name|int
+name|iswheelsu
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* WHEELSU */
 name|char
 modifier|*
 name|p
@@ -342,6 +355,14 @@ operator|--
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WHEELSU
+name|iswheelsu
+operator|=
+endif|#
+directive|endif
+comment|/* WHEELSU */
 name|asme
 operator|=
 name|asthem
@@ -630,21 +651,31 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"su: unknown login %s\n"
+literal|"unknown login: %s"
 argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-name|exit
+block|}
+ifdef|#
+directive|ifdef
+name|WHEELSU
+name|targetpass
+operator|=
+name|strdup
 argument_list|(
-literal|1
+name|pwd
+operator|->
+name|pw_passwd
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
+comment|/* WHEELSU */
 if|if
 condition|(
 name|ruid
@@ -733,7 +764,19 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|WHEELSU
+name|iswheelsu
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* WHEELSU */
 break|break;
+block|}
 block|}
 comment|/* if target requires a password, verify it */
 if|if
@@ -747,6 +790,25 @@ block|{
 ifdef|#
 directive|ifdef
 name|SKEY
+ifdef|#
+directive|ifdef
+name|WHEELSU
+if|if
+condition|(
+name|iswheelsu
+condition|)
+block|{
+name|pwd
+operator|=
+name|getpwnam
+argument_list|(
+name|username
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* WHEELSU */
 name|p
 operator|=
 name|skey_getpass
@@ -760,6 +822,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+operator|!
 name|strcmp
 argument_list|(
 name|pwd
@@ -779,6 +844,30 @@ argument_list|,
 literal|1
 argument_list|)
 argument_list|)
+ifdef|#
+directive|ifdef
+name|WHEELSU
+operator|||
+operator|(
+name|iswheelsu
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|targetpass
+argument_list|,
+name|crypt
+argument_list|(
+name|p
+argument_list|,
+name|targetpass
+argument_list|)
+argument_list|)
+operator|)
+endif|#
+directive|endif
+comment|/* WHEELSU */
+operator|)
 condition|)
 block|{
 else|#
@@ -840,6 +929,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|WHEELSU
+if|if
+condition|(
+name|iswheelsu
+condition|)
+block|{
+name|pwd
+operator|=
+name|getpwnam
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* WHEELSU */
 block|}
 block|}
 block|}
