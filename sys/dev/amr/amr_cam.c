@@ -1748,6 +1748,8 @@ operator|->
 name|ac_flags
 operator||=
 name|AMR_CMD_DATAOUT
+operator||
+name|AMR_CMD_DATAIN
 expr_stmt|;
 name|ac
 operator|->
@@ -2049,7 +2051,7 @@ name|debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"status 0x%x  scsi_status 0x%x"
+literal|"status 0x%x  AP scsi_status 0x%x"
 argument_list|,
 name|ac
 operator|->
@@ -2347,7 +2349,7 @@ name|debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"status 0x%x  scsi_status 0x%x"
+literal|"status 0x%x  AEP scsi_status 0x%x"
 argument_list|,
 name|ac
 operator|->
