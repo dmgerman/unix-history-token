@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.32 1994/02/02 14:05:53 davidg Exp $  */
+comment|/*  * $Id: if_ed.c,v 1.33 1994/02/03 11:50:58 davidg Exp $  */
 end_comment
 
 begin_include
@@ -598,9 +598,9 @@ name|IRQ9
 block|,
 name|IRQ3
 block|,
-name|IRQ4
-block|,
 name|IRQ5
+block|,
+name|IRQ7
 block|,
 name|IRQ10
 block|,
