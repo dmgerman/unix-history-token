@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.64 1995/01/15 00:18:17 wollman Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.65 1995/01/23 19:06:06 davidg Exp $  */
 end_comment
 
 begin_include
@@ -879,7 +879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generic probe routine for testing for the existance of a DS8390.  *	Must be called after the NIC has just been reset. This routine  *	works by looking at certain register values that are gauranteed  *	to be initialized a certain way after power-up or reset. Seems  *	not to currently work on the 83C690.  *  * Specifically:  *  *	Register			reset bits	set bits  *	Command Register (CR)		TXP, STA	RD2, STP  *	Interrupt Status (ISR)				RST  *	Interrupt Mask (IMR)		All bits  *	Data Control (DCR)				LAS  *	Transmit Config. (TCR)		LB1, LB0  *  * We only look at the CR and ISR registers, however, because looking at  *	the others would require changing register pages (which would be  *	intrusive if this isn't an 8390).  *  * Return 1 if 8390 was found, 0 if not.  */
+comment|/*  * Generic probe routine for testing for the existance of a DS8390.  *	Must be called after the NIC has just been reset. This routine  *	works by looking at certain register values that are guaranteed  *	to be initialized a certain way after power-up or reset. Seems  *	not to currently work on the 83C690.  *  * Specifically:  *  *	Register			reset bits	set bits  *	Command Register (CR)		TXP, STA	RD2, STP  *	Interrupt Status (ISR)				RST  *	Interrupt Mask (IMR)		All bits  *	Data Control (DCR)				LAS  *	Transmit Config. (TCR)		LB1, LB0  *  * We only look at the CR and ISR registers, however, because looking at  *	the others would require changing register pages (which would be  *	intrusive if this isn't an 8390).  *  * Return 1 if 8390 was found, 0 if not.  */
 end_comment
 
 begin_function
