@@ -203,22 +203,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|FEEDER_RATE
+name|FEEDER_MIXER
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|FEEDER_FILTER
+name|FEEDER_RATE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|FEEDER_VOLUME
+name|FEEDER_FILTER
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FEEDER_VOLUME
+value|6
 end_define
 
 begin_define
