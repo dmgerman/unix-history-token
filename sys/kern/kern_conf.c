@@ -307,24 +307,6 @@ name|dead_dump
 value|(dumper_t *)enxio
 end_define
 
-begin_function
-specifier|static
-name|int
-name|dead_psize
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define
@@ -373,7 +355,7 @@ comment|/* dump */
 name|dead_dump
 block|,
 comment|/* psize */
-name|dead_psize
+name|nopsize
 block|,
 comment|/* flags */
 literal|0
