@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.5 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1437,6 +1437,12 @@ block|}
 name|head
 operator|.
 name|h_bcc
+operator|=
+name|NOSTR
+expr_stmt|;
+name|head
+operator|.
+name|h_smopts
 operator|=
 name|NOSTR
 expr_stmt|;
@@ -3349,14 +3355,32 @@ operator|)
 operator|!=
 name|NOSTR
 condition|)
+block|{
+if|if
+condition|(
+name|ap
+operator|!=
+name|argv
+condition|)
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s "
+literal|"%s"
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3713,6 +3737,12 @@ expr_stmt|;
 name|head
 operator|.
 name|h_bcc
+operator|=
+name|NOSTR
+expr_stmt|;
+name|head
+operator|.
+name|h_smopts
 operator|=
 name|NOSTR
 expr_stmt|;
