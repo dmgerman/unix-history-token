@@ -976,6 +976,8 @@ argument_list|,
 name|M_SYNCACHE
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the hash buckets. */
@@ -2490,6 +2492,8 @@ argument_list|,
 name|M_SONAME
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2501,17 +2505,6 @@ condition|)
 goto|goto
 name|abort
 goto|;
-name|bzero
-argument_list|(
-name|sin6
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sin6
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sin6
 operator|->
 name|sin6_family
@@ -2691,6 +2684,8 @@ argument_list|,
 name|M_SONAME
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3636,6 +3631,17 @@ return|;
 block|}
 block|}
 comment|/* 	 * Fill in the syncache values. 	 */
+name|bzero
+argument_list|(
+name|sc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sc
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_tp
