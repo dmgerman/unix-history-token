@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.54 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.55 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.54 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.55 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3173,10 +3173,17 @@ name|statp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|statp
 operator|!=
 name|EX_TEMPFAIL
+operator|&&
+operator|*
+name|statp
+operator|!=
+name|EX_NOHOST
+operator|)
 operator|||
 name|UseNameServer
 condition|)
