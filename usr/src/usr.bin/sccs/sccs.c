@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.66 %G%"
+literal|"@(#)sccs.c	1.67 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,12 +301,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CREATE
+name|ENTER
 value|8
 end_define
 
 begin_comment
-comment|/* create new files */
+comment|/* enter new files */
 end_comment
 
 begin_comment
@@ -661,13 +661,21 @@ name|NO_SDOT
 block|,
 literal|"get:ixrc -e -b/delta: -s -n -ybranch-place-holder/get:pl -e -t -g"
 block|,
-literal|"create"
+literal|"enter"
 block|,
-name|CREATE
+name|ENTER
 block|,
 name|NO_SDOT
 block|,
 name|NULL
+block|,
+literal|"create"
+block|,
+name|CMACRO
+block|,
+name|NO_SDOT
+block|,
+literal|"enter/get:ixbeskcl -t"
 block|,
 name|NULL
 block|,
@@ -2248,9 +2256,9 @@ name|EX_OSERR
 argument_list|)
 expr_stmt|;
 case|case
-name|CREATE
+name|ENTER
 case|:
-comment|/* create new sccs files */
+comment|/* enter new sccs files */
 comment|/* skip over flag arguments */
 for|for
 control|(
