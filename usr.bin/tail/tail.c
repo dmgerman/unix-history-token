@@ -677,7 +677,7 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
