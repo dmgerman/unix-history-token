@@ -479,7 +479,13 @@ name|smp_disabled
 operator|!=
 literal|0
 condition|)
+block|{
+name|mp_ncpus
+operator|=
+literal|1
+expr_stmt|;
 return|return;
+block|}
 name|mtx_init
 argument_list|(
 operator|&
