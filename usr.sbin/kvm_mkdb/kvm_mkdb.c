@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)kvm_mkdb.c	5.11 (Berkeley) 4/27/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.11 (Berkeley) 4/27/91"
+literal|"$Id"
 decl_stmt|;
 end_decl_stmt
 
