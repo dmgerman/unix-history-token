@@ -8929,32 +8929,21 @@ name|tp
 operator|->
 name|sack_enable
 condition|)
-block|{
+name|tcp_update_sack_list
+argument_list|(
 name|tp
-operator|->
-name|rcv_laststart
-operator|=
+argument_list|,
 name|th
 operator|->
 name|th_seq
-expr_stmt|;
-comment|/* last recv'd segment*/
-name|tp
-operator|->
-name|rcv_lastend
-operator|=
+argument_list|,
 name|th
 operator|->
 name|th_seq
 operator|+
 name|tlen
-expr_stmt|;
-name|tcp_update_sack_list
-argument_list|(
-name|tp
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Note the amount of data that peer has sent into 		 * our window, in order to estimate the sender's 		 * buffer size. 		 */
 name|len
 operator|=

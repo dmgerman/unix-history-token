@@ -566,14 +566,6 @@ name|snd_holes
 decl_stmt|;
 comment|/* linked list of holes (sorted) */
 name|tcp_seq
-name|rcv_laststart
-decl_stmt|;
-comment|/* start of last segment recd. */
-name|tcp_seq
-name|rcv_lastend
-decl_stmt|;
-comment|/* end of ... */
-name|tcp_seq
 name|rcv_lastsack
 decl_stmt|;
 comment|/* last seq number(+1) sack'd by rcv'r*/
@@ -2501,6 +2493,12 @@ name|struct
 name|tcpcb
 modifier|*
 name|tp
+parameter_list|,
+name|tcp_seq
+name|rcv_laststart
+parameter_list|,
+name|tcp_seq
+name|rcv_lastend
 parameter_list|)
 function_decl|;
 end_function_decl
