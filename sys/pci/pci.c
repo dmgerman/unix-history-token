@@ -4462,10 +4462,24 @@ name|rpb_type
 condition|)
 block|{
 case|case
-name|ST_DEC_21000
-case|:
-case|case
 name|ST_DEC_4100
+case|:
+name|mask
+operator|=
+literal|0xc0000000
+expr_stmt|;
+name|shift
+operator|=
+literal|30
+expr_stmt|;
+name|maxh
+operator|=
+literal|4
+expr_stmt|;
+comment|/* not a hose. MCPCIA instance # */
+break|break;
+case|case
+name|ST_DEC_21000
 case|:
 name|mask
 operator|=
