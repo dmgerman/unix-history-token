@@ -548,6 +548,15 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+name|PCMCIA_CARD
+argument_list|(
+name|DLINK
+argument_list|,
+name|DWL650H
+argument_list|,
+literal|0
+argument_list|)
+block|,
 name|PCMCIA_CARD2
 argument_list|(
 name|ELSA
