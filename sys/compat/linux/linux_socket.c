@@ -1655,7 +1655,7 @@ operator|)
 name|so
 operator|->
 name|so_emuldata
-operator|!=
+operator|==
 literal|0
 condition|)
 name|error
