@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)errlst.c	5.10 (Berkeley) %G%"
+literal|"@(#)errlst.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,9 +37,16 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
+specifier|const
 name|sys_errlist
 index|[]
 init|=
@@ -303,19 +310,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|int
 name|sys_nerr
 init|=
-block|{
 sizeof|sizeof
+argument_list|(
 name|sys_errlist
+argument_list|)
 operator|/
 sizeof|sizeof
+argument_list|(
 name|sys_errlist
 index|[
 literal|0
 index|]
-block|}
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
