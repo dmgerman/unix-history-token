@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.70	82/11/03	*/
+comment|/*	tcp_usrreq.c	1.71	83/01/08	*/
 end_comment
 
 begin_include
@@ -339,13 +339,15 @@ condition|)
 break|break;
 if|if
 condition|(
-operator|(
 name|so
 operator|->
 name|so_options
 operator|&
-name|SO_DONTLINGER
-operator|)
+name|SO_LINGER
+operator|&&
+name|so
+operator|->
+name|so_linger
 operator|==
 literal|0
 condition|)
