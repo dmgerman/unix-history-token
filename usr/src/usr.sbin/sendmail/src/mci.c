@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	5.2 (Berkeley) %G%"
+literal|"@(#)mci.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -367,7 +367,6 @@ name|mci
 decl_stmt|;
 specifier|extern
 name|ENVELOPE
-modifier|*
 name|BlankEnvelope
 decl_stmt|;
 name|mci

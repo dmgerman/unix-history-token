@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.20 (Berkeley) %G%"
+literal|"@(#)headers.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1608,12 +1608,19 @@ name|hbuf
 index|[
 literal|100
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|name
 init|=
 name|hbuf
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|inet_ntoa
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|RealHostName

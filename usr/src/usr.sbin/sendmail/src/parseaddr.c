@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.20 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,12 +94,6 @@ name|char
 modifier|*
 modifier|*
 name|pvp
-decl_stmt|;
-specifier|register
-name|struct
-name|mailer
-modifier|*
-name|m
 decl_stmt|;
 name|char
 name|pvpbuf

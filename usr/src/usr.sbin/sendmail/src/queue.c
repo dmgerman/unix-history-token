@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.43 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.44 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.43 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.44 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3060,9 +3060,6 @@ specifier|register
 name|FILE
 modifier|*
 name|qfp
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|ADDRESS
 modifier|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.60 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2564,17 +2564,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|DAEMON
-specifier|register
-name|STAB
-modifier|*
-name|st
-decl_stmt|;
-specifier|extern
-name|STAB
-modifier|*
-name|stab
-parameter_list|()
-function_decl|;
 specifier|register
 name|int
 name|i
