@@ -1372,7 +1372,7 @@ name|model
 operator|=
 name|model
 expr_stmt|;
-name|device_set_desc
+name|device_set_desc_copy
 argument_list|(
 name|dev
 argument_list|,
