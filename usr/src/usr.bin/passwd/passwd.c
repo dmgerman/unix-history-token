@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.35 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -1381,12 +1387,15 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|status
-decl_stmt|,
+name|union
+name|wait
+name|pstat
+decl_stmt|;
+name|pid_t
 name|pid
 decl_stmt|,
-name|w
+name|waitpid
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1418,34 +1427,27 @@ literal|127
 argument_list|)
 expr_stmt|;
 block|}
-while|while
-condition|(
-operator|(
-name|w
-operator|=
-name|wait
-argument_list|(
-operator|&
-name|status
-argument_list|)
-operator|)
-operator|!=
-name|pid
-operator|&&
-name|w
-operator|!=
-operator|-
-literal|1
-condition|)
-empty_stmt|;
 return|return
 operator|(
-name|w
+name|waitpid
+argument_list|(
+name|pid
+argument_list|,
+operator|&
+name|pstat
+argument_list|,
+literal|0
+argument_list|)
 operator|==
 operator|-
 literal|1
-operator|||
-name|status
+condition|?
+operator|-
+literal|1
+else|:
+name|pstat
+operator|.
+name|w_status
 operator|)
 return|;
 block|}
