@@ -256,18 +256,6 @@ name|EC_REQUEST
 typedef|;
 end_typedef
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|acpi_ec_softc
-name|acpi_ec_default
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* for the default EC handler */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
