@@ -1237,7 +1237,7 @@ name|G_PF_CANDELETE
 expr_stmt|;
 name|pp
 operator|->
-name|slicesize
+name|stripesize
 operator|=
 name|kp
 operator|->
@@ -1245,7 +1245,7 @@ name|zone_cont
 expr_stmt|;
 name|pp
 operator|->
-name|sliceoffset
+name|stripeoffset
 operator|=
 literal|0
 expr_stmt|;
