@@ -1851,14 +1851,6 @@ argument_list|(
 operator|&
 name|cflags
 argument_list|,
-literal|"-Wp,-$"
-argument_list|)
-expr_stmt|;
-name|appcstrg
-argument_list|(
-operator|&
-name|cflags
-argument_list|,
 literal|"-Wp,-C"
 argument_list|)
 expr_stmt|;
