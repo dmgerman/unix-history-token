@@ -808,12 +808,13 @@ comment|/* set dma channel mode, and reset address ff */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|CYRIX_5X86
-asm|asm("wbinvd");
-endif|#
-directive|endif
+if|if
+condition|(
+name|need_pre_dma_flush
+condition|)
+name|wbinvd
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
 comment|/* NetBSD/pc98 */
@@ -1043,20 +1044,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CYRIX_486DLC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|IBM_486SLC
-argument_list|)
-asm|asm(".byte 0x0f, 0x08");
-endif|#
-directive|endif
+if|if
+condition|(
+name|need_post_dma_flush
+condition|)
+name|invd
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
 if|if
