@@ -1066,10 +1066,20 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
+comment|/* for broken hardware */
 name|cmd
 operator|&=
 operator|~
 name|PCIM_CMD_MWRICEN
+expr_stmt|;
+name|cmd
+operator|&=
+operator|~
+operator|(
+name|PCIM_CMD_SERRESPEN
+operator||
+name|PCIM_CMD_PERRESPEN
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
