@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4020,7 +4020,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Create a core dump.  * The file name is "core.progname.pid".  * Core dumps are not created if the process is setuid.  */
+comment|/*  * Create a core dump.  * The file name is "core.progname".  * Core dumps are not created if the process is setuid.  */
 end_comment
 
 begin_expr_stmt
@@ -4092,10 +4092,10 @@ name|name
 index|[
 name|MAXCOMLEN
 operator|+
-literal|12
+literal|6
 index|]
 decl_stmt|;
-comment|/* core.progname.pid */
+comment|/* core.progname */
 if|if
 condition|(
 name|pcred
@@ -4152,15 +4152,11 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"core.%s.%d"
+literal|"core.%s"
 argument_list|,
 name|p
 operator|->
 name|p_comm
-argument_list|,
-name|p
-operator|->
-name|p_pid
 argument_list|)
 expr_stmt|;
 name|nd
@@ -4519,8 +4515,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
 name|error
 operator|=
