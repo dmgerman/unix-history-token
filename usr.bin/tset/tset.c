@@ -315,11 +315,6 @@ operator|&
 name|mode
 argument_list|)
 expr_stmt|;
-name|_set_ospeed
-argument_list|(
-name|Ospeed
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
