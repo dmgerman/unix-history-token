@@ -1038,6 +1038,11 @@ name|tda
 operator|->
 name|td_kse
 expr_stmt|;
+name|sched_rem
+argument_list|(
+name|tda
+argument_list|)
+expr_stmt|;
 name|tda
 operator|->
 name|td_kse
@@ -1063,11 +1068,6 @@ argument_list|,
 name|threadqueue
 argument_list|,
 name|td_runq
-argument_list|)
-expr_stmt|;
-name|sched_rem
-argument_list|(
-name|td
 argument_list|)
 expr_stmt|;
 block|}
