@@ -398,6 +398,43 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * We just sent and acked some data.  */
+end_comment
+
+begin_function
+name|void
+name|ring_sent_acked
+parameter_list|(
+name|ring
+parameter_list|,
+name|count
+parameter_list|)
+name|Ring
+modifier|*
+name|ring
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+block|{
+name|ring_sent
+argument_list|(
+name|ring
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
+name|ring_acked
+argument_list|(
+name|ring
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Buffer state query routines */
 end_comment
 

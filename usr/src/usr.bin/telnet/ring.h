@@ -155,6 +155,16 @@ argument_list|,
 name|int
 name|count
 argument_list|)
+decl_stmt|,
+name|ring_sent_acked
+argument_list|(
+name|Ring
+operator|*
+name|ring
+argument_list|,
+name|int
+name|count
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
