@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.14 (Berkeley) %G%"
+literal|"@(#)main.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,14 +130,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|sig_t
 name|intr
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|sig_t
 name|lostpeer
 parameter_list|()
 function_decl|;
@@ -379,6 +379,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* strip c.r. on ascii gets */
+name|sendport
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* not using ports */
 comment|/* 	 * Set up the home directory in case we're globbing. 	 */
 name|cp
 operator|=
@@ -543,12 +549,10 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|sig_t
 name|intr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|longjmp
 argument_list|(
@@ -558,14 +562,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|sig_t
 name|lostpeer
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|FILE
@@ -714,7 +716,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*char * tail(filename) 	char *filename; { 	register char *s; 	 	while (*filename) { 		s = rindex(filename, '/'); 		if (s == NULL) 			break; 		if (s[1]) 			return (s + 1); 		*s = '\0'; 	} 	return (filename); } */
@@ -1960,85 +1962,6 @@ name|c_help
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * Call routine with argc, argv set from args (terminated by 0).  */
-end_comment
-
-begin_comment
-comment|/*VARARGS1*/
-end_comment
-
-begin_macro
-name|call
-argument_list|(
-argument|routine
-argument_list|,
-argument|args
-argument_list|)
-end_macro
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|routine
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|int
-name|args
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|int
-modifier|*
-name|argp
-decl_stmt|;
-specifier|register
-name|int
-name|argc
-decl_stmt|;
-for|for
-control|(
-name|argc
-operator|=
-literal|0
-operator|,
-name|argp
-operator|=
-operator|&
-name|args
-init|;
-operator|*
-name|argp
-operator|++
-operator|!=
-literal|0
-condition|;
-name|argc
-operator|++
-control|)
-empty_stmt|;
-call|(
-modifier|*
-name|routine
-call|)
-argument_list|(
-name|argc
-argument_list|,
-operator|&
-name|args
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
