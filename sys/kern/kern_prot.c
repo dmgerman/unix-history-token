@@ -5937,6 +5937,41 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * 'conservative_signals' prevents the delivery of a broad class of  * signals by unprivileged processes to processes that have changed their  * credentials since the last invocation of execve().  This can prevent  * the leakage of cached information or retained privileges as a result  * of a common class of signal-related vulnerabilities.  However, this  * may interfere with some applications that expect to be able to  * deliver these signals to peer processes after having given up  * privilege.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|conservative_signals
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_bsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|conservative_signals
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|conservative_signals
+argument_list|,
+literal|0
+argument_list|,
+literal|"Unprivileged processes prevented from "
+literal|"sending certain signals to processes whose credentials have changed"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*-  * Determine whether cred may deliver the specified signal to proc.  * Returns: 0 for permitted, an errno value otherwise.  * Locks: A lock must be held for proc.  * References: cred and proc must be valid for the lifetime of the call.  */
 end_comment
 
@@ -6037,11 +6072,15 @@ return|;
 comment|/* 	 * UNIX signal semantics depend on the status of the P_SUGID 	 * bit on the target process.  If the bit is set, then additional 	 * restrictions are placed on the set of available signals. 	 */
 if|if
 condition|(
+name|conservative_signals
+operator|&&
+operator|(
 name|proc
 operator|->
 name|p_flag
 operator|&
 name|P_SUGID
+operator|)
 condition|)
 block|{
 switch|switch
@@ -6060,6 +6099,9 @@ name|SIGINT
 case|:
 case|case
 name|SIGTERM
+case|:
+case|case
+name|SIGALRM
 case|:
 case|case
 name|SIGSTOP
