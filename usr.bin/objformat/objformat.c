@@ -569,7 +569,7 @@ name|NULL
 condition|)
 name|objformat_path
 operator|=
-name|ROOTDIR
+literal|"/usr/libexec"
 expr_stmt|;
 name|path
 operator|=
