@@ -4601,15 +4601,6 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|char
-modifier|*
-name|tstr
-decl_stmt|,
-modifier|*
-name|tmpstr
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -9574,9 +9565,6 @@ block|{
 name|u_int
 name|freq
 decl_stmt|;
-name|u_int
-name|speed
-decl_stmt|;
 name|freq
 operator|=
 name|scsi_calc_syncsrate
@@ -10077,6 +10065,12 @@ operator|=
 literal|"soft reset alternative"
 expr_stmt|;
 break|break;
+default|default:
+name|str
+operator|=
+literal|"unknown PI bit set"
+expr_stmt|;
+break|break;
 block|}
 name|fprintf
 argument_list|(
@@ -10167,6 +10161,12 @@ name|str
 operator|=
 literal|"user has disabled initial BUS RESET or"
 literal|" controller is in target/mixed mode"
+expr_stmt|;
+break|break;
+default|default:
+name|str
+operator|=
+literal|"unknown PIM bit set"
 expr_stmt|;
 break|break;
 block|}
@@ -10274,6 +10274,12 @@ case|:
 name|str
 operator|=
 literal|"group 7 commands in target mode"
+expr_stmt|;
+break|break;
+default|default:
+name|str
+operator|=
+literal|"unknown PIT bit set"
 expr_stmt|;
 break|break;
 block|}
@@ -11480,21 +11486,10 @@ literal|1
 condition|)
 block|{
 name|int
-name|num_syncrates
-decl_stmt|;
-name|int
 name|prelim_sync_period
-decl_stmt|;
-name|int
-name|period_factor_set
-init|=
-literal|0
 decl_stmt|;
 name|u_int
 name|freq
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
