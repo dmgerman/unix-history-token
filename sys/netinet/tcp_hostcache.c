@@ -1547,7 +1547,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External function: lookup an entry in the hostcache and return the  * discovered path mtu.  Returns null if no entry found or value not is set.  */
+comment|/*  * External function: lookup an entry in the hostcache and return the  * discovered path mtu.  Returns null if no entry is found or value is not  * set.  */
 end_comment
 
 begin_function
