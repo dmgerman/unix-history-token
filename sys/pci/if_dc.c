@@ -10647,13 +10647,6 @@ name|dev
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|bus_child_present
-argument_list|(
-name|dev
-argument_list|)
-condition|)
 name|dc_stop
 argument_list|(
 name|sc
