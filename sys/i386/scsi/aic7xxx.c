@@ -842,7 +842,7 @@ parameter_list|,
 name|sc_link
 parameter_list|)
 define|\
-value|(((u_int32_t)(sc_link)->fordriver)& SELBUSB)
+value|(((u_int32_t)((sc_link)->fordriver)& SELBUSB) != 0)
 end_define
 
 begin_else
@@ -1093,7 +1093,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 name|__P
 argument_list|(
 operator|(
@@ -2565,7 +2565,7 @@ operator|)
 expr_stmt|;
 name|sxfrctl0
 operator||=
-name|ULTRAEN
+name|FAST20
 expr_stmt|;
 block|}
 else|else
@@ -2586,7 +2586,7 @@ expr_stmt|;
 name|sxfrctl0
 operator|&=
 operator|~
-name|ULTRAEN
+name|FAST20
 expr_stmt|;
 block|}
 name|ahc_outb
@@ -3410,6 +3410,11 @@ argument_list|,
 name|SCB_LIST_NULL
 argument_list|,
 name|XS_DRIVER_STUFFUP
+argument_list|)
+expr_stmt|;
+name|ahc_run_done_queue
+argument_list|(
+name|ahc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6394,6 +6399,11 @@ argument_list|,
 name|CLRBUSFREE
 argument_list|)
 expr_stmt|;
+name|restart_sequencer
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -6401,11 +6411,6 @@ argument_list|,
 name|CLRINT
 argument_list|,
 name|CLRSCSIINT
-argument_list|)
-expr_stmt|;
-name|restart_sequencer
-argument_list|(
-name|ahc
 argument_list|)
 expr_stmt|;
 block|}
@@ -8358,7 +8363,7 @@ name|DFON
 operator||
 name|SPIOEN
 operator||
-name|ULTRAEN
+name|FAST20
 argument_list|)
 expr_stmt|;
 else|else
@@ -8518,7 +8523,7 @@ name|DFON
 operator||
 name|SPIOEN
 operator||
-name|ULTRAEN
+name|FAST20
 argument_list|)
 expr_stmt|;
 else|else
@@ -9755,6 +9760,35 @@ name|control
 operator||=
 name|TAG_ENB
 expr_stmt|;
+if|if
+condition|(
+name|ahc
+operator|->
+name|orderedtag
+operator|&
+name|mask
+condition|)
+block|{
+comment|/* XXX this should be handled by the upper SCSI layer */
+name|printf
+argument_list|(
+literal|"Ordered Tag sent\n"
+argument_list|)
+expr_stmt|;
+name|hscb
+operator|->
+name|control
+operator||=
+name|MSG_ORDERED_Q_TAG
+expr_stmt|;
+name|ahc
+operator|->
+name|orderedtag
+operator|&=
+operator|~
+name|mask
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -9856,36 +9890,6 @@ operator|->
 name|flags
 operator||=
 name|SCB_MSGOUT_SDTR
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ahc
-operator|->
-name|orderedtag
-operator|&
-name|mask
-condition|)
-block|{
-comment|/* XXX this should be handled by the upper SCSI layer */
-name|printf
-argument_list|(
-literal|"Ordered Tag sent\n"
-argument_list|)
-expr_stmt|;
-name|hscb
-operator|->
-name|control
-operator||=
-name|MSG_ORDERED_Q_TAG
-expr_stmt|;
-name|ahc
-operator|->
-name|orderedtag
-operator|&=
-operator|~
-name|mask
 expr_stmt|;
 block|}
 if|#
@@ -11882,6 +11886,42 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * We could be starving this command 		 * try sending an ordered tag command 		 * to the target we come from. 		 */
+name|u_int16_t
+name|mask
+decl_stmt|;
+name|mask
+operator|=
+operator|(
+literal|0x01
+operator|<<
+operator|(
+name|scb
+operator|->
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|target
+operator||
+operator|(
+name|IS_SCSIBUS_B
+argument_list|(
+name|ahc
+argument_list|,
+name|scb
+operator|->
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+condition|?
+name|SELBUSB
+else|:
+literal|0
+operator|)
+operator|)
+operator|)
+expr_stmt|;
 name|scb
 operator|->
 name|flags
@@ -11892,7 +11932,7 @@ name|ahc
 operator|->
 name|orderedtag
 operator||=
-literal|0xFF
+name|mask
 expr_stmt|;
 name|timeout
 argument_list|(
@@ -11904,7 +11944,7 @@ operator|)
 name|scb
 argument_list|,
 operator|(
-literal|5
+literal|1
 operator|*
 name|hz
 operator|)
@@ -12273,7 +12313,7 @@ argument_list|,
 name|channel
 argument_list|)
 expr_stmt|;
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 argument_list|(
 name|ahc
 argument_list|,
@@ -12492,7 +12532,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 parameter_list|(
 name|ahc
 parameter_list|,
@@ -12538,7 +12578,7 @@ index|[
 name|AHC_SCB_MAX
 index|]
 decl_stmt|;
-name|u_int8_t
+name|int
 name|queued
 init|=
 name|ahc_inb
@@ -12573,6 +12613,12 @@ expr_stmt|;
 name|found
 operator|=
 literal|0
+expr_stmt|;
+name|STAILQ_INIT
+argument_list|(
+operator|&
+name|removed_scbs
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -12822,7 +12868,7 @@ expr_stmt|;
 comment|/* 	 * Remove any entries from the Queue-In FIFO. 	 */
 name|found
 operator|=
-name|ahc_search_qinfo
+name|ahc_search_qinfifo
 argument_list|(
 name|ahc
 argument_list|,
@@ -14052,9 +14098,6 @@ decl_stmt|;
 name|int
 name|target
 decl_stmt|;
-name|int
-name|maxtarget
-decl_stmt|;
 name|u_int8_t
 name|sblkctl
 decl_stmt|;
@@ -14065,10 +14108,6 @@ name|pause_sequencer
 argument_list|(
 name|ahc
 argument_list|)
-expr_stmt|;
-name|maxtarget
-operator|=
-literal|8
 expr_stmt|;
 comment|/* 	 * Clean up all the state information for the 	 * pending transactions on this bus. 	 */
 name|found
@@ -14161,10 +14200,6 @@ operator|->
 name|wdtrpending
 operator|=
 literal|0
-expr_stmt|;
-name|maxtarget
-operator|=
-literal|16
 expr_stmt|;
 name|offset
 operator|=
