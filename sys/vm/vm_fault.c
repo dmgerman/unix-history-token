@@ -3047,10 +3047,6 @@ name|object
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|curthread
-operator|||
-operator|(
 name|pmap
 operator|!=
 name|vmspace_pmap
@@ -3061,7 +3057,6 @@ name|td_proc
 operator|->
 name|p_vmspace
 argument_list|)
-operator|)
 condition|)
 return|return;
 name|object
