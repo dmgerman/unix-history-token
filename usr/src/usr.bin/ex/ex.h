@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.9.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ex.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1781,7 +1781,7 @@ end_function_decl
 
 begin_function_decl
 name|var
-name|int
+name|void
 function_decl|(
 modifier|*
 name|oldhup
@@ -2160,7 +2160,7 @@ end_function_decl
 
 begin_function_decl
 name|var
-name|int
+name|void
 function_decl|(
 modifier|*
 name|oldquit

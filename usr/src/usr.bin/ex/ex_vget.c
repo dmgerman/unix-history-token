@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ex_vget.c	6.12 (Berkeley) %G%"
+literal|"@(#)ex_vget.c	6.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2555,7 +2555,7 @@ name|int
 name|trapalarm
 parameter_list|()
 function_decl|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|Oint
