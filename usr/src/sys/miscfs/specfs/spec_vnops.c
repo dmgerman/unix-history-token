@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.42 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -618,6 +618,8 @@ name|bp
 decl_stmt|;
 name|daddr_t
 name|bn
+decl_stmt|,
+name|nextbn
 decl_stmt|;
 name|long
 name|bsize
@@ -899,9 +901,16 @@ name|bscale
 operator|==
 name|bn
 condition|)
+block|{
+name|nextbn
+operator|=
+name|bn
+operator|+
+name|bscale
+expr_stmt|;
 name|error
 operator|=
-name|breada
+name|breadn
 argument_list|(
 name|vp
 argument_list|,
@@ -912,14 +921,17 @@ name|int
 operator|)
 name|bsize
 argument_list|,
-name|bn
-operator|+
-name|bscale
+operator|&
+name|nextbn
 argument_list|,
 operator|(
 name|int
+operator|*
 operator|)
+operator|&
 name|bsize
+argument_list|,
+literal|1
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -927,6 +939,7 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|error
 operator|=
