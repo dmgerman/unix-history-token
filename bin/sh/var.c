@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: var.c,v 1.12 1998/05/18 06:44:24 charnier Exp $"
+literal|"$Id: var.c,v 1.13 1999/04/03 11:41:46 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,7 +881,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Set the value of a variable.  The flags argument is stored with the  * flags of the variable.  If val is NULL, the variable is unset.  */
+comment|/*  * Set the value of a variable.  The flags argument is tored with the  * flags of the variable.  If val is NULL, the variable is unset.  */
 end_comment
 
 begin_function
