@@ -1623,6 +1623,14 @@ name|inp_vflag
 operator||=
 name|INP_IPV6
 expr_stmt|;
+name|inp
+operator|->
+name|inp_inc
+operator|.
+name|inc_isipv6
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(

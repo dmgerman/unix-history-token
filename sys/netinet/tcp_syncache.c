@@ -2331,6 +2331,18 @@ name|so
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Insert new socket into hash list. 	 */
+name|inp
+operator|->
+name|inp_inc
+operator|.
+name|inc_isipv6
+operator|=
+name|sc
+operator|->
+name|sc_inc
+operator|.
+name|inc_isipv6
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
