@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.4 1999/01/11 11:08:07 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.5 1999/01/12 12:27:54 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -1015,18 +1015,19 @@ begin_comment
 comment|/*  * this is the periodic task that moves packets between the R-  * and the P- queue  */
 end_comment
 
-begin_decl_stmt
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_function
 name|void
 name|dummynet
-argument_list|(
+parameter_list|(
 name|void
-operator|*
-name|__attribute__
-argument_list|(
-argument|(unused)
-argument_list|)
+modifier|*
+name|__unused
 name|unused
-argument_list|)
+parameter_list|)
 block|{
 name|struct
 name|dn_pipe
@@ -1109,7 +1110,7 @@ name|dn_restart
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * dummynet hook for packets.  * input and output use the same code, so i use bit 16 in the pipe  * number to chose the direction: 1 for output packets, 0 for input.  * for input, only m is significant. For output, also the others.  */
