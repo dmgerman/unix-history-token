@@ -1017,12 +1017,26 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* shared memory flags */
+end_comment
+
 begin_enum
 enum|enum
 block|{
 name|PCCARD_A_MEM_ATTR
 init|=
-literal|0x1
+literal|1
+block|,
+comment|/* attribute */
+name|PCCARD_A_MEM_COM
+block|,
+comment|/* common */
+name|PCCARD_A_MEM_8BIT
+block|,
+comment|/* 8 bit */
+name|PCCARD_A_MEM_16BIT
+comment|/* 16 bit */
 block|}
 enum|;
 end_enum
