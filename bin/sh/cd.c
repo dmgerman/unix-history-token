@@ -941,8 +941,6 @@ argument_list|,
 name|curdir
 argument_list|,
 name|VEXPORT
-operator||
-name|VTEXTFIXED
 argument_list|)
 expr_stmt|;
 name|setvar
@@ -952,8 +950,6 @@ argument_list|,
 name|prevdir
 argument_list|,
 name|VEXPORT
-operator||
-name|VTEXTFIXED
 argument_list|)
 expr_stmt|;
 name|INTON
@@ -1158,8 +1154,6 @@ argument_list|,
 name|curdir
 argument_list|,
 name|VEXPORT
-operator||
-name|VTEXTFIXED
 argument_list|)
 expr_stmt|;
 name|setvar
@@ -1169,8 +1163,6 @@ argument_list|,
 name|prevdir
 argument_list|,
 name|VEXPORT
-operator||
-name|VTEXTFIXED
 argument_list|)
 expr_stmt|;
 name|INTON
