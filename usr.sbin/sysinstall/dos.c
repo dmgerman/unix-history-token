@@ -158,7 +158,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|,
 name|mountpoint
 argument_list|,

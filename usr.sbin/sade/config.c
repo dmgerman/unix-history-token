@@ -511,7 +511,7 @@ operator|==
 name|fat
 condition|)
 return|return
-literal|"msdos"
+literal|"msdosfs"
 return|;
 elseif|else
 if|if

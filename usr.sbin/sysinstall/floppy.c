@@ -334,7 +334,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|,
 name|mp
 argument_list|,
@@ -391,7 +391,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|,
 name|mp
 argument_list|,
@@ -448,7 +448,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|,
 name|mp
 argument_list|,
@@ -496,7 +496,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-literal|"msdos"
+literal|"msdosfs"
 argument_list|,
 name|mp
 argument_list|,
