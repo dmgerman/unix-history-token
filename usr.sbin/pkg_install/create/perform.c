@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.37 1997/10/08 07:46:27 charnier Exp $"
+literal|"$Id: perform.c,v 1.38 1997/10/13 15:03:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,35 +379,6 @@ argument_list|,
 name|pkg_in
 argument_list|)
 expr_stmt|;
-comment|/* Prefix should override the packing list */
-if|if
-condition|(
-name|Prefix
-condition|)
-block|{
-name|delete_plist
-argument_list|(
-operator|&
-name|plist
-argument_list|,
-name|FALSE
-argument_list|,
-name|PLIST_CWD
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|add_plist_top
-argument_list|(
-operator|&
-name|plist
-argument_list|,
-name|PLIST_CWD
-argument_list|,
-name|Prefix
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * Run down the list and see if we've named it, if not stick in a name      * at the top.      */
 if|if
 condition|(
