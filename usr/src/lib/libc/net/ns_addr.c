@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns_addr.c	6.7 (Berkeley) %G%"
+literal|"@(#)ns_addr.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,9 +126,9 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|buf
@@ -136,9 +136,9 @@ index|[
 sizeof|sizeof
 argument_list|(
 name|buf
+argument_list|)
 operator|-
 literal|1
-argument_list|)
 index|]
 operator|=
 literal|'\0'
