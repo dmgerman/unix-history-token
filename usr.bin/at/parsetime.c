@@ -757,7 +757,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.7.2.2 1998/07/04 17:03:36 alex Exp $"
+literal|"$Id: parsetime.c,v 1.7.2.3 1998/07/16 23:50:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1787,7 +1787,14 @@ literal|"garbled time"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|year
+operator|!=
+operator|-
+literal|1
+condition|)
 block|{
 name|struct
 name|tm
