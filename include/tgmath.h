@@ -85,7 +85,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|(__tg_type3(e1, e2, e3, t) || __tg_type3(e1, e2, e3, t complex))
+value|(__tg_type3(e1, e2, e3, t) || __tg_type3(e1, e2, e3, t _Complex))
 end_define
 
 begin_define
@@ -115,7 +115,7 @@ parameter_list|,
 name|e3
 parameter_list|)
 define|\
-value|(__tg_type3(e1, e2, e3, float complex) ||			\ 	    __tg_type3(e1, e2, e3, double complex) ||			\ 	    __tg_type3(e1, e2, e3, long double complex))
+value|(__tg_type3(e1, e2, e3, float _Complex) ||			\ 	    __tg_type3(e1, e2, e3, double _Complex) ||			\ 	    __tg_type3(e1, e2, e3, long double _Complex)) ||		\ 	    __tg_type3(e1, e2, e3, __typeof__(_Complex_I))
 end_define
 
 begin_define
@@ -733,11 +733,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|nextbyint
+name|nearbyint
 parameter_list|(
 name|x
 parameter_list|)
-value|__tg_simple(x, nextbyint)
+value|__tg_simple(x, nearbyint)
 end_define
 
 begin_define
