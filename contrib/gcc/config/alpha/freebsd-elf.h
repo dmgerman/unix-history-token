@@ -93,11 +93,11 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"-m elf64alpha					\   %{O*:-O3} %{!O*:-O1}						\   %{assert*}							\   %{shared:-shared}						\   %{!shared:							\     -dc -dp							\     %{!nostdlib:%{!r*:%{!e*:-e __start}}}			\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld.elf_so}} \     %{static:-static}}"
+value|"-m elf64alpha					\   %{O*:-O3} %{!O*:-O1}						\   %{assert*}							\   %{shared:-shared}						\   %{!shared:							\     -dc -dp							\     %{!nostdlib:%{!r*:%{!e*:-e _start}}}			\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-static}}"
 end_define
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for FreeBSD.  Here we add    the crtbegin.o file (see crtstuff.c) which provides part of the    support for getting C++ file-scope static object constructed    before entering `main'. */
+comment|/* Provide a STARTFILE_SPEC for FreeBSD that is compatible with the    non-aout version used on i386. */
 end_comment
 
 begin_undef
@@ -111,7 +111,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt0.o%s} \      %{!pg: \ 	%{p:gcrt0.o%s} \ 	%{!p:crt0.o%s}}} \    %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"%{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} \     crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
 end_define
 
 begin_comment
