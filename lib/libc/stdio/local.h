@@ -282,7 +282,7 @@ value|{ \ 	if ((fp)->_ub._base != (fp)->_ubuf) \ 		free((char *)(fp)->_ub._base)
 end_define
 
 begin_comment
-comment|/*  * test for an fgetline() buffer.  */
+comment|/*  * test for an fgetln() buffer.  */
 end_comment
 
 begin_define

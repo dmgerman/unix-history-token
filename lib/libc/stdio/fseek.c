@@ -621,7 +621,7 @@ operator|->
 name|_r
 expr_stmt|;
 block|}
-comment|/* 	 * If the target offset is within the current buffer, 	 * simply adjust the pointers, clear EOF, undo ungetc(), 	 * and return.  (If the buffer was modified, we have to 	 * skip this; see fgetline.c.) 	 */
+comment|/* 	 * If the target offset is within the current buffer, 	 * simply adjust the pointers, clear EOF, undo ungetc(), 	 * and return.  (If the buffer was modified, we have to 	 * skip this; see fgetln.c.) 	 */
 if|if
 condition|(
 operator|(
