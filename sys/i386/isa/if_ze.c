@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.16 1995/05/24 20:33:42 davidg Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.17 1995/05/30 08:02:27 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -703,13 +703,13 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|return (memcmp (card_info, CARD_INFO, sizeof(CARD_INFO)-1) == 0);
+block|return (bcmp (card_info, CARD_INFO, sizeof(CARD_INFO)-1) == 0);
 else|#
 directive|else
 if|if
 condition|(
 operator|(
-name|memcmp
+name|bcmp
 argument_list|(
 name|card_info
 argument_list|,
@@ -727,7 +727,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|memcmp
+name|bcmp
 argument_list|(
 name|card_info
 argument_list|,
@@ -745,7 +745,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|memcmp
+name|bcmp
 argument_list|(
 name|card_info
 argument_list|,
