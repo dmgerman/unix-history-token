@@ -5300,22 +5300,6 @@ end_function
 
 begin_function
 name|int
-name|ia64_pa_access
-parameter_list|(
-name|vm_offset_t
-name|pa
-parameter_list|)
-block|{
-return|return
-name|VM_PROT_READ
-operator||
-name|VM_PROT_WRITE
-return|;
-block|}
-end_function
-
-begin_function
-name|int
 name|fill_regs
 parameter_list|(
 name|struct

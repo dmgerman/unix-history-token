@@ -269,6 +269,26 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
+name|int
+name|ia64_pa_access
+parameter_list|(
+name|vm_offset_t
+name|pa
+parameter_list|)
+block|{
+return|return
+operator|(
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|mmclose
 parameter_list|(
