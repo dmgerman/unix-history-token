@@ -351,6 +351,16 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|fup
+operator|->
+name|fu_ft4
+condition|)
+comment|/* may not happen */
+goto|goto
+name|done
+goto|;
 comment|/* 			 * We're just initializing device now, so see if 			 * the initialization command has completed 			 */
 if|if
 condition|(
