@@ -3926,6 +3926,12 @@ name|p_fd
 operator|=
 name|NULL
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* The daemon resides in its own pgrp. */
 name|MALLOC
 argument_list|(
@@ -3967,12 +3973,6 @@ argument_list|,
 name|M_WAITOK
 operator||
 name|M_ZERO
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|sx_xlock
