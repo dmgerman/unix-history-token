@@ -7749,7 +7749,7 @@ operator|=
 name|ierror
 expr_stmt|;
 block|}
-comment|/* 	 * If the node goes away when we remove the reference,  	 * whatever we just did caused it.. hwatever we do, DO NOT 	 * access the node again! 	 */
+comment|/* 	 * If the node goes away when we remove the reference,  	 * whatever we just did caused it.. whatever we do, DO NOT 	 * access the node again! 	 */
 if|if
 condition|(
 name|NG_NODE_UNREF
@@ -7850,7 +7850,7 @@ operator|=
 name|ierror
 expr_stmt|;
 block|}
-comment|/* 		 * If the node goes away when we remove the reference,  		 * whatever we just did caused it.. hwatever we do, DO NOT 		 * access the node again! 		 */
+comment|/* 		 * If the node goes away when we remove the reference,  		 * whatever we just did caused it.. whatever we do, DO NOT 		 * access the node again! 		 */
 if|if
 condition|(
 name|NG_NODE_UNREF
