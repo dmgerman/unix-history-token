@@ -4963,11 +4963,6 @@ parameter_list|)
 block|{
 name|u_int
 name|mymask
-init|=
-name|PCPU_GET
-argument_list|(
-name|cpumask
-argument_list|)
 decl_stmt|;
 name|u_int
 name|mask
@@ -5032,6 +5027,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|mymask
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpumask
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mask
