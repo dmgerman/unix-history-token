@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.66.2.8 1997/03/11 09:13:13 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.66.2.9 1997/04/28 06:22:15 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -25,18 +25,6 @@ begin_include
 include|#
 directive|include
 file|<machine/console.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include
@@ -321,20 +309,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Remount root read/write in case it's R/O */
-name|mount
-argument_list|(
-name|MOUNT_MFS
-argument_list|,
-literal|"/"
-argument_list|,
-name|MNT_WANTRDWR
-operator||
-name|MNT_UPDATE
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
