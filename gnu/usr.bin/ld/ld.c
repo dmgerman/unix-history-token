@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.29 1995/07/13 08:30:07 rgrimes Exp $  */
+comment|/*  *	$Id: ld.c,v 1.30 1995/09/28 19:43:20 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2451,13 +2451,6 @@ if|if
 condition|(
 operator|!
 name|nostdlib
-operator|&&
-name|getenv
-argument_list|(
-literal|"LD_NOSTD_PATH"
-argument_list|)
-operator|==
-name|NULL
 condition|)
 name|std_search_path
 argument_list|()
