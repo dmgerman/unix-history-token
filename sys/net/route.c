@@ -4739,7 +4739,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * notify any listenning routing agents of the change 		 */
+comment|/* 		 * notify any listening routing agents of the change 		 */
 name|rt_newaddrmsg
 argument_list|(
 name|cmd
