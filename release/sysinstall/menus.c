@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.41 1997/05/26 04:59:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.89.2.42 1997/06/09 01:20:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -7035,10 +7035,7 @@ literal|'X'
 block|,
 literal|']'
 block|,
-operator|(
-name|int
-operator|)
-name|VAR_NTPDATE
+literal|"ntpdate_enable=YES"
 block|}
 block|,
 block|{
@@ -7157,11 +7154,25 @@ name|NULL
 block|,
 block|{
 block|{
+literal|"None"
+block|,
+literal|"No ntp server"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"ntpdate_enable=NO,ntpdate_flags="
+block|}
+block|,
+block|{
 literal|"Other"
 block|,
 literal|"Select a site not on this list"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
 name|configNTP
 block|,
@@ -7175,14 +7186,13 @@ literal|"Australia"
 block|,
 literal|"ntp.syd.dms.csiro.au (HP 5061 Cesium Beam)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=ntp.syd.dms.csiro.au"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp.syd.dms.csiro.au"
 block|}
 block|,
 block|{
@@ -7190,14 +7200,13 @@ literal|"Canada"
 block|,
 literal|"tick.usask.ca (GOES clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=tick.usask.ca"
+literal|"ntpdate_enable=YES,ntpdate_flags=tick.usask.ca"
 block|}
 block|,
 block|{
@@ -7205,14 +7214,13 @@ literal|"France"
 block|,
 literal|"canon.inria.fr (TDF clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=canon.inria.fr"
+literal|"ntpdate_enable=YES,ntpdate_flags=canon.inria.fr"
 block|}
 block|,
 block|{
@@ -7220,14 +7228,13 @@ literal|"Germany"
 block|,
 literal|"ntps1-{0,1,2}.uni-erlangen.de (GPS)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=ntps1-0.uni-erlangen.de"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntps1-0.uni-erlangen.de"
 block|}
 block|,
 block|{
@@ -7235,14 +7242,13 @@ literal|"Germany #2"
 block|,
 literal|"ntps1-0.cs.tu-berlin.de (GPS)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=ntps1-0.cs.tu-berlin.de"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntps1-0.cs.tu-berlin.de"
 block|}
 block|,
 block|{
@@ -7250,14 +7256,13 @@ literal|"Japan"
 block|,
 literal|"clock.nc.fukuoka-u.ac.jp (GPS clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=clock.nc.fukuoka-u.ac.jp"
+literal|"ntpdate_enable=YES,ntpdate_flags=clock.nc.fukuoka-u.ac.jp"
 block|}
 block|,
 block|{
@@ -7265,14 +7270,13 @@ literal|"Japan #2"
 block|,
 literal|"clock.tl.fukuoka-u.ac.jp (GPS clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=clock.tl.fukuoka-u.ac.jp"
+literal|"ntpdate_enable=YES,ntpdate_flags=clock.tl.fukuoka-u.ac.jp"
 block|}
 block|,
 block|{
@@ -7280,14 +7284,13 @@ literal|"Netherlands"
 block|,
 literal|"ntp0.nl.net (GPS clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=ntp0.nl.net"
+literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.nl.net"
 block|}
 block|,
 block|{
@@ -7295,14 +7298,13 @@ literal|"Norway"
 block|,
 literal|"timer.unik.no (NTP clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=timer.unik.no"
+literal|"ntpdate_enable=YES,ntpdate_flags=timer.unik.no"
 block|}
 block|,
 block|{
@@ -7310,14 +7312,13 @@ literal|"Sweden"
 block|,
 literal|"Time1.Stupi.SE (Cesium/GPS)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=Time1.Stupi.SE"
+literal|"ntpdate_enable=YES,ntpdate_flags=Time1.Stupi.SE"
 block|}
 block|,
 block|{
@@ -7325,14 +7326,13 @@ literal|"Switzerland"
 block|,
 literal|"swisstime.ethz.ch (DCF77 clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=swisstime.ethz.ch"
+literal|"ntpdate_enable=YES,ntpdate_flags=swisstime.ethz.ch"
 block|}
 block|,
 block|{
@@ -7340,14 +7340,13 @@ literal|"U.S. East Coast"
 block|,
 literal|"bitsy.mit.edu (WWV clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=bitsy.mit.edu"
+literal|"ntpdate_enable=YES,ntpdate_flags=bitsy.mit.edu"
 block|}
 block|,
 block|{
@@ -7355,14 +7354,13 @@ literal|"U.S. East Coast #2"
 block|,
 literal|"otc1.psu.edu (WWV clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=otc1.psu.edu"
+literal|"ntpdate_enable=YES,ntpdate_flags=otc1.psu.edu"
 block|}
 block|,
 block|{
@@ -7370,14 +7368,13 @@ literal|"U.S. West Coast"
 block|,
 literal|"apple.com (WWV clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=apple.com"
+literal|"ntpdate_enable=YES,ntpdate_flags=apple.com"
 block|}
 block|,
 block|{
@@ -7385,14 +7382,13 @@ literal|"U.S. West Coast #2"
 block|,
 literal|"clepsydra.dec.com (GOES clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=clepsydra.dec.com"
+literal|"ntpdate_enable=YES,ntpdate_flags=clepsydra.dec.com"
 block|}
 block|,
 block|{
@@ -7400,14 +7396,13 @@ literal|"U.S. West Coast #3"
 block|,
 literal|"clock.llnl.gov (WWVB clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=clock.llnl.gov"
+literal|"ntpdate_enable=YES,ntpdate_flags=clock.llnl.gov"
 block|}
 block|,
 block|{
@@ -7415,14 +7410,13 @@ literal|"U.S. Midwest"
 block|,
 literal|"ncar.ucar.edu (WWVB clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=ncar.ucar.edu"
+literal|"ntpdate_enable=YES,ntpdate_flags=ncar.ucar.edu"
 block|}
 block|,
 block|{
@@ -7430,14 +7424,13 @@ literal|"U.S. Pacific"
 block|,
 literal|"chantry.hawaii.net (WWV/H clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=chantry.hawaii.net"
+literal|"ntpdate_enable=YES,ntpdate_flags=chantry.hawaii.net"
 block|}
 block|,
 block|{
@@ -7445,14 +7438,13 @@ literal|"U.S. Southwest"
 block|,
 literal|"shorty.chpc.utexas.edu (WWV clock)"
 block|,
-name|dmenuVarCheck
+name|dmenuVarsCheck
 block|,
-name|dmenuSetVariable
+name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-name|VAR_NTPDATE
-literal|"=shorty.chpc.utexas.edu"
+literal|"ntpdate_enable=YES,ntpdate_flags=shorty.chpc.utexas.edu"
 block|}
 block|,
 block|{
