@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.3 %G%"
+literal|"@(#)GETNAME.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,12 +83,6 @@ name|struct
 name|iorec
 name|locvar
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|filep
@@ -431,21 +425,43 @@ name|funit
 operator||=
 name|TEMP
 expr_stmt|;
-name|name
-operator|=
-name|mktemp
+name|sprintf
 argument_list|(
-literal|"tmp.XXXXXX"
+name|filep
+operator|->
+name|fname
+argument_list|,
+literal|"tmp.%c%d"
+argument_list|,
+literal|'a'
+operator|+
+name|filep
+operator|->
+name|fblk
+argument_list|,
+name|getpid
+argument_list|()
 argument_list|)
 expr_stmt|;
-name|maxnamlen
+name|filep
+operator|->
+name|pfname
 operator|=
-literal|10
+operator|&
+name|filep
+operator|->
+name|fname
+index|[
+literal|0
+index|]
 expr_stmt|;
+return|return
+operator|(
+name|filep
+operator|)
+return|;
 block|}
-else|else
-block|{
-comment|/* 		 * trim trailing blanks, and insure that the name  		 * will fit into the file structure 		 */
+comment|/* 	 * trim trailing blanks, and insure that the name  	 * will fit into the file structure 	 */
 for|for
 control|(
 name|cnt
@@ -503,7 +519,6 @@ operator|&=
 operator|~
 name|TEMP
 expr_stmt|;
-block|}
 comment|/* 	 * put the new name into the structure 	 */
 for|for
 control|(
