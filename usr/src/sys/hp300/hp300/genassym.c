@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -98,6 +98,23 @@ include|#
 directive|include
 file|<hp300/hp300/pte.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USELEDS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<hp300/hp300/led.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1058,6 +1075,40 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USELEDS
+comment|/* LEDs */
+name|def
+argument_list|(
+literal|"LED_PULSE"
+argument_list|,
+name|LED_PULSE
+argument_list|)
+expr_stmt|;
+name|def
+argument_list|(
+literal|"LED_DISK"
+argument_list|,
+name|LED_DISK
+argument_list|)
+expr_stmt|;
+name|def
+argument_list|(
+literal|"LED_LANRCV"
+argument_list|,
+name|LED_LANRCV
+argument_list|)
+expr_stmt|;
+name|def
+argument_list|(
+literal|"LED_LANXMT"
+argument_list|,
+name|LED_LANXMT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
