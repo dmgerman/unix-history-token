@@ -129,6 +129,12 @@ directive|include
 file|"syscall.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -196,6 +202,7 @@ name|syscall
 modifier|*
 name|sc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -232,7 +239,9 @@ specifier|static
 name|__inline
 name|void
 name|clear_fsc
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -343,15 +352,9 @@ decl_stmt|;
 name|struct
 name|reg
 name|regs
-init|=
-block|{
-block|{
-literal|0
-block|}
-block|}
 decl_stmt|;
 name|int
-name|syscall
+name|syscall_num
 decl_stmt|;
 name|int
 name|i
@@ -419,7 +422,7 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"-- CANNOT READ REGISTERS --\n"
+literal|"-- CANNOT OPEN REGISTERS --\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -443,8 +446,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|read
 argument_list|(
 name|fd
@@ -457,7 +460,24 @@ argument_list|(
 name|regs
 argument_list|)
 argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|regs
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|trussinfo
+operator|->
+name|outfile
+argument_list|,
+literal|"-- CANNOT READ REGISTERS --\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|parm_offset
 operator|=
 name|regs
@@ -473,7 +493,7 @@ name|int
 argument_list|)
 expr_stmt|;
 comment|/*    * FreeBSD has two special kinds of system call redirctions --    * SYS_syscall, and SYS___syscall.  The former is the old syscall()    * routine, basicly; the latter is for quad-aligned arguments.    */
-name|syscall
+name|syscall_num
 operator|=
 name|regs
 operator|.
@@ -484,11 +504,11 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|syscall
+name|syscall_num
 operator|==
 name|SYS_syscall
 operator|||
-name|syscall
+name|syscall_num
 operator|==
 name|SYS___syscall
 condition|)
@@ -497,7 +517,7 @@ name|indir
 operator|=
 literal|1
 expr_stmt|;
-name|syscall
+name|syscall_num
 operator|=
 name|regs
 operator|.
@@ -511,18 +531,18 @@ name|fsc
 operator|.
 name|number
 operator|=
-name|syscall
+name|syscall_num
 expr_stmt|;
 name|fsc
 operator|.
 name|name
 operator|=
 operator|(
-name|syscall
+name|syscall_num
 operator|<
 literal|0
 operator|||
-name|syscall
+name|syscall_num
 operator|>
 name|nsyscalls
 operator|)
@@ -531,7 +551,7 @@ name|NULL
 else|:
 name|syscallnames
 index|[
-name|syscall
+name|syscall_num
 index|]
 expr_stmt|;
 if|if
@@ -550,7 +570,7 @@ name|outfile
 argument_list|,
 literal|"-- UNKNOWN SYSCALL %d --\n"
 argument_list|,
-name|syscall
+name|syscall_num
 argument_list|)
 expr_stmt|;
 block|}
@@ -1282,7 +1302,8 @@ modifier|*
 name|trussinfo
 parameter_list|,
 name|int
-name|syscall
+name|syscall_num
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1357,10 +1378,15 @@ name|trussinfo
 operator|->
 name|outfile
 argument_list|,
-literal|"-- CANNOT READ REGISTERS --\n"
+literal|"-- CANNOT OPEN REGISTERS --\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|cpid
 operator|=
@@ -1408,7 +1434,12 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|retval
 operator|=
