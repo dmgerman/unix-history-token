@@ -118,6 +118,10 @@ literal|"usershow"
 block|,
 literal|"usernext"
 block|,
+literal|"lock"
+block|,
+literal|"unlock"
+block|,
 literal|"groupadd"
 block|,
 literal|"groupdel"
@@ -151,6 +155,10 @@ block|,
 literal|"showuser"
 block|,
 literal|"nextuser"
+block|,
+literal|"lock"
+block|,
+literal|"unlock"
 block|,
 literal|"addgroup"
 block|,
@@ -339,6 +347,10 @@ block|,
 literal|"V:C:qn:u:c:d:e:p:g:G:ml:k:s:w:L:h:FNPY"
 block|,
 literal|"V:C:qn:u:FPa7"
+block|,
+literal|"V:C:q"
+block|,
+literal|"V:C:q"
 block|,
 literal|"V:C:q"
 block|}
@@ -1212,7 +1224,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pw [user|group] [add|del|mod|show|next] [ help | switches/values ]\n"
+literal|"usage:\n  pw [user|group|lock|unlock] [add|del|mod|show|next] [help|switches/values]\n"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1227,7 +1239,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pw %s [add|del|mod|show|next] [ help | switches/values ]\n"
+literal|"usage:\n  pw %s [add|del|mod|show|next] [help|switches/values]\n"
 argument_list|,
 name|Which
 index|[

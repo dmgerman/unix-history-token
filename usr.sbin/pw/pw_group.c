@@ -184,6 +184,23 @@ block|,
 name|NULL
 block|}
 decl_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+name|M_LOCK
+operator|||
+name|mode
+operator|==
+name|M_UNLOCK
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"'lock' command is not available for groups"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * With M_NEXT, we only need to return the 	 * next gid to stdout 	 */
 if|if
 condition|(
