@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -788,12 +788,19 @@ argument_list|,
 name|SIOCADDRT
 argument_list|,
 name|flags
+operator||
+name|RTF_DYNAMIC
 argument_list|)
+expr_stmt|;
+name|rtstat
+operator|.
+name|rts_dynamic
+operator|++
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Smash the current notion of the gateway to 			 * this destination.  This is probably not right, 			 * as it's conceivable a flurry of redirects could 			 * cause the gateway value to fluctuate wildly during 			 * dynamic routing reconfiguration. 			 */
+comment|/* 			 * Smash the current notion of the gateway to 			 * this destination. 			 */
 name|rt
 operator|->
 name|rt_gateway
