@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_dv.c 1.9 92/12/20$  *  *	@(#)ite_dv.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_dv.c 1.10 93/06/25$  *  *	@(#)ite_dv.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -199,6 +199,43 @@ operator|->
 name|g_display
 operator|.
 name|gd_dheight
+expr_stmt|;
+comment|/* 		 * XXX some displays (e.g. the davinci) appear 		 * to return a display height greater than the 		 * returned FB height.  Guess we should go back 		 * to getting the display dimensions from the 		 * fontrom... 		 */
+if|if
+condition|(
+name|ip
+operator|->
+name|dwidth
+operator|>
+name|ip
+operator|->
+name|fbwidth
+condition|)
+name|ip
+operator|->
+name|dwidth
+operator|=
+name|ip
+operator|->
+name|fbwidth
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|dheight
+operator|>
+name|ip
+operator|->
+name|fbheight
+condition|)
+name|ip
+operator|->
+name|dheight
+operator|=
+name|ip
+operator|->
+name|fbheight
 expr_stmt|;
 block|}
 name|dv_reset
