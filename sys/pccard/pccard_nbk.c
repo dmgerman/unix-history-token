@@ -867,6 +867,11 @@ name|resource_list_entry
 modifier|*
 name|rle
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -988,7 +993,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return
+name|res
+operator|=
 name|resource_list_alloc
 argument_list|(
 name|rl
@@ -1009,6 +1015,9 @@ name|count
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+return|return
+name|res
 return|;
 block|}
 end_function

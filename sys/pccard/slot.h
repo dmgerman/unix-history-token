@@ -286,11 +286,6 @@ name|callout_handle
 name|poff_ch
 decl_stmt|;
 comment|/* Power Off timeout handle */
-name|struct
-name|callout_handle
-name|disable_ch
-decl_stmt|;
-comment|/* Disable spl0 kludge */
 name|enum
 name|cardstate
 name|state
