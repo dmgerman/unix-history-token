@@ -19,6 +19,10 @@ directive|define
 name|_IBCS2_UTIL_H_
 end_define
 
+begin_comment
+comment|/*  * XXX the inlines have obnoxious prerequisites, only some of which are  * included here.  */
+end_comment
+
 begin_include
 include|#
 directive|include
