@@ -274,9 +274,6 @@ name|pindex
 parameter_list|,
 name|vm_size_t
 name|size
-parameter_list|,
-name|int
-name|pagelimit
 parameter_list|)
 function_decl|;
 end_function_decl

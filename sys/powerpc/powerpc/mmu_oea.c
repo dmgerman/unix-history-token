@@ -5539,11 +5539,28 @@ name|pindex
 parameter_list|,
 name|vm_size_t
 name|size
-parameter_list|,
-name|int
-name|limit
 parameter_list|)
 block|{
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEVICE
+argument_list|,
+operator|(
+literal|"pmap_object_init_pt: non-device object"
+operator|)
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|pm
@@ -5560,11 +5577,10 @@ operator|==
 name|kernel_pmap
 argument_list|,
 operator|(
-literal|"pmap_remove_pages: non current pmap"
+literal|"pmap_object_init_pt: non current pmap"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 block|}
 end_function
 
