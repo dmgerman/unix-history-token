@@ -3254,32 +3254,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|convex
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|telnet
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -3297,11 +3271,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Get a pty, scan input lines.  */
@@ -3714,19 +3683,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Start up the login process on the slave side of the terminal 	 */
-ifndef|#
-directive|ifndef
-name|convex
-name|startslave
-argument_list|(
-name|host
-argument_list|,
-name|level
-argument_list|,
-name|user_name
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -3783,22 +3739,11 @@ argument_list|(
 name|net
 argument_list|,
 name|pty
-argument_list|)
-expr_stmt|;
-comment|/* begin server processing */
-else|#
-directive|else
-name|telnet
-argument_list|(
-name|net
-argument_list|,
-name|pty
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* begin server process */
 comment|/*NOTREACHED*/
 block|}
 end_block
@@ -3918,41 +3863,23 @@ end_comment
 
 begin_function
 name|void
-ifndef|#
-directive|ifndef
-name|convex
 name|telnet
 parameter_list|(
 name|f
 parameter_list|,
 name|p
-parameter_list|)
-else|#
-directive|else
-function|telnet
-parameter_list|(
-name|f
-parameter_list|,
-name|p
 parameter_list|,
 name|host
 parameter_list|)
-endif|#
-directive|endif
 name|int
 name|f
 decl_stmt|,
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|convex
 name|char
 modifier|*
 name|host
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|on
@@ -4682,16 +4609,12 @@ literal|"td: Entering processing loop\r\n"
 argument|); 		 nfrontp += strlen(nfrontp);}
 argument_list|)
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|convex
+comment|/* 	 * Startup the login process on the slave side of the terminal 	 * now.  We delay this until here to insure option negotiation 	 * is complete. 	 */
 name|startslave
 argument_list|(
 name|host
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 init|;
