@@ -348,7 +348,13 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{ }
+block|{
+name|ia64_highfp_save
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
