@@ -5196,45 +5196,20 @@ literal|" XFree86"
 block|,
 literal|"The XFree86 3.3.6 distribution"
 block|,
-ifdef|#
-directive|ifdef
-name|X_AS_PKG
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86
-block|}
-block|,
-else|#
-directive|else
 name|x11FlagCheck
 block|,
 name|distSetXF86
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 name|NULL
 block|}
 block|}
-decl_stmt|,
+block|, }
+decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-unit|};
 name|DMenu
 name|MenuCRYPTODistributions
 init|=
