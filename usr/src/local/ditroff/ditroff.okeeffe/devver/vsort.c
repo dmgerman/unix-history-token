@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vsort.c	1.1 (CWI) 86/10/21"
+literal|"@(#)vsort.c	1.2 (CWI) 87/11/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,17 +119,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|INCH
-value|200
-end_define
-
-begin_comment
-comment|/* assumed resolution of the printer (dots/inch) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|POINT
 value|72
 end_define
@@ -171,6 +160,10 @@ begin_comment
 comment|/* number of pixels across the page */
 end_comment
 
+begin_comment
+comment|/* 	 * Note that this does not work unless the input really is 	 * designed for the versatec, i.e., res = 200.  But that's 	 * OK, because it is only used for side-by-side pages, which 	 * we don't do anyway. 	 * DD 	 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -180,43 +173,31 @@ end_endif
 begin_define
 define|#
 directive|define
-name|HALF
-value|(INCH/2)
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DEBUGABLE
-end_ifndef
-
-begin_define
-define|#
-directive|define
 name|BAND
 value|1
 end_define
 
 begin_comment
-comment|/* length of each band (or defined below) */
+comment|/* length of each band in inches */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUGABLE
-end_endif
 
 begin_define
 define|#
 directive|define
 name|NLINES
-value|(int)(BAND * INCH)
+value|(int)(BAND * inch)
 end_define
 
 begin_comment
 comment|/* number of pixels in each band */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HALF
+value|(inch/2)
+end_define
 
 begin_define
 define|#
@@ -258,12 +239,6 @@ parameter_list|)
 value|vpos = (n)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUGABLE
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|dbg
@@ -275,20 +250,6 @@ end_decl_stmt
 begin_comment
 comment|/* debug flag != 0 means do debug output */
 end_comment
-
-begin_decl_stmt
-name|float
-name|BAND
-init|=
-literal|1.0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUGABLE
-end_endif
 
 begin_decl_stmt
 name|int
@@ -348,7 +309,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* place to find DESC.out file */
+comment|/* place to find DESC.out file	*/
+end_comment
+
+begin_decl_stmt
+name|int
+name|inch
+init|=
+literal|200
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* resolution of the device, in inches	*/
 end_comment
 
 begin_comment
@@ -628,164 +601,6 @@ begin_comment
 comment|/* pointer to current spot in buffer */
 end_comment
 
-begin_comment
-comment|/* Compatabilty mode code by jna */
-end_comment
-
-begin_decl_stmt
-name|int
-name|res
-init|=
-name|INCH
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* resolution when input prepared, 				 * assume INCH to be default */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hres
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* horizontal goobies in res when prepared */
-end_comment
-
-begin_decl_stmt
-name|int
-name|vres
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vertical goobies in res when prepared */
-end_comment
-
-begin_comment
-comment|/* 	 * to scale on resolution 	 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCALE
-parameter_list|(
-name|x
-parameter_list|)
-value|(int)(((double)INCH * (double)(x))/(double)(res))
-end_define
-
-begin_comment
-comment|/* 	 * to scale horizontal 	 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HSCALE
-parameter_list|(
-name|x
-parameter_list|)
-value|(int)(((double)INCH * (double)(x))/((double)(res) * vres))
-end_define
-
-begin_comment
-comment|/* 	 * to scale vertical 	 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VSCALE
-parameter_list|(
-name|x
-parameter_list|)
-value|(int)(((double)INCH * (double)(x))/((double)(res) * vres))
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|hgoto
-name|(
-name|n
-name|)
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|hmot
-name|(
-name|n
-name|)
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|vmot
-name|(
-name|n
-name|)
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|vgoto
-name|(
-name|n
-name|)
-end_undef
-
-begin_define
-define|#
-directive|define
-name|hgoto
-parameter_list|(
-name|n
-parameter_list|)
-value|if((hpos = leftmarg + (HSCALE(n)))> maxh) maxh = hpos
-end_define
-
-begin_define
-define|#
-directive|define
-name|hmot
-parameter_list|(
-name|n
-parameter_list|)
-value|if((hpos += (HSCALE(n)))> maxh) maxh = hpos
-end_define
-
-begin_define
-define|#
-directive|define
-name|vmot
-parameter_list|(
-name|n
-parameter_list|)
-value|vpos += (VSCALE(n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|vgoto
-parameter_list|(
-name|n
-parameter_list|)
-value|vpos = (VSCALE(n))
-end_define
-
 begin_function
 name|main
 parameter_list|(
@@ -922,24 +737,6 @@ break|break;
 ifdef|#
 directive|ifdef
 name|DEBUGABLE
-case|case
-literal|'B'
-case|:
-name|BAND
-operator|=
-name|atof
-argument_list|(
-operator|&
-operator|(
-operator|*
-name|argv
-operator|)
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 literal|'d'
 case|:
@@ -1579,10 +1376,7 @@ name|op
 argument_list|,
 literal|"%02d"
 argument_list|,
-name|HSCALE
-argument_list|(
 name|n
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|op
@@ -1807,17 +1601,11 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|HSCALE
-argument_list|(
 name|n1
-argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|VSCALE
-argument_list|(
 name|m1
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1942,22 +1730,16 @@ case|:
 comment|/* ellipse */
 name|n
 operator|=
-name|HSCALE
-argument_list|(
 name|ngetnumber
 argument_list|(
 name|fp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|VSCALE
-argument_list|(
 name|ngetnumber
 argument_list|(
 name|fp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|setlimit
@@ -2013,12 +1795,9 @@ case|:
 comment|/* circle */
 name|n
 operator|=
-name|SCALE
-argument_list|(
 name|ngetnumber
 argument_list|(
 name|fp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|setlimit
@@ -2136,25 +1915,13 @@ directive|endif
 endif|BERK
 name|arcbounds
 argument_list|(
-name|HSCALE
-argument_list|(
 name|n
-argument_list|)
 argument_list|,
-name|VSCALE
-argument_list|(
 name|m
-argument_list|)
 argument_list|,
-name|HSCALE
-argument_list|(
 name|n1
-argument_list|)
 argument_list|,
-name|VSCALE
-argument_list|(
 name|m1
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -2163,25 +1930,13 @@ name|op
 argument_list|,
 literal|"Da %d %d %d %d"
 argument_list|,
-name|HSCALE
-argument_list|(
 name|n
-argument_list|)
 argument_list|,
-name|VSCALE
-argument_list|(
 name|m
-argument_list|)
 argument_list|,
-name|HSCALE
-argument_list|(
 name|n1
-argument_list|)
 argument_list|,
-name|VSCALE
-argument_list|(
 name|m1
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|op
@@ -2770,15 +2525,9 @@ name|op
 argument_list|,
 literal|"%d %d "
 argument_list|,
-name|HSCALE
-argument_list|(
 name|n1
-argument_list|)
 argument_list|,
-name|VSCALE
-argument_list|(
 name|m1
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|op
@@ -2896,7 +2645,7 @@ operator|+
 literal|1
 operator|)
 operator|*
-name|INCH
+name|inch
 operator|)
 operator|/
 name|POINT
@@ -3003,10 +2752,7 @@ name|op
 argument_list|,
 literal|"h%d"
 argument_list|,
-name|HSCALE
-argument_list|(
 name|n
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|op
@@ -3081,10 +2827,7 @@ name|op
 argument_list|,
 literal|"v%d"
 argument_list|,
-name|VSCALE
-argument_list|(
 name|n
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|op
@@ -3143,22 +2886,16 @@ name|c
 expr_stmt|;
 name|n
 operator|=
-name|VSCALE
-argument_list|(
 name|ngetnumber
 argument_list|(
 name|fp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
 operator|=
-name|VSCALE
-argument_list|(
 name|ngetnumber
 argument_list|(
 name|fp
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -3283,6 +3020,10 @@ name|int
 name|c
 decl_stmt|,
 name|n
+decl_stmt|,
+name|t1
+decl_stmt|,
+name|t2
 decl_stmt|;
 name|fscanf
 argument_list|(
@@ -3314,20 +3055,26 @@ argument_list|,
 literal|"%d %d %d"
 argument_list|,
 operator|&
-name|res
+name|inch
 argument_list|,
 operator|&
-name|hres
+name|t1
 argument_list|,
 operator|&
-name|vres
+name|t2
 argument_list|)
 expr_stmt|;
 name|sprintf
 argument_list|(
 name|str1
 argument_list|,
-literal|"x res 200 1 1"
+literal|"x res %d %d %d"
+argument_list|,
+name|inch
+argument_list|,
+name|t1
+argument_list|,
+name|t2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4531,7 +4278,7 @@ name|maxh
 operator|>
 name|WIDTH
 operator|-
-name|INCH
+name|inch
 operator|||
 name|first
 condition|)
@@ -4596,7 +4343,7 @@ operator|+=
 operator|(
 literal|8
 operator|*
-name|INCH
+name|inch
 operator|)
 operator|+
 name|HALF
