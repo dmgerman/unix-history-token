@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.34 (Berkeley) %G%"
+literal|"@(#)collect.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1444,7 +1444,12 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"collect: read error\n"
+literal|"collect: %s\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|inputerr
