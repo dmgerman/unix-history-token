@@ -809,7 +809,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KLD_MODULE
+name|LOCK_DEBUG
 end_ifdef
 
 begin_define
