@@ -1721,14 +1721,9 @@ expr_stmt|;
 comment|/* 	 * Now link into the object's ordered list of backed pages. 	 */
 name|root
 operator|=
-name|vm_page_splay
-argument_list|(
-name|pindex
-argument_list|,
 name|object
 operator|->
 name|root
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1762,7 +1757,17 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+name|root
+operator|=
+name|vm_page_splay
+argument_list|(
+name|pindex
+argument_list|,
+name|root
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pindex
@@ -1838,6 +1843,7 @@ argument_list|,
 name|listq
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|object
 operator|->
