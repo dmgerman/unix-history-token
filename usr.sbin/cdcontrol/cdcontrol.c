@@ -7143,6 +7143,11 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|dev
+decl_stmt|;
 if|if
 condition|(
 name|fd
@@ -7200,6 +7205,8 @@ name|fd
 operator|=
 name|open
 argument_list|(
+name|dev
+operator|=
 name|devbuf
 argument_list|,
 name|O_RDONLY
@@ -7212,6 +7219,8 @@ name|fd
 operator|=
 name|open
 argument_list|(
+name|dev
+operator|=
 literal|"/dev/cdrom"
 argument_list|,
 name|O_RDONLY
@@ -7231,6 +7240,8 @@ name|fd
 operator|=
 name|open
 argument_list|(
+name|dev
+operator|=
 literal|"/dev/cd0"
 argument_list|,
 name|O_RDONLY
@@ -7250,6 +7261,8 @@ name|fd
 operator|=
 name|open
 argument_list|(
+name|dev
+operator|=
 literal|"/dev/acd0"
 argument_list|,
 name|O_RDONLY
@@ -7275,7 +7288,7 @@ name|warnx
 argument_list|(
 literal|"no disc in drive %s"
 argument_list|,
-name|devbuf
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
@@ -7290,7 +7303,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|devbuf
+name|dev
 argument_list|)
 expr_stmt|;
 block|}
