@@ -2480,6 +2480,23 @@ name|l
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|BRIDGE
+if|if
+condition|(
+operator|!
+operator|(
+name|do_bridge
+operator|&&
+name|BDG_USED
+argument_list|(
+name|ifp
+argument_list|)
+operator|)
+condition|)
+endif|#
+directive|endif
 comment|/* Discard packet if upper layers shouldn't see it because it was 	   unicast to a different Ethernet address. If the driver is working 	   properly, then this situation can only happen when the interface 	   is in promiscuous mode. */
 if|if
 condition|(
