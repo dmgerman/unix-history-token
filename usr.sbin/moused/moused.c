@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.11 1997/12/07 08:11:16 yokota Exp $"
+literal|"$Id: moused.c,v 1.12 1997/12/15 02:57:45 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,6 +682,15 @@ block|,
 name|MOUSE_PROTO_INTELLI
 block|,
 name|MOUSE_MODEL_NET
+block|}
+block|,
+comment|/* Logitech MouseMan (new 4 button model) */
+block|{
+literal|"LGI800C"
+block|,
+name|MOUSE_PROTO_INTELLI
+block|,
+name|MOUSE_MODEL_MOUSEMANPLUS
 block|}
 block|,
 comment|/* Logitech MouseMan+ */
@@ -2208,6 +2217,40 @@ break|break;
 case|case
 literal|'t'
 case|:
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"auto"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|rodent
+operator|.
+name|rtype
+operator|=
+name|MOUSE_PROTO_UNKNOWN
+expr_stmt|;
+name|rodent
+operator|.
+name|flags
+operator|&=
+operator|~
+name|NoPnP
+expr_stmt|;
+name|rodent
+operator|.
+name|level
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+block|}
 for|for
 control|(
 name|i
@@ -2224,7 +2267,6 @@ operator|++
 control|)
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|optarg
@@ -2234,6 +2276,8 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|rodent
@@ -2241,6 +2285,26 @@ operator|.
 name|rtype
 operator|=
 name|i
+expr_stmt|;
+name|rodent
+operator|.
+name|flags
+operator||=
+name|NoPnP
+expr_stmt|;
+name|rodent
+operator|.
+name|level
+operator|=
+operator|(
+name|i
+operator|==
+name|MOUSE_PROTO_SYSMOUSE
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 expr_stmt|;
 break|break;
 block|}
