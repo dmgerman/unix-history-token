@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reader.c	5.6 (Berkeley) %G%"
+literal|"@(#)reader.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5724,7 +5724,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"yyval.%s "
+literal|"yyval.%s"
 argument_list|,
 name|tag
 argument_list|)
@@ -5772,7 +5772,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"yyvsp[%d].%s "
+literal|"yyvsp[%d].%s"
 argument_list|,
 name|i
 operator|-
@@ -5821,7 +5821,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"yyvsp[%d].%s "
+literal|"yyvsp[%d].%s"
 argument_list|,
 name|i
 argument_list|,
@@ -5886,7 +5886,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"yyval.%s "
+literal|"yyval.%s"
 argument_list|,
 name|tag
 argument_list|)
@@ -5897,7 +5897,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"yyval "
+literal|"yyval"
 argument_list|)
 expr_stmt|;
 name|cptr
@@ -5991,7 +5991,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"yyvsp[%d].%s "
+literal|"yyvsp[%d].%s"
 argument_list|,
 name|i
 operator|-
