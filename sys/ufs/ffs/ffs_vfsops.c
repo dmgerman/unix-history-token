@@ -2531,10 +2531,8 @@ operator|->
 name|v_rdev
 operator|->
 name|si_iosize_max
-operator|>
-name|mp
-operator|->
-name|mnt_iosize_max
+operator|!=
+literal|0
 condition|)
 name|mp
 operator|->
