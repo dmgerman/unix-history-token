@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<protocols/talkd.h>
 end_include
 
@@ -172,7 +178,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
