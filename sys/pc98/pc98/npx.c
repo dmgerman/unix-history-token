@@ -996,7 +996,7 @@ name|npx_irq
 expr_stmt|;
 name|savecrit
 operator|=
-name|critcal_enter
+name|critical_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -1180,7 +1180,7 @@ argument_list|)
 expr_stmt|;
 name|savecrit
 operator|=
-name|critcal_enter
+name|critical_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -2949,7 +2949,7 @@ name|save_idt_npxintr
 decl_stmt|;
 name|savecrit
 operator|=
-name|critcal_enter
+name|critical_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -3108,7 +3108,7 @@ argument_list|)
 expr_stmt|;
 name|savecrit
 operator|=
-name|critcal_enter
+name|critical_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
