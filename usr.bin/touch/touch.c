@@ -1161,6 +1161,7 @@ if|if
 condition|(
 name|year
 condition|)
+block|{
 name|t
 operator|->
 name|tm_year
@@ -1170,6 +1171,22 @@ argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|tm_year
+operator|<
+literal|38
+condition|)
+comment|/* support 2000-2038 not 1902-1969 */
+name|t
+operator|->
+name|tm_year
+operator|+=
+literal|100
+expr_stmt|;
+block|}
 name|t
 operator|->
 name|tm_isdst
