@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	4.9 84/01/26"
+literal|"@(#)rcp.c	4.10 84/01/30"
 decl_stmt|;
 end_decl_stmt
 
