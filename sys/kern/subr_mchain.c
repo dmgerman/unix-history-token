@@ -68,10 +68,9 @@ name|MBERROR
 parameter_list|(
 name|format
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|printf("%s(%d): "format, __func__ , \ 				    __LINE__ ,## args)
+value|printf("%s(%d): "format, __func__ , \ 				    __LINE__ , ## __VA_ARGS__)
 end_define
 
 begin_define
@@ -81,10 +80,9 @@ name|MBPANIC
 parameter_list|(
 name|format
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|printf("%s(%d): "format, __func__ , \ 				    __LINE__ ,## args)
+value|printf("%s(%d): "format, __func__ , \ 				    __LINE__ , ## __VA_ARGS__)
 end_define
 
 begin_comment
