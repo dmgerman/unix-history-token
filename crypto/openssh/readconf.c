@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: readconf.c,v 1.22 1999/12/01 13:59:15 markus Exp $"
+literal|"$Id: readconf.c,v 1.23 2000/02/28 19:51:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2852,7 +2852,7 @@ name|options
 operator|->
 name|forward_x11
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(

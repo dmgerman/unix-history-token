@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh.c,v 1.40 2000/02/20 20:05:19 markus Exp $"
+literal|"$Id: ssh.c,v 1.41 2000/02/28 19:51:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -270,6 +270,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"  -x          Disable X11 connection forwarding.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -X          Enable X11 connection forwarding.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
