@@ -1018,7 +1018,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|CAformat
+name|CAkeyformat
 operator|=
 name|str2fmt
 argument_list|(

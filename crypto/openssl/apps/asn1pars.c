@@ -712,7 +712,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -out arg      output file\n"
+literal|" -out arg      output file (output format is always DER\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -783,13 +783,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"               ASN1 blob wrappings\n"
-argument_list|)
-expr_stmt|;
-name|BIO_printf
-argument_list|(
-name|bio_err
-argument_list|,
-literal|" -out filename output DER encoding to file\n"
 argument_list|)
 expr_stmt|;
 goto|goto

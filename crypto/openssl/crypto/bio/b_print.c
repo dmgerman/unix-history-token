@@ -8,6 +8,38 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
+comment|/* disable assert() unless BIO_DEBUG has been defined */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIO_DEBUG
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NDEBUG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*   * Stolen from tjh's ssl/ssl_trc.c stuff.  */
 end_comment
 

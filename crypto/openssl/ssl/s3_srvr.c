@@ -77,6 +77,12 @@ directive|include
 file|"ssl_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|SSL_METHOD
@@ -3691,6 +3697,18 @@ operator|->
 name|session
 operator|->
 name|session_id_length
+expr_stmt|;
+name|die
+argument_list|(
+name|sl
+operator|<=
+sizeof|sizeof
+name|s
+operator|->
+name|session
+operator|->
+name|session_id
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(

@@ -43,6 +43,12 @@ directive|include
 file|<openssl/md5.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|long
@@ -82,7 +88,7 @@ comment|/* NULL_WITH_MD5 v3 */
 if|#
 directive|if
 literal|0
-block|{ 	1, 	SSL2_TXT_NULL_WITH_MD5, 	SSL2_CK_NULL_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_eNULL|SSL_MD5|SSL_SSLV2, 	SSL_EXPORT|SSL_EXP40, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
+block|{ 	1, 	SSL2_TXT_NULL_WITH_MD5, 	SSL2_CK_NULL_WITH_MD5, 	SSL_kRSA|SSL_aRSA|SSL_eNULL|SSL_MD5|SSL_SSLV2, 	SSL_EXPORT|SSL_EXP40|SSL_STRONG_NONE, 	0, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
 endif|#
 directive|endif
 comment|/* RC4_128_EXPORT40_WITH_MD5 */
@@ -358,7 +364,7 @@ comment|/* NULL SSLeay (testing) */
 if|#
 directive|if
 literal|0
-block|{	 	0, 	SSL2_TXT_NULL, 	SSL2_CK_NULL, 	0, 	0, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
+block|{	 	0, 	SSL2_TXT_NULL, 	SSL2_CK_NULL, 	0, 	SSL_STRONG_NONE, 	0, 	0, 	0, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
 endif|#
 directive|endif
 comment|/* end of list :-) */
@@ -1380,6 +1386,22 @@ name|s2
 operator|->
 name|key_material
 expr_stmt|;
+name|die
+argument_list|(
+name|s
+operator|->
+name|s2
+operator|->
+name|key_material_length
+operator|<=
+sizeof|sizeof
+name|s
+operator|->
+name|s2
+operator|->
+name|key_material
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1403,6 +1425,30 @@ name|MD5_Init
 argument_list|(
 operator|&
 name|ctx
+argument_list|)
+expr_stmt|;
+name|die
+argument_list|(
+name|s
+operator|->
+name|session
+operator|->
+name|master_key_length
+operator|>=
+literal|0
+operator|&&
+name|s
+operator|->
+name|session
+operator|->
+name|master_key_length
+operator|<
+sizeof|sizeof
+name|s
+operator|->
+name|session
+operator|->
+name|master_key
 argument_list|)
 expr_stmt|;
 name|MD5_Update
@@ -1598,6 +1644,17 @@ operator|->
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|die
+argument_list|(
+name|error
+operator|>=
+literal|0
+operator|&&
+name|error
+operator|<=
+literal|3
+argument_list|)
 expr_stmt|;
 name|i
 operator|=

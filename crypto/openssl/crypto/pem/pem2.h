@@ -19,12 +19,17 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|HEADER_PEM_H
 name|void
 name|ERR_load_PEM_strings
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -706,7 +706,7 @@ directive|define
 name|EVP_dsa_sha
 parameter_list|()
 define|\
-value|EVP_PKEY_MD_add(NID_dsaWithSHA,\ 			EVP_dsa(),EVP_mdc2())
+value|EVP_PKEY_MD_add(NID_dsaWithSHA,\ 			EVP_dsa(),EVP_sha())
 define|#
 directive|define
 name|EVP_dsa_sha1
