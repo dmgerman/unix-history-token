@@ -1060,16 +1060,6 @@ comment|/* number of records (might be zero) */
 end_comment
 
 begin_decl_stmt
-name|int
-name|ddates_in
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* we have read the increment file */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|dumpdates
 modifier|*
@@ -1119,7 +1109,7 @@ parameter_list|,
 name|ddp
 parameter_list|)
 define|\
-value|for (ddp = ddatev[i = 0]; i< nddates; ddp = ddatev[++i])
+value|if (ddatev != NULL) \ 		for (ddp = ddatev[i = 0]; i< nddates; ddp = ddatev[++i])
 end_define
 
 begin_function_decl
