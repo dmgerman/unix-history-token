@@ -2314,6 +2314,15 @@ name|nclist
 operator|.
 name|pattern
 expr_stmt|;
+if|if
+condition|(
+name|lasttoken
+operator|==
+name|TLP
+condition|)
+name|readtoken
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
