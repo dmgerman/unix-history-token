@@ -171,6 +171,23 @@ begin_comment
 comment|/* HAVE_SYSV_TTYS */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_TERMIOS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -179,12 +196,6 @@ argument_list|(
 name|STREAM
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
 
 begin_include
 include|#
@@ -1200,9 +1211,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
-comment|/* 	 * POSIX/STREAMS serial line parameters (termios interface) 	 * 	 * The PPSCLK option provides timestamping at the driver level.  	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the tty_clk streams module and SunOS 4.1.1 or 	 * later. 	 */
+comment|/* 	 * POSIX serial line parameters (termios interface) 	 * 	 * The PPSCLK option provides timestamping at the driver level.  	 * It uses a 1-pps signal and level converter (gadget box) and 	 * requires the tty_clk streams module and SunOS 4.1.1 or 	 * later. 	 */
 block|{
 name|struct
 name|termios
@@ -1343,6 +1354,16 @@ goto|goto
 name|screwed
 goto|;
 block|}
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_TERMIOS */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STREAM
+argument_list|)
 while|while
 condition|(
 name|ioctl
@@ -1410,7 +1431,6 @@ expr_stmt|;
 goto|goto
 name|screwed
 goto|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -3131,9 +3151,9 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|STREAM
+name|HAVE_TERMIOS
 argument_list|)
-comment|/* 		 * System V STREAM serial line parameters 		 * (termios interface) 		 */
+comment|/* 		 * System V TERMIOS serial line parameters 		 * (termios interface) 		 */
 block|{
 name|struct
 name|termios
@@ -3196,7 +3216,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* STREAM */
+comment|/* HAVE_TERMIOS */
 if|#
 directive|if
 name|defined

@@ -390,6 +390,11 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -1635,12 +1640,12 @@ literal|0
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 name|delay_time
 operator|.
@@ -1666,7 +1671,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -1688,7 +1693,7 @@ literal|'c'
 case|:
 name|ADDCMD
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1773,7 +1778,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|optind
+name|ntp_optind
 operator|==
 name|argc
 condition|)
@@ -1789,18 +1794,18 @@ block|{
 for|for
 control|(
 init|;
-name|optind
+name|ntp_optind
 operator|<
 name|argc
 condition|;
-name|optind
+name|ntp_optind
 operator|++
 control|)
 name|ADDHOST
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;
@@ -2528,9 +2533,11 @@ operator|=
 literal|999
 expr_stmt|;
 comment|/* too big to be a sequence number */
-name|bzero
+name|memset
 argument_list|(
 name|haveseq
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3190,8 +3197,10 @@ condition|)
 name|growpktdata
 argument_list|()
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|datap
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -3199,8 +3208,6 @@ operator|)
 name|rpkt
 operator|.
 name|data
-argument_list|,
-name|datap
 argument_list|,
 name|datasize
 argument_list|)
@@ -3296,7 +3303,7 @@ decl_stmt|;
 name|int
 name|datasize
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -3304,6 +3311,8 @@ operator|*
 operator|)
 operator|&
 name|qpkt
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 name|qpkt
@@ -3355,10 +3364,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|qdata
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -3366,6 +3373,8 @@ operator|)
 name|qpkt
 operator|.
 name|data
+argument_list|,
+name|qdata
 argument_list|,
 name|datasize
 argument_list|)
@@ -5335,17 +5344,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 name|num
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5601,6 +5610,11 @@ directive|if
 name|defined
 argument_list|(
 name|sgi
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
 argument_list|)
 name|qsort
 argument_list|(
@@ -5900,6 +5914,11 @@ name|defined
 argument_list|(
 name|sgi
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_BSDI
+argument_list|)
 name|helpsort
 parameter_list|(
 name|t1
@@ -5966,7 +5985,7 @@ decl_stmt|;
 block|{
 endif|#
 directive|endif
-comment|/* sgi */
+comment|/* sgi || bsdi */
 return|return
 name|strcmp
 argument_list|(

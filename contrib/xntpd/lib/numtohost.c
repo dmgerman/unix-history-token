@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|"ntp_types.h"
 end_include
 
 begin_include

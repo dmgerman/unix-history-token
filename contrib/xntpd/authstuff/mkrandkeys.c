@@ -147,12 +147,12 @@ name|passwd
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 specifier|extern
 name|char
@@ -180,7 +180,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -217,7 +217,7 @@ literal|'p'
 case|:
 name|passwd
 operator|=
-name|optarg
+name|ntp_optarg
 expr_stmt|;
 break|break;
 case|case
@@ -244,11 +244,11 @@ init|;
 operator|!
 name|errflg
 operator|&&
-name|optind
+name|ntp_optind
 operator|<
 name|argc
 condition|;
-name|optind
+name|ntp_optind
 operator|++
 control|)
 block|{
@@ -258,7 +258,7 @@ name|atoi
 argument_list|(
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;
@@ -278,13 +278,15 @@ name|void
 operator|)
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: invalid key number `%s'\n"
 argument_list|,
 name|progname
 argument_list|,
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;

@@ -378,13 +378,15 @@ case|case
 name|KEY_TYPE_ASCII
 case|:
 comment|/* 		 * Make up key from ascii representation 		 */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|keybytes
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

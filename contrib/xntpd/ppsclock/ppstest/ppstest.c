@@ -313,7 +313,7 @@ name|speed
 init|=
 name|B4800
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -321,6 +321,8 @@ operator|*
 operator|)
 operator|&
 name|termios
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

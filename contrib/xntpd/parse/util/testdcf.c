@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/testdcf.c,v 3.7 1993/10/10 22:44:48 kardel Exp  *    * testdcf.c,v 3.7 1993/10/10 22:44:48 kardel Exp  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1993  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/testdcf.c,v 3.9 1994/01/25 19:05:45 kardel Exp  *    * testdcf.c,v 3.9 1994/01/25 19:05:45 kardel Exp  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
 end_comment
 
 begin_include
@@ -1439,11 +1439,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|term
 operator|.
 name|c_cc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

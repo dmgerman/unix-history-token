@@ -581,6 +581,50 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GPSTM
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GPSTMCLK
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GPSTMPPS
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_gpstm
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_gpstm
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Order is clock_start(), clock_shutdown(), clock_poll(),  * clock_control(), clock_init(), clock_buginfo, clock_flags;  *  * Types are defined in ntp.h.  The index must match this.  */
 end_comment
@@ -653,6 +697,10 @@ operator|&
 name|refclock_msfees
 block|,
 comment|/* 14 REFCLK_MSF_EES */
+operator|&
+name|refclock_gpstm
+block|,
+comment|/* 15 REFCLK_GPSTM_TRUETIME */
 block|}
 decl_stmt|;
 end_decl_stmt

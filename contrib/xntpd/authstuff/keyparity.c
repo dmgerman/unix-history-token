@@ -219,12 +219,12 @@ index|]
 decl_stmt|;
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 name|progname
 operator|=
@@ -238,7 +238,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|getopt_l
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -292,7 +292,7 @@ case|:
 if|if
 condition|(
 operator|*
-name|optarg
+name|ntp_optarg
 operator|==
 literal|'n'
 condition|)
@@ -310,7 +310,7 @@ elseif|else
 if|if
 condition|(
 operator|*
-name|optarg
+name|ntp_optarg
 operator|==
 literal|'s'
 condition|)
@@ -353,7 +353,7 @@ if|if
 condition|(
 name|errflg
 operator|||
-name|optind
+name|ntp_optind
 operator|==
 name|argc
 condition|)
@@ -468,11 +468,11 @@ expr_stmt|;
 for|for
 control|(
 init|;
-name|optind
+name|ntp_optind
 operator|<
 name|argc
 condition|;
-name|optind
+name|ntp_optind
 operator|++
 control|)
 block|{
@@ -485,7 +485,7 @@ name|keytype
 argument_list|,
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|,
 name|key
@@ -505,7 +505,7 @@ name|progname
 argument_list|,
 name|argv
 index|[
-name|optind
+name|ntp_optind
 index|]
 argument_list|)
 expr_stmt|;
@@ -980,9 +980,11 @@ case|case
 name|KEY_TYPE_ASCII
 case|:
 comment|/* 		 * Make up key from ascii representation 		 */
-name|bzero
+name|memset
 argument_list|(
 name|keybytes
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

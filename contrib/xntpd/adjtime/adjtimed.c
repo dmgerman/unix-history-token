@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -158,7 +164,7 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|int
-name|optind
+name|ntp_optind
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +172,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|optarg
+name|ntp_optarg
 decl_stmt|;
 end_decl_stmt
 
@@ -351,6 +357,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG_LOCAL6
 name|openlog
 argument_list|(
 literal|"adjtimed"
@@ -360,12 +369,23 @@ argument_list|,
 name|LOG_LOCAL6
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|openlog
+argument_list|(
+literal|"adjtimed"
+argument_list|,
+name|LOG_PID
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
 name|ch
 operator|=
-name|getopt
+name|ntp_getopt
 argument_list|(
 name|argc
 argument_list|,
@@ -493,7 +513,7 @@ name|RATE
 operator|=
 name|atof
 argument_list|(
-name|optarg
+name|ntp_optarg
 argument_list|)
 operator|)
 operator|<=
@@ -928,6 +948,30 @@ name|Exit
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|plock
+argument_list|(
+name|PROCLOCK
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"plock: %m"
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"adjtimed: plock"
+argument_list|)
+expr_stmt|;
+name|Cleanup
+argument_list|()
 expr_stmt|;
 block|}
 for|for

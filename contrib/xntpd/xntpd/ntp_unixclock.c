@@ -48,7 +48,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__bsdi__
+name|SYS_BSDI
 argument_list|)
 end_if
 
@@ -105,7 +105,7 @@ end_if
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__bsdi__
+name|SYS_BSDI
 end_ifdef
 
 begin_include
@@ -120,7 +120,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __bsdi__ */
+comment|/* SYS_BSDI */
 end_comment
 
 begin_include
@@ -1720,6 +1720,18 @@ literal|1000
 expr_stmt|;
 else|#
 directive|else
+comment|/*RS6000*/
+if|#
+directive|if
+name|SYS_DOMAINOS
+operator|*
+name|tickadj
+operator|=
+literal|668
+expr_stmt|;
+else|#
+directive|else
+comment|/*SYS_DOMAINOS*/
 operator|*
 name|tickadj
 operator|=
@@ -1727,6 +1739,9 @@ literal|500
 operator|/
 name|HZ
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*SYS_DOMAINOS*/
 endif|#
 directive|endif
 comment|/*RS6000*/

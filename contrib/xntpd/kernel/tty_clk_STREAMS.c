@@ -242,7 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * God only knows why, but linking with strchr() and index() fail  * on my system, so here's a renamed copy.  */
+comment|/*  * God only knows why, but linking with strchr() fails  * on my system, so here's a renamed copy.  */
 end_comment
 
 begin_function
