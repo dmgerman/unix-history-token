@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  *  * Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All  * rights reserved.  *  * License to copy and use this software is granted provided that it  * is identified as the "RSA Data Security, Inc. MD5 Message-Digest  * Algorithm" in all material mentioning or referencing this software  * or this function.  *  * License is also granted to make and use derivative works provided  * that such works are identified as "derived from the RSA Data  * Security, Inc. MD5 Message-Digest Algorithm" in all material  * mentioning or referencing the derived work.  *  * RSA Data Security, Inc. makes no representations concerning either  * the merchantability of this software or the suitability of this  * software for any particular purpose. It is provided "as is"  * without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this  * documentation and/or software.  *  * $Id: md5c.c,v 1.10 1997/10/21 13:28:36 phk Exp $  *  * This code is the same as the code published by RSA Inc.  It has been  * edited for clarity and style only.  */
+comment|/*  * MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  *  * Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All  * rights reserved.  *  * License to copy and use this software is granted provided that it  * is identified as the "RSA Data Security, Inc. MD5 Message-Digest  * Algorithm" in all material mentioning or referencing this software  * or this function.  *  * License is also granted to make and use derivative works provided  * that such works are identified as "derived from the RSA Data  * Security, Inc. MD5 Message-Digest Algorithm" in all material  * mentioning or referencing the derived work.  *  * RSA Data Security, Inc. makes no representations concerning either  * the merchantability of this software or the suitability of this  * software for any particular purpose. It is provided "as is"  * without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this  * documentation and/or software.  *  * $Id: md5c.c,v 1.11 1998/03/27 10:23:00 phk Exp $  *  * This code is the same as the code published by RSA Inc.  It has been  * edited for clarity and style only.  */
 end_comment
 
 begin_include
@@ -42,29 +42,6 @@ include|#
 directive|include
 file|<sys/md5.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|void
-name|MD5Transform
-name|__P
-argument_list|(
-operator|(
-name|u_int32_t
-index|[
-literal|4
-index|]
-operator|,
-specifier|const
-name|unsigned
-name|char
-index|[
-literal|64
-index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -1204,7 +1181,6 @@ comment|/* MD5 basic transformation. Transforms state based on block. */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|MD5Transform
 parameter_list|(

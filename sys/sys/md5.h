@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD5.H - header file for MD5C.C  * $Id: md5.h,v 1.9 1997/08/25 05:24:31 joerg Exp $  */
+comment|/* MD5.H - header file for MD5C.C  * $Id: md5.h,v 1.10 1998/03/27 10:22:35 phk Exp $  */
 end_comment
 
 begin_comment
@@ -163,6 +163,39 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|MD5Transform
+name|__P
+argument_list|(
+operator|(
+name|u_int32_t
+index|[
+literal|4
+index|]
+operator|,
+specifier|const
+name|unsigned
+name|char
+index|[
+literal|64
+index|]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS
