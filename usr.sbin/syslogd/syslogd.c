@@ -898,6 +898,7 @@ name|logerror
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -4513,6 +4514,7 @@ name|logerror
 parameter_list|(
 name|type
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|type
