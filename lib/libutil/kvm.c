@@ -2103,8 +2103,10 @@ expr|struct
 name|kinfo_proc
 operator|*
 operator|)
-name|malloc
+name|realloc
 argument_list|(
+name|kvmprocbase
+argument_list|,
 name|copysize
 argument_list|)
 operator|)
