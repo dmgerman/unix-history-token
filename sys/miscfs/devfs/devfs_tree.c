@@ -1,13 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|SPLIT_DEVS
-value|1
-end_define
+begin_comment
+comment|/*#define SPLIT_DEVS 1*/
+end_comment
 
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.45 1997/10/12 22:27:11 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.46 1997/10/16 06:29:27 julian Exp $  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.22 1997/10/12 20:24:35 phk Exp $  *  *  */
+comment|/*-  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.23 1997/10/16 06:29:27 julian Exp $  *  *  */
 end_comment
 
 begin_include
@@ -126,20 +126,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfs_busy
-argument_list|(
-name|mp
-argument_list|,
-name|LK_NOWAIT
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|mp
 operator|->
 name|mnt_op
@@ -203,7 +189,16 @@ operator|->
 name|vfc_refcount
 operator|++
 expr_stmt|;
-comment|/*CIRCLEQ_INSERT_TAIL(&mountlist, mp, mnt_list);*/
+name|CIRCLEQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|mountlist
+argument_list|,
+name|mp
+argument_list|,
+name|mnt_list
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"DEVFS: ready to run\n"
@@ -335,6 +330,10 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|devfs_mp_p
 expr_stmt|;
 comment|/*- 	 *  Fill out some fields 	 */
