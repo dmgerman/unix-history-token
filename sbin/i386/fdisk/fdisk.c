@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fdisk.c,v 1.27.2.2 1999/07/28 09:51:18 rnordier Exp $"
+literal|"$Id: fdisk.c,v 1.27.2.3 1999/08/23 11:07:00 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1809,7 +1809,7 @@ name|stderr
 argument_list|,
 literal|"%s%s"
 argument_list|,
-literal|"usage: fdisk [-Baitu] [-b bootcode] [-1234] [disk]\n"
+literal|"usage: fdisk [-Baeitu] [-b bootcode] [-1234] [disk]\n"
 argument_list|,
 literal|"       fdisk -f configfile [-itv] [disk]\n"
 argument_list|)
