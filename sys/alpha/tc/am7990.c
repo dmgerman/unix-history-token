@@ -316,19 +316,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|hide
-name|void
-name|am7990_shutdown
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* hide void am7990_shutdown __P((void *)); */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -4569,30 +4559,9 @@ return|;
 block|}
 end_function
 
-begin_function
-name|hide
-name|void
-name|am7990_shutdown
-parameter_list|(
-name|arg
-parameter_list|)
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|am7990_stop
-argument_list|(
-operator|(
-expr|struct
-name|am7990_softc
-operator|*
-operator|)
-name|arg
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+comment|/* hide void am7990_shutdown(arg) 	void *arg; {  	am7990_stop((struct am7990_softc *)arg); } */
+end_comment
 
 begin_ifdef
 ifdef|#
