@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.85	83/07/09	*/
+comment|/*	machdep.c	4.86	83/07/20	*/
 end_comment
 
 begin_include
@@ -3306,6 +3306,9 @@ name|rp_flag
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 operator|(
@@ -3320,6 +3323,8 @@ operator|!=
 literal|1
 condition|)
 return|return;
+endif|#
+directive|endif
 name|dumpsize
 operator|=
 name|physmem
