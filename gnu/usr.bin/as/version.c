@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: version.c,v 1.3 1993/10/02 20:57:59 pk Exp $"
+literal|"$Id: version.c,v 1.2 1993/11/03 00:52:27 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ name|char
 name|version_string
 index|[]
 init|=
-literal|"GNU assembler version 1.92.3, NetBSD $Revision: 1.3 $\n"
+literal|"GNU assembler version 1.92.3, FreeBSD $Revision: 1.2 $\n"
 decl_stmt|;
 end_decl_stmt
 
