@@ -6955,7 +6955,7 @@ argument_list|(
 name|proctitle
 argument_list|)
 argument_list|,
-literal|"%s: %s"
+literal|"%s: user/%s"
 argument_list|,
 name|remotehost
 argument_list|,
