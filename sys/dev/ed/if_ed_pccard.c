@@ -123,12 +123,6 @@ directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pccarddevs.h"
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -173,6 +167,23 @@ include|#
 directive|include
 file|"miibus_if.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"pccarddevs.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ED_NO_MIIBUS
+end_ifndef
 
 begin_expr_stmt
 name|MODULE_DEPEND

@@ -135,25 +135,6 @@ directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
-begin_include
-include|#
-directive|include
-file|"pccarddevs.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -195,6 +176,12 @@ directive|include
 file|"card_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pccarddevs.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -214,64 +201,6 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_decl_stmt
-specifier|static
-name|device_method_t
-name|wi_pccard_methods
-index|[]
-init|=
-block|{
-comment|/* Device interface */
-name|DEVMETHOD
-argument_list|(
-name|device_probe
-argument_list|,
-name|wi_pccard_probe
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_attach
-argument_list|,
-name|wi_pccard_attach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_detach
-argument_list|,
-name|wi_detach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_shutdown
-argument_list|,
-name|wi_shutdown
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_function_decl
 specifier|static
@@ -350,11 +279,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|driver_t
@@ -407,14 +331,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
 
 begin_decl_stmt
 specifier|static
@@ -938,11 +854,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|int
@@ -1093,11 +1004,6 @@ name|error
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|500000
 comment|/* 	 * The cute little Symbol LA4100-series CF cards need to have 	 * code downloaded to them. 	 */
 name|pccard_get_vendor
 argument_list|(
@@ -1181,8 +1087,6 @@ return|;
 endif|#
 directive|endif
 block|}
-endif|#
-directive|endif
 name|retval
 operator|=
 name|wi_attach

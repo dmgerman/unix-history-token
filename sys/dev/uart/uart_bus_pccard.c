@@ -74,18 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pccarddevs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pccard/pccardreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
@@ -99,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<dev/uart/uart_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pccarddevs.h"
 end_include
 
 begin_function_decl

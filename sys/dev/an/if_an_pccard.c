@@ -149,6 +149,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/an/if_aironet_ieee.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/an/if_anreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
@@ -162,18 +174,6 @@ begin_include
 include|#
 directive|include
 file|"card_if.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/an/if_aironet_ieee.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/an/if_anreg.h>
 end_include
 
 begin_comment

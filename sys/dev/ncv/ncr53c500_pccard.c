@@ -34,7 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -46,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -64,6 +70,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/netbsd/dvcfg.h>
 end_include
 
@@ -71,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<sys/device_port.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pccarddevs.h"
 end_include
 
 begin_include
@@ -132,50 +144,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|500014
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<pccard/cardinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/slot.h>
+file|"pccarddevs.h"
 end_include
 
 begin_function_decl

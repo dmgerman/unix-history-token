@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -48,25 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -90,25 +72,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/sn/if_snvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pccarddevs.h"
+file|<dev/sn/if_snvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"card_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pccarddevs.h"
 end_include
 
 begin_decl_stmt

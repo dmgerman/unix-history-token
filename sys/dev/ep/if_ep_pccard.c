@@ -114,13 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pccarddevs.h"
+file|"card_if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"card_if.h"
+file|"pccarddevs.h"
 end_include
 
 begin_function_decl
