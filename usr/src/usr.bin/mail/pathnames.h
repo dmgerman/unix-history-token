@@ -4,14 +4,14 @@ comment|/*  * Declarations and constants specific to an installation.  *  * Vax/
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)pathnames.h	1.2 %G%";  */
+comment|/*  * Sccs Id = "@(#)pathnames.h	1.3 %G%";  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LOCAL
-value|'v'
+value|'j'
 end_define
 
 begin_comment
