@@ -788,20 +788,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DDB
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BVDDB
 parameter_list|(
 name|x
