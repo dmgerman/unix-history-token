@@ -4,7 +4,7 @@ comment|/*#define DEBUG 1*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.9 1993/12/04 16:13:18 ats Exp $  *  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.13 1993/12/16 04:28:42 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -212,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|NUMTYPES
-value|6
+value|9
 end_define
 
 begin_comment
@@ -264,8 +264,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|FD_1722in1440
+name|FD_1720in1440
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_800in1200
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_1440in1200
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_1460in1200
+value|8
 end_define
 
 begin_decl_stmt
@@ -297,7 +318,7 @@ block|,
 literal|2
 block|}
 block|,
-comment|/* 1.44 meg HD 3.5in floppy    */
+comment|/* 1.44M in HD 3.5in  drive */
 block|{
 literal|15
 block|,
@@ -318,7 +339,7 @@ block|,
 literal|2
 block|}
 block|,
-comment|/* 1.2 meg HD floppy           */
+comment|/*  1.2M in HD 5.25in drive */
 block|{
 literal|9
 block|,
@@ -339,7 +360,7 @@ block|,
 literal|2
 block|}
 block|,
-comment|/* 360k floppy in 1.2meg drive */
+comment|/*  360K in HD 5.25in drive */
 block|{
 literal|9
 block|,
@@ -360,7 +381,7 @@ block|,
 literal|2
 block|}
 block|,
-comment|/* 360k floppy in DD drive     */
+comment|/*  360K in DD 5.25in drive */
 block|{
 literal|9
 block|,
@@ -381,7 +402,7 @@ block|,
 literal|2
 block|}
 block|,
-comment|/* 720k floppy in HD drive     */
+comment|/*  720K in HD 3.5in  drive */
 block|{
 literal|21
 block|,
@@ -402,7 +423,70 @@ block|,
 literal|2
 block|}
 block|,
-comment|/* 1.722M floppy in HD 3.5in drive */
+comment|/* 1.72M in HD 3.5in  drive */
+block|{
+literal|10
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x2E
+block|,
+literal|80
+block|,
+literal|1600
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|2
+block|}
+block|,
+comment|/*  800K in HD 5.25in drive */
+block|{
+literal|18
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x02
+block|,
+literal|80
+block|,
+literal|2880
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|2
+block|}
+block|,
+comment|/* 1.44M in HD 5.25in drive */
+block|{
+literal|18
+block|,
+literal|2
+block|,
+literal|0xFF
+block|,
+literal|0x02
+block|,
+literal|82
+block|,
+literal|2952
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|2
+block|}
+block|,
+comment|/* 1.46M in HD 5.25in drive */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2528,6 +2612,18 @@ operator|&&
 name|type
 operator|!=
 name|FD_360in1200
+operator|&&
+name|type
+operator|!=
+name|FD_800in1200
+operator|&&
+name|type
+operator|!=
+name|FD_1440in1200
+operator|&&
+name|type
+operator|!=
+name|FD_1460in1200
 condition|)
 return|return
 operator|(
@@ -2542,7 +2638,7 @@ if|if
 condition|(
 name|type
 operator|!=
-name|FD_1722in1440
+name|FD_1720in1440
 operator|&&
 name|type
 operator|!=
