@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getvfsbyname.c,v 1.2 1997/03/03 13:08:33 bde Exp $"
+literal|"$Id: getvfsbyname.c,v 1.3 1998/03/09 04:36:07 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_NEW_VFSCONF
-end_define
 
 begin_include
 include|#
@@ -69,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<kvm.h>
 end_include
 
 begin_comment
