@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.12 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.13 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.12 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.13 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1926,6 +1926,21 @@ operator|=
 name|_res
 operator|.
 name|defdname
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'.'
+condition|)
+block|{
+operator|*
+name|cp
+operator|=
+literal|'\0'
 expr_stmt|;
 block|}
 operator|*
