@@ -26,6 +26,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_random_ip_id.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
