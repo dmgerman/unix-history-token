@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.56	82/03/03	*/
+comment|/*	tcp_input.c	1.57	82/03/09	*/
 end_comment
 
 begin_include
@@ -2582,17 +2582,12 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* drop IP header */
+name|m_drop
+argument_list|(
 name|m
-operator|->
-name|m_off
-operator|+=
+argument_list|,
 name|off
-expr_stmt|;
-name|m
-operator|->
-name|m_len
-operator|-=
-name|off
+argument_list|)
 expr_stmt|;
 name|tiflags
 operator|=
