@@ -2698,9 +2698,6 @@ condition|(
 name|fhard
 condition|)
 block|{
-name|u_int64_t
-name|delta
-decl_stmt|;
 comment|/* magic, at its best... */
 name|tcount
 operator|=
