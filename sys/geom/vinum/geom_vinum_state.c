@@ -820,6 +820,35 @@ operator|=
 name|GV_VOL_UP
 expr_stmt|;
 return|return;
+comment|/* We can handle a RAID5 plex with one dead subdisk as well. */
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|org
+operator|==
+name|GV_PLEX_RAID5
+operator|)
+operator|&&
+operator|(
+name|p
+operator|->
+name|state
+operator|==
+name|GV_PLEX_DEGRADED
+operator|)
+condition|)
+block|{
+name|v
+operator|->
+name|state
+operator|=
+name|GV_VOL_UP
+expr_stmt|;
+return|return;
 block|}
 block|}
 comment|/* Not one of our plexes is up, so we can't be either. */
