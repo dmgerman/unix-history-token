@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.6	81/11/26	*/
+comment|/*	protosw.h	4.7	81/11/29	*/
 end_comment
 
 begin_comment
-comment|/*  * Protocol switch table.  *  * Each protocol has a handle initializing one of these structures,  * which is used for protocol-protocol and system-protocol communication.  *  * A protocol is called through the pr_init entry before any other.  * Thereafter it is called every 100ms through the pr_fasttimo entry and  * every 500ms through the pr_slowtimo for timer based actions.  * The system will call the pr_drain entry if it is low on space and  * this should throw away any non-critical data.  *  * Protocols pass data between themselves as chains of mbufs using  * the pr_input and pr_output hooks.  Pr_input passes data up (towards  * UNIX) and pr_output passes it down (towards the imps); control  * information passes up and down on pr_ctlinput and pr_ctloutput.  * The protocol is responsible for the space occupied by any the  * arguments to these entries and must dispose it.  *  * The userreq routine interfaces protocols to the system and is  * described below.  *  * The sense routine returns protocol status into the argument buffer.  * This is used by the system in providing session-level abstractions  * out of network level protocols, and may also be returned by socket ioctl's.  * The amount of data returned by a sense is limited to the maxsense  * value.  (The space for the sense is allocated by the caller, based on this.)  */
+comment|/*  * Protocol switch table.  *  * Each protocol has a handle initializing one of these structures,  * which is used for protocol-protocol and system-protocol communication.  *  * A protocol is called through the pr_init entry before any other.  * Thereafter it is called every 100ms through the pr_fasttimo entry and  * every 500ms through the pr_slowtimo for timer based actions.  * The system will call the pr_drain entry if it is low on space and  * this should throw away any non-critical data.  *  * Protocols pass data between themselves as chains of mbufs using  * the pr_input and pr_output hooks.  Pr_input passes data up (towards  * UNIX) and pr_output passes it down (towards the imps); control  * information passes up and down on pr_ctlinput and pr_ctloutput.  * The protocol is responsible for the space occupied by any the  * arguments to these entries and must dispose it.  *  * The userreq routine interfaces protocols to the system and is  * described below.  */
 end_comment
 
 begin_struct
@@ -60,7 +60,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* control output (from above) */
-comment|/* user-protocol hooks */
+comment|/* user-protocol hook */
 name|int
 function_decl|(
 modifier|*
@@ -69,18 +69,6 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* user request: see list below */
-name|int
-function_decl|(
-modifier|*
-name|pr_sense
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* sense state of protocol */
-name|int
-name|pr_maxsense
-decl_stmt|;
-comment|/* max size of sense value */
 comment|/* utility hooks */
 name|int
 function_decl|(
@@ -295,6 +283,39 @@ begin_comment
 comment|/* control operations on protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRU_SENSE
+value|10
+end_define
+
+begin_comment
+comment|/* return status into m */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_RCVOOB
+value|11
+end_define
+
+begin_comment
+comment|/* retrieve out of band data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRU_SENDOOB
+value|12
+end_define
+
+begin_comment
+comment|/* send out of band data */
+end_comment
+
 begin_comment
 comment|/* begin for protocols internal use */
 end_comment
@@ -303,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|PRU_FASTTIMO
-value|10
+value|13
 end_define
 
 begin_comment
@@ -314,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SLOWTIMO
-value|11
+value|14
 end_define
 
 begin_comment
@@ -325,7 +346,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTORCV
-value|12
+value|15
 end_define
 
 begin_comment
@@ -336,7 +357,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTOSEND
-value|13
+value|16
 end_define
 
 begin_comment
@@ -351,7 +372,7 @@ begin_define
 define|#
 directive|define
 name|PRU_NREQ
-value|14
+value|17
 end_define
 
 begin_ifdef
@@ -386,6 +407,12 @@ block|,
 literal|"ABORT"
 block|,
 literal|"CONTROL"
+block|,
+literal|"SENSE"
+block|,
+literal|"RCVOOB"
+block|,
+literal|"SENDOOB"
 block|,
 literal|"FASTTIMO"
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.8	81/04/28	*/
+comment|/*	user.h	4.9	81/11/29	*/
 end_comment
 
 begin_ifdef
@@ -506,11 +506,33 @@ begin_comment
 comment|/* u_error codes */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../errno.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.8	81/11/26	*/
+comment|/*	socket.h	4.9	81/11/29	*/
 end_comment
 
 begin_comment
@@ -115,7 +115,7 @@ name|short
 name|sp_family
 decl_stmt|;
 comment|/* protocol family */
-name|short
+name|u_short
 name|sp_protocol
 decl_stmt|;
 comment|/* protocol within family */
@@ -137,12 +137,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PF_LOCAL
+name|PF_UNIX
 value|1
 end_define
 
 begin_comment
-comment|/* local to host (pipes, portals) */
+comment|/* UNIX internal protocol */
 end_comment
 
 begin_define
@@ -159,8 +159,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PF_PUP
+name|PF_IMPLINK
 value|3
+end_define
+
+begin_comment
+comment|/* imp link protocols */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_PUP
+value|4
 end_define
 
 begin_comment
@@ -171,7 +182,7 @@ begin_define
 define|#
 directive|define
 name|PF_CHAOS
-value|4
+value|5
 end_define
 
 begin_comment
@@ -182,7 +193,7 @@ begin_define
 define|#
 directive|define
 name|PF_OISCP
-value|5
+value|6
 end_define
 
 begin_comment
@@ -193,7 +204,7 @@ begin_define
 define|#
 directive|define
 name|PF_NBS
-value|6
+value|7
 end_define
 
 begin_comment
@@ -204,7 +215,7 @@ begin_define
 define|#
 directive|define
 name|PF_ECMA
-value|7
+value|8
 end_define
 
 begin_comment
@@ -215,7 +226,7 @@ begin_define
 define|#
 directive|define
 name|PF_DATAKIT
-value|8
+value|9
 end_define
 
 begin_comment
@@ -226,7 +237,7 @@ begin_define
 define|#
 directive|define
 name|PF_CCITT
-value|9
+value|10
 end_define
 
 begin_comment
@@ -296,8 +307,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_PUP
+name|AF_IMPLINK
 value|3
+end_define
+
+begin_comment
+comment|/* arpanet imp addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_PUP
+value|4
 end_define
 
 begin_comment
@@ -308,7 +330,7 @@ begin_define
 define|#
 directive|define
 name|AF_CHAOS
-value|4
+value|5
 end_define
 
 begin_comment
@@ -319,7 +341,7 @@ begin_define
 define|#
 directive|define
 name|AF_OISCP
-value|5
+value|6
 end_define
 
 begin_comment
@@ -330,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|AF_NBS
-value|6
+value|7
 end_define
 
 begin_comment
@@ -341,7 +363,7 @@ begin_define
 define|#
 directive|define
 name|AF_ECMA
-value|7
+value|8
 end_define
 
 begin_comment
@@ -352,7 +374,7 @@ begin_define
 define|#
 directive|define
 name|AF_DATAKIT
-value|8
+value|9
 end_define
 
 begin_comment
@@ -363,7 +385,7 @@ begin_define
 define|#
 directive|define
 name|AF_CCITT
-value|9
+value|10
 end_define
 
 begin_comment

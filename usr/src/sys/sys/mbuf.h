@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.6 81/11/26 */
+comment|/* mbuf.h 4.7 81/11/29 */
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NMBPAGES
+name|NMBCLUSTERS
 value|256
 end_define
 
@@ -277,7 +277,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nmbpages
+name|nmbclusters
 decl_stmt|;
 end_decl_stmt
 
@@ -302,7 +302,7 @@ begin_decl_stmt
 name|char
 name|mclrefcnt
 index|[
-name|NMBPAGES
+name|NMBCLUSTERS
 index|]
 decl_stmt|;
 end_decl_stmt
