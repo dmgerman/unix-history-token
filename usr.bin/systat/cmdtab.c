@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmdtab.c,v 1.2 1997/09/24 02:43:37 wollman Exp $"
+literal|"$Id: cmdtab.c,v 1.3 1997/09/25 00:37:31 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +230,28 @@ block|,
 name|cmdmode
 block|,
 name|resetip
+block|,
+name|CF_LOADAV
+block|}
+block|,
+block|{
+literal|"tcp"
+block|,
+name|showtcp
+block|,
+name|fetchtcp
+block|,
+name|labeltcp
+block|,
+name|inittcp
+block|,
+name|opentcp
+block|,
+name|closetcp
+block|,
+name|cmdmode
+block|,
+name|resettcp
 block|,
 name|CF_LOADAV
 block|}
