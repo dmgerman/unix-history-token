@@ -2253,7 +2253,17 @@ name|i
 operator|=
 name|DITEM_FAILURE
 expr_stmt|;
+else|else
+name|USAResident
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
+else|else
+name|USAResident
+operator|=
+name|FALSE
+expr_stmt|;
 name|distVerifyFlags
 argument_list|()
 expr_stmt|;

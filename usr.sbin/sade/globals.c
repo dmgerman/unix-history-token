@@ -74,6 +74,16 @@ comment|/* Are we on a VTY? */
 end_comment
 
 begin_decl_stmt
+name|Boolean
+name|USAResident
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Are we cryptographically challenged? */
+end_comment
+
+begin_decl_stmt
 name|Variable
 modifier|*
 name|VarHead
@@ -168,6 +178,10 @@ expr_stmt|;
 name|RunningAsInit
 operator|=
 name|FALSE
+expr_stmt|;
+name|USAResident
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 end_function

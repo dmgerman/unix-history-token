@@ -4629,6 +4629,11 @@ argument_list|(
 literal|"/etc/resolv.conf"
 argument_list|)
 expr_stmt|;
+name|configMake_conf
+argument_list|(
+literal|"/etc/make.conf"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
