@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_loop.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -202,12 +202,19 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|loattach
-argument_list|()
-end_macro
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
-begin_block
+begin_function
+name|void
+name|loopattach
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -218,6 +225,16 @@ init|=
 operator|&
 name|loif
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|n
+operator|=
+name|n
+expr_stmt|;
+comment|/* Highlander: there can only be one... */
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_name
@@ -298,7 +315,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_macro
 name|looutput
