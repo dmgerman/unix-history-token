@@ -5598,7 +5598,7 @@ name|irq
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * Ohterwise we're doing PCI interrupts.  For those cardbus bridges 	 * that follow yenta (and the one pcmcia bridge that does), we don't 	 * do a thing to get the IRQ mapped into the system.  However, 	 * for other controllers that are PCI, but not yetna compliant, we 	 * need to do some special mapping. 	 */
+comment|/* 	 * Ohterwise we're doing PCI interrupts.  For those cardbus bridges 	 * that follow yenta (and the one pcmcia bridge that does), we don't 	 * do a thing to get the IRQ mapped into the system.  However, 	 * for other controllers that are PCI, but not yetna compliant, we 	 * need to do some special mapping. 	 * 	 * XXX Maybe we shouldn't assume INTA#, but rather as the function 	 * XXX what Intline to use. 	 */
 if|if
 condition|(
 name|sp
