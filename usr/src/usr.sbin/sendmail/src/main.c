@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.56 (Berkeley) %G%"
+literal|"@(#)main.c	5.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -980,6 +980,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* strip out "dangerous" envariables */
 if|if
 condition|(
 name|strncmp
@@ -1056,6 +1057,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+operator|--
 name|i
 operator|>
 literal|0

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.34 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.35 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.34 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.35 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,6 +423,8 @@ sizeof|sizeof
 argument_list|(
 name|hostbuf
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|bp
 operator|=
@@ -645,16 +647,43 @@ name|strlen
 argument_list|(
 name|bp
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
 name|bp
 operator|+=
 name|n
 expr_stmt|;
+if|if
+condition|(
+name|bp
+index|[
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'.'
+condition|)
+block|{
+operator|*
+name|bp
+operator|++
+operator|=
+literal|'.'
+expr_stmt|;
+name|n
+operator|++
+expr_stmt|;
+block|}
+operator|*
+name|bp
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
 name|buflen
 operator|-=
 name|n
+operator|+
+literal|1
 expr_stmt|;
 block|}
 if|if
