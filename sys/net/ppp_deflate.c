@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_deflate.c,v 1.4 1997/09/02 01:18:39 bde Exp $	*/
+comment|/*	$Id: ppp_deflate.c,v 1.5 1997/09/21 22:31:20 dyson Exp $	*/
 end_comment
 
 begin_comment
@@ -11,12 +11,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include

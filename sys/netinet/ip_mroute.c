@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.40 1997/07/19 20:07:07 fenner Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.41 1997/09/21 22:01:38 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -49,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -120,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
 
@@ -133,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/igmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/igmp_var.h>
 end_include
 
 begin_include

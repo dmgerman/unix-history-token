@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -93,30 +87,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_comment
-comment|/* for rdtsc proto for clock.h below */
-end_comment
 
 begin_include
 include|#

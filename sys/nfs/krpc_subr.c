@@ -4,7 +4,7 @@ comment|/*	$NetBSD: krpc_subr.c,v 1.12.4.1 1996/06/07 00:52:26 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: krpc_subr.c,v 1.5 1997/09/02 01:19:26 bde Exp $	*/
+comment|/*	$Id: krpc_subr.c,v 1.6 1997/10/12 20:25:36 phk Exp $	*/
 end_comment
 
 begin_comment
@@ -26,43 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sockio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/reboot.h>
 end_include
 
 begin_include

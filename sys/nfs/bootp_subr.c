@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.4 1997/06/12 14:08:20 tegge Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.5 1997/08/16 19:15:51 wollman Exp $	*/
 end_comment
 
 begin_comment
@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -53,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/reboot.h>
 end_include
 
 begin_include
@@ -101,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
 end_include
 
 begin_include

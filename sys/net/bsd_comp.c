@@ -4,19 +4,13 @@ comment|/* Because this code is derived from the 4.3BSD compress source:  *  *  
 end_comment
 
 begin_comment
-comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * $Id: bsd_comp.c,v 1.8 1997/08/19 17:07:07 peter Exp $  */
+comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * $Id: bsd_comp.c,v 1.9 1997/09/02 01:18:31 bde Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -40,31 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/ppp_defs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_ppp.h>
 end_include
 
 begin_define

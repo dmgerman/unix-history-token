@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.28 1997/08/08 14:36:29 alex Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.29 1997/09/16 11:43:57 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,12 +14,6 @@ define|#
 directive|define
 name|_IP_FW_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
 
 begin_comment
 comment|/*  * This union structure identifies an interface, either explicitly  * by name or implicitly by IP address. The flags IP_FW_F_IIFNAME  * and IP_FW_F_OIFNAME say how to interpret this structure. An  * interface unit number of -1 matches any unit number, while an  * IP address of 0.0.0.0 indicates matches any interface.  *  * The receive and transmit interfaces are only compared against the  * the packet if the corresponding bit (IP_FW_F_IIFACE or IP_FW_F_OIFACE)  * is set. Note some packets lack a receive or transmit interface  * (in which case the missing "interface" never matches).  */
