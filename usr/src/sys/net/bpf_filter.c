@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf_filter.c	7.4 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf_filter.c,v 1.16 91/10/27 21:22:35 mccanne Exp $";  */
+comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf_filter.c	7.5 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf_filter.c,v 1.16 91/10/27 21:22:35 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -66,7 +66,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|ALIGN
+name|BPF_ALIGN
 end_define
 
 begin_endif
@@ -77,7 +77,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALIGN
+name|BPF_ALIGN
 end_ifndef
 
 begin_define
@@ -87,7 +87,7 @@ name|EXTRACT_SHORT
 parameter_list|(
 name|p
 parameter_list|)
-value|(ntohs(*(u_short *)p))
+value|((u_short)ntohs(*(u_short *)p))
 end_define
 
 begin_define
@@ -113,7 +113,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|((u_short)\ 		(*((u_char *)(p)+0)<<8|\ 		 *((u_char *)(p)+1)<<0))
+value|((u_short)\ 		((u_short)*((u_char *)p+0)<<8|\ 		 (u_short)*((u_char *)p+1)<<0))
 end_define
 
 begin_define
@@ -124,7 +124,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(*((u_char *)(p)+0)<<24|\ 		 *((u_char *)(p)+1)<<16|\ 		 *((u_char *)(p)+2)<<8|\ 		 *((u_char *)(p)+3)<<0)
+value|((u_long)*((u_char *)p+0)<<24|\ 		 (u_long)*((u_char *)p+1)<<16|\ 		 (u_long)*((u_char *)p+2)<<8|\ 		 (u_long)*((u_char *)p+3)<<0)
 end_define
 
 begin_endif
@@ -658,7 +658,7 @@ name|buflen
 decl_stmt|;
 block|{
 specifier|register
-name|long
+name|u_long
 name|A
 decl_stmt|,
 name|X
@@ -833,7 +833,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|ALIGN
+name|BPF_ALIGN
 if|if
 condition|(
 operator|(
@@ -867,6 +867,8 @@ endif|#
 directive|endif
 name|A
 operator|=
+name|ntohl
+argument_list|(
 operator|*
 operator|(
 name|long
@@ -877,6 +879,7 @@ name|p
 operator|+
 name|k
 operator|)
+argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
@@ -1144,7 +1147,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|ALIGN
+name|BPF_ALIGN
 if|if
 condition|(
 operator|(
@@ -1178,6 +1181,8 @@ endif|#
 directive|endif
 name|A
 operator|=
+name|ntohl
+argument_list|(
 operator|*
 operator|(
 name|long
@@ -1188,6 +1193,7 @@ name|p
 operator|+
 name|k
 operator|)
+argument_list|)
 expr_stmt|;
 continue|continue;
 case|case
