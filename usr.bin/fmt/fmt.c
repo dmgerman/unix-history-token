@@ -450,6 +450,8 @@ name|cp
 decl_stmt|,
 modifier|*
 name|cp2
+decl_stmt|,
+name|cc
 decl_stmt|;
 specifier|register
 name|int
@@ -522,15 +524,11 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|(
+operator|!
+name|isprint
+argument_list|(
 name|c
-operator|<
-literal|' '
-operator|||
-name|c
-operator|>=
-literal|0177
-operator|)
+argument_list|)
 operator|&&
 name|c
 operator|!=
@@ -598,7 +596,7 @@ name|canonb
 expr_stmt|;
 while|while
 condition|(
-name|c
+name|cc
 operator|=
 operator|*
 name|cp
@@ -607,7 +605,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|c
+name|cc
 operator|!=
 literal|'\t'
 condition|)
@@ -629,7 +627,7 @@ operator|*
 name|cp2
 operator|++
 operator|=
-name|c
+name|cc
 expr_stmt|;
 continue|continue;
 block|}
@@ -751,12 +749,9 @@ name|h
 decl_stmt|;
 if|if
 condition|(
-name|strlen
-argument_list|(
+operator|!
+operator|*
 name|line
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|oflush
