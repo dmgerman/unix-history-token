@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.15 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4121,14 +4121,12 @@ block|{
 case|case
 literal|'\n'
 case|:
-comment|/* 				 * If echoing is happening locally, 				 * then a newline (unix) is CRLF (TELNET). 				 */
+comment|/* 				 * If we are in CRMOD mode (\r ==> \n) 				 * on our local machine, then probably 				 * a newline (unix) is CRLF (TELNET). 				 */
 if|if
 condition|(
-operator|!
-name|hisopts
-index|[
-name|TELOPT_ECHO
-index|]
+name|globalmode
+operator|>=
+literal|3
 condition|)
 block|{
 name|NETADD
