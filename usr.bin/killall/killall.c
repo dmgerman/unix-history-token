@@ -1026,18 +1026,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+operator|*
+name|user
+operator|==
+literal|'\0'
+operator|||
+operator|*
 name|ep
-operator|-
-name|user
-operator|)
-operator|<
-name|strlen
-argument_list|(
-name|user
-argument_list|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
+comment|/* was it a number? */
 name|pw
 operator|=
 name|getpwnam
