@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.30 (Berkeley) %G%"
+literal|"@(#)w.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,6 +377,11 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
 argument_list|)
 block|{
 literal|"_cn_tty"
@@ -810,6 +815,11 @@ directive|if
 name|defined
 argument_list|(
 name|hp300
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i386
 argument_list|)
 comment|/* 		 * XXX  If this is the console device, attempt to ascertain 		 * the true console device dev_t. 		 */
 if|if
