@@ -957,7 +957,7 @@ name|int
 name|chan
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|phys
 decl_stmt|;
 name|int
@@ -1807,13 +1807,14 @@ name|int
 name|chan
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|phys
 decl_stmt|,
 name|priorpage
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|vm_offset_t
 name|endva
 decl_stmt|;
 name|u_int
