@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.21 (Berkeley) %G%"
+literal|"@(#)find.c	4.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * SEE ALSO:	updatedb, bigram.c, code.c  *		Usenix ;login:, February/March, 1983, p. 8.  *  * REVISIONS: 	James A. Woods, Informatics General Corporation,  *		NASA Ames Research Center, 6/81.  *  *		The second form searches a pre-computed filelist  *		(constructed nightly by /usr/lib/crontab) which is  *		compressed by updatedb (v.i.z.)  The effect of  *			find<name>  *		is similar to  *			find / +0 -name "*<name>*" -print  *		but much faster.  *  *		8/82 faster yet + incorporation of bigram coding -- jaw  *  *		1/83 incorporate glob-style matching -- jaw  */
+comment|/*  * SEE ALSO:	code.c, updatedb, bigram.c  *		Usenix ;login:, Vol 8, No 1, February/March, 1983, p. 8.  *  * REVISIONS: 	James A. Woods, Informatics General Corporation,  *		NASA Ames Research Center, 6/81.  *  *		The second form searches a pre-computed filelist  *		(constructed nightly by /usr/lib/crontab) which is  *		compressed by updatedb (v.i.z.)  The effect of  *			find<name>  *		is similar to  *			find / +0 -name "*<name>*" -print  *		but much faster.  *  *		8/82 faster yet + incorporation of bigram coding -- jaw  *  *		1/83 incorporate glob-style matching -- jaw  */
 end_comment
 
 begin_define
@@ -5500,8 +5500,14 @@ name|AMES
 end_ifdef
 
 begin_comment
-comment|/*  * 'fastfind' scans a file list for the full pathname of a file  * given only a piece of the name.  The list has been processed with  * with "front-compression" and bigram coding.  Front compression reduces  * space by a factor of 4-5, bigram coding by a further 20-25%.  * The codes are:  *  *	0-28	likeliest differential counts + offset to make nonnegative   *	30	escape code for out-of-range count to follow in next word  *	128-255 bigram codes, (128 most common, as determined by 'updatedb')  *	32-127  single character (printable) ascii residue  *  * A novel two-tiered string search technique is employed:   *  * First, a metacharacter-free subpattern and partial pathname is  * matched BACKWARDS to avoid full expansion of the pathname list.  * The time savings is 40-50% over forward matching, which cannot efficiently  * handle overlapped search patterns and compressed path residue.  *  * Then, the actual shell glob-style regular expression (if in this form)  * is matched against the candidate pathnames using the slower routines  * provided in the standard 'find'.  */
+comment|/*  * 'fastfind' scans a file list for the full pathname of a file  * given only a piece of the name.  The list has been processed with  * with "front-compression" and bigram coding.  Front compression reduces  * space by a factor of 4-5, bigram coding by a further 20-25%.  * The codes are:  *  *	0-28	likeliest differential counts + offset to make nonnegative   *	30	switch code for out-of-range count to follow in next word  *	128-255 bigram codes (128 most common, as determined by 'updatedb')  *	32-127  single character (printable) ascii residue (ie, literal)  *  * A novel two-tiered string search technique is employed:   *  * First, a metacharacter-free subpattern and partial pathname is  * matched BACKWARDS to avoid full expansion of the pathname list.  * The time savings is 40-50% over forward matching, which cannot efficiently  * handle overlapped search patterns and compressed path residue.  *  * Then, the actual shell glob-style regular expression (if in this form)  * is matched against the candidate pathnames using the slower routines  * provided in the standard 'find'.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"find.h"
+end_include
 
 begin_define
 define|#
@@ -5515,20 +5521,6 @@ define|#
 directive|define
 name|NO
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|OFFSET
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|ESCCODE
-value|30
 end_define
 
 begin_macro
@@ -5572,11 +5564,13 @@ name|patprep
 argument_list|()
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|count
 init|=
 literal|0
+decl_stmt|,
+name|found
+init|=
+name|NO
 decl_stmt|,
 name|globflag
 decl_stmt|;
@@ -5598,24 +5592,19 @@ decl_stmt|;
 name|char
 name|path
 index|[
-literal|1024
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
 name|bigram1
 index|[
-literal|128
+name|NBG
 index|]
 decl_stmt|,
 name|bigram2
 index|[
-literal|128
+name|NBG
 index|]
-decl_stmt|;
-name|int
-name|found
-init|=
-name|NO
 decl_stmt|;
 if|if
 condition|(
@@ -5633,12 +5622,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"find: can't open %s\n"
-argument_list|,
 name|_PATH_FCODES
 argument_list|)
 expr_stmt|;
@@ -5650,20 +5635,28 @@ expr_stmt|;
 block|}
 for|for
 control|(
-name|i
+name|c
 operator|=
 literal|0
+operator|,
+name|p
+operator|=
+name|bigram1
+operator|,
+name|s
+operator|=
+name|bigram2
 init|;
-name|i
+name|c
 operator|<
-literal|128
+name|NBG
 condition|;
-name|i
+name|c
 operator|++
 control|)
-name|bigram1
+name|p
 index|[
-name|i
+name|c
 index|]
 operator|=
 name|getc
@@ -5671,9 +5664,9 @@ argument_list|(
 name|fp
 argument_list|)
 operator|,
-name|bigram2
+name|s
 index|[
-name|i
+name|c
 index|]
 operator|=
 name|getc
@@ -5681,25 +5674,29 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|pathpart
+expr_stmt|;
 name|globflag
 operator|=
 name|index
 argument_list|(
-name|pathpart
+name|p
 argument_list|,
 literal|'*'
 argument_list|)
 operator|||
 name|index
 argument_list|(
-name|pathpart
+name|p
 argument_list|,
 literal|'?'
 argument_list|)
 operator|||
 name|index
 argument_list|(
-name|pathpart
+name|p
 argument_list|,
 literal|'['
 argument_list|)
@@ -5708,18 +5705,17 @@ name|patend
 operator|=
 name|patprep
 argument_list|(
-name|pathpart
+name|p
 argument_list|)
 expr_stmt|;
+for|for
+control|(
 name|c
 operator|=
 name|getc
 argument_list|(
 name|fp
 argument_list|)
-expr_stmt|;
-for|for
-control|(
 init|;
 condition|;
 control|)
@@ -5730,7 +5726,7 @@ operator|(
 operator|(
 name|c
 operator|==
-name|ESCCODE
+name|SWITCH
 operator|)
 condition|?
 name|getw
@@ -5760,7 +5756,7 @@ name|fp
 argument_list|)
 operator|)
 operator|>
-name|ESCCODE
+name|SWITCH
 condition|;
 control|)
 comment|/* overlay old path */
@@ -5768,7 +5764,7 @@ if|if
 condition|(
 name|c
 operator|<
-literal|0200
+name|PARITY
 condition|)
 operator|*
 name|p
@@ -5777,7 +5773,14 @@ operator|=
 name|c
 expr_stmt|;
 else|else
+block|{
 comment|/* bigrams are parity-marked */
+name|c
+operator|&=
+name|PARITY
+operator|-
+literal|1
+expr_stmt|;
 operator|*
 name|p
 operator|++
@@ -5785,8 +5788,6 @@ operator|=
 name|bigram1
 index|[
 name|c
-operator|&
-literal|0177
 index|]
 operator|,
 operator|*
@@ -5796,10 +5797,9 @@ operator|=
 name|bigram2
 index|[
 name|c
-operator|&
-literal|0177
 index|]
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
