@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *  *	Last Edit-Date: [Thu Apr  6 09:44:24 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *  *	Last Edit-Date: [Sat Jul 15 15:06:06 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -320,6 +320,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|pcvt_identify
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -327,6 +342,13 @@ name|pcvt_methods
 index|[]
 init|=
 block|{
+name|DEVMETHOD
+argument_list|(
+name|device_identify
+argument_list|,
+name|pcvt_identify
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|device_probe
@@ -396,6 +418,37 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	driver identify  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|pcvt_identify
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|)
+block|{
+name|BUS_ADD_CHILD
+argument_list|(
+name|parent
+argument_list|,
+name|ISA_ORDER_SPECULATIVE
+argument_list|,
+literal|"vt"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	driver probe  *---------------------------------------------------------------------------*/
