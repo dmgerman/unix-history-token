@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.40 1995/03/28 07:55:42 bde Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.41 1995/04/12 20:47:58 wollman Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -152,17 +152,13 @@ define|#
 directive|define
 name|MCD_TRACE
 parameter_list|(
-name|fmt
+name|format
 parameter_list|,
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
+name|args
+modifier|...
 parameter_list|)
-value|{if (mcd_data[unit].debug) {printf("mcd%d: status=0x%02x: ",unit,mcd_data[unit].status); printf(fmt,a,b,c,d);}}
+define|\
+value|{									\ 	if (mcd_data[unit].debug) {					\ 		printf("mcd%d: status=0x%02x: ",			\ 			unit, mcd_data[unit].status);			\ 		printf(format, ## args);				\ 	}								\ }
 end_define
 
 begin_define
@@ -1683,6 +1679,8 @@ block|{
 name|printf
 argument_list|(
 literal|"mcd%d: door is open\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1704,6 +1702,8 @@ block|{
 name|printf
 argument_list|(
 literal|"mcd%d: no CD inside\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1722,6 +1722,8 @@ block|{
 name|printf
 argument_list|(
 literal|"mcd%d: CD not sensed\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -1764,7 +1766,7 @@ argument_list|)
 expr_stmt|;
 name|MCD_TRACE
 argument_list|(
-literal|"open: partition=%d, disksize = %d, blksize=%d\n"
+literal|"open: partition=%d, disksize = %ld, blksize=%d\n"
 argument_list|,
 name|part
 argument_list|,
@@ -1775,8 +1777,6 @@ argument_list|,
 name|cd
 operator|->
 name|blksize
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2024,12 +2024,6 @@ argument_list|(
 literal|"close: partition=%d\n"
 argument_list|,
 name|part
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2094,7 +2088,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mcdstrategy: unit = %d, blkno = %d, bcount = %d\n"
+literal|"mcdstrategy: unit = %d, blkno = %ld, bcount = %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2144,14 +2138,6 @@ block|{
 name|MCD_TRACE
 argument_list|(
 literal|"strategy: drive not valid\n"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2450,14 +2436,6 @@ block|{
 name|MCD_TRACE
 argument_list|(
 literal|"mcd_start: drive not valid\n"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2635,12 +2613,6 @@ argument_list|(
 literal|"ioctl called 0x%x\n"
 argument_list|,
 name|cmd
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4456,14 +4428,6 @@ block|{
 name|MCD_TRACE
 argument_list|(
 literal|"setflags: sensed DSKCHNG or DOOROPEN or !DSKIN\n"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mcd_soft_reset
@@ -5022,14 +4986,6 @@ block|{
 name|MCD_TRACE
 argument_list|(
 literal|"stray interrupt\n"
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5303,12 +5259,6 @@ operator|-
 name|mbx
 operator|->
 name|count
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* reject, if audio active */
@@ -5577,12 +5527,6 @@ operator|-
 name|mbx
 operator|->
 name|count
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|modedone
@@ -5653,10 +5597,6 @@ argument_list|,
 name|blknum
 argument_list|,
 name|bp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* build parameter block */
@@ -5866,12 +5806,6 @@ operator|-
 name|mbx
 operator|->
 name|count
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|got_it
