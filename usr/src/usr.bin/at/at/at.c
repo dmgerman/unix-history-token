@@ -1074,7 +1074,7 @@ argument_list|,
 literal|0400
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The protection mechanism works like this: 	 * We are running ruid=user, euid=daemon.  So far we have been 	 * messing around in the spool directory, so we needed the 	 * daemon stuff.  Now, we want to read the users file, 	 * so we must give up the daemon protection,  but we might 	 * need the daemon's protection if the user interrupts and 	 * we need to remove the spool files. 	 * So, we fork and let the kid set the real and effective 	 * user id's to the user, so he can read everything of his 	 * own, but not his professor's final exam and not stuff 	 * owned by daemon.  If the kid exits with non-zero status, 	 * that means that the user typed interrupt, and the parent 	 * (still with daemon permissions) removes the spool file. 	 */
+comment|/* 	 * The protection mechanism works like this: 	 * We are running ruid=user, euid=spool owner.  So far we have been 	 * messing around in the spool directory, so we needed to run 	 * as the owner of the spool directory. 	 * We now need to switch to the user's effective uid 	 * to simplify permission checking.  However, we fork first, 	 * so that we can clean up if interrupted. 	 */
 name|signal
 argument_list|(
 name|SIGINT
@@ -1158,7 +1158,7 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We are the kid, give up daemon permissions. 	 */
+comment|/* 	 * We are the kid, give up special permissions. 	 */
 name|setuid
 argument_list|(
 name|getuid
@@ -1204,42 +1204,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * If the inputfile is not from a tty then turn off standardin 	 * If the inputfile is a tty, put out a prompt now, instead of 	 * waiting for a lot of file activity to complete. 	 */
-if|if
-condition|(
-operator|!
-operator|(
-name|isatty
-argument_list|(
-name|fileno
-argument_list|(
-name|inputfile
-argument_list|)
-argument_list|)
-operator|)
-condition|)
-name|standardin
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|standardin
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"at> "
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * Determine what shell we should use to run the job. If the user 	 * didn't explicitly request that his/her current shell be over- 	 * ridden (shflag of cshflag) then we use the current shell. 	 */
 if|if
@@ -1387,17 +1351,17 @@ name|spoolfile
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Put in a line to run the proper shell using the rest of 	 * the file as input.  Note that 'exec'ing the shell will 	 * cause sh() to leave a /tmp/sh### file around. 	 */
+comment|/* 	 * Put in a line to run the proper shell using the rest of 	 * the file as input.  Note that 'exec'ing the shell will 	 * cause sh() to leave a /tmp/sh### file around.  This line 	 * depends on the shells allowing EOF to end tagged input.  The 	 * quotes also guarantee a quoting of the lines before EOF. 	 */
 name|fprintf
 argument_list|(
 name|spoolfile
 argument_list|,
-literal|"%s<< '...the rest of this file is shell input'\n"
+literal|"%s<< 'QAZWSXEDCRFVTGBYHNUJMIKOLP'\n"
 argument_list|,
 name|shell
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now that we have all the files set up, we can start reading in 	 * the job. (I added the prompt "at>" so that the user could tell 	 * when/if he/she was supposed to enter commands from standard 	 * input. The old "at" just sat there and didn't send any kind of  	 * message that said it was waiting for input if it was reading 	 * form standard input). 	 */
+comment|/* 	 * Now that we have all the files set up, we can start reading in 	 * the job. 	 */
 while|while
 condition|(
 name|fgets
@@ -1411,7 +1375,6 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|fputs
 argument_list|(
 name|line
@@ -1419,30 +1382,6 @@ argument_list|,
 name|spoolfile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|standardin
-condition|)
-name|fputs
-argument_list|(
-literal|"at> "
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|standardin
-condition|)
-name|fputs
-argument_list|(
-literal|"<EOT>\n"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-comment|/* clean up the final output */
 comment|/* 	 * Close all files and change the mode of the spoolfile. 	 */
 name|fclose
 argument_list|(
@@ -3324,22 +3263,62 @@ modifier|*
 name|pwdinfo
 decl_stmt|;
 comment|/* password info structure */
+name|char
+modifier|*
+name|logname
+decl_stmt|,
+modifier|*
+name|getlogin
+argument_list|()
+decl_stmt|;
+name|logname
+operator|=
+name|getlogin
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
+name|logname
+operator|==
+name|NULL
+operator|||
 operator|(
+name|pwdinfo
+operator|=
+name|getpwnam
+argument_list|(
+name|logname
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|||
+name|pwdinfo
+operator|->
+name|pw_uid
+operator|!=
+name|uid
+condition|)
 name|pwdinfo
 operator|=
 name|getpwuid
 argument_list|(
 name|uid
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|pwdinfo
 operator|==
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"no name for uid %d?\n"
+argument_list|,
 name|uid
 argument_list|)
 expr_stmt|;
