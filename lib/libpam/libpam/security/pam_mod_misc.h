@@ -206,11 +206,10 @@ define|#
 directive|define
 name|PAM_LOG
 parameter_list|(
-name|args
 modifier|...
 parameter_list|)
 define|\
-value|openpam_log(PAM_LOG_DEBUG, ##args)
+value|openpam_log(PAM_LOG_DEBUG, __VA_ARGS__)
 end_define
 
 begin_define
@@ -229,11 +228,10 @@ define|#
 directive|define
 name|PAM_VERBOSE_ERROR
 parameter_list|(
-name|args
 modifier|...
 parameter_list|)
 define|\
-value|_pam_verbose_error(pamh, flags, __FILE__, __FUNCTION__, ##args)
+value|_pam_verbose_error(pamh, flags, __FILE__, __FUNCTION__, __VA_ARGS__)
 end_define
 
 begin_endif
