@@ -116,7 +116,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<ypclnt.h>
+file|<rpcsvc/ypclnt.h>
 end_include
 
 begin_endif
