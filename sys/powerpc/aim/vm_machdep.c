@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_kstack_pages.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -357,7 +351,9 @@ name|td2
 operator|->
 name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|td2
+operator|->
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|-
@@ -1164,7 +1160,9 @@ name|td
 operator|->
 name|td_kstack
 operator|+
-name|KSTACK_PAGES
+name|td2
+operator|->
+name|td_kstack_pages
 operator|*
 name|PAGE_SIZE
 operator|-
