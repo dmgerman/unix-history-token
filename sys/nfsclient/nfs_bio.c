@@ -1803,7 +1803,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* 		 * Start the read ahead(s), as required. 		 */
+comment|/* 		 * Start the read ahead(s), as required. 		 * The readahead is kicked off only if sequential access 		 * is detected, based on the readahead hint (ra_expect_lbn). 		 */
 if|if
 condition|(
 name|nmp
@@ -1811,6 +1811,12 @@ operator|->
 name|nm_readahead
 operator|>
 literal|0
+operator|&&
+name|np
+operator|->
+name|ra_expect_lbn
+operator|==
+name|lbn
 condition|)
 block|{
 for|for
@@ -1998,6 +2004,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|np
+operator|->
+name|ra_expect_lbn
+operator|=
+name|lbn
+operator|+
+literal|1
+expr_stmt|;
 block|}
 comment|/* 		 * Obtain the buffer cache block.  Figure out the buffer size 		 * when we are at EOF.  If we are modifying the size of the 		 * buffer based on an EOF condition we need to hold 		 * nfs_rslock() through obtaining the buffer to prevent 		 * a potential writer-appender from messing with n_size. 		 * Otherwise we may accidently truncate the buffer and 		 * lose dirty data. 		 * 		 * Note that bcount is *not* DEV_BSIZE aligned. 		 */
 name|again

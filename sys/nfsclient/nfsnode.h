@@ -316,6 +316,9 @@ comment|/* leaf name, for v4 OPEN op */
 name|uint32_t
 name|n_namelen
 decl_stmt|;
+name|daddr_t
+name|ra_expect_lbn
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -2128,6 +2128,12 @@ name|va_mtime
 expr_stmt|;
 block|}
 block|}
+name|np
+operator|->
+name|ra_expect_lbn
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
