@@ -525,6 +525,27 @@ name|MOUSE_MODEL_VERSAPAD
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_EXPLORER
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_4D
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_MODEL_4DPLUS
+value|12
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -569,6 +590,10 @@ end_typedef
 
 begin_comment
 comment|/* protocol */
+end_comment
+
+begin_comment
+comment|/*  * Serial protocols:  *   Microsoft, MouseSystems, Logitech, MM series, MouseMan, Hitachi Tablet,  *   GlidePoint, IntelliMouse, Thinking Mouse, MouseRemote, Kidspad,  *   VersaPad  * Bus mouse protocols:  *   bus, InPort  * PS/2 mouse protocol:  *   PS/2  */
 end_comment
 
 begin_define
@@ -1041,7 +1066,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* middle button the 4th byte */
+comment|/* middle button in the 4th byte */
 end_comment
 
 begin_comment
@@ -1278,24 +1303,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOUSE_PS2PLUS_BUTTON4DOWN
-value|0x10
-end_define
-
-begin_comment
-comment|/* 4th button on MouseMan+ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MOUSE_PS2PLUS_BUTTON5DOWN
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
 name|MOUSE_PS2_XNEG
 value|0x10
 end_define
@@ -1321,15 +1328,8 @@ name|MOUSE_PS2_YOVERFLOW
 value|0x80
 end_define
 
-begin_define
-define|#
-directive|define
-name|MOUSE_PS2PLUS_ZNEG
-value|0x08
-end_define
-
 begin_comment
-comment|/* MouseMan+ negative wheel movement */
+comment|/* Logitech MouseMan+ (PS/2) data packet (PS/2++ protocol) */
 end_comment
 
 begin_define
@@ -1344,6 +1344,119 @@ define|#
 directive|define
 name|MOUSE_PS2PLUS_SYNC
 value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_ZNEG
+value|0x08
+end_define
+
+begin_comment
+comment|/* sign bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_BUTTON4DOWN
+value|0x10
+end_define
+
+begin_comment
+comment|/* 4th button on MouseMan+ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_BUTTON5DOWN
+value|0x20
+end_define
+
+begin_comment
+comment|/* IBM ScrollPoint (PS/2) also uses PS/2++ protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SPOINT_ZNEG
+value|0x80
+end_define
+
+begin_comment
+comment|/* sign bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_SPOINT_WNEG
+value|0x08
+end_define
+
+begin_comment
+comment|/* MS IntelliMouse (PS/2) data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2INTELLI_PACKETSIZE
+value|4
+end_define
+
+begin_comment
+comment|/* some compatible mice have additional buttons */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2INTELLI_BUTTON4DOWN
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2INTELLI_BUTTON5DOWN
+value|0x80
+end_define
+
+begin_comment
+comment|/* MS IntelliMouse Explorer (PS/2) data packet (variation of IntelliMouse) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_EXPLORER_ZNEG
+value|0x08
+end_define
+
+begin_comment
+comment|/* sign bit */
+end_comment
+
+begin_comment
+comment|/* IntelliMouse Explorer has additional button data in the fourth byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_EXPLORER_BUTTON4DOWN
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_EXPLORER_BUTTON5DOWN
+value|0x20
 end_define
 
 begin_comment
@@ -1502,6 +1615,53 @@ define|#
 directive|define
 name|MOUSE_PS2VERSA_TAP
 value|0x02
+end_define
+
+begin_comment
+comment|/* A4 Tech 4D Mouse (PS/2) data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_4D_PACKETSIZE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_4D_WHEELBITS
+value|0xf0
+end_define
+
+begin_comment
+comment|/* A4 Tech 4D+ Mouse (PS/2) data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_4DPLUS_PACKETSIZE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_4DPLUS_ZNEG
+value|0x04
+end_define
+
+begin_comment
+comment|/* sign bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_4DPLUS_BUTTON4DOWN
+value|0x08
 end_define
 
 begin_comment

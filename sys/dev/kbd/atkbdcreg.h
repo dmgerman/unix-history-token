@@ -602,6 +602,27 @@ name|PSM_INTELLI_ID
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|PSM_EXPLORER_ID
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSM_4DMOUSE_ID
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|PSM_4DPLUS_ID
+value|8
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
