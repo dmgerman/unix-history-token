@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	5.4 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	5.5 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -2850,7 +2850,6 @@ name|s
 decl_stmt|,
 name|i
 decl_stmt|;
-extern|extern quota;
 name|unit
 operator|=
 name|TMSUNIT

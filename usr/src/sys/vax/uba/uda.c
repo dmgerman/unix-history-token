@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)uda.c	6.19 (Berkeley) %G%  */
+comment|/*  *	@(#)uda.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1813,7 +1813,6 @@ name|s
 decl_stmt|,
 name|i
 decl_stmt|;
-extern|extern quota;
 name|unit
 operator|=
 name|udunit
