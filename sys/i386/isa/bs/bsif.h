@@ -571,7 +571,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/scsi_dvcfg.h>
+file|<cam/scsi/scsi_dvcfg.h>
 end_include
 
 begin_include
