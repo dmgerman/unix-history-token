@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.15	83/02/18	*/
+comment|/*	hp.c	4.16	83/02/20	*/
 end_comment
 
 begin_comment
@@ -1208,6 +1208,30 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|io
+operator|->
+name|i_flgs
+operator|&
+name|F_NBSF
+operator|)
+operator|==
+literal|0
+operator|&&
+name|hpecc
+argument_list|(
+name|io
+argument_list|,
+name|BSE
+argument_list|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|success
+goto|;
 name|hard0
 label|:
 name|io
@@ -1887,7 +1911,7 @@ name|bcr
 operator||=
 literal|0xffff0000
 expr_stmt|;
-comment|/* sxt */
+comment|/* sign extend */
 name|npf
 operator|=
 operator|(
@@ -1912,6 +1936,28 @@ operator|+
 name|ssect
 expr_stmt|;
 comment|/* physical block #*/
+ifdef|#
+directive|ifdef
+name|HPECCDEBUG
+name|printf
+argument_list|(
+literal|"bcr %d npf %d ssect %d sectsiz %d i_cc %d\n"
+argument_list|,
+name|bcr
+argument_list|,
+name|npf
+argument_list|,
+name|ssect
+argument_list|,
+name|sectsiz
+argument_list|,
+name|io
+operator|->
+name|i_cc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * ECC correction logic. 	 */
 if|if
 condition|(
@@ -1930,7 +1976,7 @@ decl_stmt|;
 name|int
 name|bit
 decl_stmt|,
-name|byte
+name|o
 decl_stmt|,
 name|mask
 decl_stmt|,
@@ -1974,7 +2020,7 @@ name|i
 operator|&
 literal|07
 expr_stmt|;
-name|i
+name|o
 operator|=
 operator|(
 name|i
@@ -1984,10 +2030,6 @@ literal|07
 operator|)
 operator|>>
 literal|3
-expr_stmt|;
-name|byte
-operator|=
-name|i
 expr_stmt|;
 name|rp
 operator|->
@@ -1999,7 +2041,7 @@ name|HP_GO
 expr_stmt|;
 while|while
 condition|(
-name|i
+name|o
 operator|<
 name|sectsiz
 operator|&&
@@ -2007,7 +2049,7 @@ name|npf
 operator|*
 name|sectsiz
 operator|+
-name|i
+name|o
 operator|<
 name|io
 operator|->
@@ -2031,7 +2073,7 @@ operator|*
 name|sectsiz
 operator|)
 operator|+
-name|byte
+name|o
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2052,7 +2094,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* don't correct in-core copy during wcheck */
+comment|/* 			 * No data transfer occurs with a write check, 			 * so don't correct the resident copy of data. 			 */
 if|if
 condition|(
 operator|(
@@ -2095,12 +2137,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|byte
+name|o
 operator|++
 operator|,
-name|i
-operator|++
-expr_stmt|;
 name|bit
 operator|-=
 literal|8
