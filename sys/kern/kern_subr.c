@@ -488,6 +488,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
+end_ifdef
+
+begin_comment
+comment|/*  * Experimental support for zero-copy I/O  */
+end_comment
+
 begin_function
 name|int
 name|uiomoveco
@@ -878,11 +888,9 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENABLE_VFS_IOOPT
-end_ifdef
+begin_comment
+comment|/*  * Experimental support for zero-copy I/O  */
+end_comment
 
 begin_function
 name|int

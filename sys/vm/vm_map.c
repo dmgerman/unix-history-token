@@ -10398,8 +10398,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ENABLE_VFS_IOOPT
+end_ifdef
+
 begin_comment
-comment|/*  * Implement uiomove with VM operations.  This handles (and collateral changes)  * support every combination of source object modification, and COW type  * operations.  */
+comment|/*  * Experimental support for zero-copy I/O  *  * Implement uiomove with VM operations.  This handles (and collateral changes)  * support every combination of source object modification, and COW type  * operations.  */
 end_comment
 
 begin_function
@@ -11260,6 +11266,11 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Performs the copy_on_write operations necessary to allow the virtual copies  * into user space to work.  This has to be called for write(2) system calls  * from other processes, file unlinking, and file size shrinkage.  */
