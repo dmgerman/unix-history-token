@@ -1219,12 +1219,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1237,6 +1231,12 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -1247,6 +1247,12 @@ comment|/* free old resources if we're resizing */
 name|pipe_free_kmem
 argument_list|(
 name|cpipe
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|cpipe
@@ -5079,6 +5085,14 @@ modifier|*
 name|cpipe
 decl_stmt|;
 block|{
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cpipe
@@ -5335,6 +5349,7 @@ argument_list|(
 name|cpipe
 argument_list|)
 expr_stmt|;
+comment|/* XXX: erm, doesn't zalloc already have its own locks and 		 * not need the giant vm lock? 		 */
 name|zfree
 argument_list|(
 name|pipe_zone
