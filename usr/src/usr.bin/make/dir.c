@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.3 (Berkeley) %G%"
+literal|"@(#)dir.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -493,7 +493,7 @@ operator|.
 name|name
 argument_list|)
 else|:
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|p
 operator|->
@@ -748,7 +748,7 @@ block|}
 comment|/* 	 * Allocate room for the combination and install the three pieces. 	 */
 name|file
 operator|=
-name|malloc
+name|emalloc
 argument_list|(
 name|otherLen
 operator|+
@@ -1772,7 +1772,7 @@ block|}
 block|}
 name|file
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|p
 operator|->
@@ -2006,7 +2006,7 @@ condition|)
 block|{
 name|file
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|p
 operator|->
@@ -2920,7 +2920,7 @@ operator|(
 name|Path
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3210,7 +3210,7 @@ argument_list|)
 expr_stmt|;
 name|tstr
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|flag
 argument_list|,
@@ -3223,7 +3223,7 @@ argument_list|)
 expr_stmt|;
 name|str
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|str
 argument_list|,
