@@ -760,6 +760,7 @@ literal|1024
 index|]
 decl_stmt|;
 name|u_char
+modifier|*
 name|snewpath
 init|=
 name|newpath
@@ -1128,12 +1129,14 @@ literal|'\\'
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|np
 operator|=
 operator|*
 name|dir
 operator|++
+operator|)
 operator|&&
 name|np
 operator|-

@@ -1073,6 +1073,14 @@ operator|.
 name|uc_stack
 argument_list|)
 expr_stmt|;
+name|uc
+operator|.
+name|uc_mcontext
+operator|.
+name|mc_onstack
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|tmode
