@@ -520,6 +520,9 @@ name|tcp_keepcnt
 operator|*
 name|tcp_keepintvl
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
 name|tcp_iss
 operator|+=
 name|TCP_ISSINCR
@@ -527,9 +530,6 @@ operator|/
 name|PR_SLOWHZ
 expr_stmt|;
 comment|/* increment iss */
-ifdef|#
-directive|ifdef
-name|TCP_COMPAT_42
 if|if
 condition|(
 operator|(
