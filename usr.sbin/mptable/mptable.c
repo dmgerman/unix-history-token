@@ -33,27 +33,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VMAJOR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|VMINOR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|VDELTA
-value|15
-end_define
-
 begin_comment
 comment|/*  * this will cause the raw mp table to be dumped to /tmp/mpdump  * #define RAW_DUMP  */
 end_comment
@@ -1207,13 +1186,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"MPTable, version %d.%d.%d\n"
-argument_list|,
-name|VMAJOR
-argument_list|,
-name|VMINOR
-argument_list|,
-name|VDELTA
+literal|"MPTable\n"
 argument_list|)
 expr_stmt|;
 while|while
