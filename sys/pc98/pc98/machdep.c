@@ -2170,8 +2170,6 @@ name|PSL_VM
 operator||
 name|PSL_NT
 operator||
-name|PSL_T
-operator||
 name|PSL_VIF
 operator||
 name|PSL_VIP
@@ -2229,6 +2227,13 @@ operator|=
 name|PS_STRINGS
 operator|-
 name|szosigcode
+expr_stmt|;
+name|regs
+operator|->
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_T
 expr_stmt|;
 name|regs
 operator|->
@@ -2984,7 +2989,7 @@ name|PSL_VIP
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 		 * We should never have PSL_T set when returning from vm86 		 * mode.  It may be set here if we deliver a signal before 		 * getting to vm86 mode, so turn it off. 		 * 		 * Clear PSL_NT to inhibit T_TSSFLT faults on return from 		 * syscalls made by the signal handler.  This just avoids 		 * wasting time for our lazy fixup of such faults.  PSL_NT 		 * does nothing in vm86 mode, but vm86 programs can set it 		 * almost legitimately in probes for old cpu types. 		 */
+comment|/* 		 * Clear PSL_NT to inhibit T_TSSFLT faults on return from 		 * syscalls made by the signal handler.  This just avoids 		 * wasting time for our lazy fixup of such faults.  PSL_NT 		 * does nothing in vm86 mode, but vm86 programs can set it 		 * almost legitimately in probes for old cpu types. 		 */
 name|tf
 operator|->
 name|tf_eflags
@@ -2994,8 +2999,6 @@ operator|(
 name|PSL_VM
 operator||
 name|PSL_NT
-operator||
-name|PSL_T
 operator||
 name|PSL_VIF
 operator||
@@ -3061,6 +3064,13 @@ name|p_sysent
 operator|->
 name|sv_szsigcode
 operator|)
+expr_stmt|;
+name|regs
+operator|->
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_T
 expr_stmt|;
 name|regs
 operator|->

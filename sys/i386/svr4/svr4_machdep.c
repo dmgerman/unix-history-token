@@ -2126,6 +2126,13 @@ argument_list|)
 expr_stmt|;
 name|tf
 operator|->
+name|tf_eflags
+operator|&=
+operator|~
+name|PSL_T
+expr_stmt|;
+name|tf
+operator|->
 name|tf_cs
 operator|=
 name|_ucodesel
