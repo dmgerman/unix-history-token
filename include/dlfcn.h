@@ -22,7 +22,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * Modes for dlopen().  */
+comment|/*  * Modes and flags for dlopen().  */
 end_comment
 
 begin_define
@@ -45,6 +45,24 @@ end_define
 
 begin_comment
 comment|/* Bind function calls immediately */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_MODEMASK
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTLD_GLOBAL
+value|0x100
+end_define
+
+begin_comment
+comment|/* Make symbols globally available */
 end_comment
 
 begin_comment
