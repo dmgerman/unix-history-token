@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.119 (Berkeley) %G%"
+literal|"@(#)main.c	8.120 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4627,6 +4627,12 @@ condition|(
 name|ExitStat
 operator|==
 name|EX_TEMPFAIL
+operator|||
+name|CurEnv
+operator|->
+name|e_errormode
+operator|==
+name|EM_BERKNET
 condition|)
 name|ExitStat
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.71 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,12 +356,6 @@ break|break;
 case|case
 name|EM_BERKNET
 case|:
-comment|/* mail back, but return o.k. exit status */
-name|ExitStat
-operator|=
-name|EX_OK
-expr_stmt|;
-comment|/* fall through.... */
 case|case
 name|EM_MAIL
 case|:
