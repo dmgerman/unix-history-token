@@ -551,214 +551,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find index of volume in vinum_conf.  Return the index  * if found, or -1 if not  */
-end_comment
-
-begin_function
-name|int
-name|volume_index
-parameter_list|(
-name|struct
-name|volume
-modifier|*
-name|vol
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|vinum_conf
-operator|.
-name|volumes_used
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|&
-name|VOL
-index|[
-name|i
-index|]
-operator|==
-name|vol
-condition|)
-return|return
-name|i
-return|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Find index of plex in vinum_conf.  Return the index  * if found, or -1 if not  */
-end_comment
-
-begin_function
-name|int
-name|plex_index
-parameter_list|(
-name|struct
-name|plex
-modifier|*
-name|plex
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|vinum_conf
-operator|.
-name|plexes_used
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|&
-name|PLEX
-index|[
-name|i
-index|]
-operator|==
-name|plex
-condition|)
-return|return
-name|i
-return|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Find index of subdisk in vinum_conf.  Return the index  * if found, or -1 if not  */
-end_comment
-
-begin_function
-name|int
-name|sd_index
-parameter_list|(
-name|struct
-name|sd
-modifier|*
-name|sd
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|vinum_conf
-operator|.
-name|subdisks_used
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|&
-name|SD
-index|[
-name|i
-index|]
-operator|==
-name|sd
-condition|)
-return|return
-name|i
-return|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Find index of drive in vinum_conf.  Return the index  * if found, or -1 if not  */
-end_comment
-
-begin_function
-name|int
-name|drive_index
-parameter_list|(
-name|struct
-name|drive
-modifier|*
-name|drive
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|vinum_conf
-operator|.
-name|drives_used
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|&
-name|DRIVE
-index|[
-name|i
-index|]
-operator|==
-name|drive
-condition|)
-return|return
-name|i
-return|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Check a volume to see if the plex is already assigned to it.  * Return index in volume->plex, or -1 if not assigned  */
 end_comment
 
@@ -2374,7 +2166,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|driveno
 operator|++
@@ -2400,23 +2192,6 @@ name|driveno
 operator|>=
 name|vinum_conf
 operator|.
-name|drives_used
-condition|)
-comment|/* Couldn't find a deallocated drive.  Allocate a new one */
-block|{
-name|vinum_conf
-operator|.
-name|drives_used
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|vinum_conf
-operator|.
-name|drives_used
-operator|>
-name|vinum_conf
-operator|.
 name|drives_allocated
 condition|)
 comment|/* we've used all our allocation */
@@ -2434,7 +2209,6 @@ argument_list|,
 name|INITIAL_DRIVES
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* got a drive entry.  Make it pretty */
 name|drive
 operator|=
@@ -2532,7 +2306,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|driveno
 operator|++
@@ -2577,8 +2351,17 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+comment|/* and it's this one */
+operator|&&
+operator|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_unallocated
+operator|)
 condition|)
-comment|/* and it's this one: found */
+comment|/* and it's a real one: found */
 return|return
 name|driveno
 return|;
@@ -2694,7 +2477,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|driveno
 operator|++
@@ -2712,20 +2495,6 @@ comment|/* point to drive */
 if|if
 condition|(
 operator|(
-name|drive
-operator|->
-name|label
-operator|.
-name|name
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-operator|)
-comment|/* it has a name */
-operator|&&
-operator|(
 name|strcmp
 argument_list|(
 name|drive
@@ -2737,8 +2506,17 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+comment|/* it's this device */
+operator|&&
+operator|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_unallocated
+operator|)
 condition|)
-comment|/* and it's this one: found */
+comment|/* and it's a real one: found */
 return|return
 name|driveno
 return|;
@@ -2838,7 +2616,7 @@ name|sdno
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|;
 name|sdno
 operator|++
@@ -2864,25 +2642,9 @@ name|sdno
 operator|>=
 name|vinum_conf
 operator|.
-name|subdisks_used
-condition|)
-block|{
-comment|/* No unused sd found.  Allocate a new one */
-name|vinum_conf
-operator|.
-name|subdisks_used
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|vinum_conf
-operator|.
-name|subdisks_used
-operator|>
-name|vinum_conf
-operator|.
 name|subdisks_allocated
 condition|)
+comment|/* 	 * We've run out of space.  sdno is pointing 	 * where we want it, but at the moment we 	 * don't have the space.  Get it. 	 */
 name|EXPAND
 argument_list|(
 name|SD
@@ -2897,7 +2659,6 @@ argument_list|,
 name|INITIAL_SUBDISKS
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* initialize some things */
 name|sd
 operator|=
@@ -2979,6 +2740,16 @@ modifier|*
 name|drive
 parameter_list|)
 block|{
+if|if
+condition|(
+name|drive
+operator|->
+name|state
+operator|>
+name|drive_referenced
+condition|)
+block|{
+comment|/* real drive */
 name|lockdrive
 argument_list|(
 name|drive
@@ -3022,17 +2793,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* this also sets drive_unallocated */
-name|vinum_conf
-operator|.
-name|drives_used
-operator|--
-expr_stmt|;
-comment|/* one less drive */
 name|unlockdrive
 argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3674,12 +3440,6 @@ name|state
 operator|=
 name|sd_unallocated
 expr_stmt|;
-name|vinum_conf
-operator|.
-name|subdisks_used
-operator|--
-expr_stmt|;
-comment|/* one less sd */
 block|}
 end_function
 
@@ -3714,7 +3474,7 @@ name|plexno
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|;
 name|plexno
 operator|++
@@ -3741,23 +3501,6 @@ name|plexno
 operator|>=
 name|vinum_conf
 operator|.
-name|plexes_used
-condition|)
-block|{
-comment|/* Couldn't find a deallocated plex.  Allocate a new one */
-name|vinum_conf
-operator|.
-name|plexes_used
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|vinum_conf
-operator|.
-name|plexes_used
-operator|>
-name|vinum_conf
-operator|.
 name|plexes_allocated
 condition|)
 name|EXPAND
@@ -3774,7 +3517,6 @@ argument_list|,
 name|INITIAL_PLEXES
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Found a plex.  Give it an sd structure */
 name|plex
 operator|=
@@ -4076,12 +3818,6 @@ name|state
 operator|=
 name|plex_unallocated
 expr_stmt|;
-name|vinum_conf
-operator|.
-name|plexes_used
-operator|--
-expr_stmt|;
-comment|/* one less plex */
 block|}
 end_function
 
@@ -4115,7 +3851,7 @@ name|volno
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|volno
 operator|++
@@ -4141,23 +3877,6 @@ name|volno
 operator|>=
 name|vinum_conf
 operator|.
-name|volumes_used
-condition|)
-comment|/* Couldn't find a deallocated volume.  Allocate a new one */
-block|{
-name|vinum_conf
-operator|.
-name|volumes_used
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|vinum_conf
-operator|.
-name|volumes_used
-operator|>
-name|vinum_conf
-operator|.
 name|volumes_allocated
 condition|)
 name|EXPAND
@@ -4174,7 +3893,6 @@ argument_list|,
 name|INITIAL_VOLUMES
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Now initialize fields */
 name|vol
 operator|=
@@ -4200,16 +3918,10 @@ operator|->
 name|flags
 operator||=
 name|VF_NEWBORN
+operator||
+name|VF_CREATED
 expr_stmt|;
 comment|/* newly born volume */
-name|vol
-operator|->
-name|preferred_plex
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* default to round robin */
 name|vol
 operator|->
 name|preferred_plex
@@ -4259,7 +3971,7 @@ name|volno
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|volno
 operator|++
@@ -4395,12 +4107,6 @@ name|state
 operator|=
 name|volume_unallocated
 expr_stmt|;
-name|vinum_conf
-operator|.
-name|volumes_used
-operator|--
-expr_stmt|;
-comment|/* one less volume */
 block|}
 end_function
 
@@ -4885,6 +4591,12 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+name|vinum_conf
+operator|.
+name|drives_used
+operator|++
+expr_stmt|;
+comment|/* passed all hurdles: one more in use */
 block|}
 end_function
 
@@ -5746,6 +5458,12 @@ argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|subdisks_used
+operator|++
+expr_stmt|;
+comment|/* one more in use */
 block|}
 end_function
 
@@ -6482,6 +6200,12 @@ operator|=
 name|state
 expr_stmt|;
 comment|/* set whatever state we chose */
+name|vinum_conf
+operator|.
+name|plexes_used
+operator|++
+expr_stmt|;
+comment|/* one more in use */
 block|}
 end_function
 
@@ -6564,7 +6288,7 @@ name|vol
 operator|->
 name|flags
 operator|&
-name|VF_NEWBORN
+name|VF_CREATED
 operator|)
 operator|==
 literal|0
@@ -6573,6 +6297,14 @@ condition|)
 comment|/* this volume exists already */
 return|return;
 comment|/* don't do anything */
+name|vol
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_CREATED
+expr_stmt|;
+comment|/* it exists now */
 for|for
 control|(
 name|parameter
@@ -7038,6 +6770,12 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|volumes_used
+operator|++
+expr_stmt|;
+comment|/* one more in use */
 block|}
 end_function
 
@@ -7476,7 +7214,7 @@ name|driveno
 operator|>
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 operator|)
 comment|/* not a valid drive */
 operator|||
@@ -7540,7 +7278,7 @@ name|sdno
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|;
 name|sdno
 operator|++
@@ -7612,6 +7350,12 @@ name|driveno
 argument_list|)
 expr_stmt|;
 comment|/* now remove it */
+name|vinum_conf
+operator|.
+name|drives_used
+operator|--
+expr_stmt|;
+comment|/* one less drive */
 block|}
 else|else
 name|ioctl_reply
@@ -7623,12 +7367,20 @@ expr_stmt|;
 comment|/* can't do that */
 block|}
 else|else
+block|{
 name|remove_drive
 argument_list|(
 name|driveno
 argument_list|)
 expr_stmt|;
 comment|/* just remove it */
+name|vinum_conf
+operator|.
+name|drives_used
+operator|--
+expr_stmt|;
+comment|/* one less drive */
+block|}
 block|}
 end_function
 
@@ -7668,7 +7420,7 @@ name|sdno
 operator|>
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 operator|)
 comment|/* not a valid sd */
 operator|||
@@ -7899,6 +7651,12 @@ argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|subdisks_used
+operator|--
+expr_stmt|;
+comment|/* one less sd */
 block|}
 else|else
 name|ioctl_reply
@@ -7927,6 +7685,12 @@ argument_list|(
 name|sdno
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|subdisks_used
+operator|--
+expr_stmt|;
+comment|/* one less sd */
 block|}
 block|}
 end_function
@@ -7970,7 +7734,7 @@ name|plexno
 operator|>
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 comment|/* not a valid plex */
 operator|||
@@ -8054,6 +7818,7 @@ condition|;
 name|sdno
 operator|++
 control|)
+block|{
 name|free_sd
 argument_list|(
 name|plex
@@ -8065,6 +7830,13 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* free all subdisks */
+name|vinum_conf
+operator|.
+name|subdisks_used
+operator|--
+expr_stmt|;
+comment|/* one less sd */
+block|}
 block|}
 else|else
 block|{
@@ -8276,6 +8048,12 @@ argument_list|(
 name|plexno
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|plexes_used
+operator|--
+expr_stmt|;
+comment|/* one less plex */
 block|}
 end_function
 
@@ -8318,7 +8096,7 @@ name|volno
 operator|>
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 operator|)
 comment|/* not a valid volume */
 operator|||
@@ -8454,6 +8232,12 @@ argument_list|(
 name|volno
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|volumes_used
+operator|--
+expr_stmt|;
+comment|/* one less volume */
 block|}
 else|else
 name|ioctl_reply
@@ -8482,6 +8266,12 @@ argument_list|(
 name|volno
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|volumes_used
+operator|--
+expr_stmt|;
+comment|/* one less volume */
 block|}
 block|}
 end_function
@@ -9244,7 +9034,7 @@ name|plexno
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|;
 name|plexno
 operator|++
@@ -9266,11 +9056,23 @@ name|volno
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|volno
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|VOL
+index|[
+name|volno
+index|]
+operator|.
+name|state
+operator|>
+name|volume_uninit
+condition|)
 block|{
 name|VOL
 index|[
@@ -9295,6 +9097,7 @@ argument_list|,
 name|diskconfig
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|save_config
 argument_list|()
