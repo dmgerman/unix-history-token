@@ -60,19 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/driver.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pccard/slot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/pcic.h>
 end_include
 
 begin_comment
@@ -2221,6 +2209,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|stat
+decl_stmt|;
 name|SET_UNIT
 argument_list|(
 name|dev
@@ -2563,9 +2554,8 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-if|if
-condition|(
-operator|(
+name|stat
+operator|=
 name|sp
 operator|->
 name|getb
@@ -2574,6 +2564,22 @@ name|sp
 argument_list|,
 name|PCIC_STATUS
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"stat is %x\n"
+argument_list|,
+name|stat
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|stat
 operator|&
 name|PCIC_CD
 operator|)
@@ -3639,6 +3645,19 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Slot %d chg = 0x%x\n"
+argument_list|,
+name|slot
+argument_list|,
+name|chg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chg

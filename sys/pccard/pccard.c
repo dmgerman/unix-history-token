@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
 end_include
 
@@ -85,24 +79,6 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_include
@@ -1201,7 +1177,7 @@ name|pwr
 operator|.
 name|vpp
 operator|=
-literal|0
+literal|50
 expr_stmt|;
 comment|/* 	 * Disable any pending timeouts for this slot, and explicitly 	 * power it off right now.  Then, re-enable the power using 	 * the (possibly new) power settings. 	 */
 name|untimeout
