@@ -81,6 +81,12 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -274,7 +280,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Common code for vnode open operations.  * Check permissions, and call the VOP_OPEN or VOP_CREATE routine.  */
+comment|/*  * Common code for vnode open operations.  * Check permissions, and call the VOP_OPEN or VOP_CREATE routine.  *   * Note that this do NOT free nameidata for the successful case,  * due to the NDINIT being done elsewhere.  */
 end_comment
 
 begin_function
@@ -483,6 +489,18 @@ argument_list|,
 name|vap
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|ndp
@@ -490,15 +508,19 @@ operator|->
 name|ni_dvp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
+name|vput
+argument_list|(
+name|ndp
+operator|->
+name|ni_dvp
+argument_list|)
+expr_stmt|;
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|ndp
@@ -531,18 +553,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VOP_ABORTOP
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-argument_list|,
-operator|&
-name|ndp
-operator|->
-name|ni_cnd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ndp
@@ -930,6 +940,13 @@ operator|)
 return|;
 name|bad
 label|:
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp

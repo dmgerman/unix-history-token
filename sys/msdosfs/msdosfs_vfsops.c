@@ -94,6 +94,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<vm/vm_zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<msdosfs/bpb.h>
 end_include
 
@@ -1500,6 +1506,13 @@ operator|=
 name|ndp
 operator|->
 name|ni_vp
+expr_stmt|;
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -2204,6 +2204,14 @@ name|error
 operator|)
 return|;
 block|}
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nd

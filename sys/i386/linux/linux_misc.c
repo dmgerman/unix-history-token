@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -806,6 +812,7 @@ name|ni
 operator|.
 name|ni_vp
 expr_stmt|;
+comment|/*      * XXX This looks like a bogus check - a LOCKLEAF namei should not succeed      * without returning a vnode.      */
 if|if
 condition|(
 name|vp
@@ -822,6 +829,14 @@ goto|goto
 name|cleanup
 goto|;
 block|}
+name|NDFREE
+argument_list|(
+operator|&
+name|ni
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 comment|/*      * From here on down, we have a locked vnode that must be unlocked.      */
 name|locked
 operator|++

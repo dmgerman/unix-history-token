@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<gnu/ext2fs/fs.h>
 end_include
 
@@ -1378,6 +1384,13 @@ operator|(
 name|error
 operator|)
 return|;
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|devvp
 operator|=
 name|ndp

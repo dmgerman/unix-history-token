@@ -70,6 +70,12 @@ directive|include
 file|<sys/linker.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -961,6 +967,14 @@ condition|)
 return|return
 name|error
 return|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 comment|/*      * Read the a.out header from the file.      */
 name|error
 operator|=

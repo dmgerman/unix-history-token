@@ -1047,6 +1047,14 @@ return|return
 name|error
 return|;
 block|}
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 operator|*
 name|cp
 operator|=
@@ -1097,6 +1105,14 @@ return|return
 name|error
 return|;
 block|}
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 comment|/* 		 * We now compare the vnode of the svr4_root to the one 		 * vnode asked. If they resolve to be the same, then we 		 * ignore the match so that the real root gets used. 		 * This avoids the problem of traversing "../.." to find the 		 * root directory and never finding it, because "/" resolves 		 * to the emulation root directory. This is expensive :-( 		 */
 name|NDINIT
 argument_list|(
@@ -1148,6 +1164,14 @@ return|return
 name|error
 return|;
 block|}
+name|NDFREE
+argument_list|(
+operator|&
+name|ndroot
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

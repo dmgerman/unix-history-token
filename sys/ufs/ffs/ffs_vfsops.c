@@ -129,6 +129,12 @@ directive|include
 file|<vm/vm_page.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -874,6 +880,13 @@ goto|goto
 name|error_1
 goto|;
 block|}
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|devvp
 operator|=
 name|ndp

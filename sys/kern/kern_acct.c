@@ -93,6 +93,12 @@ directive|include
 file|<sys/tty.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_comment
 comment|/*  * The routines implemented in this file are described in:  *      Leffler, et al.: The Design and Implementation of the 4.3BSD  *	    UNIX Operating System (Addison Welley, 1989)  * on pages 62-63.  *  * Arguably, to simplify accounting operations, this mechanism should  * be replaced by one in which an accounting log file (similar to /dev/klog)  * is read by a user process, etc.  However, that has its own problems.  */
 end_comment
@@ -387,6 +393,14 @@ operator|(
 name|error
 operator|)
 return|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|nd

@@ -67,6 +67,12 @@ directive|include
 file|<miscfs/union/union.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -416,6 +422,13 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|upperrootvp
 operator|=
 name|ndp

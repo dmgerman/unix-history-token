@@ -87,6 +87,12 @@ directive|include
 file|<i386/linux/linux_util.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_struct
 struct|struct
 name|linux_newstat
@@ -443,6 +449,14 @@ operator|(
 name|error
 operator|)
 return|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vn_stat
@@ -608,6 +622,14 @@ operator|(
 name|error
 operator|)
 return|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|vp
 operator|=
 name|nd
@@ -941,6 +963,13 @@ condition|)
 return|return
 name|error
 return|;
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|mp
 operator|=
 name|ndp

@@ -1449,6 +1449,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* XXX This should probably move to the top of function. */
 if|if
 condition|(
 name|cnp
@@ -2072,7 +2073,6 @@ name|ndp
 operator|->
 name|ni_vp
 condition|)
-block|{
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|ndp
@@ -2082,7 +2082,6 @@ argument_list|,
 literal|"lookup"
 argument_list|)
 expr_stmt|;
-block|}
 name|vrele
 argument_list|(
 name|ndp
@@ -2522,6 +2521,7 @@ name|vpp
 operator|=
 name|dp
 expr_stmt|;
+comment|/* XXX This should probably move to the top of function. */
 if|if
 condition|(
 name|cnp

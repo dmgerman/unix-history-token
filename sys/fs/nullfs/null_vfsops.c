@@ -61,6 +61,12 @@ directive|include
 file|<miscfs/nullfs/null.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -610,6 +616,13 @@ operator|(
 name|error
 operator|)
 return|;
+name|NDFREE
+argument_list|(
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Sanity check on lower vnode 	 */
 name|lowerrootvp
 operator|=

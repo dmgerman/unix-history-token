@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_zone.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/elf.h>
 end_include
 
@@ -1330,6 +1336,14 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp

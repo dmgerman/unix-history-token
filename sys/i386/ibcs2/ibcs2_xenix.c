@@ -99,6 +99,12 @@ directive|include
 file|<i386/ibcs2/ibcs2_xenix_syscall.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1144,6 +1150,14 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|vput
 argument_list|(
 name|vp

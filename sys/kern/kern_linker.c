@@ -99,6 +99,12 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -5040,6 +5046,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|type
 operator|=
 name|nd

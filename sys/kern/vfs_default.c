@@ -111,17 +111,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_abortop_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|vop_null
-block|}
-block|,
-block|{
-operator|&
 name|vop_advlock_desc
 block|,
 operator|(

@@ -688,20 +688,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nfs_abortop
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_abortop_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|nfs_inactive
 name|__P
 argument_list|(

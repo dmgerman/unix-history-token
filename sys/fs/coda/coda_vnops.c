@@ -497,14 +497,6 @@ block|,
 comment|/* readlink */
 block|{
 operator|&
-name|vop_abortop_desc
-block|,
-name|coda_abortop
-block|}
-block|,
-comment|/* abortop */
-block|{
-operator|&
 name|vop_inactive_desc
 block|,
 name|coda_inactive
@@ -2389,6 +2381,14 @@ argument_list|(
 name|tvp
 argument_list|)
 expr_stmt|;
+name|NDFREE
+argument_list|(
+operator|&
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|MARK_INT_FAIL
 argument_list|(
 name|CODA_IOCTL_STATS
@@ -2419,9 +2419,12 @@ operator|>
 name|VC_MAXDATASIZE
 condition|)
 block|{
-name|vrele
+name|NDFREE
 argument_list|(
-name|tvp
+operator|&
+name|ndp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2483,6 +2486,14 @@ argument_list|)
 name|vrele
 argument_list|(
 name|tvp
+argument_list|)
+expr_stmt|;
+name|NDFREE
+argument_list|(
+operator|&
+name|ndp
+argument_list|,
+name|NDF_ONLY_PNBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3155,73 +3166,6 @@ expr_stmt|;
 return|return
 operator|(
 name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * CODA abort op, called after namei() when a CREATE/DELETE isn't actually  * done. If a buffer has been saved in anticipation of a coda_create or  * a coda_remove, delete it.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-name|int
-name|coda_abortop
-parameter_list|(
-name|v
-parameter_list|)
-name|void
-modifier|*
-name|v
-decl_stmt|;
-block|{
-comment|/* true args */
-name|struct
-name|vop_abortop_args
-comment|/* { 	struct vnode *a_dvp; 	struct componentname *a_cnp;     } */
-modifier|*
-name|ap
-init|=
-name|v
-decl_stmt|;
-comment|/* upcall decl */
-comment|/* locals */
-if|if
-condition|(
-operator|(
-name|ap
-operator|->
-name|a_cnp
-operator|->
-name|cn_flags
-operator|&
-operator|(
-name|HASBUF
-operator||
-name|SAVESTART
-operator|)
-operator|)
-operator|==
-name|HASBUF
-condition|)
-name|zfree
-argument_list|(
-name|namei_zone
-argument_list|,
-name|ap
-operator|->
-name|a_cnp
-operator|->
-name|cn_pnbuf
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -5047,31 +4991,6 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* Have to free the previously saved name */
-comment|/*       * This condition is stolen from ufs_makeinode.  I have no idea      * why it's here, but what the hey...      */
-if|if
-condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|SAVESTART
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|zfree
-argument_list|(
-name|namei_zone
-argument_list|,
-name|cnp
-operator|->
-name|cn_pnbuf
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -5318,29 +5237,6 @@ argument|myprintf((
 literal|"in remove result %d\n"
 argument|,error));
 argument_list|)
-if|if
-condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|SAVESTART
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|zfree
-argument_list|(
-name|namei_zone
-argument_list|,
-name|cnp
-operator|->
-name|cn_pnbuf
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -5666,30 +5562,6 @@ argument|myprintf((
 literal|"in link result %d\n"
 argument|,error));
 argument_list|)
-comment|/* Drop the name buffer if we don't need to SAVESTART */
-if|if
-condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|SAVESTART
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|zfree
-argument_list|(
-name|namei_zone
-argument_list|,
-name|cnp
-operator|->
-name|cn_pnbuf
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -6567,17 +6439,6 @@ literal|"mkdir error %d\n"
 argument|,error));
 argument_list|)
 block|}
-comment|/* Have to free the previously saved name */
-comment|/*       * ufs_mkdir doesn't check for SAVESTART before freeing the      * pathname buffer, but ufs_create does.  For the moment, I'll      * follow their lead, but this seems like it is probably      * incorrect.        */
-name|zfree
-argument_list|(
-name|namei_zone
-argument_list|,
-name|cnp
-operator|->
-name|cn_pnbuf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -6785,29 +6646,6 @@ argument|myprintf((
 literal|"in rmdir result %d\n"
 argument|, error));
 argument_list|)
-if|if
-condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|SAVESTART
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|zfree
-argument_list|(
-name|namei_zone
-argument_list|,
-name|cnp
-operator|->
-name|cn_pnbuf
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error

@@ -69,21 +69,16 @@ directive|include
 file|<vm/vm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SPARSE_MAPPING
-end_ifdef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
 end_include
 
 begin_include
@@ -2126,6 +2121,14 @@ condition|)
 return|return
 name|error
 return|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 comment|/*      * Read the elf header from the file.      */
 name|firstpage
 operator|=

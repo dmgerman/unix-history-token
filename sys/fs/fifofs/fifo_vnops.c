@@ -343,17 +343,6 @@ block|}
 block|,
 block|{
 operator|&
-name|vop_abortop_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|fifo_badop
-block|}
-block|,
-block|{
-operator|&
 name|vop_access_desc
 block|,
 operator|(

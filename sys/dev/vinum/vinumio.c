@@ -15,6 +15,12 @@ directive|include
 file|<dev/vinum/request.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|char
@@ -242,6 +248,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* only consider block devices */
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_ONLY_PNBUF
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|drive
@@ -304,6 +318,14 @@ argument_list|,
 name|drive
 operator|->
 name|p
+argument_list|)
+expr_stmt|;
+name|NDFREE
+argument_list|(
+operator|&
+name|nd
+argument_list|,
+name|NDF_NO_VP_RELE
 argument_list|)
 expr_stmt|;
 return|return
