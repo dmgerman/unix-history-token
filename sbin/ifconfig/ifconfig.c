@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.29 1997/05/10 14:47:34 peter Exp $"
+literal|"$Id: ifconfig.c,v 1.30 1997/05/10 17:14:52 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,12 +439,6 @@ name|int
 name|newaddr
 init|=
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|allmedia
 decl_stmt|;
 end_decl_stmt
 
@@ -1508,7 +1502,7 @@ parameter_list|()
 block|{
 name|fputs
 argument_list|(
-literal|"usage: ifconfig -a [ -m ] [ -d ] [ -u ] [ af ]\n"
+literal|"usage: ifconfig -a [ -d ] [ -u ] [ af ]\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1516,13 +1510,6 @@ expr_stmt|;
 name|fputs
 argument_list|(
 literal|"       ifconfig -l [ -d ] [ -u ]\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|"       ifconfig [ -m ] interface\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1700,8 +1687,6 @@ decl_stmt|;
 comment|/* Parse leading line options */
 name|all
 operator|=
-name|allmedia
-operator|=
 name|downonly
 operator|=
 name|uponly
@@ -1770,26 +1755,7 @@ case|case
 literal|'m'
 case|:
 comment|/* show media choices in status */
-ifdef|#
-directive|ifdef
-name|USE_IF_MEDIA
-name|allmedia
-operator|++
-expr_stmt|;
-else|#
-directive|else
-name|fputs
-argument_list|(
-literal|"WARNING: if_media not compiled in!\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
+comment|/* ignored for compatability */
 break|break;
 default|default:
 name|usage
@@ -1811,11 +1777,7 @@ if|if
 condition|(
 name|namesonly
 operator|&&
-operator|(
 name|all
-operator|||
-name|allmedia
-operator|)
 condition|)
 name|usage
 argument_list|()

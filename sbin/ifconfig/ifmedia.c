@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ifconfig.c,v 1.34 1997/04/21 01:17:58 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: ifmedia.c,v 1.2 1997/05/10 14:47:35 peter Exp $ */
+comment|/*	$Id: ifmedia.c,v 1.3 1997/05/10 17:14:53 peter Exp $ */
 end_comment
 
 begin_comment
@@ -511,7 +511,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|allmedia
+name|ifmr
+operator|.
+name|ifm_count
+operator|>
+literal|0
 condition|)
 block|{
 name|printf
