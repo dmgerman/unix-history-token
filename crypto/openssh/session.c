@@ -2610,17 +2610,6 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|HAVE_LOGIN_CAP
-specifier|const
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_LOGIN_CAP */
-ifdef|#
-directive|ifdef
 name|__FreeBSD__
 define|#
 directive|define
@@ -2804,29 +2793,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|USE_PAM
-if|if
-condition|(
-operator|!
-name|check_quietlogin
-argument_list|(
-name|s
-argument_list|,
-name|command
-argument_list|)
-operator|&&
-operator|!
-name|pam_password_change_required
-argument_list|()
-condition|)
-name|print_pam_messages
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_PAM */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -3148,9 +3114,42 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|USE_PAM
+if|if
+condition|(
+name|command
+operator|==
+name|NULL
+operator|&&
+name|options
+operator|.
+name|print_lastlog
+operator|&&
+operator|!
+name|check_quietlogin
+argument_list|(
+name|s
+argument_list|,
+name|command
+argument_list|)
+operator|&&
+operator|!
+name|options
+operator|.
+name|use_login
+operator|&&
+operator|!
+name|pam_password_change_required
+argument_list|()
+condition|)
+name|print_pam_messages
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+comment|/* !USE_PAM */
 comment|/* 	 * If the user has logged in before, display the time of last 	 * login. However, don't display anything extra if a command 	 * has been specified (so that ssh can be used to execute 	 * commands on a remote machine without users knowing they 	 * are going to another machine). Login(1) will do this for 	 * us as well, so check if login(1) is used 	 */
 if|if
 condition|(
@@ -3239,9 +3238,6 @@ block|}
 endif|#
 directive|endif
 comment|/* !USE_PAM */
-ifdef|#
-directive|ifdef
-name|HAVE_LOGIN_CAP
 if|if
 condition|(
 name|command
@@ -3262,8 +3258,14 @@ operator|.
 name|use_login
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_LOGIN_CAP
+specifier|const
+name|char
+modifier|*
 name|fname
-operator|=
+init|=
 name|login_getcapstr
 argument_list|(
 name|lc
@@ -3274,7 +3276,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|fname
@@ -3325,6 +3327,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+comment|/* HAVE_LOGIN_CAP */
 operator|(
 name|void
 operator|)
@@ -3339,33 +3344,19 @@ argument_list|,
 literal|"All rights reserved."
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* HAVE_LOGIN_CAP */
-comment|/* 	 * Print /etc/motd unless a command was specified or printing 	 * it was disabled in server options or login(1) will be 	 * used.  Note that some machines appear to print it in 	 * /etc/profile or similar. 	 */
-if|if
-condition|(
-name|command
-operator|==
-name|NULL
-operator|&&
-operator|!
-name|check_quietlogin
+operator|(
+name|void
+operator|)
+name|printf
 argument_list|(
-name|s
-argument_list|,
-name|command
+literal|"\n"
 argument_list|)
-operator|&&
-operator|!
-name|options
-operator|.
-name|use_login
-condition|)
+expr_stmt|;
+comment|/* 	 * Print /etc/motd unless a command was specified or printing 	 * it was disabled in server options or login(1) will be 	 * used.  Note that some machines appear to print it in 	 * /etc/profile or similar. 	 */
 name|do_motd
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
