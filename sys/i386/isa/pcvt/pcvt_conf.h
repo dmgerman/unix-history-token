@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_conf.h	VT220 driver global configuration file  *	------------------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:38:19 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_conf.h	VT220 driver global configuration file  *	------------------------------------------------------  *  *	Last Edit-Date: [Fri Mar 31 10:20:27 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_comment
@@ -257,6 +257,59 @@ end_comment
 begin_comment
 comment|/* black !!!!!!				*/
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|PCVT_GREENSAVER
+end_if
+
+begin_comment
+comment|/* ---------- DEFAULT: OFF ------------ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCVT_GREENSAVER
+value|0
+end_define
+
+begin_comment
+comment|/* screensaver mode that enables 	*/
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|PCVT_GREENSAVER
+operator|!=
+literal|0
+end_elif
+
+begin_comment
+comment|/* power-save mode			*/
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PCVT_GREENSAVER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PCVT_GREENSAVER
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
