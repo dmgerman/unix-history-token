@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1577,6 +1577,10 @@ decl_stmt|,
 modifier|*
 name|arg1
 decl_stmt|;
+name|initproc
+operator|=
+name|p
+expr_stmt|;
 comment|/* 	 * We need to set p->p_md.md_regs since start_init acts like a 	 * system call and references the regs to set the entry point 	 * (see setregs) when it tries to exec.  On regular fork, the 	 * p->p_md.md_regs of the child is undefined since it is set on 	 * each system call.  The startup code in "locore.s" has arranged 	 * that there be some place to set "p->p_md.md_regs" to, and 	 * passed a pointer to that place as main's argument. 	 */
 name|p
 operator|->
