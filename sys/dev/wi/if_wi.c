@@ -1188,6 +1188,14 @@ block|,
 block|{
 literal|0x16ab
 block|,
+literal|0x1101
+block|,
+literal|"GLPRISM2 PCI WaveLAN/IEEE 802.11"
+block|}
+block|,
+block|{
+literal|0x16ab
+block|,
 literal|0x1102
 block|,
 literal|"Linksys WDT11 PCI IEEE 802.11b"
