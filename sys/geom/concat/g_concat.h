@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|G_CONCAT_VERSION
-value|1
+value|2
 end_define
 
 begin_ifdef

@@ -2050,6 +2050,15 @@ literal|"destroy"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|verb
+argument_list|,
+literal|"stop"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|g_label_ctl_destroy

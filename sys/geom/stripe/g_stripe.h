@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|G_STRIPE_VERSION
-value|0
+value|1
 end_define
 
 begin_ifdef
