@@ -762,10 +762,59 @@ name|flag
 operator|&
 name|FWRITE
 operator|)
+operator|&&
+name|cmd
+operator|!=
+name|PCIOCGETCONF
 condition|)
 return|return
 name|EPERM
 return|;
+comment|/* make sure register is in bounds and aligned */
+if|if
+condition|(
+name|cmd
+operator|==
+name|PCIOCREAD
+operator|||
+name|cmd
+operator|==
+name|PCIOCWRITE
+condition|)
+if|if
+condition|(
+name|io
+operator|->
+name|pi_reg
+operator|<
+literal|0
+operator|||
+name|io
+operator|->
+name|pi_reg
+operator|+
+name|io
+operator|->
+name|pi_width
+operator|>
+name|PCI_REGMAX
+operator|||
+name|io
+operator|->
+name|pi_reg
+operator|&
+operator|(
+name|io
+operator|->
+name|pi_width
+operator|-
+literal|1
+operator|)
+condition|)
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -823,20 +872,6 @@ name|dinfo
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Hopefully the user won't pass in a null pointer, but it 		 * can't hurt to check. 		 */
-if|if
-condition|(
-name|cio
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-break|break;
-block|}
 comment|/* 		 * If the user specified an offset into the device list, 		 * but the list has changed since they last called this 		 * ioctl, tell them that the list has changed.  They will 		 * have to get the list from the beginning. 		 */
 if|if
 condition|(
@@ -997,50 +1032,6 @@ name|status
 operator|=
 name|PCI_GETCONF_ERROR
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"pci_ioctl: pat_buf_len %d != "
-literal|"num_patterns (%d) * sizeof(struct "
-literal|"pci_match_conf) (%d)\npci_ioctl: "
-literal|"pat_buf_len should be = %d\n"
-argument_list|,
-name|cio
-operator|->
-name|pat_buf_len
-argument_list|,
-name|cio
-operator|->
-name|num_patterns
-argument_list|,
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pci_match_conf
-argument_list|)
-argument_list|,
-operator|(
-name|int
-operator|)
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pci_match_conf
-argument_list|)
-operator|*
-name|cio
-operator|->
-name|num_patterns
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"pci_ioctl: do your headers match your "
-literal|"kernel?\n"
-argument_list|)
-expr_stmt|;
 name|cio
 operator|->
 name|num_matches
@@ -1050,48 +1041,6 @@ expr_stmt|;
 name|error
 operator|=
 name|EINVAL
-expr_stmt|;
-break|break;
-block|}
-comment|/* 			 * Check the user's buffer to make sure it's readable. 			 */
-if|if
-condition|(
-operator|!
-name|useracc
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|cio
-operator|->
-name|patterns
-argument_list|,
-name|cio
-operator|->
-name|pat_buf_len
-argument_list|,
-name|VM_PROT_READ
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pci_ioctl: pattern buffer %p, "
-literal|"length %u isn't user accessible for"
-literal|" READ\n"
-argument_list|,
-name|cio
-operator|->
-name|patterns
-argument_list|,
-name|cio
-operator|->
-name|pat_buf_len
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EACCES
 expr_stmt|;
 break|break;
 block|}
@@ -1130,7 +1079,15 @@ name|error
 operator|!=
 literal|0
 condition|)
-break|break;
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|getconfexit
+goto|;
+block|}
 name|num_patterns
 operator|=
 name|cio
@@ -1171,11 +1128,6 @@ name|num_matches
 operator|=
 literal|0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"pci_ioctl: invalid GETCONF arguments\n"
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EINVAL
@@ -1187,47 +1139,6 @@ name|pattern_buf
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Make sure we can write to the match buffer. 		 */
-if|if
-condition|(
-operator|!
-name|useracc
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|cio
-operator|->
-name|matches
-argument_list|,
-name|cio
-operator|->
-name|match_buf_len
-argument_list|,
-name|VM_PROT_WRITE
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"pci_ioctl: match buffer %p, length %u "
-literal|"isn't user accessible for WRITE\n"
-argument_list|,
-name|cio
-operator|->
-name|matches
-argument_list|,
-name|cio
-operator|->
-name|match_buf_len
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EACCES
-expr_stmt|;
-break|break;
-block|}
 comment|/* 		 * Go through the list of devices and copy out the devices 		 * that match the user's criteria. 		 */
 for|for
 control|(
@@ -1276,6 +1187,12 @@ operator|(
 name|i
 operator|<
 name|pci_numdevs
+operator|)
+operator|&&
+operator|(
+name|dinfo
+operator|!=
+name|NULL
 operator|)
 condition|;
 name|dinfo
@@ -1422,6 +1339,11 @@ operator|>=
 name|ionum
 condition|)
 break|break;
+comment|/* only if can copy it out do we count it */
+if|if
+condition|(
+operator|!
+operator|(
 name|error
 operator|=
 name|copyout
@@ -1447,12 +1369,15 @@ expr|struct
 name|pci_conf
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+block|{
 name|cio
 operator|->
 name|num_matches
 operator|++
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 		 * Set the pointer into the list, so if the user is getting 		 * n records at a time, where n< pci_numdevs, 		 */
@@ -1489,6 +1414,8 @@ name|status
 operator|=
 name|PCI_GETCONF_MORE_DEVS
 expr_stmt|;
+name|getconfexit
+label|:
 if|if
 condition|(
 name|pattern_buf
@@ -1616,7 +1543,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|ENODEV
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
@@ -1733,7 +1660,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|ENODEV
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
