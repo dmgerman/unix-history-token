@@ -1212,7 +1212,7 @@ elseif|else
 if|if
 condition|(
 name|linkNum
-operator|==
+operator|>=
 literal|0
 operator|&&
 name|linkNum
