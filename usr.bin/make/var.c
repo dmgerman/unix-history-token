@@ -8991,7 +8991,7 @@ operator|!=
 operator|*
 name|var
 operator|||
-name|val
+name|var
 index|[
 literal|1
 index|]
