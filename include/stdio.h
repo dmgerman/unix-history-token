@@ -1556,15 +1556,6 @@ name|char
 operator|*
 operator|)
 argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__format_arg__
-argument_list|(
-literal|2
-argument_list|)
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
