@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)dterm.c	1.5	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c to allow for   *		extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
+comment|/* @(#)dterm.c	1.6	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -L	put a form feed (^L) at the end of each page  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c and -L to allow  *		for extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
 end_comment
 
 begin_include
@@ -171,7 +171,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)dterm.c	1.5	(Berkeley)	%G%"
+literal|"@(#)dterm.c	1.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,14 @@ begin_function_decl
 name|char
 modifier|*
 name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|operand
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -474,17 +482,16 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|argv
-operator|++
-expr_stmt|;
 while|while
 condition|(
+operator|--
 name|argc
 operator|>
-literal|1
+literal|0
 operator|&&
 operator|*
 operator|*
+operator|++
 name|argv
 operator|==
 literal|'-'
@@ -492,12 +499,13 @@ condition|)
 block|{
 switch|switch
 condition|(
-operator|*
 operator|(
-operator|++
 operator|*
 name|argv
 operator|)
+index|[
+literal|1
+index|]
 condition|)
 block|{
 case|case
@@ -506,9 +514,14 @@ case|:
 comment|/* special character filepath */
 name|specfile
 operator|=
-operator|++
-operator|*
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
 name|argv
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -519,9 +532,14 @@ name|linelen
 operator|=
 name|atoi
 argument_list|(
-operator|++
-operator|*
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
 name|argv
+argument_list|)
 argument_list|)
 operator|-
 literal|1
@@ -535,9 +553,14 @@ name|hscale
 operator|=
 name|atof
 argument_list|(
-operator|++
-operator|*
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
 name|argv
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -549,9 +572,14 @@ name|vscale
 operator|=
 name|atof
 argument_list|(
-operator|++
-operator|*
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
 name|argv
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -561,9 +589,14 @@ case|:
 comment|/* output list */
 name|outlist
 argument_list|(
-operator|++
-operator|*
+name|operand
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
 name|argv
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -573,7 +606,8 @@ case|:
 comment|/* continue at endofpage */
 name|keepon
 operator|=
-literal|1
+operator|!
+name|keepon
 expr_stmt|;
 break|break;
 case|case
@@ -582,7 +616,8 @@ case|:
 comment|/* form feed after each page */
 name|clearsc
 operator|=
-literal|1
+operator|!
+name|clearsc
 expr_stmt|;
 break|break;
 case|case
@@ -611,17 +646,11 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-name|argc
-operator|--
-expr_stmt|;
-name|argv
-operator|++
-expr_stmt|;
 block|}
 if|if
 condition|(
 name|argc
-operator|<=
+operator|<
 literal|1
 condition|)
 name|conv
@@ -632,8 +661,8 @@ expr_stmt|;
 else|else
 while|while
 condition|(
-operator|--
 name|argc
+operator|--
 condition|)
 block|{
 if|if
@@ -696,6 +725,92 @@ block|}
 name|done
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*----------------------------------------------------------------------------*  | Routine:	char  * operand (& argc,& argv)  |  | Results:	returns address of the operand given with a command-line  |		option.  It uses either "-Xoperand" or "-X operand", whichever  |		is present.  The program is terminated if no option is present.  |  | Side Efct:	argc and argv are updated as necessary.  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|operand
+parameter_list|(
+name|argcp
+parameter_list|,
+name|argvp
+parameter_list|)
+name|int
+modifier|*
+name|argcp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|argvp
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+operator|*
+name|argvp
+operator|)
+index|[
+literal|2
+index|]
+condition|)
+return|return
+operator|(
+operator|*
+operator|*
+name|argvp
+operator|+
+literal|2
+operator|)
+return|;
+comment|/* operand immediately follows */
+if|if
+condition|(
+operator|(
+operator|--
+operator|*
+name|argcp
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* operand next word */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"command-line option operand missing.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+operator|*
+operator|(
+operator|++
+operator|(
+operator|*
+name|argvp
+operator|)
+operator|)
+operator|)
+return|;
+comment|/* no operand */
 block|}
 end_function
 
