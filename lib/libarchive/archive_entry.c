@@ -6188,20 +6188,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|longestflaglen
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|nmappings
-value|(sizeof(mapping) / sizeof(mapping[0]))
-end_define
-
 begin_comment
 comment|/*  * fflagstostr --  *	Convert file flags to a comma-separated string.  If no flags  *	are set, return the empty string.  */
 end_comment
