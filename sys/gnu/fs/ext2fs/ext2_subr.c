@@ -465,7 +465,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\tstart %d, end %d overlap start %d, end %d\n"
+literal|"\tstart %d, end %d overlap start %d, end %ld\n"
 argument_list|,
 name|start
 argument_list|,
@@ -475,6 +475,10 @@ name|ep
 operator|->
 name|b_blkno
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|ep
 operator|->
 name|b_blkno
@@ -487,6 +491,7 @@ name|b_bcount
 argument_list|)
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|panic
