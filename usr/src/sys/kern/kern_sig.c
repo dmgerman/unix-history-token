@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -152,6 +152,27 @@ define|\
 value|((pc)->pc_ucred->cr_uid == 0 || \ 	    (pc)->p_ruid == (q)->p_cred->p_ruid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_cred->p_ruid || \ 	    (pc)->p_ruid == (q)->p_ucred->cr_uid || \ 	    (pc)->pc_ucred->cr_uid == (q)->p_ucred->cr_uid || \ 	    ((signo) == SIGCONT&& (q)->p_session == (p)->p_session))
 end_define
 
+begin_struct
+struct|struct
+name|sigaction_args
+block|{
+name|int
+name|signo
+decl_stmt|;
+name|struct
+name|sigaction
+modifier|*
+name|nsa
+decl_stmt|;
+name|struct
+name|sigaction
+modifier|*
+name|osa
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -175,29 +196,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|signo
-decl_stmt|;
 name|struct
-name|sigaction
-modifier|*
-name|nsa
-decl_stmt|;
-name|struct
-name|sigaction
-modifier|*
-name|osa
-decl_stmt|;
-block|}
+name|sigaction_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -937,6 +943,20 @@ begin_comment
 comment|/*  * Manipulate signal mask.  * Note that we receive new mask, not pointer,  * and return old mask as return value;  * the library stub does the rest.  */
 end_comment
 
+begin_struct
+struct|struct
+name|sigprocmask_args
+block|{
+name|int
+name|how
+decl_stmt|;
+name|sigset_t
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|sigprocmask
 argument_list|(
@@ -954,21 +974,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|how
-decl_stmt|;
-name|sigset_t
-name|mask
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|sigprocmask_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1068,6 +1080,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|sigpending_args
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1092,7 +1115,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|sigpending_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -1140,6 +1164,27 @@ begin_comment
 comment|/*  * Generalized interface signal handler, 4.3-compatible.  */
 end_comment
 
+begin_struct
+struct|struct
+name|osigvec_args
+block|{
+name|int
+name|signo
+decl_stmt|;
+name|struct
+name|sigvec
+modifier|*
+name|nsv
+decl_stmt|;
+name|struct
+name|sigvec
+modifier|*
+name|osv
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1163,29 +1208,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|signo
-decl_stmt|;
 name|struct
-name|sigvec
-modifier|*
-name|nsv
-decl_stmt|;
-name|struct
-name|sigvec
-modifier|*
-name|osv
-decl_stmt|;
-block|}
+name|osigvec_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1483,6 +1513,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|osigblock_args
+block|{
+name|int
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|osigblock
 argument_list|(
@@ -1500,18 +1541,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|mask
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|osigblock_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1560,6 +1596,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|osigsetmask_args
+block|{
+name|int
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|osigsetmask
 argument_list|(
@@ -1579,18 +1626,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|mask
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|osigsetmask_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1652,6 +1694,17 @@ begin_comment
 comment|/*  * Suspend process until signal, providing mask to be set  * in the meantime.  Note nonstandard calling convention:  * libc stub passes mask, not pointer, to save a copyin.  */
 end_comment
 
+begin_struct
+struct|struct
+name|sigsuspend_args
+block|{
+name|sigset_t
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1673,18 +1726,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|sigset_t
-name|mask
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|sigsuspend_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1773,6 +1821,24 @@ name|COMPAT_SUNOS
 argument_list|)
 end_if
 
+begin_struct
+struct|struct
+name|osigstack_args
+block|{
+name|struct
+name|sigstack
+modifier|*
+name|nss
+decl_stmt|;
+name|struct
+name|sigstack
+modifier|*
+name|oss
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1796,26 +1862,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|sigstack
-modifier|*
-name|nss
-decl_stmt|;
-name|struct
-name|sigstack
-modifier|*
-name|oss
-decl_stmt|;
-block|}
+name|osigstack_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1993,6 +2047,24 @@ begin_comment
 comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
+begin_struct
+struct|struct
+name|sigaltstack_args
+block|{
+name|struct
+name|sigaltstack
+modifier|*
+name|nss
+decl_stmt|;
+name|struct
+name|sigaltstack
+modifier|*
+name|oss
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2016,26 +2088,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|sigaltstack
-modifier|*
-name|nss
-decl_stmt|;
-name|struct
-name|sigaltstack
-modifier|*
-name|oss
-decl_stmt|;
-block|}
+name|sigaltstack_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2246,6 +2306,20 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|kill_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|signo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2267,22 +2341,14 @@ name|cp
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|signo
-decl_stmt|;
-block|}
+name|struct
+name|kill_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2485,6 +2551,20 @@ name|COMPAT_SUNOS
 argument_list|)
 end_if
 
+begin_struct
+struct|struct
+name|okillpg_args
+block|{
+name|int
+name|pgid
+decl_stmt|;
+name|int
+name|signo
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2508,22 +2588,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pgid
-decl_stmt|;
-name|int
-name|signo
-decl_stmt|;
-block|}
+name|struct
+name|okillpg_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4935,6 +5007,17 @@ begin_comment
 comment|/*  * Nonexistent system call-- signal process (may want to handle it).  * Flag error in case process won't see signal immediately (blocked or ignored).  */
 end_comment
 
+begin_struct
+struct|struct
+name|nosys_args
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -4959,7 +5042,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|nosys_args
 modifier|*
 name|args
 decl_stmt|;

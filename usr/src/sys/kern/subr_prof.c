@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -346,6 +346,26 @@ begin_comment
 comment|/*  * Profiling system call.  *  * The scale factor is a fixed point number with 16 bits of fraction, so that  * 1.0 is represented as 0x10000.  A scale factor of 0 turns off profiling.  */
 end_comment
 
+begin_struct
+struct|struct
+name|profil_args
+block|{
+name|caddr_t
+name|buf
+decl_stmt|;
+name|u_int
+name|bufsize
+decl_stmt|;
+name|u_int
+name|offset
+decl_stmt|;
+name|u_int
+name|scale
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -369,28 +389,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|caddr_t
-name|buf
-decl_stmt|;
-name|u_int
-name|bufsize
-decl_stmt|;
-name|u_int
-name|offset
-decl_stmt|;
-name|u_int
-name|scale
-decl_stmt|;
-block|}
+name|struct
+name|profil_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

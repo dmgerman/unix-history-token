@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_xxx.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -54,6 +54,17 @@ name|hostid
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|gethostid_args
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -78,14 +89,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|gethostid_args
 modifier|*
 name|uap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|int
 modifier|*
 name|retval
 decl_stmt|;
@@ -94,6 +106,10 @@ end_decl_stmt
 begin_block
 block|{
 operator|*
+operator|(
+name|long
+operator|*
+operator|)
 name|retval
 operator|=
 name|hostid
@@ -105,6 +121,17 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|sethostid_args
+block|{
+name|long
+name|hostid
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ARGSUSED */
@@ -129,18 +156,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|long
-name|hostid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|sethostid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -156,6 +178,21 @@ name|error
 decl_stmt|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|gethostname_args
+block|{
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ARGSUSED */
@@ -180,22 +217,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|hostname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|gethostname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -249,6 +277,21 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|sethostname_args
+block|{
+name|char
+modifier|*
+name|hostname
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -272,23 +315,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|hostname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+name|struct
+name|sethostname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -380,6 +414,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|reboot_args
+block|{
+name|int
+name|opt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -403,18 +448,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|opt
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|reboot_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

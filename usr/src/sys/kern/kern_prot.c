@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -55,6 +55,17 @@ directive|include
 file|"malloc.h"
 end_include
 
+begin_struct
+struct|struct
+name|args
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -79,7 +90,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -157,7 +169,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -213,7 +226,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -269,7 +283,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -349,7 +364,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -405,7 +421,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -492,7 +509,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -527,6 +545,22 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|getgroups_args
+block|{
+name|u_int
+name|gidsetsize
+decl_stmt|;
+name|int
+modifier|*
+name|gidset
+decl_stmt|;
+comment|/* XXX not yet POSIX */
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|getgroups
 argument_list|(
@@ -546,24 +580,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|arg
-block|{
-name|u_int
-name|gidsetsize
-decl_stmt|;
-name|int
-modifier|*
-name|gidset
-decl_stmt|;
-comment|/* XXX not yet POSIX */
-block|}
+name|struct
+name|getgroups_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -758,7 +782,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|args
 modifier|*
 name|uap
 decl_stmt|;
@@ -830,6 +855,22 @@ begin_comment
 comment|/*  * set process group (setpgid/old setpgrp)  *  * caller does setpgid(targpid, targpgid)  *  * pid must be caller or child of caller (ESRCH)  * if a child  *	pid must be in same session (EPERM)  *	pid can't have done an exec (EACCES)  * if pgid != pid  * 	there must exist some pid in same session having pgid (EPERM)  * pid must not be session leader (EPERM)  */
 end_comment
 
+begin_struct
+struct|struct
+name|setpgid_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+comment|/* target process id */
+name|int
+name|pgid
+decl_stmt|;
+comment|/* target pgrp id */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -853,24 +894,14 @@ name|curp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-comment|/* target process id */
-name|int
-name|pgid
-decl_stmt|;
-comment|/* target pgrp id */
-block|}
+name|struct
+name|setpgid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1058,6 +1089,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|setuid_args
+block|{
+name|int
+name|uid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1081,18 +1123,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|uid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|setuid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1200,6 +1237,17 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|seteuid_args
+block|{
+name|int
+name|euid
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1224,18 +1272,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|euid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|seteuid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1338,6 +1381,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|setgid_args
+block|{
+name|int
+name|gid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1361,18 +1415,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|gid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|setgid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1484,6 +1533,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|setegid_args
+block|{
+name|int
+name|egid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1507,18 +1567,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|egid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|setegid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1623,6 +1678,21 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|setgroups_args
+block|{
+name|u_int
+name|gidsetsize
+decl_stmt|;
+name|int
+modifier|*
+name|gidset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1646,22 +1716,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|u_int
-name|gidsetsize
-decl_stmt|;
-name|int
-modifier|*
-name|gidset
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|setgroups_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2237,6 +2298,21 @@ begin_comment
 comment|/*  * Get login name, if available.  */
 end_comment
 
+begin_struct
+struct|struct
+name|getlogin_args
+block|{
+name|char
+modifier|*
+name|namebuf
+decl_stmt|;
+name|u_int
+name|namelen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2260,22 +2336,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|namebuf
-decl_stmt|;
-name|u_int
-name|namelen
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|getlogin_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2353,6 +2420,18 @@ begin_comment
 comment|/*  * Set login name.  */
 end_comment
 
+begin_struct
+struct|struct
+name|setlogin_args
+block|{
+name|char
+modifier|*
+name|namebuf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2376,19 +2455,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|namebuf
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|setlogin_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.92 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.93 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -150,6 +150,27 @@ begin_comment
 comment|/*  * Mount system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|mount_args
+block|{
+name|int
+name|type
+decl_stmt|;
+name|char
+modifier|*
+name|dir
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|caddr_t
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -173,29 +194,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|type
-decl_stmt|;
-name|char
-modifier|*
-name|dir
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|caddr_t
-name|data
-decl_stmt|;
-block|}
+name|struct
+name|mount_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -891,6 +897,21 @@ begin_comment
 comment|/*  * Unmount system call.  *  * Note: unmount takes a path to the vnode mounted on as argument,  * not special file (as before).  */
 end_comment
 
+begin_struct
+struct|struct
+name|unmount_args
+block|{
+name|char
+modifier|*
+name|pathp
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -914,23 +935,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|pathp
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-block|}
+name|struct
+name|unmount_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1279,6 +1291,17 @@ begin_comment
 comment|/*  * Sync system call.  * Sync each mounted filesystem.  */
 end_comment
 
+begin_struct
+struct|struct
+name|sync_args
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1303,7 +1326,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|sync_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -1415,6 +1439,27 @@ begin_comment
 comment|/*  * Operate on filesystem quotas.  */
 end_comment
 
+begin_struct
+struct|struct
+name|quotactl_args
+block|{
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|int
+name|uid
+decl_stmt|;
+name|caddr_t
+name|arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1438,29 +1483,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|path
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|int
-name|uid
-decl_stmt|;
-name|caddr_t
-name|arg
-decl_stmt|;
-block|}
+name|struct
+name|quotactl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1561,6 +1591,23 @@ begin_comment
 comment|/*  * Get filesystem statistics.  */
 end_comment
 
+begin_struct
+struct|struct
+name|statfs_args
+block|{
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|struct
+name|statfs
+modifier|*
+name|buf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1584,25 +1631,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|path
-decl_stmt|;
 name|struct
-name|statfs
-modifier|*
-name|buf
-decl_stmt|;
-block|}
+name|statfs_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1746,6 +1782,22 @@ begin_comment
 comment|/*  * Get filesystem statistics.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fstatfs_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|statfs
+modifier|*
+name|buf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -1769,24 +1821,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
 name|struct
-name|statfs
-modifier|*
-name|buf
-decl_stmt|;
-block|}
+name|fstatfs_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1920,6 +1962,25 @@ begin_comment
 comment|/*  * Get statistics on all filesystems.  */
 end_comment
 
+begin_struct
+struct|struct
+name|getfsstat_args
+block|{
+name|struct
+name|statfs
+modifier|*
+name|buf
+decl_stmt|;
+name|long
+name|bufsize
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|getfsstat
 argument_list|(
@@ -1939,27 +2000,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|statfs
-modifier|*
-name|buf
-decl_stmt|;
-name|long
-name|bufsize
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-block|}
+name|getfsstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2188,6 +2236,17 @@ begin_comment
 comment|/*  * Change current working directory to a given file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fchdir_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2211,18 +2270,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|fchdir_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2366,6 +2420,18 @@ begin_comment
 comment|/*  * Change current working directory (``.'').  */
 end_comment
 
+begin_struct
+struct|struct
+name|chdir_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2389,19 +2455,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|chdir_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2493,6 +2553,18 @@ begin_comment
 comment|/*  * Change notion of root (``/'') directory.  */
 end_comment
 
+begin_struct
+struct|struct
+name|chroot_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2516,19 +2588,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|chroot_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2756,6 +2822,24 @@ begin_comment
 comment|/*  * Open system call.  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  */
 end_comment
 
+begin_struct
+struct|struct
+name|open_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|int
+name|crtmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|open
 argument_list|(
@@ -2775,26 +2859,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|mode
-decl_stmt|;
-name|int
-name|crtmode
-decl_stmt|;
-block|}
+name|struct
+name|open_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3243,6 +3315,21 @@ begin_comment
 comment|/*  * Creat system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ocreat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|fmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ocreat
 argument_list|(
@@ -3262,23 +3349,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|fmode
-decl_stmt|;
-block|}
+name|struct
+name|ocreat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3289,22 +3367,10 @@ end_decl_stmt
 
 begin_block
 block|{
-struct|struct
-name|nargs
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|mode
-decl_stmt|;
-name|int
-name|crtmode
-decl_stmt|;
-block|}
+name|struct
+name|open_args
 name|openuap
-struct|;
+decl_stmt|;
 name|openuap
 operator|.
 name|fname
@@ -3360,6 +3426,24 @@ begin_comment
 comment|/*  * Mknod system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|mknod_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|fmode
+decl_stmt|;
+name|int
+name|dev
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -3383,26 +3467,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|fmode
-decl_stmt|;
-name|int
-name|dev
-decl_stmt|;
-block|}
+name|struct
+name|mknod_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3699,6 +3771,21 @@ begin_comment
 comment|/*  * Mkfifo system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|mkfifo_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|fmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -3722,23 +3809,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|fmode
-decl_stmt|;
-block|}
+name|struct
+name|mkfifo_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3941,6 +4019,22 @@ begin_comment
 comment|/*  * Link system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|link_args
+block|{
+name|char
+modifier|*
+name|target
+decl_stmt|;
+name|char
+modifier|*
+name|linkname
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -3964,24 +4058,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|target
-decl_stmt|;
-name|char
-modifier|*
-name|linkname
-decl_stmt|;
-block|}
+name|struct
+name|link_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4271,6 +4355,22 @@ begin_comment
 comment|/*  * Make a symbolic link.  */
 end_comment
 
+begin_struct
+struct|struct
+name|symlink_args
+block|{
+name|char
+modifier|*
+name|target
+decl_stmt|;
+name|char
+modifier|*
+name|linkname
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -4294,24 +4394,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|target
-decl_stmt|;
-name|char
-modifier|*
-name|linkname
-decl_stmt|;
-block|}
+name|struct
+name|symlink_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4551,6 +4641,18 @@ begin_comment
 comment|/*  * Delete a name from the filesystem.  */
 end_comment
 
+begin_struct
+struct|struct
+name|unlink_args
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -4574,19 +4676,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|unlink_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4819,7 +4915,7 @@ end_block
 
 begin_struct
 struct|struct
-name|args_lseek
+name|__lseek_args
 block|{
 name|int
 name|fdes
@@ -4855,6 +4951,23 @@ begin_comment
 comment|/*  * Seek system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|lseek_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|long
+name|off
+decl_stmt|;
+name|int
+name|sbase
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|lseek
 argument_list|(
@@ -4874,28 +4987,17 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|long
-name|off
-decl_stmt|;
-name|int
-name|sbase
-decl_stmt|;
-block|}
+name|struct
+name|lseek_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|int
 modifier|*
 name|retval
 decl_stmt|;
@@ -4904,7 +5006,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|args_lseek
+name|__lseek_args
 name|nuap
 decl_stmt|;
 name|off_t
@@ -4951,6 +5053,10 @@ name|qret
 argument_list|)
 expr_stmt|;
 operator|*
+operator|(
+name|long
+operator|*
+operator|)
 name|retval
 operator|=
 name|qret
@@ -4998,14 +5104,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|args_lseek
+name|__lseek_args
 modifier|*
 name|uap
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|off_t
+name|int
 modifier|*
 name|retval
 decl_stmt|;
@@ -5174,6 +5280,10 @@ operator|)
 return|;
 block|}
 operator|*
+operator|(
+name|off_t
+operator|*
+operator|)
 name|retval
 operator|=
 name|fp
@@ -5191,6 +5301,21 @@ end_block
 begin_comment
 comment|/*  * Check access permissions.  */
 end_comment
+
+begin_struct
+struct|struct
+name|saccess_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|fmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ARGSUSED */
@@ -5215,23 +5340,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|fmode
-decl_stmt|;
-block|}
+name|struct
+name|saccess_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -5479,6 +5595,23 @@ begin_comment
 comment|/*  * Stat system call.  * This version follows links.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ostat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|ostat
+modifier|*
+name|ub
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -5502,25 +5635,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
 name|struct
-name|ostat
-modifier|*
-name|ub
-decl_stmt|;
-block|}
+name|ostat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -5655,6 +5777,23 @@ begin_comment
 comment|/*  * Lstat system call.  * This version does not follow links.  */
 end_comment
 
+begin_struct
+struct|struct
+name|olstat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|ostat
+modifier|*
+name|ub
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -5678,25 +5817,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
 name|struct
-name|ostat
-modifier|*
-name|ub
-decl_stmt|;
-block|}
+name|olstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6015,6 +6143,23 @@ begin_comment
 comment|/*  * Stat system call.  * This version follows links.  */
 end_comment
 
+begin_struct
+struct|struct
+name|stat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|stat
+modifier|*
+name|ub
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6038,25 +6183,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
 name|struct
-name|stat
-modifier|*
-name|ub
-decl_stmt|;
-block|}
+name|stat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6178,6 +6312,23 @@ begin_comment
 comment|/*  * Lstat system call.  * This version does not follow links.  */
 end_comment
 
+begin_struct
+struct|struct
+name|lstat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|stat
+modifier|*
+name|ub
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6201,25 +6352,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
 name|struct
-name|stat
-modifier|*
-name|ub
-decl_stmt|;
-block|}
+name|lstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6341,6 +6481,25 @@ begin_comment
 comment|/*  * Return target name of a symbolic link.  */
 end_comment
 
+begin_struct
+struct|struct
+name|readlink_args
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6364,27 +6523,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-block|}
+name|struct
+name|readlink_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6586,6 +6732,21 @@ begin_comment
 comment|/*  * Change flags of a file given path name.  */
 end_comment
 
+begin_struct
+struct|struct
+name|chflags_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6609,23 +6770,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-block|}
+name|struct
+name|chflags_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6775,6 +6927,20 @@ begin_comment
 comment|/*  * Change flags of a file given a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fchflags_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6798,22 +6964,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-block|}
+name|struct
+name|fchflags_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6961,6 +7119,21 @@ begin_comment
 comment|/*  * Change mode of a file given path name.  */
 end_comment
 
+begin_struct
+struct|struct
+name|chmod_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|fmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6984,23 +7157,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|fmode
-decl_stmt|;
-block|}
+name|struct
+name|chmod_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -7152,6 +7316,20 @@ begin_comment
 comment|/*  * Change mode of a file given a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fchmod_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|fmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -7175,22 +7353,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|fmode
-decl_stmt|;
-block|}
+name|struct
+name|fchmod_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -7340,6 +7510,24 @@ begin_comment
 comment|/*  * Set ownership given a path name.  */
 end_comment
 
+begin_struct
+struct|struct
+name|chown_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|uid
+decl_stmt|;
+name|int
+name|gid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -7363,26 +7551,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|uid
-decl_stmt|;
-name|int
-name|gid
-decl_stmt|;
-block|}
+name|struct
+name|chown_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -7540,6 +7716,23 @@ begin_comment
 comment|/*  * Set ownership given a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fchown_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|uid
+decl_stmt|;
+name|int
+name|gid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -7563,25 +7756,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|uid
-decl_stmt|;
-name|int
-name|gid
-decl_stmt|;
-block|}
+name|struct
+name|fchown_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -7737,6 +7919,23 @@ begin_comment
 comment|/*  * Set the access and modification times of a file.  */
 end_comment
 
+begin_struct
+struct|struct
+name|utimes_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|timeval
+modifier|*
+name|tptr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -7760,25 +7959,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
 name|struct
-name|timeval
-modifier|*
-name|tptr
-decl_stmt|;
-block|}
+name|utimes_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8010,7 +8198,7 @@ end_block
 
 begin_struct
 struct|struct
-name|args_truncate
+name|__truncate_args
 block|{
 name|char
 modifier|*
@@ -8056,7 +8244,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|args_truncate
+name|__truncate_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -8237,7 +8425,7 @@ end_block
 
 begin_struct
 struct|struct
-name|args_ftruncate
+name|__ftruncate_args
 block|{
 name|int
 name|fd
@@ -8282,7 +8470,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|args_ftruncate
+name|__ftruncate_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -8475,6 +8663,21 @@ begin_comment
 comment|/*  * Truncate a file given its path name.  */
 end_comment
 
+begin_struct
+struct|struct
+name|truncate_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|long
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -8498,23 +8701,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|long
-name|length
-decl_stmt|;
-block|}
+name|struct
+name|truncate_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8526,7 +8720,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|args_truncate
+name|__truncate_args
 name|nuap
 decl_stmt|;
 name|nuap
@@ -8565,6 +8759,20 @@ begin_comment
 comment|/*  * Truncate a file given a file descriptor.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ftruncate_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|long
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -8588,22 +8796,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|long
-name|length
-decl_stmt|;
-block|}
+name|struct
+name|ftruncate_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8615,7 +8815,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|args_ftruncate
+name|__truncate_args
 name|nuap
 decl_stmt|;
 name|nuap
@@ -8663,6 +8863,17 @@ begin_comment
 comment|/*  * Synch an open file.  */
 end_comment
 
+begin_struct
+struct|struct
+name|fsync_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -8686,18 +8897,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|fsync_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8793,6 +8999,22 @@ begin_comment
 comment|/*  * Rename system call.  *  * Source and destination must either both be directories, or both  * not be directories.  If target is a directory, it must be empty.  */
 end_comment
 
+begin_struct
+struct|struct
+name|rename_args
+block|{
+name|char
+modifier|*
+name|from
+decl_stmt|;
+name|char
+modifier|*
+name|to
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -8816,24 +9038,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|from
-decl_stmt|;
-name|char
-modifier|*
-name|to
-decl_stmt|;
-block|}
+name|struct
+name|rename_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -9341,6 +9553,21 @@ begin_comment
 comment|/*  * Mkdir system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|mkdir_args
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|dmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -9364,23 +9591,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|dmode
-decl_stmt|;
-block|}
+name|struct
+name|mkdir_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -9604,6 +9822,18 @@ begin_comment
 comment|/*  * Rmdir system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|rmdir_args
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -9627,19 +9857,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|rmdir_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -9875,6 +10099,28 @@ begin_comment
 comment|/*  * Read a block of directory entries in a file system independent format.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ogetdirentries_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|unsigned
+name|count
+decl_stmt|;
+name|long
+modifier|*
+name|basep
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ogetdirentries
 argument_list|(
@@ -9894,30 +10140,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|unsigned
-name|count
-decl_stmt|;
-name|long
-modifier|*
-name|basep
-decl_stmt|;
-block|}
+name|struct
+name|ogetdirentries_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -10422,6 +10652,28 @@ begin_comment
 comment|/*  * Read a block of directory entries in a file system independent format.  */
 end_comment
 
+begin_struct
+struct|struct
+name|getdirentries_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|unsigned
+name|count
+decl_stmt|;
+name|long
+modifier|*
+name|basep
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|getdirentries
 argument_list|(
@@ -10441,30 +10693,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|unsigned
-name|count
-decl_stmt|;
-name|long
-modifier|*
-name|basep
-decl_stmt|;
-block|}
+name|struct
+name|getdirentries_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -10716,44 +10952,42 @@ begin_comment
 comment|/*  * Set the mode mask for creation of filesystem nodes.  */
 end_comment
 
-begin_decl_stmt
-name|mode_t
-name|umask
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-decl|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
-name|args
+name|umask_args
 block|{
 name|int
 name|mask
 decl_stmt|;
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function
+name|mode_t
+comment|/* XXX */
+name|umask
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|umask_args
+modifier|*
+name|uap
+decl_stmt|;
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -10788,11 +11022,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Void all references to file by ripping underlying filesystem  * away from vnode.  */
 end_comment
+
+begin_struct
+struct|struct
+name|revoke_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* ARGSUSED */
@@ -10817,20 +11063,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-block|}
+name|struct
+name|revoke_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.47 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.48 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -150,6 +150,17 @@ begin_comment
 comment|/*  * Exit system call: pass back caller's arg  */
 end_comment
 
+begin_struct
+struct|struct
+name|rexit_args
+block|{
+name|int
+name|rval
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -173,18 +184,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|rval
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|rexit_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -945,6 +951,38 @@ comment|/* NOTREACHED */
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|wait_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+modifier|*
+name|status
+decl_stmt|;
+name|int
+name|options
+decl_stmt|;
+name|struct
+name|rusage
+modifier|*
+name|rusage
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+name|int
+name|compat
+decl_stmt|;
+comment|/* pseudo */
+endif|#
+directive|endif
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -970,34 +1008,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|status
-decl_stmt|;
-name|int
-name|options
-decl_stmt|;
 name|struct
-name|rusage
-modifier|*
-name|rusage
-decl_stmt|;
-name|int
-name|compat
-decl_stmt|;
-block|}
+name|wait_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1039,7 +1057,7 @@ name|uap
 operator|->
 name|rusage
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -1088,7 +1106,7 @@ name|uap
 operator|->
 name|rusage
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif
@@ -1102,7 +1120,7 @@ name|uap
 operator|->
 name|status
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|uap
 operator|->
@@ -1144,33 +1162,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|status
-decl_stmt|;
-name|int
-name|options
-decl_stmt|;
+begin_decl_stmt
 name|struct
-name|rusage
-modifier|*
-name|rusage
-decl_stmt|;
-name|int
-name|compat
-decl_stmt|;
-block|}
+name|wait_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1240,39 +1238,14 @@ name|q
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|status
-decl_stmt|;
-name|int
-name|options
-decl_stmt|;
 name|struct
-name|rusage
-modifier|*
-name|rusage
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_43
-name|int
-name|compat
-decl_stmt|;
-endif|#
-directive|endif
-block|}
+name|wait_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

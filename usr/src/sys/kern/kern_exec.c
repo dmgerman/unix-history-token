@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.64 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.65 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -219,6 +219,28 @@ begin_comment
 comment|/*  * exec system call  */
 end_comment
 
+begin_struct
+struct|struct
+name|execve_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|envp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -240,30 +262,14 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argp
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|envp
-decl_stmt|;
-block|}
+name|struct
+name|execve_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

@@ -654,6 +654,28 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxexecv_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|envp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxexecv
 argument_list|(
@@ -673,29 +695,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argp
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|envp
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxexecv_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -736,6 +742,24 @@ begin_comment
 comment|/*  * HP-UX versions of wait and wait3 actually pass the parameters  * (status pointer, options, rusage) into the kernel rather than  * handling it in the C library stub.  We also need to map any  * termination signal from BSD to HP-UX.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxwait3_args
+block|{
+name|int
+modifier|*
+name|status
+decl_stmt|;
+name|int
+name|options
+decl_stmt|;
+name|int
+name|rusage
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxwait3
 argument_list|(
@@ -755,25 +779,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-modifier|*
-name|status
-decl_stmt|;
-name|int
-name|options
-decl_stmt|;
-name|int
-name|rusage
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxwait3_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -848,6 +860,18 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxwait_args
+block|{
+name|int
+modifier|*
+name|status
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxwait
 argument_list|(
@@ -867,19 +891,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-modifier|*
-name|status
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxwait_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1045,6 +1063,30 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxwaitpid_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+modifier|*
+name|status
+decl_stmt|;
+name|int
+name|options
+decl_stmt|;
+name|struct
+name|rusage
+modifier|*
+name|rusage
+decl_stmt|;
+comment|/* wait4 arg */
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxwaitpid
 argument_list|(
@@ -1064,31 +1106,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|status
-decl_stmt|;
-name|int
-name|options
-decl_stmt|;
+begin_decl_stmt
 name|struct
-name|rusage
-modifier|*
-name|rusage
-decl_stmt|;
-comment|/* wait4 arg */
-block|}
+name|hpuxwaitpid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1257,6 +1281,24 @@ begin_comment
 comment|/*  * Must remap some bits in the mode mask.  * O_CREAT, O_TRUNC, and O_EXCL must be remapped,  * O_SYNCIO (0100000) is removed entirely.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxopen_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|int
+name|crtmode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxopen
 argument_list|(
@@ -1276,26 +1318,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|int
-name|mode
-decl_stmt|;
-name|int
-name|crtmode
-decl_stmt|;
-block|}
+name|struct
+name|hpuxopen_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1423,6 +1453,23 @@ begin_comment
 comment|/* XXX */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxfcntl_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|int
+name|arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxfcntl
 argument_list|(
@@ -1442,25 +1489,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|int
-name|arg
-decl_stmt|;
-block|}
+name|struct
+name|hpuxfcntl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1734,6 +1770,17 @@ begin_comment
 comment|/*  * Read and write should return a 0 count when an operation  * on a VNODE would block, not an error.  *  * In 6.2 and 6.5 sockets appear to return EWOULDBLOCK.  * In 7.0 the behavior for sockets depends on whether FNONBLOCK is in effect.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxread_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxread
 argument_list|(
@@ -1753,18 +1800,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxread_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1844,6 +1886,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxwrite_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxwrite
 argument_list|(
@@ -1863,18 +1916,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxwrite_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1954,6 +2002,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxreadv_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxreadv
 argument_list|(
@@ -1973,18 +2032,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxreadv_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2064,6 +2118,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxwritev_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxwritev
 argument_list|(
@@ -2083,18 +2148,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxwritev_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2178,6 +2238,17 @@ begin_comment
 comment|/*  * 4.3bsd dup allows dup2 to come in on the same syscall entry  * and hence allows two arguments.  HP-UX dup has only one arg.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxdup_args
+block|{
+name|int
+name|i
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxdup
 argument_list|(
@@ -2197,19 +2268,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|i
-decl_stmt|;
-block|}
+name|struct
+name|hpuxdup_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2354,6 +2420,25 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxutssys_args
+block|{
+name|struct
+name|hpuxutsname
+modifier|*
+name|uts
+decl_stmt|;
+name|int
+name|dev
+decl_stmt|;
+name|int
+name|request
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxutssys
 argument_list|(
@@ -2373,27 +2458,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|hpuxutsname
-modifier|*
-name|uts
-decl_stmt|;
-name|int
-name|dev
-decl_stmt|;
-name|int
-name|request
-decl_stmt|;
-block|}
+name|hpuxutssys_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2688,6 +2760,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsysconf_args
+block|{
+name|int
+name|name
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsysconf
 argument_list|(
@@ -2707,18 +2790,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|name
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsysconf_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2823,6 +2901,23 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxstat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|hpuxstat
+modifier|*
+name|hsb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxstat
 argument_list|(
@@ -2842,24 +2937,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
+begin_decl_stmt
 name|struct
-name|hpuxstat
-modifier|*
-name|hsb
-decl_stmt|;
-block|}
+name|hpuxstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2889,6 +2973,23 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxlstat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|hpuxstat
+modifier|*
+name|hsb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxlstat
 argument_list|(
@@ -2908,24 +3009,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
+begin_decl_stmt
 name|struct
-name|hpuxstat
-modifier|*
-name|hsb
-decl_stmt|;
-block|}
+name|hpuxlstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -2955,6 +3045,22 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxfstat_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|struct
+name|hpuxstat
+modifier|*
+name|hsb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxfstat
 argument_list|(
@@ -2974,24 +3080,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
 name|struct
-name|hpuxstat
-modifier|*
-name|hsb
-decl_stmt|;
-block|}
+name|hpuxfstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3144,6 +3240,20 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxulimit_args
+block|{
+name|int
+name|cmd
+decl_stmt|;
+name|long
+name|newlimit
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxulimit
 argument_list|(
@@ -3163,22 +3273,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|cmd
-decl_stmt|;
-name|long
-name|newlimit
-decl_stmt|;
-block|}
+name|struct
+name|hpuxulimit_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|long
@@ -3327,6 +3429,20 @@ begin_comment
 comment|/*  * Map "real time" priorities 0 (high) thru 127 (low) into nice  * values -16 (high) thru -1 (low).  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxrtprio_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|prio
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxrtprio
 argument_list|(
@@ -3346,22 +3462,14 @@ name|cp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|prio
-decl_stmt|;
-block|}
+name|struct
+name|hpuxrtprio_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3553,6 +3661,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxadvise_args
+block|{
+name|int
+name|arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxadvise
 argument_list|(
@@ -3572,18 +3691,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|arg
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxadvise_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3649,6 +3763,27 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxptrace_args
+block|{
+name|int
+name|req
+decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
+name|int
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxptrace
 argument_list|(
@@ -3668,28 +3803,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|req
-decl_stmt|;
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|addr
-decl_stmt|;
-name|int
-name|data
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxptrace_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3771,6 +3891,21 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxgetdomainname_args
+block|{
+name|char
+modifier|*
+name|domainname
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxgetdomainname
 argument_list|(
@@ -3790,23 +3925,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|domainname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+name|struct
+name|hpuxgetdomainname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -3854,6 +3980,21 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsetdomainname_args
+block|{
+name|char
+modifier|*
+name|domainname
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsetdomainname
 argument_list|(
@@ -3873,23 +4014,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|domainname
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
+name|struct
+name|hpuxsetdomainname_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4132,6 +4264,23 @@ begin_comment
 comment|/*  * Handle HP-UX specific commands.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxshmctl_args
+block|{
+name|int
+name|shmid
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|caddr_t
+name|buf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxshmctl
 argument_list|(
@@ -4151,24 +4300,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|shmid
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|caddr_t
-name|buf
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxshmctl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4303,6 +4441,26 @@ begin_comment
 comment|/*  * Fake semaphore routines, just don't return an error.  * Should be adequate for starbase to run.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxsemctl_args
+block|{
+name|int
+name|semid
+decl_stmt|;
+name|u_int
+name|semnum
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|int
+name|arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsemctl
 argument_list|(
@@ -4322,27 +4480,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|semid
-decl_stmt|;
-name|u_int
-name|semnum
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|int
-name|arg
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsemctl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4361,6 +4505,23 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|hpuxsemget_args
+block|{
+name|key_t
+name|key
+decl_stmt|;
+name|int
+name|nsems
+decl_stmt|;
+name|int
+name|semflg
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_macro
 name|hpuxsemget
@@ -4381,24 +4542,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|key_t
-name|key
-decl_stmt|;
-name|int
-name|nsems
-decl_stmt|;
-name|int
-name|semflg
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsemget_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -4417,6 +4567,25 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|hpuxsemop_args
+block|{
+name|int
+name|semid
+decl_stmt|;
+name|struct
+name|sembuf
+modifier|*
+name|sops
+decl_stmt|;
+name|u_int
+name|nsops
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_macro
 name|hpuxsemop
@@ -4437,26 +4606,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|semid
-decl_stmt|;
+begin_decl_stmt
 name|struct
-name|sembuf
-modifier|*
-name|sops
-decl_stmt|;
-name|u_int
-name|nsops
-decl_stmt|;
-block|}
+name|hpuxsemop_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -5181,6 +5337,23 @@ begin_comment
 comment|/*  * HP-UX ioctl system call.  The differences here are:  *	IOC_IN also means IOC_VOID if the size portion is zero.  *	no FIOCLEX/FIONCLEX/FIOASYNC/FIOGETOWN/FIOSETOWN  *	the sgttyb struct is 2 bytes longer  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxioctl_args
+block|{
+name|int
+name|fdes
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|caddr_t
+name|cmarg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxioctl
 argument_list|(
@@ -5200,25 +5373,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fdes
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-name|caddr_t
-name|cmarg
-decl_stmt|;
-block|}
+name|struct
+name|hpuxioctl_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -5870,6 +6032,21 @@ begin_comment
 comment|/*  * Man page lies, behaviour here is based on observed behaviour.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxgetcontext_args
+block|{
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxgetcontext
 argument_list|(
@@ -5889,22 +6066,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|int
-name|len
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxgetcontext_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6050,6 +6218,17 @@ begin_comment
 comment|/*  * This is the equivalent of BSD getpgrp but with more restrictions.  * Note we do not check the real uid or "saved" uid.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxgetpgrp2_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxgetpgrp2
 argument_list|(
@@ -6069,19 +6248,14 @@ name|cp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-block|}
+name|struct
+name|hpuxgetpgrp2_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6184,6 +6358,20 @@ begin_comment
 comment|/*  * This is the equivalent of BSD setpgrp but with more restrictions.  * Note we do not check the real uid or "saved" uid or pgrp.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxsetpgrp2_args
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|pgrp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxsetpgrp2
 argument_list|(
@@ -6203,21 +6391,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|pid
-decl_stmt|;
-name|int
-name|pgrp
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsetpgrp2_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6267,6 +6447,23 @@ begin_comment
 comment|/*  * XXX Same as old BSD setre[ug]id right now.  Need to consider saved ids.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxsetresuid_args
+block|{
+name|int
+name|ruid
+decl_stmt|;
+name|int
+name|euid
+decl_stmt|;
+name|int
+name|suid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6288,24 +6485,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|ruid
-decl_stmt|;
-name|int
-name|euid
-decl_stmt|;
-name|int
-name|suid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsetresuid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6503,6 +6689,23 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|hpuxsetresgid_args
+block|{
+name|int
+name|rgid
+decl_stmt|;
+name|int
+name|egid
+decl_stmt|;
+name|int
+name|sgid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -6524,24 +6727,13 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|rgid
-decl_stmt|;
-name|int
-name|egid
-decl_stmt|;
-name|int
-name|sgid
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxsetresgid_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6754,6 +6946,23 @@ begin_comment
 comment|/*  * XXX: simple recognition hack to see if we can make grmd work.  */
 end_comment
 
+begin_struct
+struct|struct
+name|hpuxlockf_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|int
+name|func
+decl_stmt|;
+name|long
+name|size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|hpuxlockf
 argument_list|(
@@ -6773,24 +6982,13 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|func
-decl_stmt|;
-name|long
-name|size
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|hpuxlockf_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -6837,27 +7035,9 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
-name|hpuxgetaccess
-argument_list|(
-name|p
-argument_list|,
-name|uap
-argument_list|,
-name|retval
-argument_list|)
-specifier|register
-expr|struct
-name|proc
-operator|*
-name|p
-expr_stmt|;
-end_expr_stmt
-
 begin_struct
-specifier|register
 struct|struct
-name|args
+name|hpuxgetaccess_args
 block|{
 name|char
 modifier|*
@@ -6882,10 +7062,34 @@ modifier|*
 name|privs
 decl_stmt|;
 block|}
-modifier|*
-name|uap
 struct|;
 end_struct
+
+begin_expr_stmt
+name|hpuxgetaccess
+argument_list|(
+name|p
+argument_list|,
+name|uap
+argument_list|,
+name|retval
+argument_list|)
+specifier|register
+expr|struct
+name|proc
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
+name|hpuxgetaccess_args
+modifier|*
+name|uap
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8324,6 +8528,18 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|ohpuxtime_args
+block|{
+name|long
+modifier|*
+name|tp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxtime
 argument_list|(
@@ -8343,23 +8559,17 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|long
-modifier|*
-name|tp
-decl_stmt|;
-block|}
+name|struct
+name|ohpuxtime_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|time_t
+name|int
 modifier|*
 name|retval
 decl_stmt|;
@@ -8404,6 +8614,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
+operator|(
+name|time_t
+operator|*
+operator|)
 name|retval
 operator|=
 name|time
@@ -8417,6 +8631,17 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_struct
+struct|struct
+name|ohpuxstime_args
+block|{
+name|int
+name|time
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_macro
 name|ohpuxstime
@@ -8437,19 +8662,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|time
-decl_stmt|;
-block|}
+name|struct
+name|ohpuxstime_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8542,6 +8762,19 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|ohpuxftime_args
+block|{
+name|struct
+name|hpuxtimeb
+modifier|*
+name|tp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxftime
 argument_list|(
@@ -8561,21 +8794,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|hpuxtimeb
-modifier|*
-name|tp
-decl_stmt|;
-block|}
+name|ohpuxftime_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8664,6 +8890,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|ohpuxalarm_args
+block|{
+name|int
+name|deltat
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|ohpuxalarm
 argument_list|(
@@ -8681,19 +8918,14 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|deltat
-decl_stmt|;
-block|}
+name|struct
+name|ohpuxalarm_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8860,6 +9092,17 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|ohpuxnice_args
+block|{
+name|int
+name|niceness
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_expr_stmt
 name|ohpuxnice
 argument_list|(
@@ -8877,19 +9120,14 @@ name|p
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|niceness
-decl_stmt|;
-block|}
+name|struct
+name|ohpuxnice_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -8947,6 +9185,19 @@ return|;
 block|}
 end_block
 
+begin_struct
+struct|struct
+name|ohpuxtimes_args
+block|{
+name|struct
+name|tms
+modifier|*
+name|tmsb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxtimes
 argument_list|(
@@ -8966,24 +9217,17 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
 name|struct
-name|tms
-modifier|*
-name|tmsb
-decl_stmt|;
-block|}
+name|ohpuxtimes_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|time_t
+name|int
 modifier|*
 name|retval
 decl_stmt|;
@@ -9099,6 +9343,10 @@ operator|==
 literal|0
 condition|)
 operator|*
+operator|(
+name|time_t
+operator|*
+operator|)
 name|retval
 operator|=
 name|hpuxscale
@@ -9164,6 +9412,22 @@ begin_comment
 comment|/*  * Set IUPD and IACC times on file.  * Can't set ICHG.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ohpuxutime_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|time_t
+modifier|*
+name|tptr
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxutime
 argument_list|(
@@ -9183,24 +9447,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|a
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|time_t
-modifier|*
-name|tptr
-decl_stmt|;
-block|}
+name|struct
+name|ohpuxutime_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -9479,6 +9733,22 @@ begin_comment
 comment|/*  * The old fstat system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ohpuxfstat_args
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|ohpuxstat
+modifier|*
+name|sb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxfstat
 argument_list|(
@@ -9498,24 +9768,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|fd
-decl_stmt|;
 name|struct
-name|ohpuxstat
-modifier|*
-name|sb
-decl_stmt|;
-block|}
+name|ohpuxfstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -9615,6 +9875,23 @@ begin_comment
 comment|/*  * Old stat system call.  This version follows links.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ohpuxstat_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|struct
+name|ohpuxstat
+modifier|*
+name|sb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ohpuxstat
 argument_list|(
@@ -9634,25 +9911,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
 name|struct
-name|ohpuxstat
-modifier|*
-name|sb
-decl_stmt|;
-block|}
+name|ohpuxstat_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int

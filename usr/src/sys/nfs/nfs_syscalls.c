@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -372,6 +372,22 @@ begin_comment
 comment|/*  * Get file handle system call  */
 end_comment
 
+begin_struct
+struct|struct
+name|getfh_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|fhandle_t
+modifier|*
+name|fhp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|getfh
 argument_list|(
@@ -391,24 +407,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-name|fhandle_t
-modifier|*
-name|fhp
-decl_stmt|;
-block|}
+name|struct
+name|getfh_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -607,6 +613,20 @@ begin_comment
 comment|/*  * Nfs server psuedo system call for the nfsd's  * Based on the flag value it either:  * - adds a socket to the selection list  * - remains in the kernel as an nfsd  * - remains in the kernel as an nfsiod  */
 end_comment
 
+begin_struct
+struct|struct
+name|nfssvc_args
+block|{
+name|int
+name|flag
+decl_stmt|;
+name|caddr_t
+name|argp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|nfssvc
 argument_list|(
@@ -626,22 +646,14 @@ name|p
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|flag
-decl_stmt|;
-name|caddr_t
-name|argp
-decl_stmt|;
-block|}
+name|struct
+name|nfssvc_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
