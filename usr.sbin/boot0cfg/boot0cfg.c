@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: boot0cfg.c,v 1.1.1.1 1999/02/21 21:23:42 rnordier Exp $"
+literal|"$Id: boot0cfg.c,v 1.2 1999/02/22 09:36:54 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,17 @@ end_define
 
 begin_comment
 comment|/* master boot record size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFF_DRIVE
+value|0x1ba
+end_define
+
+begin_comment
+comment|/* offset: setdrv drive */
 end_comment
 
 begin_define
@@ -850,6 +861,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|d_arg
+operator|!=
+operator|-
+literal|1
+condition|)
+name|buf
+index|[
+name|OFF_DRIVE
+index|]
+operator|=
+name|d_arg
+expr_stmt|;
+if|if
+condition|(
 name|o_flag
 condition|)
 block|{
@@ -1103,7 +1128,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"drive=0x0  options="
+literal|"drive=0x%x  options="
+argument_list|,
+name|buf
+index|[
+name|OFF_DRIVE
+index|]
 argument_list|)
 expr_stmt|;
 for|for
