@@ -101,7 +101,7 @@ specifier|const
 name|maketId
 index|[]
 init|=
-literal|"$Id: maketime.c,v 1.4 1995/12/01 08:26:33 jkh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

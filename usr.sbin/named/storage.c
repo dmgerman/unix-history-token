@@ -66,7 +66,7 @@ name|char
 name|RCSid
 index|[]
 init|=
-literal|"$Id: storage.c,v 1.3 1995/05/30 03:49:05 rgrimes Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

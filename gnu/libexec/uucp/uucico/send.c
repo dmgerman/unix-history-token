@@ -21,7 +21,7 @@ name|char
 name|send_rcsid
 index|[]
 init|=
-literal|"$Id: send.c,v 1.5 1995/08/19 21:29:52 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

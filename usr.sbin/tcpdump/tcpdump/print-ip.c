@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print-ip.c,v 1.5 1995/06/13 17:39:23 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

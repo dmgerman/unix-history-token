@@ -21,7 +21,7 @@ name|char
 name|xqtfil_rcsid
 index|[]
 init|=
-literal|"$Id: xqtfil.c,v 1.4 1995/08/19 21:26:23 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -57,7 +57,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: panic.c,v 1.2 1995/04/12 02:42:32 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

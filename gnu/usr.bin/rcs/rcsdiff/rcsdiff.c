@@ -98,7 +98,7 @@ argument|rcsdiffId
 argument_list|,
 literal|"rcsdiff"
 argument_list|,
-literal|"$Id: rcsdiff.c,v 1.5 1996/01/20 07:51:25 mpp Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

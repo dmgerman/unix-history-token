@@ -4,7 +4,7 @@ comment|/* RCS compile-time configuration */
 end_comment
 
 begin_comment
-comment|/* $Id: conf.h,v 1.5 1995/10/29 08:35:51 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

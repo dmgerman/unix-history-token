@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* named.h - include the local definitions in the right order  * vix 28aug93 [original]  *  * $Id: named.h,v 1.1 1993/09/08 04:57:40 vixie Exp $  */
+comment|/* named.h - include the local definitions in the right order  * vix 28aug93 [original]  *  * $FreeBSD$  */
 end_comment
 
 begin_include

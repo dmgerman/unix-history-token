@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id: callbootd.c,v 1.2 1995/03/26 03:15:39 wpaul Exp $ */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>   $FreeBSD$ */
 end_comment
 
 begin_include

@@ -18,7 +18,7 @@ name|libId
 argument_list|(
 argument|mergerId
 argument_list|,
-literal|"$Id: merger.c,v 1.1.1.1 1993/06/18 04:22:13 jkh Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

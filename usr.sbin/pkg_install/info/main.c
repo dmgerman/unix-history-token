@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.10 1995/10/25 15:38:29 jkh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

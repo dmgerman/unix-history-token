@@ -24,7 +24,7 @@ file|"ccp.h"
 end_include
 
 begin_comment
-comment|/*  *  * $Id: pred.c,v 1.3 1995/05/30 03:50:55 rgrimes Exp $  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
+comment|/*  *  * $FreeBSD$  *  * pred.c -- Test program for Dave Rand's rendition of the  * predictor algorithm  * Updated by: iand@labtam.labtam.oz.au (Ian Donaldson)  * Updated by: Carsten Bormann<cabo@cs.tu-berlin.de>  * Original  : Dave Rand<dlr@bungi.com>/<dave_rand@novell.com>  */
 end_comment
 
 begin_comment

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_vinit_rcsid
 index|[]
 init|=
-literal|"$Id: vinit.c,v 1.3 1995/08/19 21:28:39 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

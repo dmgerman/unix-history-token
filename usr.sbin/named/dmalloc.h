@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dmalloc - debugging layer on top of malloc  * vix 22mar92 [written]  *  * $Id: dmalloc.h,v 1.1.1.1 1994/09/22 19:46:14 pst Exp $  */
+comment|/* dmalloc - debugging layer on top of malloc  * vix 22mar92 [written]  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

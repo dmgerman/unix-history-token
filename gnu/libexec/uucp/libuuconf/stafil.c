@@ -21,7 +21,7 @@ name|char
 name|_uuconf_stafil_rcsid
 index|[]
 init|=
-literal|"$Id: stafil.c,v 1.3 1995/08/19 21:28:06 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

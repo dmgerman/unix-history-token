@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: krb.c,v 1.1 1993/07/29 22:45:19 dglo Exp gibbs $  * $Source: /usr/src/eBones/rkinitd/RCS/krb.c,v $  * $Author: dglo $  *  * This file contains all of the kerberos part of rkinitd.  */
+comment|/*   * $FreeBSD$  * $Source: /usr/src/eBones/rkinitd/RCS/krb.c,v $  * $Author: dglo $  *  * This file contains all of the kerberos part of rkinitd.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: krb.c,v 1.1 1993/07/29 22:45:19 dglo Exp gibbs $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

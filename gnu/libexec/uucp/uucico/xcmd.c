@@ -21,7 +21,7 @@ name|char
 name|xcmd_rcsid
 index|[]
 init|=
-literal|"$Id: xcmd.c,v 1.3 1995/08/19 21:30:01 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

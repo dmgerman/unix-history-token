@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.6.2.2 1996/10/28 23:03:54 joerg Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lock.c,v 1.2 1994/09/25 02:32:04 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/gnu/usr.bin/patch/inp.c,v 1.3 1995/05/30 05:02:31 rgrimes Exp $  *  * $Log: inp.c,v $  * Revision 1.3  1995/05/30  05:02:31  rgrimes  * Remove trailing whitespace.  *  * Revision 1.2  1995/01/12  22:09:39  hsu  * Fix bug that created new files even when running in -C check mode.  * Reviewed by: phk  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *  * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *  */
+comment|/* $FreeBSD$  *  * $Log: inp.c,v $  * Revision 1.3  1995/05/30  05:02:31  rgrimes  * Remove trailing whitespace.  *  * Revision 1.2  1995/01/12  22:09:39  hsu  * Fix bug that created new files even when running in -C check mode.  * Reviewed by: phk  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.1  88/06/03  15:06:13  lwall  * patch10: made a little smarter about sccs files  *  * Revision 2.0  86/09/17  15:37:02  lwall  * Baseline for netwide release.  *  */
 end_comment
 
 begin_include

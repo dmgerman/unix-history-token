@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id$  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment

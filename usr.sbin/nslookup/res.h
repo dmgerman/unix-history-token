@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1985, 1989  * -  * Copyright (c) 1985, 1989  *    Th
 end_comment
 
 begin_comment
-comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 1.1.1.1 1994/09/22 21:36:02 pst Exp $  */
+comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  * $FreeBSD$  */
 end_comment
 
 begin_comment

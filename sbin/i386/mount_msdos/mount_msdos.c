@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.2 1994/09/22 22:16:35 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

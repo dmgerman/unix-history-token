@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1990  * -  * Copyright (c) 1990  *    The Regents of
 end_comment
 
 begin_comment
-comment|/*  *	@(#)pathnames.h	5.1 (Berkeley) 5/28/90  *	$Id: pathnames.h,v 1.2 1994/09/22 21:50:37 pst Exp $  */
+comment|/*  *	@(#)pathnames.h	5.1 (Berkeley) 5/28/90  * $FreeBSD$  */
 end_comment
 
 begin_define

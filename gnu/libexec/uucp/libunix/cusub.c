@@ -21,7 +21,7 @@ name|char
 name|cusub_rcsid
 index|[]
 init|=
-literal|"$Id: cusub.c,v 1.4 1995/08/19 21:25:06 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

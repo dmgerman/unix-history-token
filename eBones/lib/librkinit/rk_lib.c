@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: rk_lib.c,v 1.1 1993/12/10 19:32:01 dglo Exp gibbs $  * $Source: /usr/src/eBones/librkinit/RCS/rk_lib.c,v $  * $Author: dglo $  *  * This file contains the non-rpc top-level rkinit library routines.  * The routines in the rkinit library that should be called from clients  * are exactly those defined in this file.  *  * The naming convetions used within the rkinit library are as follows:  * Functions intended for general client use start with rkinit_  * Functions intended for use only inside the library or server start with  * rki_  * Functions that do network communcation start with rki_rpc_  * Static functions can be named in any fashion.  */
+comment|/*   * $FreeBSD$  * $Source: /usr/src/eBones/librkinit/RCS/rk_lib.c,v $  * $Author: dglo $  *  * This file contains the non-rpc top-level rkinit library routines.  * The routines in the rkinit library that should be called from clients  * are exactly those defined in this file.  *  * The naming convetions used within the rkinit library are as follows:  * Functions intended for general client use start with rkinit_  * Functions intended for use only inside the library or server start with  * rki_  * Functions that do network communcation start with rki_rpc_  * Static functions can be named in any fashion.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rk_lib.c,v 1.1 1993/12/10 19:32:01 dglo Exp gibbs $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rpc_commondata.c,v 1.1 1994/08/07 18:36:01 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

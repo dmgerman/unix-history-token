@@ -20,7 +20,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: shmctl.c,v 1.2 1993/10/10 12:01:28 rgrimes Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

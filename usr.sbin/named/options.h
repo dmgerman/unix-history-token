@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 1.3 1995/05/30 03:49:02 rgrimes Exp $  */
+comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

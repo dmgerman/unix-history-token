@@ -21,7 +21,7 @@ name|char
 name|_uuconf_val_rcsid
 index|[]
 init|=
-literal|"$Id: val.c,v 1.3 1995/08/19 21:28:38 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/lex/FlexLexer.h,v 1.1.1.1 1994/08/24 13:10:33 csgr Exp $
+comment|// $FreeBSD$
 end_comment
 
 begin_comment

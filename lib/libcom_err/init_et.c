@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: /pub/FreeBSD/FreeBSD-CVS/src/lib/libcom_err/init_et.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $  * $Source: /pub/FreeBSD/FreeBSD-CVS/src/lib/libcom_err/init_et.c,v $  * $Locker:  $  *  * Copyright 1986, 1987, 1988 by MIT Information Systems and  *	the MIT Student Information Processing Board.  *  * For copyright info, see mit-sipb-copyright.h.  */
+comment|/*  * $FreeBSD$  * $Source: /pub/FreeBSD/FreeBSD-CVS/src/lib/libcom_err/init_et.c,v $  * $Locker:  $  *  * Copyright 1986, 1987, 1988 by MIT Information Systems and  *	the MIT Student Information Processing Board.  *  * For copyright info, see mit-sipb-copyright.h.  */
 end_comment
 
 begin_include
@@ -51,7 +51,7 @@ name|char
 name|rcsid_init_et_c
 index|[]
 init|=
-literal|"$Header: /pub/FreeBSD/FreeBSD-CVS/src/lib/libcom_err/init_et.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: rd_req.c,v 4.16 89/03/22 14:52:06 jtkohl Exp $  *	$Id: rd_req.c,v 1.3 1995/07/18 16:39:33 mark Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: rd_req.c,v 4.16 89/03/22 14:52:06 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char *rcsid = "$Id: rd_req.c,v 1.3 1995/07/18 16:39:33 mark Exp $";
+unit|static char *rcsid = "$FreeBSD$";
 endif|#
 directive|endif
 end_endif

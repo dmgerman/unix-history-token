@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_tcp.c,v 1.2.4.2 1996/06/05 02:49:02 jkh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

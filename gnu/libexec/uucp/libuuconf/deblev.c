@@ -21,7 +21,7 @@ name|char
 name|_uuconf_deblev_rcsid
 index|[]
 init|=
-literal|"$Id: deblev.c,v 1.3 1995/08/19 21:26:54 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

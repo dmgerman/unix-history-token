@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_phost.c,v 4.6 89/01/23 09:25:40 jtkohl Exp $  *	$Id: get_phost.c,v 1.3 1995/07/18 16:38:35 mark Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_phost.c,v 4.6 89/01/23 09:25:40 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: get_phost.c,v 1.3 1995/07/18 16:38:35 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 end_endif

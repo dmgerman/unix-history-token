@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1994,1995 by Andrey A. Chernov, Moscow, Russia.  * A
 end_comment
 
 begin_comment
-comment|/* $Id: termcap.h,v 1.6 1995/08/05 21:21:54 ache Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

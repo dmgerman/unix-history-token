@@ -35,7 +35,7 @@ argument|rcsmergeId
 argument_list|,
 literal|"rcsmerge"
 argument_list|,
-literal|"$Id: rcsmerge.c,v 1.4 1995/10/29 22:06:45 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

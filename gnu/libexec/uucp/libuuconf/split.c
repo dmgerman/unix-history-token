@@ -21,7 +21,7 @@ name|char
 name|_uuconf_split_rcsid
 index|[]
 init|=
-literal|"$Id: split.c,v 1.3 1995/08/19 21:28:04 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

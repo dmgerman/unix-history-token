@@ -21,7 +21,7 @@ name|char
 name|_uuconf_runuxq_rcsid
 index|[]
 init|=
-literal|"$Id: runuxq.c,v 1.2 1995/08/19 21:27:59 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995 Wolfram Schneider. Public domain.  *  * $Id: ostern.c,v 1.3 1996/05/10 17:32:05 ache Exp $ */
+comment|/*   * Copyright (c) 1995 Wolfram Schneider. Public domain.  *  * $FreeBSD$ */
 end_comment
 
 begin_include

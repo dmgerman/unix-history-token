@@ -5,7 +5,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: iid.c,v 1.4 1995/01/25 13:42:33 jkr Exp jkr $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -12,7 +12,7 @@ name|_STRHASH_H_INCLUDE
 end_define
 
 begin_comment
-comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/include/strhash.h,v 1.2 1995/05/30 04:54:49 rgrimes Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Lists your current Kerberos tickets.  * Written by Bill Sommerfeld, MIT Project Athena.  *  *	from: klist.c,v 4.15 89/08/30 11:19:16 jtkohl Exp $  *	$Id: klist.c,v 1.3 1995/07/18 16:37:59 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Lists your current Kerberos tickets.  * Written by Bill Sommerfeld, MIT Project Athena.  *  *	from: klist.c,v 4.15 89/08/30 11:19:16 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: klist.c,v 1.3 1995/07/18 16:37:59 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Purpose:  * This module was developed to parse the "~/.klogin" files for  * Kerberos-authenticated rlogin/rcp/rsh services.  However, it is  * general purpose and can be used to parse any such parameter file.  *  * The parameter file should consist of one or more entries, with each  * entry on a separate line and consisting of zero or more  * "keyword=value" combinations.  The keyword is case insensitive, but  * the value is not.  Any string may be enclosed in quotes, and  * c-style "\" literals are supported.  A comma may be used to  * separate the k/v combinations, and multiple commas are ignored.  * Whitespace (blank or tab) may be used freely and is ignored.  *  * Full error processing is available.  When PS_BAD_KEYWORD or  * PS_SYNTAX is returned from fGetParameterSet(), the string ErrorMsg  * contains a meaningful error message.  *  * Keywords and their default values are programmed by an external  * table.  *  * Routines:  * fGetParameterSet()      parse one line of the parameter file  * fGetKeywordValue()      parse one "keyword=value" combo  * fGetToken()             parse one token  *  *  *	from: kparse.c,v 4.5 89/01/21 17:20:39 jtkohl Exp $  *	$Id: kparse.c,v 1.3 1995/07/18 16:38:58 mark Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Purpose:  * This module was developed to parse the "~/.klogin" files for  * Kerberos-authenticated rlogin/rcp/rsh services.  However, it is  * general purpose and can be used to parse any such parameter file.  *  * The parameter file should consist of one or more entries, with each  * entry on a separate line and consisting of zero or more  * "keyword=value" combinations.  The keyword is case insensitive, but  * the value is not.  Any string may be enclosed in quotes, and  * c-style "\" literals are supported.  A comma may be used to  * separate the k/v combinations, and multiple commas are ignored.  * Whitespace (blank or tab) may be used freely and is ignored.  *  * Full error processing is available.  When PS_BAD_KEYWORD or  * PS_SYNTAX is returned from fGetParameterSet(), the string ErrorMsg  * contains a meaningful error message.  *  * Keywords and their default values are programmed by an external  * table.  *  * Routines:  * fGetParameterSet()      parse one line of the parameter file  * fGetKeywordValue()      parse one "keyword=value" combo  * fGetToken()             parse one token  *  *  *	from: kparse.c,v 4.5 89/01/21 17:20:39 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: kparse.c,v 1.3 1995/07/18 16:38:58 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

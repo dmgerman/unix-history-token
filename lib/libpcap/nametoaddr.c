@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /pub/FreeBSD/FreeBSD-CVS/src/lib/libpcap/nametoaddr.c,v 1.2 1995/05/30 05:47:21 rgrimes Exp $ (LBL)"
+literal|"@(#) $FreeBSD$ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

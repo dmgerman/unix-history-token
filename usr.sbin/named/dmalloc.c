@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dmalloc - debugging layer on top of malloc  * vix 25mar92 [fixed bug in round-up calcs in alloc()]  * vix 24mar92 [added size calcs, improved printout]  * vix 22mar92 [original work]  *  * $Id: dmalloc.c,v 1.2 1994/09/22 20:45:04 pst Exp $  */
+comment|/* dmalloc - debugging layer on top of malloc  * vix 25mar92 [fixed bug in round-up calcs in alloc()]  * vix 24mar92 [added size calcs, improved printout]  * vix 22mar92 [original work]  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

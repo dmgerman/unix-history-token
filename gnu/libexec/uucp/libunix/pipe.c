@@ -21,7 +21,7 @@ name|char
 name|pipe_rcsid
 index|[]
 init|=
-literal|"$Id: pipe.c,v 1.2 1995/08/19 21:25:48 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

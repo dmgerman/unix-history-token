@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cron.c,v 2.11 1994/01/15 20:43:43 vixie Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

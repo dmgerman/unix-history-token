@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subsegs.c,v 1.3 1995/03/02 20:29:18 nate Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -30,7 +30,7 @@ name|libId
 argument_list|(
 argument|synId
 argument_list|,
-literal|"$Id: rcssyn.c,v 1.4 1995/10/29 22:06:30 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

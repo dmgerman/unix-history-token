@@ -21,7 +21,7 @@ name|char
 name|_uuconf_spool_rcsid
 index|[]
 init|=
-literal|"$Id: spool.c,v 1.3 1995/08/19 21:28:05 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

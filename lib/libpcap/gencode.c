@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /pub/FreeBSD/FreeBSD-CVS/src/lib/libpcap/gencode.c,v 1.1.1.1.4.1 1995/08/30 08:51:45 davidg Exp $ (LBL)"
+literal|"@(#) $FreeBSD$ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

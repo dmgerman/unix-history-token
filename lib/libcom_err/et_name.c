@@ -45,7 +45,7 @@ name|char
 name|rcsid_et_name_c
 index|[]
 init|=
-literal|"$Header: /pub/FreeBSD/FreeBSD-CVS/src/lib/libcom_err/et_name.c,v 1.1.1.1 1995/01/14 22:23:41 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

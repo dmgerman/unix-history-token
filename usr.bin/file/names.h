@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * $Id: names.h,v 1.11 1993/09/16 21:14:20 christos Exp $  */
+comment|/*  * Names.h - names and types used by ascmagic in file(1).  * These tokens are here because they can appear anywhere in  * the first HOWMANY bytes, while tokens in /etc/magic must  * appear at fixed offsets into the file. Don't make HOWMANY  * too high unless you have a very fast CPU.  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * See LEGAL.NOTICE  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

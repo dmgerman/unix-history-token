@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)Version.c	4.9 (Berkeley) 7/21/90  *	$Id: Version.c,v 4.9.1.3 1994/06/01 21:09:39 vixie Exp $  */
+comment|/*  *	@(#)Version.c	4.9 (Berkeley) 7/21/90  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: Version.c,v 4.9.1.3 1994/06/01 21:09:39 vixie Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

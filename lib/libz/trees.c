@@ -8,7 +8,7 @@ comment|/*  *  ALGORITHM  *  *      The "deflation" process uses several Huffman
 end_comment
 
 begin_comment
-comment|/* $Id: trees.c,v 1.11 1996/07/24 13:41:06 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

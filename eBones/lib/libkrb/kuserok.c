@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * kuserok: check if a kerberos principal has  * access to a local account  *  *	from: kuserok.c,v 4.5 89/01/23 09:25:21 jtkohl Exp $  *	$Id: kuserok.c,v 1.3 1995/07/18 16:39:07 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * kuserok: check if a kerberos principal has  * access to a local account  *  *	from: kuserok.c,v 4.5 89/01/23 09:25:21 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: kuserok.c,v 1.3 1995/07/18 16:39:07 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

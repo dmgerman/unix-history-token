@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.16 1995/09/28 19:43:22 bde Exp $	- library routines  */
+comment|/*  * $FreeBSD$	- library routines  */
 end_comment
 
 begin_include

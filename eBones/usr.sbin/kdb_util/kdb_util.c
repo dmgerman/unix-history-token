@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Kerberos database manipulation utility. This program allows you to  * dump a kerberos database to an ascii readable file and load this  * file into the database. Read locking of the database is done during a  * dump operation. NO LOCKING is done during a load operation. Loads  * should happen with other processes shutdown.  *  * Written July 9, 1987 by Jeffrey I. Schiller  *  *	from: kdb_util.c,v 4.4 90/01/09 15:57:20 raeburn Exp $  *	$Id: kdb_util.c,v 1.5 1995/08/03 17:15:57 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Kerberos database manipulation utility. This program allows you to  * dump a kerberos database to an ascii readable file and load this  * file into the database. Read locking of the database is done during a  * dump operation. NO LOCKING is done during a load operation. Loads  * should happen with other processes shutdown.  *  * Written July 9, 1987 by Jeffrey I. Schiller  *  *	from: kdb_util.c,v 4.4 90/01/09 15:57:20 raeburn Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: kdb_util.c,v 1.5 1995/08/03 17:15:57 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

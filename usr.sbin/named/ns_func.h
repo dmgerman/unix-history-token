@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 1.1.1.1 1994/09/22 19:46:13 pst Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

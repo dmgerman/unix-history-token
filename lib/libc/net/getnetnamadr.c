@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetnamadr.c,v 1.3 1995/03/24 15:51:30 ache Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetnamadr.c,v 1.3 1995/03/24 15:51:30 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

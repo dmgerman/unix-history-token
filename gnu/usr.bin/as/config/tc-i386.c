@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tc-i386.c,v 1.3 1994/12/23 22:37:35 nate Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

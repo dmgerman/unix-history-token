@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Configuration info for operating system, hardware description,  * language implementation, C library, etc.  *  * This file should be included in (almost) every file in the Kerberos  * sources, and probably should *not* be needed outside of those  * sources.  (How do we deal with /usr/include/des.h and  * /usr/include/krb.h?)  *  *	from: conf.h,v 4.0 89/01/23 09:58:40 jtkohl Exp $  *	$Id: conf.h,v 1.3 1995/07/18 16:36:24 mark Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Configuration info for operating system, hardware description,  * language implementation, C library, etc.  *  * This file should be included in (almost) every file in the Kerberos  * sources, and probably should *not* be needed outside of those  * sources.  (How do we deal with /usr/include/des.h and  * /usr/include/krb.h?)  *  *	from: conf.h,v 4.0 89/01/23 09:58:40 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

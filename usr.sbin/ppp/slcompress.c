@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.c,v 1.3.4.2 1996/04/11 08:18:05 davidg Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ specifier|const
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slcompress.c,v 1.3.4.2 1996/04/11 08:18:05 davidg Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

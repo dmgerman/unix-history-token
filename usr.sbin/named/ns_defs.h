@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 1.2 1995/05/30 03:48:47 rgrimes Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  * $FreeBSD$  */
 end_comment
 
 begin_comment

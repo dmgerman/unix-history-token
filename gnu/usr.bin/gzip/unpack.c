@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: unpack.c,v 1.4 1993/06/11 19:25:36 jloup Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

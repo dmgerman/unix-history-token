@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bootpef.c,v 1.1.1.1 1994/09/10 14:44:54 csgr Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

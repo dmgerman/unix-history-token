@@ -34,7 +34,7 @@ name|libId
 argument_list|(
 argument|fcmpId
 argument_list|,
-literal|"$Id: rcsfcmp.c,v 1.4 1995/10/29 22:06:15 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid_kprop_c[] = "$Id$";
+unit|static char rcsid_kprop_c[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

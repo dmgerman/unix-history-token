@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/print-ipx.c,v 1.1 1995/03/08 12:52:34 olah Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccdconfig.c,v 1.3 1995/12/28 00:22:16 asami Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

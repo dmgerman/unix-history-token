@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdryp.c,v 1.3 1995/04/02 19:58:29 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

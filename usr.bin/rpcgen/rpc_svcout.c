@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_svcout.c,v 1.2 1995/03/04 17:47:50 nate Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

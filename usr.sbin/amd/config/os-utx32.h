@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-utx32.h,v 5.2.1.1 90/10/21 22:31:11 jsp Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -22,7 +22,7 @@ literal|""
 block|,
 literal|"/* Scanner skeleton version:"
 block|,
-literal|" * $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/lex/skel.c,v 1.1.1.1 1994/08/24 13:10:31 csgr Exp $"
+literal|" * $FreeBSD$"
 block|,
 literal|" */"
 block|,

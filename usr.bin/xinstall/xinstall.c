@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.1.1.1.6.3 1996/02/22 19:43:36 peter Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

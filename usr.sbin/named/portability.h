@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* defs.h - include or define things that aren't present on all systems  * vixie@decwrl 26dec92 [new]  *  * $Id: portability.h,v 1.2 1995/05/30 03:49:04 rgrimes Exp $  */
+comment|/* defs.h - include or define things that aren't present on all systems  * vixie@decwrl 26dec92 [new]  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

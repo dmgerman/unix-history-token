@@ -21,7 +21,7 @@ name|char
 name|_uuconf_paramc_rcsid
 index|[]
 init|=
-literal|"$Id: paramc.c,v 1.3 1995/08/19 21:27:45 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.10 1996/07/30 10:48:16 jkh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

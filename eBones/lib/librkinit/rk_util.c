@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: rk_util.c,v 1.1 1993/12/10 19:36:09 dglo Exp gibbs $  * $Source: /usr/src/eBones/librkinit/RCS/rk_util.c,v $  * $Author: dglo $  *  * This file contains internal routines for general use by the rkinit  * library and server.    *  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
+comment|/*   * $FreeBSD$  * $Source: /usr/src/eBones/librkinit/RCS/rk_util.c,v $  * $Author: dglo $  *  * This file contains internal routines for general use by the rkinit  * library and server.    *  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: rk_util.c,v 1.1 1993/12/10 19:36:09 dglo Exp gibbs $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

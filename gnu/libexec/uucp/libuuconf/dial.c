@@ -21,7 +21,7 @@ name|char
 name|_uuconf_dial_rcsid
 index|[]
 init|=
-literal|"$Id: dial.c,v 1.3 1995/08/19 21:26:56 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

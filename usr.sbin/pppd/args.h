@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * neat macro from ka9q to "do the right thing" with ansi prototypes  * $Id: args.h,v 1.2 1994/09/25 02:31:51 wollman Exp $  */
+comment|/*  * neat macro from ka9q to "do the right thing" with ansi prototypes  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.4.4.1 1995/10/06 11:28:58 davidg Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

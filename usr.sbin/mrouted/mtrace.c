@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mtrace.c,v 1.4.4.2 1996/11/12 18:18:32 jkh Exp $"
+literal|"@(#) $FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /pub/FreeBSD/FreeBSD-CVS/src/gnu/usr.bin/patch/patch.c,v 1.6 1995/05/30 05:02:34 rgrimes Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.3 1995/03/04 17:46:24 nate Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

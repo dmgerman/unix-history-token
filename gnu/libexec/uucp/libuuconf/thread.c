@@ -21,7 +21,7 @@ name|char
 name|_uuconf_thread_rcsid
 index|[]
 init|=
-literal|"$Id: thread.c,v 1.3 1995/08/19 21:28:18 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

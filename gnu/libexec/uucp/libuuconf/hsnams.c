@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hsnams_rcsid
 index|[]
 init|=
-literal|"$Id: hsnams.c,v 1.4 1995/08/19 21:27:26 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

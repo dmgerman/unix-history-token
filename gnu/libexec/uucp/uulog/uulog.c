@@ -21,7 +21,7 @@ name|char
 name|uulog_rcsid
 index|[]
 init|=
-literal|"$Id: uulog.c,v 1.4 1995/08/19 21:30:12 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

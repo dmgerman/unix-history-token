@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: crontab.c,v 1.3.4.1 1996/04/09 21:23:11 scrappy Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

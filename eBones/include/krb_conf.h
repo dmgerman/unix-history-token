@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This file contains configuration information for the Kerberos library  * which is machine specific; currently, this file contains  * configuration information for the vax, the "ibm032" (RT), and the  * "PC8086" (IBM PC).  *  * Note:  cross-compiled targets must appear BEFORE their corresponding  * cross-compiler host.  Otherwise, both will be defined when running  * the native compiler on the programs that construct cross-compiled  * sources.  *  *	from: krb_conf.h,v 4.0 89/01/23 09:59:27 jtkohl Exp $  *	$Id: krb_conf.h,v 1.3 1995/07/18 16:36:36 mark Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This file contains configuration information for the Kerberos library  * which is machine specific; currently, this file contains  * configuration information for the vax, the "ibm032" (RT), and the  * "PC8086" (IBM PC).  *  * Note:  cross-compiled targets must appear BEFORE their corresponding  * cross-compiler host.  Otherwise, both will be defined when running  * the native compiler on the programs that construct cross-compiled  * sources.  *  *	from: krb_conf.h,v 4.0 89/01/23 09:59:27 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

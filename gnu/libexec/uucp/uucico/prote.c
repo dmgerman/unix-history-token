@@ -21,7 +21,7 @@ name|char
 name|prote_rcsid
 index|[]
 init|=
-literal|"$Id: prote.c,v 1.4 1995/08/19 21:29:36 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

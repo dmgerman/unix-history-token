@@ -26,7 +26,7 @@ name|libId
 argument_list|(
 argument|fnmsId
 argument_list|,
-literal|"$Id: rcsfnms.c,v 1.4 1995/10/29 22:06:18 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

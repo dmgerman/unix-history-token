@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * spm		Project Athena  8/85  *  * This file defines data structures for the kerberos  * authentication/authorization database.  *  * They MUST correspond to those defined in *.rel  *  *	from: krb_db.h,v 4.9 89/01/24 17:55:39 jon Exp $  *	$Id: krb_db.h,v 1.4 1995/08/25 21:25:12 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * spm		Project Athena  8/85  *  * This file defines data structures for the kerberos  * authentication/authorization database.  *  * They MUST correspond to those defined in *.rel  *  *	from: krb_db.h,v 4.9 89/01/24 17:55:39 jon Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ktrace.c,v 1.3.4.1 1996/06/21 01:12:18 jraynard Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

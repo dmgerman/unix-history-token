@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: plist.c,v 1.17 1996/07/30 10:48:20 jkh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

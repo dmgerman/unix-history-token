@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/bootp.h,v 1.2 1995/03/08 12:52:09 olah Exp $ (LBL) */
+comment|/* @(#) $FreeBSD$ (LBL) */
 end_comment
 
 begin_comment

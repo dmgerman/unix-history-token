@@ -34,7 +34,7 @@ name|libId
 argument_list|(
 argument|lexId
 argument_list|,
-literal|"$Id: rcslex.c,v 1.5 1995/10/29 22:06:26 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

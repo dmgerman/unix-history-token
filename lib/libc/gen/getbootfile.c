@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getbootfile.c,v 1.1 1994/09/23 20:22:01 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_cmdlin_rcsid
 index|[]
 init|=
-literal|"$Id: cmdlin.c,v 1.4 1995/08/19 21:26:51 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

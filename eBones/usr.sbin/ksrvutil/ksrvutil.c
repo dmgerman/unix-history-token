@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid_ksrvutil_c[] = "BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/ksrvutil.c,v 4.1 89/09/26 09:33:49 jtkohl Exp "; static const char rcsid[] = 	"$Id$";
+unit|static char rcsid_ksrvutil_c[] = "BonesHeader: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/ksrvutil.c,v 4.1 89/09/26 09:33:49 jtkohl Exp "; static const char rcsid[] =   "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1990 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Convert a struct tm * to a UNIX time.  *  *	from: maketime.c,v 4.2 90/01/09 15:54:51 raeburn Exp $  *	$Id: maketime.c,v 1.3 1995/07/18 16:37:29 mark Exp $  */
+comment|/*  * Copyright 1990 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Convert a struct tm * to a UNIX time.  *  *	from: maketime.c,v 4.2 90/01/09 15:54:51 raeburn Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if

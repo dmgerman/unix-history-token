@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.9 1994/12/23 22:30:57 nate Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_include

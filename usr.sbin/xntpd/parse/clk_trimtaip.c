@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/xntpd/parse/clk_trimtaip.c,v 1.1.1.1 1994/09/29 23:01:31 wollman Exp $  *  * Trimble SV6 clock support  */
+comment|/*  * $FreeBSD$  *  * Trimble SV6 clock support  */
 end_comment
 
 begin_include

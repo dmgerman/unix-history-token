@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsquery.c,v 1.2 1994/09/22 20:45:28 pst Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

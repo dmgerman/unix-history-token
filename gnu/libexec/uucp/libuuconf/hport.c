@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hport_rcsid
 index|[]
 init|=
-literal|"$Id: hport.c,v 1.3 1995/08/19 21:27:22 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

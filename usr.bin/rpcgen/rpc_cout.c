@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_cout.c,v 1.1 1994/08/07 18:01:29 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

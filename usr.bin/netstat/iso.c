@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/netstat/iso.c,v 1.2 1995/04/09 05:33:17 davidg Exp $  * $Source: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/netstat/iso.c,v $  */
+comment|/*  * $FreeBSD$  * $Source: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/netstat/iso.c,v $  */
 end_comment
 
 begin_comment

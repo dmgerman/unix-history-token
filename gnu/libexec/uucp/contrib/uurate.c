@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uurate.c,v 1.3.4.1 1995/09/01 06:01:59 davidg Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

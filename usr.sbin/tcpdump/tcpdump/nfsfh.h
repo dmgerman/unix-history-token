@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/nfsfh.h,v 1.1 1995/03/08 12:52:19 olah Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
+comment|/*  * $FreeBSD$  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
 end_comment
 
 begin_comment

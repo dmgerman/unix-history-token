@@ -21,7 +21,7 @@ name|char
 name|_uuconf_remunk_rcsid
 index|[]
 init|=
-literal|"$Id: remunk.c,v 1.3 1995/08/19 21:27:58 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

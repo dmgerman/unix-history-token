@@ -21,7 +21,7 @@ name|char
 name|trans_rcsid
 index|[]
 init|=
-literal|"$Id: trans.c,v 1.5 1995/08/21 11:28:22 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

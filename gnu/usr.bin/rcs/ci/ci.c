@@ -356,7 +356,7 @@ argument|ciId
 argument_list|,
 literal|"ci"
 argument_list|,
-literal|"$Id: ci.c,v 1.4 1995/10/29 22:05:59 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

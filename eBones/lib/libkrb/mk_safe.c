@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'safe msg', i.e. authenticated  * using a private session key to seed a checksum. Msg is NOT  * encrypted.  *  *      Note-- bcopy is used to avoid alignment problems on IBM RT  *  *      Returns either<0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_safe.c,v 4.12 89/03/22 14:50:49 jtkohl Exp $  *	$Id: mk_safe.c,v 1.3 1995/07/18 16:39:17 mark Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'safe msg', i.e. authenticated  * using a private session key to seed a checksum. Msg is NOT  * encrypted.  *  *      Note-- bcopy is used to avoid alignment problems on IBM RT  *  *      Returns either<0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_safe.c,v 4.12 89/03/22 14:50:49 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: mk_safe.c,v 1.3 1995/07/18 16:39:17 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 end_endif

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_hinit_rcsid
 index|[]
 init|=
-literal|"$Id: hinit.c,v 1.4 1995/08/19 21:27:16 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

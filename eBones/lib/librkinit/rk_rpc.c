@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id$  * $Source$  * $Author$  *  * This file contains functions that are used for network communication.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
+comment|/*   * $FreeBSD$  * $Source$  * $Author$  *  * This file contains functions that are used for network communication.  * See the comment at the top of rk_lib.c for a description of the naming  * conventions used within the rkinit library.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

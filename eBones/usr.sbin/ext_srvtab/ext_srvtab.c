@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  *  *	from: ext_srvtab.c,v 4.1 89/07/18 16:49:30 jtkohl Exp $  *	$Id: ext_srvtab.c,v 1.3 1995/07/18 16:35:55 mark Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  *  *	from: ext_srvtab.c,v 4.1 89/07/18 16:49:30 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: ext_srvtab.c,v 1.3 1995/07/18 16:35:55 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

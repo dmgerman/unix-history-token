@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  *	from: @(#)symseg.h	5.4 (Berkeley) 4/30/91  *	$Id: symseg.h,v 1.3 1993/11/09 04:19:05 paul Exp $  */
+comment|/*-  *  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  *	from: @(#)symseg.h	5.4 (Berkeley) 4/30/91  * $FreeBSD$  */
 end_comment
 
 begin_comment

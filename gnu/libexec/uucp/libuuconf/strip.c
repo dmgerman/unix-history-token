@@ -21,7 +21,7 @@ name|char
 name|_uuconf_strip_rcsid
 index|[]
 init|=
-literal|"$Id: strip.c,v 1.2 1995/06/28 15:43:14 ian Rel $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

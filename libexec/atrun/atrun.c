@@ -246,7 +246,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: atrun.c,v 1.3 1995/04/12 19:21:43 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

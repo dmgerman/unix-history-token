@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Shared memory segment functions for session keys.  Derived from code  * contributed by Dan Kolkowitz (kolk@jessica.stanford.edu).  *  *	from: tf_shm.c,v 4.2 89/10/25 23:26:46 qjb Exp $  *	$Id: tf_shm.c,v 1.3 1995/07/18 16:39:48 mark Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Shared memory segment functions for session keys.  Derived from code  * contributed by Dan Kolkowitz (kolk@jessica.stanford.edu).  *  *	from: tf_shm.c,v 4.2 89/10/25 23:26:46 qjb Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id: tf_shm.c,v 1.3 1995/07/18 16:39:48 mark Exp $";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.2.6.1 1996/10/27 17:50:49 fenner Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

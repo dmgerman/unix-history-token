@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: print-snmp.c,v 3.10 91/01/17 01:18:13 loverso Exp Locker: loverso $ (jlv)"
+literal|"@(#) $FreeBSD$ (jlv)"
 decl_stmt|;
 end_decl_stmt
 

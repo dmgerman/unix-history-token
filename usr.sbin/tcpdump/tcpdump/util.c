@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/util.c,v 1.2.4.1 1995/10/06 11:53:51 davidg Exp $ (LBL)"
+literal|"@(#) $FreeBSD$ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

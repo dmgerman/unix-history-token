@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'private msg', decrypting it,  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...).  If  * the return value is RD_AP_TIME, then either the times are too far  * out of synch, OR the packet was modified.  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_priv.c,v 4.14 89/04/28 11:59:42 jtkohl Exp $  *	$Id: rd_priv.c,v 1.3 1995/07/18 16:39:31 mark Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'private msg', decrypting it,  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...).  If  * the return value is RD_AP_TIME, then either the times are too far  * out of synch, OR the packet was modified.  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_priv.c,v 4.14 89/04/28 11:59:42 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[]= "$Id: rd_priv.c,v 1.3 1995/07/18 16:39:31 mark Exp $";
+unit|static char rcsid[]= "$FreeBSD$";
 endif|#
 directive|endif
 end_endif

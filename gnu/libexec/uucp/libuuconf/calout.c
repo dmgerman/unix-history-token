@@ -21,7 +21,7 @@ name|char
 name|_uuconf_calout_rcsid
 index|[]
 init|=
-literal|"$Id: calout.c,v 1.4 1995/08/19 21:26:44 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

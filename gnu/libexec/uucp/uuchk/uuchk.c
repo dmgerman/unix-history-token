@@ -21,7 +21,7 @@ name|char
 name|uuchk_rcsid
 index|[]
 init|=
-literal|"$Id: uuchk.c,v 1.4 1995/08/19 21:29:30 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_tsinfo_rcsid
 index|[]
 init|=
-literal|"$Id: tsinfo.c,v 1.3 1995/08/19 21:28:29 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: stime.c,v 4.5 88/11/15 16:58:05 jtkohl Exp $  *	$Id: stime.c,v 1.3 1995/07/18 16:39:46 mark Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: stime.c,v 4.5 88/11/15 16:58:05 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_if
@@ -16,7 +16,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char *rcsid = "$Id: stime.c,v 1.3 1995/07/18 16:39:46 mark Exp $";
+unit|static char *rcsid = "$FreeBSD$";
 endif|#
 directive|endif
 end_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: etc.c,v 1.7 1994/02/13 20:41:05 jkh Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_include

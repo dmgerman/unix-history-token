@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vasprintf.c,v 1.2 1996/06/22 10:34:01 jraynard Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -18,7 +18,7 @@ name|libId
 argument_list|(
 name|mapId
 argument_list|,
-literal|"$Id: rcsmap.c,v 1.1.1.1 1993/06/18 04:22:12 jkh Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 comment|/* map of character types */
 comment|/* ISO 8859/1 (Latin-1) */

@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwall.c,v 1.1.1.1 1994/08/28 15:11:02 csgr Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -80,7 +80,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/compile_et/compile_et.c,v 1.2 1995/01/14 22:29:31 wollman Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

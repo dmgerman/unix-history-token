@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: docmd.c,v 1.3.4.1 1996/07/12 06:19:46 pst Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

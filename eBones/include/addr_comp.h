@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988, 1989 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for address comparison macros.  *  *	from: addr_comp.h,v 4.0 89/01/23 09:57:44 jtkohl Exp $  *	$Id: addr_comp.h,v 1.3 1995/07/18 16:36:01 mark Exp $  */
+comment|/*  * Copyright 1987, 1988, 1989 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for address comparison macros.  *  *	from: addr_comp.h,v 4.0 89/01/23 09:57:44 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

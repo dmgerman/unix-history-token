@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for kparse routines.  *  *	from: kparse.h,v 4.5 89/01/11 12:05:53 steiner Exp $  *	$Id: kparse.h,v 1.4 1995/09/07 20:50:34 mark Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for kparse routines.  *  *	from: kparse.h,v 4.5 89/01/11 12:05:53 steiner Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

@@ -21,7 +21,7 @@ name|char
 name|_uuconf_logfil_rcsid
 index|[]
 init|=
-literal|"$Id: logfil.c,v 1.3 1995/08/19 21:27:41 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

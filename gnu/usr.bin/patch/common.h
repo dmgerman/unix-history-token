@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/gnu/usr.bin/patch/common.h,v 1.3 1995/05/30 05:02:30 rgrimes Exp $  *  * $Log: common.h,v $  * Revision 1.3  1995/05/30  05:02:30  rgrimes  * Remove trailing whitespace.  *  * Revision 1.2  1993/09/22  16:51:03  rich  * Increaed the fixed static buffer sizes and maximum hunk size that  * otherwise causes the XFree86 1.3 patch set to fail.  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.2  88/06/22  20:44:53  lwall  * patch12: sprintf was declared wrong  *  * Revision 2.0.1.1  88/06/03  15:01:56  lwall  * patch10: support for shorter extensions.  *  * Revision 2.0  86/09/17  15:36:39  lwall  * Baseline for netwide release.  *  */
+comment|/* $FreeBSD$  *  * $Log: common.h,v $  * Revision 1.3  1995/05/30  05:02:30  rgrimes  * Remove trailing whitespace.  *  * Revision 1.2  1993/09/22  16:51:03  rich  * Increaed the fixed static buffer sizes and maximum hunk size that  * otherwise causes the XFree86 1.3 patch set to fail.  *  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.2  88/06/22  20:44:53  lwall  * patch12: sprintf was declared wrong  *  * Revision 2.0.1.1  88/06/03  15:01:56  lwall  * patch10: support for shorter extensions.  *  * Revision 2.0  86/09/17  15:36:39  lwall  * Baseline for netwide release.  *  */
 end_comment
 
 begin_define

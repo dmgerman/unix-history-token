@@ -4,7 +4,7 @@ comment|/* zconf.h -- configuration of the zlib compression library  * Copyright
 end_comment
 
 begin_comment
-comment|/* $Id: zconf.h,v 1.20 1996/07/02 15:09:28 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

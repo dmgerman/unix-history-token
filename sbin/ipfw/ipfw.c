@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.15.4.7 1996/06/29 03:55:46 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include

@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/lex/dfa.c,v 1.2 1995/05/30 06:31:08 rgrimes Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include

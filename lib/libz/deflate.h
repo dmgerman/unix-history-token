@@ -8,7 +8,7 @@ comment|/* WARNING: this file should *not* be used by applications. It is    par
 end_comment
 
 begin_comment
-comment|/* $Id: deflate.h,v 1.10 1996/07/02 12:41:00 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

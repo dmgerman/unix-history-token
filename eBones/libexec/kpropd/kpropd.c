@@ -20,7 +20,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char     rcsid_kpropd_c[] = "$Header: /usr/cvs/src/eBones/kpropd/kpropd.c,v 1.1.1.1 1995/08/03 07:37:19 mark Exp $";
+unit|static char     rcsid_kpropd_c[] = "$FreeBSD$";
 endif|#
 directive|endif
 end_endif

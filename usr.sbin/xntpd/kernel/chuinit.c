@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **	dynamically loadable chu driver ** **	$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/xntpd/kernel/chuinit.c,v 1.2 1995/05/30 03:53:30 rgrimes Exp $ ** **	william robertson<rob@agate.berkeley.edu> */
+comment|/* **	dynamically loadable chu driver ** ** $FreeBSD$ ** **	william robertson<rob@agate.berkeley.edu> */
 end_comment
 
 begin_include

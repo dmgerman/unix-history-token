@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file with authentication protocol information.  *  *	from: prot.h,v 4.13 89/01/24 14:27:22 jtkohl Exp $  *	$Id: prot.h,v 1.3 1995/07/18 16:36:46 mark Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file with authentication protocol information.  *  *	from: prot.h,v 4.13 89/01/24 14:27:22 jtkohl Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include

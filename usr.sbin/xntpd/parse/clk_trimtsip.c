@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/xntpd/parse/clk_trimtsip.c,v 1.2 1995/05/30 03:54:13 rgrimes Exp $  *  * Trimble TSIP support - CURRENTLY VERY MUCH UNDER CONSTRUCTION  */
+comment|/*  * $FreeBSD$  *  * Trimble TSIP support - CURRENTLY VERY MUCH UNDER CONSTRUCTION  */
 end_comment
 
 begin_include

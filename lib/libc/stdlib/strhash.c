@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: /pub/FreeBSD/FreeBSD-CVS/src/lib/libc/stdlib/strhash.c,v 1.4.4.1 1996/02/11 09:05:56 jkh Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

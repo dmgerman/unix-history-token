@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine changes the Kerberos encryption keys for principals,  * i.e., users or services.  *  *	from: kdb_edit.c,v 4.2 90/01/09 16:05:09 raeburn Exp $  *	$Id$  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine changes the Kerberos encryption keys for principals,  * i.e., users or services.  *  *	from: kdb_edit.c,v 4.2 90/01/09 16:05:09 raeburn Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char rcsid[] = "$Id$";
+unit|static char rcsid[] = "$FreeBSD$";
 endif|#
 directive|endif
 endif|lint

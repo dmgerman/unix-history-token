@@ -21,7 +21,7 @@ name|char
 name|_uuconf_cmdarg_rcsid
 index|[]
 init|=
-literal|"$Id: cmdarg.c,v 1.4 1995/08/19 21:26:48 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

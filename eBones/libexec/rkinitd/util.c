@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: util.c,v 1.1 1993/12/10 18:59:29 dglo Exp gibbs $  * $Source: /usr/src/eBones/rkinitd/RCS/util.c,v $  * $Author: dglo $  *  * This file contains general rkinit server utilities.  */
+comment|/*   * $FreeBSD$  * $Source: /usr/src/eBones/rkinitd/RCS/util.c,v $  * $Author: dglo $  *  * This file contains general rkinit server utilities.  */
 end_comment
 
 begin_if
@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: util.c,v 1.1 1993/12/10 18:59:29 dglo Exp gibbs $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

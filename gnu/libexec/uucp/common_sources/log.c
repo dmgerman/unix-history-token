@@ -21,7 +21,7 @@ name|char
 name|log_rcsid
 index|[]
 init|=
-literal|"$Id: log.c,v 1.4 1995/08/19 21:23:54 ache Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

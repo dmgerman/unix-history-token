@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: rkinit_private.h,v 1.4 1993/12/23 16:47:39 dglo Exp $  * $Source: /usr/sww/share/src/kerberosIV.BSD/include/RCS/rkinit_private.h,v $  * $Author: dglo $  *  * Header file for rkinit library and server internal use  */
+comment|/*   * $FreeBSD$  * $Source: /usr/sww/share/src/kerberosIV.BSD/include/RCS/rkinit_private.h,v $  * $Author: dglo $  *  * Header file for rkinit library and server internal use  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ name|char
 modifier|*
 name|rcsid_rkinit_private_h
 init|=
-literal|"$Id: rkinit_private.h,v 1.4 1993/12/23 16:47:39 dglo Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
