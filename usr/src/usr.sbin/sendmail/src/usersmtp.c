@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.39
+literal|3.40
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.39
+literal|3.40
 operator|%
 name|G
 operator|%
@@ -1185,6 +1185,25 @@ argument_list|,
 literal|"reply: read error"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+comment|/* if debugging, pause so we can see state */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|18
+argument_list|,
+literal|100
+argument_list|)
+condition|)
+name|pause
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 ifdef|#
 directive|ifdef
 name|LOG
