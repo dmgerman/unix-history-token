@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -1041,13 +1047,6 @@ name|m_term
 index|[]
 parameter_list|)
 block|{
-specifier|extern
-name|void
-name|init_acs
-argument_list|(
-name|void
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|OnVTY
@@ -1084,9 +1083,6 @@ argument_list|(
 name|color
 argument_list|)
 expr_stmt|;
-name|init_acs
-argument_list|()
-expr_stmt|;
 name|cbreak
 argument_list|()
 expr_stmt|;
@@ -1121,9 +1117,6 @@ name|setterm
 argument_list|(
 name|mono
 argument_list|)
-expr_stmt|;
-name|init_acs
-argument_list|()
 expr_stmt|;
 name|cbreak
 argument_list|()
