@@ -490,6 +490,9 @@ decl_stmt|;
 name|int
 name|nticks
 decl_stmt|;
+name|register_t
+name|msr
+decl_stmt|;
 comment|/* 	 * Check whether we are initialized. 	 */
 if|if
 condition|(
@@ -533,10 +536,6 @@ name|CNT_CLOCK
 index|]
 operator|++
 expr_stmt|;
-block|{
-name|int
-name|msr
-decl_stmt|;
 name|nticks
 operator|+=
 name|tickspending
@@ -545,14 +544,22 @@ name|tickspending
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 		 * Reenable interrupts 		 */
-block|msr = mfmsr(); 		mtmsr(msr | PSL_EE);
-endif|#
-directive|endif
-comment|/* 		 * Do standard timer interrupt stuff. 		 * Do softclock stuff only on the last iteration. 		 */
+comment|/* 	 * Reenable interrupts 	 */
+name|msr
+operator|=
+name|mfmsr
+argument_list|()
+expr_stmt|;
+name|mtmsr
+argument_list|(
+name|msr
+operator||
+name|PSL_EE
+operator||
+name|PSL_RI
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Do standard timer interrupt stuff. 	 * Do softclock stuff only on the last iteration. 	 */
 while|while
 condition|(
 operator|--
@@ -572,7 +579,6 @@ argument_list|(
 name|frame
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -598,6 +604,10 @@ name|unsigned
 name|int
 name|msr
 decl_stmt|;
+name|phandle
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Get this info during autoconf?				XXX 	 */
 for|for
 control|(
@@ -666,7 +676,11 @@ argument_list|(
 name|msr
 operator|&
 operator|~
+operator|(
 name|PSL_EE
+operator||
+name|PSL_RI
+operator|)
 argument_list|)
 expr_stmt|;
 name|powerpc_timecounter
@@ -864,12 +878,12 @@ name|tb
 expr_stmt|;
 asm|__asm ("1: mftbu %0; cmplw %0,%1; blt 1b; bgt 2f;"
 literal|"mftb %0; cmplw %0,%2; blt 1b; 2:"
-operator|::
-literal|"r"
+operator|:
+literal|"=r"
 operator|(
 name|scratch
 operator|)
-operator|,
+operator|:
 literal|"r"
 operator|(
 name|tbh
