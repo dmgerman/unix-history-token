@@ -281,7 +281,7 @@ begin_define
 define|#
 directive|define
 name|NMBCLUSTERS
-value|(1024 + MAXUSERS * 64)
+value|(1024 + maxusers * 64)
 end_define
 
 begin_endif
@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|NMBUFS
-value|(NMBCLUSTERS * 2)
+value|(nmbclusters * 2)
 end_define
 
 begin_endif
@@ -317,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|NSFBUFS
-value|(512 + MAXUSERS * 16)
+value|(512 + maxusers * 16)
 end_define
 
 begin_endif
@@ -335,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|NMBCNTS
-value|(NMBCLUSTERS + NSFBUFS)
+value|(nmbclusters + nsfbufs)
 end_define
 
 begin_endif
@@ -346,78 +346,26 @@ end_endif
 begin_decl_stmt
 name|int
 name|nmbufs
-init|=
-name|NMBUFS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|nmbclusters
-init|=
-name|NMBCLUSTERS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|nmbcnt
-init|=
-name|NMBCNTS
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|nsfbufs
-init|=
-name|NSFBUFS
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.ipc.nmbufs"
-argument_list|,
-operator|&
-name|nmbufs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.ipc.nmbclusters"
-argument_list|,
-operator|&
-name|nmbclusters
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.ipc.nmbcnt"
-argument_list|,
-operator|&
-name|nmbcnt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"kern.ipc.nsfbufs"
-argument_list|,
-operator|&
-name|nsfbufs
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Perform sanity checks of tunables declared above.  */
@@ -434,6 +382,55 @@ name|dummy
 parameter_list|)
 block|{
 comment|/* 	 * This has to be done before VM init. 	 */
+name|nmbclusters
+operator|=
+name|NMBCLUSTERS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nmbclusters"
+argument_list|,
+operator|&
+name|nmbclusters
+argument_list|)
+expr_stmt|;
+name|nmbufs
+operator|=
+name|NMBUFS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nmbufs"
+argument_list|,
+operator|&
+name|nmbufs
+argument_list|)
+expr_stmt|;
+name|nsfbufs
+operator|=
+name|NSFBUFS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nsfbufs"
+argument_list|,
+operator|&
+name|nsfbufs
+argument_list|)
+expr_stmt|;
+name|nmbcnt
+operator|=
+name|NMBCNTS
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.ipc.nmbcnt"
+argument_list|,
+operator|&
+name|nmbcnt
+argument_list|)
+expr_stmt|;
+comment|/* Sanity checks */
 if|if
 condition|(
 name|nmbufs
