@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.3 1993/10/16 19:11:34 rgrimes Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.4 1994/02/22 22:59:40 rgrimes Exp $  */
+end_comment
+
+begin_comment
+comment|/*  * 93/10/08  bde  *	If there is no 386BSD partition, initialize the label sector with  *	LABELSECTOR instead of with garbage.  *  * 93/08/22  bde  *	Fixed reading of bad sector table.  It is at the end of the 'c'  *	partition, which is not always at the end of the disk.  */
 end_comment
 
 begin_include
@@ -310,6 +314,10 @@ operator|+
 name|DOSPARTOFF
 operator|)
 expr_stmt|;
+name|sector
+operator|=
+name|LABELSECTOR
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -334,7 +342,7 @@ name|dp_typ
 operator|==
 name|DOSPTYP_386BSD
 condition|)
-break|break;
+block|{
 name|sector
 operator|=
 name|dptr
@@ -343,6 +351,8 @@ name|dp_start
 operator|+
 name|LABELSECTOR
 expr_stmt|;
+break|break;
+block|}
 name|Bread
 argument_list|(
 name|dosdev
@@ -484,15 +494,62 @@ name|dkbad
 modifier|*
 name|dkbptr
 decl_stmt|;
-comment|/* find the first readable bad144 sector */
-comment|/* some of this code is copied from ufs/disk_subr.c */
+comment|/* find the first readable bad sector table */
+comment|/* some of this code is copied from ufs/ufs_disksubr.c */
+comment|/* including the bugs :-( */
 comment|/* read a bad sector table */
+define|#
+directive|define
+name|BAD144_PART
+value|2
+comment|/* XXX scattered magic numbers */
+define|#
+directive|define
+name|BSD_PART
+value|0
+comment|/* XXX should be 2 but bad144.c uses 0 */
+if|if
+condition|(
+name|dl
+operator|->
+name|d_partitions
+index|[
+name|BSD_PART
+index|]
+operator|.
+name|p_offset
+operator|!=
+literal|0
+condition|)
+name|dkbbnum
+operator|=
+name|dl
+operator|->
+name|d_partitions
+index|[
+name|BAD144_PART
+index|]
+operator|.
+name|p_offset
+operator|+
+name|dl
+operator|->
+name|d_partitions
+index|[
+name|BAD144_PART
+index|]
+operator|.
+name|p_size
+expr_stmt|;
+else|else
 name|dkbbnum
 operator|=
 name|dl
 operator|->
 name|d_secperunit
-operator|-
+expr_stmt|;
+name|dkbbnum
+operator|-=
 name|dl
 operator|->
 name|d_nsectors
@@ -608,13 +665,13 @@ name|do_bad144
 condition|)
 name|printf
 argument_list|(
-literal|"Bad badsect table\n"
+literal|"Bad bad sector table\n"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Using bad144 bad sector at %d\n"
+literal|"Using bad sector table at %d\n"
 argument_list|,
 name|dkbbnum
 operator|+
@@ -1128,18 +1185,54 @@ name|no_remap
 goto|;
 block|}
 comment|/* otherwise find replacement sector */
+if|if
+condition|(
+name|dl
+operator|->
+name|d_partitions
+index|[
+name|BSD_PART
+index|]
+operator|.
+name|p_offset
+operator|!=
+literal|0
+condition|)
+name|newsec
+operator|=
+name|dl
+operator|->
+name|d_partitions
+index|[
+name|BAD144_PART
+index|]
+operator|.
+name|p_offset
+operator|+
+name|dl
+operator|->
+name|d_partitions
+index|[
+name|BAD144_PART
+index|]
+operator|.
+name|p_size
+expr_stmt|;
+else|else
 name|newsec
 operator|=
 name|dl
 operator|->
 name|d_secperunit
-operator|-
+expr_stmt|;
+name|newsec
+operator|-=
 name|dl
 operator|->
 name|d_nsectors
-operator|-
+operator|+
 name|i
-operator|-
+operator|+
 literal|1
 expr_stmt|;
 return|return
