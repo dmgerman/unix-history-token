@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pmon.c	2.1 (Berkeley) %G%"
+literal|"@(#)pmon.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,7 +487,7 @@ name|cp
 operator|=
 name|zbuf
 operator|=
-name|alloc
+name|pcalloc
 argument_list|(
 name|i
 operator|=
@@ -500,6 +500,8 @@ operator|*
 sizeof|sizeof
 expr|*
 name|zbuf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -516,13 +518,15 @@ name|cp
 operator|=
 name|zpf
 operator|=
-name|alloc
+name|pcalloc
 argument_list|(
 name|zpfcnt
 operator|*
 sizeof|sizeof
 expr|*
 name|zpf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
