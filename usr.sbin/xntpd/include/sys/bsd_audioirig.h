@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Header: bsd_audioirig.h,v 1.0 93/08/02 12:42:00  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
