@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)heapsort.c	5.5 (Berkeley) %G%"
+literal|"@(#)heapsort.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,8 +73,14 @@ parameter_list|(
 name|a
 parameter_list|,
 name|b
+parameter_list|,
+name|count
+parameter_list|,
+name|size
+parameter_list|,
+name|tmp
 parameter_list|)
-value|{ \ 	cnt = size; \ 	do { \ 		ch = *a; \ 		*a++ = *b; \ 		*b++ = ch; \ 	} while (--cnt); \ }
+value|{ \ 	count = size; \ 	do { \ 		tmp = *a; \ 		*a++ = *b; \ 		*b++ = tmp; \ 	} while (--count); \ }
 end_define
 
 begin_comment
@@ -89,8 +95,16 @@ parameter_list|(
 name|a
 parameter_list|,
 name|b
+parameter_list|,
+name|count
+parameter_list|,
+name|size
+parameter_list|,
+name|tmp1
+parameter_list|,
+name|tmp2
 parameter_list|)
-value|{ \ 	cnt = size; \ 	t1 = a; \ 	t2 = b; \ 	do { \ 		*t1++ = *t2++; \ 	} while (--cnt); \ }
+value|{ \ 	count = size; \ 	tmp1 = a; \ 	tmp2 = b; \ 	do { \ 		*tmp1++ = *tmp2++; \ 	} while (--count); \ }
 end_define
 
 begin_comment
@@ -103,8 +117,24 @@ directive|define
 name|CREATE
 parameter_list|(
 name|initval
+parameter_list|,
+name|nmemb
+parameter_list|,
+name|par_i
+parameter_list|,
+name|child_i
+parameter_list|,
+name|par
+parameter_list|,
+name|child
+parameter_list|,
+name|size
+parameter_list|,
+name|count
+parameter_list|,
+name|tmp
 parameter_list|)
-value|{ \ 	for (i = initval; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		if (compar(p, t)<= 0) \ 			break; \ 		SWAP(t, p); \ 	} \ }
+value|{ \ 	for (par_i = initval; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = (char *)bot + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = (char *)bot + par_i * size; \ 		if (compar(child, par)<= 0) \ 			break; \ 		SWAP(par, child, count, size, tmp); \ 	} \ }
 end_define
 
 begin_comment
@@ -115,7 +145,28 @@ begin_define
 define|#
 directive|define
 name|SELECT
-value|{ \ 	for (i = 1; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		COPY(t, p); \ 	} \ 	for (;;) { \ 		j = i; \ 		i = j / 2; \ 		p = (char *)bot + j * size; \ 		t = (char *)bot + i * size; \ 		if (j == 1 || compar(k, t)< 0) { \ 			COPY(p, k); \ 			break; \ 		} \ 		COPY(p, t); \ 	} \ }
+parameter_list|(
+name|par_i
+parameter_list|,
+name|child_i
+parameter_list|,
+name|nmemb
+parameter_list|,
+name|par
+parameter_list|,
+name|child
+parameter_list|,
+name|size
+parameter_list|,
+name|k
+parameter_list|,
+name|count
+parameter_list|,
+name|tmp1
+parameter_list|,
+name|tmp2
+parameter_list|)
+value|{ \ 	for (par_i = 1; (child_i = par_i * 2)<= nmemb; par_i = child_i) { \ 		child = (char *)bot + child_i * size; \ 		if (child_i< nmemb&& compar(child, child + size)< 0) { \ 			child += size; \ 			++child_i; \ 		} \ 		par = (char *)bot + par_i * size; \ 		COPY(par, child, count, size, tmp1, tmp2); \ 	} \ 	for (;;) { \ 		child_i = par_i; \ 		par_i = child_i / 2; \ 		child = (char *)bot + child_i * size; \ 		par = (char *)bot + par_i * size; \ 		if (child_i == 1 || compar(k, par)< 0) { \ 			COPY(child, k, count, size, tmp1, tmp2); \ 			break; \ 		} \ 		COPY(child, par, count, size, tmp1, tmp2); \ 	} \ }
 end_define
 
 begin_comment
@@ -179,13 +230,13 @@ name|l
 decl_stmt|;
 specifier|register
 name|char
-name|ch
+name|tmp
 decl_stmt|,
 modifier|*
-name|t1
+name|tmp1
 decl_stmt|,
 modifier|*
-name|t2
+name|tmp2
 decl_stmt|;
 name|char
 modifier|*
@@ -266,6 +317,22 @@ control|)
 name|CREATE
 argument_list|(
 name|l
+argument_list|,
+name|nmemb
+argument_list|,
+name|i
+argument_list|,
+name|j
+argument_list|,
+name|t
+argument_list|,
+name|p
+argument_list|,
+name|size
+argument_list|,
+name|cnt
+argument_list|,
+name|tmp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For each element of the heap, save the largest element into its 	 * final slot, save the displaced element (k), then recreate the 	 * heap. 	 */
@@ -289,6 +356,14 @@ operator|+
 name|nmemb
 operator|*
 name|size
+argument_list|,
+name|cnt
+argument_list|,
+name|size
+argument_list|,
+name|tmp1
+argument_list|,
+name|tmp2
 argument_list|)
 expr_stmt|;
 name|COPY
@@ -310,12 +385,41 @@ operator|)
 name|bot
 operator|+
 name|size
+argument_list|,
+name|cnt
+argument_list|,
+name|size
+argument_list|,
+name|tmp1
+argument_list|,
+name|tmp2
 argument_list|)
 expr_stmt|;
 operator|--
 name|nmemb
 expr_stmt|;
 name|SELECT
+argument_list|(
+name|i
+argument_list|,
+name|j
+argument_list|,
+name|nmemb
+argument_list|,
+name|t
+argument_list|,
+name|p
+argument_list|,
+name|size
+argument_list|,
+name|k
+argument_list|,
+name|cnt
+argument_list|,
+name|tmp1
+argument_list|,
+name|tmp2
+argument_list|)
 expr_stmt|;
 block|}
 name|free
