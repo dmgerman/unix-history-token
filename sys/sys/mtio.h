@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)mtio.h	7.6 (Berkeley) 2/5/91  *	$Id: mtio.h,v 1.4 1993/10/16 17:17:16 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)mtio.h	7.6 (Berkeley) 2/5/91  *	$Id: mtio.h,v 1.5 1993/11/07 17:52:52 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -180,11 +180,7 @@ comment|/* Resetting the block size to 0 will restore the device to a variable	*
 end_comment
 
 begin_comment
-comment|/* block size device.  At this time this command works across all modes	*/
-end_comment
-
-begin_comment
-comment|/* unlike the density command below.. this may change			*/
+comment|/* block size device. */
 end_comment
 
 begin_define
@@ -247,25 +243,45 @@ argument_list|(
 name|__386BSD__
 argument_list|)
 name|daddr_t
-name|mt_bsiz
+name|mt_blksiz
 decl_stmt|;
-comment|/* block size, 0 is variable */
-name|short
-name|mt_dns_dflt
+comment|/* presently operatin blocksize */
+name|daddr_t
+name|mt_density
 decl_stmt|;
-comment|/* density setting for default density */
-name|short
-name|mt_dns_dsty1
+comment|/* presently operatin density */
+name|daddr_t
+name|mt_blksiz0
 decl_stmt|;
-comment|/* density setting for high density */
-name|short
-name|mt_dns_dsty2
+comment|/* blocksize for mode 0 */
+name|daddr_t
+name|mt_blksiz1
 decl_stmt|;
-comment|/* density setting for medium density */
-name|short
-name|mt_dns_dsty3
+comment|/* blocksize for mode 1 */
+name|daddr_t
+name|mt_blksiz2
 decl_stmt|;
-comment|/* density setting for low density */
+comment|/* blocksize for mode 2 */
+name|daddr_t
+name|mt_blksiz3
+decl_stmt|;
+comment|/* blocksize for mode 3 */
+name|daddr_t
+name|mt_density0
+decl_stmt|;
+comment|/* density for mode 0 */
+name|daddr_t
+name|mt_density1
+decl_stmt|;
+comment|/* density for mode 1 */
+name|daddr_t
+name|mt_density2
+decl_stmt|;
+comment|/* density for mode 2 */
+name|daddr_t
+name|mt_density3
+decl_stmt|;
+comment|/* density for mode 3 */
 endif|#
 directive|endif
 comment|/* the following two are not yet implemented */
@@ -531,7 +547,7 @@ begin_define
 define|#
 directive|define
 name|DEFTAPE
-value|"/dev/rst0"
+value|"/dev/nrst0"
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990, 1991, 1992 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1989, 1990, 1991, 1992 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: kern__physio.c,v 1.2 1993/10/16 15:24:06 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -57,33 +57,37 @@ directive|include
 file|"specdev.h"
 end_include
 
-begin_expr_stmt
-specifier|static
+begin_function_decl
+name|int
 name|physio
-argument_list|(
+parameter_list|(
 name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-argument_list|,
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|()
+parameter_list|,
 name|int
-argument_list|,
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|,
 name|int
-argument_list|,
+parameter_list|,
 name|int
-argument_list|,
+parameter_list|,
 name|caddr_t
-argument_list|,
+parameter_list|,
 name|int
-operator|*
-argument_list|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|proc
-operator|*
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Driver interface to do "raw" I/O in the address space of a  * user process directly for read and write operations..  */
@@ -189,23 +193,25 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_decl_stmt
+name|int
 name|physio
 argument_list|(
-argument|strat
+name|strat
 argument_list|,
-argument|dev
+name|dev
 argument_list|,
-argument|off
+name|bp
 argument_list|,
-argument|rw
+name|off
 argument_list|,
-argument|base
+name|rw
 argument_list|,
-argument|len
+name|base
 argument_list|,
-argument|p
+name|len
+argument_list|,
+name|p
 argument_list|)
 name|int
 argument_list|(
@@ -213,12 +219,20 @@ operator|*
 name|strat
 argument_list|)
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|buf
+modifier|*
+name|bp
 decl_stmt|;
 end_decl_stmt
 
@@ -253,12 +267,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
 name|int
 name|amttodo
 init|=
@@ -278,6 +286,15 @@ expr_stmt|;
 name|caddr_t
 name|adr
 decl_stmt|;
+name|int
+name|bp_alloc
+init|=
+operator|(
+name|bp
+operator|==
+literal|0
+operator|)
+decl_stmt|;
 name|rw
 operator|=
 name|rw
@@ -289,6 +306,11 @@ else|:
 literal|0
 expr_stmt|;
 comment|/* create and build a buffer header for a transfer */
+if|if
+condition|(
+name|bp_alloc
+condition|)
+block|{
 name|bp
 operator|=
 operator|(
@@ -325,6 +347,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 09 Sep 92*/
+block|}
 name|bp
 operator|->
 name|b_flags
@@ -417,6 +440,10 @@ name|B_WRITE
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|bp_alloc
+condition|)
 name|free
 argument_list|(
 name|bp
@@ -449,6 +476,10 @@ name|B_READ
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|bp_alloc
+condition|)
 name|free
 argument_list|(
 name|bp
@@ -616,6 +647,10 @@ name|bp
 operator|->
 name|b_error
 expr_stmt|;
+if|if
+condition|(
+name|bp_alloc
+condition|)
 name|free
 argument_list|(
 name|bp
