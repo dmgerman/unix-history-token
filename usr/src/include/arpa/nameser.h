@@ -642,6 +642,39 @@ directive|ifndef
 name|BYTE_ORDER
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|LITTLE_ENDIAN
+value|1234
+end_define
+
+begin_comment
+comment|/* least-significant byte first (vax) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIG_ENDIAN
+value|4321
+end_define
+
+begin_comment
+comment|/* most-significant byte first (IBM, net) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDP_ENDIAN
+value|3412
+end_define
+
+begin_comment
+comment|/* LSB first in word, MSW first in long (pdp) */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -655,6 +688,12 @@ argument_list|(
 name|ns32000
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|sun386
+argument_list|)
+operator|||
+expr|\
 name|defined
 argument_list|(
 name|BIT_ZERO_ON_RIGHT
@@ -678,11 +717,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|sun
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|sel
 argument_list|)
 operator|||
@@ -694,6 +728,11 @@ operator|||
 name|defined
 argument_list|(
 name|mc68000
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|sparc
 argument_list|)
 operator|||
 expr|\
