@@ -165,7 +165,7 @@ define|#
 directive|define
 name|SYSCTL_INIT
 parameter_list|()
-value|sx_init(&sysctllock, "sysctl sysctllock")
+value|sx_init(&sysctllock, "sysctl lock")
 end_define
 
 begin_function_decl
