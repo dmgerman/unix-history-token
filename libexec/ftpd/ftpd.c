@@ -9979,8 +9979,13 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|cnt
+operator|==
+literal|0
+operator|&&
+name|offset
+operator|==
+literal|0
 condition|)
 goto|goto
 name|oldway
