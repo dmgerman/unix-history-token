@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995  *	Poul-Henning Kamp.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.3 (Berkeley) 8/22/94  * $Id: vfs_cache.c,v 1.17 1995/10/29 15:31:18 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1995  *	Poul-Henning Kamp.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cache.c	8.3 (Berkeley) 8/22/94  * $Id: vfs_cache.c,v 1.18 1995/12/14 09:52:47 phk Exp $  */
 end_comment
 
 begin_include
@@ -170,12 +170,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|u_long
-name|nextvnodeid
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -910,17 +904,18 @@ operator|&
 name|nchash
 argument_list|)
 expr_stmt|;
+name|cache_purge
+argument_list|(
+operator|&
 name|nchENOENT
-operator|.
-name|v_id
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
+comment|/* Initialize v_id */
 block|}
 end_function
 
 begin_comment
-comment|/*  * Invalidate a all entries to particular vnode.  *  * We actually just increment the v_id, that will do it.  The entries will  * be purged by lookup as they get found.  * If the v_id wraps around, we need to ditch the entire cache, to avoid  * confusion.  * No valid vnode will ever have (v_id == 0).  */
+comment|/*  * Invalidate all entries to a particular vnode.  *  * We actually just increment the v_id, that will do it.  The stale entries   * will be purged by lookup as they get found.  * If the v_id wraps around, we need to ditch the entire cache, to avoid  * confusion.  * No valid vnode will ever have (v_id == 0).  */
 end_comment
 
 begin_function
@@ -939,6 +934,10 @@ name|struct
 name|nchashhead
 modifier|*
 name|ncpp
+decl_stmt|;
+specifier|static
+name|u_long
+name|nextvnodeid
 decl_stmt|;
 name|vp
 operator|->
@@ -988,6 +987,13 @@ name|lh_first
 argument_list|)
 expr_stmt|;
 block|}
+name|nchENOENT
+operator|.
+name|v_id
+operator|=
+operator|++
+name|nextvnodeid
+expr_stmt|;
 name|vp
 operator|->
 name|v_id
@@ -999,7 +1005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush all entries referencing a particular filesystem.  *  * Since we need to check it anyway, we will flush all the invalid  * entriess at the same time.  *  * If we purge anything, we scan the hash-bucket again.  There is only  * a handful of entries, so it cheap and simple.  */
+comment|/*  * Flush all entries referencing a particular filesystem.  *  * Since we need to check it anyway, we will flush all the invalid  * entries at the same time.  *  * If we purge anything, we scan the hash-bucket again.  There is only  * a handful of entries, so it cheap and simple.  */
 end_comment
 
 begin_function
