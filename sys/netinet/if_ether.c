@@ -1041,7 +1041,32 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"arp_rtrequest: bad gateway value\n"
+literal|"arp_rtrequest: bad gateway %s%s\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|SIN
+argument_list|(
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
+argument_list|)
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+operator|(
+name|gate
+operator|->
+name|sa_family
+operator|!=
+name|AF_LINK
+operator|)
+condition|?
+literal|" (sa_family != AF_LINK)"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 break|break;
