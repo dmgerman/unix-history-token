@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	2.1.1.1 83/08/09"
+literal|"@(#)cmd1.c	3.1 83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -762,7 +762,6 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-comment|/* 	wwupdate(); 	wwflush(); 	*/
 switch|switch
 condition|(
 name|wwfork

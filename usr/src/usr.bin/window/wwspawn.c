@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwspawn.c	2.1.1.1 83/08/09"
+literal|"@(#)wwspawn.c	3.1 83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,11 @@ return|;
 case|case
 literal|0
 case|:
+name|moncontrol
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|wp
 operator|->
 name|ww_state

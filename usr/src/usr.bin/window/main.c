@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	2.1.1.1 83/08/09"
+literal|"@(#)main.c	3.1 83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,11 +725,13 @@ argument_list|,
 literal|"window: [-e escape] [-t] [-f]\n"
 argument_list|)
 expr_stmt|;
-return|return
 name|exit
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 comment|/* for lint */
 block|}

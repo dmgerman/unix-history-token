@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	2.1.1.1 83/08/09"
+literal|"@(#)wwinit.c	3.1 83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,14 @@ name|wwkeys
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|_sobuf
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|wwinit
 argument_list|()
@@ -51,6 +59,13 @@ expr_stmt|;
 name|int
 name|kn
 decl_stmt|;
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|_sobuf
+argument_list|)
+expr_stmt|;
 name|wwdtablesize
 operator|=
 name|getdtablesize
