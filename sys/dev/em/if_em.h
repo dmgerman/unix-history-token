@@ -1095,6 +1095,29 @@ end_struct
 begin_define
 define|#
 directive|define
+name|EM_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_name
+parameter_list|)
+define|\
+value|mtx_init(&(_sc)->mtx, _name, MTX_NETWORK_LOCK, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EM_LOCK
 parameter_list|(
 name|_sc
@@ -1110,6 +1133,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_unlock(&(_sc)->mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->mtx, MA_OWNED)
 end_define
 
 begin_endif

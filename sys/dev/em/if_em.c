@@ -1745,21 +1745,14 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|EM_LOCK_INIT
 argument_list|(
-operator|&
 name|adapter
-operator|->
-name|mtx
 argument_list|,
 name|device_get_nameunit
 argument_list|(
 name|dev
 argument_list|)
-argument_list|,
-name|MTX_NETWORK_LOCK
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -2905,6 +2898,11 @@ operator|=
 name|adapter
 operator|->
 name|next
+expr_stmt|;
+name|EM_LOCK_DESTROY
+argument_list|(
+name|adapter
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -4278,7 +4276,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|em_poll
+name|em_poll_locked
 argument_list|(
 name|ifp
 argument_list|,
@@ -5943,7 +5941,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*********************************************************************  *  * 82547 workaround to avoid controller hang in half-duplex environment.  * The workaround is to avoid queuing a large packet that would span     * the internal Tx FIFO ring boundary. We need to reset the FIFO pointers  * in this case. We do that only when FIFO is queiced.  *  **********************************************************************/
+comment|/*********************************************************************  *  * 82547 workaround to avoid controller hang in half-duplex environment.  * The workaround is to avoid queuing a large packet that would span     * the internal Tx FIFO ring boundary. We need to reset the FIFO pointers  * in this case. We do that only when FIFO is quiescent.  *  **********************************************************************/
 specifier|static
 name|void
 name|em_82547_move_tail
@@ -5981,7 +5979,7 @@ name|eop
 init|=
 literal|0
 decl_stmt|;
-name|EM_LOCK
+name|EM_LOCK_ASSERT
 argument_list|(
 name|adapter
 argument_list|)
@@ -6115,11 +6113,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|EM_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 specifier|static
@@ -7813,7 +7806,8 @@ operator|->
 name|res_interrupt
 argument_list|,
 name|INTR_TYPE_NET
-comment|/*| INTR_MPSAFE*/
+operator||
+name|INTR_MPSAFE
 argument_list|,
 operator|(
 name|void
