@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.8 (Berkeley) %G%"
+literal|"@(#)display.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,6 +531,15 @@ empty_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|_argv
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|u_char
 modifier|*
@@ -777,6 +786,34 @@ operator|!
 name|n
 condition|)
 block|{
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"hexdump: %s: %s\n"
+argument_list|,
+name|_argv
+index|[
+operator|-
+literal|1
+index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ateof
 operator|=
 literal|1
@@ -927,12 +964,6 @@ decl_stmt|;
 specifier|static
 name|int
 name|done
-decl_stmt|;
-specifier|static
-name|char
-modifier|*
-modifier|*
-name|_argv
 decl_stmt|;
 name|int
 name|statok
