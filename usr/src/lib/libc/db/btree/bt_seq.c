@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_seq.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_seq.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,7 +135,7 @@ operator|->
 name|data
 operator|!=
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|NULL

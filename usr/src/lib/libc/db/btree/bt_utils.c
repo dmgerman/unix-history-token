@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_utils.c	5.2 (Berkeley) %G%"
+literal|"@(#)bt_utils.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,6 +221,10 @@ name|key
 operator|->
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|_key
 expr_stmt|;
 name|key
@@ -302,6 +306,10 @@ name|key
 operator|->
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|_key
 expr_stmt|;
 if|if
@@ -427,6 +435,10 @@ name|data
 operator|->
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|_data
 expr_stmt|;
 name|data
@@ -508,6 +520,10 @@ name|data
 operator|->
 name|data
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|_data
 expr_stmt|;
 if|if
