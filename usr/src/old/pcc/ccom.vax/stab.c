@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.5 (Berkeley) %G%"
+literal|"@(#)stab.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2131,7 +2131,7 @@ name|printf
 argument_list|(
 literal|"\",0x%x,0,%d,L%d\n"
 argument_list|,
-name|N_STSYM
+name|N_LCSYM
 argument_list|,
 name|bsize
 argument_list|(
