@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ansi.c	5.1 (Berkeley) %G%"
+literal|"@(#)ansi.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,6 +441,8 @@ name|e
 decl_stmt|;
 name|int
 name|cnt
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
