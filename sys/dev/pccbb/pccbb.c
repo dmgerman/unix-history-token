@@ -2657,6 +2657,9 @@ argument_list|(
 name|brdev
 argument_list|)
 decl_stmt|;
+name|uint32_t
+name|sockbase
+decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
