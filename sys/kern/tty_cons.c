@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cons.h>
 end_include
 
 begin_include
@@ -258,6 +258,17 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|dev_t
+name|cn_devfsdev
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* represents the device private info */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|u_char
 name|cn_phys_is_open
 decl_stmt|;
@@ -303,17 +314,6 @@ begin_comment
 comment|/* physical console device info */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|dev_t
-name|condev_t
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* represents the device private info */
-end_comment
-
 begin_expr_stmt
 name|CONS_DRIVER
 argument_list|(
@@ -344,14 +344,14 @@ block|{
 name|struct
 name|consdev
 modifier|*
-modifier|*
-name|list
-decl_stmt|,
-modifier|*
 name|best_cp
 decl_stmt|,
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+modifier|*
+name|list
 decl_stmt|;
 comment|/* 	 * Find the first console with the highest priority. 	 */
 name|best_cp
@@ -1745,7 +1745,7 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|condev_t
+name|cn_devfsdev
 operator|=
 name|make_dev
 argument_list|(
