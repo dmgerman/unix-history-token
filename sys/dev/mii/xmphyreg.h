@@ -222,23 +222,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XMPHY_ANAR_FDX
+name|XMPHY_ANAR_HDX
 value|0x0040
 end_define
 
 begin_comment
-comment|/* Select full duplex */
+comment|/* Select half duplex */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XMPHY_ANAR_HDX
+name|XMPHY_ANAR_FDX
 value|0x0020
 end_define
 
 begin_comment
-comment|/* Select half duplex */
+comment|/* Select full duplex */
 end_comment
 
 begin_define
@@ -295,23 +295,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|XMPHY_ANLPAR_FDX
+name|XMPHY_ANLPAR_HDX
 value|0x0040
 end_define
 
 begin_comment
-comment|/* Select full duplex */
+comment|/* Select half duplex */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|XMPHY_ANLPAR_HDX
+name|XMPHY_ANLPAR_FDX
 value|0x0020
 end_define
 
 begin_comment
-comment|/* Select half duplex */
+comment|/* Select full duplex */
 end_comment
 
 begin_define
