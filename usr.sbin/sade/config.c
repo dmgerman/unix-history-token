@@ -2410,14 +2410,14 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|configSecurityModerate
-argument_list|(
-argument|dialogMenuItem *self
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
 block|{
 name|WINDOW
 modifier|*
@@ -2487,7 +2487,7 @@ return|return
 name|DITEM_SUCCESS
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
