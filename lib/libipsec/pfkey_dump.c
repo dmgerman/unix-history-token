@@ -262,7 +262,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|do { \ 	if (sizeof((str)[0]) == 0 \ 	 || num>= sizeof(str)/sizeof((str)[0])) \ 		printf("%d ", (num)); \ 	else if (strlen((str)[(num)]) == 0) \ 		printf("%d ", (num)); \ 	else \ 		printf("%s ", (str)[(num)]); \ } while (0)
+value|do { \ 	if (sizeof((str)[0]) == 0 \ 	 || num>= sizeof(str)/sizeof((str)[0])) \ 		printf("%u ", (num)); \ 	else if (strlen((str)[(num)]) == 0) \ 		printf("%u ", (num)); \ 	else \ 		printf("%s ", (str)[(num)]); \ } while (0)
 end_define
 
 begin_define
@@ -275,7 +275,7 @@ parameter_list|,
 name|num
 parameter_list|)
 define|\
-value|do { \ 	struct val2str *p;  \ 	for (p = (v2s); p&& p->str; p++) { \ 		if (p->val == (num)) \ 			break; \ 	} \ 	if (p&& p->str) \ 		printf("%s ", p->str); \ 	else \ 		printf("%d ", (num)); \ } while (0)
+value|do { \ 	struct val2str *p;  \ 	for (p = (v2s); p&& p->str; p++) { \ 		if (p->val == (num)) \ 			break; \ 	} \ 	if (p&& p->str) \ 		printf("%s ", p->str); \ 	else \ 		printf("%u ", (num)); \ } while (0)
 end_define
 
 begin_function_decl

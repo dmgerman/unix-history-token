@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: ipsec_dump_policy.c,v 1.11 2000/05/07 05:29:47 itojun Exp $	*/
+comment|/*	$KAME: ipsec_dump_policy.c,v 1.13 2002/06/27 14:35:11 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -1029,7 +1029,7 @@ name|buf
 argument_list|,
 name|len
 argument_list|,
-literal|"%s/%s/%s/%s%c%d"
+literal|"%s/%s/%s/%s%c%u"
 argument_list|,
 name|proto
 argument_list|,
