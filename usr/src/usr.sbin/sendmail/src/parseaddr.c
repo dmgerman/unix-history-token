@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.35 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8616,6 +8616,20 @@ name|c
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|c
+operator|==
+literal|' '
+operator|&&
+name|SpaceSub
+operator|!=
+literal|'\0'
+condition|)
+name|c
+operator|=
+name|SpaceSub
+expr_stmt|;
 switch|switch
 condition|(
 name|c
