@@ -93,6 +93,31 @@ directive|include
 file|<vm/vm_kern.h>
 end_include
 
+begin_comment
+comment|/* needed to make inflate() work */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uch
+value|u_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|ush
+value|u_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|ulg
+value|u_long
+end_define
+
 begin_define
 define|#
 directive|define
@@ -163,8 +188,34 @@ begin_struct
 struct|struct
 name|gz_global
 block|{
+name|ulg
+name|bb
+decl_stmt|;
+comment|/* bit buffer */
+name|unsigned
+name|bk
+decl_stmt|;
+comment|/* bits in bit buffer */
+name|unsigned
+name|hufts
+decl_stmt|;
+comment|/* track memory usage */
+name|struct
+name|huft
+modifier|*
+name|fixed_tl
+decl_stmt|;
+comment|/* must init to NULL !! */
+name|struct
+name|huft
+modifier|*
+name|fixed_td
+decl_stmt|;
 name|int
-name|foo
+name|fixed_bl
+decl_stmt|;
+name|int
+name|fixed_bd
 decl_stmt|;
 block|}
 struct|;
@@ -182,6 +233,20 @@ operator|*
 operator|,
 expr|struct
 name|gz_global
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|do_aout_hdr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|gzip
 operator|*
 operator|)
 argument_list|)

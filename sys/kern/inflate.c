@@ -88,27 +88,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|uch
-value|u_char
-end_define
-
-begin_define
-define|#
-directive|define
-name|ush
-value|u_short
-end_define
-
-begin_define
-define|#
-directive|define
-name|ulg
-value|u_long
-end_define
-
-begin_define
-define|#
-directive|define
 name|memzero
 parameter_list|(
 name|dest
@@ -961,6 +940,10 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+expr|struct
+name|gz_global
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1007,6 +990,10 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+expr|struct
+name|gz_global
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1021,6 +1008,10 @@ argument_list|(
 operator|(
 expr|struct
 name|gzip
+operator|*
+operator|,
+expr|struct
+name|gz_global
 operator|*
 operator|)
 argument_list|)
@@ -1037,6 +1028,10 @@ operator|(
 expr|struct
 name|gzip
 operator|*
+operator|,
+expr|struct
+name|gz_global
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1051,6 +1046,10 @@ argument_list|(
 operator|(
 expr|struct
 name|gzip
+operator|*
+operator|,
+expr|struct
+name|gz_global
 operator|*
 operator|)
 argument_list|)
@@ -1070,6 +1069,10 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+expr|struct
+name|gz_global
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1084,6 +1087,10 @@ argument_list|(
 operator|(
 expr|struct
 name|gzip
+operator|*
+operator|,
+expr|struct
+name|gz_global
 operator|*
 operator|)
 argument_list|)
@@ -1457,6 +1464,7 @@ comment|/* And'ing with mask[n] masks the lower n bits */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|ush
 name|mask
@@ -1505,24 +1513,26 @@ comment|/* Macros for inflate() bit peeking and grabbing.    The usage is:      
 end_comment
 
 begin_comment
-comment|/* !!! XXX !!! */
+comment|/*  * The following 2 were global variables.  * They are now fields of the gz_global structure.  */
 end_comment
 
-begin_decl_stmt
-name|ulg
+begin_define
+define|#
+directive|define
 name|bb
-decl_stmt|;
-end_decl_stmt
+value|(glbl->bb)
+end_define
 
 begin_comment
 comment|/* bit buffer */
 end_comment
 
-begin_decl_stmt
-name|unsigned
+begin_define
+define|#
+directive|define
 name|bk
-decl_stmt|;
-end_decl_stmt
+value|(glbl->bk)
+end_define
 
 begin_comment
 comment|/* bits in bit buffer */
@@ -1583,6 +1593,7 @@ comment|/*    Huffman code decoding is performed using a multi-level table looku
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|int
 name|lbits
@@ -1596,6 +1607,7 @@ comment|/* bits in base literal/length lookup table */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|int
 name|dbits
@@ -1635,18 +1647,15 @@ comment|/* maximum number of codes in any set */
 end_comment
 
 begin_comment
-comment|/* !!! XXX !!! */
+comment|/*  * This also used to be a global variable  */
 end_comment
 
-begin_decl_stmt
-name|unsigned
+begin_define
+define|#
+directive|define
 name|hufts
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* track memory usage */
-end_comment
+value|(glbl->hufts)
+end_define
 
 begin_function
 specifier|static
@@ -1668,6 +1677,8 @@ parameter_list|,
 name|t
 parameter_list|,
 name|m
+parameter_list|,
+name|glbl
 parameter_list|)
 name|struct
 name|gzip
@@ -1711,6 +1722,11 @@ modifier|*
 name|m
 decl_stmt|;
 comment|/* maximum lookup bits, returns actual */
+name|struct
+name|gz_global
+modifier|*
+name|glbl
+decl_stmt|;
 comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return zero on success, one if    the given code set is incomplete (the tables are still built in this    case), two if the input is invalid (all zero length codes or an    oversubscribed set of lengths), and three if not enough memory.    The code with value 256 is special, and the tables are constructed    so that no bits beyond that code are fetched when that code is    decoded. */
 block|{
 name|unsigned
@@ -2944,6 +2960,8 @@ parameter_list|,
 name|bl
 parameter_list|,
 name|bd
+parameter_list|,
+name|glbl
 parameter_list|)
 name|struct
 name|gzip
@@ -2974,6 +2992,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of bits decoded by tl[] and td[] */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|gz_global
+modifier|*
+name|glbl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* global variables */
 end_comment
 
 begin_comment
@@ -3513,11 +3543,18 @@ name|int
 name|inflate_stored
 parameter_list|(
 name|gz
+parameter_list|,
+name|glbl
 parameter_list|)
 name|struct
 name|gzip
 modifier|*
 name|gz
+decl_stmt|;
+name|struct
+name|gz_global
+modifier|*
+name|glbl
 decl_stmt|;
 comment|/* "decompress" an inflated type 0 (stored) block. */
 block|{
@@ -3695,39 +3732,36 @@ comment|/* Globals for literal tables (built once) */
 end_comment
 
 begin_comment
-comment|/* !!! XXX !!! */
+comment|/* The real variables are now in the struct gz_global */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|huft
-modifier|*
+begin_define
+define|#
+directive|define
 name|fixed_tl
-init|=
-operator|(
-expr|struct
-name|huft
-operator|*
-operator|)
-name|NULL
-decl_stmt|;
-end_decl_stmt
+value|(glbl->fixed_tl)
+end_define
 
-begin_decl_stmt
-name|struct
-name|huft
-modifier|*
+begin_define
+define|#
+directive|define
 name|fixed_td
-decl_stmt|;
-end_decl_stmt
+value|(glbl->fixed_td)
+end_define
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|fixed_bl
-decl_stmt|,
+value|(glbl->fixed_bl)
+end_define
+
+begin_define
+define|#
+directive|define
 name|fixed_bd
-decl_stmt|;
-end_decl_stmt
+value|(glbl->fixed_bd)
+end_define
 
 begin_function
 specifier|static
@@ -3735,11 +3769,18 @@ name|int
 name|inflate_fixed
 parameter_list|(
 name|gz
+parameter_list|,
+name|glbl
 parameter_list|)
 name|struct
 name|gzip
 modifier|*
 name|gz
+decl_stmt|;
+name|struct
+name|gz_global
+modifier|*
+name|glbl
 decl_stmt|;
 comment|/* decompress an inflated type 1 (fixed Huffman codes) block.  We should    either replace this with a custom decoder, or at least precompute the    Huffman tables. */
 block|{
@@ -3878,6 +3919,8 @@ name|fixed_tl
 argument_list|,
 operator|&
 name|fixed_bl
+argument_list|,
+name|glbl
 argument_list|)
 operator|)
 operator|!=
@@ -3947,6 +3990,8 @@ name|fixed_td
 argument_list|,
 operator|&
 name|fixed_bd
+argument_list|,
+name|glbl
 argument_list|)
 operator|)
 operator|>
@@ -3987,6 +4032,8 @@ argument_list|,
 name|fixed_bl
 argument_list|,
 name|fixed_bd
+argument_list|,
+name|glbl
 argument_list|)
 operator|!=
 literal|0
@@ -4000,11 +4047,18 @@ name|int
 name|inflate_dynamic
 parameter_list|(
 name|gz
+parameter_list|,
+name|glbl
 parameter_list|)
 name|struct
 name|gzip
 modifier|*
 name|gz
+decl_stmt|;
+name|struct
+name|gz_global
+modifier|*
+name|glbl
 decl_stmt|;
 comment|/* decompress an inflated type 2 (dynamic Huffman codes) block. */
 block|{
@@ -4300,6 +4354,8 @@ name|tl
 argument_list|,
 operator|&
 name|bl
+argument_list|,
+name|glbl
 argument_list|)
 operator|)
 operator|!=
@@ -4630,6 +4686,8 @@ name|tl
 argument_list|,
 operator|&
 name|bl
+argument_list|,
+name|glbl
 argument_list|)
 operator|)
 operator|!=
@@ -4694,6 +4752,8 @@ name|td
 argument_list|,
 operator|&
 name|bd
+argument_list|,
+name|glbl
 argument_list|)
 operator|)
 operator|!=
@@ -4767,6 +4827,8 @@ argument_list|,
 name|bl
 argument_list|,
 name|bd
+argument_list|,
+name|glbl
 argument_list|)
 condition|)
 return|return
@@ -4812,6 +4874,8 @@ parameter_list|(
 name|gz
 parameter_list|,
 name|e
+parameter_list|,
+name|glbl
 parameter_list|)
 name|struct
 name|gzip
@@ -4823,6 +4887,11 @@ modifier|*
 name|e
 decl_stmt|;
 comment|/* last block flag */
+name|struct
+name|gz_global
+modifier|*
+name|glbl
+decl_stmt|;
 comment|/* decompress an inflated block */
 block|{
 name|unsigned
@@ -4905,6 +4974,8 @@ return|return
 name|inflate_dynamic
 argument_list|(
 name|gz
+argument_list|,
+name|glbl
 argument_list|)
 return|;
 if|if
@@ -4917,6 +4988,8 @@ return|return
 name|inflate_stored
 argument_list|(
 name|gz
+argument_list|,
+name|glbl
 argument_list|)
 return|;
 if|if
@@ -4929,6 +5002,8 @@ return|return
 name|inflate_fixed
 argument_list|(
 name|gz
+argument_list|,
+name|glbl
 argument_list|)
 return|;
 comment|/* bad block type */
@@ -4970,6 +5045,15 @@ name|unsigned
 name|h
 decl_stmt|;
 comment|/* maximum struct huft's malloc'ed */
+name|fixed_tl
+operator|=
+operator|(
+expr|struct
+name|huft
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
 comment|/* initialize window, bit buffer */
 name|wp
 operator|=
@@ -5005,6 +5089,8 @@ name|gz
 argument_list|,
 operator|&
 name|e
+argument_list|,
+name|glbl
 argument_list|)
 operator|)
 operator|!=
@@ -5074,11 +5160,18 @@ name|int
 name|inflate_free
 parameter_list|(
 name|gz
+parameter_list|,
+name|glbl
 parameter_list|)
 name|struct
 name|gzip
 modifier|*
 name|gz
+decl_stmt|;
+name|struct
+name|gz_global
+modifier|*
+name|glbl
 decl_stmt|;
 block|{
 if|if
