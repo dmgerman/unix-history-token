@@ -320,6 +320,8 @@ parameter_list|)
 block|{
 name|sigset_t
 name|set
+decl_stmt|,
+name|suspend_set
 decl_stmt|;
 name|pthread_t
 name|self
@@ -374,6 +376,7 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
+comment|/* Get the current signal mask. */
 name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
@@ -384,6 +387,19 @@ operator|&
 name|set
 argument_list|)
 expr_stmt|;
+comment|/* The handler should run with the current signal masked. */
+name|suspend_set
+operator|=
+name|suspender_mask
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|suspend_set
+argument_list|,
+name|signo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|memcmp
@@ -392,7 +408,7 @@ operator|&
 name|set
 argument_list|,
 operator|&
-name|suspender_mask
+name|suspend_set
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -698,7 +714,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Install a signal handler for SIGUSR1 and SIGUSR2 */
+comment|/* Install a signal handler for SIGUSR1 */
 name|sigemptyset
 argument_list|(
 operator|&
@@ -717,28 +733,6 @@ argument_list|,
 name|SIGUSR1
 argument_list|)
 expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|act
-operator|.
-name|sa_mask
-argument_list|,
-name|SIGUSR2
-argument_list|)
-expr_stmt|;
-name|act
-operator|.
-name|sa_handler
-operator|=
-name|sighandler
-expr_stmt|;
-name|act
-operator|.
-name|sa_flags
-operator|=
-name|SA_RESTART
-expr_stmt|;
 name|sigaction
 argument_list|(
 name|SIGUSR1
@@ -747,6 +741,25 @@ operator|&
 name|act
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Install a signal handler for SIGUSR2 */
+name|sigemptyset
+argument_list|(
+operator|&
+name|act
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|act
+operator|.
+name|sa_mask
+argument_list|,
+name|SIGUSR2
 argument_list|)
 expr_stmt|;
 name|sigaction
