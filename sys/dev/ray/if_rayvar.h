@@ -344,6 +344,11 @@ name|c_ccs
 decl_stmt|;
 comment|/* CCS structure	*/
 name|struct
+name|ray_nw_param
+name|c_desired
+decl_stmt|;
+comment|/* network settings	*/
+name|struct
 name|ray_param_req
 modifier|*
 name|c_pr
