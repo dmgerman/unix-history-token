@@ -2665,6 +2665,7 @@ condition|(
 operator|(
 operator|(
 operator|(
+operator|(
 name|stat
 operator|->
 name|device_type
@@ -2675,6 +2676,20 @@ operator|==
 name|DEVSTAT_TYPE_DIRECT
 operator|)
 comment|/* disk device */
+operator|&&
+operator|(
+operator|(
+name|stat
+operator|->
+name|device_type
+operator|&
+name|DEVSTAT_TYPE_IF_MASK
+operator|)
+operator|!=
+name|DEVSTAT_TYPE_IF_OTHER
+operator|)
+operator|)
+comment|/* and not md */
 operator|||
 operator|(
 operator|(
@@ -2689,19 +2704,6 @@ name|DEVSTAT_TYPE_STORARRAY
 operator|)
 operator|)
 comment|/* storage array */
-operator|&&
-operator|(
-operator|(
-name|stat
-operator|->
-name|device_type
-operator|&
-name|DEVSTAT_TYPE_IF_MASK
-operator|)
-operator|!=
-name|DEVSTAT_TYPE_IF_OTHER
-operator|)
-comment|/* and not md */
 operator|&&
 operator|(
 operator|(
