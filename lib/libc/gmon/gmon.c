@@ -876,7 +876,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"[mcleanup1] kcount 0x%x ssiz %d\n"
+literal|"[mcleanup1] kcount 0x%p ssiz %lu\n"
 argument_list|,
 name|p
 operator|->
@@ -1088,7 +1088,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"[mcleanup2] frompc 0x%x selfpc 0x%x count %d\n"
+literal|"[mcleanup2] frompc 0x%lx selfpc 0x%lx count %lu\n"
 argument_list|,
 name|frompc
 argument_list|,

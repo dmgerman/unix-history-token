@@ -170,7 +170,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" keys %lu"
+literal|" keys %u"
 argument_list|,
 name|t
 operator|->
@@ -347,7 +347,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"magic %lx\n"
+literal|"magic %x\n"
 argument_list|,
 name|m
 operator|->
@@ -361,7 +361,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"version %lu\n"
+literal|"version %u\n"
 argument_list|,
 name|m
 operator|->
@@ -375,7 +375,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"psize %lu\n"
+literal|"psize %u\n"
 argument_list|,
 name|m
 operator|->
@@ -389,7 +389,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"free %lu\n"
+literal|"free %u\n"
 argument_list|,
 name|m
 operator|->
@@ -403,7 +403,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nrecs %lu\n"
+literal|"nrecs %u\n"
 argument_list|,
 name|m
 operator|->
@@ -417,7 +417,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"flags %lu"
+literal|"flags %u"
 argument_list|,
 name|m
 operator|->
@@ -907,7 +907,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"big key page %lu size %u/"
+literal|"big key page %u size %u/"
 argument_list|,
 operator|*
 operator|(
@@ -949,7 +949,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s/"
+literal|"%.*s/"
+argument_list|,
+name|bl
+operator|->
+name|ksize
 argument_list|,
 name|bl
 operator|->
@@ -971,7 +975,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"big data page %lu size %u"
+literal|"big data page %u size %u"
 argument_list|,
 operator|*
 operator|(
@@ -1069,7 +1073,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"big data page %lu size %u"
+literal|"big data page %u size %u"
 argument_list|,
 operator|*
 operator|(
@@ -1486,7 +1490,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" (%ld header count)"
+literal|" (%d header count)"
 argument_list|,
 name|t
 operator|->
@@ -1500,7 +1504,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%lu pages (leaf %ld, internal %ld, overflow %ld)\n"
+literal|"\n%u pages (leaf %d, internal %d, overflow %d)\n"
 argument_list|,
 name|pinternal
 operator|+
@@ -1536,7 +1540,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld splits (%ld root splits, %ld sort splits)\n"
+literal|"%lu splits (%lu root splits, %lu sort splits)\n"
 argument_list|,
 name|bt_split
 argument_list|,
