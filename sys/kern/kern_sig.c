@@ -11677,7 +11677,7 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|EFBIG
 return|;
 block|}
 name|PROC_UNLOCK
