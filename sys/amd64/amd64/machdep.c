@@ -2717,6 +2717,17 @@ name|sf_siginfo
 operator|.
 name|si_sc
 operator|.
+name|sc_gs
+operator|=
+name|rgs
+argument_list|()
+expr_stmt|;
+name|sf
+operator|.
+name|sf_siginfo
+operator|.
+name|si_sc
+operator|.
 name|sc_isp
 operator|=
 name|regs
