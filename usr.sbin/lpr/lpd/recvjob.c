@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: recvjob.c,v 1.11 1997/10/06 03:58:48 imp Exp $"
+literal|"$Id: recvjob.c,v 1.12 1997/12/02 20:45:59 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -350,6 +350,11 @@ operator|&
 name|myprinter
 decl_stmt|;
 comment|/* 	 * Perform lookup for printer name or abbreviation 	 */
+name|init_printer
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|getprintcap
