@@ -955,7 +955,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> socket: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1005,7 +1005,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> ioctl:SIOCGIFFLAGS: failed for %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ifr
 operator|.
@@ -1174,7 +1174,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> unsupported link type(%d)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sdl
 operator|->
@@ -1402,7 +1402,7 @@ argument_list|,
 literal|"<%s> rtm_msglen is 0 "
 literal|"(buf=%p lim=%p rtm=%p)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|buf
 argument_list|,
@@ -2406,7 +2406,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> sysctl: iflist size get failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2437,7 +2437,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> malloc failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2473,7 +2473,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> sysctl: iflist get failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2579,7 +2579,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> malloc failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2632,7 +2632,7 @@ argument_list|,
 literal|"<%s> ifm_msglen is 0 "
 literal|"(buf=%p lim=%p ifm=%p)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|buf
 argument_list|,
@@ -2764,7 +2764,7 @@ argument_list|,
 literal|"<%s> ifa_msglen is 0 "
 literal|"(buf=%p lim=%p ifam=%p)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|buf
 argument_list|,

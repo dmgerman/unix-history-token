@@ -267,6 +267,21 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+literal|"  other config: %s\n"
+argument_list|,
+name|ifinfo
+operator|->
+name|otherconfig
+condition|?
+literal|"on"
+else|:
+literal|"off"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
 literal|"  rtsold status: %s\n"
 argument_list|,
 name|ifstatstr
@@ -437,7 +452,7 @@ name|warnmsg
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"open a dump file(%s): %s"
 argument_list|,

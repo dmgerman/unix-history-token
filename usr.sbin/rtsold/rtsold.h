@@ -37,7 +37,7 @@ comment|/* interface status */
 name|int
 name|probeinterval
 decl_stmt|;
-comment|/* interval of probe timer(if necessary) */
+comment|/* interval of probe timer (if necessary) */
 name|int
 name|probetimer
 decl_stmt|;
@@ -46,6 +46,10 @@ name|int
 name|mediareqok
 decl_stmt|;
 comment|/* wheter the IF supports SIOCGIFMEDIA */
+name|int
+name|otherconfig
+decl_stmt|;
+comment|/* need a separate protocol for the "other" 				 * configuration */
 name|int
 name|state
 decl_stmt|;
@@ -141,6 +145,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|otherconf_script
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|ifinfo
 modifier|*
@@ -149,7 +161,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|ifindex
 operator|)
 argument_list|)
 decl_stmt|;
@@ -164,7 +175,6 @@ operator|(
 expr|struct
 name|ifinfo
 operator|*
-name|ifinfo
 operator|)
 argument_list|)
 decl_stmt|;
@@ -232,7 +242,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -263,7 +272,6 @@ operator|(
 expr|struct
 name|sockaddr_dl
 operator|*
-name|sdl
 operator|)
 argument_list|)
 decl_stmt|;
@@ -279,12 +287,10 @@ operator|(
 expr|struct
 name|sockaddr_dl
 operator|*
-name|sdl
 operator|,
 expr|struct
 name|nd_opt_hdr
 operator|*
-name|ndopt
 operator|)
 argument_list|)
 decl_stmt|;
@@ -301,7 +307,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -315,7 +320,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|code
 operator|)
 argument_list|)
 decl_stmt|;
@@ -348,7 +352,6 @@ operator|(
 expr|struct
 name|ifinfo
 operator|*
-name|ifinfo
 operator|)
 argument_list|)
 decl_stmt|;
@@ -362,7 +365,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|s
 operator|)
 argument_list|)
 decl_stmt|;
@@ -393,7 +395,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|ifindex
 operator|)
 argument_list|)
 decl_stmt|;

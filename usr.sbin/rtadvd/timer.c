@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: timer.c,v 1.4 2000/05/27 11:30:43 jinmei Exp $	*/
+comment|/*	$KAME: timer.c,v 1.9 2002/06/10 19:59:47 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -222,7 +222,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't allocate memory"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -255,9 +255,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> timeout function unspecfied"
+literal|"<%s> timeout function unspecified"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -690,7 +690,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> a timer must be expired, but not yet"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|returnval

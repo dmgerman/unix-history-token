@@ -113,23 +113,6 @@ directive|include
 file|<netinet/icmp6.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MIP6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet6/mip6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -443,7 +426,7 @@ literal|"<%s> %s isn't defined in the configuration file"
 literal|" or the configuration file doesn't exist."
 literal|" Treat it as default"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -589,7 +572,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get information of %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -665,7 +648,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> can't get interface mtu of %s. Treat as %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|,
@@ -700,7 +683,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> maxinterval must be between %e and %u"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|MIN_MAXINTERVAL
 argument_list|,
@@ -760,7 +743,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> mininterval must be between %e and %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|MIN_MININTERVAL
 argument_list|,
@@ -832,23 +815,6 @@ name|val
 operator|&
 name|ND_RA_FLAG_OTHER
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-if|if
-condition|(
-name|mobileip6
-condition|)
-name|tmp
-operator|->
-name|haflg
-operator|=
-name|val
-operator|&
-name|ND_RA_FLAG_HA
-expr_stmt|;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|ND_RA_FLAG_RTPREF_MASK
@@ -887,7 +853,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> invalid router preference on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -935,7 +901,7 @@ argument_list|,
 literal|"<%s> router lifetime on %s must be 0 or"
 literal|" between %d and %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|,
@@ -969,7 +935,7 @@ argument_list|,
 literal|"<%s> non zero router lifetime is specified for %s, "
 literal|"which must not be allowed for hosts."
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -1010,7 +976,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> reachable time must be no greater than %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|MAXREACHABLETIME
 argument_list|)
@@ -1056,7 +1022,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> retrans time out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1074,9 +1040,6 @@ name|u_int32_t
 operator|)
 name|val64
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MIP6
 if|if
 condition|(
 name|agetstr
@@ -1102,7 +1065,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> mobile-ip6 configuration not supported"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1111,141 +1074,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|mobileip6
-condition|)
-block|{
-if|if
-condition|(
-name|agetstr
-argument_list|(
-literal|"hapref"
-argument_list|,
-operator|&
-name|bp
-argument_list|)
-operator|||
-name|agetstr
-argument_list|(
-literal|"hatime"
-argument_list|,
-operator|&
-name|bp
-argument_list|)
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"<%s> mobile-ip6 configuration without "
-literal|"proper command line option"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|tmp
-operator|->
-name|hapref
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|val
-operator|=
-name|agetnum
-argument_list|(
-literal|"hapref"
-argument_list|)
-operator|)
-operator|>=
-literal|0
-condition|)
-name|tmp
-operator|->
-name|hapref
-operator|=
-operator|(
-name|int16_t
-operator|)
-name|val
-expr_stmt|;
-if|if
-condition|(
-name|tmp
-operator|->
-name|hapref
-operator|!=
-literal|0
-condition|)
-block|{
-name|tmp
-operator|->
-name|hatime
-operator|=
-literal|0
-expr_stmt|;
-name|MUSTHAVE
-argument_list|(
-name|val
-argument_list|,
-literal|"hatime"
-argument_list|)
-expr_stmt|;
-name|tmp
-operator|->
-name|hatime
-operator|=
-operator|(
-name|u_int16_t
-operator|)
-name|val
-expr_stmt|;
-if|if
-condition|(
-name|tmp
-operator|->
-name|hatime
-operator|<=
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"<%s> home agent lifetime must be greater than 0"
-argument_list|,
-name|__FUNCTION__
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-endif|#
-directive|endif
 comment|/* prefix information */
-comment|/* 	 * This is an implementation specific parameter to consinder 	 * link propagation delays and poorly synchronized clocks when 	 * checking consistency of advertised lifetimes. 	 */
+comment|/* 	 * This is an implementation specific parameter to consider 	 * link propagation delays and poorly synchronized clocks when 	 * checking consistency of advertised lifetimes. 	 */
 name|MAYHAVE
 argument_list|(
 name|val
@@ -1302,7 +1132,7 @@ argument_list|,
 literal|"<%s> conflicting prefix configuration for %s: "
 literal|"automatic and manual config at the same time"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|intface
 argument_list|)
@@ -1390,7 +1220,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't allocate enough memory"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1477,7 +1307,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> prefixlen out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1511,33 +1341,6 @@ argument_list|,
 name|added
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-if|if
-condition|(
-name|mobileip6
-condition|)
-block|{
-name|MAYHAVE
-argument_list|(
-name|val
-argument_list|,
-name|entbuf
-argument_list|,
-operator|(
-name|ND_OPT_PI_FLAG_ONLINK
-operator||
-name|ND_OPT_PI_FLAG_AUTO
-operator||
-name|ND_OPT_PI_FLAG_ROUTER
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-endif|#
-directive|endif
 block|{
 name|MAYHAVE
 argument_list|(
@@ -1569,19 +1372,6 @@ name|val
 operator|&
 name|ND_OPT_PI_FLAG_AUTO
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-name|pfx
-operator|->
-name|routeraddr
-operator|=
-name|val
-operator|&
-name|ND_OPT_PI_FLAG_ROUTER
-expr_stmt|;
-endif|#
-directive|endif
 name|makeentry
 argument_list|(
 name|entbuf
@@ -1624,7 +1414,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> vltime out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1733,7 +1523,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> pltime out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1844,7 +1634,7 @@ argument_list|,
 literal|"<%s> need %s as an prefix for "
 literal|"interface %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|entbuf
 argument_list|,
@@ -1880,7 +1670,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_pton failed for %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|)
@@ -1909,7 +1699,7 @@ argument_list|,
 literal|"<%s> multicast prefix(%s) must "
 literal|"not be advertised (IF=%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|,
@@ -1939,7 +1729,7 @@ argument_list|,
 literal|"<%s> link-local prefix(%s) will be"
 literal|" advertised on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|,
@@ -1974,7 +1764,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> mtu out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2066,7 +1856,7 @@ argument_list|,
 literal|"<%s> advertised link mtu must be between"
 literal|" least MTU and physical link MTU"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2102,7 +1892,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> number of route information improper"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2184,7 +1974,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't allocate enough memory"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2259,7 +2049,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> prefixlen out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2325,7 +2115,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> invalid route preference"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2377,7 +2167,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> rtrltime out of range"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2439,7 +2229,7 @@ argument_list|,
 literal|"<%s> need %s as an route for "
 literal|"interface %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|entbuf
 argument_list|,
@@ -2475,7 +2265,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_pton failed for %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|addr
 argument_list|)
@@ -2490,7 +2280,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * XXX: currently there's no restriction in route information 		 * prefix according to draft-draves-route-selection-01.txt, 		 * however I think the similar restriction be necessary. 		 */
-block|MAYHAVE(val64, entbuf, DEF_ADVVALIDLIFETIME); 		if (IN6_IS_ADDR_MULTICAST(&rti->prefix)) { 			syslog(LOG_ERR, 			       "<%s> multicast route (%s) must " 			       "not be advertised (IF=%s)", 			       __FUNCTION__, addr, intface); 			exit(1); 		} 		if (IN6_IS_ADDR_LINKLOCAL(&rti->prefix)) { 			syslog(LOG_NOTICE, 			       "<%s> link-local route (%s) must " 			       "not be advertised on %s", 			       __FUNCTION__, addr, intface); 			exit(1); 		}
+block|MAYHAVE(val64, entbuf, DEF_ADVVALIDLIFETIME); 		if (IN6_IS_ADDR_MULTICAST(&rti->prefix)) { 			syslog(LOG_ERR, 			       "<%s> multicast route (%s) must " 			       "not be advertised (IF=%s)", 			       __func__, addr, intface); 			exit(1); 		} 		if (IN6_IS_ADDR_LINKLOCAL(&rti->prefix)) { 			syslog(LOG_NOTICE, 			       "<%s> link-local route (%s) must " 			       "not be advertised on %s", 			       __func__, addr, intface); 			exit(1); 		}
 endif|#
 directive|endif
 block|}
@@ -2625,7 +2415,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get interface addresses"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2769,7 +2559,7 @@ argument_list|,
 literal|"<%s> failed to get prefixlen "
 literal|"or prefix is invalid"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2818,7 +2608,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get allocate buffer for prefix"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2942,7 +2732,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> inet_ntop failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2957,7 +2747,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> add %s/%d to prefix list on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ntopbuf
 argument_list|,
@@ -3169,7 +2959,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> memory allocation failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3266,7 +3056,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> new prefix %s/%d was added on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3398,7 +3188,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> prefix %s/%d was deleted on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3493,7 +3283,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> assumption failure: timer already exists"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3509,7 +3299,7 @@ argument_list|,
 literal|"<%s> prefix %s/%d was invalidated on %s, "
 literal|"will expire in %ld seconds"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3571,7 +3361,7 @@ argument_list|,
 literal|"<%s> failed to add a timer for a prefix. "
 literal|"remove the prefix"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|delete_prefix
@@ -3683,7 +3473,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> assumption failure: timer does not exist"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3698,7 +3488,7 @@ name|LOG_DEBUG
 argument_list|,
 literal|"<%s> prefix %s/%d was re-enabled on %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -3753,9 +3543,9 @@ block|{
 if|#
 directive|if
 literal|0
-block|int s;  	if ((s = socket(AF_INET6, SOCK_DGRAM, 0))< 0) { 		syslog(LOG_ERR, "<%s> socket: %s", __FUNCTION__, 		       strerror(errno)); 		exit(1); 	}  	if (ioctl(s, SIOCGIFPREFIX_IN6, (caddr_t)ipr)< 0) { 		syslog(LOG_INFO, "<%s> ioctl:SIOCGIFPREFIX %s", __FUNCTION__, 		       strerror(errno));  		ipr->ipr_vltime = DEF_ADVVALIDLIFETIME; 		ipr->ipr_pltime = DEF_ADVPREFERREDLIFETIME; 		ipr->ipr_raf_onlink = 1; 		ipr->ipr_raf_auto = 1;
+block|int s;  	if ((s = socket(AF_INET6, SOCK_DGRAM, 0))< 0) { 		syslog(LOG_ERR, "<%s> socket: %s", __func__, 		       strerror(errno)); 		exit(1); 	}  	if (ioctl(s, SIOCGIFPREFIX_IN6, (caddr_t)ipr)< 0) { 		syslog(LOG_INFO, "<%s> ioctl:SIOCGIFPREFIX %s", __func__, 		       strerror(errno));  		ipr->ipr_vltime = DEF_ADVVALIDLIFETIME; 		ipr->ipr_pltime = DEF_ADVPREFERREDLIFETIME; 		ipr->ipr_raf_onlink = 1; 		ipr->ipr_raf_auto = 1;
 comment|/* omit other field initialization */
-block|} 	else if (ipr->ipr_origin< PR_ORIG_RR) { 		u_char ntopbuf[INET6_ADDRSTRLEN];  		syslog(LOG_WARNING, "<%s> Added prefix(%s)'s origin %d is" 		       "lower than PR_ORIG_RR(router renumbering)." 		       "This should not happen if I am router", __FUNCTION__, 		       inet_ntop(AF_INET6,&ipr->ipr_prefix.sin6_addr, ntopbuf, 				 sizeof(ntopbuf)), ipr->ipr_origin); 		close(s); 		return 1; 	}  	close(s); 	return 0;
+block|} 	else if (ipr->ipr_origin< PR_ORIG_RR) { 		u_char ntopbuf[INET6_ADDRSTRLEN];  		syslog(LOG_WARNING, "<%s> Added prefix(%s)'s origin %d is" 		       "lower than PR_ORIG_RR(router renumbering)." 		       "This should not happen if I am router", __func__, 		       inet_ntop(AF_INET6,&ipr->ipr_prefix.sin6_addr, ntopbuf, 				 sizeof(ntopbuf)), ipr->ipr_origin); 		close(s); 		return 1; 	}  	close(s); 	return 0;
 else|#
 directive|else
 name|ipr
@@ -3849,7 +3639,7 @@ argument_list|,
 literal|"<%s> Prefix added interface No.%d doesn't"
 literal|"exist. This should not happen! %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|ifindex
 argument_list|,
@@ -3958,21 +3748,6 @@ name|nd_opt_mtu
 modifier|*
 name|ndopt_mtu
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-name|struct
-name|nd_opt_advinterval
-modifier|*
-name|ndopt_advint
-decl_stmt|;
-name|struct
-name|nd_opt_homeagent_info
-modifier|*
-name|ndopt_hai
-decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|nd_opt_route_info
 modifier|*
@@ -4025,10 +3800,9 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"<%s> link-layer address option has"
-literal|" null length on %s."
-literal|" Treat as not included."
+literal|" null length on %s.  Treat as not included."
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rainfo
 operator|->
@@ -4079,43 +3853,6 @@ expr|struct
 name|nd_opt_mtu
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-if|if
-condition|(
-name|mobileip6
-operator|&&
-name|rainfo
-operator|->
-name|maxinterval
-condition|)
-name|packlen
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nd_opt_advinterval
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mobileip6
-operator|&&
-name|rainfo
-operator|->
-name|hatime
-condition|)
-name|packlen
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nd_opt_homeagent_info
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|ND_OPT_ROUTE_INFO
@@ -4187,7 +3924,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> can't get enough memory for an RA packet"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4316,23 +4053,6 @@ name|ND_RA_FLAG_OTHER
 else|:
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-name|ra
-operator|->
-name|nd_ra_flags_reserved
-operator||=
-name|rainfo
-operator|->
-name|haflg
-condition|?
-name|ND_RA_FLAG_HA
-else|:
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|ra
 operator|->
 name|nd_ra_router_lifetime
@@ -4454,139 +4174,6 @@ name|nd_opt_mtu
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MIP6
-if|if
-condition|(
-name|mobileip6
-operator|&&
-name|rainfo
-operator|->
-name|maxinterval
-condition|)
-block|{
-name|ndopt_advint
-operator|=
-operator|(
-expr|struct
-name|nd_opt_advinterval
-operator|*
-operator|)
-name|buf
-expr_stmt|;
-name|ndopt_advint
-operator|->
-name|nd_opt_adv_type
-operator|=
-name|ND_OPT_ADVINTERVAL
-expr_stmt|;
-name|ndopt_advint
-operator|->
-name|nd_opt_adv_len
-operator|=
-literal|1
-expr_stmt|;
-name|ndopt_advint
-operator|->
-name|nd_opt_adv_reserved
-operator|=
-literal|0
-expr_stmt|;
-name|ndopt_advint
-operator|->
-name|nd_opt_adv_interval
-operator|=
-name|htonl
-argument_list|(
-name|rainfo
-operator|->
-name|maxinterval
-operator|*
-literal|1000
-argument_list|)
-expr_stmt|;
-name|buf
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nd_opt_advinterval
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MIP6
-if|if
-condition|(
-name|rainfo
-operator|->
-name|hatime
-condition|)
-block|{
-name|ndopt_hai
-operator|=
-operator|(
-expr|struct
-name|nd_opt_homeagent_info
-operator|*
-operator|)
-name|buf
-expr_stmt|;
-name|ndopt_hai
-operator|->
-name|nd_opt_hai_type
-operator|=
-name|ND_OPT_HOMEAGENT_INFO
-expr_stmt|;
-name|ndopt_hai
-operator|->
-name|nd_opt_hai_len
-operator|=
-literal|1
-expr_stmt|;
-name|ndopt_hai
-operator|->
-name|nd_opt_hai_reserved
-operator|=
-literal|0
-expr_stmt|;
-name|ndopt_hai
-operator|->
-name|nd_opt_hai_preference
-operator|=
-name|htons
-argument_list|(
-name|rainfo
-operator|->
-name|hapref
-argument_list|)
-expr_stmt|;
-name|ndopt_hai
-operator|->
-name|nd_opt_hai_lifetime
-operator|=
-name|htons
-argument_list|(
-name|rainfo
-operator|->
-name|hatime
-argument_list|)
-expr_stmt|;
-name|buf
-operator|+=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|nd_opt_homeagent_info
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 for|for
 control|(
 name|pfx
@@ -4679,23 +4266,6 @@ name|nd_opt_pi_flags_reserved
 operator||=
 name|ND_OPT_PI_FLAG_AUTO
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-if|if
-condition|(
-name|pfx
-operator|->
-name|routeraddr
-condition|)
-name|ndopt_pi
-operator|->
-name|nd_opt_pi_flags_reserved
-operator||=
-name|ND_OPT_PI_FLAG_ROUTER
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|pfx
@@ -5077,7 +4647,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s>: failed to get ip6 sysctl(%d): %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|code
 argument_list|,

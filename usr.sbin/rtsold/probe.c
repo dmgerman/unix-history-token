@@ -179,10 +179,8 @@ operator|(
 expr|struct
 name|in6_addr
 operator|*
-name|addr
 operator|,
 name|int
-name|ifindex
 operator|)
 argument_list|)
 decl_stmt|;
@@ -246,7 +244,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"malloc failed"
 argument_list|)
@@ -280,7 +278,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"socket: %s"
 argument_list|,
@@ -312,7 +310,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"shutdown: %s"
 argument_list|,
@@ -376,7 +374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe if each router in the default router list is still alive.   */
+comment|/*  * Probe if each router in the default router list is still alive.  */
 end_comment
 
 begin_function
@@ -424,7 +422,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"socket: %s"
 argument_list|,
@@ -479,7 +477,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"ioctl(SIOCGDRLST_IN6): %s"
 argument_list|,
@@ -554,10 +552,10 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"default router list contains a "
-literal|"non-linklocal address(%s)"
+literal|"non-link-local address(%s)"
 argument_list|,
 name|inet_ntop
 argument_list|(
@@ -613,7 +611,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -656,7 +653,11 @@ index|[
 name|IFNAMSIZ
 index|]
 decl_stmt|;
-empty_stmt|;
+name|int
+name|hoplimit
+init|=
+literal|1
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -793,12 +794,6 @@ operator|=
 name|ifindex
 expr_stmt|;
 comment|/* specify the hop limit of the packet for safety */
-block|{
-name|int
-name|hoplimit
-init|=
-literal|1
-decl_stmt|;
 name|cm
 operator|=
 name|CMSG_NXTHDR
@@ -849,12 +844,11 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"probe a router %s on %s"
 argument_list|,
@@ -893,7 +887,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"sendmsg on %s: %s"
 argument_list|,
@@ -910,7 +904,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

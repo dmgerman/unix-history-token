@@ -344,7 +344,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|sprintf
 argument_list|(
 name|ebuf
@@ -352,7 +351,6 @@ argument_list|,
 literal|"NONE"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|ebuf
@@ -670,17 +668,6 @@ literal|"O"
 else|:
 literal|""
 argument_list|,
-ifdef|#
-directive|ifdef
-name|MIP6
-name|rai
-operator|->
-name|haflg
-condition|?
-literal|"H"
-else|:
-endif|#
-directive|endif
 literal|""
 argument_list|)
 expr_stmt|;
@@ -735,26 +722,6 @@ operator|->
 name|hoplimit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MIP6
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"  HAPreference: %d, HALifetime: %d\n"
-argument_list|,
-name|rai
-operator|->
-name|hapref
-argument_list|,
-name|rai
-operator|->
-name|hatime
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|rai
@@ -1056,17 +1023,6 @@ literal|"A"
 else|:
 literal|""
 argument_list|,
-ifdef|#
-directive|ifdef
-name|MIP6
-name|pfx
-operator|->
-name|routeraddr
-condition|?
-literal|"R"
-else|:
-endif|#
-directive|endif
 literal|""
 argument_list|)
 expr_stmt|;
@@ -1158,7 +1114,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"<%s> open a dump file(%s)"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|dumpfile
 argument_list|)

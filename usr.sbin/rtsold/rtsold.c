@@ -137,6 +137,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|log_upto
+init|=
+literal|999
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|aflag
 init|=
@@ -153,20 +171,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|log_upto
-init|=
-literal|999
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fflag
-init|=
-literal|0
+name|char
+modifier|*
+name|otherconf_script
 decl_stmt|;
 end_decl_stmt
 
@@ -208,7 +215,7 @@ comment|/* times */
 end_comment
 
 begin_comment
-comment|/* implementation dependent constants */
+comment|/*  * implementation dependent constants in secondes  * XXX: should be configurable  */
 end_comment
 
 begin_define
@@ -217,10 +224,6 @@ directive|define
 name|PROBE_INTERVAL
 value|60
 end_define
-
-begin_comment
-comment|/* secondes XXX: should be configurable */
-end_comment
 
 begin_comment
 comment|/* utility macros */
@@ -255,7 +258,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((a).tv_sec< (b).tv_sec) ||\ 			   (((a).tv_sec == (b).tv_sec)&&\  			    ((a).tv_usec<= (b).tv_usec)))
+value|(((a).tv_sec< (b).tv_sec) ||\ 			   (((a).tv_sec == (b).tv_sec)&&\ 			    ((a).tv_usec<= (b).tv_usec)))
 end_define
 
 begin_comment
@@ -281,12 +284,10 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|argc
 operator|,
 name|char
 operator|*
-name|argv
-index|[]
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -349,7 +350,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|ifname
 operator|)
 argument_list|)
 decl_stmt|;
@@ -362,7 +362,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int ifreconfig __P((char *ifname));
+unit|static int ifreconfig __P((char *));
 endif|#
 directive|endif
 end_endif
@@ -377,7 +377,6 @@ operator|(
 expr|struct
 name|ifinfo
 operator|*
-name|ifinfo
 operator|)
 argument_list|)
 decl_stmt|;
@@ -408,17 +407,14 @@ operator|(
 expr|struct
 name|timeval
 operator|*
-name|a
 operator|,
 expr|struct
 name|timeval
 operator|*
-name|b
 operator|,
 expr|struct
 name|timeval
 operator|*
-name|result
 operator|)
 argument_list|)
 decl_stmt|;
@@ -434,17 +430,14 @@ operator|(
 expr|struct
 name|timeval
 operator|*
-name|a
 operator|,
 expr|struct
 name|timeval
 operator|*
-name|b
 operator|,
 expr|struct
 name|timeval
 operator|*
-name|result
 operator|)
 argument_list|)
 decl_stmt|;
@@ -472,7 +465,6 @@ argument_list|(
 operator|(
 name|char
 operator|*
-name|progname
 operator|)
 argument_list|)
 decl_stmt|;
@@ -506,8 +498,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 name|int
@@ -536,8 +528,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|argv0
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|opts
 decl_stmt|;
@@ -577,13 +568,13 @@ literal|1
 expr_stmt|;
 name|opts
 operator|=
-literal|"adD"
+literal|"adDO:"
 expr_stmt|;
 block|}
 else|else
 name|opts
 operator|=
-literal|"adDfm1"
+literal|"adDfm1O:"
 expr_stmt|;
 while|while
 condition|(
@@ -655,6 +646,14 @@ case|:
 name|once
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|otherconf_script
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 default|default:
@@ -819,10 +818,30 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|otherconf_script
+operator|&&
+operator|*
+name|otherconf_script
+operator|!=
+literal|'/'
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"configuration script (%s) must be an absolute path"
+argument_list|,
+name|otherconf_script
+argument_list|)
+expr_stmt|;
+block|}
 ifndef|#
 directive|ifndef
 name|HAVE_ARC4RANDOM
-comment|/* random value initilization */
+comment|/* random value initialization */
 name|srandom
 argument_list|(
 operator|(
@@ -1058,9 +1077,9 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
-literal|"failed to open a log file(%s): %s"
+literal|"failed to open a pid log file(%s): %s"
 argument_list|,
 name|pidfilename
 argument_list|,
@@ -1244,7 +1263,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"select: %s"
 argument_list|,
@@ -1337,7 +1356,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"failed to get link layer information for %s"
 argument_list|,
@@ -1365,7 +1384,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"interface %s was already configured"
 argument_list|,
@@ -1406,7 +1425,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"memory allocation failed"
 argument_list|)
@@ -1603,7 +1622,7 @@ comment|/* reclaim it after ifconfig() in case ifname is pointer inside ifi */
 end_comment
 
 begin_endif
-unit|if (ifi->rs_data) 		free(ifi->rs_data); 	free(ifi->sdl); 	free(ifi);  	return rv; }
+unit|if (ifi->rs_data) 		free(ifi->rs_data); 	free(ifi->sdl); 	free(ifi); 	return rv; }
 endif|#
 directive|endif
 end_endif
@@ -1671,15 +1690,6 @@ modifier|*
 name|ifinfo
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|buf
-decl_stmt|;
-name|struct
-name|nd_router_solicit
-modifier|*
-name|rs
-decl_stmt|;
 name|size_t
 name|packlen
 init|=
@@ -1692,6 +1702,15 @@ decl_stmt|,
 name|lladdroptlen
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|nd_router_solicit
+modifier|*
+name|rs
+decl_stmt|;
+name|char
+modifier|*
+name|buf
 decl_stmt|;
 if|if
 condition|(
@@ -1713,7 +1732,7 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"link-layer address option has null length"
 literal|" on %s. Treat as not included."
@@ -1753,7 +1772,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"memory allocation failed for %s"
 argument_list|,
@@ -1920,7 +1939,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"timer expiration on %s, "
 literal|"state = %d"
@@ -2028,7 +2047,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"%s status is changed"
 literal|" from %d to %d"
@@ -2097,6 +2116,17 @@ operator|=
 name|IFS_PROBE
 expr_stmt|;
 block|}
+comment|/* 				 * If we need a probe, clear the previous 				 * status wrt the "other" configuration. 				 */
+if|if
+condition|(
+name|probe
+condition|)
+name|ifinfo
+operator|->
+name|otherconfig
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|probe
@@ -2151,10 +2181,9 @@ name|warnmsg
 argument_list|(
 name|LOG_INFO
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
-literal|"No answer "
-literal|"after sending %d RSs"
+literal|"No answer after sending %d RSs"
 argument_list|,
 name|ifinfo
 operator|->
@@ -2214,7 +2243,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"there is no timer"
 argument_list|)
@@ -2269,7 +2298,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"New timer is %ld:%08ld"
 argument_list|,
@@ -2503,7 +2532,7 @@ name|warnmsg
 argument_list|(
 name|LOG_ERR
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"illegal interface state(%d) on %s"
 argument_list|,
@@ -2541,7 +2570,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"stop timer for %s"
 argument_list|,
@@ -2587,7 +2616,7 @@ name|warnmsg
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 literal|"set timer for %s to %d:%d"
 argument_list|,
@@ -3046,18 +3075,6 @@ modifier|*
 name|autoifprobe
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|HAVE_GETIFADDRS
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-a is not available with the configuration"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 specifier|static
 name|char
 name|ifname
@@ -3315,8 +3332,6 @@ operator|*
 operator|)
 name|NULL
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

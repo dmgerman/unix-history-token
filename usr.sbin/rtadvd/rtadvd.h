@@ -99,24 +99,6 @@ begin_comment
 comment|/*XXX int-to-double comparison for INTERVAL items */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIP6
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|mobileip6
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -128,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|MIN_MAXINTERVAL
-value|(mobileip6 ? 1.5 : 4.0)
+value|4.0
 end_define
 
 begin_define
@@ -142,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|MIN_MININTERVAL
-value|(mobileip6 ? 0.5 : 3)
+value|3
 end_define
 
 begin_define
@@ -151,23 +133,6 @@ directive|define
 name|MAXREACHABLETIME
 value|3600000
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIP6
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|miobileip6
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -281,22 +246,13 @@ name|u_int
 name|autoconfflg
 decl_stmt|;
 comment|/* bool: AdvAutonomousFlag */
-ifdef|#
-directive|ifdef
-name|MIP6
-name|u_int
-name|routeraddr
-decl_stmt|;
-comment|/* bool: RouterAddress */
-endif|#
-directive|endif
 name|int
 name|prefixlen
 decl_stmt|;
 name|int
 name|origin
 decl_stmt|;
-comment|/* from kernel or cofig */
+comment|/* from kernel or config */
 name|struct
 name|in6_addr
 name|prefix
@@ -328,7 +284,7 @@ comment|/* route lifetime */
 name|u_int
 name|rtpref
 decl_stmt|;
-comment|/* router preference */
+comment|/* route preference */
 name|int
 name|prefixlen
 decl_stmt|;
@@ -430,15 +386,6 @@ name|int
 name|otherflg
 decl_stmt|;
 comment|/* AdvOtherConfigFlag */
-ifdef|#
-directive|ifdef
-name|MIP6
-name|int
-name|haflg
-decl_stmt|;
-comment|/* HAFlag */
-endif|#
-directive|endif
 name|int
 name|rtpref
 decl_stmt|;
@@ -472,19 +419,6 @@ name|long
 name|clockskew
 decl_stmt|;
 comment|/* used for consisitency check of lifetimes */
-ifdef|#
-directive|ifdef
-name|MIP6
-name|u_short
-name|hapref
-decl_stmt|;
-comment|/* Home Agent Preference */
-name|u_short
-name|hatime
-decl_stmt|;
-comment|/* Home Agent Lifetime */
-endif|#
-directive|endif
 name|struct
 name|rtinfo
 name|route
@@ -627,24 +561,6 @@ name|in6_addr
 name|in6a_site_allrouters
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MIP6
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|mobileip6
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
