@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.14 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|metric
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|setaddr
 decl_stmt|;
 end_decl_stmt
@@ -242,6 +248,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|setifmetric
+argument_list|()
+decl_stmt|,
 name|setifbroadaddr
 argument_list|()
 decl_stmt|,
@@ -332,28 +341,6 @@ block|,
 name|setifflags
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|IFF_LOCAL
-block|{
-literal|"local"
-block|,
-name|IFF_LOCAL
-block|,
-name|setifflags
-block|}
-block|,
-block|{
-literal|"-local"
-block|,
-operator|-
-name|IFF_LOCAL
-block|,
-name|setifflags
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|"debug"
 block|,
@@ -403,6 +390,14 @@ block|,
 name|NEXTARG
 block|,
 name|setifnetmask
+block|}
+block|,
+block|{
+literal|"metric"
+block|,
+name|NEXTARG
+block|,
+name|setifmetric
 block|}
 block|,
 block|{
@@ -575,15 +570,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ifconfig interface [ af %s %s %s %s\n"
+literal|"usage: ifconfig interface\n%s%s%s%s"
 argument_list|,
-literal|"[ address [ dest_addr ] ] [ up ] [ down ]"
+literal|"\t[ af [ address [ dest_addr ] ] [ up ] [ down ]"
 argument_list|,
-literal|"[ netmask mask ] ]"
+literal|"[ netmask mask ] ]\n"
 argument_list|,
-literal|"[ trailers | -trailers ]"
+literal|"\t[ metric n ]\n"
 argument_list|,
-literal|"[ arp | -arp ] ]"
+literal|"\t[ trailers | -trailers ]\n"
+argument_list|,
+literal|"\t[ arp | -arp ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -777,6 +774,35 @@ operator|=
 name|ifr
 operator|.
 name|ifr_flags
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGIFMETRIC
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifr
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl (SIOCGIFMETRIC)"
+argument_list|)
+expr_stmt|;
+else|else
+name|metric
+operator|=
+name|ifr
+operator|.
+name|ifr_metric
 expr_stmt|;
 if|if
 condition|(
@@ -1537,6 +1563,80 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|setifmetric
+argument_list|(
+argument|val
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|val
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|strncpy
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|,
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr
+operator|.
+name|ifr_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ifr
+operator|.
+name|ifr_metric
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCSIFMETRIC
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifr
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl (set metric)"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_define
+define|#
+directive|define
+name|IFFBITS
+define|\
+value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP\ "
+end_define
+
 begin_comment
 comment|/*  * Print the status of the interface.  If an address family was  * specified, show it and it only; otherwise, show them all.  */
 end_comment
@@ -1565,6 +1665,38 @@ name|ifr_addr
 operator|.
 name|sa_family
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|printb
+argument_list|(
+literal|"flags"
+argument_list|,
+name|flags
+argument_list|,
+name|IFFBITS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|metric
+condition|)
+name|printf
+argument_list|(
+literal|" metric %d"
+argument_list|,
+name|metric
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1621,14 +1753,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_define
-define|#
-directive|define
-name|IFFBITS
-define|\
-value|"\020\1UP\2BROADCAST\3DEBUG\4ROUTE\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP\ \11LOCAL"
-end_define
 
 begin_macro
 name|in_status
@@ -1727,7 +1851,7 @@ name|ifr_addr
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: %s "
+literal|"\tinet %s "
 argument_list|,
 name|name
 argument_list|,
@@ -1851,20 +1975,6 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printb
-argument_list|(
-literal|"flags"
-argument_list|,
-name|flags
-argument_list|,
-name|IFFBITS
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1933,7 +2043,7 @@ name|ifr_addr
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"broadcast: %s\n"
+literal|"broadcast %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1944,6 +2054,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2063,9 +2178,7 @@ name|ifr_addr
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: ns:%s "
-argument_list|,
-name|name
+literal|"\tns %s "
 argument_list|,
 name|ns_ntoa
 argument_list|(
@@ -2174,15 +2287,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printb
-argument_list|(
-literal|"flags"
-argument_list|,
-name|flags
-argument_list|,
-name|IFFBITS
-argument_list|)
-expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
