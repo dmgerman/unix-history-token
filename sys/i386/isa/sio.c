@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.52 1994/09/13 03:30:31 phk Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.53 1994/09/21 19:39:25 davidg Exp $  */
 end_comment
 
 begin_include
@@ -113,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -630,6 +636,14 @@ comment|/* is this unit part of a multiport device? */
 endif|#
 directive|endif
 comment|/* COM_MULTIPORT */
+name|bool_t
+name|no_irq
+decl_stmt|;
+comment|/* nonzero if irq is not attached */
+name|bool_t
+name|poll
+decl_stmt|;
+comment|/* nonzero if polling is required */
 name|int
 name|dtr_wait
 decl_stmt|;
@@ -729,9 +743,6 @@ name|struct
 name|termios
 name|lt_out
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TIOCTIMESTAMP
 name|bool_t
 name|do_timestamp
 decl_stmt|;
@@ -739,8 +750,6 @@ name|struct
 name|timeval
 name|timestamp
 decl_stmt|;
-endif|#
-directive|endif
 name|u_long
 name|bytes_in
 decl_stmt|;
@@ -1307,12 +1316,6 @@ parameter_list|)
 value|(p_com_addr[unit])
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIOCTIMESTAMP
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1320,11 +1323,6 @@ name|timeval
 name|intr_timestamp
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -1737,7 +1735,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 	 * If the port is on a multiport card and has a master port, 	 * initialize the common interrupt control register in the 	 * master and prepare to leave MCR_IENABLE clear in the mcr. 	 * Otherwise, prepare to set MCR_IENABLE in the mcr. 	 * Point idev to the device struct giving the correct id_irq. 	 * This is the struct for the master device if there is one. 	 */
+comment|/* 	 * If the device is on a multiport card and has an AST/4 	 * compatible interrupt control register, initialize this 	 * register and prepare to leave MCR_IENABLE clear in the mcr. 	 * Otherwise, prepare to set MCR_IENABLE in the mcr. 	 * Point idev to the device struct giving the correct id_irq. 	 * This is the struct for the master device if there is one. 	 */
 name|idev
 operator|=
 name|dev
@@ -1781,36 +1779,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sio%d: master device %d not found\n"
-argument_list|,
-name|dev
-operator|->
-name|id_unit
-argument_list|,
-name|COM_MPMASTER
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|idev
-operator|->
-name|id_irq
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sio%d: master device %d irq not configured\n"
+literal|"sio%d: master device %d not configured\n"
 argument_list|,
 name|dev
 operator|->
@@ -1845,7 +1814,13 @@ name|id_iobase
 operator|+
 name|com_scr
 argument_list|,
+name|idev
+operator|->
+name|id_irq
+condition|?
 literal|0x80
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|mcr_image
@@ -1854,7 +1829,6 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-elseif|else
 endif|#
 directive|endif
 comment|/* COM_MULTIPORT */
@@ -1866,22 +1840,10 @@ name|id_irq
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sio%d: irq not configured\n"
-argument_list|,
-name|dev
-operator|->
-name|id_unit
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
+name|mcr_image
+operator|=
 literal|0
-operator|)
-return|;
-block|}
+expr_stmt|;
 name|bzero
 argument_list|(
 name|failures
@@ -2027,9 +1989,9 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 operator|(
-literal|2
-operator|+
 literal|1
+operator|+
+literal|2
 operator|)
 operator|*
 literal|9600
@@ -2130,6 +2092,14 @@ operator|)
 operator|-
 name|IIR_TXRDY
 expr_stmt|;
+if|if
+condition|(
+name|idev
+operator|->
+name|id_irq
+operator|!=
+literal|0
+condition|)
 name|failures
 index|[
 literal|5
@@ -2194,6 +2164,14 @@ operator|+
 name|com_ier
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|idev
+operator|->
+name|id_irq
+operator|!=
+literal|0
+condition|)
 name|failures
 index|[
 literal|8
@@ -2380,7 +2358,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * sioprobe() has initialized the device registers as follows: 	 *	o cfcr = CFCR_8BITS. 	 *	  It is most important that CFCR_DLAB is off, so that the 	 *	  data port is not hidden when we enable interrupts. 	 *	o ier = 0. 	 *	  Interrupts are only enabled when the line is open. 	 *	o mcr = MCR_IENABLE, or 0 if the port has a master port. 	 *	  Keeping MCR_DTR and MCR_RTS off might stop the external 	 *	  device from sending before we are ready. 	 */
+comment|/* 	 * sioprobe() has initialized the device registers as follows: 	 *	o cfcr = CFCR_8BITS. 	 *	  It is most important that CFCR_DLAB is off, so that the 	 *	  data port is not hidden when we enable interrupts. 	 *	o ier = 0. 	 *	  Interrupts are only enabled when the line is open. 	 *	o mcr = MCR_IENABLE, or 0 if the port has AST/4 compatible 	 *	  interrupt control register or the config specifies no irq. 	 *	  Keeping MCR_DTR and MCR_RTS off might stop the external 	 *	  device from sending before we are ready. 	 */
 name|bzero
 argument_list|(
 name|com
@@ -2403,6 +2381,16 @@ operator|=
 literal|3
 operator|*
 name|hz
+expr_stmt|;
+name|com
+operator|->
+name|no_irq
+operator|=
+name|isdp
+operator|->
+name|id_irq
+operator|==
+literal|0
 expr_stmt|;
 name|com
 operator|->
@@ -2910,6 +2898,27 @@ name|printf
 argument_list|(
 literal|")"
 argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|no_irq
+operator|=
+name|find_isadev
+argument_list|(
+name|isa_devtab_tty
+argument_list|,
+operator|&
+name|siodriver
+argument_list|,
+name|COM_MPMASTER
+argument_list|(
+name|isdp
+argument_list|)
+argument_list|)
+operator|->
+name|id_irq
+operator|==
+literal|0
 expr_stmt|;
 block|}
 endif|#
@@ -3440,6 +3449,14 @@ name|com
 operator|->
 name|ftl_init
 expr_stmt|;
+name|com
+operator|->
+name|poll
+operator|=
+name|com
+operator|->
+name|no_irq
+expr_stmt|;
 operator|++
 name|com
 operator|->
@@ -3490,18 +3507,23 @@ operator|->
 name|hasfifo
 condition|)
 block|{
-comment|/* Drain fifo. */
+comment|/* 			 * (Re)enable and drain fifos. 			 * 			 * Certain SMC chips cause problems if the fifos 			 * are enabled while input is ready.  Turn off the 			 * fifo if necessary to clear the input.  We test 			 * the input ready bit after enabling the fifos 			 * since we've already enabled them in comparam() 			 * and to handle races between enabling and fresh 			 * input. 			 */
+while|while
+condition|(
+name|TRUE
+condition|)
+block|{
 name|outb
 argument_list|(
 name|iobase
 operator|+
 name|com_fifo
 argument_list|,
-name|FIFO_ENABLE
-operator||
 name|FIFO_RCV_RST
 operator||
 name|FIFO_XMT_RST
+operator||
+name|FIFO_ENABLE
 operator||
 name|com
 operator|->
@@ -3513,6 +3535,46 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+name|com
+operator|->
+name|line_status_port
+argument_list|)
+operator|&
+name|LSR_RXRDY
+operator|)
+condition|)
+break|break;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_fifo
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|inb
+argument_list|(
+name|com
+operator|->
+name|data_port
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|disable_intr
 argument_list|()
@@ -3936,17 +3998,18 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TIOCTIMESTAMP
+name|com
+operator|->
+name|poll
+operator|=
+name|FALSE
+expr_stmt|;
 name|com
 operator|->
 name|do_timestamp
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|outb
 argument_list|(
 name|iobase
@@ -4341,12 +4404,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIOCTIMESTAMP
-end_ifdef
-
 begin_comment
 comment|/* Interrupt routine for timekeeping purposes */
 end_comment
@@ -4374,11 +4431,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -4509,9 +4561,6 @@ decl_stmt|;
 name|u_char
 name|recv_data
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TIOCTIMESTAMP
 if|if
 condition|(
 name|com
@@ -4525,8 +4574,6 @@ name|timestamp
 operator|=
 name|intr_timestamp
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|TRUE
@@ -6046,9 +6093,6 @@ operator|->
 name|dtr_wait
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|TIOCTIMESTAMP
 case|case
 name|TIOCTIMESTAMP
 case|:
@@ -6071,8 +6115,6 @@ operator|->
 name|timestamp
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|splx
 argument_list|(
@@ -6234,7 +6276,76 @@ name|tp
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* 			 * XXX forget any events related to closed devices 			 * (actually never opened devices) so that we don't 			 * loop. 			 */
+name|disable_intr
+argument_list|()
+expr_stmt|;
+name|incc
+operator|=
+name|com
+operator|->
+name|iptr
+operator|-
+name|com
+operator|->
+name|ibuf
+expr_stmt|;
+name|com
+operator|->
+name|iptr
+operator|=
+name|com
+operator|->
+name|ibuf
+expr_stmt|;
+if|if
+condition|(
+name|com
+operator|->
+name|state
+operator|&
+name|CS_CHECKMSR
+condition|)
+block|{
+name|incc
+operator|+=
+name|LOTS_OF_EVENTS
+expr_stmt|;
+name|com
+operator|->
+name|state
+operator|&=
+operator|~
+name|CS_CHECKMSR
+expr_stmt|;
+block|}
+name|com_events
+operator|-=
+name|incc
+expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|incc
+operator|!=
+literal|0
+condition|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"sio%d: %d events for device with no tp\n"
+argument_list|,
+name|unit
+argument_list|,
+name|incc
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* switch the role of the low-level input buffers */
 if|if
 condition|(
@@ -6572,7 +6683,7 @@ name|delta
 expr_stmt|;
 name|log
 argument_list|(
-name|LOG_WARNING
+name|LOG_ERR
 argument_list|,
 literal|"sio%d: %u more %s%s (total %lu)\n"
 argument_list|,
@@ -6604,7 +6715,7 @@ define|#
 directive|define
 name|FIFO_TRIGGER_DELTA
 value|FIFO_TRIGGER_4
-block|com->ftl_max = 					com->ftl -= FIFO_TRIGGER_DELTA; 					outb(com->iobase + com_fifo, 					     FIFO_ENABLE | com->ftl); 					log(LOG_WARNING, 				"sio%d: reduced fifo trigger level to %d\n", 					    unit, 					    ftl_in_bytes[com->ftl 							 / FIFO_TRIGGER_DELTA]); 				}
+block|com->ftl_max = 					com->ftl -= FIFO_TRIGGER_DELTA; 					outb(com->iobase + com_fifo, 					     FIFO_ENABLE | com->ftl); 					log(LOG_DEBUG, 				"sio%d: reduced fifo trigger level to %d\n", 					    unit, 					    ftl_in_bytes[com->ftl 							 / FIFO_TRIGGER_DELTA]); 				}
 endif|#
 directive|endif
 block|}
@@ -8220,14 +8331,19 @@ argument_list|(
 name|comwakeup
 argument_list|,
 operator|(
-name|void
-operator|*
+name|caddr_t
 operator|)
 name|NULL
 argument_list|,
 name|hz
+operator|>
+literal|200
+condition|?
+name|hz
 operator|/
-literal|100
+literal|200
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -8255,6 +8371,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* recover from lost output interrupts */
+comment|/* poll any lines that don't use interrupts */
 for|for
 control|(
 name|unit
@@ -8287,6 +8404,7 @@ name|com
 operator|!=
 name|NULL
 operator|&&
+operator|(
 name|com
 operator|->
 name|state
@@ -8295,6 +8413,11 @@ operator|(
 name|CS_BUSY
 operator||
 name|CS_TTGO
+operator|)
+operator|||
+name|com
+operator|->
+name|poll
 operator|)
 condition|)
 block|{
@@ -8589,12 +8712,21 @@ operator|+
 name|com_mcr
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We don't want interrupts, but must be careful not to "disable" 	 * them by clearing the MCR_IENABLE bit, since that might cause 	 * an interrupt by floating the IRQ line. 	 */
 name|outb
 argument_list|(
 name|iobase
 operator|+
 name|com_mcr
 argument_list|,
+operator|(
+name|sp
+operator|->
+name|mcr
+operator|&
+name|MCR_IENABLE
+operator|)
+operator||
 name|MCR_DTR
 operator||
 name|MCR_RTS
@@ -8669,7 +8801,7 @@ operator|->
 name|cfcr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX damp oscllations of MCR_DTR and MCR_RTS by not restoring them. 	 */
+comment|/* 	 * XXX damp oscillations of MCR_DTR and MCR_RTS by not restoring them. 	 */
 name|outb
 argument_list|(
 name|iobase
