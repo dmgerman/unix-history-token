@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1995 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This is a modified version of the keyboard reset code used in syscons.  * If the keyboard reset fails, we assume that the keyboard has been  * unplugged and we use a serial port (COM1) as the console instead.  * Returns 1 on failure (no keyboard), 0 on success (keyboard attached).  *  * This grody hack brought to you by Bill Paul (wpaul@ctr.columbia.edu)  *  *	$Id: probe_keyboard.c,v 1.3 1995/03/02 21:00:14 wpaul Exp $  */
+comment|/*-  * Copyright (c) 1992-1995 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This is a modified version of the keyboard reset code used in syscons.  * If the keyboard reset fails, we assume that the keyboard has been  * unplugged and we use a serial port (COM1) as the console instead.  * Returns 1 on failure (no keyboard), 0 on success (keyboard attached).  *  * This grody hack brought to you by Bill Paul (wpaul@ctr.columbia.edu)  *  *	$Id: probe_keyboard.c,v 1.4 1995/04/14 21:26:52 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -69,16 +69,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Try to reset keyboard hardware */
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"kbd reset\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+name|again
+label|:
 while|while
 condition|(
 operator|--
@@ -173,9 +165,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"%d after loop.\n"
-argument_list|,
-name|retries
+literal|"gotres\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -185,13 +175,36 @@ condition|(
 operator|!
 name|retries
 condition|)
+block|{
+if|if
+condition|(
+name|val
+operator|==
+name|KB_RESEND
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"gave up\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-else|else
-block|{
+block|}
 name|gotack
 label|:
 name|delay1ms
@@ -245,6 +258,15 @@ goto|;
 if|if
 condition|(
 name|val
+operator|==
+name|KB_RESEND
+condition|)
+goto|goto
+name|again
+goto|;
+if|if
+condition|(
+name|val
 operator|!=
 name|KB_RESET_DONE
 condition|)
@@ -263,10 +285,9 @@ endif|#
 directive|endif
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
