@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ipcp.c,v 1.9 1997/08/19 17:52:38 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4021,26 +4021,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|demand
-operator|&&
-name|wo
-operator|->
-name|accept_remote
-condition|)
-block|{
-name|option_error
-argument_list|(
-literal|"ipcp-accept-remote is incompatible with demand\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+block|if (demand&& wo->accept_remote) { 	option_error("ipcp-accept-remote is incompatible with demand\n"); 	exit(1);     }
+endif|#
+directive|endif
 block|}
 end_function
 

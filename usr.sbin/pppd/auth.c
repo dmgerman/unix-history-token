@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: auth.c,v 1.17 1997/08/19 17:52:31 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,6 +1415,20 @@ operator|++
 name|num_np_open
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|num_np_open
+operator|==
+literal|0
+condition|)
+comment|/* nothing to do */
+name|lcp_close
+argument_list|(
+literal|0
+argument_list|,
+literal|"No network protocols running"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1719,12 +1733,19 @@ condition|(
 name|num_np_up
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* 	 * At this point we consider that the link has come up successfully. 	 */
+name|need_holdoff
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|idle_time_limit
 operator|>
 literal|0
 condition|)
-block|{
 name|TIMEOUT
 argument_list|(
 name|check_idle
@@ -1898,10 +1919,6 @@ name|LOG_INFO
 argument_list|,
 literal|"Terminating connection due to lack of activity."
 argument_list|)
-expr_stmt|;
-name|need_holdoff
-operator|=
-literal|0
 expr_stmt|;
 name|lcp_close
 argument_list|(
@@ -4031,6 +4048,9 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|struct
 name|wordlist
 modifier|*
@@ -4075,8 +4095,8 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ret
+operator|=
 name|scan_authfile
 argument_list|(
 name|f
@@ -4103,6 +4123,15 @@ name|NULL
 argument_list|,
 name|filename
 argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|<
 literal|0
 condition|)

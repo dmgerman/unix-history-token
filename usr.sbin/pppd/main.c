@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.13 1997/08/19 17:52:43 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2283,6 +2283,10 @@ operator|||
 name|errno
 operator|!=
 name|EINTR
+operator|||
+name|hungup
+operator|||
+name|kill_link
 condition|)
 goto|goto
 name|fail
