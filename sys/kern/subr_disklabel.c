@@ -181,7 +181,7 @@ if|if
 condition|(
 name|BIOTOBUF
 argument_list|(
-name|bn
+name|bp
 argument_list|)
 operator|->
 name|b_vp
