@@ -1121,7 +1121,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|epic_rx_done
 name|__P
@@ -1696,7 +1696,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|epic_tx_done
 name|__P

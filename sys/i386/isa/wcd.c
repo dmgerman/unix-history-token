@@ -3352,7 +3352,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|lba2msf
 parameter_list|(

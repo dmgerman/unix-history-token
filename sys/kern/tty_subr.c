@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: tty_subr.c,v 1.23 1996/09/14 10:53:48 bde Exp $  */
+comment|/*  * Copyright (c) 1994, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: tty_subr.c,v 1.23.2.1 1997/03/07 09:22:57 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -291,24 +291,23 @@ begin_comment
 comment|/*  * Remove a cblock from the cfreelist queue and return a pointer  * to it.  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
-name|struct
+name|__inline
+expr|struct
 name|cblock
-modifier|*
+operator|*
 name|cblock_alloc
-parameter_list|()
-block|{
-name|struct
+argument_list|()
+block|{ 	struct
 name|cblock
-modifier|*
+operator|*
 name|cblockp
-decl_stmt|;
+block|;
 name|cblockp
 operator|=
 name|cfreelist
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|cblockp
@@ -326,31 +325,40 @@ name|cblockp
 operator|->
 name|c_next
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cblockp
 operator|->
 name|c_next
 operator|=
 name|NULL
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|cfreecount
 operator|-=
 name|CBSIZE
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|cblockp
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Add a cblock to the cfreelist queue.  */
 end_comment
 
 begin_function
-specifier|static
-specifier|inline
+unit|static
+name|__inline
 name|void
 name|cblock_free
 parameter_list|(

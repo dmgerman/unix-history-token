@@ -1786,11 +1786,11 @@ value|epic_ac.ac_enaddr
 end_define
 
 begin_comment
-comment|//extern epic_softc_t *epics[];
+comment|/*extern epic_softc_t *epics[];*/
 end_comment
 
 begin_comment
-comment|//extern u_long epic_pci_count;
+comment|/*extern u_long epic_pci_count;*/
 end_comment
 
 begin_decl_stmt
@@ -1960,7 +1960,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|epic_rx_done
 name|__P
@@ -1975,7 +1975,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|epic_tx_done
 name|__P

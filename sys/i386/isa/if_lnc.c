@@ -954,7 +954,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|write_csr
 parameter_list|(
@@ -993,7 +993,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_short
 name|read_csr
 parameter_list|(
@@ -1036,7 +1036,7 @@ end_ifdef
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_long
 name|ether_crc
 parameter_list|(
@@ -1536,7 +1536,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|alloc_mbuf_cluster
 parameter_list|(
@@ -1721,39 +1721,32 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
-name|struct
+name|__inline
+expr|struct
 name|mbuf
-modifier|*
+operator|*
 name|chain_mbufs
-parameter_list|(
-name|struct
-name|lnc_softc
-modifier|*
-name|sc
-parameter_list|,
-name|int
-name|start_of_packet
-parameter_list|,
-name|int
-name|pkt_len
-parameter_list|)
-block|{
-name|struct
+argument_list|(
+argument|struct lnc_softc *sc
+argument_list|,
+argument|int start_of_packet
+argument_list|,
+argument|int pkt_len
+argument_list|)
+block|{ 	struct
 name|mbuf
-modifier|*
+operator|*
 name|head
-decl_stmt|,
-modifier|*
+block|,
+operator|*
 name|m
-decl_stmt|;
-name|struct
+block|; 	struct
 name|host_ring_entry
-modifier|*
+operator|*
 name|desc
-decl_stmt|;
+block|;
 comment|/* 	 * Turn head into a pkthdr mbuf -- 	 * assumes a pkthdr type mbuf was 	 * allocated to the descriptor 	 * originally. 	 */
 name|desc
 operator|=
@@ -1762,7 +1755,7 @@ operator|->
 name|recv_ring
 operator|+
 name|start_of_packet
-expr_stmt|;
+block|;
 name|head
 operator|=
 name|desc
@@ -1770,17 +1763,17 @@ operator|->
 name|buff
 operator|.
 name|mbuf
-expr_stmt|;
+block|;
 name|head
 operator|->
 name|m_flags
 operator||=
 name|M_PKTHDR
-expr_stmt|;
+block|;
 name|m
 operator|=
 name|head
-expr_stmt|;
+block|;
 do|do
 block|{
 name|m
@@ -1860,7 +1853,10 @@ operator|.
 name|mbuf
 expr_stmt|;
 block|}
-do|while
+end_expr_stmt
+
+begin_while
+while|while
 condition|(
 name|start_of_packet
 operator|!=
@@ -1868,24 +1864,29 @@ name|sc
 operator|->
 name|recv_next
 condition|)
-do|;
+empty_stmt|;
+end_while
+
+begin_expr_stmt
 name|m
 operator|->
 name|m_next
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|head
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
-specifier|inline
+unit|}  static
+name|__inline
 name|struct
 name|mbuf
 modifier|*
@@ -2215,7 +2216,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|lnc_rint
 parameter_list|(
@@ -3016,7 +3017,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|lnc_tint
 parameter_list|(
@@ -7281,7 +7282,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|mbuf_to_buffer
 parameter_list|(
@@ -7349,25 +7350,21 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
-name|struct
+name|__inline
+expr|struct
 name|mbuf
-modifier|*
+operator|*
 name|chain_to_cluster
-parameter_list|(
-name|struct
+argument_list|(
+argument|struct mbuf *m
+argument_list|)
+block|{ 	struct
 name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-name|struct
-name|mbuf
-modifier|*
+operator|*
 name|new
-decl_stmt|;
+block|;
 name|MGET
 argument_list|(
 name|new
@@ -7376,7 +7373,7 @@ name|M_DONTWAIT
 argument_list|,
 name|MT_DATA
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|new
@@ -7422,27 +7419,32 @@ name|new
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_else
 else|else
 name|m_free
 argument_list|(
 name|new
 argument_list|)
 expr_stmt|;
-block|}
-return|return
+end_else
+
+begin_expr_stmt
+unit|} 	return
 operator|(
 literal|0
 operator|)
-return|;
-block|}
-end_function
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/*  * IFF_OACTIVE and IFF_RUNNING are checked in ether_output so it's redundant  * to check them again since we wouldn't have got here if they were not  * appropriately set. This is also called from lnc_init and lncintr but the  * flags should be ok at those points too.  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|void
 name|lnc_start
 parameter_list|(

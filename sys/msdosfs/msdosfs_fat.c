@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.9 1995/11/07 14:06:42 phk Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.10 1995/12/03 16:41:57 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1356,7 +1356,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|usemap_alloc
 parameter_list|(
@@ -1400,7 +1400,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|usemap_free
 parameter_list|(
