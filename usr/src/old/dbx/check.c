@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)check.c 1.3 %G%"
+literal|"@(#)check.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,20 +528,6 @@ name|enderrmsg
 argument_list|()
 expr_stmt|;
 block|}
-name|chkblock
-argument_list|(
-name|place
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|cond
-operator|!=
-name|nil
-condition|)
-block|{
 name|chkblock
 argument_list|(
 name|place
