@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.116 1997/12/06 14:27:56 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.118 1997/12/28 09:10:37 julian Exp $  */
 end_comment
 
 begin_include
@@ -306,22 +306,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|u_int32_t
+name|int
 name|sd_size
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|unit
-operator|,
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|sizep
+parameter_list|,
+name|u_int16_t
+modifier|*
+name|secsizep
+parameter_list|,
 name|int
 name|flags
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -931,7 +936,9 @@ operator||
 name|SCSI_NOMASK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
+comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. This may fail with removable media. 	 */
+if|if
+condition|(
 name|sd_get_parms
 argument_list|(
 name|unit
@@ -940,22 +947,11 @@ name|SCSI_NOSLEEP
 operator||
 name|SCSI_NOMASK
 argument_list|)
-expr_stmt|;
-comment|/* 	 * if we don't have actual parameters, assume 512 bytes/sec 	 * (could happen on removable media - MOD) 	 * -- this avoids the division below from falling over 	 */
-if|if
-condition|(
-name|dp
-operator|->
-name|secsiz
 operator|==
 literal|0
 condition|)
-name|dp
-operator|->
-name|secsiz
-operator|=
-name|SECSIZE
-expr_stmt|;
+block|{
+comment|/* 		 * if we don't have actual parameters, assume 512 bytes/sec 		 * (could happen on removable media - MOD) 		 * -- this avoids the division below from falling over 	 	 */
 name|printf
 argument_list|(
 literal|"%ldMB (%ld %d byte sectors)"
@@ -1021,6 +1017,15 @@ argument_list|,
 name|dp
 operator|->
 name|sectors
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Media parameters not available"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1391,52 +1396,6 @@ comment|/* sets SDEV_MEDIA_LOADED */
 goto|goto
 name|bad
 goto|;
-switch|switch
-condition|(
-name|sd
-operator|->
-name|params
-operator|.
-name|secsiz
-condition|)
-block|{
-case|case
-literal|512
-case|:
-case|case
-literal|1024
-case|:
-case|case
-literal|2048
-case|:
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"sd%ld: Can't deal with %d bytes logical blocks\n"
-argument_list|,
-name|unit
-argument_list|,
-name|sd
-operator|->
-name|params
-operator|.
-name|secsiz
-argument_list|)
-expr_stmt|;
-name|Debugger
-argument_list|(
-literal|"sd"
-argument_list|)
-expr_stmt|;
-name|errcode
-operator|=
-name|ENXIO
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 name|SC_DEBUG
 argument_list|(
 name|sc_link
@@ -2782,23 +2741,28 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find out from the device what it's capacity is  */
+comment|/*  * Find out from the device what it's capacity is. It turns  * out this is also the best way to find out the sector size.  */
 end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|int
 name|sd_size
 parameter_list|(
-name|unit
-parameter_list|,
-name|flags
-parameter_list|)
 name|int
 name|unit
-decl_stmt|,
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|sizep
+parameter_list|,
+name|u_int16_t
+modifier|*
+name|secsizep
+parameter_list|,
+name|int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|scsi_read_cap_data
@@ -2810,6 +2774,9 @@ name|scsi_cmd
 decl_stmt|;
 name|u_int32_t
 name|size
+decl_stmt|;
+name|u_int32_t
+name|secsize
 decl_stmt|;
 name|struct
 name|scsi_link
@@ -2897,12 +2864,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENXIO
 operator|)
 return|;
 block|}
-else|else
-block|{
 name|size
 operator|=
 name|rdcap
@@ -2935,10 +2900,49 @@ name|addr_3
 operator|<<
 literal|24
 expr_stmt|;
-block|}
+name|secsize
+operator|=
+name|rdcap
+operator|.
+name|length_0
+expr_stmt|;
+name|secsize
+operator|+=
+name|rdcap
+operator|.
+name|length_1
+operator|<<
+literal|8
+expr_stmt|;
+name|secsize
+operator|+=
+name|rdcap
+operator|.
+name|length_2
+operator|<<
+literal|16
+expr_stmt|;
+name|secsize
+operator|+=
+name|rdcap
+operator|.
+name|length_3
+operator|<<
+literal|24
+expr_stmt|;
+operator|*
+name|secsizep
+operator|=
+name|secsize
+expr_stmt|;
+operator|*
+name|sizep
+operator|=
+name|size
+expr_stmt|;
 return|return
 operator|(
-name|size
+literal|0
 operator|)
 return|;
 block|}
@@ -2971,7 +2975,7 @@ value|(((unsigned)(a##_1)<< 8) + (unsigned)a##_0 )
 end_define
 
 begin_comment
-comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the disk  * parameter structure.  */
+comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the disk  * parameter structure.  * Even if we get an error, complete with some dummy information.  * XXX this is backwards. The read_cap (sd_size()) should be done first.  */
 end_comment
 
 begin_function
@@ -2979,15 +2983,12 @@ specifier|static
 name|errval
 name|sd_get_parms
 parameter_list|(
-name|unit
-parameter_list|,
-name|flags
-parameter_list|)
 name|int
 name|unit
-decl_stmt|,
+parameter_list|,
+name|int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|scsi_link
@@ -3045,6 +3046,11 @@ name|scsi_sense
 struct|;
 name|u_int32_t
 name|sectors
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * First check if we have it all loaded 	 */
 if|if
@@ -3163,15 +3169,41 @@ literal|" Using ficticious geometry\n"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * use adaptec standard ficticious geometry 		 * this depends on which controller (e.g. 1542C is 		 * different. but we have to put SOMETHING here..) 		 */
-name|sectors
+if|if
+condition|(
+name|error
 operator|=
 name|sd_size
 argument_list|(
 name|unit
 argument_list|,
+operator|&
+name|sectors
+argument_list|,
+operator|&
+name|disk_parms
+operator|->
+name|secsiz
+argument_list|,
 name|flags
 argument_list|)
+condition|)
+block|{
+comment|/* we couldn't get anyhthing. removable? */
+name|sectors
+operator|=
+literal|32
+operator|*
+literal|64
 expr_stmt|;
+name|disk_parms
+operator|->
+name|secsiz
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
+empty_stmt|;
+block|}
 name|disk_parms
 operator|->
 name|heads
@@ -3195,12 +3227,6 @@ literal|64
 operator|*
 literal|32
 operator|)
-expr_stmt|;
-name|disk_parms
-operator|->
-name|secsiz
-operator|=
-name|SECSIZE
 expr_stmt|;
 name|disk_parms
 operator|->
@@ -3304,6 +3330,7 @@ operator|.
 name|ncyl_2
 argument_list|)
 expr_stmt|;
+comment|/* set in a default value */
 name|disk_parms
 operator|->
 name|secsiz
@@ -3317,15 +3344,35 @@ operator|.
 name|blklen
 argument_list|)
 expr_stmt|;
-name|sectors
+if|if
+condition|(
+name|error
 operator|=
 name|sd_size
 argument_list|(
 name|unit
 argument_list|,
+operator|&
+name|sectors
+argument_list|,
+operator|&
+name|disk_parms
+operator|->
+name|secsiz
+argument_list|,
 name|flags
 argument_list|)
+condition|)
+block|{
+comment|/* we couldn't get anyhthing. removable? */
+name|sectors
+operator|=
+literal|64
+operator|*
+literal|32
 expr_stmt|;
+comment|/* just so non 0 */
+block|}
 name|disk_parms
 operator|->
 name|disksize
@@ -3407,6 +3454,50 @@ expr_stmt|;
 comment|/* dubious on SCSI */
 comment|/*XXX */
 block|}
+switch|switch
+condition|(
+name|sd
+operator|->
+name|params
+operator|.
+name|secsiz
+condition|)
+block|{
+case|case
+literal|512
+case|:
+case|case
+literal|1024
+case|:
+case|case
+literal|2048
+case|:
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"sd%ld: Can't deal with %d bytes logical blocks\n"
+argument_list|,
+name|unit
+argument_list|,
+name|sd
+operator|->
+name|params
+operator|.
+name|secsiz
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|sc_link
 operator|->
 name|flags
@@ -3414,7 +3505,9 @@ operator||=
 name|SDEV_MEDIA_LOADED
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
