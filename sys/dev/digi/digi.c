@@ -3071,7 +3071,7 @@ name|numports
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -3109,7 +3109,7 @@ name|numports
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -6377,7 +6377,7 @@ name|size
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -6449,7 +6449,7 @@ name|size
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -6521,7 +6521,7 @@ name|size
 argument_list|,
 name|M_TTYS
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
