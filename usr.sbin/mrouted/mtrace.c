@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mtrace.c,v 1.13 1998/01/16 07:17:44 charnier Exp $"
+literal|"$Id: mtrace.c,v 1.14 1998/06/09 05:01:35 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5895,6 +5895,9 @@ name|struct
 name|timeval
 name|tr
 decl_stmt|;
+name|time_t
+name|tr_sec
+decl_stmt|;
 name|struct
 name|ip
 modifier|*
@@ -6511,14 +6514,18 @@ name|tr
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tr_sec
+operator|=
+name|tr
+operator|.
+name|tv_sec
+expr_stmt|;
 name|now
 operator|=
 name|localtime
 argument_list|(
 operator|&
-name|tr
-operator|.
-name|tv_sec
+name|tr_sec
 argument_list|)
 expr_stmt|;
 name|strftime
@@ -8767,6 +8774,9 @@ name|printf
 argument_list|(
 literal|"\t\t\t\tv_in: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|s
@@ -8779,6 +8789,9 @@ name|printf
 argument_list|(
 literal|"v_out: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|s
@@ -8791,6 +8804,9 @@ name|printf
 argument_list|(
 literal|"pkts: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|s
@@ -8803,6 +8819,9 @@ name|printf
 argument_list|(
 literal|"\t\t\t\tv_in: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|r
@@ -8815,6 +8834,9 @@ name|printf
 argument_list|(
 literal|"v_out: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|r
@@ -8827,6 +8849,9 @@ name|printf
 argument_list|(
 literal|"pkts: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|r
@@ -8839,6 +8864,10 @@ name|printf
 argument_list|(
 literal|"\t\t\t\tv_in: %ld "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|s
@@ -8853,11 +8882,16 @@ operator|->
 name|tr_vifin
 argument_list|)
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"v_out: %ld "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|s
@@ -8870,6 +8904,7 @@ argument_list|(
 name|r
 operator|->
 name|tr_vifout
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8877,6 +8912,10 @@ name|printf
 argument_list|(
 literal|"pkts: %ld "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|s
@@ -8889,6 +8928,7 @@ argument_list|(
 name|r
 operator|->
 name|tr_pktcnt
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9820,6 +9860,9 @@ name|printf
 argument_list|(
 literal|"\t\t\t\tv_in: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|n
@@ -9832,6 +9875,9 @@ name|printf
 argument_list|(
 literal|"v_out: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|n
@@ -9844,6 +9890,9 @@ name|printf
 argument_list|(
 literal|"pkts: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|n
@@ -9856,6 +9905,9 @@ name|printf
 argument_list|(
 literal|"\t\t\t\tv_in: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|b
@@ -9868,6 +9920,9 @@ name|printf
 argument_list|(
 literal|"v_out: %ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|b
@@ -9880,6 +9935,9 @@ name|printf
 argument_list|(
 literal|"pkts: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|b
@@ -9892,6 +9950,10 @@ name|printf
 argument_list|(
 literal|"\t\t\t\tv_in: %ld "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|n
@@ -9904,6 +9966,7 @@ argument_list|(
 name|b
 operator|->
 name|tr_vifin
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9911,6 +9974,10 @@ name|printf
 argument_list|(
 literal|"v_out: %ld "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|n
@@ -9923,6 +9990,7 @@ argument_list|(
 name|b
 operator|->
 name|tr_vifout
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9930,6 +9998,10 @@ name|printf
 argument_list|(
 literal|"pkts: %ld\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|n
@@ -9942,6 +10014,7 @@ argument_list|(
 name|b
 operator|->
 name|tr_pktcnt
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
