@@ -1,18 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.10	81/03/08	*/
+comment|/*	param.h	4.11	81/05/05	*/
 end_comment
 
 begin_comment
 comment|/*  * Tunable variables which do not usually vary per system.  *  * The sizes of most system tables are configured  * into each system description.  The file system buffer  * cache size is assigned based on available memory.  * The tables whose sizes don't vary often are given here.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXNBUF
-value|128
-end_define
 
 begin_define
 define|#
