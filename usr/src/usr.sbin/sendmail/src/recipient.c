@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.37 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1130,6 +1130,9 @@ operator||=
 name|a
 operator|->
 name|q_flags
+operator|&
+operator|~
+name|QDONTSEND
 expr_stmt|;
 block|}
 if|if
