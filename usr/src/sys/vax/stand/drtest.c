@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	drtest.c	4.12	83/03/20	*/
+comment|/*	drtest.c	4.13	83/05/03	*/
 end_comment
 
 begin_comment
@@ -252,9 +252,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"sector %d\n"
+literal|"cylinder %d\n"
 argument_list|,
 name|sector
+operator|/
+name|st
+operator|.
+name|nspc
 argument_list|)
 expr_stmt|;
 name|read
