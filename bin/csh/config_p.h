@@ -233,6 +233,12 @@ directive|define
 name|SYSMALLOC
 end_define
 
+begin_define
+define|#
+directive|define
+name|BSD_STYLE_COLORLS
+end_define
+
 begin_endif
 endif|#
 directive|endif
