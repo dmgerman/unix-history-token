@@ -447,6 +447,14 @@ parameter_list|()
 value|setpfx('e')
 end_define
 
+begin_define
+define|#
+directive|define
+name|continuation
+parameter_list|()
+value|setpfx(' ')
+end_define
+
 begin_decl_stmt
 name|int
 name|cgenflg
