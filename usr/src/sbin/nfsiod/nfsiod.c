@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsiod.c	5.1 (Berkeley) %G%"
+literal|"@(#)nfsiod.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,12 +50,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
 end_include
 
 begin_include
@@ -92,18 +86,6 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|syslog
-parameter_list|(
-name|e
-parameter_list|,
-name|s
-parameter_list|)
-value|fprintf(stderr,(s))
-end_define
-
 begin_decl_stmt
 name|int
 name|debug
@@ -131,7 +113,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Nfs asynchronous i/o daemon. Just helps out client i/o with read aheads  */
+comment|/*  * Nfsiod does asynchronous buffered I/O on behalf of the NFS client.  * It does not have to be running for correct operation, but will improve  * throughput. The one optional argument is the number of children to fork.  */
 end_comment
 
 begin_function
@@ -328,15 +310,6 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 block|}
-name|openlog
-argument_list|(
-literal|"nfsiod:"
-argument_list|,
-name|LOG_PID
-argument_list|,
-name|LOG_DAEMON
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -386,23 +359,14 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
 name|async_daemon
 argument_list|()
-operator|<
-literal|0
-condition|)
-comment|/* Only returns on error */
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"nfsiod() failed %m"
-argument_list|)
 expr_stmt|;
+comment|/* Never returns */
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function
