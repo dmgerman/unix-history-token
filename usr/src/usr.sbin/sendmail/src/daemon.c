@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -65,6 +65,12 @@ directive|include
 file|<net/in.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<wait.h>
+end_include
+
 begin_expr_stmt
 name|SCCSID
 argument_list|(
@@ -75,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.13
+literal|3.14
 operator|%
 name|G
 operator|%
@@ -111,6 +117,17 @@ begin_comment
 comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Waits until some interesting activity occurs.  When **		it does, a child is created to process it, and the **		parent waits for completion.  Return from this **		routine is always in the child. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAXCONNS
+value|4
+end_define
+
+begin_comment
+comment|/* maximum simultaneous sendmails */
+end_comment
+
 begin_macro
 name|getrequests
 argument_list|()
@@ -118,6 +135,15 @@ end_macro
 
 begin_block
 block|{
+name|union
+name|wait
+name|status
+decl_stmt|;
+name|int
+name|numconnections
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|wh
 name|wbuf
@@ -167,6 +193,17 @@ begin_comment
 comment|/* **  GETCONNECTION -- make a connection with the outside world ** **	Parameters: **		none. ** **	Returns: **		The port for mail traffic. ** **	Side Effects: **		Waits for a connection. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPORT_PLAYPORT
+value|3055
+end_define
+
+begin_comment
+comment|/* random number */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|sockaddr_in
@@ -210,6 +247,35 @@ name|sin_port
 operator|=
 name|IPPORT_SMTP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|0
+condition|)
+name|SendmailAddress
+operator|.
+name|sin_port
+operator|=
+name|IPPORT_PLAYPORT
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+name|SendmailAddress
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+name|SendmailAddress
+operator|.
+name|sin_port
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Try to actually open the connection. 	*/
 ifdef|#
 directive|ifdef
@@ -240,6 +306,24 @@ argument_list|,
 name|SO_ACCEPTCONN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+block|{
+name|sleep
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -257,6 +341,8 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+if|if
+condition|(
 name|accept
 argument_list|(
 name|s
@@ -264,7 +350,27 @@ argument_list|,
 operator|&
 name|otherend
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"accept"
+argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|s
@@ -367,7 +473,10 @@ name|SendmailAddress
 operator|.
 name|sin_port
 operator|=
+name|htons
+argument_list|(
 name|port
+argument_list|)
 expr_stmt|;
 comment|/* 	**  Try to actually open the connection. 	*/
 ifdef|#
