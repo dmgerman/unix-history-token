@@ -628,6 +628,13 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
+name|devclass_t
+name|digi_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|struct
 name|digi_control_signals
