@@ -237,6 +237,27 @@ directive|include
 file|<compat/linux/linux_util.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|LINUX_IFNAMSIZ
+operator|!=
+name|IFNAMSIZ
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"LINUX_IFNAMSIZ != IFNAMSIZ"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|linux_ioctl_function_t
@@ -12071,19 +12092,6 @@ name|error
 decl_stmt|,
 name|type
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|LINUX_IFNAMSIZ
-operator|==
-name|IFNAMSIZ
-argument_list|,
-operator|(
-literal|"%s(): LINUX_IFNAMSIZ != IFNAMSIZ"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|NULL
