@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_umap.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_umap.c	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -414,14 +414,12 @@ argument_list|(
 literal|"mount_umap: nentries exceeds maximum\n"
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"reading %d entries\n"
-argument_list|,
-name|nentries
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|else 		printf("reading %d entries\n", nentries);
+endif|#
+directive|endif
 for|for
 control|(
 name|count
@@ -612,14 +610,12 @@ argument_list|(
 literal|"mount_umap: gnentries exceeds maximum\n"
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"reading %d group entries\n"
-argument_list|,
-name|gnentries
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|else 		printf("reading %d group entries\n", gnentries);
+endif|#
+directive|endif
 for|for
 control|(
 name|count
@@ -731,19 +727,12 @@ literal|0
 index|]
 operator|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"calling mount_umap(%s,%d,<%s>)\n"
-argument_list|,
-name|target
-argument_list|,
-name|mntflags
-argument_list|,
-name|args
-operator|.
-name|target
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("calling mount_umap(%s,%d,<%s>)\n",target,mntflags, 	       args.target);
+endif|#
+directive|endif
 if|if
 condition|(
 name|mount
