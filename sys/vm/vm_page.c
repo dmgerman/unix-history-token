@@ -2172,6 +2172,7 @@ name|m
 operator|->
 name|wire_count
 operator|||
+operator|(
 operator|!
 name|VM_OBJECT_TRYLOCK
 argument_list|(
@@ -2179,6 +2180,15 @@ name|m
 operator|->
 name|object
 argument_list|)
+operator|&&
+operator|!
+name|VM_OBJECT_LOCKED
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
@@ -2519,6 +2529,12 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|m_object
+operator|!=
+name|object
+condition|)
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|m_object
