@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	5.5 (Berkeley) %G%"
+literal|"@(#)kgmon.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/pte.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/gprof.h>
 end_include
 
 begin_include
@@ -97,7 +103,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/gprof.h>
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -357,11 +363,14 @@ operator|++
 expr_stmt|;
 break|break;
 default|default:
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage: kgmon [-bhrp] [system [core]]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: kgmon [-bhrp] [system [core]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -388,7 +397,7 @@ name|O_RDONLY
 expr_stmt|;
 name|kmemf
 operator|=
-literal|"/dev/kmem"
+name|_PATH_KMEM
 expr_stmt|;
 if|if
 condition|(
@@ -428,7 +437,7 @@ block|}
 else|else
 name|system
 operator|=
-literal|"/vmunix"
+name|_PATH_UNIX
 expr_stmt|;
 if|if
 condition|(
@@ -451,11 +460,14 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: no namelist\n"
+literal|"kgmon: %s: no namelist\n"
 argument_list|,
 name|system
 argument_list|)
@@ -477,11 +489,14 @@ operator|.
 name|n_value
 condition|)
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"profiling: not defined in kernel.\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"kgmon: profiling: not defined in kernel.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -537,6 +552,9 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -550,6 +568,9 @@ if|if
 condition|(
 name|rflag
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -561,6 +582,9 @@ if|if
 condition|(
 name|bflag
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -572,6 +596,9 @@ if|if
 condition|(
 name|hflag
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -630,11 +657,14 @@ operator|!
 name|Sysmap
 condition|)
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"arp: can't get memory for Sysmap.\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"kgmon: can't get memory for Sysmap.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -744,6 +774,9 @@ name|mode
 operator|==
 name|PROFILING_ON
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -767,6 +800,9 @@ argument_list|(
 name|disp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -790,6 +826,10 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|struct
 name|rawarc
 name|rawarc
@@ -838,6 +878,10 @@ name|s_lowpc
 decl_stmt|,
 modifier|*
 name|malloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
 argument_list|()
 decl_stmt|;
 name|turnonoff
@@ -1015,24 +1059,23 @@ operator|!=
 name|fromssize
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"read froms: request %d, got %d"
+literal|"read kmem: request %d, got %d: %s"
 argument_list|,
 name|fromssize
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1117,24 +1160,23 @@ operator|!=
 name|tossize
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"read tos: request %d, got %d"
+literal|"read kmem: request %d, got %d: %s"
 argument_list|,
 name|tossize
 argument_list|,
 name|i
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1158,6 +1200,9 @@ if|if
 condition|(
 name|debug
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1249,6 +1294,9 @@ if|if
 condition|(
 name|debug
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
