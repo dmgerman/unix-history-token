@@ -405,6 +405,21 @@ decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"rman_manage_region:<%s> request: start %#lx, end %#lx"
+operator|,
+name|rm
+operator|->
+name|rm_descr
+operator|,
+name|start
+operator|,
+name|end
+operator|)
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|malloc
