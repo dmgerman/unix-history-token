@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.32 1995/10/15 12:41:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.33 1995/10/16 07:31:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -627,24 +627,6 @@ condition|(
 operator|!
 name|variable_get
 argument_list|(
-name|DISK_PARTITIONED
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"You need to partition your disk before you can proceed with\nthe installation."
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|variable_get
-argument_list|(
 name|DISK_LABELLED
 argument_list|)
 condition|)
@@ -694,8 +676,10 @@ return|;
 block|}
 if|if
 condition|(
-name|installFilesystems
-argument_list|()
+name|diskLabelCommit
+argument_list|(
+name|NULL
+argument_list|)
 operator|!=
 name|RET_SUCCESS
 condition|)
@@ -1372,12 +1356,11 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\")\n"
-literal|"partitioning scheme for your hard disk.    If you simply wish to\n"
-literal|"devote all disk space to FreeBSD (overwritting anything else that might\n"
-literal|"be on the disk(s) selected, use the (A)ll command to select the default\n"
-literal|"partitioning scheme and then (Q)uit.  If you wish to allocate only free\n"
-literal|"space to FreeBSD, move to a partition marked \"unused\" and use the\n"
-literal|"(C)reate command."
+literal|"partitioning scheme for your hard disk.  If you simply wish to devote all\n"
+literal|"disk space to FreeBSD (overwritting anything else that might be on the disk(s)\n"
+literal|"selected), use the (A)ll command to select the default partitioning scheme and\n"
+literal|"then (Q)uit.  If you wish to allocate only free space to FreeBSD, move to a\n"
+literal|"partition marked \"unused\" and use the (C)reate command."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1394,12 +1377,12 @@ name|RET_FAIL
 return|;
 name|msgConfirm
 argument_list|(
-literal|"Next, you need to create BSD partitions inside of the fdisk\n"
-literal|"partition(s) just created.  If you have a reasonable amount of disk\n"
-literal|"space (200MB or more) and don't have any special requirements,\n"
-literal|"simply use the (A)uto command to allocate space automatically."
-literal|"If you have more specific needs, or don't care for the layout\n"
-literal|"chosen by (A)uto, press F1 for more information on manual layout."
+literal|"Next, you need to create BSD partitions inside of the fdisk partition(s)\n"
+literal|"just created.  If you have a reasonable amount of disk space (200MB or more)\n"
+literal|"and don't have any special requirements, simply use the (A)uto command to\n"
+literal|"allocate space automatically.  If you have more specific needs, or don't\n"
+literal|"care for the layout chosen by (A)uto, press F1 for more information on\n"
+literal|"manual layout."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1416,11 +1399,10 @@ name|RET_FAIL
 return|;
 name|msgConfirm
 argument_list|(
-literal|"Now it is time to select an installation subset.  There\n"
-literal|"are many different configurations, ranging from minimal\n"
-literal|"installation sets to full X developer oriented configs.\n"
-literal|"You can also select a custom software set if none of the\n"
-literal|"provided configurations are suitable."
+literal|"Now it is time to select an installation subset.  There are a number of canned\n"
+literal|"distributions, ranging from minimal installation sets to full X developer\n"
+literal|"oriented configurations.  You can also select a custom software set if none\n"
+literal|"of the provided configurations are suitable."
 argument_list|)
 expr_stmt|;
 while|while
@@ -1486,15 +1468,11 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Since you're running the express installation, a few\n"
-literal|"post-configuration questions will be asked at this point.\n\n"
-literal|"The FreeBSD package collection is a collection of over 300\n"
-literal|"ready-to-run applications, from text editors to WEB servers,\n"
-literal|"and is definitely worth at least looking at.\n\n"
-literal|"Would you like to browse the selection of packaged software"
-literal|"now?\n\n"
-literal|"You can also reach this utility from the Configure menu later\n"
-literal|"if you wish."
+literal|"Since you're running the express installation, a few post-configuration\n"
+literal|"questions will be asked at this point.\n\n"
+literal|"The FreeBSD package collection is a collection of over 300 ready-to-run\n"
+literal|"applications, from text editors to games to WEB servers.  If you've never\n"
+literal|"done so, it's definitely worth browsing through.  Would you like to do so now?"
 argument_list|)
 condition|)
 name|configPackages
@@ -1507,8 +1485,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Would you like to configure any additional network devices or\n"
-literal|"services?"
+literal|"Would you like to configure any additional network devices or services?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
@@ -1524,8 +1501,8 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Would you like to go to the general configuration menu for\n"
-literal|"any last additional configuration options?"
+literal|"Would you like to go to the general configuration menu for any last\n"
+literal|"additional configuration options?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
@@ -1663,6 +1640,19 @@ condition|)
 name|i
 operator|=
 name|RET_FAIL
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|SYSTEM_INSTALLED
+argument_list|,
+name|i
+operator|==
+name|RET_FAIL
+condition|?
+literal|"errors"
+else|:
+literal|"yes"
+argument_list|)
 expr_stmt|;
 name|dialog_clear
 argument_list|()
@@ -3193,57 +3183,13 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|msgGetInput
-argument_list|(
-name|variable_get
+return|return
+name|variable_get_value
 argument_list|(
 name|RELNAME
-argument_list|)
 argument_list|,
 literal|"Please specify the release you wish to load"
 argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|variable_set2
-argument_list|(
-name|RELNAME
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|RET_SUCCESS
-expr_stmt|;
-block|}
-else|else
-name|i
-operator|=
-name|RET_FAIL
-expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-return|return
-name|i
 return|;
 block|}
 end_function

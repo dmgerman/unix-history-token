@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.7 1995/10/07 11:55:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: media.c,v 1.25.2.8 1995/10/09 11:14:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -187,7 +187,10 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No CDROM devices found!  Please check that your system's\nconfiguration is correct and that the CDROM drive is of a supported\ntype.  For more information, consult the hardware guide\nin the Doc menu."
+literal|"No CDROM devices found!  Please check that your system's\n"
+literal|"configuration is correct and that the CDROM drive is of a supported\n"
+literal|"type.  For more information, consult the hardware guide\n"
+literal|"in the Doc menu."
 argument_list|)
 expr_stmt|;
 return|return
@@ -336,7 +339,9 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No floppy devices found!  Please check that your system's\nconfiguration is correct.  For more information, consult the hardware guide\nin the Doc menu."
+literal|"No floppy devices found!  Please check that your system's configuration\n"
+literal|"is correct.  For more information, consult the hardware guide in the Doc\n"
+literal|"menu."
 argument_list|)
 expr_stmt|;
 return|return
@@ -634,7 +639,9 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No tape drive devices found!  Please check that your system's\nconfiguration is correct.  For more information, consult the hardware guide\nin the Doc menu."
+literal|"No tape drive devices found!  Please check that your system's configuration\n"
+literal|"is correct.  For more information, consult the hardware guide in the Doc\n"
+literal|"menu."
 argument_list|)
 expr_stmt|;
 return|return
@@ -722,7 +729,11 @@ name|msgGetInput
 argument_list|(
 literal|"/usr/tmp"
 argument_list|,
-literal|"Please enter the name of a temporary directory containing\nsufficient space for holding the contents of this tape (or\ntapes).  The contents of this directory will be removed\nafter installation, so be sure to specify a directory that\ncan be erased afterwards!\n"
+literal|"Please enter the name of a temporary directory containing\n"
+literal|"sufficient space for holding the contents of this tape (or\n"
+literal|"tapes).  The contents of this directory will be removed\n"
+literal|"after installation, so be sure to specify a directory that\n"
+literal|"can be erased afterwards!\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -820,7 +831,13 @@ name|msgGetInput
 argument_list|(
 literal|"ftp://"
 argument_list|,
-literal|"Please specify the URL of a FreeBSD distribution on a\nremote ftp site.  This site must accept either anonymous\nftp or you should have set an ftp username and password\nin the Options screen.\nA URL looks like this:  ftp://<hostname>/<path>\nWhere<path> is relative to the anonymous ftp directory or the\nhome directory of the user being logged in as."
+literal|"Please specify the URL of a FreeBSD distribution on a\n"
+literal|"remote ftp site.  This site must accept either anonymous\n"
+literal|"ftp or you should have set an ftp username and password\n"
+literal|"in the Options screen.\n"
+literal|"A URL looks like this:  ftp://<hostname>/<path>\n"
+literal|"Where<path> is relative to the anonymous ftp directory or the\n"
+literal|"home directory of the user being logged in as."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1002,7 +1019,8 @@ name|msgGetInput
 argument_list|(
 name|NULL
 argument_list|,
-literal|"Enter a fully qualified pathname for the directory\ncontaining the FreeBSD distribution files:"
+literal|"Enter a fully qualified pathname for the directory\n"
+literal|"containing the FreeBSD distribution files:"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1097,7 +1115,9 @@ name|nfsDevice
 operator|.
 name|name
 argument_list|,
-literal|"Please enter the full NFS file specification for the remote\nhost and directory containing the FreeBSD distribution files.\nThis should be in the format:  hostname:/some/freebsd/dir"
+literal|"Please enter the full NFS file specification for the remote\n"
+literal|"host and directory containing the FreeBSD distribution files.\n"
+literal|"This should be in the format:  hostname:/some/freebsd/dir"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2073,7 +2093,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Media type not set!  Please select a media type\nfrom the Installation menu before proceeding."
+literal|"Media type not set!  Please select a media type\n"
+literal|"from the Installation menu before proceeding."
 argument_list|)
 expr_stmt|;
 return|return
@@ -2100,13 +2121,6 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|user
-decl_stmt|,
-modifier|*
-name|pass
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2115,58 +2129,30 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|user
-operator|=
-name|msgGetInput
-argument_list|(
-name|variable_get
+name|variable_get_value
 argument_list|(
 name|FTP_USER
-argument_list|)
 argument_list|,
 literal|"Please enter the username you wish to login as"
 argument_list|)
-operator|)
-operator|!=
-name|NULL
+operator|==
+name|RET_SUCCESS
 condition|)
 block|{
-name|variable_set2
-argument_list|(
-name|FTP_USER
-argument_list|,
-name|user
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|pass
-operator|=
-name|msgGetInput
-argument_list|(
-name|variable_get
-argument_list|(
-name|FTP_PASS
-argument_list|)
-argument_list|,
-literal|"Please enter the password for this user.\nWARNING: This password will echo on the screen!"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|variable_set2
-argument_list|(
-name|FTP_PASS
-argument_list|,
-name|pass
-argument_list|)
+name|noecho
+argument_list|()
 expr_stmt|;
 name|i
 operator|=
-name|RET_SUCCESS
+name|variable_get_value
+argument_list|(
+name|FTP_PASS
+argument_list|,
+literal|"Please enter the password for this user."
+argument_list|)
+expr_stmt|;
+name|echo
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -2203,44 +2189,14 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|bsize
+name|i
 operator|=
-name|msgGetInput
-argument_list|(
-name|variable_get
+name|variable_get_value
 argument_list|(
 name|TAPE_BLOCKSIZE
-argument_list|)
 argument_list|,
 literal|"Please enter the tape block size in 512 byte blocks"
 argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|variable_set2
-argument_list|(
-name|TAPE_BLOCKSIZE
-argument_list|,
-name|bsize
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|RET_SUCCESS
-expr_stmt|;
-block|}
-else|else
-name|i
-operator|=
-name|RET_FAIL
 expr_stmt|;
 name|dialog_clear
 argument_list|()
