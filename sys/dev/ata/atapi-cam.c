@@ -1035,6 +1035,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|s
 decl_stmt|;
 name|char
 modifier|*
@@ -2314,6 +2316,11 @@ goto|goto
 name|action_oom
 goto|;
 block|}
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -2324,6 +2331,11 @@ argument_list|,
 name|hcb
 argument_list|,
 name|chain
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2492,12 +2504,6 @@ modifier|*
 name|req
 parameter_list|)
 block|{
-name|int
-name|s
-init|=
-name|splcam
-argument_list|()
-decl_stmt|;
 name|struct
 name|atapi_hcb
 modifier|*
@@ -2530,6 +2536,12 @@ init|=
 name|req
 operator|->
 name|result
+decl_stmt|;
+name|int
+name|s
+init|=
+name|splbio
+argument_list|()
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2889,7 +2901,7 @@ block|{
 name|int
 name|s
 init|=
-name|splcam
+name|splbio
 argument_list|()
 decl_stmt|;
 name|atapi_async1
