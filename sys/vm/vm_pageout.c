@@ -358,8 +358,6 @@ end_endif
 begin_decl_stmt
 name|int
 name|vm_pages_needed
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -370,8 +368,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|vm_pageout_deficit
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -382,8 +378,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|vm_pageout_pages_needed
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -4819,7 +4813,11 @@ name|vm_pageout
 parameter_list|()
 block|{
 name|int
+name|error
+decl_stmt|,
 name|pass
+decl_stmt|,
+name|s
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -5054,15 +5052,11 @@ condition|(
 name|TRUE
 condition|)
 block|{
-name|int
-name|error
-decl_stmt|;
-name|int
 name|s
-init|=
+operator|=
 name|splvm
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 comment|/* 		 * If we have enough free memory, wakeup waiters.  Do 		 * not clear vm_pages_needed until we reach our target, 		 * otherwise we may be woken up over and over again and 		 * waste a lot of cpu. 		 */
 if|if
 condition|(
