@@ -382,6 +382,7 @@ name|TSPTYPES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tsptype
