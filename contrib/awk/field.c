@@ -2708,6 +2708,10 @@ name|IGNORECASE
 operator|&&
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|fschar
 argument_list|)
 operator|)
@@ -2721,7 +2725,8 @@ operator|=
 name|casetable
 index|[
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|fschar
 index|]
@@ -2762,7 +2767,8 @@ condition|(
 name|casetable
 index|[
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|scan

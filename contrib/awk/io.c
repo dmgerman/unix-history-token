@@ -7832,6 +7832,10 @@ name|IGNORECASE
 operator|&&
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|rs
 argument_list|)
 operator|)
@@ -7844,6 +7848,10 @@ name|rs
 operator|=
 name|casetable
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 name|rs
 index|]
 expr_stmt|;
@@ -8520,7 +8528,8 @@ condition|(
 name|casetable
 index|[
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|bp
@@ -8661,7 +8670,8 @@ condition|?
 name|casetable
 index|[
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|bp
@@ -9082,6 +9092,10 @@ name|IGNORECASE
 operator|&&
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|rs
 argument_list|)
 operator|)
@@ -9094,6 +9108,10 @@ name|rs
 operator|=
 name|casetable
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 name|rs
 index|]
 expr_stmt|;
@@ -9353,6 +9371,10 @@ name|end
 operator|&&
 name|casetable
 index|[
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|bp
 operator|++

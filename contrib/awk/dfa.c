@@ -3980,6 +3980,10 @@ name|setbit
 argument_list|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c3
 argument_list|)
 argument_list|,
@@ -3998,6 +4002,10 @@ name|setbit
 argument_list|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c3
 argument_list|)
 argument_list|,
@@ -4037,6 +4045,10 @@ name|setbit
 argument_list|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -4055,6 +4067,10 @@ name|setbit
 argument_list|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -4153,6 +4169,10 @@ if|if
 condition|(
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -4160,6 +4180,10 @@ name|setbit
 argument_list|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -4171,6 +4195,10 @@ name|setbit
 argument_list|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 argument_list|,
@@ -10657,6 +10685,10 @@ index|]
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|s
 index|[
 name|i
