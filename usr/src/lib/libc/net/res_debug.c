@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.13 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1155,6 +1155,11 @@ name|dlen
 expr_stmt|;
 block|}
 break|break;
+default|default:
+name|cp
+operator|+=
+name|dlen
+expr_stmt|;
 block|}
 break|break;
 case|case
