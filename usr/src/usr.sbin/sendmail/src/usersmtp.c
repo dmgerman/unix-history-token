@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.17 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.18 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.17 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.18 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,7 +521,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|tempfail
+name|tempfail1
 goto|;
 name|gte
 operator|=
@@ -580,7 +580,7 @@ operator|!=
 literal|2
 condition|)
 goto|goto
-name|tempfail
+name|tempfail1
 goto|;
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
 name|smtpmessage
@@ -623,7 +623,7 @@ operator|<
 literal|0
 condition|)
 goto|goto
-name|tempfail
+name|tempfail1
 goto|;
 elseif|else
 if|if
@@ -649,7 +649,7 @@ operator|!=
 literal|2
 condition|)
 goto|goto
-name|tempfail
+name|tempfail1
 goto|;
 comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
 if|if
@@ -686,7 +686,7 @@ operator|<
 literal|0
 condition|)
 goto|goto
-name|tempfail
+name|tempfail2
 goto|;
 comment|/* tell it we will be sending one transaction only */
 name|smtpmessage
@@ -710,7 +710,7 @@ operator|<
 literal|0
 condition|)
 goto|goto
-name|tempfail
+name|tempfail2
 goto|;
 block|}
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
@@ -827,7 +827,7 @@ operator|==
 literal|4
 condition|)
 goto|goto
-name|tempfail
+name|tempfail2
 goto|;
 elseif|else
 if|if
@@ -863,7 +863,56 @@ name|EX_PROTOCOL
 operator|)
 return|;
 comment|/* signal a temporary failure */
-name|tempfail
+name|tempfail1
+label|:
+ifdef|#
+directive|ifdef
+name|HOSTINFO
+block|{
+specifier|register
+name|STAB
+modifier|*
+name|st
+decl_stmt|;
+specifier|extern
+name|STAB
+modifier|*
+name|stab
+parameter_list|()
+function_decl|;
+comment|/* log this as an error to avoid sure-to-be-void connections */
+name|st
+operator|=
+name|stab
+argument_list|(
+name|CurHostName
+argument_list|,
+name|ST_HOST
+argument_list|,
+name|ST_ENTER
+argument_list|)
+expr_stmt|;
+name|st
+operator|->
+name|s_host
+operator|.
+name|ho_exitstat
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+name|st
+operator|->
+name|s_host
+operator|.
+name|ho_errno
+operator|=
+name|errno
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* HOSTINFO */
+name|tempfail2
 label|:
 name|smtpquit
 argument_list|(
