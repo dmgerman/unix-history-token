@@ -926,7 +926,6 @@ name|__P
 argument_list|(
 operator|(
 name|pthread_t
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

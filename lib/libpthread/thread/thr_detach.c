@@ -32,8 +32,7 @@ name|int
 name|pthread_detach
 parameter_list|(
 name|pthread_t
-modifier|*
-name|p_pthread
+name|pthread
 parameter_list|)
 block|{
 name|int
@@ -47,9 +46,6 @@ decl_stmt|;
 name|pthread_t
 name|next_thread
 decl_stmt|;
-name|pthread_t
-name|pthread
-decl_stmt|;
 comment|/* Block signals: */
 name|_thread_kern_sig_block
 argument_list|(
@@ -60,16 +56,7 @@ expr_stmt|;
 comment|/* Check for invalid calling parameters: */
 if|if
 condition|(
-name|p_pthread
-operator|==
-name|NULL
-operator|||
-operator|(
 name|pthread
-operator|=
-operator|*
-name|p_pthread
-operator|)
 operator|==
 name|NULL
 condition|)
@@ -133,19 +120,13 @@ name|PS_RUNNING
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * NULL the thread pointer now that the thread has been 		 * detached:  		 */
-operator|*
-name|p_pthread
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* Return an error: */
 name|rval
 operator|=
-name|ESRCH
+name|EINVAL
 expr_stmt|;
 block|}
 comment|/* Unblock signals: */
