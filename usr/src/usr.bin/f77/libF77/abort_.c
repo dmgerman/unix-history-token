@@ -114,13 +114,7 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|f_exit
-argument_list|()
-expr_stmt|;
-name|_cleanup
-argument_list|()
-expr_stmt|;
-name|abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}

@@ -1068,7 +1068,7 @@ argument_list|,
 name|o_no
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -1202,7 +1202,7 @@ argument_list|,
 literal|"Can't find any reserved operand!\n"
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -1399,7 +1399,7 @@ argument_list|,
 literal|"Can't do 'poly' instructions yet\n"
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -1434,7 +1434,7 @@ argument_list|,
 literal|"Can't do 'emod' instructions yet\n"
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -1683,7 +1683,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -1759,7 +1759,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -2101,7 +2101,7 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
@@ -2236,7 +2236,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 name|value
@@ -2319,7 +2319,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 return|return
@@ -2413,30 +2413,6 @@ end_block
 begin_escape
 end_escape
 
-begin_comment
-comment|/*  *	force_abort - force us to abort.  *  *	We have to change the signal handler for illegal instructions back,  *	or we'll end up calling 'got_illegal_instruction()' again when  *	abort() does it's dirty work.  */
-end_comment
-
-begin_macro
-name|force_abort
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|signal
-argument_list|(
-name|SIGILL
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
 begin_macro
 name|type_length
 argument_list|(
@@ -2478,7 +2454,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|force_abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 return|return

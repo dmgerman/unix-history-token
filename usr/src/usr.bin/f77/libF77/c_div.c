@@ -9,6 +9,18 @@ directive|include
 file|"complex"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_macro
 name|c_div
 argument_list|(
@@ -92,10 +104,20 @@ name|abi
 operator|==
 literal|0
 condition|)
-name|abort
-argument_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"complex division by zero\n"
+argument_list|)
 expr_stmt|;
-comment|/* fatal("complex division by zero"); */
+name|f77_abort
+argument_list|(
+name|EDOM
+argument_list|)
+expr_stmt|;
+block|}
 name|ratio
 operator|=
 name|b

@@ -136,10 +136,7 @@ argument_list|,
 literal|".\n"
 argument_list|)
 expr_stmt|;
-name|_cleanup
-argument_list|()
-expr_stmt|;
-name|abort
+name|f77_abort
 argument_list|()
 expr_stmt|;
 block|}
