@@ -384,23 +384,6 @@ literal|'0'
 operator|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|u_chars
-operator|>
-name|MAXSIZE
-condition|)
-block|{
-name|Fatal
-argument_list|(
-literal|"Bytecount too large."
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 return|return
 name|u_chars
 return|;
