@@ -485,5 +485,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|ia32_setregs
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|u_long
+name|entry
+parameter_list|,
+name|u_long
+name|stack
+parameter_list|,
+name|u_long
+name|ps_strings
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
