@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.23 1995/12/15 00:54:30 bde Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.24 1996/03/27 19:07:33 bde Exp $  */
 end_comment
 
 begin_include
@@ -348,6 +348,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* emit tone of frequency thz for given number of ticks */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -357,7 +361,6 @@ name|thz
 parameter_list|,
 name|ticks
 parameter_list|)
-comment|/* emit tone of frequency thz for given number of ticks */
 name|unsigned
 name|int
 name|thz
@@ -406,7 +409,7 @@ comment|/* DEBUG */
 comment|/* set timer to generate clicks at given frequency in Hertz */
 name|sps
 operator|=
-name|spltty
+name|splclock
 argument_list|()
 expr_stmt|;
 if|if
@@ -418,8 +421,21 @@ argument_list|)
 condition|)
 block|{
 comment|/* enter list of waiting procs ??? */
+name|splx
+argument_list|(
+name|sps
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|splx
+argument_list|(
+name|sps
+argument_list|)
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 name|outb
 argument_list|(
 name|TIMER_CNTR2
@@ -444,10 +460,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* send hi byte */
-name|splx
-argument_list|(
-name|sps
-argument_list|)
+name|enable_intr
+argument_list|()
 expr_stmt|;
 comment|/* turn the speaker on */
 name|outb
@@ -499,11 +513,25 @@ operator|~
 name|PPI_SPKR
 argument_list|)
 expr_stmt|;
+name|sps
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
 name|release_timer2
 argument_list|()
 expr_stmt|;
+name|splx
+argument_list|(
+name|sps
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* rest for given number of ticks */
+end_comment
 
 begin_function
 specifier|static
@@ -512,7 +540,6 @@ name|rest
 parameter_list|(
 name|ticks
 parameter_list|)
-comment|/* rest for given number of ticks */
 name|int
 name|ticks
 decl_stmt|;
@@ -1112,6 +1139,10 @@ comment|/* act as though there was an initial O(n) */
 block|}
 end_function
 
+begin_comment
+comment|/* play tone of proper duration for current rhythm signature */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1123,7 +1154,6 @@ name|value
 parameter_list|,
 name|sustain
 parameter_list|)
-comment|/* play tone of proper duration for current rhythm signature */
 name|int
 name|pitch
 decl_stmt|,
@@ -1326,6 +1356,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* interpret and play an item from a notation string */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1335,7 +1369,6 @@ name|cp
 parameter_list|,
 name|slen
 parameter_list|)
-comment|/* interpret and play an item from a notation string */
 name|char
 modifier|*
 name|cp
