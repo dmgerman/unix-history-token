@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sccs.c	5.3 (Berkeley) %G%"
+literal|"@(#)sccs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4362,8 +4362,16 @@ specifier|extern
 name|char
 modifier|*
 name|makefile
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
+decl_stmt|,
+modifier|*
+name|tail
+argument_list|()
+decl_stmt|;
 comment|/* make "s." filename& find the trailing component */
 name|pfn
 operator|=
@@ -5831,12 +5839,6 @@ specifier|extern
 name|char
 modifier|*
 name|getlogin
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|getenv
 parameter_list|()
 function_decl|;
 specifier|register
