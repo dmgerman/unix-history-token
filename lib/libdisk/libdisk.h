@@ -165,15 +165,11 @@ decl_stmt|;
 name|u_long
 name|end
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
 name|char
 modifier|*
 name|sname
 decl_stmt|;
-endif|#
-directive|endif
+comment|/* PC98 field */
 name|char
 modifier|*
 name|name
@@ -491,9 +487,6 @@ end_comment
 
 begin_function_decl
 name|int
-ifdef|#
-directive|ifdef
-name|PC98
 name|Create_Chunk
 parameter_list|(
 name|struct
@@ -522,37 +515,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_macro
-name|Create_Chunk
-argument_list|(
-argument|struct disk *disk
-argument_list|,
-argument|u_long offset
-argument_list|,
-argument|u_long size
-argument_list|,
-argument|chunk_e type
-argument_list|,
-argument|int subtype
-argument_list|,
-argument|u_long flags
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Create a chunk with the specified paramters  */
@@ -952,12 +914,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_function_decl
 name|int
 name|Add_Chunk
@@ -986,41 +942,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|Add_Chunk
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-parameter_list|,
-name|long
-parameter_list|,
-name|u_long
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|chunk_e
-parameter_list|,
-name|int
-parameter_list|,
-name|u_long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
