@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	7.2 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.6 1992/05/30 10:25:59 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	7.3 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.9 1993/04/06 15:28:33 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -80,9 +80,8 @@ file|<miscfs/fdesc/fdesc.h>
 end_include
 
 begin_decl_stmt
-specifier|static
-name|u_short
-name|fdesc_mntid
+name|dev_t
+name|devctty
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +103,15 @@ expr_stmt|;
 comment|/* printed during system boot */
 endif|#
 directive|endif
+name|devctty
+operator|=
+name|makedev
+argument_list|(
+name|nchrdev
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -211,19 +219,18 @@ operator|)
 return|;
 name|error
 operator|=
-name|getnewvnode
+name|fdesc_allocvp
 argument_list|(
-name|VT_UFS
+name|Froot
+argument_list|,
+name|FD_ROOT
 argument_list|,
 name|mp
-argument_list|,
-name|fdesc_vnodeop_p
 argument_list|,
 operator|&
 name|rvp
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|error
