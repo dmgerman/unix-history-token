@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -95,6 +95,9 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
+name|int
+name|s
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VERBOSE
@@ -141,6 +144,11 @@ operator||
 name|B_ERROR
 operator|)
 expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|reassignbuf
 argument_list|(
 name|bp
@@ -148,6 +156,11 @@ argument_list|,
 name|bp
 operator|->
 name|b_vp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|brelse
@@ -231,6 +244,11 @@ name|mp
 argument_list|)
 condition|)
 block|{
+comment|/* 			 * We set the queue to 0 here because we are about to 			 * write all the dirty buffers we have.  If more come 			 * in while we're writing the segment, they may not 			 * get written, so we want the count to reflect these 			 * new writes after the segwrite completes. 			 */
+name|locked_queue_count
+operator|=
+literal|0
+expr_stmt|;
 name|lfs_segwrite
 argument_list|(
 name|mp
@@ -250,11 +268,6 @@ name|mnt_next
 expr_stmt|;
 name|vfs_unbusy
 argument_list|(omp)
-expr_stmt|;
-comment|/* Not exact, but it doesn't matter. */
-name|locked_queue_count
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
