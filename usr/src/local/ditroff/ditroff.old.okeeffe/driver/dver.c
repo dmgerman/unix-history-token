@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dver.c	1.3	83/06/24  *  * dver.c - Versatec driver for the new troff  *  * Authors:	BWK(BELL), VCAT(berkley), and Richard L. Hyde  *		Many parts where lifted from the above sources.  * Editor:	Richard L. Hyde  * 		Dept. of Computer Sciences  * 		Purdue University  * Date:	Thu Oct 28 1982  */
+comment|/* dver.c	1.4	83/07/05  *  * dver.c - Versatec driver for the new troff  *  * Authors:	BWK(BELL), VCAT(berkley), and Richard L. Hyde  *		Many parts where lifted from the above sources.  * Editor:	Richard L. Hyde  * 		Dept. of Computer Sciences  * 		Purdue University  * Date:	Thu Oct 28 1982  */
 end_comment
 
 begin_comment
@@ -50,6 +50,17 @@ end_define
 
 begin_comment
 comment|/* total number of fonts useable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSTATE
+value|6
+end_define
+
+begin_comment
+comment|/* number of environments rememberable */
 end_comment
 
 begin_define
@@ -121,6 +132,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXWRIT
+value|4096
+end_define
+
+begin_comment
+comment|/* max characters allowed to write at once */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|hmot
 parameter_list|(
 name|n
@@ -153,7 +175,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.3	83/06/24"
+literal|"dver.c	1.4	83/07/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,17 +263,39 @@ name|pstab
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* point size table pointer */
+end_comment
+
+begin_decl_stmt
+name|int
+name|res
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* input was computed according to this resolution */
+end_comment
+
 begin_decl_stmt
 name|int
 name|nsizes
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* number of sizes device is capable of printing */
+end_comment
+
 begin_decl_stmt
 name|int
 name|nfonts
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* number of fonts device is capable of printing */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -324,16 +368,6 @@ comment|/* device codes */
 end_comment
 
 begin_decl_stmt
-name|int
-name|res
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* input was computed according to this resolution */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fontdir
@@ -341,6 +375,29 @@ init|=
 name|FONTDIR
 decl_stmt|;
 end_decl_stmt
+
+begin_struct
+struct|struct
+block|{
+comment|/* table of what font */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/*   name is on what */
+name|int
+name|number
+decl_stmt|;
+comment|/*   position in font tables */
+block|}
+name|fontname
+index|[
+name|NFONTS
+operator|+
+literal|1
+index|]
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -363,9 +420,13 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|maxX
+name|maxH
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* farthest down we've been on the current page */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -377,7 +438,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* this is invalid */
+comment|/* current point size being use */
 end_comment
 
 begin_decl_stmt
@@ -390,7 +451,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current font */
+comment|/* current font - not using any to start with */
 end_comment
 
 begin_decl_stmt
@@ -420,7 +481,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* h origin of current block; hpos rel to this */
+comment|/* h origin of current block (just a marker) */
 end_comment
 
 begin_decl_stmt
@@ -428,6 +489,20 @@ name|int
 name|vorig
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* v origin of current block (just a marker) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lastw
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* width of last character printed */
+end_comment
 
 begin_define
 define|#
@@ -457,13 +532,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXF
-value|(NFONTS + 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|OUTFILE
 value|fileno (stdout)
 end_define
@@ -471,9 +539,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|RASTER_LENGTH
-value|7040
+name|RES
+value|200
 end_define
+
+begin_comment
+comment|/* resolution of the device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRAILER
+value|(10 * RES)
+end_define
+
+begin_comment
+comment|/* position of trailer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RASTER_LENGTH
+value|2048
+end_define
+
+begin_comment
+comment|/* device line length */
+end_comment
 
 begin_define
 define|#
@@ -486,8 +580,12 @@ begin_define
 define|#
 directive|define
 name|NLINES
-value|100
+value|(11 * RES)
 end_define
+
+begin_comment
+comment|/* 11" long paper */
+end_comment
 
 begin_define
 define|#
@@ -495,6 +593,10 @@ directive|define
 name|BUFFER_SIZE
 value|(NLINES*BYTES_PER_LINE)
 end_define
+
+begin_comment
+comment|/* number of chars in picture */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -885,15 +987,7 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-name|ioctl
-argument_list|(
-name|OUTFILE
-argument_list|,
-name|VSETSTATE
-argument_list|,
-name|pltmode
-argument_list|)
-expr_stmt|;
+comment|/* noversatec 	ioctl(OUTFILE, VSETSTATE, pltmode); noversatec */
 if|if
 condition|(
 name|argc
@@ -1436,8 +1530,6 @@ argument_list|(
 name|n
 argument_list|,
 name|m
-argument_list|,
-literal|"."
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1536,6 +1628,8 @@ argument_list|(
 name|buf
 operator|+
 literal|1
+argument_list|,
+name|fp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1913,9 +2007,7 @@ name|fileinit
 argument_list|()
 expr_stmt|;
 name|t_init
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -3149,59 +3241,17 @@ block|}
 end_block
 
 begin_comment
-comment|/*******************************************************************************      Here beginneth all the stuff that really depends on the versatec (we hope).  *******************************************************************************/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES
-value|200
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRAILER
-value|(14 * res)
-end_define
-
-begin_decl_stmt
-name|int
-name|lastw
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* last character and width (maybe not used) */
-end_comment
-
-begin_decl_stmt
-name|long
-name|paper
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* paper used */
+comment|/*******************************************************************************  * Routine:	  * Results:	  * Side Efct:	  ******************************************************************************/
 end_comment
 
 begin_macro
 name|t_init
-argument_list|(
-argument|reinit
-argument_list|)
+argument_list|()
 end_macro
 
 begin_comment
 comment|/* initialize device */
 end_comment
-
-begin_decl_stmt
-name|int
-name|reinit
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -3214,7 +3264,6 @@ name|vpos
 operator|=
 literal|0
 expr_stmt|;
-comment|/* the above are not true until the code below happens*/
 name|setsize
 argument_list|(
 name|t_size
@@ -3231,13 +3280,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_define
-define|#
-directive|define
-name|MAXSTATE
-value|6
-end_define
 
 begin_struct
 struct|struct
@@ -3456,10 +3498,6 @@ condition|(
 name|output
 condition|)
 block|{
-name|paper
-operator|+=
-name|vpos
-expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -3480,50 +3518,15 @@ expr_stmt|;
 block|}
 name|slop_lines
 argument_list|(
-name|maxX
+name|maxH
 argument_list|)
 expr_stmt|;
-name|ioctl
-argument_list|(
-name|OUTFILE
-argument_list|,
-name|VSETSTATE
-argument_list|,
-name|prtmode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|write
-argument_list|(
-name|OUTFILE
-argument_list|,
-literal|"\f"
-argument_list|,
-literal|2
-argument_list|)
-operator|!=
-literal|2
-condition|)
-name|exit
-argument_list|(
-name|RESTART
-argument_list|)
-expr_stmt|;
-name|ioctl
-argument_list|(
-name|OUTFILE
-argument_list|,
-name|VSETSTATE
-argument_list|,
-name|pltmode
-argument_list|)
-expr_stmt|;
+comment|/* noversatec 		ioctl(OUTFILE, VSETSTATE, prtmode); 		if (write(OUTFILE, "\f", 2) != 2) 			exit(RESTART); 		ioctl(OUTFILE, VSETSTATE, pltmode); noversatec */
 name|size
 operator|=
 name|BYTES_PER_LINE
 operator|*
-name|maxX
+name|maxH
 expr_stmt|;
 name|vclear
 argument_list|(
@@ -3537,7 +3540,7 @@ operator|=
 name|buffer
 expr_stmt|;
 block|}
-name|maxX
+name|maxH
 operator|=
 literal|0
 expr_stmt|;
@@ -3982,14 +3985,6 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-name|output
-condition|)
-name|paper
-operator|+=
-name|vpos
-expr_stmt|;
 name|output
 operator|=
 literal|1
@@ -4004,10 +3999,10 @@ literal|'p'
 case|:
 name|slop_lines
 argument_list|(
-name|maxX
+name|maxH
 argument_list|)
 expr_stmt|;
-name|maxX
+name|maxH
 operator|=
 literal|0
 expr_stmt|;
@@ -4021,7 +4016,7 @@ literal|'s'
 case|:
 name|slop_lines
 argument_list|(
-name|maxX
+name|maxH
 argument_list|)
 expr_stmt|;
 name|t_done
@@ -4044,33 +4039,7 @@ end_comment
 
 begin_block
 block|{
-name|ioctl
-argument_list|(
-name|OUTFILE
-argument_list|,
-name|VSETSTATE
-argument_list|,
-name|prtmode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|write
-argument_list|(
-name|OUTFILE
-argument_list|,
-literal|"\f"
-argument_list|,
-literal|2
-argument_list|)
-operator|!=
-literal|2
-condition|)
-name|exit
-argument_list|(
-name|RESTART
-argument_list|)
-expr_stmt|;
+comment|/* noversatec 	ioctl(OUTFILE, VSETSTATE, prtmode); 	if (write(OUTFILE, "\f", 2) != 2) 		exit(RESTART); noversatec */
 block|}
 end_block
 
@@ -4323,6 +4292,7 @@ endif|#
 directive|endif
 name|lastw
 operator|=
+operator|(
 name|widtab
 index|[
 name|font
@@ -4337,6 +4307,13 @@ name|size
 operator|-
 literal|1
 index|]
+operator|+
+name|dev
+operator|.
+name|unitwidth
+operator|/
+literal|2
+operator|)
 operator|/
 name|dev
 operator|.
@@ -4592,17 +4569,15 @@ argument_list|)
 expr_stmt|;
 name|lastw
 operator|=
+operator|(
+operator|(
 name|pw
 index|[
 name|i
 index|]
 operator|&
 literal|077
-expr_stmt|;
-name|lastw
-operator|=
-operator|(
-name|lastw
+operator|)
 operator|*
 name|pstab
 index|[
@@ -4624,30 +4599,6 @@ name|unitwidth
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/* font position info: */
-end_comment
-
-begin_struct
-struct|struct
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|int
-name|number
-decl_stmt|;
-block|}
-name|fontname
-index|[
-name|NFONTS
-operator|+
-literal|1
-index|]
-struct|;
-end_struct
 
 begin_macro
 name|setsize
@@ -5017,8 +4968,8 @@ operator|<
 literal|0
 operator|||
 name|fnum
-operator|>=
-name|MAXF
+operator|>
+name|NFONTS
 operator|||
 name|fontname
 index|[
@@ -5786,17 +5737,17 @@ name|code
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* character to print */
+end_comment
+
 begin_block
 block|{
-name|char
-name|c
-decl_stmt|;
-comment|/* character to print */
 specifier|register
 name|struct
 name|dispatch
 modifier|*
-name|d
+name|dis
 decl_stmt|;
 comment|/* ptr to character font record */
 specifier|register
@@ -5853,19 +5804,15 @@ condition|)
 name|getfont
 argument_list|()
 expr_stmt|;
-name|c
-operator|=
-name|code
-expr_stmt|;
-name|d
+name|dis
 operator|=
 name|dispatch
 operator|+
-name|c
+name|code
 expr_stmt|;
 if|if
 condition|(
-name|d
+name|dis
 operator|->
 name|nbytes
 condition|)
@@ -5874,18 +5821,18 @@ name|addr
 operator|=
 name|bits
 operator|+
-name|d
+name|dis
 operator|->
 name|addr
 expr_stmt|;
 name|llen
 operator|=
 operator|(
-name|d
+name|dis
 operator|->
 name|left
 operator|+
-name|d
+name|dis
 operator|->
 name|right
 operator|+
@@ -5896,42 +5843,46 @@ literal|8
 expr_stmt|;
 name|nlines
 operator|=
-name|d
+name|dis
 operator|->
 name|up
 operator|+
-name|d
-operator|->
-name|down
-expr_stmt|;
-name|i
-operator|=
-name|vpos
-operator|+
-name|d
+name|dis
 operator|->
 name|down
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|i
+operator|=
+name|vpos
+operator|+
+name|dis
+operator|->
+name|down
+operator|)
 operator|>
-name|maxX
+name|maxH
 condition|)
-name|maxX
+name|maxH
 operator|=
 name|i
 expr_stmt|;
-comment|/* for flush */
+comment|/* remember page len */
 name|scanp
 operator|=
+name|buf0p
+operator|+
+operator|(
 operator|(
 operator|(
 name|vpos
 operator|-
-name|d
+name|dis
 operator|->
 name|up
+operator|)
 operator|-
 literal|1
 operator|)
@@ -5941,15 +5892,13 @@ operator|+
 operator|(
 name|hpos
 operator|-
-name|d
+name|dis
 operator|->
 name|left
 operator|)
 operator|/
 literal|8
 operator|)
-operator|+
-name|buf0p
 expr_stmt|;
 if|if
 condition|(
@@ -5979,7 +5928,7 @@ operator|(
 operator|(
 name|hpos
 operator|-
-name|d
+name|dis
 operator|->
 name|left
 operator|)
@@ -6038,6 +5987,7 @@ index|[
 name|BUFFER_SIZE
 index|]
 condition|)
+block|{
 do|do
 block|{
 name|fontdata
@@ -6124,6 +6074,7 @@ operator|>
 literal|0
 condition|)
 do|;
+block|}
 name|scanp
 operator|+=
 name|scanp_inc
@@ -6187,15 +6138,7 @@ argument_list|,
 name|usize
 argument_list|)
 expr_stmt|;
-name|ioctl
-argument_list|(
-name|OUTFILE
-argument_list|,
-name|VSETSTATE
-argument_list|,
-name|pltmode
-argument_list|)
-expr_stmt|;
+comment|/* noversatec 	ioctl(OUTFILE, VSETSTATE, pltmode); noversatec */
 block|}
 end_block
 
@@ -6240,6 +6183,12 @@ name|tsize
 expr_stmt|;
 name|tsize
 operator|=
+name|usize
+operator|>
+name|MAXWRIT
+condition|?
+name|MAXWRIT
+else|:
 name|usize
 expr_stmt|;
 ifdef|#
@@ -6532,52 +6481,70 @@ block|}
 end_block
 
 begin_comment
-comment|/*******************************************************************************  	graphics routines go here  *******************************************************************************/
+comment|/*  * Points should be in the range 0<= x< RASTER_LENGTH, 0<= y< NLINES.  * The origin is the top left-hand corner with increasing x towards the  * right and increasing y going down.  * The output array is NLINES x BYTES_PER_LINE pixels.  */
 end_comment
 
-begin_macro
-name|drawline
-argument_list|()
-end_macro
+begin_expr_stmt
+name|point
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+specifier|register
+name|int
+name|x
+operator|,
+name|y
+expr_stmt|;
+end_expr_stmt
 
 begin_block
-block|{}
-end_block
-
-begin_macro
-name|drawcirc
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_macro
-name|drawellip
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_macro
-name|drawarc
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_macro
-name|drawwig
-argument_list|()
-end_macro
-
-begin_block
-block|{}
+block|{
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|x
+operator|<
+name|RASTER_LENGTH
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|y
+operator|<
+name|NLINES
+condition|)
+block|{
+name|buffer
+index|[
+name|y
+operator|*
+name|BYTES_PER_LINE
+operator|+
+operator|(
+name|x
+operator|>>
+literal|3
+operator|)
+index|]
+operator||=
+literal|1
+operator|<<
+operator|(
+literal|7
+operator|-
+operator|(
+name|x
+operator|&
+literal|07
+operator|)
+operator|)
+expr_stmt|;
+block|}
+block|}
 end_block
 
 end_unit
