@@ -128,40 +128,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* The following might now be obsolete */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|pcic_resume_reset
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_machdep_pccard
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|pcic_resume_reset
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|pcic_resume_reset
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -1267,7 +1233,8 @@ name|pwr
 operator|.
 name|vpp
 operator|=
-literal|50
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 	 * Disable any pending timeouts for this slot, and explicitly 	 * power it off right now.  Then, re-enable the power using 	 * the (possibly new) power settings. 	 */
 name|untimeout
