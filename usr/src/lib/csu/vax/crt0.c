@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.5 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,14 +63,6 @@ name|fd
 decl_stmt|;
 end_decl_stmt
 
-begin_asm
-asm|asm("#define _start start");
-end_asm
-
-begin_asm
-asm|asm("#define _eprol eprol");
-end_asm
-
 begin_decl_stmt
 specifier|extern
 name|unsigned
@@ -84,8 +76,29 @@ specifier|extern
 name|unsigned
 name|char
 name|eprol
+name|asm
+argument_list|(
+literal|"eprol"
+argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_extern
+extern|extern			start(
+end_extern
+
+begin_asm
+unit|)
+asm|asm("start");
+end_asm
+
+begin_comment
+comment|/*  * Two kluges: store sp at entry in environ, and  * install 16 bits of 0 at location 0 (a zero register save mask).  * These two hacks remove limits on the use of local  * and register variables in start().  */
+end_comment
+
+begin_asm
+asm|asm(".text; .word 0; movl sp,_environ; jbr start+2");
+end_asm
 
 begin_macro
 name|start
@@ -124,19 +137,12 @@ decl_stmt|;
 comment|/* size varies */
 block|}
 struct|;
-comment|/* 	 *	ALL REGISTER VARIABLES!!! 	 */
-specifier|register
-name|int
-name|r11
-decl_stmt|;
-comment|/* needed for init */
 specifier|register
 name|struct
 name|kframe
 modifier|*
 name|kfp
 decl_stmt|;
-comment|/* r10 */
 specifier|register
 name|char
 modifier|*
@@ -169,8 +175,15 @@ expr_stmt|;
 else|#
 directive|else
 else|not lint
-asm|asm("	movl	sp,r10");
-comment|/* catch it quick */
+name|kfp
+operator|=
+operator|(
+expr|struct
+name|kframe
+operator|*
+operator|)
+name|environ
+expr_stmt|;
 endif|#
 directive|endif
 endif|not lint
@@ -289,14 +302,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_asm
-asm|asm("#undef _start");
-end_asm
-
-begin_asm
-asm|asm("#undef _eprol");
-end_asm
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -317,10 +322,6 @@ name|int
 name|code
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* r11 */
-end_comment
 
 begin_block
 block|{
@@ -374,11 +375,11 @@ block|{  }
 end_block
 
 begin_asm
-asm|asm("	.globl	mcount");
+asm|asm(".globl mcount");
 end_asm
 
 begin_asm
-asm|asm("mcount:	rsb");
+asm|asm("mcount: rsb");
 end_asm
 
 begin_endif
