@@ -969,7 +969,7 @@ name|td_ucred
 condition|)
 name|panic
 argument_list|(
-literal|"trap:thread got a cred while userspace"
+literal|"trap: thread got a cred while userspace"
 argument_list|)
 expr_stmt|;
 name|td
