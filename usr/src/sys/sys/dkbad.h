@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dkbad.h	4.1	81/05/08	*/
+comment|/*	dkbad.h	4.2	81/05/09	*/
 end_comment
 
 begin_comment
@@ -19,15 +19,21 @@ name|u_short
 name|bt_magic
 decl_stmt|;
 comment|/* magic number for sanity check */
+ifdef|#
+directive|ifdef
+name|notdef
 define|#
 directive|define
 name|BADMAGIC
 value|0122155
+endif|#
+directive|endif
 name|u_short
 name|bt_flag
 decl_stmt|;
 comment|/* -1 => alignment cartridge */
 struct|struct
+name|bt_bad
 block|{
 name|u_short
 name|bt_cyl
