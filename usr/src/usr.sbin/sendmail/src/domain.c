@@ -3,11 +3,23 @@ begin_comment
 comment|/*  * Copyright (c) 1986 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sendmail.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -15,9 +27,29 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.15 (Berkeley) %G%"
+literal|"@(#)domain.c	5.16 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)domain.c	5.16 (Berkeley) %G% (without name server)"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -28,16 +60,22 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sendmail.h>
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -243,12 +281,14 @@ case|:
 case|case
 name|NO_RECOVERY
 case|:
+comment|/* no MX data on this host */
 goto|goto
 name|punt
 goto|;
 case|case
 name|HOST_NOT_FOUND
 case|:
+comment|/* the host just doesn't exist */
 operator|*
 name|rcode
 operator|=
@@ -258,6 +298,20 @@ break|break;
 case|case
 name|TRY_AGAIN
 case|:
+comment|/* couldn't connect to the name server */
+if|if
+condition|(
+operator|!
+name|UseNameServer
+operator|&&
+name|errno
+operator|==
+name|ECONNREFUSED
+condition|)
+goto|goto
+name|punt
+goto|;
+comment|/* it might come up later; better queue it up */
 operator|*
 name|rcode
 operator|=
@@ -265,6 +319,7 @@ name|EX_TEMPFAIL
 expr_stmt|;
 break|break;
 block|}
+comment|/* irreconcilable differences */
 return|return
 operator|(
 operator|-
@@ -1193,6 +1248,15 @@ block|}
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NAMED_BIND */
+end_comment
 
 end_unit
 
