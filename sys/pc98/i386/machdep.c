@@ -10532,16 +10532,6 @@ name|p_addr
 operator|->
 name|u_pcb
 operator|.
-name|pcb_schednest
-operator|=
-literal|0
-expr_stmt|;
-name|proc0
-operator|.
-name|p_addr
-operator|->
-name|u_pcb
-operator|.
 name|pcb_ext
 operator|=
 literal|0
