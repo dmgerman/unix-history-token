@@ -882,24 +882,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|memcpy
-argument_list|(
-operator|&
-name|bindto
-argument_list|,
+name|bindres0
+operator|=
 name|res
-operator|->
-name|ai_addr
-argument_list|,
-name|res
-operator|->
-name|ai_addrlen
-argument_list|)
-expr_stmt|;
-name|freeaddrinfo
-argument_list|(
-name|res
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Set up the home directory in case we're globbing. 	 */

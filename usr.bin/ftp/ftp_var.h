@@ -896,13 +896,14 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|sockaddr_storage
-name|bindto
+name|addrinfo
+modifier|*
+name|bindres0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* address to bind to */
+comment|/* addrinfo for address to bind to */
 end_comment
 
 begin_decl_stmt
