@@ -11583,7 +11583,7 @@ index|[
 name|gus_devnum
 index|]
 operator|=
-literal|1
+name|DSP_BUFFCOUNT
 expr_stmt|;
 name|sound_buffsizes
 index|[
