@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1987, 1988, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1980, 1987, 1988, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980, 1987, 1988, 1991, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1987, 1988, 1991, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	8.1 (Berkeley) %G%"
+literal|"@(#)login.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2357,7 +2357,7 @@ name|printf
 argument_list|(
 literal|"%s\n\t%s  %s\n\n"
 argument_list|,
-literal|"Copyright (c) 1980, 1983, 1986, 1988, 1990, 1991, 1993"
+literal|"Copyright (c) 1980, 1983, 1986, 1988, 1990, 1991, 1993, 1994"
 argument_list|,
 literal|"The Regents of the University of California. "
 argument_list|,
