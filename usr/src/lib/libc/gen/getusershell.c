@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getusershell.c	5.7 (Berkeley) %G%"
+literal|"@(#)getusershell.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -79,15 +79,14 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|SHELLS
-value|"/etc/shells"
-end_define
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_comment
-comment|/*  * Do not add local shells here.  They should be added in /etc/shells  */
+comment|/*  * Local shells should NOT be added here.  They should be added in  * /etc/shells.  */
 end_comment
 
 begin_decl_stmt
@@ -98,11 +97,11 @@ name|okshells
 index|[]
 init|=
 block|{
-literal|"/bin/sh"
+name|_PATH_BSHELL
 block|,
-literal|"/bin/csh"
+name|_PATH_CSHELL
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -110,6 +109,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
+modifier|*
+name|curshell
+decl_stmt|,
 modifier|*
 modifier|*
 name|shells
@@ -124,24 +127,18 @@ specifier|static
 name|char
 modifier|*
 modifier|*
-name|curshell
-init|=
-name|NULL
+name|initshells
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|initshells
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/*  * Get a list of shells from SHELLS, if it exists.  */
+comment|/*  * Get a list of shells from _PATH_SHELLS, if it exists.  */
 end_comment
 
 begin_function
@@ -200,10 +197,6 @@ name|NULL
 condition|)
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|shells
 argument_list|)
 expr_stmt|;
@@ -280,10 +273,6 @@ name|NULL
 condition|)
 name|free
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|shells
 argument_list|)
 expr_stmt|;
@@ -313,17 +302,13 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|SHELLS
+name|_PATH_SHELLS
 argument_list|,
 literal|"r"
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|FILE
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -369,7 +354,7 @@ operator|=
 name|malloc
 argument_list|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 name|statb
 operator|.
@@ -396,11 +381,6 @@ return|;
 block|}
 name|shells
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|calloc
 argument_list|(
 operator|(
@@ -544,11 +524,7 @@ block|}
 operator|*
 name|sp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 operator|(
 name|void
