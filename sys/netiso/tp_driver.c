@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header$ */
+comment|/* $Header: /a/cvs/386BSD/src/sys/netiso/tp_driver.c,v 1.1.1.1 1993/06/12 14:57:19 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source$ */
+comment|/* $Source: /a/cvs/386BSD/src/sys/netiso/tp_driver.c,v $ */
 end_comment
 
 begin_ifndef
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include

@@ -12,13 +12,19 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_timer.c,v 5.2 88/11/18 17:29:07 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_timer.c,v $  *  * Contains all the timer code.    * There are two sources of calls to these routines:  * the clock, and tp.trans. (ok, and tp_pcb.c calls it at init time)  *  * Timers come in two flavors - those that generally get  * cancelled (tp_ctimeout, tp_cuntimeout)  * and those that either usually expire (tp_etimeout,   * tp_euntimeout, tp_slowtimo) or may require more than one instance  * of the timer active at a time.  *  * The C timers are stored in the tp_ref structure. Their "going off"  * is manifested by a driver event of the TM_xxx form.  *  * The E timers are handled like the generic kernel callouts.  * Their "going off" is manifested by a function call w/ 3 arguments.  */
+comment|/*   * ARGO TP  *  * $Header: /a/cvs/386BSD/src/sys/netiso/tp_timer.c,v 1.1.1.1 1993/06/12 14:57:17 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/sys/netiso/tp_timer.c,v $  *  * Contains all the timer code.    * There are two sources of calls to these routines:  * the clock, and tp.trans. (ok, and tp_pcb.c calls it at init time)  *  * Timers come in two flavors - those that generally get  * cancelled (tp_ctimeout, tp_cuntimeout)  * and those that either usually expire (tp_etimeout,   * tp_euntimeout, tp_slowtimo) or may require more than one instance  * of the timer active at a time.  *  * The C timers are stored in the tp_ref structure. Their "going off"  * is manifested by a driver event of the TM_xxx form.  *  * The E timers are handled like the generic kernel callouts.  * Their "going off" is manifested by a function call w/ 3 arguments.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include

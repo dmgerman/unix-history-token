@@ -12,17 +12,23 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: /var/src/sys/netiso/RCS/clnp_frag.c,v 5.1 89/02/09 16:20:26 hagens Exp $ */
+comment|/* $Header: /a/cvs/386BSD/src/sys/netiso/clnp_frag.c,v 1.1.1.1 1993/06/12 14:57:22 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/src/sys/netiso/RCS/clnp_frag.c,v $ */
+comment|/* $Source: /a/cvs/386BSD/src/sys/netiso/clnp_frag.c,v $ */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include

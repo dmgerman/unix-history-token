@@ -12,13 +12,19 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
+comment|/*   * ARGO TP  *  * $Header: /a/cvs/386BSD/src/sys/netiso/tp_subr.c,v 1.1.1.1 1993/06/12 14:57:17 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/sys/netiso/tp_subr.c,v $  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include

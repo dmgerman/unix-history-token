@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * $Header: iso_chksum.c,v 4.7 88/07/29 15:31:26 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/iso_chksum.c,v $  *  * ISO CHECKSUM  *  * The checksum generation and check routines are here.  * The checksum is 2 bytes such that the sum of all the bytes b(i) == 0  * and the sum of i * b(i) == 0.  * The whole thing is complicated by the fact that the data are in mbuf  * chains.  * Furthermore, there is the possibility of wraparound in the running  * sums after adding up 4102 octets.  In order to avoid doing a mod  * operation after EACH add, we have restricted this implementation to   * negotiating a maximum of 4096-octets per TPDU (for the transport layer).  * The routine iso_check_csum doesn't need to know where the checksum  * octets are.  * The routine iso_gen_csum takes a pointer to an mbuf chain (logically  * a chunk of data), an offset into the chunk at which the 2 octets are to  * be stuffed, and the length of the chunk.  The 2 octets have to be  * logically adjacent, but may be physically located in separate mbufs.  */
+comment|/*   * $Header: /a/cvs/386BSD/src/sys/netiso/iso_chksum.c,v 1.1.1.1 1993/06/12 14:57:20 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/sys/netiso/iso_chksum.c,v $  *  * ISO CHECKSUM  *  * The checksum generation and check routines are here.  * The checksum is 2 bytes such that the sum of all the bytes b(i) == 0  * and the sum of i * b(i) == 0.  * The whole thing is complicated by the fact that the data are in mbuf  * chains.  * Furthermore, there is the possibility of wraparound in the running  * sums after adding up 4102 octets.  In order to avoid doing a mod  * operation after EACH add, we have restricted this implementation to   * negotiating a maximum of 4096-octets per TPDU (for the transport layer).  * The routine iso_check_csum doesn't need to know where the checksum  * octets are.  * The routine iso_gen_csum takes a pointer to an mbuf chain (logically  * a chunk of data), an offset into the chunk at which the 2 octets are to  * be stuffed, and the length of the chunk.  The 2 octets have to be  * logically adjacent, but may be physically located in separate mbufs.  */
 end_comment
 
 begin_ifdef
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
