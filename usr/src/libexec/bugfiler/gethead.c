@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethead.c	5.8 (Berkeley) %G%"
+literal|"@(#)gethead.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bug.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -43,13 +43,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bug.h"
 end_include
 
 begin_decl_stmt
@@ -268,15 +298,6 @@ modifier|*
 name|hp
 decl_stmt|;
 comment|/* mail header pointer */
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 name|redist

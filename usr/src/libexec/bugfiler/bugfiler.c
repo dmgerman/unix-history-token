@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.15 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bug.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -71,7 +71,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include
@@ -83,7 +89,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bug.h"
 end_include
 
 begin_decl_stmt
@@ -154,18 +184,16 @@ comment|/* redistribut BR */
 name|char
 modifier|*
 name|argversion
-decl_stmt|,
+decl_stmt|;
 comment|/* folder name provided */
-modifier|*
-name|strcpy
+specifier|static
+name|void
+name|logit
+argument_list|()
+decl_stmt|,
+name|make_copy
 argument_list|()
 decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
 name|do_ack
 operator|=
 name|do_redist
@@ -349,8 +377,6 @@ condition|(
 name|setuid
 argument_list|(
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 name|error
@@ -394,24 +420,25 @@ begin_comment
 comment|/*  * make_copy --  *	make a copy of bug report in error folder  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|make_copy
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
 name|int
 name|cnt
-block|,
+decl_stmt|,
 comment|/* read return value */
 name|tfd
-block|;
+decl_stmt|;
 comment|/* temp file descriptor */
 name|char
-operator|*
+modifier|*
 name|strcpy
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|access
@@ -421,26 +448,22 @@ argument_list|,
 name|F_OK
 argument_list|)
 condition|)
-block|{
 operator|(
 name|void
 operator|)
 name|mkdir
 argument_list|(
 name|TMP_DIR
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|chmod
-argument_list|(
-name|TMP_DIR
 argument_list|,
-literal|0775
+name|S_IRWXU
+operator||
+name|S_IRWXG
+operator||
+name|S_IROTH
+operator||
+name|S_IXOTH
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -451,9 +474,6 @@ argument_list|,
 name|TMP_BUG
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tfd
@@ -508,9 +528,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|error
 argument_list|(
 literal|"can't make copy using %s."
@@ -518,20 +535,18 @@ argument_list|,
 name|tmpname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * logit --  *	log this run of the bugfiler  */
 end_comment
 
-begin_macro
-unit|static
+begin_function
+specifier|static
+name|void
 name|logit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|timeval
@@ -609,7 +624,7 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

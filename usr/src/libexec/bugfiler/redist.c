@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.10 (Berkeley) %G%"
+literal|"@(#)redist.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
 end_include
 
 begin_include
@@ -49,7 +55,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bug.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bug.h"
 end_include
 
 begin_include

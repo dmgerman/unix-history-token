@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.8 (Berkeley) %G%"
+literal|"@(#)process.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<bug.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -56,6 +68,18 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bug.h"
 end_include
 
 begin_decl_stmt
@@ -96,9 +120,9 @@ name|int
 name|lfd
 decl_stmt|;
 comment|/* lock file descriptor */
-name|char
-modifier|*
-name|ctime
+specifier|static
+name|int
+name|getnext
 parameter_list|()
 function_decl|;
 if|if
@@ -363,35 +387,36 @@ begin_comment
 comment|/*  * getnext --  *	get next file name (number)  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|getnext
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
-expr|struct
-name|direct
-operator|*
+name|struct
+name|dirent
+modifier|*
 name|d
-block|;
+decl_stmt|;
 comment|/* directory structure */
 specifier|register
 name|DIR
-operator|*
+modifier|*
 name|dirp
-block|;
+decl_stmt|;
 comment|/* directory pointer */
 specifier|register
 name|int
 name|highval
-block|,
+decl_stmt|,
 name|newval
-block|;
+decl_stmt|;
 specifier|register
 name|char
-operator|*
+modifier|*
 name|p
-block|;
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -405,7 +430,7 @@ name|dir
 argument_list|,
 name|folder
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -425,9 +450,6 @@ argument_list|,
 name|bfr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|highval
@@ -489,25 +511,19 @@ operator|=
 name|newval
 expr_stmt|;
 block|}
-end_for
-
-begin_expr_stmt
 name|closedir
 argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 operator|++
 name|highval
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-unit|}
 end_unit
 
