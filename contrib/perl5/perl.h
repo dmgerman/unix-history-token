@@ -2319,6 +2319,57 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* needed for IAMSUID case for 4.4BSD systems   * XXX there should probably be a Configure variable  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I_SYS_PARAM
+end_ifdef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199306
+operator|)
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !BSD */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !I_SYS_PARAM */
+end_comment
+
+begin_comment
 comment|/* Use all the "standard" definitions? */
 end_comment
 
@@ -19347,6 +19398,27 @@ end_endif
 begin_comment
 comment|/* IAMSUID */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|I_LIBUTIL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_comment
+comment|/* setproctitle() in some FreeBSDs */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* and finally... */
