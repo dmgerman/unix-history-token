@@ -491,6 +491,12 @@ operator|&&
 name|fs
 operator|->
 name|st_size
+operator|>
+literal|0
+operator|&&
+name|fs
+operator|->
+name|st_size
 operator|<=
 literal|8
 operator|*
