@@ -2253,34 +2253,59 @@ condition|(
 name|exiting
 condition|)
 return|return;
-name|again
-label|:
-name|acquire_line
-argument_list|()
-expr_stmt|;
-comment|/* reopen dead line */
-comment|/* invoke a shell for redial_cmd or punt. */
 if|if
 condition|(
 name|redial_cmd
+operator|==
+name|NULL
 condition|)
 block|{
-name|setup_line
-argument_list|(
-name|CLOCAL
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"SIGHUP on %s (sl%d); running %s"
+literal|"SIGHUP on %s (sl%d); exiting"
+argument_list|,
+name|dev
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|again
+label|:
+comment|/* invoke a shell for redial_cmd or punt. */
+if|if
+condition|(
+operator|*
+name|redial_cmd
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"SIGHUP on %s (sl%d); running '%s'"
 argument_list|,
 name|dev
 argument_list|,
 name|unit
 argument_list|,
 name|redial_cmd
+argument_list|)
+expr_stmt|;
+name|acquire_line
+argument_list|()
+expr_stmt|;
+comment|/* reopen dead line */
+name|setup_line
+argument_list|(
+name|CLOCAL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2430,6 +2455,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* Empty redial command */
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"SIGHUP on %s (sl%d); reestablish connection"
+argument_list|,
+name|dev
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|acquire_line
+argument_list|()
+expr_stmt|;
+comment|/* reopen dead line */
 name|setup_line
 argument_list|(
 literal|0
