@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.28 1998/05/31 12:09:50 bde Exp $"
+literal|"$Id: print.c,v 1.29 1998/06/28 18:19:13 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
