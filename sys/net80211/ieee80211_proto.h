@@ -128,7 +128,7 @@ end_struct_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ieee80211_input
 parameter_list|(
 name|struct

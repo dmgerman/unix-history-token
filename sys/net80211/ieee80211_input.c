@@ -491,7 +491,7 @@ comment|/*  * Process a received frame.  The node associated with the sender  * 
 end_comment
 
 begin_function
-name|void
+name|int
 name|ieee80211_input
 parameter_list|(
 name|struct
@@ -647,6 +647,12 @@ name|len
 operator|)
 argument_list|)
 expr_stmt|;
+name|type
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* undefined */
 comment|/* 	 * In monitor mode, send everything directly to bpf. 	 * XXX may want to include the CRC 	 */
 if|if
 condition|(
@@ -2354,7 +2360,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
+return|return
+name|IEEE80211_FC0_TYPE_DATA
+return|;
 case|case
 name|IEEE80211_FC0_TYPE_MGT
 case|:
@@ -2660,7 +2668,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|type
+return|;
 case|case
 name|IEEE80211_FC0_TYPE_CTL
 case|:
@@ -2766,6 +2776,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|type
+return|;
 undef|#
 directive|undef
 name|SEQ_LEQ
