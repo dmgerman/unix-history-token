@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GNU DIFF entry routine.    Copyright (C) 1988, 1989, 1992, 1993, 1994, 1997 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* GNU DIFF entry routine.    Copyright (C) 1988, 1989, 1992, 1993, 1994, 1997, 1998 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -1411,6 +1411,8 @@ parameter_list|,
 name|argv
 parameter_list|,
 name|out
+parameter_list|,
+name|callbacks_arg
 parameter_list|)
 name|int
 name|argc
@@ -1423,6 +1425,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|out
+decl_stmt|;
+specifier|const
+name|struct
+name|diff_callbacks
+modifier|*
+name|callbacks_arg
 decl_stmt|;
 block|{
 name|int
@@ -1450,6 +1458,15 @@ decl_stmt|;
 name|int
 name|optind_old
 decl_stmt|;
+name|int
+name|opened_file
+init|=
+literal|0
+decl_stmt|;
+name|callbacks
+operator|=
+name|callbacks_arg
+expr_stmt|;
 comment|/* Do our initializations.  */
 name|initialize_main
 argument_list|(
@@ -2074,6 +2091,47 @@ break|break;
 case|case
 literal|'v'
 case|:
+if|if
+condition|(
+name|callbacks
+operator|&&
+name|callbacks
+operator|->
+name|write_stdout
+condition|)
+block|{
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+literal|"diff - GNU diffutils version "
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+name|diff_version_string
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|printf
 argument_list|(
 literal|"diff - GNU diffutils version %s\n"
@@ -2372,6 +2430,16 @@ case|:
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|callbacks
+operator|||
+operator|!
+name|callbacks
+operator|->
+name|write_stdout
+condition|)
 name|check_output
 argument_list|(
 name|stdout
@@ -2753,6 +2821,38 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|callbacks
+operator|&&
+name|callbacks
+operator|->
+name|write_output
+condition|)
+block|{
+if|if
+condition|(
+name|out
+operator|!=
+name|NULL
+condition|)
+block|{
+name|diff_error
+argument_list|(
+literal|"write callback with output file"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+literal|2
+return|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|out
 operator|==
 name|NULL
@@ -2766,7 +2866,7 @@ block|{
 if|#
 directive|if
 name|HAVE_SETMODE
-comment|/* A diff which is full of ^Z and such isn't going to work          very well in text mode.  */
+comment|/* A diff which is full of ^Z and such isn't going to work 	     very well in text mode.  */
 if|if
 condition|(
 name|binary_I_O
@@ -2808,6 +2908,11 @@ return|return
 literal|2
 return|;
 block|}
+name|opened_file
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 comment|/* Set the jump buffer, so that diff may abort execution without      terminating the process. */
 if|if
@@ -2830,9 +2935,7 @@ name|optind_old
 expr_stmt|;
 if|if
 condition|(
-name|outfile
-operator|!=
-name|stdout
+name|opened_file
 condition|)
 name|fclose
 argument_list|(
@@ -2879,6 +2982,16 @@ name|optind
 operator|=
 name|optind_old
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|callbacks
+operator|||
+operator|!
+name|callbacks
+operator|->
+name|write_output
+condition|)
 name|check_output
 argument_list|(
 name|outfile
@@ -2886,9 +2999,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|outfile
-operator|!=
-name|stdout
+name|opened_file
 condition|)
 if|if
 condition|(
@@ -2899,7 +3010,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|perror
+name|perror_with_name
 argument_list|(
 literal|"close error on output file"
 argument_list|)
@@ -3257,6 +3368,103 @@ specifier|const
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|callbacks
+operator|&&
+name|callbacks
+operator|->
+name|write_stdout
+condition|)
+block|{
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+literal|"Usage: "
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+name|diff_program_name
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+literal|" [OPTION]... FILE1 FILE2\n\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|option_help
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+block|{
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+literal|"  "
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+operator|*
+name|p
+argument_list|)
+expr_stmt|;
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+call|(
+modifier|*
+name|callbacks
+operator|->
+name|write_stdout
+call|)
+argument_list|(
+literal|"\nIf FILE1 or FILE2 is `-', read standard input.\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"Usage: %s [OPTION]... FILE1 FILE2\n\n"
@@ -3289,6 +3497,7 @@ argument_list|(
 literal|"\nIf FILE1 or FILE2 is `-', read standard input.\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5128,10 +5337,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|fflush
-argument_list|(
-name|outfile
-argument_list|)
+name|flush_output
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

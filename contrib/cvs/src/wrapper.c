@@ -1314,6 +1314,16 @@ block|{
 case|case
 literal|'f'
 case|:
+comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cyclic.com/cvs/dev-wrap.txt).  */
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"-t/-f wrappers not supported by this version of CVS"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -1361,6 +1371,16 @@ break|break;
 case|case
 literal|'t'
 case|:
+comment|/* Before this is reenabled, need to address the problem in 	       commit.c (see http://www.cyclic.com/cvs/dev-wrap.txt).  */
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"-t/-f wrappers not supported by this version of CVS"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|e

@@ -319,7 +319,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status EXIT_FAILURE if STATUS is nonzero.  If MESSAGE is "",    no need to print a message.     I think this is largely cleaned up to the point where it does the right    thing for the server, whether the normal server_active (child process)    case or the error_use_protocol (parent process) case.  The one exception    is that STATUS nonzero for error_use_protocol probably doesn't work yet;    in that case still need to use the pending_error machinery in server.c.  */
+comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status EXIT_FAILURE if STATUS is nonzero.  If MESSAGE is "",    no need to print a message.     I think this is largely cleaned up to the point where it does the right    thing for the server, whether the normal server_active (child process)    case or the error_use_protocol (parent process) case.  The one exception    is that STATUS nonzero for error_use_protocol probably doesn't work yet;    in that case still need to use the pending_error machinery in server.c.     error() does not molest errno; some code (e.g. Entries_Open) depends    on being able to say something like:       error (0, 0, "foo");       error (0, errno, "bar");     */
 end_comment
 
 begin_comment
@@ -396,6 +396,12 @@ end_endif
 
 begin_block
 block|{
+comment|/* Prevent strtoul (via int_vasprintf) from clobbering it.  */
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_VPRINTF
@@ -860,6 +866,10 @@ name|status
 condition|)
 name|error_exit
 argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 block|}
 end_block

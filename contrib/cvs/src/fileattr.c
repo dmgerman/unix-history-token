@@ -427,6 +427,23 @@ argument_list|,
 literal|'\t'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"file attribute database corruption: tab missing in %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
 operator|*
 name|p
 operator|++
@@ -511,6 +528,23 @@ argument_list|(
 name|line
 argument_list|,
 literal|'\t'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"file attribute database corruption: tab missing in %s"
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 operator|++

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Commit Files  *   * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *   */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *  * Commit Files  *  * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *  */
 end_comment
 
 begin_include
@@ -601,7 +601,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|tag
+name|saved_tag
 decl_stmt|;
 end_decl_stmt
 
@@ -638,9 +638,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|List
+modifier|*
+name|saved_ulist
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
-name|message
+name|saved_message
 decl_stmt|;
 end_decl_stmt
 
@@ -1284,7 +1292,7 @@ name|xfinfo
 argument_list|,
 name|NULL
 argument_list|,
-name|tag
+name|saved_tag
 argument_list|,
 name|NULL
 argument_list|,
@@ -1804,20 +1812,20 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|message
+name|saved_message
 condition|)
 block|{
 name|free
 argument_list|(
-name|message
+name|saved_message
 argument_list|)
 expr_stmt|;
-name|message
+name|saved_message
 operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|message
+name|saved_message
 operator|=
 name|xstrdup
 argument_list|(
@@ -1830,14 +1838,14 @@ literal|'r'
 case|:
 if|if
 condition|(
-name|tag
+name|saved_tag
 condition|)
 name|free
 argument_list|(
-name|tag
+name|saved_tag
 argument_list|)
 expr_stmt|;
-name|tag
+name|saved_tag
 operator|=
 name|xstrdup
 argument_list|(
@@ -1920,12 +1928,12 @@ expr_stmt|;
 comment|/* numeric specified revision means we ignore sticky tags... */
 if|if
 condition|(
-name|tag
+name|saved_tag
 operator|&&
 name|isdigit
 argument_list|(
 operator|*
-name|tag
+name|saved_tag
 argument_list|)
 condition|)
 block|{
@@ -1936,11 +1944,11 @@ expr_stmt|;
 comment|/* strip trailing dots */
 while|while
 condition|(
-name|tag
+name|saved_tag
 index|[
 name|strlen
 argument_list|(
-name|tag
+name|saved_tag
 argument_list|)
 operator|-
 literal|1
@@ -1948,11 +1956,11 @@ index|]
 operator|==
 literal|'.'
 condition|)
-name|tag
+name|saved_tag
 index|[
 name|strlen
 argument_list|(
-name|tag
+name|saved_tag
 argument_list|)
 operator|-
 literal|1
@@ -1978,7 +1986,7 @@ name|statbuf
 decl_stmt|;
 if|if
 condition|(
-name|message
+name|saved_message
 condition|)
 name|error
 argument_list|(
@@ -2041,7 +2049,7 @@ argument_list|,
 name|logfile
 argument_list|)
 expr_stmt|;
-name|message
+name|saved_message
 operator|=
 name|xmalloc
 argument_list|(
@@ -2062,7 +2070,7 @@ name|read
 argument_list|(
 name|logfd
 argument_list|,
-name|message
+name|saved_message
 argument_list|,
 name|statbuf
 operator|.
@@ -2093,7 +2101,7 @@ argument_list|(
 name|logfd
 argument_list|)
 expr_stmt|;
-name|message
+name|saved_message
 index|[
 name|n
 index|]
@@ -2109,9 +2117,6 @@ condition|(
 name|client_active
 condition|)
 block|{
-name|int
-name|err
-decl_stmt|;
 name|struct
 name|find_data
 name|find_args
@@ -2157,7 +2162,7 @@ name|force
 operator|=
 name|force_ci
 operator|||
-name|tag
+name|saved_tag
 operator|!=
 name|NULL
 expr_stmt|;
@@ -2285,7 +2290,7 @@ argument_list|(
 literal|"."
 argument_list|,
 operator|&
-name|message
+name|saved_message
 argument_list|,
 operator|(
 name|char
@@ -2301,7 +2306,7 @@ expr_stmt|;
 comment|/* Run the user-defined script to verify/check information in 	 *the log message 	 */
 name|do_verify
 argument_list|(
-name|message
+name|saved_message
 argument_list|,
 operator|(
 name|char
@@ -2316,7 +2321,7 @@ name|option_with_arg
 argument_list|(
 literal|"-m"
 argument_list|,
-name|message
+name|saved_message
 argument_list|)
 expr_stmt|;
 comment|/* OK, now process all the questionable files we have been saving 	   up.  */
@@ -2554,7 +2559,7 @@ name|option_with_arg
 argument_list|(
 literal|"-r"
 argument_list|,
-name|tag
+name|saved_tag
 argument_list|)
 expr_stmt|;
 comment|/* Sending only the names of the files which were modified, added, 	   or removed means that the server will only do an up-to-date 	   check on those files.  This is different from local CVS and 	   previous versions of client/server CVS, but it probably is a Good 	   Thing, or at least Not Such A Bad Thing.  */
@@ -2615,7 +2620,7 @@ literal|0
 operator|&&
 name|use_editor
 operator|&&
-name|message
+name|saved_message
 operator|!=
 name|NULL
 condition|)
@@ -2664,13 +2669,13 @@ if|if
 condition|(
 name|fwrite
 argument_list|(
-name|message
+name|saved_message
 argument_list|,
 literal|1
 argument_list|,
 name|strlen
 argument_list|(
-name|message
+name|saved_message
 argument_list|)
 argument_list|,
 name|fp
@@ -2678,7 +2683,7 @@ argument_list|)
 operator|!=
 name|strlen
 argument_list|(
-name|message
+name|saved_message
 argument_list|)
 condition|)
 name|error
@@ -2732,13 +2737,13 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|tag
+name|saved_tag
 operator|!=
 name|NULL
 condition|)
 name|tag_check_valid
 argument_list|(
-name|tag
+name|saved_tag
 argument_list|,
 name|argc
 argument_list|,
@@ -2760,7 +2765,7 @@ literal|0
 condition|)
 name|write_dirtag
 operator|=
-name|tag
+name|saved_tag
 expr_stmt|;
 name|wrap_setup
 argument_list|()
@@ -2861,30 +2866,6 @@ literal|"correct above errors first!"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PRESERVE_PERMISSIONS_SUPPORT
-if|if
-condition|(
-name|preserve_perms
-condition|)
-block|{
-comment|/* hardlist now includes a complete index of the files 	   to be committed, indexed by inode.  For each inode, 	   compile a list of the files that are linked to it, 	   and save this list in each file's hardlink_info node. */
-operator|(
-name|void
-operator|)
-name|walklist
-argument_list|(
-name|hardlist
-argument_list|,
-name|cache_hardlinks_proc
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/*      * Run the recursion processor to commit the files      */
 name|write_dirnonbranch
 operator|=
@@ -3039,12 +3020,12 @@ expr_stmt|;
 comment|/* handle specified numeric revision specially */
 if|if
 condition|(
-name|tag
+name|saved_tag
 operator|&&
 name|isdigit
 argument_list|(
 operator|*
-name|tag
+name|saved_tag
 argument_list|)
 condition|)
 block|{
@@ -3053,7 +3034,7 @@ if|if
 condition|(
 name|numdots
 argument_list|(
-name|tag
+name|saved_tag
 argument_list|)
 operator|<
 literal|2
@@ -3121,7 +3102,7 @@ name|Classify_File
 argument_list|(
 name|finfo
 argument_list|,
-name|tag
+name|saved_tag
 argument_list|,
 operator|(
 name|char
@@ -3190,7 +3171,7 @@ name|xtag
 operator|=
 name|xstrdup
 argument_list|(
-name|tag
+name|saved_tag
 argument_list|)
 expr_stmt|;
 if|if
@@ -3352,7 +3333,7 @@ name|tag
 operator|=
 name|xstrdup
 argument_list|(
-name|tag
+name|saved_tag
 argument_list|)
 expr_stmt|;
 name|free
@@ -3369,7 +3350,7 @@ name|Classify_File
 argument_list|(
 name|finfo
 argument_list|,
-name|tag
+name|saved_tag
 argument_list|,
 operator|(
 name|char
@@ -3554,13 +3535,13 @@ comment|/* 	     * some quick sanity checks; if no numeric -r option specified: 
 if|if
 condition|(
 operator|!
-name|tag
+name|saved_tag
 operator|||
 operator|!
 name|isdigit
 argument_list|(
 operator|*
-name|tag
+name|saved_tag
 argument_list|)
 condition|)
 block|{
@@ -4516,12 +4497,6 @@ name|status
 operator|=
 name|status
 expr_stmt|;
-name|hlinfo
-operator|->
-name|links
-operator|=
-name|NULL
-expr_stmt|;
 name|linkp
 operator|->
 name|data
@@ -4756,14 +4731,6 @@ begin_comment
 comment|/*  * Callback proc for pre-commit checking  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|List
-modifier|*
-name|ulist
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -4886,7 +4853,7 @@ name|void
 operator|)
 name|walklist
 argument_list|(
-name|ulist
+name|saved_ulist
 argument_list|,
 name|precommit_list_proc
 argument_list|,
@@ -4978,7 +4945,7 @@ name|p
 operator|!=
 name|NULL
 condition|)
-name|ulist
+name|saved_ulist
 operator|=
 operator|(
 operator|(
@@ -4994,7 +4961,7 @@ operator|->
 name|ulist
 expr_stmt|;
 else|else
-name|ulist
+name|saved_ulist
 operator|=
 operator|(
 name|List
@@ -5005,17 +4972,17 @@ expr_stmt|;
 comment|/* skip the checks if there's nothing to do */
 if|if
 condition|(
-name|ulist
+name|saved_ulist
 operator|==
 name|NULL
 operator|||
-name|ulist
+name|saved_ulist
 operator|->
 name|list
 operator|->
 name|next
 operator|==
-name|ulist
+name|saved_ulist
 operator|->
 name|list
 condition|)
@@ -5293,7 +5260,7 @@ operator|->
 name|update_dir
 argument_list|,
 operator|&
-name|message
+name|saved_message
 argument_list|,
 name|finfo
 operator|->
@@ -5304,7 +5271,7 @@ argument_list|)
 expr_stmt|;
 name|do_verify
 argument_list|(
-name|message
+name|saved_message
 argument_list|,
 name|finfo
 operator|->
@@ -5535,7 +5502,7 @@ name|ci
 operator|->
 name|options
 argument_list|,
-name|message
+name|saved_message
 argument_list|)
 expr_stmt|;
 if|if
@@ -5729,7 +5696,7 @@ name|ci
 operator|->
 name|options
 argument_list|,
-name|message
+name|saved_message
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5786,7 +5753,7 @@ name|ci
 operator|->
 name|tag
 argument_list|,
-name|message
+name|saved_message
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -6067,7 +6034,7 @@ name|Update_Logfile
 argument_list|(
 name|repository
 argument_list|,
-name|message
+name|saved_message
 argument_list|,
 operator|(
 name|FILE
@@ -6142,9 +6109,78 @@ name|p
 argument_list|)
 operator|==
 literal|0
+comment|/* Check for subdirectories because people may want to create 	       subdirectories and list files therein in checkoutlist.  */
+operator|||
+name|strncmp
+argument_list|(
+literal|"CVSROOT/"
+argument_list|,
+name|p
+argument_list|,
+name|strlen
+argument_list|(
+literal|"CVSROOT/"
+argument_list|)
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* "Database" might a little bit grandiose and/or vague, 	       but "checked-out copies of administrative files, unless 	       in the case of modules and you are using ndbm in which 	       case modules.{pag,dir,db}" is verbose and excessively 	       focused on how the database is implemented.  */
+comment|/* mkmodules requires the absolute name of the CVSROOT directory. 	       Remove anything after the `CVSROOT' component -- this is 	       necessary when committing in a subdirectory of CVSROOT.  */
+name|char
+modifier|*
+name|admin_dir
+init|=
+name|xstrdup
+argument_list|(
+name|repository
+argument_list|)
+decl_stmt|;
+name|int
+name|cvsrootlen
+init|=
+name|strlen
+argument_list|(
+literal|"CVSROOT"
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|admin_dir
+index|[
+name|p
+operator|-
+name|repository
+operator|+
+name|cvsrootlen
+index|]
+operator|==
+literal|'\0'
+operator|||
+name|admin_dir
+index|[
+name|p
+operator|-
+name|repository
+operator|+
+name|cvsrootlen
+index|]
+operator|==
+literal|'/'
+argument_list|)
+expr_stmt|;
+name|admin_dir
+index|[
+name|p
+operator|-
+name|repository
+operator|+
+name|cvsrootlen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cvs_output
 argument_list|(
 name|program_name
@@ -6175,7 +6211,12 @@ argument_list|)
 expr_stmt|;
 name|mkmodules
 argument_list|(
-name|repository
+name|admin_dir
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|admin_dir
 argument_list|)
 expr_stmt|;
 block|}
@@ -6221,7 +6262,7 @@ name|line_chars_allocated
 decl_stmt|;
 name|char
 modifier|*
-name|repository
+name|repos
 decl_stmt|;
 name|line
 operator|=
@@ -6271,7 +6312,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|repository
+name|repos
 operator|=
 name|Name_Repository
 argument_list|(
@@ -6291,7 +6332,7 @@ argument_list|)
 expr_stmt|;
 name|run_arg
 argument_list|(
-name|repository
+name|repos
 argument_list|)
 expr_stmt|;
 name|cvs_output
@@ -6350,7 +6391,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|repository
+name|repos
 argument_list|)
 expr_stmt|;
 block|}
@@ -6592,7 +6633,7 @@ argument_list|(
 name|update_dir
 argument_list|,
 operator|&
-name|message
+name|saved_message
 argument_list|,
 name|real_repos
 argument_list|,
@@ -6601,7 +6642,7 @@ argument_list|)
 expr_stmt|;
 name|do_verify
 argument_list|(
-name|message
+name|saved_message
 argument_list|,
 name|real_repos
 argument_list|)
@@ -7789,7 +7830,7 @@ name|tag
 argument_list|,
 name|options
 argument_list|,
-name|message
+name|saved_message
 argument_list|)
 expr_stmt|;
 if|if
@@ -9511,7 +9552,7 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-comment|/*      * For a specified, numeric revision of the form "1" or "1.1", (or when      * no revision is specified ""), definitely move the branch to the trunk      * before locking the RCS file.      *       * The assumption is that if there is more than one revision on the trunk,      * the head points to the trunk, not a branch... and as such, it's not      * necessary to move the head in this case.      */
+comment|/*      * For a specified, numeric revision of the form "1" or "1.1", (or when      * no revision is specified ""), definitely move the branch to the trunk      * before locking the RCS file.      *      * The assumption is that if there is more than one revision on the trunk,      * the head points to the trunk, not a branch... and as such, it's not      * necessary to move the head in this case.      */
 if|if
 condition|(
 name|rev

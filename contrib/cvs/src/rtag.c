@@ -2295,8 +2295,6 @@ argument_list|,
 name|RUN_TTY
 argument_list|,
 name|RUN_NORMAL
-operator||
-name|RUN_REALLY
 argument_list|)
 operator|)
 return|;
