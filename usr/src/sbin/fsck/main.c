@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.30 (Berkeley) %G%"
+literal|"@(#)main.c	1.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6286,6 +6286,10 @@ operator|<
 name|dirp
 operator|->
 name|blksiz
+operator|&&
+name|filsize
+operator|>
+literal|0
 operator|&&
 operator|(
 name|ndp
