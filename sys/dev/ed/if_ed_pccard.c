@@ -151,7 +151,7 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_attach
+name|device_detach
 argument_list|,
 name|ed_pccard_detach
 argument_list|)
@@ -415,13 +415,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"probe %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -566,15 +559,10 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"attach failed %d\n"
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
