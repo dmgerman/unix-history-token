@@ -84,7 +84,7 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|round
+name|fpround
 parameter_list|(
 name|struct
 name|fpemu
@@ -118,7 +118,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|round
+name|fpround
 parameter_list|(
 name|struct
 name|fpemu
@@ -1061,7 +1061,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|round
+name|fpround
 argument_list|(
 name|fe
 argument_list|,
@@ -1187,7 +1187,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|round
+name|fpround
 argument_list|(
 name|fe
 argument_list|,
@@ -1443,7 +1443,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|round
+name|fpround
 argument_list|(
 name|fe
 argument_list|,
@@ -1537,7 +1537,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|round
+name|fpround
 argument_list|(
 name|fe
 argument_list|,
@@ -1827,7 +1827,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|round
+name|fpround
 argument_list|(
 name|fe
 argument_list|,
@@ -1916,7 +1916,7 @@ block|}
 comment|/* Since internal == extended, no need to shift here. */
 if|if
 condition|(
-name|round
+name|fpround
 argument_list|(
 name|fe
 argument_list|,
