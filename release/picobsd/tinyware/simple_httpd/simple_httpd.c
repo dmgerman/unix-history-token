@@ -1048,11 +1048,7 @@ operator|.
 name|st_uid
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 if|if
 condition|(
 name|seteuid
@@ -1062,11 +1058,7 @@ operator|.
 name|st_uid
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 if|if
 condition|(
 operator|!
@@ -1118,11 +1110,7 @@ operator|&
 name|i
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|conti
 label|:
@@ -2054,7 +2042,7 @@ index|[
 literal|50
 index|]
 decl_stmt|;
-name|long
+name|time_t
 name|now
 decl_stmt|;
 name|struct
