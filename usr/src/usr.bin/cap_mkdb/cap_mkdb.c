@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cap_mkdb.c	5.3 (Berkeley) %G%"
+literal|"@(#)cap_mkdb.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1012,7 +1012,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"%s: %s"
+argument_list|,
+name|capdb
 argument_list|,
 name|strerror
 argument_list|(
@@ -1031,7 +1033,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s"
+literal|"file argument: %s"
 argument_list|,
 name|strerror
 argument_list|(
