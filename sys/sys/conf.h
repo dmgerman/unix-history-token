@@ -381,24 +381,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|d_parms_t
-name|__P
-typedef|((
-name|dev_t
-name|dev
-typedef|, struct
-name|specinfo
-modifier|*
-name|sinfo
-typedef|,
-name|int
-name|ctl
-typedef|));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
 name|d_ioctl_t
 name|__P
 typedef|((
