@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cp.c,v 1.18 1999/04/25 21:13:32 imp Exp $"
+literal|"$Id: cp.c,v 1.19 1999/05/08 10:19:27 kris Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,6 +137,8 @@ block|{
 name|to
 operator|.
 name|p_path
+block|,
+literal|""
 block|,
 literal|""
 block|}
