@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)lam.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)lam.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +70,12 @@ end_comment
 begin_comment
 comment|/*  *	lam - laminate files  *	Author:  John Kunze, UCB  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -166,22 +186,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|error
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|gatherline
@@ -225,6 +229,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -258,12 +275,8 @@ condition|(
 operator|!
 name|morefiles
 condition|)
-name|error
-argument_list|(
-literal|"lam - laminate files"
-argument_list|,
-literal|""
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -462,14 +475,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -600,9 +610,11 @@ operator|=
 name|p
 expr_stmt|;
 else|else
-name|error
+name|errx
 argument_list|(
-literal|"Need string after -%s"
+literal|1
+argument_list|,
+literal|"need string after -%s"
 argument_list|,
 name|c
 argument_list|)
@@ -646,9 +658,11 @@ operator|*
 name|p
 expr_stmt|;
 else|else
-name|error
+name|errx
 argument_list|(
-literal|"Need character after -%s"
+literal|1
+argument_list|,
+literal|"need character after -%s"
 argument_list|,
 name|c
 argument_list|)
@@ -741,11 +755,11 @@ name|fmtbuf
 operator|+
 name|BUFSIZ
 condition|)
-name|error
+name|errx
 argument_list|(
-literal|"No more format space"
+literal|1
 argument_list|,
-literal|""
+literal|"no more format space"
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -765,18 +779,22 @@ name|fmtp
 expr_stmt|;
 block|}
 else|else
-name|error
+name|errx
 argument_list|(
-literal|"Need string after -%s"
+literal|1
+argument_list|,
+literal|"need string after -%s"
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
+name|errx
 argument_list|(
-literal|"What do you mean by -%s?"
+literal|1
+argument_list|,
+literal|"what do you mean by -%s?"
 argument_list|,
 name|c
 argument_list|)
@@ -1068,75 +1086,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|error
-parameter_list|(
-name|msg
-parameter_list|,
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|msg
-decl_stmt|,
-decl|*
-name|s
-decl_stmt|;
-end_function
-
-begin_block
+name|usage
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"lam: "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n"
 argument_list|,
-name|msg
+literal|"usage: lam [ -f min.max ] [ -s sepstring ] [ -t c ] file ..."
 argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\nUsage:  lam [ -[fp] min.max ] [ -s sepstring ] [ -t c ] file ...\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strncmp
-argument_list|(
-literal|"lam - "
-argument_list|,
-name|msg
-argument_list|,
-literal|6
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n\t%s\t%s\t%s\t%s\t%s"
-argument_list|,
-literal|"-f min.max	field widths for file fragments\n"
-argument_list|,
-literal|"-p min.max	like -f, but pad missing fragments\n"
-argument_list|,
-literal|"-s sepstring	fragment separator\n"
-argument_list|,
-literal|"-t c		input line terminator is c, no \\n after output lines\n"
-argument_list|,
-literal|"Capitalized options affect more than one file.\n"
+literal|"       lam [ -p min.max ] [ -s sepstring ] [ -t c ] file ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1145,7 +1108,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
