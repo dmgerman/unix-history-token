@@ -657,17 +657,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Get vnodes for swapdev and rootdev. 	 */
 if|if
 condition|(
-name|bdevvp
-argument_list|(
-name|swapdev
-argument_list|,
-operator|&
-name|swapdev_vp
-argument_list|)
-operator|||
+operator|(
+name|error
+operator|=
 name|bdevvp
 argument_list|(
 name|rootdev
@@ -675,12 +669,20 @@ argument_list|,
 operator|&
 name|rootvp
 argument_list|)
+operator|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"ext2_mountroot: can't setup bdevvp's"
+literal|"ext2_mountroot: can't find rootvp"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|mp
 operator|=
 name|bsd_malloc
