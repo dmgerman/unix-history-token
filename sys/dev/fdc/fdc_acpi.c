@@ -527,10 +527,6 @@ argument_list|,
 literal|"_FDE too small\n"
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -569,10 +565,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
 goto|goto
 name|out
 goto|;
