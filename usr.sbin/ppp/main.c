@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.149 1999/02/02 09:35:29 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.150 1999/02/06 02:54:46 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1188,10 +1188,7 @@ operator|&
 name|alias
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/*    * A FreeBSD hack to dodge a bug in the tty driver that drops output    * occasionally.... I must find the real reason some time.  To display    * the dodgy behaviour, comment out this bit, make yourself a large    * routing table and then run ppp in interactive mode.  The `show route'    * command will drop chunks of data !!!    */
+comment|/*    * A FreeBSD& OpenBSD hack to dodge a bug in the tty driver that drops    * output occasionally.... I must find the real reason some time.  To    * display the dodgy behaviour, comment out this bit, make yourself a large    * routing table and then run ppp in interactive mode.  The `show route'    * command will drop chunks of data !!!    */
 if|if
 condition|(
 name|mode
@@ -1230,8 +1227,6 @@ literal|2
 return|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* Allow output for the moment (except in direct mode) */
 if|if
 condition|(
