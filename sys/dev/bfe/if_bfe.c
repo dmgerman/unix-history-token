@@ -5973,6 +5973,13 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|BFE_INC
+argument_list|(
+name|cons
+argument_list|,
+name|BFE_RX_LIST_CNT
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* Go past the rx header */
@@ -6025,6 +6032,13 @@ name|ifp
 operator|->
 name|if_ierrors
 operator|++
+expr_stmt|;
+name|BFE_INC
+argument_list|(
+name|cons
+argument_list|,
+name|BFE_RX_LIST_CNT
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
