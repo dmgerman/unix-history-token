@@ -292,7 +292,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the RSDP in low memory.  */
+comment|/*  * Find the RSDP in low memory.  See section 5.2.2 of the ACPI spec.  */
 end_comment
 
 begin_function
@@ -308,7 +308,19 @@ name|RSDP_DESCRIPTOR
 modifier|*
 name|rsdp
 decl_stmt|;
-comment|/* search the EBDA */
+name|uint16_t
+modifier|*
+name|addr
+decl_stmt|;
+comment|/* EBDA is the 1 KB addressed by the 16 bit pointer at 0x40E. */
+name|addr
+operator|=
+operator|(
+name|uint16_t
+operator|*
+operator|)
+literal|0x40E
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -320,7 +332,12 @@ operator|(
 name|char
 operator|*
 operator|)
-literal|0
+operator|(
+operator|*
+name|addr
+operator|<<
+literal|4
+operator|)
 argument_list|,
 literal|0x400
 argument_list|)
@@ -333,7 +350,7 @@ operator|(
 name|rsdp
 operator|)
 return|;
-comment|/* search the BIOS space */
+comment|/* Check the upper memory BIOS space, 0xe0000 - 0xfffff. */
 if|if
 condition|(
 operator|(

@@ -962,15 +962,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RSDP_EBDA_START
-value|0
+name|RSDP_EBDA_PTR
+value|0x40E
 end_define
 
 begin_define
 define|#
 directive|define
-name|RSDP_EBDA_END
-value|(0x400 - sizeof(struct ACPIrsdp))
+name|RSDP_EBDA_SIZE
+value|(1024 - sizeof(struct ACPIrsdp))
 end_define
 
 begin_define
