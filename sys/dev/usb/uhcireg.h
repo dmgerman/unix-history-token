@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb/uhcireg.h,v 1.12 2000/07/23 19:43:38 augustss Exp $	*/
+comment|/*	$NetBSD: usb/uhcireg.h,v 1.13 2000/08/13 18:20:15 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -462,6 +462,17 @@ define|#
 directive|define
 name|UHCI_PTR_VF
 value|0x00000004
+end_define
+
+begin_comment
+comment|/*   * Wait this long after a QH has been removed.  This gives that HC a  * chance to stop looking at it before it's recycled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UHCI_QH_REMOVE_DELAY
+value|5
 end_define
 
 begin_comment
