@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.38	81/11/20	*/
+comment|/*	uba.c	4.39	81/12/09	*/
 end_comment
 
 begin_include
@@ -1673,6 +1673,16 @@ argument_list|(
 name|uban
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|ifubareset
+argument_list|(
+name|uban
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\n"
