@@ -287,6 +287,8 @@ operator||
 name|RFPROC
 operator||
 name|RFPPWAIT
+operator||
+name|RFMEM
 operator|)
 argument_list|,
 name|retval
