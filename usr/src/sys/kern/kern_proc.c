@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.60	83/04/05	*/
+comment|/*	kern_proc.c	4.61	83/04/06	*/
 end_comment
 
 begin_include
@@ -364,7 +364,9 @@ argument_list|)
 expr_stmt|;
 name|hostname
 index|[
-name|hostnamelen
+name|uap
+operator|->
+name|len
 index|]
 operator|=
 literal|0
