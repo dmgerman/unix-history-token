@@ -3607,6 +3607,14 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
