@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_quirks.h,v 1.9 1999/11/15 22:04:15 augustss Exp $	*/
+comment|/*	$NetBSD: usb_quirks.h,v 1.11 2000/04/27 15:26:50 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -59,11 +59,6 @@ directive|define
 name|UQ_SPUR_BUT_UP
 value|0x80
 comment|/* spurious mouse button up events */
-define|#
-directive|define
-name|UQ_NO_TSLEEP
-value|0x100
-comment|/* device needs to work at interrupt 				 * context, must avoid tsleep! */
 block|}
 struct|;
 end_struct
