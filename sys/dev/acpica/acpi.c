@@ -2924,7 +2924,7 @@ decl_stmt|;
 if|if
 condition|(
 name|howto
-operator|==
+operator|&
 name|RB_POWEROFF
 condition|)
 block|{
