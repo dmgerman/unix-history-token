@@ -285,6 +285,9 @@ name|uhci_physaddr_t
 modifier|*
 name|sc_pframes
 decl_stmt|;
+name|vm_offset_t
+name|sc_flbase
+decl_stmt|;
 name|struct
 name|uhci_vframe
 name|sc_vframes
@@ -410,17 +413,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void		uhci_reset __P((void *));
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|usbd_status
+name|uhci_reset
+name|__P
+argument_list|(
+operator|(
+name|uhci_softc_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
