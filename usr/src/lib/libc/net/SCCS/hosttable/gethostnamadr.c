@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.11	85/04/01	*/
+comment|/*	gethostnamadr.c	5.1	85/05/30	*/
 end_comment
 
 begin_include
