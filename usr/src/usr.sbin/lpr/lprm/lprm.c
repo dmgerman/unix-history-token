@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	lprm.c	4.4	83/06/02	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)lprm.c	4.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * lprm - remove the current user's spool entry  *  * lprm [-] [[job #] [user] ...]  *  * Using information in the lock file, lprm will kill the  * currently active daemon (if necessary), remove the associated files,  * and startup a new daemon.  Priviledged users may remove anyone's spool  * entries, otherwise one can only remove their own.  */

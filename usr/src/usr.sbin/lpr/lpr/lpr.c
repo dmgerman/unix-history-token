@@ -12,9 +12,26 @@ literal|"~|^`lpr.c:\t4.2\t1 May 1981\n"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*	lpr.c	4.23	83/06/29	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)lpr.c	4.24 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *      lpr -- off line print  *  * Allows multiple printers and printers on remote machines by  * using information from a printer data base.  */

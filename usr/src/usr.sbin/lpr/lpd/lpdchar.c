@@ -3,9 +3,26 @@ begin_comment
 comment|/*  *	Bill Shannon	21 Dec 1978  *	removed from lpd.c so as to be easier to modify.  *  *	sjl		4-22-81  *	changed to 2-dim  */
 end_comment
 
-begin_comment
-comment|/*	lpdchar.c	4.2	83/01/05	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)lpdchar.c	4.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *	Character set for line printer daemon  */
