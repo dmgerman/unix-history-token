@@ -36,8 +36,42 @@ end_include
 begin_include
 include|#
 directive|include
-file|"openpam_impl.h"
+file|<security/pam_mod_misc.h>
 end_include
+
+begin_function
+specifier|static
+name|void
+name|openpam_free_data
+parameter_list|(
+name|pam_handle_t
+modifier|*
+name|pamh
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|status
+parameter_list|)
+block|{
+comment|/* silence compiler warnings */
+name|pamh
+operator|=
+name|pamh
+expr_stmt|;
+name|status
+operator|=
+name|status
+expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * OpenPAM extension  *  * Temporarily borrow user credentials  */
