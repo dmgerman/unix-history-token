@@ -2482,11 +2482,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|maybe_resched
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -2730,6 +2725,11 @@ operator|->
 name|ke_runq
 argument_list|,
 name|ke
+argument_list|)
+expr_stmt|;
+name|maybe_resched
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 block|}
