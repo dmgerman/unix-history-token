@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	7.4 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)tz.c	7.5 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/RCS/devSCSITape.c,  *	v 8.14 89/07/31 17:26:13 mendel Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -2909,9 +2909,6 @@ case|:
 case|case
 name|MT_ISVIPER1
 case|:
-case|case
-name|MT_ISPYTHON
-case|:
 name|sc
 operator|->
 name|sc_blklen
@@ -2929,6 +2926,9 @@ block|if (minor(dev)& TZ_FIXEDBLK) 			sc->sc_blklen = 1024; 		else 			sc->sc_blk
 endif|#
 directive|endif
 break|break;
+case|case
+name|MT_ISPYTHON
+case|:
 case|case
 name|MT_ISMFOUR
 case|:
