@@ -478,6 +478,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|UMASS_SIM_UNIT
+value|0
+end_define
+
+begin_comment
+comment|/* we use one sim for all drives */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MS_TO_TICKS
 parameter_list|(
 name|ms
@@ -7963,7 +7974,7 @@ argument_list|,
 name|NULL
 comment|/*priv*/
 argument_list|,
-name|UMASS_SCSIID_HOST
+name|UMASS_SIM_UNIT
 comment|/*unit number*/
 argument_list|,
 literal|1
@@ -8202,9 +8213,9 @@ argument_list|(
 name|umass_sim
 argument_list|)
 argument_list|,
-name|UMASS_SCSIID_HOST
+name|CAM_TARGET_WILDCARD
 argument_list|,
-literal|0
+name|CAM_LUN_WILDCARD
 argument_list|)
 operator|!=
 name|CAM_REQ_CMP
@@ -8449,6 +8460,11 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
+if|if
+condition|(
+name|umass_sim
+condition|)
+block|{
 comment|/* detach of sim not done until module unload */
 name|DPRINTF
 argument_list|(
@@ -8525,6 +8541,7 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
