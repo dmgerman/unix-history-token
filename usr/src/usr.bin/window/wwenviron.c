@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.21 (Berkeley) %G%"
+literal|"@(#)wwenviron.c	3.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,18 +62,26 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|TIOCSCTTY
 name|int
 name|pgrp
 init|=
 name|getpid
 argument_list|()
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|buf
 index|[
 literal|1024
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|TIOCSCTTY
 if|if
 condition|(
 operator|(
@@ -120,6 +128,8 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -229,6 +239,31 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCSCTTY
+operator|(
+name|void
+operator|)
+name|setsid
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -256,6 +291,8 @@ argument_list|,
 name|pgrp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* SIGPIPE is the only one we ignore */
 operator|(
 name|void

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.34 (Berkeley) %G%"
+literal|"@(#)main.c	3.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|"local.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -298,7 +304,7 @@ literal|0
 condition|)
 name|p
 operator|=
-name|SHELL
+name|_PATH_BSHELL
 expr_stmt|;
 if|if
 condition|(
