@@ -422,6 +422,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ioapic_enable_mixed_mode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ioapic_get_vector
 parameter_list|(
@@ -511,8 +520,9 @@ parameter_list|,
 name|u_int
 name|pin
 parameter_list|,
-name|char
-name|activehi
+name|enum
+name|intr_polarity
+name|pol
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -528,8 +538,9 @@ parameter_list|,
 name|u_int
 name|pin
 parameter_list|,
-name|char
-name|edgetrigger
+name|enum
+name|intr_trigger
+name|trigger
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -739,8 +750,9 @@ parameter_list|,
 name|u_int
 name|lvt
 parameter_list|,
-name|u_char
-name|activehi
+name|enum
+name|intr_polarity
+name|pol
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -755,8 +767,9 @@ parameter_list|,
 name|u_int
 name|lvt
 parameter_list|,
-name|u_char
-name|edgetrigger
+name|enum
+name|intr_trigger
+name|trigger
 parameter_list|)
 function_decl|;
 end_function_decl
