@@ -4601,10 +4601,15 @@ operator|->
 name|wire_count
 operator|--
 expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
 name|cnt
 operator|.
 name|v_wire_count
-operator|--
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|vm_page_free_zero
 argument_list|(
