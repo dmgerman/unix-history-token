@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpmaptype.c	4.7	83/03/03	*/
+comment|/*	hpmaptype.c	4.8	83/06/17	*/
 end_comment
 
 begin_comment
@@ -803,6 +803,22 @@ operator|=
 name|HPDT_CAP
 expr_stmt|;
 comment|/* AMPEX capricorn */
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|ntracks
+operator|==
+literal|19
+condition|)
+block|{
+name|newtype
+operator|=
+name|HPDT_9300
+expr_stmt|;
+comment|/* AMPEX 9300 */
 goto|goto
 name|done
 goto|;
