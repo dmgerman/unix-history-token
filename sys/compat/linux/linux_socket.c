@@ -2668,13 +2668,10 @@ name|close_args
 comment|/* { 		int     fd; 	} */
 name|c_args
 decl_stmt|;
-name|struct
-name|fcntl_args
-comment|/* { 		int	fd; 		int	cmd; 		long	arg; 	} */
-name|f_args
-decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|fd
 decl_stmt|;
 if|if
 condition|(
@@ -2811,8 +2808,6 @@ return|;
 block|}
 block|}
 comment|/* 	 * linux appears not to copy flags from the parent socket to the 	 * accepted one, so we must clear the flags in the new descriptor. 	 * Ignore any errors, because we already have an open fd. 	 */
-name|f_args
-operator|.
 name|fd
 operator|=
 name|td
@@ -2822,27 +2817,18 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|f_args
-operator|.
-name|cmd
-operator|=
-name|F_SETFL
-expr_stmt|;
-name|f_args
-operator|.
-name|arg
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fcntl
+name|kern_fcntl
 argument_list|(
 name|td
 argument_list|,
-operator|&
-name|f_args
+name|fd
+argument_list|,
+name|F_SETFL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|td
@@ -2852,8 +2838,6 @@ index|[
 literal|0
 index|]
 operator|=
-name|f_args
-operator|.
 name|fd
 expr_stmt|;
 return|return
