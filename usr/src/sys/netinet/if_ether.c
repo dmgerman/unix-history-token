@@ -2400,9 +2400,12 @@ name|LOG_INFO
 argument_list|,
 literal|"arp info overwritten for %x by %s\n"
 argument_list|,
+name|ntohl
+argument_list|(
 name|isaddr
 operator|.
 name|s_addr
+argument_list|)
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -3085,7 +3088,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"arptnew failed on %x\n"
+literal|"arplookup couldn't create %x\n"
 argument_list|,
 name|ntohl
 argument_list|(
