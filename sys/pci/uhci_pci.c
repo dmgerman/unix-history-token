@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/proc.h>
 end_include
 
@@ -505,6 +499,9 @@ modifier|*
 name|typestr
 decl_stmt|;
 name|int
+name|intr
+decl_stmt|;
+name|int
 name|legsup
 decl_stmt|;
 name|int
@@ -822,6 +819,55 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|intr
+operator|=
+name|pci_read_config
+argument_list|(
+name|self
+argument_list|,
+name|PCIR_INTLINE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|intr
+operator|==
+literal|0
+operator|||
+name|intr
+operator|==
+literal|255
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"Invalid irq %d\n"
+argument_list|,
+name|intr
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|self
+argument_list|,
+literal|"Please switch on USB support and switch PNP-OS to 'No' in BIOS\n"
+argument_list|)
+expr_stmt|;
+name|device_delete_child
+argument_list|(
+name|self
+argument_list|,
+name|usbus
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
 name|err
 operator|=
 name|BUS_SETUP_INTR
@@ -871,6 +917,7 @@ return|return
 name|err
 return|;
 block|}
+comment|/* Verify that the PIRQD enable bit is set, some BIOS's don't do that */
 name|legsup
 operator|=
 name|pci_read_config
@@ -967,7 +1014,7 @@ argument_list|,
 literal|"init failed\n"
 argument_list|)
 expr_stmt|;
-comment|/* disable interrupts */
+comment|/* disable interrupts that might have been switched on 		 * in uhci_init 		 */
 name|bus_space_write_2
 argument_list|(
 name|sc
