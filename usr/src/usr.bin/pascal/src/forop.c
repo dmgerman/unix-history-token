@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forop.c 1.14 %G%"
+literal|"@(#)forop.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1506,10 +1506,13 @@ comment|/* 	     *	shadowing the real for variable 	     *	with the shadow tempo
 name|shadownlp
 operator|->
 name|nl_flags
-operator|=
+operator||=
+name|NLFLAGS
+argument_list|(
 name|forvar
 operator|->
 name|nl_flags
+argument_list|)
 expr_stmt|;
 operator|*
 name|forvar
@@ -1974,9 +1977,12 @@ name|saved_nl
 operator|.
 name|nl_flags
 operator||=
+name|NLFLAGS
+argument_list|(
 name|forvar
 operator|->
 name|nl_flags
+argument_list|)
 operator|&
 operator|(
 name|NUSED
