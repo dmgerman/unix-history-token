@@ -157,12 +157,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAP_NOEXTEND
+name|MAP_RESERVED0100
 value|0x0100
 end_define
 
 begin_comment
-comment|/* for MAP_FILE, don't change file size */
+comment|/* previously unimplemented MAP_NOEXTEND */
 end_comment
 
 begin_define
