@@ -5587,28 +5587,28 @@ begin_define
 define|#
 directive|define
 name|SYM_PCI_IO
-value|PCIR_MAPS
+value|PCIR_BAR(0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYM_PCI_MMIO
-value|(PCIR_MAPS + 4)
+value|PCIR_BAR(1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYM_PCI_RAM
-value|(PCIR_MAPS + 8)
+value|PCIR_BAR(2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYM_PCI_RAM64
-value|(PCIR_MAPS + 12)
+value|PCIR_BAR(3)
 end_define
 
 begin_comment

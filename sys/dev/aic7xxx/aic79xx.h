@@ -3610,7 +3610,7 @@ begin_define
 define|#
 directive|define
 name|AHD_PCI_IOADDR0
-value|PCIR_MAPS
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -3621,7 +3621,7 @@ begin_define
 define|#
 directive|define
 name|AHD_PCI_MEMADDR
-value|(PCIR_MAPS + 4)
+value|PCIR_BAR(1)
 end_define
 
 begin_comment
@@ -3632,7 +3632,7 @@ begin_define
 define|#
 directive|define
 name|AHD_PCI_IOADDR1
-value|(PCIR_MAPS + 12)
+value|PCIR_BAR(3)
 end_define
 
 begin_comment

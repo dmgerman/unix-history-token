@@ -462,7 +462,10 @@ comment|/* rid value tells bus_alloc_resource where to find the addresses of por
 name|int
 name|rid
 init|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 decl_stmt|;
 comment|/* Increment the card counter (for the ioctl code) */
 name|tdfx_count

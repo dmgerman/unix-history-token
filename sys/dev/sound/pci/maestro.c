@@ -4930,7 +4930,10 @@ decl_stmt|;
 name|int
 name|regid
 init|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 decl_stmt|;
 name|struct
 name|resource

@@ -3506,11 +3506,10 @@ index|[
 name|j
 index|]
 operator|=
-name|PCIR_MAPS
-operator|+
+name|PCIR_BAR
+argument_list|(
 name|i
-operator|*
-literal|4
+argument_list|)
 expr_stmt|;
 name|type
 index|[

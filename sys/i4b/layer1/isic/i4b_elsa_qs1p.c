@@ -113,36 +113,36 @@ end_include
 begin_define
 define|#
 directive|define
-name|MEM0_MAPOFF
+name|MEM0_BAR
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PORT0_MAPOFF
-value|4
+name|PORT0_BAR
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PORT1_MAPOFF
-value|12
+name|PORT1_BAR
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|ELSA_PORT0_MAPOFF
-value|(PCIR_MAPS+PORT0_MAPOFF)
+value|PCIR_BAR(PORT0_BAR)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ELSA_PORT1_MAPOFF
-value|(PCIR_MAPS+PORT1_MAPOFF)
+value|PCIR_BAR(PORT1_BAR)
 end_define
 
 begin_define

@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|IDA_PCI_MEMADDR
-value|(PCIR_MAPS + 4)
+value|PCIR_BAR(1)
 end_define
 
 begin_comment
@@ -1040,7 +1040,10 @@ name|ida
 operator|->
 name|regs_res_id
 operator|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|ida
 operator|->

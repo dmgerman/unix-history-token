@@ -14687,7 +14687,10 @@ decl_stmt|;
 name|int
 name|rid
 init|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 decl_stmt|,
 name|i
 init|=
@@ -15351,7 +15354,10 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|pACB
 operator|->
@@ -15803,7 +15809,10 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|pACB
 operator|->
@@ -16082,7 +16091,10 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|pACB
 operator|->

@@ -831,7 +831,10 @@ block|}
 comment|/*      * Allocate the PCI register window.      */
 name|rid
 operator|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|rtype
 operator|=
@@ -1814,7 +1817,10 @@ name|SYS_RES_MEMORY
 else|:
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|sc
 operator|->

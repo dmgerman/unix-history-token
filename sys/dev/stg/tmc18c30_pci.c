@@ -251,7 +251,10 @@ name|sc
 operator|->
 name|port_rid
 operator|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|PCI_BASEADR0
-value|PCIR_MAPS
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|PCI_BASEADR1
-value|PCIR_MAPS + 4
+value|PCIR_BAR(1)
 end_define
 
 begin_comment

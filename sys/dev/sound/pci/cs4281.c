@@ -3525,7 +3525,10 @@ name|sc
 operator|->
 name|regid
 operator|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -3647,9 +3650,10 @@ name|sc
 operator|->
 name|memid
 operator|=
-name|PCIR_MAPS
-operator|+
-literal|4
+name|PCIR_BAR
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|HIFN_BAR0
-value|(PCIR_MAPS+0x0)
+value|PCIR_BAR(0)
 end_define
 
 begin_comment
@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|HIFN_BAR1
-value|(PCIR_MAPS+0x4)
+value|PCIR_BAR(1)
 end_define
 
 begin_comment

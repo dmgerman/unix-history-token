@@ -303,7 +303,10 @@ name|ed_probe_Novell
 argument_list|(
 name|dev
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|flags
 argument_list|)

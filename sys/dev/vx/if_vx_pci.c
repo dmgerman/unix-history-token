@@ -434,7 +434,10 @@ argument_list|)
 expr_stmt|;
 name|rid
 operator|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->

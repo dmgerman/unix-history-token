@@ -145,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|PCI_DPMEM
-value|PCIR_MAPS
+value|PCIR_BAR(0)
 end_define
 
 begin_comment

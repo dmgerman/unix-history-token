@@ -146,29 +146,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BASEREG0_MAPOFF
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|BASEREG1_MAPOFF
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
 name|BADDR0
-value|(PCIR_MAPS + BASEREG0_MAPOFF)
+value|PCIR_BAR(0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BADDR1
-value|(PCIR_MAPS + BASEREG1_MAPOFF)
+value|PCIR_BAR(1)
 end_define
 
 begin_function_decl

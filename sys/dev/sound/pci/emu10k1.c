@@ -9003,7 +9003,10 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|=
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -9429,7 +9432,10 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|sc
 operator|->
@@ -9563,7 +9569,10 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 name|sc
 operator|->

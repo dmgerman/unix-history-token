@@ -5558,11 +5558,10 @@ name|cbdev
 argument_list|,
 name|child
 argument_list|,
-name|PCIR_MAPS
-operator|+
+name|PCIR_BAR
+argument_list|(
 name|reg
-operator|*
-literal|4
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -3889,11 +3889,10 @@ name|s
 argument_list|,
 name|f
 argument_list|,
-name|PCIR_MAPS
-operator|+
+name|PCIR_BAR
+argument_list|(
 name|i
-operator|*
-literal|4
+argument_list|)
 argument_list|,
 name|rl
 argument_list|)

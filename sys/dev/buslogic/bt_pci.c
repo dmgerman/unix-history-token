@@ -105,14 +105,14 @@ begin_define
 define|#
 directive|define
 name|BT_PCI_IOADDR
-value|PCIR_MAPS
+value|PCIR_BAR(0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|BT_PCI_MEMADDR
-value|PCIR_MAPS + 4
+value|PCIR_BAR(1)
 end_define
 
 begin_define
