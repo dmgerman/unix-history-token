@@ -98,12 +98,6 @@ begin_comment
 comment|/* command line option */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLUDGELINEMODE
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -113,15 +107,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Client support for linemode */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KLUDGELINEMODE */
 end_comment
 
 begin_endif
@@ -220,27 +205,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|require_SecurID
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|auth_level
 decl_stmt|;
 end_decl_stmt
 
@@ -869,23 +833,6 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-name|start_slave
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|,
-else|#
-directive|else
 name|start_slave
 name|P
 argument_list|(
@@ -900,8 +847,6 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|,
-endif|#
-directive|endif
 name|suboption
 name|P
 argument_list|(
@@ -1389,12 +1334,35 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|DEFAULT_IM
 value|"\r\n\r\nFreeBSD (%h) (%t)\r\n\r\r\n\r"
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_IM
+value|"\r\n\r\n4.4 BSD UNIX (%h) (%t)\r\n\r\r\n\r"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

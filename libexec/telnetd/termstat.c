@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)termstat.c	8.1 (Berkeley) 6/4/93";
+unit|static const char sccsid[] = "@(#)termstat.c	8.2 (Berkeley) 5/30/95";
 endif|#
 directive|endif
 end_endif
@@ -219,7 +219,7 @@ condition|(
 name|uselinemode
 condition|)
 block|{
-comment|/*              * Check for state of BINARY options.              *              * We only need to do the binary dance if we are actually going              * to use linemode.  As this confuses some telnet clients that dont              * support linemode, and doesnt gain us anything, we dont do it               * unless we're doing linemode.  -Crh (henrich@msu.edu)              */
+comment|/* 		 * Check for state of BINARY options. 		 * 		 * We only need to do the binary dance if we are actually going 		 * to use linemode.  As this confuses some telnet clients 		 * that don't support linemode, and doesn't gain us 		 * anything, we don't do it unless we're doing linemode. 		 * -Crh (henrich@msu.edu) 		 */
 if|if
 condition|(
 name|tty_isbinaryin
@@ -1390,7 +1390,7 @@ name|struct
 name|winsize
 name|ws
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1398,6 +1398,8 @@ operator|*
 operator|)
 operator|&
 name|ws
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

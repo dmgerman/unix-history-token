@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char sccsid[] = "@(#)state.c	8.2 (Berkeley) 12/15/93";
+unit|static const char sccsid[] = "@(#)state.c	8.5 (Berkeley) 5/30/95";
 endif|#
 directive|endif
 end_endif
@@ -52,26 +52,6 @@ include|#
 directive|include
 file|"telnetd.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<libtelnet/auth.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|unsigned
@@ -1355,25 +1335,6 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AUTHENTICATION
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|auth_request
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|LINEMODE
 end_ifdef
 
@@ -1676,22 +1637,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* LINEMODE */
-ifdef|#
-directive|ifdef
-name|AUTHENTICATION
-case|case
-name|TELOPT_AUTHENTICATION
-case|:
-name|func
-operator|=
-name|auth_request
-expr_stmt|;
-name|changeok
-operator|++
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 break|break;
 block|}
@@ -1781,19 +1726,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* LINEMODE */
-ifdef|#
-directive|ifdef
-name|AUTHENTICATION
-case|case
-name|TELOPT_AUTHENTICATION
-case|:
-name|func
-operator|=
-name|auth_request
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 name|TELOPT_LFLOW
 case|:
@@ -2109,25 +2041,6 @@ operator||=
 name|SLC_CANTCHANGE
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-case|case
-name|TELOPT_AUTHENTICATION
-case|:
-name|auth_finished
-argument_list|(
-literal|0
-argument_list|,
-name|AUTH_REJECT
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 comment|/* 		 * For options that we might spin waiting for 		 * sub-negotiation, if the client turns off the 		 * option rather than responding to the request, 		 * we have to treat it here as if we got a response 		 * to the sub-negotiation, (by updating the timers) 		 * so that we'll break out of the loop. 		 */
 case|case
 name|TELOPT_TTYPE
@@ -2257,25 +2170,6 @@ endif|#
 directive|endif
 comment|/* defined(LINEMODE)&& defined(KLUDGELINEMODE) */
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-case|case
-name|TELOPT_AUTHENTICATION
-case|:
-name|auth_finished
-argument_list|(
-literal|0
-argument_list|,
-name|AUTH_REJECT
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 break|break;
 block|}
@@ -3512,7 +3406,7 @@ operator|==
 name|LM_SLC
 condition|)
 block|{
-comment|/* SLC is not preceded by WILL or WONT */
+comment|/* SLC is not preceeded by WILL or WONT */
 comment|/* 		 * Process suboption buffer of slc's 		 */
 name|start_slc
 argument_list|(
@@ -4298,63 +4192,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* end of case TELOPT_NEW_ENVIRON */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|AUTHENTICATION
-argument_list|)
-case|case
-name|TELOPT_AUTHENTICATION
-case|:
-if|if
-condition|(
-name|SB_EOF
-argument_list|()
-condition|)
-break|break;
-switch|switch
-condition|(
-name|SB_GET
-argument_list|()
-condition|)
-block|{
-case|case
-name|TELQUAL_SEND
-case|:
-case|case
-name|TELQUAL_REPLY
-case|:
-comment|/* 		 * These are sent by us and cannot be sent by 		 * the client. 		 */
-break|break;
-case|case
-name|TELQUAL_IS
-case|:
-name|auth_is
-argument_list|(
-name|subpointer
-argument_list|,
-name|SB_LEN
-argument_list|()
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|TELQUAL_NAME
-case|:
-name|auth_name
-argument_list|(
-name|subpointer
-argument_list|,
-name|SB_LEN
-argument_list|()
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-break|break;
-endif|#
-directive|endif
 default|default:
 break|break;
 block|}
@@ -4400,7 +4237,7 @@ name|ADD_DATA
 parameter_list|(
 name|c
 parameter_list|)
-value|{ *ncp++ = c; if (c == SE) *ncp++ = c; }
+value|{ *ncp++ = c; if (c == SE || c == IAC) *ncp++ = c; }
 end_define
 
 begin_function
@@ -4617,11 +4454,6 @@ argument_list|(
 name|SE
 argument_list|)
 expr_stmt|;
-name|ADD
-argument_list|(
-name|SB
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 ifdef|#
@@ -4664,17 +4496,6 @@ expr_stmt|;
 name|ADD_DATA
 argument_list|(
 name|editmode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|editmode
-operator|==
-name|IAC
-condition|)
-name|ADD
-argument_list|(
-name|IAC
 argument_list|)
 expr_stmt|;
 name|ADD
