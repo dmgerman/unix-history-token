@@ -16764,6 +16764,14 @@ operator|->
 name|pending_scbs
 argument_list|)
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|ahd
+operator|->
+name|timedout_scbs
+argument_list|)
+expr_stmt|;
 comment|/* We don't know our unit number until the OSM sets it */
 name|ahc
 operator|->
@@ -27404,6 +27412,8 @@ argument_list|,
 name|resid_sgptr
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+return|return;
 block|}
 else|else
 block|{

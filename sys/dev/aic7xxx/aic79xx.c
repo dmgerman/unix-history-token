@@ -22383,6 +22383,14 @@ operator|->
 name|pending_scbs
 argument_list|)
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|ahd
+operator|->
+name|timedout_scbs
+argument_list|)
+expr_stmt|;
 comment|/* We don't know our unit number until the OSM sets it */
 name|ahd
 operator|->
@@ -41758,13 +41766,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SCB 0x%x - timed out\n"
+literal|"SCB %d - timed out\n"
 argument_list|,
+name|SCB_GET_TAG
+argument_list|(
 name|scb
 operator|->
 name|hscb
 operator|->
 name|tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -41972,11 +41983,14 @@ name|channel
 argument_list|,
 name|lun
 argument_list|,
+name|SCB_GET_TAG
+argument_list|(
 name|scb
 operator|->
 name|hscb
 operator|->
 name|tag
+argument_list|)
 argument_list|,
 name|ROLE_INITIATOR
 argument_list|,
