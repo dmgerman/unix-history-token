@@ -237,7 +237,7 @@ name|_IO_off64_t
 name|streamoff
 typedef|;
 typedef|typedef
-name|_IO_fpos64_t
+name|_IO_off64_t
 name|streampos
 typedef|;
 else|#
@@ -247,7 +247,7 @@ name|_IO_off_t
 name|streamoff
 typedef|;
 typedef|typedef
-name|_IO_fpos_t
+name|_IO_off_t
 name|streampos
 typedef|;
 endif|#

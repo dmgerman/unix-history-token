@@ -57,7 +57,7 @@ name|streambuf
 block|{
 name|protected
 operator|:
-name|_IO_fpos_t
+name|_IO_off_t
 name|pos_at_line_start
 block|;
 name|long
