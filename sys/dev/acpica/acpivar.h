@@ -68,6 +68,9 @@ decl_stmt|;
 name|int
 name|acpi_sstate
 decl_stmt|;
+name|int
+name|acpi_sleep_disabled
+decl_stmt|;
 name|struct
 name|sysctl_ctx_list
 name|acpi_sysctl_ctx
