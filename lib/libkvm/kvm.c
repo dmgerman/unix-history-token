@@ -949,13 +949,48 @@ name|strcmp
 argument_list|(
 name|mf
 argument_list|,
+name|_PATH_DEVNULL
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|kd
+operator|->
+name|vmfd
+operator|=
+name|open
+argument_list|(
+name|_PATH_DEVNULL
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+name|kd
+operator|->
+name|swfd
+operator|=
+name|open
+argument_list|(
+name|_PATH_DEVNULL
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|mf
+argument_list|,
 name|_PATH_MEM
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXX */
 name|_kvm_err
 argument_list|(
 name|kd
@@ -973,6 +1008,8 @@ goto|goto
 name|failed
 goto|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -1045,6 +1082,7 @@ goto|goto
 name|failed
 goto|;
 block|}
+block|}
 comment|/* 		 * Open kvm nlist database.  We go ahead and do this 		 * here so that we don't have to hold on to the kernel 		 * path name.  Since a kvm application will surely do 		 * a kvm_nlist(), this probably won't be a wasted effort. 		 * If the database cannot be opened, open the namelist 		 * argument so we revert to slow nlist() calls. 		 */
 if|if
 condition|(
@@ -1095,7 +1133,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * This is a crash dump. 		 * Initalize the virtual address translation machinery, 		 * but first setup the namelist fd. 		 */
+comment|/* 		 * This is a crash dump. 		 * Initialize the virtual address translation machinery, 		 * but first setup the namelist fd. 		 */
 if|if
 condition|(
 operator|(
