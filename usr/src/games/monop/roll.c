@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)roll.c	5.1 (Berkeley) %G%"
+literal|"@(#)roll.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,11 +36,21 @@ name|reg
 value|register
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|vax
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_define
 define|#
