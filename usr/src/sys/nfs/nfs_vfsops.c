@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -133,76 +139,6 @@ begin_comment
 comment|/*  * nfs vfs operations.  */
 end_comment
 
-begin_function_decl
-name|int
-name|nfs_mount
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_start
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_unmount
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_root
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_quotactl
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_statfs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_sync
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_fhtovp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_vptofh
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfs_init
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|vfsops
@@ -296,6 +232,8 @@ argument_list|(
 argument|mp
 argument_list|,
 argument|sbp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -313,6 +251,14 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -463,7 +409,7 @@ name|vp
 argument_list|,
 name|NFSPROC_STATFS
 argument_list|,
-name|curproc
+name|p
 argument_list|,
 literal|0
 argument_list|)
@@ -1279,6 +1225,8 @@ argument_list|,
 argument|data
 argument_list|,
 argument|ndp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1308,6 +1256,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1626,6 +1582,14 @@ name|nfsmount
 modifier|*
 name|nmp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|nfsnode
 modifier|*
@@ -2237,6 +2201,8 @@ operator|&
 name|mp
 operator|->
 name|mnt_stat
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -2322,6 +2288,8 @@ argument_list|(
 argument|mp
 argument_list|,
 argument|mntflags
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2336,6 +2304,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|mntflags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -2776,19 +2752,17 @@ end_comment
 begin_macro
 name|nfs_vptofh
 argument_list|(
-argument|mp
+argument|vp
 argument_list|,
 argument|fhp
-argument_list|,
-argument|vpp
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|struct
-name|mount
+name|vnode
 modifier|*
-name|mp
+name|vp
 decl_stmt|;
 end_decl_stmt
 
@@ -2797,15 +2771,6 @@ name|struct
 name|fid
 modifier|*
 name|fhp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|vpp
 decl_stmt|;
 end_decl_stmt
 
@@ -2833,6 +2798,8 @@ argument_list|(
 argument|mp
 argument_list|,
 argument|flags
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2847,6 +2814,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -2874,6 +2849,8 @@ argument_list|,
 argument|uid
 argument_list|,
 argument|arg
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2900,6 +2877,14 @@ end_decl_stmt
 begin_decl_stmt
 name|caddr_t
 name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
