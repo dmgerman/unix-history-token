@@ -147,21 +147,28 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %1\n\t"
+literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
-literal|"or %0, %0, %2\n\t"
+literal|"or %0, %3, %0\n\t"
 comment|/* calculate new value */
-literal|"stwcx. %0, 0, %1\n\t"
+literal|"stwcx. %0, 0, %2\n\t"
 comment|/* attempt to store */
 literal|"bne- 1b\n\t"
 comment|/* spin if failed */
-literal|"eieio\n"
-comment|/* drain to memory */
 operator|:
 literal|"=&r"
 operator|(
 name|temp
+operator|)
+operator|,
+literal|"+m"
+operator|(
+operator|*
+name|p
 operator|)
 operator|:
 literal|"r"
@@ -174,10 +181,17 @@ operator|(
 name|v
 operator|)
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 unit|}  static
@@ -197,21 +211,28 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %1\n\t"
+literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
-literal|"andc %0, %0, %2\n\t"
+literal|"andc %0, %0, %3\n\t"
 comment|/* calculate new value */
-literal|"stwcx. %0, 0, %1\n\t"
+literal|"stwcx. %0, 0, %2\n\t"
 comment|/* attempt to store */
 literal|"bne- 1b\n\t"
 comment|/* spin if failed */
-literal|"eieio\n"
-comment|/* drain to memory */
 operator|:
 literal|"=&r"
 operator|(
 name|temp
+operator|)
+operator|,
+literal|"+m"
+operator|(
+operator|*
+name|p
 operator|)
 operator|:
 literal|"r"
@@ -224,10 +245,17 @@ operator|(
 name|v
 operator|)
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 unit|}  static
@@ -247,21 +275,28 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %1\n\t"
+literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
-literal|"add %0, %0, %2\n\t"
+literal|"add %0, %3, %0\n\t"
 comment|/* calculate new value */
-literal|"stwcx. %0, 0, %1\n\t"
+literal|"stwcx. %0, 0, %2\n\t"
 comment|/* attempt to store */
 literal|"bne- 1b\n\t"
 comment|/* spin if failed */
-literal|"eieio\n"
-comment|/* Old McDonald had a farm */
 operator|:
 literal|"=&r"
 operator|(
 name|temp
+operator|)
+operator|,
+literal|"+m"
+operator|(
+operator|*
+name|p
 operator|)
 operator|:
 literal|"r"
@@ -274,10 +309,17 @@ operator|(
 name|v
 operator|)
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 unit|}  static
@@ -297,21 +339,28 @@ block|{
 name|u_int32_t
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %1\n\t"
+literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
-literal|"sub %0, %2, %0\n\t"
+literal|"subf %0, %3, %0\n\t"
 comment|/* calculate new value */
-literal|"stwcx. %0, 0, %1\n\t"
+literal|"stwcx. %0, 0, %2\n\t"
 comment|/* attempt to store */
 literal|"bne- 1b\n\t"
 comment|/* spin if failed */
-literal|"eieio\n"
-comment|/* drain to memory */
 operator|:
 literal|"=&r"
 operator|(
 name|temp
+operator|)
+operator|,
+literal|"+m"
+operator|(
+operator|*
+name|p
 operator|)
 operator|:
 literal|"r"
@@ -324,10 +373,17 @@ operator|(
 name|v
 operator|)
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 unit|}  static
@@ -346,19 +402,20 @@ name|result
 decl_stmt|,
 name|temp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
-literal|"\teieio\n"
-comment|/* memory barrier */
-literal|"1:\tlwarx %0, 0, %2\n\t"
+literal|"\tsync\n"
+comment|/* drain writes */
+literal|"1:\tlwarx %0, 0, %3\n\t"
 comment|/* load old value */
 literal|"li %1, 0\n\t"
 comment|/* load new value */
-literal|"stwcx. %1, 0, %2\n\t"
+literal|"stwcx. %1, 0, %3\n\t"
 comment|/* attempt to store */
 literal|"bne- 1b\n\t"
 comment|/* spin if failed */
-literal|"eieio\n"
-comment|/* drain to memory */
 operator|:
 literal|"=&r"
 operator|(
@@ -369,20 +426,35 @@ literal|"=&r"
 operator|(
 name|temp
 operator|)
+operator|,
+literal|"+m"
+operator|(
+operator|*
+name|addr
+operator|)
 operator|:
 literal|"r"
 operator|(
 name|addr
 operator|)
 operator|:
+literal|"cc"
+operator|,
 literal|"memory"
 block|)
 function|;
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_return
 return|return
+operator|(
 name|result
+operator|)
 return|;
 end_return
 
@@ -604,7 +676,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|static __inline void							\ atomic_##NAME##_acq_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	powerpc_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\ 	powerpc_mb();							\ }									\ 									\ static __inline void							\ atomic_##NAME##_acq_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	powerpc_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\ 	powerpc_mb();							\ }
+value|static __inline void							\ atomic_##NAME##_acq_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\ 	powerpc_mb();							\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##WIDTH(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	powerpc_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }									\ 									\ static __inline void							\ atomic_##NAME##_acq_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	atomic_##NAME##_##WIDTH(p, v);					\ 	powerpc_mb();							\ }									\ 									\ static __inline void							\ atomic_##NAME##_rel_##TYPE(volatile u_int##WIDTH##_t *p, u_int##WIDTH##_t v) \ {									\ 	powerpc_mb();							\ 	atomic_##NAME##_##WIDTH(p, v);					\ }
 end_define
 
 begin_expr_stmt
@@ -749,7 +821,7 @@ parameter_list|,
 name|WIDTH
 parameter_list|)
 define|\
-value|static __inline u_##TYPE					\ atomic_load_acq_##WIDTH(volatile u_##TYPE *p)			\ {								\ 	powerpc_mb();						\ 	return (*p);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##WIDTH(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	*p = v;							\ 	powerpc_mb();						\ }								\ static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	powerpc_mb();						\ 	return (*p);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	*p = v;							\ 	powerpc_mb();						\ }
+value|static __inline u_##TYPE					\ atomic_load_acq_##WIDTH(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE v;						\ 								\ 	v = *p;							\ 	powerpc_mb();						\ 	return (v);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##WIDTH(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	powerpc_mb();						\ 	*p = v;							\ }								\ 								\ static __inline u_##TYPE					\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)			\ {								\ 	u_##TYPE v;						\ 								\ 	v = *p;							\ 	powerpc_mb();						\ 	return (v);						\ }								\ 								\ static __inline void						\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)	\ {								\ 	powerpc_mb();						\ 	*p = v;							\ }
 name|ATOMIC_STORE_LOAD
 argument_list|(
 argument|char
@@ -795,34 +867,47 @@ block|{
 name|u_int32_t
 name|ret
 block|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
 asm|__asm __volatile (
-literal|"1:\tlwarx %0, 0, %3\n\t"
+literal|"1:\tlwarx %0, 0, %2\n\t"
 comment|/* load old value */
-literal|"cmplw 0, %1, %0\n\t"
+literal|"cmplw %3, %0\n\t"
 comment|/* compare */
 literal|"bne 2f\n\t"
 comment|/* exit if not equal */
-literal|"mr %0, %2\n\t"
-comment|/* value to store */
-literal|"stwcx. %0, 0, %3\n\t"
+literal|"stwcx. %4, 0, %2\n\t"
 comment|/* attempt to store */
 literal|"bne- 1b\n\t"
 comment|/* spin if failed */
-literal|"eieio\n"
-comment|/* memory barrier */
-literal|"sync\n"
+literal|"li %0, 1\n\t"
+comment|/* success - retval = 1 */
 literal|"b 3f\n\t"
 comment|/* we've succeeded */
-literal|"2:\t\n"
-literal|"xor %0,%0,%0\t\n"
-comment|/* failure, so return 0 */
-literal|"3:\t\n"
+literal|"2:\n\t"
+literal|"stwcx. %0, 0, %2\n\t"
+comment|/* clear reservation (74xx) */
+literal|"li %0, 0\n\t"
+comment|/* failure - retval = 0 */
+literal|"3:\n\t"
 operator|:
 literal|"=&r"
 operator|(
 name|ret
 operator|)
+block|,
+literal|"+m"
+operator|(
+operator|*
+name|p
+operator|)
 operator|:
+literal|"r"
+operator|(
+name|p
+operator|)
+block|,
 literal|"r"
 operator|(
 name|cmpval
@@ -832,20 +917,24 @@ literal|"r"
 operator|(
 name|newval
 operator|)
-block|,
-literal|"r"
-operator|(
-name|p
-operator|)
 operator|:
+literal|"cc"
+block|,
 literal|"memory"
 block|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_return
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 end_return
 
@@ -970,11 +1059,11 @@ name|u_int32_t
 name|newval
 parameter_list|)
 block|{
-name|powerpc_mb
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
+name|int
+name|retval
+decl_stmt|;
+name|retval
+operator|=
 name|atomic_cmpset_32
 argument_list|(
 name|p
@@ -983,6 +1072,13 @@ name|cmpval
 argument_list|,
 name|newval
 argument_list|)
+expr_stmt|;
+name|powerpc_mb
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|retval
 operator|)
 return|;
 block|}
@@ -1006,11 +1102,11 @@ name|u_int32_t
 name|newval
 parameter_list|)
 block|{
-name|int
-name|retval
-decl_stmt|;
-name|retval
-operator|=
+name|powerpc_mb
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
 name|atomic_cmpset_32
 argument_list|(
 name|p
@@ -1019,13 +1115,6 @@ name|cmpval
 argument_list|,
 name|newval
 argument_list|)
-expr_stmt|;
-name|powerpc_mb
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|retval
 operator|)
 return|;
 block|}
