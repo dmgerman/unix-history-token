@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ns_if.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ns_if.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -20,14 +20,15 @@ define|#
 directive|define
 name|ia_ifp
 value|ia_ifa.ifa_ifp
+define|#
+directive|define
+name|ia_flags
+value|ia_ifa.ifa_flags
 comment|/*	union	ns_net	ia_net;		/* network number of interface */
 define|#
 directive|define
 name|ia_net
 value|ia_addr.sns_addr.x_net
-name|int
-name|ia_flags
-decl_stmt|;
 name|struct
 name|ns_ifaddr
 modifier|*
@@ -97,21 +98,6 @@ name|ia
 parameter_list|)
 value|(&(((struct ns_ifaddr *)(ia))->ia_addr))
 end_define
-
-begin_comment
-comment|/*  * ia_flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFA_ROUTE
-value|0x01
-end_define
-
-begin_comment
-comment|/* routing entry installed */
-end_comment
 
 begin_comment
 comment|/* This is not the right place for this but where is? */
