@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isa/isavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pci/pcivar.h>
 end_include
 
@@ -112,7 +118,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|isab_attach
+name|pci_isab_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -172,7 +178,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|isab_attach
+name|pci_isab_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -278,13 +284,6 @@ expr|struct
 name|isab_softc
 argument_list|)
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|isab_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -507,15 +506,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|isab_attach
+name|pci_isab_attach
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
-name|device_t
-name|child
-decl_stmt|;
 name|struct
 name|isab_softc
 modifier|*
@@ -532,27 +528,9 @@ decl_stmt|,
 name|rid
 decl_stmt|;
 comment|/*      * Attach an ISA bus.  Note that we can only have one ISA bus.      */
-name|child
-operator|=
-name|device_add_child
-argument_list|(
-name|dev
-argument_list|,
-literal|"isa"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|child
-operator|!=
-name|NULL
-condition|)
-block|{
 name|error
 operator|=
-name|bus_generic_attach
+name|isab_attach
 argument_list|(
 name|dev
 argument_list|)
@@ -566,7 +544,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|pci_get_devid

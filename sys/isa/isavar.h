@@ -519,6 +519,17 @@ argument|int
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* Device class for ISA bridges. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|isab_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|intrmask_t
@@ -645,6 +656,16 @@ name|isa_dmastop
 parameter_list|(
 name|int
 name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isab_attach
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
