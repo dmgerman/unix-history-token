@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: print.c,v 1.2 1994/09/24 02:58:59 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: print.c,v 1.3 1995/04/28 19:29:30 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -63,6 +63,16 @@ include|#
 directive|include
 file|"extern.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl_compat.h>
+end_include
+
+begin_comment
+comment|/* XXX NTTYDISC is too well hidden */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -199,6 +209,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|NTTYDISC
+case|:
+name|cnt
+operator|+=
+name|printf
+argument_list|(
+literal|"new tty disc; "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SLIPDISC
 case|:
 name|cnt
@@ -314,7 +335,7 @@ name|on
 parameter_list|(
 name|f
 parameter_list|)
-value|((tmp&f) != 0)
+value|((tmp& (f)) != 0)
 define|#
 directive|define
 name|put
@@ -326,7 +347,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|if (fmt>= BSD || on(f) != d) \ 		bput(n + on(f));
+value|if (fmt>= BSD || on(f) != (d)) \ 		bput((n) + on(f));
 comment|/* "local" flags */
 name|tmp
 operator|=
@@ -771,11 +792,63 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|tmp
+operator|&
+operator|(
+name|CCTS_OFLOW
+operator||
+name|CRTS_IFLOW
+operator|)
+condition|)
+block|{
+case|case
+name|CCTS_OFLOW
+case|:
+name|bput
+argument_list|(
+literal|"ctsflow"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CRTS_IFLOW
+case|:
+name|bput
+argument_list|(
+literal|"rtsflow"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 name|put
 argument_list|(
 literal|"-crtscts"
 argument_list|,
-name|CRTSCTS
+name|CCTS_OFLOW
+operator||
+name|CRTS_IFLOW
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|put
+argument_list|(
+literal|"-dsrflow"
+argument_list|,
+name|CDSR_OFLOW
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|put
+argument_list|(
+literal|"-dtrflow"
+argument_list|,
+name|CDTR_IFLOW
 argument_list|,
 literal|0
 argument_list|)
@@ -789,6 +862,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* XXX mdmbuf ==  dtrflow */
 comment|/* special control characters */
 name|cc
 operator|=
