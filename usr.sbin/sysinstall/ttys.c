@@ -41,9 +41,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|t
 decl_stmt|,
 name|tlen

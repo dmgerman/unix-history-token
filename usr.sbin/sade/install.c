@@ -4485,7 +4485,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|sz
 init|=
 operator|(
