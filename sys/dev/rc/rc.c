@@ -5544,15 +5544,6 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-name|rc_stop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 name|rc_hardclose
 argument_list|(
 name|rc

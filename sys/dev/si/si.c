@@ -3994,15 +3994,6 @@ operator|~
 name|SS_LSTART
 expr_stmt|;
 block|}
-name|si_stop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 name|sihardclose
 argument_list|(
 name|pp

@@ -3502,15 +3502,6 @@ argument_list|,
 name|com
 argument_list|)
 expr_stmt|;
-name|comstop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 name|comhardclose
 argument_list|(
 name|com

@@ -5506,15 +5506,6 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-name|digistop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 name|digihardclose
 argument_list|(
 name|port

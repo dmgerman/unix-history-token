@@ -1015,15 +1015,6 @@ operator|,
 name|flag
 operator|)
 expr_stmt|;
-name|ptsstop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)

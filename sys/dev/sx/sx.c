@@ -2730,15 +2730,6 @@ name|out
 goto|;
 block|}
 comment|/* ok. we are now still on the right track.. nuke the hardware */
-name|sx_stop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 name|sxhardclose
 argument_list|(
 name|pp

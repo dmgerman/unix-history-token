@@ -1433,15 +1433,6 @@ argument_list|,
 name|otherpart
 argument_list|)
 expr_stmt|;
-name|nmdmstop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)

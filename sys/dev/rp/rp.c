@@ -6174,15 +6174,6 @@ operator|->
 name|t_termios
 argument_list|)
 expr_stmt|;
-name|rpstop
-argument_list|(
-name|tp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|)
-expr_stmt|;
 name|rphardclose
 argument_list|(
 name|rp
