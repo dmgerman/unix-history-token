@@ -6946,6 +6946,16 @@ if|if
 condition|(
 name|ke
 operator|->
+name|ke_ftick
+operator|+
+name|SCHED_CPU_TICKS
+operator|<
+name|ke
+operator|->
+name|ke_ltick
+operator|||
+name|ke
+operator|->
 name|ke_ltick
 operator|<
 operator|(
