@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.22 1998/05/02 15:51:54 peter Exp $"
+literal|"$Id: res_send.c,v 1.23 1998/06/11 09:03:01 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,30 @@ directive|include
 file|"res_config.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOPOLL
+end_ifdef
+
+begin_comment
+comment|/* libc_r doesn't wrap poll yet() */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|use_poll
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -187,6 +211,11 @@ end_comment
 begin_comment
 comment|/* 0 = not present, 1 = try it, 2 = exists */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -2140,6 +2169,9 @@ block|}
 else|else
 block|{
 comment|/* 			 * Use datagrams. 			 */
+ifndef|#
+directive|ifndef
+name|NOPOLL
 name|struct
 name|pollfd
 name|pfd
@@ -2147,6 +2179,8 @@ decl_stmt|;
 name|int
 name|msec
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|timeval
 name|timeout
@@ -2547,6 +2581,9 @@ endif|#
 directive|endif
 comment|/* !CANNOT_CONNECT_DGRAM */
 comment|/* 			 * Wait for reply 			 */
+ifndef|#
+directive|ifndef
+name|NOPOLL
 name|othersyscall
 label|:
 if|if
@@ -2591,6 +2628,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 name|timeout
 operator|.
 name|tv_sec
@@ -2640,7 +2679,12 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOPOLL
 block|}
+endif|#
+directive|endif
 name|wait
 label|:
 if|if
@@ -2666,6 +2710,9 @@ goto|goto
 name|next_ns
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|NOPOLL
 if|if
 condition|(
 name|use_poll
@@ -2849,6 +2896,8 @@ block|}
 block|}
 else|else
 block|{
+endif|#
+directive|endif
 name|dsmasklen
 operator|=
 name|howmany
@@ -2996,7 +3045,12 @@ goto|goto
 name|next_ns
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|NOPOLL
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|n
