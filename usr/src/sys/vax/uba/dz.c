@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.12	%G%	*/
+comment|/*	dz.c	3.13	%G%	*/
 end_comment
 
 begin_comment
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|"../h/bk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/file.h"
 end_include
 
 begin_comment
@@ -2897,6 +2903,10 @@ expr_stmt|;
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 block|}
