@@ -728,6 +728,40 @@ define|\
 value|if (!getenv_int((path),&(var)))		\        (var) = (defval);
 end_define
 
+begin_define
+define|#
+directive|define
+name|TUNABLE_STR_DECL
+parameter_list|(
+name|path
+parameter_list|,
+name|defval
+parameter_list|,
+name|var
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|static void __Tunable_ ## var (void *ignored)		\ {							\     char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strncpy((var), tmp, (size));			\     (var)[(size)] = 0;					\ }							\ SYSINIT(__Tunable_init_ ## var, SI_SUB_TUNABLES, SI_ORDER_MIDDLE, __Tunable_ ## var , NULL);
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNABLE_STR_FETCH
+parameter_list|(
+name|path
+parameter_list|,
+name|defval
+parameter_list|,
+name|var
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|static void __Tunable_ ## var (void *ignored)		\ {							\     char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strncpy((var), tmp, (size));			\     (var)[(size)] = 0;					\ }
+end_define
+
 begin_comment
 comment|/*  * Compatibility.  To be deprecated after LKM is removed.  */
 end_comment
