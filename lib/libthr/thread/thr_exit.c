@@ -468,9 +468,7 @@ argument_list|)
 condition|)
 name|exit
 argument_list|(
-name|curthread
-operator|->
-name|ret
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Retire the architecture specific id so that it can be used for 	 * new threads. 	 */
