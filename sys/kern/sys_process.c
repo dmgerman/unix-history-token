@@ -1278,6 +1278,9 @@ case|case
 name|PT_TO_SCX
 case|:
 case|case
+name|PT_SYSCALL
+case|:
+case|case
 name|PT_DETACH
 case|:
 name|sx_xlock
@@ -2015,6 +2018,9 @@ name|PT_TO_SCE
 case|:
 case|case
 name|PT_TO_SCX
+case|:
+case|case
+name|PT_SYSCALL
 case|:
 case|case
 name|PT_DETACH
