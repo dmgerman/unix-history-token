@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.15 1998/02/18 09:28:31 jkh Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.16 1998/02/22 12:05:42 ache Exp $ */
 end_comment
 
 begin_comment
@@ -2497,52 +2497,52 @@ index|]
 init|=
 block|{
 comment|/* defaulted to KOI8-R */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
 literal|0xb3
 block|,
 comment|/* CYRILLIC CAPITAL LETTER IO */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER DJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER GJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER UKRAINIAN IE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER DZE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER YI */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER JE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER LJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER NJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER TSHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER SHORT U */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER DZHE */
 literal|0xe1
@@ -2737,532 +2737,532 @@ comment|/* CYRILLIC SMALL LETTER YU */
 literal|0xd1
 block|,
 comment|/* CYRILLIC SMALL LETTER YA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
 literal|0xa3
 block|,
 comment|/* CYRILLIC SMALL LETTER IO */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER DJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER GJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER UKRAINIAN IE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER DZE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER YI */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER JE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER LJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER NJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER TSHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KJE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER SHORT U */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER DZHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER OMEGA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER OMEGA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER YAT */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER YAT */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER IOTIFIED E */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER IOTIFIED E */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER LITTLE YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER LITTLE YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER IOTIFIED LITTLE YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER IOTIFIED LITTLE YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER BIG YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER BIG YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER IOTIFIED BIG YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER IOTIFIED BIG YUS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KSI */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KSI */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER PSI */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER PSI */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER FITA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER FITA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER IZHITSA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER IZHITSA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER IZHITSA WITH DOUBLE GRAVE ACCENT */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER IZHITSA WITH DOUBLE GRAVE ACCENT */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER UK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER UK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ROUND OMEGA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ROUND OMEGA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER OMEGA WITH TITLO */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER OMEGA WITH TITLO */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER OT */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER OT */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KOPPA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KOPPA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC THOUSANDS SIGN */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER GHE WITH UPTURN */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER GHE WITH UPTURN */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER GHE WITH STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER GHE WITH STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER GHE WITH MIDDLE HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER GHE WITH MIDDLE HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ZHE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ZHE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ZE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ZE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KA WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KA WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KA WITH VERTICAL STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KA WITH VERTICAL STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KA WITH STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KA WITH STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER BASHKIR KA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER BASHKIR KA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER EN WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER EN WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LIGATURE EN GHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LIGATURE EN GHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER PE WITH MIDDLE HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER PE WITH MIDDLE HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ABKHASIAN HA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ABKHASIAN HA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ES WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ES WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER TE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER TE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER STRAIGHT U */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER STRAIGHT U */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER STRAIGHT U WITH STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER STRAIGHT U WITH STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER HA WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER HA WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LIGATURE TE TSE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LIGATURE TE TSE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER CHE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER CHE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER CHE WITH VERTICAL STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER CHE WITH VERTICAL STROKE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER SHHA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER SHHA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ABKHASIAN CHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ABKHASIAN CHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ABKHASIAN CHE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ABKHASIAN CHE WITH DESCENDER */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC LETTER PALOCHKA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ZHE WITH BREVE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ZHE WITH BREVE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KA WITH HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KA WITH HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER EN WITH HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER EN WITH HOOK */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER KHAKASSIAN CHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER KHAKASSIAN CHE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER A WITH BREVE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER A WITH BREVE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER A WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER A WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LIGATURE A IE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LIGATURE A IE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER IE WITH BREVE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER IE WITH BREVE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER SCHWA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER SCHWA */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER SCHWA WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER SCHWA WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ZHE WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ZHE WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ZE WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ZE WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER ABKHASIAN DZE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER ABKHASIAN DZE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER I WITH MACRON */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER I WITH MACRON */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER I WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER I WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER O WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER O WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER BARRED O */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER BARRED O */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER BARRED O WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER BARRED O WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER U WITH MACRON */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER U WITH MACRON */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER U WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER U WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER U WITH DOUBLE ACUTE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER U WITH DOUBLE ACUTE */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER CHE WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER CHE WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC CAPITAL LETTER YERU WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* CYRILLIC SMALL LETTER YERU WITH DIAERESIS */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 block|,
 comment|/* */
-literal|0x00
+literal|'?'
 comment|/* */
 block|}
 decl_stmt|;
@@ -5177,10 +5177,10 @@ literal|0xff
 index|]
 expr_stmt|;
 else|else
-return|return
-operator|-
-literal|1
-return|;
+name|code
+operator|=
+literal|'?'
+expr_stmt|;
 block|}
 operator|*
 name|np
@@ -5345,10 +5345,10 @@ literal|0xff
 index|]
 expr_stmt|;
 else|else
-return|return
-operator|-
-literal|1
-return|;
+name|code
+operator|=
+literal|'?'
+expr_stmt|;
 block|}
 operator|*
 name|np
@@ -5526,10 +5526,10 @@ literal|0xff
 index|]
 expr_stmt|;
 else|else
-return|return
-operator|-
-literal|1
-return|;
+name|code
+operator|=
+literal|'?'
+expr_stmt|;
 block|}
 operator|*
 name|np
