@@ -98,23 +98,20 @@ directive|ifdef
 name|DDB
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ffs_checkoverlap
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|buf
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|inode
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

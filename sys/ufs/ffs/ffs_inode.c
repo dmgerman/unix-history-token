@@ -129,31 +129,28 @@ directive|include
 file|<ufs/ffs/ffs_extern.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ffs_indirtrunc
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|inode
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ufs_daddr_t
-operator|,
+parameter_list|,
 name|ufs_daddr_t
-operator|,
+parameter_list|,
 name|ufs_daddr_t
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Update the access, modified, and inode change times as specified by the  * IN_ACCESS, IN_UPDATE, and IN_CHANGE flags respectively.  Write the inode  * to disk if the IN_MODIFIED flag is set (it may be set initially, or by  * the timestamp update).  The IN_LAZYMOD flag is set to force a write  * later if not now.  If we write now, then clear both IN_MODIFIED and  * IN_LAZYMOD to reflect the presumably successful write, and if waitfor is  * set, then wait for the write to complete.  */

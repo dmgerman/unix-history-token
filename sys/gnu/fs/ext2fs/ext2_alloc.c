@@ -103,25 +103,22 @@ directive|include
 file|<gnu/ext2fs/ext2_extern.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ext2_fserr
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|ext2_sb_info
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Linux calls this functions at the following locations:  * (1) the inode is freed  * (2) a preallocation miss occurs  * (3) truncate is called  * (4) release_file is called and f_mode& 2  *  * I call it in ext2_inactive, ext2_truncate, ext2_vfree and in (2)  * the call in vfree might be redundant  */

@@ -245,29 +245,26 @@ define|\
 value|((dt)> sizeof(dt_to_ext2_ft) / sizeof(dt_to_ext2_ft[0]) ?	\     EXT2_FT_UNKNOWN : dt_to_ext2_ft[(dt)])
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ext2_dirbadentry
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|dp
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|ext2_dir_entry_2
-operator|*
+modifier|*
 name|de
-operator|,
+parameter_list|,
 name|int
 name|entryoffsetinblock
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Vnode op for reading directories.  *  * The routine below assumes that the on-disk format of a directory  * is the same as that defined by<sys/dirent.h>. If the on-disk  * format changes, then it will be necessary to do a conversion  * from the on-disk format that read returns to the format defined  * by<sys/dirent.h>.  */
