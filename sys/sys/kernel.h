@@ -748,14 +748,6 @@ comment|/* printf(#name " module load\n"); */
 value|\ 			initfunc(NULL); \ 			break; \ 		case MOD_UNLOAD: \ 			printf(#name " module unload - not possible for this module type\n"); \ 			return EINVAL; \ 		} \ 		return 0; \ 	} \ 	static moduledata_t name ## _mod = { \ 		#name, \ 		name ## _modevent, \ 		(void *)sym \ 	}; \ 	DECLARE_MODULE(name, name ## _mod, SI_SUB_PSEUDO, SI_ORDER_ANY)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
-name|execsw_set
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|intr_config_hook
