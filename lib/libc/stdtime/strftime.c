@@ -141,6 +141,12 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"setlocale.h"
+end_include
+
 begin_struct
 struct|struct
 name|lc_time_T
@@ -1915,14 +1921,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|_PathLocale
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|__time_load_locale
@@ -2118,7 +2116,7 @@ condition|)
 goto|goto
 name|no_locale
 goto|;
-comment|/* Range checking not needed, name has fixed size */
+comment|/* Range checking not needed, 'name' size is limited */
 name|strcpy
 argument_list|(
 name|filename
