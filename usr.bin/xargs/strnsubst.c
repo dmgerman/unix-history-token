@@ -221,6 +221,11 @@ operator|)
 operator|)
 operator|>
 name|maxsize
+operator|&&
+operator|*
+name|replstr
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|strlcat
