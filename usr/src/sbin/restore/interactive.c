@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.14 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,13 @@ end_define
 begin_comment
 comment|/*  * Things to handle interruptions.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|runshell
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -286,6 +293,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|runshell
+operator|=
+literal|1
+expr_stmt|;
 name|getcmd
 argument_list|(
 name|curdir
@@ -4211,6 +4222,8 @@ condition|(
 name|command
 operator|==
 literal|'i'
+operator|&&
+name|runshell
 condition|)
 name|longjmp
 argument_list|(
