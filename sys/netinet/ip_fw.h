@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.16 1996/02/24 00:17:33 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.17 1996/02/24 13:38:27 phk Exp $  */
 end_comment
 
 begin_comment
@@ -404,6 +404,13 @@ name|IP_FW_TCPF_URG
 value|TH_URG
 end_define
 
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_ESTAB
+value|0x40
+end_define
+
 begin_comment
 comment|/*  * New IP firewall options for [gs]etsockopt at the RAW IP level.  */
 end_comment
@@ -459,54 +466,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_comment
-comment|/*  * Function pointers.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|ip_fw_chk_ptr
-function_decl|)
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|ip
-modifier|*
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|int
-name|dir
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|ip_fw_ctl_ptr
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Function definitions.  */
