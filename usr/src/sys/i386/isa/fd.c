@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)fd.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * %sccs.include.redist.c%  *  *	@(#)fd.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1178,7 +1178,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"FD bad status :%X %X %X %X %X %X %X\n"
+literal|"FD bad status :%lx %lx %lx %lx %lx %lx %lx\n"
 argument_list|,
 name|fd_status
 index|[
@@ -1295,7 +1295,7 @@ directive|ifdef
 name|FDOTHER
 name|printf
 argument_list|(
-literal|"%X\n"
+literal|"%lx\n"
 argument_list|,
 name|x
 argument_list|)
@@ -1948,7 +1948,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Timeout drive status %X\n"
+literal|"Timeout drive status %lx\n"
 argument_list|,
 name|i
 argument_list|)
@@ -1970,7 +1970,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ST0 = %X, PCN = %X\n"
+literal|"ST0 = %lx, PCN = %lx\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2161,7 +2161,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Stray int ST0 = %X, PCN = %X:"
+literal|"Stray int ST0 = %lx, PCN = %lx:"
 argument_list|,
 name|i
 argument_list|,
@@ -2762,7 +2762,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ST0 = %X, PCN = %X\n"
+literal|"ST0 = %lx, PCN = %lx\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2804,7 +2804,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"intr status :%X %X %X %X %X %X %X "
+literal|"intr status :%lx %lx %lx %lx %lx %lx %lx "
 argument_list|,
 name|fd_status
 index|[
@@ -2894,7 +2894,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"FD err %X %X %X %X %X %X %X\n"
+literal|"FD err %lx %lx %lx %lx %lx %lx %lx\n"
 argument_list|,
 name|fd_status
 index|[

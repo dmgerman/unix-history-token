@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -584,7 +584,7 @@ control|)
 block|{
 name|kdbprintf
 argument_list|(
-literal|"%X pid %5d%c%5d %c "
+literal|"%lx pid %5d%c%5d %c "
 argument_list|,
 name|p
 argument_list|,
