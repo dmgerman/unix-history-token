@@ -2467,9 +2467,12 @@ name|intr
 condition|)
 block|{
 comment|/* Hard error, can't continue */
-name|msgConfirm
+if|if
+condition|(
+operator|!
+name|msgYesNo
 argument_list|(
-literal|"Unable to open %s: %s.\nReinitializing media."
+literal|"Unable to open %s: %s.\nReinitialize media?"
 argument_list|,
 name|buf
 argument_list|,
@@ -2480,7 +2483,8 @@ literal|"I/O error."
 else|:
 literal|"User interrupt."
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|mediaDevice
 operator|->
 name|shutdown
@@ -2511,6 +2515,17 @@ else|else
 goto|goto
 name|getinfo
 goto|;
+block|}
+else|else
+block|{
+name|status
+operator|=
+name|FALSE
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 block|}
 else|else
 block|{
