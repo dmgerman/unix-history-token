@@ -87,6 +87,40 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_function_decl
+specifier|extern
+name|int
+name|dvrecv
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dvsend
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -98,7 +132,7 @@ block|{
 name|printf
 argument_list|(
 literal|"fwcontrol [-g gap_count] [-b pri_req] [-c node]"
-literal|" [-r] [-t] [-d node] [-l file]\n"
+literal|" [-r] [-t] [-d node] [-l file] [-R file] [-S file]\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -134,6 +168,16 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\t-l: load and parse hex dump file of configuration ROM\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-R: Receive DV stream\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\t-S: Send DV stream\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1980,7 +2024,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"g:b:rtc:d:l:"
+literal|"g:b:rtc:d:l:R:S:"
 argument_list|)
 operator|)
 operator|!=
@@ -2149,6 +2193,50 @@ expr_stmt|;
 name|show_crom
 argument_list|(
 name|crom_buf
+argument_list|)
+expr_stmt|;
+break|break;
+define|#
+directive|define
+name|TAG
+value|(1<<6)
+define|#
+directive|define
+name|CHANNEL
+value|63
+case|case
+literal|'R'
+case|:
+name|dvrecv
+argument_list|(
+name|fd
+argument_list|,
+name|optarg
+argument_list|,
+name|TAG
+operator||
+name|CHANNEL
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|dvsend
+argument_list|(
+name|fd
+argument_list|,
+name|optarg
+argument_list|,
+name|TAG
+operator||
+name|CHANNEL
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
