@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw.c,v 1.12 1999/02/23 07:15:10 davidn Exp $"
+literal|"$Id: pw.c,v 1.13 1999/02/23 10:35:47 davidn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,12 +634,6 @@ name|mode
 operator|!=
 operator|-
 literal|1
-operator|&&
-name|arglist
-operator|.
-name|lh_first
-operator|==
-name|NULL
 condition|)
 name|addarg
 argument_list|(
