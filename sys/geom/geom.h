@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<geom/geom_sim.h>
+file|<geom_sim.h>
 end_include
 
 begin_endif
