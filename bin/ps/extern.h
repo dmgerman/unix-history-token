@@ -372,6 +372,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rss
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|,
+name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|runame
 parameter_list|(
 name|KINFO
