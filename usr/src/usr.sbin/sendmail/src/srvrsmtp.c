@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.26 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.27 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.26 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.27 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -918,6 +918,15 @@ argument_list|(
 literal|'s'
 argument_list|,
 name|sendinghost
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'r'
+argument_list|,
+literal|"SMTP"
 argument_list|,
 name|CurEnv
 argument_list|)
