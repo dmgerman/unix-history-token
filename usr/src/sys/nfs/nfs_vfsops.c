@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -977,15 +977,6 @@ literal|0
 index|]
 operator|.
 name|sw_vp
-operator|=
-name|vp
-expr_stmt|;
-name|VREF
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|argdev_vp
 operator|=
 name|vp
 expr_stmt|;
