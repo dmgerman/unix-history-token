@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: freebsd.h,v 1.16 1999/08/15 21:59:46 obrien Exp $ */
+comment|/* $Id: freebsd.h,v 1.17 1999/08/15 22:02:47 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -161,6 +161,33 @@ define|#
 directive|define
 name|DEFAULT_VTABLE_THUNKS
 value|1
+end_define
+
+begin_comment
+comment|/* This is BSD, so we want the DBX format.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DBX_DEBUGGING_INFO
+end_define
+
+begin_comment
+comment|/* Use stabs instead of DWARF debug format.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PREFERRED_DEBUGGING_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_DEBUGGING_TYPE
+value|DBX_DEBUG
 end_define
 
 begin_comment
