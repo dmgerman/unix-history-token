@@ -765,6 +765,17 @@ begin_comment
 comment|/* vinvalbuf: leave indirect blocks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|REVOKEALL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* vop_revoke: revoke all aliases */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1580,21 +1591,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|vgoneall
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-name|vp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|vinvalbuf
 name|__P
@@ -1899,6 +1895,20 @@ expr|struct
 name|ucred
 operator|*
 name|cred
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vop_revoke
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_revoke_args
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
