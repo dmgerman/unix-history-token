@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.5 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.6 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.5 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.6 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -803,7 +803,17 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"udbexpand: db-get stat %s"
+literal|"udbexpand: db-get %.*s stat %d"
+argument_list|,
+name|key
+operator|.
+name|size
+argument_list|,
+name|key
+operator|.
+name|data
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 return|return

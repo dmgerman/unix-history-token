@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.3 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.4 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.3 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.4 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,29 @@ end_define
 begin_comment
 comment|/* number of possible domains to search */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)> (b) ? (a) : (b))
+end_define
 
 begin_endif
 endif|#
@@ -1176,7 +1199,16 @@ decl_stmt|;
 name|char
 name|nbuf
 index|[
+name|MAX
+argument_list|(
 name|PACKETSZ
+argument_list|,
+name|MAXDNAME
+operator|*
+literal|2
+operator|+
+literal|2
+argument_list|)
 index|]
 decl_stmt|;
 name|char
@@ -1339,35 +1371,6 @@ name|dp
 operator|++
 control|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|nbuf
-argument_list|,
-literal|"%.*s%s%.*s"
-argument_list|,
-name|MAXDNAME
-argument_list|,
-name|host
-argument_list|,
-operator|*
-operator|*
-name|dp
-operator|==
-literal|'\0'
-condition|?
-literal|""
-else|:
-literal|"."
-argument_list|,
-name|MAXDNAME
-argument_list|,
-operator|*
-name|dp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1379,16 +1382,22 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"getcanonname: trying %s\n"
+literal|"getcanonname: trying %s.%s\n"
 argument_list|,
-name|nbuf
+name|host
+argument_list|,
+operator|*
+name|dp
 argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|res_query
+name|res_querydomain
 argument_list|(
-name|nbuf
+name|host
+argument_list|,
+operator|*
+name|dp
 argument_list|,
 name|C_IN
 argument_list|,

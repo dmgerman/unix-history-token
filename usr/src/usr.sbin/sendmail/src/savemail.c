@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.3 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -920,11 +920,10 @@ name|sendtolist
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+operator|&
+name|e
+operator|->
+name|e_from
 argument_list|,
 operator|&
 name|q
@@ -1007,7 +1006,7 @@ name|putfromline
 argument_list|(
 name|fp
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|,
 name|e
 argument_list|)
@@ -1021,7 +1020,7 @@ call|)
 argument_list|(
 name|fp
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|,
 name|e
 argument_list|)
@@ -1032,7 +1031,7 @@ literal|"\n"
 argument_list|,
 name|fp
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|)
 expr_stmt|;
 call|(
@@ -1044,7 +1043,7 @@ call|)
 argument_list|(
 name|fp
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|,
 name|e
 argument_list|)
@@ -1055,7 +1054,7 @@ literal|"\n"
 argument_list|,
 name|fp
 argument_list|,
-name|ProgMailer
+name|FileMailer
 argument_list|)
 expr_stmt|;
 operator|(

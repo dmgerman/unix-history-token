@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.3 (Berkeley) %G%"
+literal|"@(#)err.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1318,25 +1318,43 @@ ifdef|#
 directive|ifdef
 name|NAMED_BIND
 case|case
+name|HOST_NOT_FOUND
+operator|+
+name|MAX_ERRNO
+case|:
+return|return
 operator|(
+literal|"Name server: host not found"
+operator|)
+return|;
+case|case
 name|TRY_AGAIN
 operator|+
 name|MAX_ERRNO
-operator|)
 case|:
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"Host Name Lookup Failure"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|buf
+literal|"Name server: host name lookup failure"
+operator|)
+return|;
+case|case
+name|NO_RECOVERY
+operator|+
+name|MAX_ERRNO
+case|:
+return|return
+operator|(
+literal|"Name server: non-recoverable error"
+operator|)
+return|;
+case|case
+name|NO_DATA
+operator|+
+name|MAX_ERRNO
+case|:
+return|return
+operator|(
+literal|"Name server: no data known for name"
 operator|)
 return|;
 endif|#

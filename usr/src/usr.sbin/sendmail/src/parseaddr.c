@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.11 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5279,6 +5279,11 @@ operator|-=
 name|i
 expr_stmt|;
 block|}
+operator|*
+name|bp
+operator|=
+literal|'\0'
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG

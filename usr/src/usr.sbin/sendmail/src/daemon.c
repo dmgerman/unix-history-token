@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.5 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.6 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.5 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.6 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -699,7 +699,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 			**  XXX Should look for mail forwarder record here 			**  XXX if (h_errno == NO_ADDRESS). 			*/
 return|return
 operator|(
 name|EX_NOHOST
