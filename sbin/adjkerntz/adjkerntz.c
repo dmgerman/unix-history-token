@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993 by Andrew A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPERS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1993 by Andrew A. Chernov, Moscow, Russia.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -113,7 +113,7 @@ decl_stmt|,
 modifier|*
 name|stz
 decl_stmt|;
-comment|/* Avoid time_t here, can be unsigned long */
+comment|/* Avoid time_t here, can be unsigned long or worse */
 name|long
 name|offset
 decl_stmt|,
@@ -126,6 +126,8 @@ decl_stmt|,
 name|diff
 decl_stmt|;
 name|time_t
+name|initial_sec
+decl_stmt|,
 name|final_sec
 decl_stmt|;
 name|int
@@ -303,7 +305,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Incorrect offset in %s\n"
+literal|"Misformatted offset in %s\n"
 argument_list|,
 name|storage
 argument_list|)
@@ -350,15 +352,19 @@ literal|1
 return|;
 block|}
 comment|/* get the actual local timezone difference */
+name|initial_sec
+operator|=
+name|tv
+operator|.
+name|tv_sec
+expr_stmt|;
 name|local
 operator|=
 operator|*
 name|localtime
 argument_list|(
 operator|&
-name|tv
-operator|.
-name|tv_sec
+name|initial_sec
 argument_list|)
 expr_stmt|;
 name|utc
@@ -367,9 +373,7 @@ operator|*
 name|gmtime
 argument_list|(
 operator|&
-name|tv
-operator|.
-name|tv_sec
+name|initial_sec
 argument_list|)
 expr_stmt|;
 name|utc
@@ -412,11 +416,12 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* 		 * XXX user can only control local time, and it is 		 * unacceptable to fail here for -i.  2:30 am in the 		 * middle of the nonexistent hour means 3:30 am. 		 */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong initial hour to call\n"
+literal|"Nonexistent local time - try again in an hour\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -517,11 +522,12 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* 			 * XXX as above.  The user has even less control, 			 * but perhaps we never get here. 			 */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong final hour to call\n"
+literal|"Nonexistent (final) local time - try again in an hour\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -660,7 +666,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"Calculated zone offset diffs: %ld seconds\n"
+literal|"Calculated zone offset difference: %ld seconds\n"
 argument_list|,
 name|diff
 argument_list|)
