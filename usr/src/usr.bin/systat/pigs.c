@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pigs.c	5.2 (Berkeley) %G%"
+literal|"@(#)pigs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -304,24 +304,11 @@ index|]
 operator|.
 name|pt_pctcpu
 operator|=
-name|total
-operator|/
-operator|(
-literal|1.0
-operator|-
-name|idle
-operator|)
-operator|*
 name|idle
 expr_stmt|;
 name|total
 operator|+=
-name|pt
-index|[
-name|numprocs
-index|]
-operator|.
-name|pt_pctcpu
+name|idle
 expr_stmt|;
 name|pt
 index|[
@@ -351,6 +338,16 @@ operator|.
 name|pt_pp
 operator|=
 name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|total
+operator|<
+literal|1.0
+condition|)
+name|total
+operator|=
+literal|1.0
 expr_stmt|;
 name|factor
 operator|=
