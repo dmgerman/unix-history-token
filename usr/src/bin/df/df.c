@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	8.5 (Berkeley) %G%"
+literal|"@(#)df.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,12 +467,14 @@ modifier|*
 name|mntbuf
 decl_stmt|;
 name|long
+name|fsmask
+decl_stmt|,
 name|mntsize
 decl_stmt|;
 name|int
-name|err
-decl_stmt|,
 name|ch
+decl_stmt|,
+name|err
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -483,9 +485,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|mntpt
-decl_stmt|;
-name|long
-name|fsmask
 decl_stmt|;
 while|while
 condition|(
@@ -1230,21 +1229,13 @@ name|MT_ALL
 operator|)
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"df: unknown type `%s'\n"
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unknown type `%s'"
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 block|}
@@ -1276,13 +1267,11 @@ decl_stmt|,
 name|fsmask
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-specifier|register
 name|struct
 name|statfs
 modifier|*
@@ -1431,7 +1420,6 @@ name|sfsp
 parameter_list|,
 name|maxwidth
 parameter_list|)
-specifier|register
 name|struct
 name|statfs
 modifier|*
@@ -1785,7 +1773,6 @@ name|struct
 name|statfs
 name|statfsbuf
 decl_stmt|;
-specifier|register
 name|struct
 name|statfs
 modifier|*

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	8.1 (Berkeley) %G%"
+literal|"@(#)kill.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,21 +150,19 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|errors
-decl_stmt|,
-name|numsig
-decl_stmt|,
-name|pid
-decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
 specifier|const
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|errors
+decl_stmt|,
+name|numsig
+decl_stmt|,
+name|pid
 decl_stmt|;
 name|char
 modifier|*
@@ -475,14 +473,9 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"kill: unknown signal %s; valid signals:\n"
+literal|"unknown signal %s; valid signals:"
 argument_list|,
 name|name
 argument_list|)
@@ -511,17 +504,15 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|cnt
-decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
 specifier|const
 modifier|*
 name|p
+decl_stmt|;
+name|int
+name|cnt
 decl_stmt|;
 for|for
 control|(
