@@ -105,7 +105,6 @@ modifier|*
 name|filename
 decl_stmt|;
 comment|/* for pointing to file names */
-specifier|register
 name|int
 name|fd
 decl_stmt|;

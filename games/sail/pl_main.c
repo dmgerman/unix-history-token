@@ -130,13 +130,11 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|File
 modifier|*
 name|fp
 decl_stmt|;
-specifier|register
 name|struct
 name|ship
 modifier|*
@@ -157,7 +155,6 @@ decl_stmt|;
 name|int
 name|load
 decl_stmt|;
-specifier|register
 name|int
 name|n
 decl_stmt|;
