@@ -1241,10 +1241,11 @@ condition|(
 operator|!
 name|badaddr
 argument_list|(
-operator|(
+name|__DEVOLATILE
+argument_list|(
 name|void
 operator|*
-operator|)
+argument_list|,
 operator|&
 name|t2_csr
 index|[
@@ -1252,6 +1253,7 @@ literal|1
 index|]
 operator|->
 name|tlbbr
+argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
