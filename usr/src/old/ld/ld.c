@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 4.3 %G%"
+literal|"@(#)ld.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
