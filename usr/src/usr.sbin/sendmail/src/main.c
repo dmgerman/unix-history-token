@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.109 (Berkeley) %G%"
+literal|"@(#)main.c	8.110 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3183,6 +3183,14 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+name|vendor_pre_defaults
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|readcf
 argument_list|(
 name|getcfname
@@ -3190,6 +3198,14 @@ argument_list|()
 argument_list|,
 name|safecf
 argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|vendor_post_defaults
+argument_list|(
 name|CurEnv
 argument_list|)
 expr_stmt|;

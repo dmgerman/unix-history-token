@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.166 (Berkeley) %G%"
+literal|"@(#)conf.c	8.167 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -10144,6 +10144,39 @@ return|return
 name|FALSE
 return|;
 block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  VENDOR_PRE_DEFAULTS, VENDOR_POST_DEFAULTS -- set vendor-specific defaults ** **	Vendor_pre_defaults is called before reading the configuration **	file; vendor_post_defaults is called immediately after. ** **	Parameters: **		e -- the global environment to initialize. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|vendor_pre_defaults
+parameter_list|(
+name|e
+parameter_list|)
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{ }
+end_function
+
+begin_function
+name|void
+name|vendor_post_defaults
+parameter_list|(
+name|e
+parameter_list|)
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{ }
 end_function
 
 begin_escape
