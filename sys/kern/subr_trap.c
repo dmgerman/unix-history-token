@@ -829,9 +829,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_rux
-operator|.
-name|rux_runtime
+name|p_runtime
 operator|.
 name|sec
 operator|>=

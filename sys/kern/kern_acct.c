@@ -898,6 +898,12 @@ name|ac_comm
 argument_list|)
 expr_stmt|;
 comment|/* (2) The amount of user and system time that was used */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|calcru
 argument_list|(
 name|p
@@ -907,6 +913,14 @@ name|ut
 argument_list|,
 operator|&
 name|st
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 name|acct

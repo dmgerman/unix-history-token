@@ -1156,9 +1156,7 @@ argument_list|(
 operator|&
 name|p
 operator|->
-name|p_rux
-operator|.
-name|rux_runtime
+name|p_runtime
 argument_list|,
 operator|&
 name|new_switchtime
@@ -1169,9 +1167,7 @@ argument_list|(
 operator|&
 name|p
 operator|->
-name|p_rux
-operator|.
-name|rux_runtime
+name|p_runtime
 argument_list|,
 name|PCPU_PTR
 argument_list|(
@@ -1222,9 +1218,7 @@ name|RLIM_INFINITY
 operator|&&
 name|p
 operator|->
-name|p_rux
-operator|.
-name|rux_runtime
+name|p_runtime
 operator|.
 name|sec
 operator|>

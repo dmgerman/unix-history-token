@@ -1768,9 +1768,7 @@ argument_list|(
 operator|&
 name|proc
 operator|.
-name|p_rux
-operator|.
-name|rux_runtime
+name|p_runtime
 argument_list|,
 operator|&
 name|tv

@@ -1829,9 +1829,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_rux
-operator|.
-name|rux_runtime
+name|p_runtime
 operator|.
 name|sec
 operator|=
@@ -1839,9 +1837,7 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
-name|p_rux
-operator|.
-name|rux_runtime
+name|p_runtime
 operator|.
 name|frac
 operator|=
