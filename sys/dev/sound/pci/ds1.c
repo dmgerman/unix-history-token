@@ -348,6 +348,10 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
+name|void
+modifier|*
+name|regbase
+decl_stmt|;
 name|u_int32_t
 modifier|*
 name|pbase
@@ -1043,7 +1047,32 @@ block|,
 name|ds1pchan_getptr
 block|,
 name|ds1pchan_getcaps
-block|, }
+block|,
+name|NULL
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1068,7 +1097,32 @@ block|,
 name|ds1rchan_getptr
 block|,
 name|ds1rchan_getcaps
-block|, }
+block|,
+name|NULL
+block|,
+comment|/* free */
+name|NULL
+block|,
+comment|/* nop1 */
+name|NULL
+block|,
+comment|/* nop2 */
+name|NULL
+block|,
+comment|/* nop3 */
+name|NULL
+block|,
+comment|/* nop4 */
+name|NULL
+block|,
+comment|/* nop5 */
+name|NULL
+block|,
+comment|/* nop6 */
+name|NULL
+block|,
+comment|/* nop7 */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -4576,6 +4630,15 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|regbase
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|bus_dmamem_alloc
 argument_list|(
 name|sc
@@ -4646,6 +4709,20 @@ operator|-
 literal|1
 return|;
 block|}
+name|sc
+operator|->
+name|regbase
+operator|=
+name|buf
+expr_stmt|;
+block|}
+else|else
+name|buf
+operator|=
+name|sc
+operator|->
+name|regbase
+expr_stmt|;
 name|cb
 operator|=
 literal|0
@@ -5392,6 +5469,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|sc
+operator|->
+name|regbase
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|ds_init
@@ -5695,6 +5778,88 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|ds_pci_resume
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|snddev_info
+modifier|*
+name|d
+decl_stmt|;
+name|struct
+name|sc_info
+modifier|*
+name|sc
+decl_stmt|;
+name|d
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|pcm_getdevinfo
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ds_init
+argument_list|(
+name|sc
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unable to reinitialize the card\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
+if|if
+condition|(
+name|mixer_reinit
+argument_list|(
+name|d
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unable to reinitialize the mixer\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENXIO
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -5715,6 +5880,13 @@ argument_list|(
 name|device_attach
 argument_list|,
 name|ds_pci_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|ds_pci_resume
 argument_list|)
 block|,
 block|{
