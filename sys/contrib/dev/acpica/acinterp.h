@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1433,25 +1433,6 @@ parameter_list|,
 name|NATIVE_CHAR
 modifier|*
 name|OutString
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiAmlBuildCopyInternalPackageObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|SourceObj
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|DestObj
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 100 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 104 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -964,6 +964,46 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Pkg state - used to traverse nested package structures  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_pkg_state
+block|{
+name|ACPI_STATE_COMMON
+name|union
+name|acpi_operand_obj
+modifier|*
+name|SourceObject
+decl_stmt|;
+name|union
+name|acpi_operand_obj
+modifier|*
+name|DestObject
+decl_stmt|;
+name|struct
+name|acpi_walk_state
+modifier|*
+name|WalkState
+decl_stmt|;
+name|void
+modifier|*
+name|ThisTargetObj
+decl_stmt|;
+name|UINT32
+name|NumPackages
+decl_stmt|;
+name|UINT16
+name|Index
+decl_stmt|;
+block|}
+name|ACPI_PKG_STATE
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Control state - one per if/else and while constructs.  * Allows nesting of these constructs  */
 end_comment
 
@@ -1094,6 +1134,9 @@ name|Scope
 decl_stmt|;
 name|ACPI_PSCOPE_STATE
 name|ParseScope
+decl_stmt|;
+name|ACPI_PKG_STATE
+name|Pkg
 decl_stmt|;
 name|ACPI_RESULT_VALUES
 name|Results
@@ -1717,9 +1760,6 @@ typedef|typedef
 struct|struct
 name|acpi_device_walk_info
 block|{
-name|UINT32
-name|Flags
-decl_stmt|;
 name|UINT16
 name|DeviceCount
 decl_stmt|;

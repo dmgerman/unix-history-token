@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 163 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 165 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -776,15 +776,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_NO_PCI_INIT
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_NO_OBJECT_INIT
-value|0x40
+value|0x20
 end_define
 
 begin_comment
@@ -3366,45 +3359,31 @@ begin_comment
 comment|/*  * END: Definitions for Resource Attributes  */
 end_comment
 
-begin_comment
-comment|/*  * Definitions for PCI Routing tables  */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
+name|pci_routing_table
 block|{
-name|ACPI_INTEGER
-name|Address
+name|UINT32
+name|Length
 decl_stmt|;
 name|UINT32
 name|Pin
 decl_stmt|;
+name|ACPI_INTEGER
+name|Address
+decl_stmt|;
+comment|/* here for 64-bit alignment */
 name|UINT32
 name|SourceIndex
 decl_stmt|;
 name|NATIVE_CHAR
 name|Source
 index|[
-literal|1
+literal|4
 index|]
 decl_stmt|;
-block|}
-name|PRT_ENTRY
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_prt_tag
-block|{
-name|UINT32
-name|Length
-decl_stmt|;
-name|PRT_ENTRY
-name|Data
-decl_stmt|;
+comment|/* pad to 64 bits so sizeof() works in all cases */
 block|}
 name|PCI_ROUTING_TABLE
 typedef|;

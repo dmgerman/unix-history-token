@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions do dump out the resource structures.  *              $Revision: 15 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions do dump out the resource structures.  *              $Revision: 16 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2084,8 +2084,6 @@ literal|"\t\tAddress: %X\n"
 argument_list|,
 name|PrtElement
 operator|->
-name|Data
-operator|.
 name|Address
 argument_list|)
 expr_stmt|;
@@ -2095,8 +2093,6 @@ literal|"\t\tPin: %X\n"
 argument_list|,
 name|PrtElement
 operator|->
-name|Data
-operator|.
 name|Pin
 argument_list|)
 expr_stmt|;
@@ -2106,8 +2102,6 @@ literal|"\t\tSource: %s\n"
 argument_list|,
 name|PrtElement
 operator|->
-name|Data
-operator|.
 name|Source
 argument_list|)
 expr_stmt|;
@@ -2117,8 +2111,6 @@ literal|"\t\tSourceIndex: %X\n"
 argument_list|,
 name|PrtElement
 operator|->
-name|Data
-operator|.
 name|SourceIndex
 argument_list|)
 expr_stmt|;

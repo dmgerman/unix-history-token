@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 81 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 83 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -582,13 +582,16 @@ operator|!
 name|Node
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_BAD_PARAMETER
+name|AcpiCmReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
+argument_list|)
 expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_PARAMETER
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Two major cases here:      * 1) The object is an actual control method -- execute it.      * 2) The object is not a method -- just return it's current      *      value      *      * In both cases, the namespace is unlocked by the      *  AcpiNs* procedure      */
 if|if
@@ -670,18 +673,6 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
-name|UnlockAndExit
-label|:
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -718,6 +709,12 @@ decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"NsExecuteControlMethod"
+argument_list|)
+expr_stmt|;
+comment|/*      * Unlock the namespace before execution.  This allows namespace access      * via the external Acpi* interfaces while a method is being executed.      * However, any namespace deletion must acquire both the namespace and      * interpreter locks to ensure that no thread is using the portion of the      * namespace that is being deleted.      */
+name|AcpiCmReleaseMutex
+argument_list|(
+name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
 comment|/* Verify that there is a method associated with this object */
@@ -805,13 +802,7 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Unlock the namespace before execution.  This allows namespace access      * via the external Acpi* interfaces while a method is being executed.      * However, any namespace deletion must acquire both the namespace and      * interpreter locks to ensure that no thread is using the portion of the      * namespace that is being deleted.      */
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
-comment|/*      * Excecute the method via the interpreter      */
+comment|/*      * Execute the method via the interpreter      */
 name|Status
 operator|=
 name|AcpiAmlExecuteMethod

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acnamesp.h - Namespace subcomponent prototypes and defines  *       $Revision: 103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -189,8 +189,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiNsInitializeDevices
 parameter_list|(
-name|UINT32
-name|Flags
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -811,6 +810,17 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 modifier|*
 name|OutNode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT32
+name|AcpiNsGetPathnameLength
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|)
 function_decl|;
 end_function_decl

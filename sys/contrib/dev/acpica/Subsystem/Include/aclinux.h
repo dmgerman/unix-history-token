@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclinux.h - OS specific defines, etc.  *       $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclinux.h - OS specific defines, etc.  *       $Revision: 9 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -62,6 +62,12 @@ directive|include
 file|<asm/atomic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<asm/div64.h>
+end_include
+
 begin_comment
 comment|/* Linux uses GCC */
 end_comment
@@ -85,20 +91,53 @@ name|DEBUGGER_THREADING
 value|DEBUGGER_SINGLE_THREADED
 end_define
 
-begin_comment
-comment|/* Linux ia32 can't do int64 well */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_IA64
 end_ifndef
 
+begin_comment
+comment|/* Linux ia32 can't do int64 well */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ACPI_NO_INTEGER64_SUPPORT
+end_define
+
+begin_comment
+comment|/* And the ia32 kernel doesn't include 64-bit divide support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DIV64
+parameter_list|(
+name|dividend
+parameter_list|,
+name|divisor
+parameter_list|)
+value|do_div(dividend, divisor)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_DIV64
+parameter_list|(
+name|dividend
+parameter_list|,
+name|divisor
+parameter_list|)
+value|ACPI_DIVIDE(dividend, divisor)
 end_define
 
 begin_endif

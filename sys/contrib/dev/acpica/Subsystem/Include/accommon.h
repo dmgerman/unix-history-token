@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: accommon.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 87 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: accommon.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -18,6 +18,77 @@ define|#
 directive|define
 name|_ACCOMMON_H
 end_define
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_PKG_CALLBACK
+function_decl|)
+parameter_list|(
+name|UINT8
+name|ObjectType
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceObject
+parameter_list|,
+name|ACPI_GENERIC_STATE
+modifier|*
+name|State
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiCmWalkPackageTree
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceObject
+parameter_list|,
+name|void
+modifier|*
+name|TargetObject
+parameter_list|,
+name|ACPI_PKG_CALLBACK
+name|WalkCallback
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_pkg_info
+block|{
+name|UINT8
+modifier|*
+name|FreeSpace
+decl_stmt|;
+name|UINT32
+name|Length
+decl_stmt|;
+name|UINT32
+name|ObjectSpace
+decl_stmt|;
+name|UINT32
+name|NumPackages
+decl_stmt|;
+block|}
+name|ACPI_PKG_INFO
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -489,7 +560,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmBuildExternalObject
+name|AcpiCmCopyIobjectToEobject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -504,7 +575,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmBuildInternalSimpleObject
+name|AcpiCmCopyEsimpleToIsimple
 parameter_list|(
 name|ACPI_OBJECT
 modifier|*
@@ -519,7 +590,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmBuildInternalObject
+name|AcpiCmCopyEobjectToIobject
 parameter_list|(
 name|ACPI_OBJECT
 modifier|*
@@ -534,7 +605,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCopyInternalSimpleObject
+name|AcpiCmCopyISimpleToIsimple
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -549,7 +620,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmBuildCopyInternalPackageObject
+name|AcpiCmCopyIpackageToIpackage
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -558,6 +629,10 @@ parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|DestObj
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1380,6 +1455,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|ACPI_GENERIC_STATE
+modifier|*
+name|AcpiCmCreatePkgState
+parameter_list|(
+name|void
+modifier|*
+name|InternalObject
+parameter_list|,
+name|void
+modifier|*
+name|ExternalObject
+parameter_list|,
+name|UINT16
+name|Index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_STATUS
 name|AcpiCmCreateUpdateStateAndPush
 parameter_list|(
@@ -1389,6 +1483,29 @@ name|Object
 parameter_list|,
 name|UINT16
 name|Action
+parameter_list|,
+name|ACPI_GENERIC_STATE
+modifier|*
+modifier|*
+name|StateList
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiCmCreatePkgStateAndPush
+parameter_list|(
+name|void
+modifier|*
+name|InternalObject
+parameter_list|,
+name|void
+modifier|*
+name|ExternalObject
+parameter_list|,
+name|UINT16
+name|Index
 parameter_list|,
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -1471,6 +1588,31 @@ name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
+begin_function_decl
+name|void
+name|AcpiCmDisplayInitPathname
+parameter_list|(
+name|ACPI_HANDLE
+name|ObjHandle
+parameter_list|,
+name|char
+modifier|*
+name|Path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Memory allocation functions and related macros.  * Macros that expand to include filename and line number  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -334,6 +334,24 @@ operator|=
 name|Function
 expr_stmt|;
 comment|/*      *  Execute the method, no return value      */
+name|DEBUG_EXEC
+argument_list|(
+name|AcpiCmDisplayInitPathname
+argument_list|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|Extra
+operator|->
+name|Extra
+operator|.
+name|Method_REG
+argument_list|,
+literal|"  [Method]"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsEvaluateByHandle

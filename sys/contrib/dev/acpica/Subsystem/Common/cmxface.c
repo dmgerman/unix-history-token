@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmxface - External interfaces for "global" ACPI functions  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmxface - External interfaces for "global" ACPI functions  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -358,7 +358,6 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: workaround. Old Lions don't enable properly */
 name|DEBUG_PRINT
 argument_list|(
 name|ACPI_WARN
@@ -368,7 +367,11 @@ literal|"AcpiEnable failed.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*return_ACPI_STATUS (Status);*/
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/*      * Note:      * We must have the hardware AND events initialized before we can execute      * ANY control methods SAFELY.  Any control method can require ACPI hardware      * support, so the hardware MUST be initialized before execution!      */
@@ -411,7 +414,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Initialize all device objects in the namespace      * This runs the _STA, _INI, and _HID methods, and detects      * the PCI root bus(es)      */
+comment|/*      * Initialize all device objects in the namespace      * This runs the _STA and _INI methods.      */
 if|if
 condition|(
 operator|!
@@ -434,11 +437,7 @@ expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsInitializeDevices
-argument_list|(
-name|Flags
-operator|&
-name|ACPI_NO_PCI_INIT
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -455,7 +454,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Initialize the objects that remain unitialized.  This      * runs the executable AML that is part of the declaration of OpRegions      * and Fields.      */
+comment|/*      * Initialize the objects that remain uninitialized.  This      * runs the executable AML that is part of the declaration of OpRegions      * and Fields.      */
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstore - AML Interpreter object store support  *              $Revision: 121 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amstore - AML Interpreter object store support  *              $Revision: 123 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -588,7 +588,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiAmlBuildCopyInternalPackageObject
+name|AcpiCmCopyIpackageToIpackage
 argument_list|(
 name|ValDesc
 argument_list|,
@@ -1284,7 +1284,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToObject: Storing %p(%s) to (%p)%s\n"
+literal|"AmlStoreObjectToObject: Storing %p(%s) to %p(%s)\n"
 operator|,
 name|SourceDesc
 operator|,

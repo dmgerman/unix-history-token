@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - AcpiRsCreateResourceList  *                         AcpiRsCreatePciRoutingTable  *                         AcpiRsCreateByteStream  *              $Revision: 24 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - AcpiRsCreateResourceList  *                         AcpiRsCreatePciRoutingTable  *                         AcpiRsCreateByteStream  *              $Revision: 25 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,6 +23,18 @@ begin_include
 include|#
 directive|include
 file|"acresrc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acnamesp.h"
 end_include
 
 begin_define
@@ -306,6 +318,10 @@ name|UserPrt
 init|=
 name|NULL
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -419,7 +435,7 @@ operator|*
 operator|)
 name|Buffer
 expr_stmt|;
-comment|/*              * Fill in the Length field with the information we              * have at this point.              * The minus one is to subtract the size of the              * UINT8 Source[1] member because it is added below.              */
+comment|/*              * Fill in the Length field with the information we              * have at this point.              * The minus four is to subtract the size of the              * UINT8 Source[4] member because it is added below.              */
 name|UserPrt
 operator|->
 name|Length
@@ -430,7 +446,7 @@ argument_list|(
 name|PCI_ROUTING_TABLE
 argument_list|)
 operator|-
-literal|1
+literal|4
 operator|)
 expr_stmt|;
 comment|/*              * Dereference the sub-package              */
@@ -448,7 +464,7 @@ name|Package
 operator|.
 name|Elements
 expr_stmt|;
-comment|/*              * Dereference the Address              */
+comment|/*              * 1) First subobject:  Dereference the Address              */
 if|if
 condition|(
 name|ACPI_TYPE_INTEGER
@@ -465,8 +481,6 @@ condition|)
 block|{
 name|UserPrt
 operator|->
-name|Data
-operator|.
 name|Address
 operator|=
 operator|(
@@ -481,13 +495,34 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+operator|,
+name|AcpiCmGetTypeName
+argument_list|(
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * Dereference the Pin              */
+comment|/*              * 2) Second subobject: Dereference the Pin              */
 name|SubObjectList
 operator|++
 expr_stmt|;
@@ -507,8 +542,6 @@ condition|)
 block|{
 name|UserPrt
 operator|->
-name|Data
-operator|.
 name|Pin
 operator|=
 call|(
@@ -526,20 +559,39 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+operator|,
+name|AcpiCmGetTypeName
+argument_list|(
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * Dereference the Source Name              */
+comment|/*              * 3) Third subobject: Dereference the Source Name              */
 name|SubObjectList
 operator|++
 expr_stmt|;
-if|if
+switch|switch
 condition|(
-name|ACPI_TYPE_STRING
-operator|==
 operator|(
 operator|*
 name|SubObjectList
@@ -550,12 +602,98 @@ operator|.
 name|Type
 condition|)
 block|{
+case|case
+name|INTERNAL_TYPE_REFERENCE
+case|:
+if|if
+condition|(
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Reference
+operator|.
+name|OpCode
+operator|!=
+name|AML_NAMEPATH_OP
+condition|)
+block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"CreatePciRoutingTable: Need name, found reference op %X\n"
+operator|,
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Reference
+operator|.
+name|OpCode
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BAD_DATA
+argument_list|)
+expr_stmt|;
+block|}
+name|Node
+operator|=
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Reference
+operator|.
+name|Node
+expr_stmt|;
+comment|/* TBD: use *remaining* length of the buffer! */
+name|Status
+operator|=
+name|AcpiNsHandleToPathname
+argument_list|(
+operator|(
+name|ACPI_HANDLE
+operator|*
+operator|)
+name|Node
+argument_list|,
+name|OutputBufferLength
+argument_list|,
+name|UserPrt
+operator|->
+name|Source
+argument_list|)
+expr_stmt|;
+name|UserPrt
+operator|->
+name|Length
+operator|+=
+name|STRLEN
+argument_list|(
+name|UserPrt
+operator|->
+name|Source
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+comment|/* include null terminator */
+break|break;
+case|case
+name|ACPI_TYPE_STRING
+case|:
 name|STRCPY
 argument_list|(
 name|UserPrt
 operator|->
-name|Data
-operator|.
 name|Source
 argument_list|,
 operator|(
@@ -582,25 +720,12 @@ name|String
 operator|.
 name|Length
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*                  * If this is a number, then the Source Name                  * is NULL, since the entire buffer was zeroed                  * out, we can leave this alone.                  */
-if|if
-condition|(
+break|break;
+case|case
 name|ACPI_TYPE_INTEGER
-operator|==
-operator|(
-operator|*
-name|SubObjectList
-operator|)
-operator|->
-name|Common
-operator|.
-name|Type
-condition|)
-block|{
-comment|/*                      * Add to the Length field the length of                      * the UINT32 NULL                      */
+case|:
+comment|/*                  * If this is a number, then the Source Name                  * is NULL, since the entire buffer was zeroed                  * out, we can leave this alone.                  */
+comment|/*                  * Add to the Length field the length of                  * the UINT32 NULL                  */
 name|UserPrt
 operator|->
 name|Length
@@ -610,15 +735,35 @@ argument_list|(
 name|UINT32
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+operator|,
+name|AcpiCmGetTypeName
+argument_list|(
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
 block|}
 comment|/* Now align the current length */
 name|UserPrt
@@ -632,7 +777,7 @@ operator|->
 name|Length
 argument_list|)
 expr_stmt|;
-comment|/*              * Dereference the Source Index              */
+comment|/*              * 4) Fourth subobject: Dereference the Source Index              */
 name|SubObjectList
 operator|++
 expr_stmt|;
@@ -652,8 +797,6 @@ condition|)
 block|{
 name|UserPrt
 operator|->
-name|Data
-operator|.
 name|SourceIndex
 operator|=
 call|(
@@ -671,6 +814,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"CreatePciRoutingTable: Need Integer, found %s\n"
+operator|,
+name|AcpiCmGetTypeName
+argument_list|(
+operator|(
+operator|*
+name|SubObjectList
+operator|)
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_BAD_DATA

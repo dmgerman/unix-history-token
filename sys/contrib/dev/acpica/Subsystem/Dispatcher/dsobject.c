@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -182,6 +182,16 @@ operator|->
 name|MethodCount
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|AcpiDbgLevel
+operator|&
+name|TRACE_INIT
+operator|)
+condition|)
+block|{
 name|DEBUG_PRINT_RAW
 argument_list|(
 name|ACPI_OK
@@ -191,6 +201,7 @@ literal|"."
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*          * Set the execution data width (32 or 64) based upon the          * revision number of the parent ACPI table.          */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 54 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 56 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -203,6 +203,14 @@ name|TRUE
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|BOOLEAN
+name|opt_ini_methods
+init|=
+name|TRUE
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Top-level debugger commands.  *  * This list of commands must match the string table below it  */
 end_comment
@@ -284,6 +292,8 @@ block|,
 name|CMD_QUIT
 block|,
 name|CMD_REFERENCES
+block|,
+name|CMD_RESOURCES
 block|,
 name|CMD_RESULTS
 block|,
@@ -531,6 +541,12 @@ block|}
 block|,
 block|{
 literal|"REFERENCES"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"RESOURCES"
 block|,
 literal|1
 block|}
@@ -804,6 +820,11 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"References<Addr>                   Find all references to object at addr\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Resources xxx                       Get and display resources\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -2018,6 +2039,18 @@ case|case
 name|CMD_REFERENCES
 case|:
 name|AcpiDbFindReferences
+argument_list|(
+name|Args
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_RESOURCES
+case|:
+name|AcpiDbDisplayResources
 argument_list|(
 name|Args
 index|[

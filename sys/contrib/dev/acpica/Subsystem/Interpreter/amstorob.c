@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstorob - AML Interpreter object store support, store to object  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amstorob - AML Interpreter object store support, store to object  *              $Revision: 23 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -114,6 +114,54 @@ name|Buffer
 operator|.
 name|Length
 expr_stmt|;
+comment|/*      * If target is a buffer of length zero, allocate a new      * buffer of the proper length      */
+if|if
+condition|(
+name|TargetDesc
+operator|->
+name|Buffer
+operator|.
+name|Length
+operator|==
+literal|0
+condition|)
+block|{
+name|TargetDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+operator|=
+name|AcpiCmAllocate
+argument_list|(
+name|Length
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TargetDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+name|TargetDesc
+operator|->
+name|Buffer
+operator|.
+name|Length
+operator|=
+name|Length
+expr_stmt|;
+block|}
 comment|/*      * Buffer is a static allocation,      * only place what will fit in the buffer.      */
 if|if
 condition|(
@@ -183,7 +231,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNode: Truncating src buffer from %X to %X\n"
+literal|"AmlCopyBufferToBuffer: Truncating src buffer from %X to %X\n"
 operator|,
 name|Length
 operator|,
@@ -339,14 +387,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|TargetDesc
-operator|->
-name|String
-operator|.
-name|Length
-operator|=
-name|Length
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -363,6 +403,14 @@ name|AE_NO_MEMORY
 operator|)
 return|;
 block|}
+name|TargetDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|=
+name|Length
+expr_stmt|;
 name|MEMCPY
 argument_list|(
 name|TargetDesc
@@ -493,7 +541,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNode: IndexField: set data returned %s\n"
+literal|"AmlCopyIntegerToIndexField: IndexField: set data returned %s\n"
 operator|,
 name|AcpiCmFormatException
 argument_list|(
@@ -510,7 +558,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNode: IndexField: set index returned %s\n"
+literal|"AmlCopyIntegerToIndexField: IndexField: set index returned %s\n"
 operator|,
 name|AcpiCmFormatException
 argument_list|(
@@ -645,7 +693,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNode: BankField: set bakn returned %s\n"
+literal|"AmlCopyIntegerToBankField: BankField: set bakn returned %s\n"
 operator|,
 name|AcpiCmFormatException
 argument_list|(
