@@ -1125,21 +1125,6 @@ directive|define
 name|F_LOCKED
 value|0x0001
 comment|/* this unit is locked */
-define|#
-directive|define
-name|F_WRITTEN
-value|0x0002
-comment|/* medium has been written to */
-define|#
-directive|define
-name|F_DISK_OPEN
-value|0x0004
-comment|/* disk open for writing */
-define|#
-directive|define
-name|F_TRACK_OPEN
-value|0x0008
-comment|/* track open for writing */
 name|struct
 name|bio_queue_head
 name|bio_queue
