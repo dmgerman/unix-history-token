@@ -3490,7 +3490,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Nfs timer routine  * Scan the nfsreq list and retranmit any requests that have timed out  * To avoid retransmission attempts on STREAM sockets (in the future) make  * sure to set the r_retry field to 0 (implies nm_retry == 0).  */
+comment|/*  * NFS server timer routine.  */
 end_comment
 
 begin_function
