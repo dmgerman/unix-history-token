@@ -4832,6 +4832,13 @@ name|uio
 struct_decl|;
 end_struct_decl
 
+begin_typedef
+typedef|typedef
+name|int
+name|bus_dmasync_op_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -5150,7 +5157,7 @@ name|bus_dma_tag_t
 parameter_list|,
 name|bus_dmamap_t
 parameter_list|,
-name|int
+name|bus_dmasync_op_t
 parameter_list|)
 function_decl|;
 comment|/* 	 * DMA memory utility functions. 	 */
@@ -5823,7 +5830,7 @@ parameter_list|,
 name|bus_dmamap_t
 name|m
 parameter_list|,
-name|int
+name|bus_dmasync_op_t
 name|op
 parameter_list|)
 block|{

@@ -3189,7 +3189,7 @@ parameter_list|,
 name|bus_dmamap_t
 name|map
 parameter_list|,
-name|int
+name|bus_dmasync_op_t
 name|op
 parameter_list|)
 block|{

@@ -2810,6 +2810,13 @@ begin_comment
 comment|/*  *	Operations performed by bus_dmamap_sync().  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|bus_dmasync_op_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -3211,7 +3218,7 @@ name|bus_dma_tag_t
 parameter_list|,
 name|bus_dmamap_t
 parameter_list|,
-name|int
+name|bus_dmasync_op_t
 parameter_list|)
 function_decl|;
 end_function_decl

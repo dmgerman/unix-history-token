@@ -1492,7 +1492,7 @@ name|ida_qcb
 modifier|*
 name|qcb
 decl_stmt|;
-name|int
+name|bus_dmasync_op_t
 name|op
 decl_stmt|;
 name|int
@@ -1760,7 +1760,7 @@ name|ida_qcb
 modifier|*
 name|qcb
 decl_stmt|;
-name|int
+name|bus_dmasync_op_t
 name|op
 decl_stmt|;
 name|struct
@@ -2370,7 +2370,7 @@ operator|&
 name|DMA_DATA_TRANSFER
 condition|)
 block|{
-name|int
+name|bus_dmasync_op_t
 name|op
 decl_stmt|;
 name|op

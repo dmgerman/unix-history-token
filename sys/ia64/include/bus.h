@@ -4109,6 +4109,13 @@ begin_comment
 comment|/*  *	Operations performed by bus_dmamap_sync().  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+name|bus_dmasync_op_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -4527,7 +4534,7 @@ parameter_list|,
 name|bus_dmamap_t
 name|dmamap
 parameter_list|,
-name|int
+name|bus_dmasync_op_t
 name|op
 parameter_list|)
 block|{

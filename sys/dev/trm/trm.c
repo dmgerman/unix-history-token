@@ -10543,7 +10543,7 @@ operator|!=
 name|CAM_DIR_NONE
 condition|)
 block|{
-name|int
+name|bus_dmasync_op_t
 name|op
 decl_stmt|;
 if|if
