@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.35 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,8 @@ specifier|auto
 name|ADDRESS
 modifier|*
 name|q
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|buf
@@ -979,11 +981,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|auto
-name|ADDRESS
-modifier|*
-name|q
-decl_stmt|;
 name|bool
 name|oldverb
 init|=
