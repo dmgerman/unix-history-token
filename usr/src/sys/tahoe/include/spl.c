@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	spl.c	1.1	85/07/21	*/
+comment|/*	spl.c	1.2	85/07/29	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_macro
@@ -29,9 +29,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|IPL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -62,9 +62,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|1
-argument_list|,
 name|IPL
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -95,9 +95,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|0xC
-argument_list|,
 name|IPL
+argument_list|,
+literal|0xC
 argument_list|)
 expr_stmt|;
 return|return
@@ -128,11 +128,11 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|IPL
+argument_list|,
 literal|0x10
 operator|+
 literal|8
-argument_list|,
-name|IPL
 argument_list|)
 expr_stmt|;
 return|return
@@ -173,11 +173,11 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|IPL
+argument_list|,
 literal|0x10
 operator|+
 literal|5
-argument_list|,
-name|IPL
 argument_list|)
 expr_stmt|;
 return|return
@@ -208,11 +208,11 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|IPL
+argument_list|,
 literal|0x10
 operator|+
 literal|4
-argument_list|,
-name|IPL
 argument_list|)
 expr_stmt|;
 return|return
@@ -243,11 +243,11 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|IPL
+argument_list|,
 literal|0x10
 operator|+
 literal|6
-argument_list|,
-name|IPL
 argument_list|)
 expr_stmt|;
 return|return
@@ -283,11 +283,11 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|IPL
+argument_list|,
 literal|0x10
 operator|+
 literal|8
-argument_list|,
-name|IPL
 argument_list|)
 expr_stmt|;
 return|return
@@ -318,9 +318,9 @@ argument_list|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-literal|8
-argument_list|,
 name|IPL
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 return|return
@@ -348,9 +348,9 @@ begin_block
 block|{
 name|mtpr
 argument_list|(
-name|oldipl
-argument_list|,
 name|IPL
+argument_list|,
+name|oldipl
 argument_list|)
 expr_stmt|;
 block|}
