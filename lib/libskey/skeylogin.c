@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"skey.h"
 end_include
 
@@ -495,13 +501,12 @@ if|if
 condition|(
 name|len
 operator|>
-literal|8
+name|UT_NAMESIZE
 condition|)
 name|len
 operator|=
-literal|8
+name|UT_NAMESIZE
 expr_stmt|;
-comment|/*  Added 8/2/91  -  nmh */
 name|found
 operator|=
 literal|0
