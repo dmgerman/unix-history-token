@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -195,15 +195,6 @@ name|int
 name|nfs_tcpnodelay
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|file
-modifier|*
-name|getsock
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct
@@ -649,25 +640,34 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-goto|goto
-name|bad
-goto|;
-name|fp
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
+name|error
 operator|=
 name|getsock
 argument_list|(
+name|p
+operator|->
+name|p_fd
+argument_list|,
 name|uap
 operator|->
 name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|fp
-operator|==
-literal|0
+argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|so
 operator|=
 operator|(
