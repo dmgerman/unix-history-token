@@ -1898,6 +1898,14 @@ break|break;
 case|case
 literal|'0'
 case|:
+comment|/* 			 * Only turn on zero_flag if we haven't seen 			 * the field width or precision yet.  Otherwise, 			 * screws up floating point formatting. 			 */
+if|if
+condition|(
+name|cur
+operator|==
+operator|&
+name|fw
+condition|)
 name|zero_flag
 operator|=
 name|TRUE
@@ -8909,7 +8917,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|uval
+name|d
 operator|<
 literal|0
 condition|)
