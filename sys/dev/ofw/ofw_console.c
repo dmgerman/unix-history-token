@@ -385,6 +385,15 @@ operator|.
 name|cn_pri
 operator|!=
 name|CN_DEAD
+operator|&&
+name|ofw_consdev
+operator|.
+name|cn_name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 if|if
