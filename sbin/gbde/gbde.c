@@ -1699,8 +1699,18 @@ operator|=
 name|g_bde_keyloc_encrypt
 argument_list|(
 name|sc
+operator|->
+name|sha2
 argument_list|,
 name|off
+index|[
+literal|0
+index|]
+argument_list|,
+name|off
+index|[
+literal|1
+index|]
 argument_list|,
 name|keyloc
 argument_list|)
@@ -1776,7 +1786,7 @@ name|gl
 operator|->
 name|flags
 operator|&
-literal|1
+name|GBDE_F_SECT0
 condition|)
 block|{
 name|offset2
@@ -1973,6 +1983,8 @@ operator|=
 name|g_bde_encode_lock
 argument_list|(
 name|sc
+operator|->
+name|sha2
 argument_list|,
 name|gl
 argument_list|,
@@ -2936,7 +2948,7 @@ name|gl
 operator|->
 name|flags
 operator||=
-literal|1
+name|GBDE_F_SECT0
 expr_stmt|;
 block|}
 name|gl
@@ -3270,7 +3282,7 @@ name|gl
 operator|->
 name|flags
 operator|&
-literal|1
+name|GBDE_F_SECT0
 condition|)
 block|{
 name|off2
