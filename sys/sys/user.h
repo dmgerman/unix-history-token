@@ -731,7 +731,7 @@ comment|/* proc blocked on mutex ki_mtxname */
 end_comment
 
 begin_comment
-comment|/*  * Per process structure containing data that isn't needed in core  * when the process isn't running (esp. when swapped out).  * This structure may or may not be at the same kernel address  * in all processes.  */
+comment|/*  * Per process structure containing data that isn't needed in core  * when the process isn't running (esp. when swapped out).  */
 end_comment
 
 begin_struct
@@ -748,7 +748,7 @@ name|pstats
 name|u_stats
 decl_stmt|;
 comment|/* *p_stats */
-comment|/* 	 * Remaining fields only for 	 * core dump and/or ptrace-- 	 * not valid at other times! 	 */
+comment|/* 	 * Remaining fields for a.out core dumps - not valid at other times! 	 */
 name|struct
 name|kinfo_proc
 name|u_kproc
