@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.c,v 4.300 91/06/09 06:44:53 root Rel41 $ SONY  *  *	@(#)scc.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: scc.c,v 4.300 91/06/09 06:44:53 root Rel41 $ SONY  *  *	@(#)scc.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -766,23 +766,10 @@ name|scc2chan
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|news700
-literal|0
-block|,
-literal|1
-block|,
-else|#
-directive|else
-comment|/* news700 */
 literal|1
 block|,
 literal|0
 block|,
-endif|#
-directive|endif
-comment|/* news700 */
 literal|3
 block|,
 literal|2
@@ -801,245 +788,6 @@ literal|8
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news700
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OFF
-value|0x80
-end_define
-
-begin_macro
-name|scc_rint
-argument_list|(
-argument|vec
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|vec
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|chan
-init|=
-name|vec_to_chan
-argument_list|(
-name|vec
-argument_list|)
-decl_stmt|;
-name|Scc_channel
-modifier|*
-name|scc
-init|=
-operator|&
-name|sccsw
-index|[
-name|chan
-index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|scc_reg
-modifier|*
-name|port
-init|=
-name|scc
-operator|->
-name|scc_port
-decl_stmt|;
-specifier|register
-name|int
-name|c
-decl_stmt|;
-if|#
-directive|if
-name|NMS
-operator|>
-literal|0
-specifier|extern
-name|int
-name|_ms_helper
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* NMS> 0 */
-if|#
-directive|if
-name|NBM
-operator|>
-literal|0
-specifier|extern
-name|int
-name|kb_softint
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-comment|/* NBM> 0 */
-if|if
-condition|(
-operator|(
-name|scc
-operator|->
-name|scc_status
-operator|&
-name|CHAN_ACTIVE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|scc_reset
-argument_list|(
-name|chan
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-while|while
-condition|(
-name|port
-operator|->
-name|ctrl
-operator|&
-name|R0_RxCA
-condition|)
-block|{
-name|SCCWAIT
-expr_stmt|;
-name|c
-operator|=
-name|port
-operator|->
-name|data
-expr_stmt|;
-name|SCCWAIT
-expr_stmt|;
-switch|switch
-condition|(
-name|chan
-condition|)
-block|{
-case|case
-name|SCC_MOUSE
-case|:
-if|#
-directive|if
-name|NMS
-operator|>
-literal|0
-if|if
-condition|(
-name|xputc
-argument_list|(
-name|c
-argument_list|,
-name|SCC_MOUSE
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"mouse queue overflow\n"
-argument_list|)
-expr_stmt|;
-name|softcall
-argument_list|(
-name|_ms_helper
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
-case|case
-name|SCC_KEYBOARD
-case|:
-if|#
-directive|if
-name|NBM
-operator|>
-literal|0
-if|if
-condition|(
-name|xputc
-argument_list|(
-name|c
-argument_list|,
-name|SCC_KEYBOARD
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"keyboard queue overflow\n"
-argument_list|)
-expr_stmt|;
-name|softcall
-argument_list|(
-name|kb_softint
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"kb or ms stray intr\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|SCCWAIT
-expr_stmt|;
-block|}
-name|out
-label|:
-name|port
-operator|->
-name|ctrl
-operator|=
-name|W0_RES_IUS
-expr_stmt|;
-name|SCCWAIT
-expr_stmt|;
-block|}
-end_block
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* news700 */
-end_comment
 
 begin_macro
 name|scc_rint
@@ -1185,15 +933,6 @@ name|SCCWAIT
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news700 */
-end_comment
 
 begin_if
 if|#
@@ -1959,7 +1698,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NRS> 0 */
 block|}
 block|}
 if|if
@@ -2160,148 +1898,6 @@ end_block
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|news1700
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DSRA
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIA
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSRB
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIB
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSRC
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIC
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSRD
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|RID
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSRE
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIE
-value|0x20
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSRF
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIF
-value|0x80
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news1700 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1200
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DSRA
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIA
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSRB
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|RIB
-value|0x01
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news1200 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|news3400
 end_ifdef
 
@@ -2417,23 +2013,6 @@ name|ri_dsr
 index|[]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|news700
-block|{
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-else|#
-directive|else
-comment|/* news700 */
 block|{
 operator|(
 name|char
@@ -2460,12 +2039,6 @@ block|}
 block|,
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|news1200
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -2568,10 +2141,7 @@ name|DSRF
 block|}
 endif|#
 directive|endif
-comment|/* !news1200&& !news3200 */
-endif|#
-directive|endif
-comment|/* news700 */
+comment|/* !news3200 */
 block|}
 struct|;
 end_struct
@@ -2607,9 +2177,6 @@ name|param
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|news700
 name|p
 operator|=
 operator|&
@@ -2657,9 +2224,6 @@ name|param
 operator||=
 name|DSR
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !news700 */
 return|return
 operator|(
 name|param
@@ -2668,168 +2232,9 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news700
-end_ifdef
-
-begin_comment
-comment|/*  *	tc = floor(5000000 / 32 / baudrate - 2 + 0.5);  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tc0
-index|[]
-init|=
-block|{
-literal|0
-block|,
-comment|/* B0 */
-literal|3123
-block|,
-comment|/* B50 */
-literal|2081
-block|,
-comment|/* B75 */
-literal|1418
-block|,
-comment|/* B110 */
-literal|1164
-block|,
-comment|/* B134 */
-literal|1039
-block|,
-comment|/* B150 */
-literal|779
-block|,
-comment|/* B200 */
-literal|518
-block|,
-comment|/* B300 */
-literal|258
-block|,
-comment|/* B600 */
-literal|128
-block|,
-comment|/* B1200 */
-literal|84
-block|,
-comment|/* B1800 */
-literal|63
-block|,
-comment|/* B2400 */
-literal|30
-block|,
-comment|/* B4800 */
-literal|14
-block|,
-comment|/* B9600 */
-literal|14
-block|,
-comment|/* EXTA	*/
-literal|14
-comment|/* EXTB	*/
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news700 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|news1700
-end_ifdef
-
-begin_comment
-comment|/*  *	tc0 = floor(4000000 / 32 / baudrate - 2 + 0.5);  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tc0
-index|[]
-init|=
-block|{
-literal|0
-block|,
-comment|/* B0 */
-literal|2498
-block|,
-comment|/* B50 */
-literal|1664
-block|,
-comment|/* B75 */
-literal|1134
-block|,
-comment|/* B110 */
-literal|930
-block|,
-comment|/* B134 */
-literal|831
-block|,
-comment|/* B150 */
-literal|623
-block|,
-comment|/* B200 */
-literal|414
-block|,
-comment|/* B300 */
-literal|206
-block|,
-comment|/* B600 */
-literal|102
-block|,
-comment|/* B1200 */
-literal|67
-block|,
-comment|/* B1800 */
-literal|50
-block|,
-comment|/* B2400 */
-literal|24
-block|,
-comment|/* B4800 */
-literal|11
-block|,
-comment|/* B9600 */
-literal|11
-block|,
-comment|/* EXTA (B9600)*/
-literal|11
-comment|/* EXTB (B9600)*/
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* news1700 */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|news1200
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|news3400
@@ -2904,14 +2309,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* news1200 || news3400 */
+comment|/* news3400 */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|news700
-end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -2972,15 +2371,6 @@ comment|/* B38400 */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !news700 */
-end_comment
 
 begin_macro
 name|scc_set_param
@@ -3074,16 +2464,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|news700
-name|tc
-operator|=
-name|tc0
-expr_stmt|;
-else|#
-directive|else
-comment|/* news700 */
 name|tc
 operator|=
 operator|(
@@ -3096,9 +2476,6 @@ name|tc0
 else|:
 name|tc1
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* news700 */
 name|scc_write_reg
 argument_list|(
 name|chan
