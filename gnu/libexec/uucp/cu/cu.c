@@ -21,7 +21,7 @@ name|char
 name|cu_rcsid
 index|[]
 init|=
-literal|"$Id: cu.c,v 1.28 1994/01/30 21:01:46 ian Rel $"
+literal|"$Id: cu.c,v 1.2 1994/05/07 18:09:54 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7649,6 +7649,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|b
+operator|==
+literal|'\r'
+condition|)
+continue|continue;
 if|if
 condition|(
 name|ceoflen
