@@ -2076,6 +2076,7 @@ modifier|*
 name|spkr_inbuf
 decl_stmt|;
 comment|/* incoming buf */
+specifier|static
 name|int
 name|spkropen
 parameter_list|(
@@ -2186,6 +2187,7 @@ operator|)
 return|;
 block|}
 block|}
+specifier|static
 name|int
 name|spkrwrite
 parameter_list|(
@@ -2321,6 +2323,7 @@ operator|)
 return|;
 block|}
 block|}
+specifier|static
 name|int
 name|spkrclose
 parameter_list|(
@@ -2418,6 +2421,7 @@ operator|)
 return|;
 block|}
 block|}
+specifier|static
 name|int
 name|spkrioctl
 parameter_list|(
