@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	1.2	%G% */
+comment|/*	boot.c	1.3	%G% */
 end_comment
 
 begin_include
@@ -129,6 +129,15 @@ argument_list|(
 literal|"\nBoot\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|JUSTASK
+name|howto
+operator|=
+name|RB_ASKNAME
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -208,6 +217,8 @@ name|RB_ASKNAME
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|retry
 operator|=
 literal|0
