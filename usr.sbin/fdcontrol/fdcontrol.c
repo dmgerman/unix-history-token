@@ -32,6 +32,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/fdcio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -53,19 +65,28 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
+begin_function_decl
+specifier|static
+name|int
+name|getnumber
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<sys/fdcio.h>
-end_include
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
+specifier|static
 name|int
 name|getnumber
 parameter_list|(
@@ -120,6 +141,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
