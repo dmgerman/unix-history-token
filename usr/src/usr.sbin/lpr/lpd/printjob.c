@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	5.9 (Berkeley) %G%"
+literal|"@(#)printjob.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +382,7 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|tmpfile
+name|tempfile
 index|[]
 init|=
 literal|"errsXXXXXX"
@@ -553,7 +553,7 @@ name|void
 operator|)
 name|mktemp
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 comment|/* 	 * uses short form file names 	 */
@@ -1276,7 +1276,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2091,6 +2091,10 @@ name|int
 name|fi
 decl_stmt|,
 name|fo
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
 decl_stmt|;
 name|char
 modifier|*
@@ -3118,7 +3122,7 @@ name|n
 operator|=
 name|open
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 name|O_WRONLY
 operator||
@@ -3269,6 +3273,52 @@ name|tof
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Copy filter output to "lf" logfile */
+if|if
+condition|(
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|tempfile
+argument_list|,
+literal|"r"
+argument_list|)
+condition|)
+block|{
+name|char
+name|tbuf
+index|[
+literal|512
+index|]
+decl_stmt|;
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+condition|)
+name|fputs
+argument_list|(
+name|buf
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -5202,7 +5252,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 operator|&
 name|stb
@@ -5221,7 +5271,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 literal|"r"
 argument_list|)
@@ -5467,7 +5517,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 name|kill
