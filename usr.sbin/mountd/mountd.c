@@ -1294,7 +1294,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|log
+name|dolog
 init|=
 literal|0
 decl_stmt|;
@@ -1771,7 +1771,7 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|log
+name|dolog
 operator|=
 literal|1
 expr_stmt|;
@@ -3501,7 +3501,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|log
+name|dolog
 condition|)
 name|syslog
 argument_list|(
@@ -3603,7 +3603,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|log
+name|dolog
 condition|)
 name|syslog
 argument_list|(
@@ -3746,7 +3746,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|log
+name|dolog
 condition|)
 name|syslog
 argument_list|(
@@ -3834,7 +3834,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|log
+name|dolog
 condition|)
 name|syslog
 argument_list|(
@@ -3894,7 +3894,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|log
+name|dolog
 condition|)
 name|syslog
 argument_list|(
