@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.14 (Berkeley) %G%"
+literal|"@(#)mloop.c	3.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
 end_include
 
 begin_macro

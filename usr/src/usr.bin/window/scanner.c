@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanner.c	3.11 (Berkeley) %G%"
+literal|"@(#)scanner.c	3.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,12 +27,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#

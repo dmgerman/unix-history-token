@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.37 (Berkeley) %G%"
+literal|"@(#)main.c	3.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
 end_include
 
 begin_include
@@ -319,9 +313,23 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|nomem
-argument_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Out of memory.\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|p
@@ -758,31 +766,6 @@ return|return
 literal|0
 return|;
 comment|/* for lint */
-block|}
-end_block
-
-begin_macro
-name|nomem
-argument_list|()
-end_macro
-
-begin_block
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Out of memory.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
