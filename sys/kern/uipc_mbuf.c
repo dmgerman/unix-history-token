@@ -4250,7 +4250,7 @@ argument_list|)
 expr_stmt|;
 name|mbstat
 operator|.
-name|m_mcfail
+name|m_mpfail
 operator|++
 expr_stmt|;
 name|mtx_unlock
