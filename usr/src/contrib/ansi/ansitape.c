@@ -53,6 +53,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function_decl
 name|char
 modifier|*
@@ -64,14 +70,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|rewind
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|long
-name|lseek
+name|ansi_rewind
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -924,7 +923,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|rewind
+name|ansi_rewind
 argument_list|(
 name|tape
 argument_list|)
@@ -1232,7 +1231,7 @@ name|tape
 argument_list|)
 expr_stmt|;
 block|}
-name|rewind
+name|ansi_rewind
 argument_list|(
 name|tape
 argument_list|)
@@ -1854,7 +1853,7 @@ argument_list|,
 literal|" hard write error:  write aborted\n"
 argument_list|)
 expr_stmt|;
-name|rewind
+name|ansi_rewind
 argument_list|(
 name|tape
 argument_list|)
@@ -2078,7 +2077,7 @@ argument_list|,
 literal|" hard write error:  write aborted\n"
 argument_list|)
 expr_stmt|;
-name|rewind
+name|ansi_rewind
 argument_list|(
 name|tape
 argument_list|)
@@ -2183,7 +2182,7 @@ argument_list|(
 literal|"corrupted record - write aborted\b"
 argument_list|)
 expr_stmt|;
-name|rewind
+name|ansi_rewind
 argument_list|(
 name|tape
 argument_list|)
@@ -2255,7 +2254,7 @@ argument_list|,
 literal|" hard write error:   write aborted\n"
 argument_list|)
 expr_stmt|;
-name|rewind
+name|ansi_rewind
 argument_list|(
 name|tape
 argument_list|)
@@ -2403,7 +2402,7 @@ end_block
 begin_function
 name|void
 specifier|static
-name|rewind
+name|ansi_rewind
 parameter_list|(
 name|tape
 parameter_list|)
