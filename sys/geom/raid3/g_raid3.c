@@ -309,7 +309,7 @@ specifier|static
 name|u_int
 name|g_raid3_syncs_per_sec
 init|=
-literal|100
+literal|1000
 decl_stmt|;
 end_decl_stmt
 
