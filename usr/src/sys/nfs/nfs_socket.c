@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_socket.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_socket.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -353,10 +353,6 @@ decl_stmt|,
 name|s
 decl_stmt|,
 name|dontroute
-decl_stmt|,
-name|first
-init|=
-literal|1
 decl_stmt|;
 name|dontroute
 operator|=
@@ -652,15 +648,6 @@ decl_stmt|,
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|protosw
-modifier|*
-name|pr
-init|=
-name|so
-operator|->
-name|so_proto
 decl_stmt|;
 name|struct
 name|mbuf
@@ -1085,6 +1072,10 @@ begin_comment
 comment|/*  * Implement receipt of reply on a socket.  * We depend on the way that records are added to the sockbuf  * by sbappend*.  In particular, each record (mbufs linked through m_next)  * must begin with an address, followed by optional MT_CONTROL mbuf  * and then zero or more mbufs of data.  * Although the sockbuf is locked, new data may still be appended,  * and thus we must maintain consistency of the sockbuf during that time.  * We must search through the list of received datagrams matching them  * with outstanding requests using the xid, until ours is found.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_expr_stmt
 name|nfs_udpreply
 argument_list|(
@@ -1139,15 +1130,6 @@ init|=
 literal|0
 decl_stmt|,
 name|s
-decl_stmt|;
-name|struct
-name|protosw
-modifier|*
-name|pr
-init|=
-name|so
-operator|->
-name|so_proto
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2643,17 +2625,34 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
+name|u_long
+modifier|*
+name|p
+decl_stmt|;
+specifier|register
+name|long
+name|t1
+decl_stmt|;
+name|caddr_t
+name|dpos
+decl_stmt|,
+name|cp2
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|m
+name|mrep
+decl_stmt|,
+modifier|*
+name|md
 decl_stmt|;
-name|nfsm_vars
-expr_stmt|;
 name|int
 name|len
-decl_stmt|,
-name|len2
 decl_stmt|;
 if|if
 condition|(
@@ -2842,8 +2841,9 @@ name|EPROCUNAVAIL
 operator|)
 return|;
 block|}
-name|len
-operator|=
+operator|(
+name|void
+operator|)
 name|fxdr_unsigned
 argument_list|(
 name|int
@@ -2853,7 +2853,7 @@ name|p
 operator|++
 argument_list|)
 expr_stmt|;
-name|len2
+name|len
 operator|=
 name|fxdr_unsigned
 argument_list|(
@@ -2868,7 +2868,7 @@ name|nfsm_adv
 argument_list|(
 name|nfsm_rndup
 argument_list|(
-name|len2
+name|len
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2910,7 +2910,7 @@ name|p
 operator|++
 argument_list|)
 expr_stmt|;
-name|len2
+name|len
 operator|=
 name|fxdr_unsigned
 argument_list|(
@@ -2922,7 +2922,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len2
+name|len
 operator|>
 literal|10
 condition|)
@@ -2946,7 +2946,7 @@ name|u_long
 operator|*
 argument_list|,
 operator|(
-name|len2
+name|len
 operator|+
 literal|2
 operator|)
@@ -2962,7 +2962,7 @@ literal|1
 init|;
 name|i
 operator|<=
-name|len2
+name|len
 condition|;
 name|i
 operator|++
@@ -2987,12 +2987,12 @@ name|cr
 operator|->
 name|cr_ngroups
 operator|=
-name|len2
+name|len
 operator|+
 literal|1
 expr_stmt|;
 comment|/* 	 * Do we have any use for the verifier. 	 * According to the "Remote Procedure Call Protocol Spec." it 	 * should be AUTH_NULL, but some clients make it AUTH_UNIX? 	 * For now, just skip over it 	 */
-name|len2
+name|len
 operator|=
 name|fxdr_unsigned
 argument_list|(
@@ -3005,7 +3005,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len2
+name|len
 operator|>
 literal|0
 condition|)
@@ -3013,7 +3013,7 @@ name|nfsm_adv
 argument_list|(
 name|nfsm_rndup
 argument_list|(
-name|len2
+name|len
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3113,8 +3113,29 @@ end_decl_stmt
 
 begin_block
 block|{
-name|nfsm_vars
-expr_stmt|;
+specifier|register
+name|u_long
+modifier|*
+name|p
+decl_stmt|;
+specifier|register
+name|long
+name|t1
+decl_stmt|;
+name|caddr_t
+name|bpos
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mreq
+decl_stmt|,
+modifier|*
+name|mb
+decl_stmt|,
+modifier|*
+name|mb2
+decl_stmt|;
 name|NFSMGETHDR
 argument_list|(
 name|mreq
@@ -3417,8 +3438,6 @@ name|so
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|len
 decl_stmt|;
 name|s
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -324,7 +324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Create the header for an rpc request packet  * The function nfs_unixauth() creates a unix style authorization string  * and returns a ptr to it.  * The hsiz is the size of the rest of the nfs request header.  * (just used to decide if a cluster is a good idea)  * nb: Note that the prog, vers and proc args are already in xdr byte order  */
+comment|/*  * Create the header for an rpc request packet  * The function nfs_unixauth() creates a unix style authorization string  * and returns a ptr to it.  * The hsiz is the size of the rest of the nfs request header.  * (just used to decide if a cluster is a good idea)  * nb: Note that the prog, vers and procid args are already in xdr byte order  */
 end_comment
 
 begin_function
@@ -337,7 +337,7 @@ name|prog
 parameter_list|,
 name|vers
 parameter_list|,
-name|proc
+name|procid
 parameter_list|,
 name|cred
 parameter_list|,
@@ -356,7 +356,7 @@ name|u_long
 name|vers
 decl_stmt|;
 name|u_long
-name|proc
+name|procid
 decl_stmt|;
 name|struct
 name|ucred
@@ -594,7 +594,7 @@ operator|*
 name|p
 operator|++
 operator|=
-name|proc
+name|procid
 expr_stmt|;
 comment|/* Now we can call nfs_unixauth() and copy it in */
 name|ap
@@ -1197,8 +1197,6 @@ decl_stmt|,
 name|left
 decl_stmt|,
 name|uiosiz
-decl_stmt|,
-name|off
 decl_stmt|;
 name|int
 name|clflg
@@ -1710,9 +1708,6 @@ specifier|register
 name|caddr_t
 name|p
 decl_stmt|;
-name|caddr_t
-name|p2
-decl_stmt|;
 name|mp
 operator|=
 operator|*
@@ -2043,12 +2038,12 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_block
 
@@ -3168,8 +3163,25 @@ name|nfsnode
 modifier|*
 name|np
 decl_stmt|;
-name|nfsm_vars
-expr_stmt|;
+specifier|register
+name|long
+name|t1
+decl_stmt|;
+name|caddr_t
+name|dpos
+decl_stmt|,
+name|cp2
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|md
+decl_stmt|;
 name|enum
 name|vtype
 name|type
@@ -3975,16 +3987,6 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|tdp
-decl_stmt|;
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
@@ -3996,11 +3998,6 @@ name|wantparent
 decl_stmt|;
 name|int
 name|lockparent
-decl_stmt|;
-name|int
-name|rootflg
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|error
@@ -5040,9 +5037,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfsm_subs.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfsm_subs.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,6 +12,7 @@ comment|/*  * First define what the actual subs. return  */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|struct
 name|mbuf
 modifier|*
@@ -21,6 +22,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|struct
 name|vnode
 modifier|*
@@ -242,6 +244,12 @@ begin_comment
 comment|/*  * Now for the macros that do the simple stuff and call the functions  * for the hard stuff.  * These macros use several vars. declared in nfsm_reqhead and these  * vars. must not be used elsewhere unless you are careful not to corrupt  * them. The vars. starting with pN and tN (N=1,2,3,..) are temporaries  * that may be used so long as the value is not expected to retained  * after a macro.  * I know, this is kind of dorkey, but it makes the actual op functions  * fairly clean and deals with the mess caused by the xdr discriminating  * unions.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -256,6 +264,39 @@ parameter_list|)
 define|\
 value|t1 = NFSMSIZ(mb); \ 		if ((s)> (t1-mb->m_len)) { \ 			MGET(mb2, M_WAIT, MT_DATA); \ 			if ((s)> MLEN) \ 				panic("build> MLEN"); \ 			mb->m_next = mb2; \ 			mb = mb2; \ 			mb->m_len = 0; \ 			bpos = mtod(mb, caddr_t); \ 		} \ 		(a) = (c)(bpos); \ 		mb->m_len += (s); \ 		bpos += (s)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* lint */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|nfsm_build
+parameter_list|(
+name|a
+parameter_list|,
+name|c
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|t1 = NFSMSIZ(mb); \ 		if ((s)> (t1-mb->m_len)) { \ 			MGET(mb2, M_WAIT, MT_DATA); \ 			mb->m_next = mb2; \ 			mb = mb2; \ 			mb->m_len = 0; \ 			bpos = mtod(mb, caddr_t); \ 		} \ 		(a) = (c)(bpos); \ 		mb->m_len += (s); \ 		bpos += (s)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* lint */
+end_comment
 
 begin_define
 define|#
@@ -332,7 +373,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|if (error = nfs_loadattrcache(&(v),&md,&dpos, (a))) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		}
+value|{ struct vnode *tvp = (v); \ 		if (error = nfs_loadattrcache(&tvp,&md,&dpos, (a))) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		} \ 		(v) = tvp; }
 end_define
 
 begin_define
@@ -359,19 +400,6 @@ name|m
 parameter_list|)
 define|\
 value|nfsm_disect(p,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*p))> (m) || (s)<= 0) { \ 			error = EBADRPC; \ 			nfsm_reply(0); \ 		}
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_srvstrsizon
-parameter_list|(
-name|s
-parameter_list|,
-name|m
-parameter_list|)
-define|\
-value|nfsm_disecton(p,u_long *,NFSX_UNSIGNED); \ 		if (((s) = fxdr_unsigned(long,*p))> (m)) { \ 			error = EBADRPC; \ 			nfsm_reply(0); \ 		}
 end_define
 
 begin_define
@@ -413,14 +441,6 @@ name|s
 parameter_list|)
 define|\
 value|if ((mreq = nfsm_reqh(nfs_prog,nfs_vers,(a),(c),(s),&bpos,&mb,&xid)) == NULL) { \ 			error = ENOBUFS; \ 			goto nfsmout; \ 		}
-end_define
-
-begin_define
-define|#
-directive|define
-name|nfsm_vars
-define|\
-value|register u_long *p; \ 		register caddr_t cp; \ 		register long t1, t2; \ 		caddr_t bpos, dpos, cp2; \ 		u_long xid; \ 		int error = 0; \ 		long offs = 0; \ 		struct mbuf *mreq, *mrep, *md, *mb, *mb2
 end_define
 
 begin_define
@@ -477,14 +497,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|nfsm_srvars
-define|\
-value|register caddr_t cp; \ 		register u_long *p; \ 		register long t1, t2; \ 		caddr_t bpos; \ 		long offs = 0; \ 		int error = 0; \ 		char *cp2; \ 		struct mbuf *mb, *mb2, *mreq
-end_define
-
-begin_define
-define|#
-directive|define
 name|nfsm_srvdone
 define|\
 value|nfsmout: \ 		return(error)
@@ -498,7 +510,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|{ \ 		if (error) \ 			nfs_rephead(0, xid, error, mrq,&mb,&bpos); \ 		else \ 			nfs_rephead((s), xid, error, mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		mreq = *mrq; \ 		if (error) \ 			return(0); \ 		}
+value|{ \ 		if (error) \ 			nfs_rephead(0, xid, error, mrq,&mb,&bpos); \ 		else \ 			nfs_rephead((s), xid, error, mrq,&mb,&bpos); \ 		m_freem(mrep); \ 		if (error) \ 			return(0); \ 		}
 end_define
 
 begin_define

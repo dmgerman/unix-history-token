@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -276,6 +276,10 @@ end_block
 
 begin_comment
 comment|/*  * VFS Operations.  *  * mount system call  * It seems a bit dumb to copyinstr() the host and path here and then  * bcopy() them in mountnfs(), but I wanted to detect errors before  * doing the sockargs() call because sockargs() allocates an mbuf and  * an error after that means that I have to release the mbuf.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -616,11 +620,6 @@ name|struct
 name|nfsmount
 modifier|*
 name|nmp
-decl_stmt|;
-name|struct
-name|nfsnode
-modifier|*
-name|np
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1533,6 +1532,10 @@ begin_comment
 comment|/*  * Flush out the buffer cache  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|nfs_sync
 argument_list|(
@@ -1581,6 +1584,10 @@ end_block
 
 begin_comment
 comment|/*  * At this point, this should never happen  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
@@ -1633,6 +1640,10 @@ begin_comment
 comment|/*  * Vnode pointer to File handle, should never happen either  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|nfs_vptofh
 argument_list|(
@@ -1681,6 +1692,10 @@ end_block
 
 begin_comment
 comment|/*  * Vfs start routine, a no-op.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
