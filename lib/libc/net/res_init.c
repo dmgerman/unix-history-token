@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 1.4 1995/05/30 05:40:55 rgrimes Exp $"
+literal|"$Id: res_init.c,v 1.5 1995/08/20 20:02:52 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<res_config.h>
+file|"res_config.h"
 end_include
 
 begin_decl_stmt
