@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)openprom.c	7.1 (Berkeley) %G%  *  * from: $Header: openprom.c,v 1.2 93/04/20 11:16:14 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)openprom.c	7.2 (Berkeley) %G%  *  * from: $Header: openprom.c,v 1.3 93/04/27 08:56:09 torek Exp $  */
 end_comment
 
 begin_include
@@ -73,6 +73,18 @@ begin_comment
 comment|/* node ID of ROM's options */
 end_comment
 
+begin_function_decl
+specifier|extern
+name|int
+name|findroot
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* returns node ID of top node */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -136,6 +148,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Verify target ID is valid (exists in the OPENPROM tree), as  * listed from node ID sid forward.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -164,9 +180,13 @@ name|promvec
 operator|->
 name|pv_nodeops
 expr_stmt|;
-while|while
-condition|(
-operator|(
+for|for
+control|(
+init|;
+name|sid
+operator|!=
+literal|0
+condition|;
 name|sid
 operator|=
 name|no
@@ -175,10 +195,7 @@ name|no_nextnode
 argument_list|(
 name|sid
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
+control|)
 if|if
 condition|(
 name|sid
@@ -438,7 +455,8 @@ name|ok
 operator|=
 name|openpromcheckid
 argument_list|(
-literal|0
+name|findroot
+argument_list|()
 argument_list|,
 name|node
 argument_list|)
