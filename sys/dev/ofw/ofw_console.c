@@ -382,7 +382,9 @@ name|GID_WHEEL
 argument_list|,
 literal|0600
 argument_list|,
-literal|"ofwcons"
+literal|"%s"
+argument_list|,
+name|output
 argument_list|)
 expr_stmt|;
 name|make_dev_alias
@@ -391,9 +393,7 @@ name|ofw_consdev
 operator|.
 name|cn_dev
 argument_list|,
-literal|"%s"
-argument_list|,
-name|output
+literal|"ofwcons"
 argument_list|)
 expr_stmt|;
 block|}
