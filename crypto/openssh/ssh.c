@@ -1013,7 +1013,9 @@ condition|)
 block|{
 name|log
 argument_list|(
-literal|"You don't exist, go away!"
+literal|"unknown user %d"
+argument_list|,
+name|original_real_uid
 argument_list|)
 expr_stmt|;
 name|exit
