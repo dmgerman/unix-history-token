@@ -786,6 +786,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Macros for sockets and socket buffering.  */
 end_comment
@@ -979,12 +985,6 @@ name|so
 parameter_list|)
 value|do {						\ 	if (sb_notify(&(so)->so_snd))					\ 		sowakeup((so),&(so)->so_snd); 				\ } while (0)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Argument structure for sosetopt et seq.  This is in the KERNEL  * section because it will never be visible to user code.  */
