@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<crypto/cast128/cast128.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<crypto/sha1.h>
 end_include
 
@@ -97,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<opencrypto/rmd160.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<opencrypto/cast.h>
 end_include
 
 begin_include
