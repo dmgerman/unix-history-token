@@ -146,7 +146,7 @@ name|strconcat
 argument_list|(
 name|fname
 argument_list|,
-literal|"/"
+literal|"/."
 argument_list|)
 argument_list|,
 operator|&
