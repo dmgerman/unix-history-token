@@ -1,14 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Header file for standalone package  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"saerrno.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|UNIX
+value|"/vmunix"
+end_define
+
 begin_comment
-comment|/*  * Io block: includes an  * inode, cells for the use of seek, etc,  * and a buffer.  */
+comment|/*  * Io block: includes an inode, cells for the use of seek, etc.,  * and a buffer.  */
 end_comment
 
 begin_struct
@@ -19,19 +32,31 @@ name|int
 name|i_flgs
 decl_stmt|;
 comment|/* see F_ below */
+name|int
+name|i_adapt
+decl_stmt|;
+comment|/* adapter */
+name|int
+name|i_ctlr
+decl_stmt|;
+comment|/* controller */
+name|int
+name|i_unit
+decl_stmt|;
+comment|/* pseudo device unit */
+name|int
+name|i_part
+decl_stmt|;
+comment|/* disk partition */
+name|daddr_t
+name|i_boff
+decl_stmt|;
+comment|/* block offset on device */
 name|struct
 name|inode
 name|i_ino
 decl_stmt|;
 comment|/* inode, if file */
-name|int
-name|i_unit
-decl_stmt|;
-comment|/* pseudo device unit */
-name|daddr_t
-name|i_boff
-decl_stmt|;
-comment|/* block offset on device */
 name|daddr_t
 name|i_cyloff
 decl_stmt|;
@@ -239,6 +264,21 @@ value|0xff00
 end_define
 
 begin_comment
+comment|/*  * Lseek call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L_SET
+value|0
+end_define
+
+begin_comment
+comment|/* absolute offset */
+end_comment
+
+begin_comment
 comment|/*  * Device switch.  */
 end_comment
 
@@ -341,21 +381,21 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Request codes. Must be the same a F_XXX above  */
+comment|/*  * Request codes. Must be the same as F_XXX above  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|READ
-value|1
+value|F_READ
 end_define
 
 begin_define
 define|#
 directive|define
 name|WRITE
-value|2
+value|F_WRITE
 end_define
 
 begin_define
@@ -402,153 +442,6 @@ name|NFILES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* just like unix */
-end_comment
-
-begin_comment
-comment|/* error codes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EBADF
-value|1
-end_define
-
-begin_comment
-comment|/* bad file descriptor */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EOFFSET
-value|2
-end_define
-
-begin_comment
-comment|/* relative seek not supported */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EDEV
-value|3
-end_define
-
-begin_comment
-comment|/* improper device specification on open */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ENXIO
-value|4
-end_define
-
-begin_comment
-comment|/* unknown device specified */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EUNIT
-value|5
-end_define
-
-begin_comment
-comment|/* improper unit specification */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ESRCH
-value|6
-end_define
-
-begin_comment
-comment|/* directory search for file failed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EIO
-value|7
-end_define
-
-begin_comment
-comment|/* generic error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ECMD
-value|10
-end_define
-
-begin_comment
-comment|/* undefined driver command */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EBSE
-value|11
-end_define
-
-begin_comment
-comment|/* bad sector error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EWCK
-value|12
-end_define
-
-begin_comment
-comment|/* write check error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EECC
-value|13
-end_define
-
-begin_comment
-comment|/* uncorrectable ecc error */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EHER
-value|14
-end_define
-
-begin_comment
-comment|/* hard error */
-end_comment
 
 begin_comment
 comment|/* ioctl's -- for disks just now */
