@@ -1947,42 +1947,5 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|void
-name|OpenSSLDie
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|assertion
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s(%d): OpenSSL internal error, assertion failed: %s\n"
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|,
-name|assertion
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
 end_unit
 
