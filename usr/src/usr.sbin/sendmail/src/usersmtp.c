@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.2 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.3 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.2 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.3 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1675,6 +1675,9 @@ decl_stmt|;
 name|time_t
 name|timeout
 decl_stmt|;
+name|time_t
+name|mintimeout
+decl_stmt|;
 specifier|static
 name|int
 name|datatimeout
@@ -1832,6 +1835,7 @@ name|EX_PROTOCOL
 operator|)
 return|;
 block|}
+comment|/* 	**  Set timeout around data writes.  Make it at least large 	**  enough for DNS timeouts on all recipients plus some fudge 	**  factor.  The main thing is that it should not be infinite. 	*/
 if|if
 condition|(
 name|setjmp
@@ -1860,26 +1864,6 @@ name|mci_state
 operator|=
 name|MCIS_ERROR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"%s: timeout writing message to %s"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-name|mci
-operator|->
-name|mci_host
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|syserr
 argument_list|(
 literal|"451 timeout writing message to %s"
@@ -1910,18 +1894,25 @@ name|e_msgsize
 operator|/
 literal|64
 expr_stmt|;
+name|mintimeout
+operator|=
+name|e
+operator|->
+name|e_nrcpts
+operator|*
+literal|90
+operator|+
+literal|60
+expr_stmt|;
 if|if
 condition|(
 name|timeout
 operator|<
-operator|(
-name|time_t
-operator|)
-literal|60
+name|mintimeout
 condition|)
 name|timeout
 operator|=
-literal|60
+name|mintimeout
 expr_stmt|;
 name|ev
 operator|=
