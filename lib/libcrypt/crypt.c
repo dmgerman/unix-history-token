@@ -121,6 +121,14 @@ block|,
 endif|#
 directive|endif
 block|{
+literal|"nth"
+block|,
+name|crypt_nthash
+block|,
+literal|"$3$"
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
