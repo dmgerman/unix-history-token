@@ -89,6 +89,16 @@ directive|include
 file|<ddb/ddb.h>
 end_include
 
+begin_comment
+comment|/* Define this to check for blessed mutexes */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|BLESSING
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -228,6 +238,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BLESSING
+end_ifdef
+
 begin_struct
 struct|struct
 name|witness_blessed
@@ -245,6 +261,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -356,6 +377,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BLESSING
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -371,6 +398,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1185,6 +1217,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BLESSING
+end_ifdef
+
 begin_comment
 comment|/*  * Pairs of locks which have been blessed  * Don't complain about order problems with blessed locks  */
 end_comment
@@ -1217,6 +1255,11 @@ name|witness_blessed
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * List of all locks in the system.  */
@@ -3027,6 +3070,9 @@ operator|&
 name|w_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BLESSING
 if|if
 condition|(
 name|blessed
@@ -3039,6 +3085,8 @@ condition|)
 goto|goto
 name|out
 goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|lock1
@@ -6240,6 +6288,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BLESSING
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -6367,6 +6421,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
