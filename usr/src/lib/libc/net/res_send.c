@@ -209,14 +209,6 @@ operator|*
 operator|)
 name|answer
 decl_stmt|;
-specifier|extern
-name|u_short
-name|htons
-argument_list|()
-decl_stmt|,
-name|ntohs
-argument_list|()
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -299,11 +291,12 @@ name|_res
 operator|.
 name|retry
 init|;
-operator|--
 name|retry
-operator|>=
+operator|>
 literal|0
 condition|;
+name|retry
+operator|--
 control|)
 block|{
 for|for
@@ -1147,11 +1140,14 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 				 * retry decremented on continue 				 * to desired starting value 				 */
 name|retry
 operator|=
 name|_res
 operator|.
 name|retry
+operator|+
+literal|1
 expr_stmt|;
 name|v_circuit
 operator|=
