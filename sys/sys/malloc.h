@@ -80,6 +80,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_PANIC
+value|0x0010
+end_define
+
+begin_comment
+comment|/* panic if allocation failed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_MAGIC
 value|877983977
 end_define
