@@ -4304,9 +4304,13 @@ name|ARGS
 argument_list|(
 name|personality
 argument_list|,
-literal|"%ld"
+literal|"%lu"
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|args
 operator|->
 name|per
