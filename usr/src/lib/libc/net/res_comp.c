@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.7 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1093,7 +1093,7 @@ end_comment
 
 begin_function
 name|u_short
-name|getshort
+name|_getshort
 parameter_list|(
 name|msgp
 parameter_list|)
@@ -1155,7 +1155,7 @@ end_function
 
 begin_function
 name|u_long
-name|getlong
+name|_getlong
 parameter_list|(
 name|msgp
 parameter_list|)

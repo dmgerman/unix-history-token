@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.16 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,7 +544,7 @@ literal|", type = %s"
 argument_list|,
 name|p_type
 argument_list|(
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -566,7 +566,7 @@ literal|", class = %s\n\n"
 argument_list|,
 name|p_class
 argument_list|(
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -956,7 +956,7 @@ name|p_type
 argument_list|(
 name|type
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -980,7 +980,7 @@ name|p_class
 argument_list|(
 name|class
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -1000,7 +1000,7 @@ name|file
 argument_list|,
 literal|", ttl = %u"
 argument_list|,
-name|getlong
+name|_getlong
 argument_list|(
 name|cp
 argument_list|)
@@ -1021,7 +1021,7 @@ literal|", dlen = %d\n"
 argument_list|,
 name|dlen
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -1317,7 +1317,7 @@ name|file
 argument_list|,
 literal|"\n\tserial=%ld"
 argument_list|,
-name|getlong
+name|_getlong
 argument_list|(
 name|cp
 argument_list|)
@@ -1336,7 +1336,7 @@ name|file
 argument_list|,
 literal|", refresh=%ld"
 argument_list|,
-name|getlong
+name|_getlong
 argument_list|(
 name|cp
 argument_list|)
@@ -1355,7 +1355,7 @@ name|file
 argument_list|,
 literal|", retry=%ld"
 argument_list|,
-name|getlong
+name|_getlong
 argument_list|(
 name|cp
 argument_list|)
@@ -1374,7 +1374,7 @@ name|file
 argument_list|,
 literal|", expire=%ld"
 argument_list|,
-name|getlong
+name|_getlong
 argument_list|(
 name|cp
 argument_list|)
@@ -1393,7 +1393,7 @@ name|file
 argument_list|,
 literal|", min=%ld\n"
 argument_list|,
-name|getlong
+name|_getlong
 argument_list|(
 name|cp
 argument_list|)
@@ -1416,7 +1416,7 @@ name|file
 argument_list|,
 literal|"\tpreference = %ld,"
 argument_list|,
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -1524,7 +1524,7 @@ name|file
 argument_list|,
 literal|"\t%ld\n"
 argument_list|,
-name|getlong
+name|_getlong
 argument_list|(
 name|cp
 argument_list|)
