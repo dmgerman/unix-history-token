@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.19	82/12/09	*/
+comment|/*	proc.h	4.20	83/01/20	*/
 end_comment
 
 begin_comment
@@ -529,15 +529,8 @@ begin_comment
 comment|/* another flag to prevent swap out */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SDLYU
-value|0x0000200
-end_define
-
 begin_comment
-comment|/* delayed unlock of pages */
+comment|/* was SDLYU */
 end_comment
 
 begin_define
