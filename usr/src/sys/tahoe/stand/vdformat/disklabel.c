@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)disklabel.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,10 +388,6 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|op_mask
-operator|&
-name|FORMAT_OP
-operator|&&
 name|lp
 operator|->
 name|d_traksize
@@ -1415,9 +1411,36 @@ name|struct
 name|disklabel
 modifier|*
 name|lp
-init|=
-name|lab
 decl_stmt|;
+name|bzero
+argument_list|(
+name|labelsector
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|labelsector
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|lp
+operator|=
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+operator|(
+name|labelsector
+operator|+
+name|LABELOFFSET
+operator|)
+expr_stmt|;
+operator|*
+name|lp
+operator|=
+operator|*
+name|lab
+expr_stmt|;
 name|lp
 operator|->
 name|d_magic

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdfmt.h	1.7	88/06/07	*/
+comment|/*	vdfmt.h	1.8	90/06/24	*/
 end_comment
 
 begin_comment
@@ -40,13 +40,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|"time.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fs.h"
+file|"vnode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ufs/inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ufs/fs.h"
 end_include
 
 begin_include
@@ -166,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|MAXTRKS
-value|24
+value|32
 end_define
 
 begin_define
@@ -941,10 +953,24 @@ name|smddrives
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Structure of the bad-sector map on the disk.  * The original bs_map did not have the magic number or "checksum,"  * thus the fudges below.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|unsigned
+name|int
+name|bs_magic
+decl_stmt|;
+comment|/* magic (0x12344321) */
+name|unsigned
+name|int
+name|bs_cksum
+decl_stmt|;
+comment|/* checksum (0) */
 name|unsigned
 name|int
 name|bs_id
@@ -974,18 +1000,87 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|MAX_FLAWS
-value|(((MAXTRKSIZ*sizeof(long))-sizeof(bs_map))/sizeof(bs_entry))
+name|MAX_FLAWMAP
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) - sizeof(bs_map)) / sizeof(bs_entry))
 end_define
 
-begin_decl_stmt
+begin_define
+define|#
+directive|define
+name|MAX_FLAWS
+value|MAX_FLAWMAP(MAXTRKSIZ*sizeof(long))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSMAGIC
+value|0x12344321
+end_define
+
+begin_union
+union|union
+block|{
+name|bs_map
+name|Offset_bad_map
+decl_stmt|;
+comment|/* offset by bs_magic+cksum */
+define|#
+directive|define
+name|offset_bad_map
+value|bs_map_space.Offset_bad_map
+struct|struct
+block|{
+name|unsigned
+name|int
+name|bs_magic
+decl_stmt|;
+name|unsigned
+name|int
+name|bs_cksum
+decl_stmt|;
+name|bs_map
+name|bs_map
+decl_stmt|;
+comment|/* aligned with track buffer */
+block|}
+name|Norm_bad_map
+struct|;
+define|#
+directive|define
+name|norm_bad_map
+value|bs_map_space.Norm_bad_map.bs_map
+struct|struct
+block|{
+name|unsigned
+name|int
+name|bs_magic
+decl_stmt|;
+name|unsigned
+name|int
+name|bs_cksum
+decl_stmt|;
 name|long
-name|bs_map_space
+name|track
 index|[
 name|MAXTRKSIZ
 index|]
 decl_stmt|;
-end_decl_stmt
+comment|/* disk track is read here */
+block|}
+name|space
+struct|;
+define|#
+directive|define
+name|map_space
+value|bs_map_space.space.track
+block|}
+name|bs_map_space
+union|;
+end_union
 
 begin_decl_stmt
 name|bs_map

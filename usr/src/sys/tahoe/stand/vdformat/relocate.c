@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)relocate.c	1.6 (Berkeley/CCI) %G%"
+literal|"@(#)relocate.c	1.7 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,7 +261,7 @@ literal|1
 expr_stmt|;
 name|dskaddr
 operator|.
-name|cylinder
+name|track
 operator|=
 name|lab
 operator|->

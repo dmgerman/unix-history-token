@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.7 (Berkeley/CCI) %G%"
+literal|"@(#)format.c	1.8 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,44 @@ operator|->
 name|d_typename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lab
+operator|->
+name|d_nsectors
+operator|>
+name|MAXSECS_PER_TRK
+operator|||
+name|lab
+operator|->
+name|d_ntracks
+operator|>
+name|MAXTRKS
+condition|)
+block|{
+name|print
+argument_list|(
+literal|"Drive geometry (number of sectors or tracks) is too large;\n"
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+literal|"vdformat must be recompiled with larger value\n"
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+literal|"for MAXTRKS or  MAXSECS_PER_TRK.\n"
+argument_list|)
+expr_stmt|;
+name|_longjmp
+argument_list|(
+name|abort_environ
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Read the flaw map from the disk (where ever it may be) */
 if|if
 condition|(
@@ -712,6 +750,10 @@ operator|)
 name|cur
 operator|.
 name|drive
+operator||
+name|lab
+operator|->
+name|d_devflags
 expr_stmt|;
 name|dcb
 operator|.

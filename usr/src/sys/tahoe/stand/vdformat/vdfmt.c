@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vdfmt.c	1.6 (Berkeley/CCI) %G%"
+literal|"@(#)vdfmt.c	1.7 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ argument_list|)
 expr_stmt|;
 name|print
 argument_list|(
-literal|"VDFORMAT            Berkeley Version 1.6 \n\n"
+literal|"VDFORMAT            Berkeley Version 1.7 \n\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -940,11 +940,8 @@ literal|"exercising"
 expr_stmt|;
 name|bad_map
 operator|=
-operator|(
-name|bs_map
-operator|*
-operator|)
-name|bs_map_space
+operator|&
+name|norm_bad_map
 expr_stmt|;
 block|}
 end_block

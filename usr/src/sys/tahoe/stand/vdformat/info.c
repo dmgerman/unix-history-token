@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)info.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)info.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,13 @@ operator|=
 name|read_bad_sector_map
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|has_map
+operator|==
+name|true
+condition|)
+block|{
 name|print
 argument_list|(
 literal|"Module serial number is %d.\n"
@@ -85,24 +92,21 @@ argument_list|)
 expr_stmt|;
 name|print
 argument_list|(
-literal|"Drive type is %s.\n"
+literal|"Drive contains a%s bad sector map.\n"
 argument_list|,
-name|lab
-operator|->
-name|d_typename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|has_map
+operator|(
+name|bad_map
 operator|==
-name|true
-condition|)
-name|print
-argument_list|(
-literal|"Drive contains a bad sector map.\n"
+operator|&
+name|offset_bad_map
+operator|)
+condition|?
+literal|"n old-style"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|print
 argument_list|(
