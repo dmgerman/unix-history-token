@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -153,7 +153,23 @@ decl_stmt|;
 name|uid_t
 name|p_uid
 decl_stmt|;
-comment|/* user id, used to direct tty signals */
+comment|/* effective user id */
+name|uid_t
+name|p_ruid
+decl_stmt|;
+comment|/* real user id */
+name|uid_t
+name|p_svuid
+decl_stmt|;
+comment|/* saved effective user id */
+name|gid_t
+name|p_rgid
+decl_stmt|;
+comment|/* real group id */
+name|gid_t
+name|p_svgid
+decl_stmt|;
+comment|/* saved effective group id */
 name|pid_t
 name|p_pid
 decl_stmt|;
@@ -171,7 +187,7 @@ name|rusage
 modifier|*
 name|p_ru
 decl_stmt|;
-comment|/* mbuf holding exit information */
+comment|/* exit information */
 name|short
 name|p_poip
 decl_stmt|;
@@ -230,7 +246,7 @@ modifier|*
 name|p_xlink
 decl_stmt|;
 comment|/* linked list of procs sharing same text */
-name|short
+name|int
 name|p_cpticks
 decl_stmt|;
 comment|/* ticks of cpu time */
@@ -706,7 +722,7 @@ value|0x0000800
 end_define
 
 begin_comment
-comment|/* doing physical i/o (bio.c) */
+comment|/* doing physical i/o */
 end_comment
 
 begin_define
@@ -786,19 +802,19 @@ begin_comment
 comment|/* timing out during sleep */
 end_comment
 
-begin_comment
-comment|/* was SDETACH */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SOUSIG
-value|0x0100000
+name|SNOCLDSTOP
+value|0x0080000
 end_define
 
 begin_comment
-comment|/* using old signal mechanism */
+comment|/* no SIGCHLD when children stop */
+end_comment
+
+begin_comment
+comment|/* was SOUSIG	0x0100000	/* using old signal mechanism */
 end_comment
 
 begin_define
