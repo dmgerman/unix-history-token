@@ -95,6 +95,7 @@ name|signal_handler
 parameter_list|(
 name|int
 name|signum
+name|__unused
 parameter_list|)
 block|{
 name|global_stop_flag
