@@ -75,6 +75,19 @@ directive|ifdef
 name|NCACHE
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|BOUNDS_CHECK
+parameter_list|(
+name|ptr
+parameter_list|,
+name|count
+parameter_list|)
+define|\
+value|do { \ 		if ((ptr) + (count)> eom) { \ 			return; \ 		} \ 	} while (0)
+end_define
+
 begin_function
 name|void
 name|cache_n_resp
@@ -104,6 +117,12 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|eom
+decl_stmt|,
+modifier|*
+name|rdatap
 decl_stmt|;
 name|char
 name|dname
@@ -130,6 +149,9 @@ directive|endif
 name|int
 name|flags
 decl_stmt|;
+name|u_int
+name|dlen
+decl_stmt|;
 name|nameserIncr
 argument_list|(
 name|from_addr
@@ -153,15 +175,19 @@ name|msg
 operator|+
 name|HFIXEDSZ
 expr_stmt|;
+name|eom
+operator|=
+name|msg
+operator|+
+name|msglen
+expr_stmt|;
 name|n
 operator|=
 name|dn_expand
 argument_list|(
 name|msg
 argument_list|,
-name|msg
-operator|+
-name|msglen
+name|eom
 argument_list|,
 name|cp
 argument_list|,
@@ -200,6 +226,15 @@ block|}
 name|cp
 operator|+=
 name|n
+expr_stmt|;
+name|BOUNDS_CHECK
+argument_list|(
+name|cp
+argument_list|,
+literal|2
+operator|*
+name|INT16SZ
+argument_list|)
 expr_stmt|;
 name|GETSHORT
 argument_list|(
@@ -338,16 +373,14 @@ name|type
 operator|=
 name|T_SOA
 expr_stmt|;
-comment|/* store ther SOA record */
+comment|/* store their SOA record */
 name|n
 operator|=
 name|dn_skipname
 argument_list|(
 name|tp
 argument_list|,
-name|msg
-operator|+
-name|msglen
+name|eom
 argument_list|)
 expr_stmt|;
 if|if
@@ -373,6 +406,17 @@ block|}
 name|tp
 operator|+=
 name|n
+expr_stmt|;
+name|BOUNDS_CHECK
+argument_list|(
+name|tp
+argument_list|,
+literal|3
+operator|*
+name|INT16SZ
+operator|+
+name|INT32SZ
+argument_list|)
 expr_stmt|;
 name|GETSHORT
 argument_list|(
@@ -419,11 +463,25 @@ name|tp
 argument_list|)
 expr_stmt|;
 comment|/* ttl */
+name|GETSHORT
+argument_list|(
+name|dlen
+argument_list|,
 name|tp
-operator|+=
-name|INT16SZ
+argument_list|)
 expr_stmt|;
 comment|/* dlen */
+name|BOUNDS_CHECK
+argument_list|(
+name|tp
+argument_list|,
+name|dlen
+argument_list|)
+expr_stmt|;
+name|rdatap
+operator|=
+name|tp
+expr_stmt|;
 comment|/* origin */
 name|n
 operator|=
@@ -431,9 +489,7 @@ name|dn_expand
 argument_list|(
 name|msg
 argument_list|,
-name|msg
-operator|+
-name|msglen
+name|eom
 argument_list|,
 name|tp
 argument_list|,
@@ -560,6 +616,19 @@ name|len
 operator|-=
 name|n
 expr_stmt|;
+name|n
+operator|=
+literal|5
+operator|*
+name|INT32SZ
+expr_stmt|;
+name|BOUNDS_CHECK
+argument_list|(
+name|tp
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|tp
@@ -567,10 +636,6 @@ argument_list|,
 name|cp1
 argument_list|,
 name|n
-operator|=
-literal|5
-operator|*
-name|INT32SZ
 argument_list|)
 expr_stmt|;
 comment|/* serial, refresh, retry, expire, min */
@@ -582,6 +647,32 @@ name|len
 operator|-=
 name|n
 expr_stmt|;
+name|tp
+operator|+=
+name|n
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|!=
+name|rdatap
+operator|+
+name|dlen
+condition|)
+block|{
+name|dprintf
+argument_list|(
+literal|3
+argument_list|,
+operator|(
+name|ddt
+operator|,
+literal|"ncache: form error 2\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* store the zone of the soa record */
 name|n
 operator|=
