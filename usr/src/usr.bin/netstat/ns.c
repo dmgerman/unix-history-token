@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.2 (Berkeley) %G%"
+literal|"@(#)ns.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,67 +342,6 @@ operator|)
 name|off
 condition|)
 return|return;
-if|if
-condition|(
-name|first
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Active connections"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|aflag
-condition|)
-name|printf
-argument_list|(
-literal|" (including servers)"
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Aflag
-condition|)
-name|printf
-argument_list|(
-literal|"%-8.8s "
-argument_list|,
-literal|"PCB"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|Aflag
-condition|?
-literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
-else|:
-literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s %s\n"
-argument_list|,
-literal|"Proto"
-argument_list|,
-literal|"Recv-Q"
-argument_list|,
-literal|"Send-Q"
-argument_list|,
-literal|"Local Address"
-argument_list|,
-literal|"Foreign Address"
-argument_list|,
-literal|"(state)"
-argument_list|)
-expr_stmt|;
-name|first
-operator|=
-literal|0
-expr_stmt|;
-block|}
 for|for
 control|(
 init|;
@@ -569,6 +508,67 @@ condition|(
 name|isspp
 condition|)
 continue|continue;
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Active NS connections"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|aflag
+condition|)
+name|printf
+argument_list|(
+literal|" (including servers)"
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Aflag
+condition|)
+name|printf
+argument_list|(
+literal|"%-8.8s "
+argument_list|,
+literal|"PCB"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|Aflag
+condition|?
+literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
+else|:
+literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s %s\n"
+argument_list|,
+literal|"Proto"
+argument_list|,
+literal|"Recv-Q"
+argument_list|,
+literal|"Send-Q"
+argument_list|,
+literal|"Local Address"
+argument_list|,
+literal|"Foreign Address"
+argument_list|,
+literal|"(state)"
+argument_list|)
+expr_stmt|;
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|Aflag
