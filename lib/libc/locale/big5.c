@@ -73,6 +73,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_decl_stmt
 name|rune_t
 name|_BIG5_sgetrune
