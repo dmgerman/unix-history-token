@@ -443,7 +443,17 @@ break|break;
 case|case
 literal|0x4f
 case|:
-comment|/* 	 * XXX - Check scan code in GET8L(sc->sc_eax). 	 */
+comment|/* Keyboard intercept */
+name|debug
+argument_list|(
+name|D_TRAPS
+operator||
+literal|0x15
+argument_list|,
+literal|"BIOS: Keyboard intercept\n"
+argument_list|)
+expr_stmt|;
+comment|/* Don't translate scan code. */
 break|break;
 case|case
 literal|0x88
@@ -457,16 +467,14 @@ break|break;
 case|case
 literal|0xc0
 case|:
-comment|/* get configuration */
+comment|/* Get configuration */
 name|debug
 argument_list|(
 name|D_TRAPS
 operator||
 literal|0x15
 argument_list|,
-literal|"Get configuration\n"
-argument_list|,
-name|R_DX
+literal|"BIOS: Get configuration\n"
 argument_list|)
 expr_stmt|;
 name|PUTVEC
@@ -486,7 +494,7 @@ break|break;
 case|case
 literal|0xc1
 case|:
-comment|/* get extended BIOS data area */
+comment|/* Get extended BIOS data area */
 name|R_FLAGS
 operator||=
 name|PSL_C
@@ -496,6 +504,15 @@ case|case
 literal|0xc2
 case|:
 comment|/* Pointing device */
+name|debug
+argument_list|(
+name|D_TRAPS
+operator||
+literal|0x15
+argument_list|,
+literal|"BIOS: Pointing device?\n"
+argument_list|)
+expr_stmt|;
 name|R_FLAGS
 operator||=
 name|PSL_C
@@ -557,14 +574,6 @@ decl_stmt|;
 name|u_long
 name|vec
 decl_stmt|;
-if|if
-condition|(
-literal|1
-operator|||
-operator|!
-name|raw_kbd
-condition|)
-block|{
 name|strcpy
 argument_list|(
 operator|(
@@ -757,7 +766,6 @@ operator|=
 literal|0xcf
 expr_stmt|;
 comment|/* IRET */
-comment|/* 	 *memcpy((u_char *)BIOS_video_parms, video_parms, sizeof(video_parms)); 	 */
 name|memcpy
 argument_list|(
 operator|(
@@ -855,15 +863,6 @@ operator|++
 operator|=
 literal|'3'
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|*(u_char *)BIOS_hardware_id = 0xfe;
-comment|/* Identify as a PC/XT */
-block|*(u_char *)BIOS_hardware_id = 0xff;
-comment|/* Identify as a PC */
-endif|#
-directive|endif
 operator|*
 operator|(
 name|u_char
@@ -874,7 +873,6 @@ operator|=
 literal|0xfc
 expr_stmt|;
 comment|/* Identify as a PC/AT */
-block|}
 comment|/*      * Interrupt revectors F000:0000 - F000:03ff      */
 for|for
 control|(

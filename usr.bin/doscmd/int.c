@@ -4,7 +4,7 @@ comment|/* ** No copyright?! ** ** $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Notes:  *   1) Second PIC is not implemented.  *   2) Interrupt priority management is not implemented.  *   3) What should be read from port 0x20?  *  * "within interrupt processing" means the following is true:  *   1) Hardware interrupt<irql> is delivered by hardint().  *   2) Next interrupt<irql> is not possible yet by either:  *	a) V_IF;  *	b) Interrupt mask;  *	c) Current irql.  *  * Related functions:  *   int isinhardint(int irql)  *   void set_eoir(int irql, void(*eoir)(void*), void* arg);  *  */
+comment|/*  * Notes:  *   1) Second PIC is not implemented.  *   2) Interrupt priority management is not implemented.  *   3) What should be read from port 0x20?  *  * "within interrupt processing" means the following is true:  *   1) Hardware interrupt<irql> is delivered by hardint().  *   2) Next interrupt<irql> is not possible yet by either:  *	a) V_IF;  *	b) Interrupt mask;  *	c) Current irql.  *  * Related functions:  *   int isinhardint(int irql)  *   void set_eoir(int irql, void (*eoir)(void *), void *arg);  *  */
 end_comment
 
 begin_include

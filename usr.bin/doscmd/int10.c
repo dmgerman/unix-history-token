@@ -1072,6 +1072,7 @@ block|{
 case|case
 literal|0x00
 case|:
+comment|/* Text-mode chargen: load user-specified                                    patterns */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1083,6 +1084,7 @@ break|break;
 case|case
 literal|0x01
 case|:
+comment|/* Text-mode chargen: load ROM monochrome                                    patterns */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1094,6 +1096,7 @@ break|break;
 case|case
 literal|0x02
 case|:
+comment|/* Text-mode chargen: load ROM 8x8 double-dot                                    patterns */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1105,6 +1108,7 @@ break|break;
 case|case
 literal|0x03
 case|:
+comment|/* Text-mode chargen: set block specifier */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1116,6 +1120,7 @@ break|break;
 case|case
 literal|0x04
 case|:
+comment|/* Text-mode chargen: load ROM 8x16 character                                    set */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1127,6 +1132,7 @@ break|break;
 case|case
 literal|0x10
 case|:
+comment|/* Text-mode chargen: load and activate                                    user-specified patterns */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1138,6 +1144,7 @@ break|break;
 case|case
 literal|0x11
 case|:
+comment|/* Text-mode chargen: load and activate ROM                                    monochrome patterns */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1149,6 +1156,7 @@ break|break;
 case|case
 literal|0x12
 case|:
+comment|/* Text-mode chargen: load and activate ROM                                    8x8 double-dot patterns */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1160,6 +1168,7 @@ break|break;
 case|case
 literal|0x14
 case|:
+comment|/* Text-mode chargen: load and activate ROM                                    8x16 character set */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1171,6 +1180,7 @@ break|break;
 case|case
 literal|0x20
 case|:
+comment|/* Graph-mode chargen: set user 8x8 graphics                                    characters */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1182,6 +1192,7 @@ break|break;
 case|case
 literal|0x21
 case|:
+comment|/* Graph-mode chargen: set user graphics                                    characters */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1193,6 +1204,7 @@ break|break;
 case|case
 literal|0x22
 case|:
+comment|/* Graph-mode chargen: set ROM 8x14 graphics                                    chars */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1204,6 +1216,7 @@ break|break;
 case|case
 literal|0x23
 case|:
+comment|/* Graph-mode chargen: set ROM 8x8 double-dot                                    chars */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1215,6 +1228,7 @@ break|break;
 case|case
 literal|0x24
 case|:
+comment|/* Graph-mode chargen: load 8x16 graphics                                    chars */
 name|debug
 argument_list|(
 name|D_VIDEO
@@ -1226,6 +1240,16 @@ break|break;
 case|case
 literal|0x30
 case|:
+comment|/* Get font information */
+name|debug
+argument_list|(
+name|D_VIDEO
+argument_list|,
+literal|"INT 10 11:30 Request font address %02x\n"
+argument_list|,
+name|R_BH
+argument_list|)
+expr_stmt|;
 name|R_CX
 operator|=
 name|CharHeight
@@ -1297,15 +1321,6 @@ name|R_BP
 operator|=
 literal|0
 expr_stmt|;
-name|debug
-argument_list|(
-name|D_VIDEO
-argument_list|,
-literal|"INT 10 11:30 Request font address %02x"
-argument_list|,
-name|R_BH
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|unknown_int4
@@ -1342,7 +1357,7 @@ break|break;
 case|case
 literal|0x12
 case|:
-comment|/* Load multiple DAC color register */
+comment|/* Alternate function select */
 if|if
 condition|(
 operator|!
@@ -1721,10 +1736,23 @@ name|debug
 argument_list|(
 name|D_VIDEO
 argument_list|,
-literal|"Save/restore video state\n"
+literal|"VGA: Save/restore video state\n"
 argument_list|)
 expr_stmt|;
 name|R_AL
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|0x30
+case|:
+comment|/* Locate 3270PC configuration table */
+name|R_CX
+operator|=
+literal|0
+expr_stmt|;
+name|R_DX
 operator|=
 literal|0
 expr_stmt|;
