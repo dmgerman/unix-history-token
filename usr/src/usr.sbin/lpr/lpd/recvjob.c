@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recvjob.c	5.14 (Berkeley) %G%"
+literal|"@(#)recvjob.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,7 +725,9 @@ argument_list|)
 condition|)
 name|frecverr
 argument_list|(
-literal|"illegal path name"
+literal|"readjob: %s: illegal path name"
+argument_list|,
+name|dfname
 argument_list|)
 expr_stmt|;
 operator|(
@@ -816,11 +818,6 @@ argument_list|,
 name|FILMOD
 argument_list|)
 expr_stmt|;
-name|frecverr
-argument_list|(
-literal|"illegal path name"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fd
@@ -829,7 +826,7 @@ literal|0
 condition|)
 name|frecverr
 argument_list|(
-literal|"%s: %m"
+literal|"readfile: %s: illegal path name: %m"
 argument_list|,
 name|file
 argument_list|)
