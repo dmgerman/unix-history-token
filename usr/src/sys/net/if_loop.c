@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.14	82/10/09	*/
+comment|/*	if_loop.c	4.15	82/10/13	*/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
