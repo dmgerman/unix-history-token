@@ -3,6 +3,32 @@ begin_comment
 comment|/*   *  perm.c - check user permission for at(1)  *  Copyright (C) 1994  Thomas Koenig  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/* System Headers */
 end_comment
@@ -11,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -85,21 +117,6 @@ end_define
 begin_comment
 comment|/* Structures and unions */
 end_comment
-
-begin_comment
-comment|/* File scope variables */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Function declarations */
@@ -279,18 +296,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"Cannot access user database"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+literal|"cannot access user database"
 argument_list|)
 expr_stmt|;
-block|}
 name|PRIV_START
 name|fp
 init|=
@@ -367,14 +379,14 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"at.deny"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|perror
+name|warn
 argument_list|(
 literal|"at.allow"
 argument_list|)

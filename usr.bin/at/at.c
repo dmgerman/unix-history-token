@@ -3,6 +3,32 @@ begin_comment
 comment|/*   *  at.c : Put file into atrun queue  *  Copyright (C) 1993, 1994 Thomas Koenig  *  *  Atrun& Atq modifications  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -48,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -328,17 +360,6 @@ comment|/* File scope variables */
 end_comment
 
 begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|no_export
@@ -381,13 +402,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|fcreated
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|namep
 decl_stmt|;
 end_decl_stmt
 
@@ -550,7 +564,7 @@ block|{
 comment|/* Time out after some seconds  */
 name|panic
 argument_list|(
-literal|"File locking timed out"
+literal|"file locking timed out"
 argument_list|)
 expr_stmt|;
 block|}
@@ -613,7 +627,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"Out of memory"
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 if|if
@@ -640,7 +654,7 @@ name|ERANGE
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot get directory"
+literal|"cannot get directory"
 argument_list|)
 expr_stmt|;
 name|free
@@ -954,7 +968,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot open lockfile "
+literal|"cannot open lockfile "
 name|LFILE
 argument_list|)
 expr_stmt|;
@@ -1048,7 +1062,7 @@ name|EOF
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot generate job number"
+literal|"cannot generate job number"
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -1118,7 +1132,7 @@ name|ENOENT
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot access "
+literal|"cannot access "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -1152,7 +1166,7 @@ literal|1
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot create atjob file"
+literal|"cannot create atjob file"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1170,7 +1184,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Error in dup() of job file"
+literal|"error in dup() of job file"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1188,7 +1202,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot give away file"
+literal|"cannot give away file"
 argument_list|)
 expr_stmt|;
 name|PRIV_END
@@ -1261,7 +1275,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"Cannot reopen atjob file"
+literal|"cannot reopen atjob file"
 argument_list|)
 expr_stmt|;
 comment|/* Get the userid to mail to, first by trying getlogin(), which reads      * /etc/utmp, then from LOGNAME, finally from getpwuid().      */
@@ -1369,7 +1383,7 @@ name|NULL
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot open input file"
+literal|"cannot open input file"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1410,7 +1424,7 @@ operator|)
 name|cmask
 argument_list|)
 expr_stmt|;
-comment|/* Write out the environment. Anything that may look like a      * special character to the shell is quoted, except for \n, which is      * done with a pair of "'s.  Dont't export the no_export list (such      * as TERM or DISPLAY) because we don't want these.      */
+comment|/* Write out the environment. Anything that may look like a      * special character to the shell is quoted, except for \n, which is      * done with a pair of "'s.  Don't export the no_export list (such      * as TERM or DISPLAY) because we don't want these.      */
 for|for
 control|(
 name|atenv
@@ -1807,7 +1821,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"Output error"
+literal|"output error"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1819,7 +1833,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"Input error"
+literal|"input error"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1845,7 +1859,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot give away file"
+literal|"cannot give away file"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1945,7 +1959,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot change to "
+literal|"cannot change to "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -1964,7 +1978,7 @@ name|NULL
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot open "
+literal|"cannot open "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -1999,7 +2013,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot stat in "
+literal|"cannot stat in "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2223,7 +2237,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot change to "
+literal|"cannot change to "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2242,7 +2256,7 @@ name|NULL
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot open "
+literal|"cannot open "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2279,7 +2293,7 @@ literal|0
 condition|)
 name|perr
 argument_list|(
-literal|"Cannot stat in "
+literal|"cannot stat in "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
@@ -2351,12 +2365,11 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"%s: Not owner\n"
+literal|"%s: not owner"
 argument_list|,
 name|argv
 index|[
@@ -2364,12 +2377,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|what
@@ -2431,7 +2438,7 @@ condition|)
 block|{
 name|perr
 argument_list|(
-literal|"Cannot open file"
+literal|"cannot open file"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2458,21 +2465,15 @@ block|}
 block|}
 break|break;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"Internal error, process_jobs = %d\n"
+literal|"internal error, process_jobs = %d"
 argument_list|,
 name|what
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-break|break;
 block|}
 block|}
 block|}
@@ -2518,20 +2519,13 @@ operator|*
 operator|)
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Virtual memory exhausted\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+literal|"virtual memory exhausted"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|p
 return|;
@@ -2633,10 +2627,6 @@ expr_stmt|;
 else|else
 name|pgm
 operator|++
-expr_stmt|;
-name|namep
-operator|=
-name|pgm
 expr_stmt|;
 comment|/* find out what this program is supposed to do      */
 if|if
@@ -2915,22 +2905,13 @@ operator|!
 name|check_permission
 argument_list|()
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"You do not have permission to use %s.\n"
-argument_list|,
-name|namep
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+literal|"you do not have permission to use this program"
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|program
@@ -3112,7 +3093,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"Internal error"
+literal|"internal error"
 argument_list|)
 expr_stmt|;
 break|break;
