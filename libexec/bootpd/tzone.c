@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tzone.c - get the timezone  *  * This is shared by bootpd and bootpef  */
+comment|/*  * tzone.c - get the timezone  *  * This is shared by bootpd and bootpef  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -107,27 +107,35 @@ else|#
 directive|else
 comment|/* SVR4 */
 name|struct
-name|timezone
-name|tzp
+name|tm
+modifier|*
+name|tm
 decl_stmt|;
-comment|/* Time zone offset for clients */
-name|struct
-name|timeval
-name|tp
+name|time_t
+name|now
 decl_stmt|;
-comment|/* Time (extra baggage) */
-if|if
-condition|(
-name|gettimeofday
+operator|(
+name|void
+operator|)
+name|time
 argument_list|(
 operator|&
-name|tp
-argument_list|,
-operator|&
-name|tzp
+name|now
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tm
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|secondswest
@@ -139,10 +147,7 @@ name|report
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"gettimeofday: %s"
-argument_list|,
-name|get_errmsg
-argument_list|()
+literal|"localtime() failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -150,13 +155,11 @@ else|else
 block|{
 name|secondswest
 operator|=
-literal|60L
-operator|*
-name|tzp
-operator|.
-name|tz_minuteswest
+operator|-
+name|tm
+operator|->
+name|tm_gmtoff
 expr_stmt|;
-comment|/* Convert to seconds */
 block|}
 endif|#
 directive|endif
