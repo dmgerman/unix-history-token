@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.12 %G%"
+literal|"@(#)rval.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3820,6 +3820,17 @@ argument_list|,
 name|LREQ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NIL
+condition|)
+block|{
+return|return
+name|NIL
+return|;
+block|}
 name|putop
 argument_list|(
 name|P2LISTOP
@@ -3841,6 +3852,17 @@ argument_list|,
 name|LREQ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|==
+name|NIL
+condition|)
+block|{
+return|return
+name|NIL
+return|;
+block|}
 name|putop
 argument_list|(
 name|P2LISTOP
@@ -3924,6 +3946,17 @@ argument_list|,
 name|RREQ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|==
+name|NIL
+condition|)
+block|{
+return|return
+name|NIL
+return|;
+block|}
 if|if
 condition|(
 name|isa
@@ -4834,6 +4867,17 @@ argument_list|,
 name|LREQ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|==
+name|NIL
+condition|)
+block|{
+return|return
+name|NIL
+return|;
+block|}
 name|putop
 argument_list|(
 name|P2LISTOP
