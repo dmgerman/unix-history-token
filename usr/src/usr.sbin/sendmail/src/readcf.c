@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.89 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.90 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,7 +58,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. **		Vversioncode[/vendorcode] **				Version level/vendor name of **				configuration syntax. **		Kmapname mapclass arguments.... **				Define keyed lookup of a given class. **				Arguments are class dependent. ** **	Parameters: **		cfname -- control file name. **		safe -- TRUE if this is the system config file; **			FALSE otherwise. **		e -- the main envelope. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
+comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. **		Vversioncode[/vendorcode] **				Version level/vendor name of **				configuration syntax. **		Kmapname mapclass arguments.... **				Define keyed lookup of a given class. **				Arguments are class dependent. **		Eenvar=value	Set the environment value to the given value. ** **	Parameters: **		cfname -- control file name. **		safe -- TRUE if this is the system config file; **			FALSE otherwise. **		e -- the main envelope. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
 
 begin_macro
@@ -2267,6 +2267,42 @@ name|bp
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|bp
+argument_list|,
+literal|'='
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+name|setuserenv
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|1
+index|]
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
