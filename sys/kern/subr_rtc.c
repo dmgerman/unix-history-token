@@ -53,6 +53,16 @@ directive|include
 file|<sys/timetc.h>
 end_include
 
+begin_comment
+comment|/* XXX: for the  CPU_* sysctl OID constants. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -217,7 +227,7 @@ name|SYSCTL_PROC
 argument_list|(
 name|_machdep
 argument_list|,
-name|OID_AUTO
+name|CPU_ADJKERNTZ
 argument_list|,
 name|adjkerntz
 argument_list|,
@@ -244,7 +254,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_machdep
 argument_list|,
-name|OID_AUTO
+name|CPU_DISRTCSET
 argument_list|,
 name|disable_rtc_set
 argument_list|,
@@ -265,7 +275,7 @@ name|SYSCTL_INT
 argument_list|(
 name|_machdep
 argument_list|,
-name|OID_AUTO
+name|CPU_WALLCLOCK
 argument_list|,
 name|wall_cmos_clock
 argument_list|,
