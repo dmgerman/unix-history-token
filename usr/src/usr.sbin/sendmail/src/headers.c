@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.38 (Berkeley) %G%"
+literal|"@(#)headers.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4180,7 +4180,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	**  If we are converting this to a MIME message, add the 	**  MIME-Version: header. 	*/
+comment|/* 	**  If we are converting this to a MIME message, add the 	**  MIME headers. 	*/
 if|if
 condition|(
 name|bitset
@@ -4220,7 +4220,10 @@ name|mci
 operator|->
 name|mci_flags
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|hvalue
 argument_list|(
 literal|"MIME-Version"
@@ -4232,10 +4235,66 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
 name|putline
 argument_list|(
 literal|"MIME-Version: 1.0"
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hvalue
+argument_list|(
+literal|"Content-Type"
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|obuf
+argument_list|,
+literal|"Content-Type: text/plain; charset=%s"
+argument_list|,
+name|DefaultCharSet
+operator|!=
+name|NULL
+condition|?
+name|DefaultCharSet
+else|:
+literal|"unknown-8bit"
+argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|obuf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|hvalue
+argument_list|(
+literal|"Content-Transfer-Encoding"
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|putline
+argument_list|(
+literal|"Content-Transfer-Encoding: 8bit"
 argument_list|,
 name|mci
 argument_list|)
