@@ -2093,7 +2093,7 @@ name|p
 argument_list|(
 name|tcps_badrst
 argument_list|,
-literal|"\t%lu Ignored RSTs in the window%s\n"
+literal|"\t%lu ignored RSTs in the window%s\n"
 argument_list|)
 expr_stmt|;
 name|p
