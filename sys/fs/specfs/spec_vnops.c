@@ -2817,6 +2817,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|td
 operator|->
 name|td_proc
@@ -2827,6 +2828,11 @@ name|s_ttyvp
 operator|=
 name|NULL
 expr_stmt|;
+name|oldvp
+operator|=
+name|vp
+expr_stmt|;
+block|}
 name|VI_UNLOCK
 argument_list|(
 name|vp
@@ -2840,10 +2846,6 @@ name|td_proc
 operator|->
 name|p_session
 argument_list|)
-expr_stmt|;
-name|oldvp
-operator|=
-name|vp
 expr_stmt|;
 block|}
 name|sx_xunlock
