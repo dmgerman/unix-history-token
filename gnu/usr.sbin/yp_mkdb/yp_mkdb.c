@@ -4,7 +4,7 @@ comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Rebe
 end_comment
 
 begin_comment
-comment|/*  * $Id: yp_mkdb.c,v 1.2 1995/03/31 19:45:13 wpaul Exp $  */
+comment|/*  * $Id: yp_mkdb.c,v 1.3 1995/05/30 05:05:26 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -988,6 +988,23 @@ name|r
 index|]
 operator|!=
 literal|'\t'
+condition|)
+break|break;
+if|if
+condition|(
+name|Buffer
+index|[
+name|r
+index|]
+operator|==
+literal|'+'
+operator|||
+name|Buffer
+index|[
+name|r
+index|]
+operator|==
+literal|'-'
 condition|)
 break|break;
 name|key
