@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.94 (Berkeley) %G%"
+literal|"@(#)conf.c	8.95 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8063,7 +8063,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SOLARIS_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Solaris versions prior through 2.3 don't properly deliver a **	canonical h_name field.  This tries to work around it. */
+comment|/* **  SOLARIS_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Solaris versions at least through 2.3 don't properly deliver a **	canonical h_name field.  This tries to work around it. */
 end_comment
 
 begin_ifdef
@@ -8071,6 +8071,13 @@ ifdef|#
 directive|ifdef
 name|SOLARIS
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|struct
