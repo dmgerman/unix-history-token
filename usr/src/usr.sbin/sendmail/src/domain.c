@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.14 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.15 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.14 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.15 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,6 +531,8 @@ operator|&&
 name|nmx
 operator|<
 name|MAXMXHOSTS
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -823,11 +825,10 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|nmx
+operator|=
 literal|1
-operator|)
-return|;
+expr_stmt|;
 block|}
 comment|/* sort the records */
 for|for
@@ -1017,6 +1018,21 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* if we have a default lowest preference, include that */
+if|if
+condition|(
+name|FallBackMX
+operator|!=
+name|NULL
+condition|)
+name|mxhosts
+index|[
+name|nmx
+operator|++
+index|]
+operator|=
+name|FallBackMX
+expr_stmt|;
 return|return
 operator|(
 name|nmx
