@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.15 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -678,7 +678,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* uses 6 rows and 10 cols */
+comment|/* uses 3 rows and 10 cols */
 end_comment
 
 begin_define
@@ -728,11 +728,11 @@ begin_define
 define|#
 directive|define
 name|GENSTATROW
-value|14
+value|11
 end_define
 
 begin_comment
-comment|/* uses 9 rows and 11 cols */
+comment|/* uses 8 rows and 11 cols */
 end_comment
 
 begin_define
@@ -1545,45 +1545,6 @@ argument_list|)
 expr_stmt|;
 name|mvprintw
 argument_list|(
-name|FILLSTATROW
-operator|+
-literal|3
-argument_list|,
-name|FILLSTATCOL
-operator|+
-literal|7
-argument_list|,
-literal|" xf"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|FILLSTATROW
-operator|+
-literal|4
-argument_list|,
-name|FILLSTATCOL
-operator|+
-literal|7
-argument_list|,
-literal|"nxf"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|FILLSTATROW
-operator|+
-literal|5
-argument_list|,
-name|FILLSTATCOL
-operator|+
-literal|7
-argument_list|,
-literal|"%%xf"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
 name|GRAPHROW
 argument_list|,
 name|GRAPHCOL
@@ -1812,6 +1773,23 @@ parameter_list|(
 name|fld
 parameter_list|)
 value|{t = s.nchstats.fld; s.nchstats.fld -= s1.nchstats.fld; \ 	if(state == TIME) s1.nchstats.fld = t;}
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUTRATE
+parameter_list|(
+name|fld
+parameter_list|,
+name|l
+parameter_list|,
+name|c
+parameter_list|,
+name|w
+parameter_list|)
+define|\
+value|Y(fld); \ 	putint((int)((float)s.fld/etime + 0.5), l, c, w)
 end_define
 
 begin_define
@@ -2712,13 +2690,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_swtch
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_swtch
 argument_list|,
@@ -2729,13 +2703,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_trap
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_trap
 argument_list|,
@@ -2748,13 +2718,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_syscall
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_syscall
 argument_list|,
@@ -2767,13 +2733,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_intr
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_intr
 argument_list|,
@@ -2786,13 +2748,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_pdma
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_pdma
 argument_list|,
@@ -2805,13 +2763,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_soft
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_soft
 argument_list|,
@@ -2824,13 +2778,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|vmstat
-operator|.
-name|faults
-argument_list|,
-name|oldvmstat
+name|Vmstat
 operator|.
 name|faults
 argument_list|,
@@ -2843,13 +2793,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|vmstat
-operator|.
-name|cow_faults
-argument_list|,
-name|oldvmstat
+name|Vmstat
 operator|.
 name|cow_faults
 argument_list|,
@@ -2862,13 +2808,9 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|vmstat
-operator|.
-name|pageins
-argument_list|,
-name|oldvmstat
+name|Vmstat
 operator|.
 name|pageins
 argument_list|,
@@ -2883,13 +2825,9 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|vmstat
-operator|.
-name|pageouts
-argument_list|,
-name|oldvmstat
+name|Vmstat
 operator|.
 name|pageouts
 argument_list|,
@@ -2904,13 +2842,9 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_swpin
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_swpin
 argument_list|,
@@ -2918,7 +2852,6 @@ name|PAGEROW
 operator|+
 literal|2
 argument_list|,
-comment|/* - */
 name|PAGECOL
 operator|+
 literal|15
@@ -2926,13 +2859,10 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+comment|/* - */
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_swpout
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_swpout
 argument_list|,
@@ -2940,7 +2870,6 @@ name|PAGEROW
 operator|+
 literal|2
 argument_list|,
-comment|/* - */
 name|PAGECOL
 operator|+
 literal|20
@@ -2948,13 +2877,10 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+comment|/* - */
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_pgpgin
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_pgpgin
 argument_list|,
@@ -2962,7 +2888,6 @@ name|PAGEROW
 operator|+
 literal|3
 argument_list|,
-comment|/* ? */
 name|PAGECOL
 operator|+
 literal|5
@@ -2970,13 +2895,10 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+comment|/* ? */
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_pgpgout
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_pgpgout
 argument_list|,
@@ -2984,7 +2906,6 @@ name|PAGEROW
 operator|+
 literal|3
 argument_list|,
-comment|/* ? */
 name|PAGECOL
 operator|+
 literal|10
@@ -2992,13 +2913,10 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+comment|/* ? */
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_pswpin
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_pswpin
 argument_list|,
@@ -3006,7 +2924,6 @@ name|PAGEROW
 operator|+
 literal|3
 argument_list|,
-comment|/* - */
 name|PAGECOL
 operator|+
 literal|15
@@ -3014,13 +2931,10 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+comment|/* - */
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_pswpout
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_pswpout
 argument_list|,
@@ -3028,7 +2942,6 @@ name|PAGEROW
 operator|+
 literal|3
 argument_list|,
-comment|/* - */
 name|PAGECOL
 operator|+
 literal|20
@@ -3036,13 +2949,10 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putrate
+comment|/* - */
+name|PUTRATE
 argument_list|(
-name|vmstat
-operator|.
-name|reactivations
-argument_list|,
-name|oldvmstat
+name|Vmstat
 operator|.
 name|reactivations
 argument_list|,
@@ -3055,13 +2965,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_xsfrec
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_xsfrec
 argument_list|,
@@ -3076,13 +2982,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_xifrec
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_xifrec
 argument_list|,
@@ -3097,13 +2999,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_pgfrec
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_pgfrec
 argument_list|,
@@ -3118,13 +3016,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_dfree
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_dfree
 argument_list|,
@@ -3139,13 +3033,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|cnt
-operator|.
-name|v_seqfree
-argument_list|,
-name|oldcnt
+name|Cnt
 operator|.
 name|v_seqfree
 argument_list|,
@@ -3160,13 +3050,9 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|putrate
+name|PUTRATE
 argument_list|(
-name|vmstat
-operator|.
-name|zero_fill_count
-argument_list|,
-name|oldvmstat
+name|Vmstat
 operator|.
 name|zero_fill_count
 argument_list|,
@@ -3177,7 +3063,56 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/******* begin XXX 	putrate(cnt.v_nzfod, oldcnt.v_nzfod, FILLSTATROW + 1, FILLSTATCOL, 6); 	putrate(cnt.v_exfod, oldcnt.v_exfod, FILLSTATROW + 3, 		FILLSTATCOL, 6); 	putrate(cnt.v_nexfod, oldcnt.v_nexfod, FILLSTATROW + 4, 		FILLSTATCOL, 6); 	putfloat ( 		cnt.v_nzfod == 0 ? 			0.0 		: state != RUN ? 			( 100.0 * cnt.v_zfod / cnt.v_nzfod ) 		: cnt.v_nzfod == oldcnt.v_nzfod ? 			0.0 		: 			( 100.0 * (cnt.v_zfod-oldcnt.v_zfod) 			/ (cnt.v_nzfod-oldcnt.v_nzfod) ) 		, FILLSTATROW + 2 		, FILLSTATCOL 		, 6 		, 2 		, 1 	); 	putfloat ( 		cnt.v_nexfod == 0 ? 			0.0 		: state != RUN ? 			( 100.0 * cnt.v_exfod / cnt.v_nexfod ) 		: cnt.v_nexfod == oldcnt.v_nexfod ? 			0.0 		: 			( 100.0 * (cnt.v_exfod-oldcnt.v_exfod) 			/ (cnt.v_nexfod-oldcnt.v_nexfod) ) 		, FILLSTATROW + 5 		, FILLSTATCOL 		, 6 		, 2 		, 1 	); 	******* end XXX */
+name|PUTRATE
+argument_list|(
+name|Cnt
+operator|.
+name|v_nzfod
+argument_list|,
+name|FILLSTATROW
+operator|+
+literal|1
+argument_list|,
+name|FILLSTATCOL
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+name|putfloat
+argument_list|(
+name|cnt
+operator|.
+name|v_nzfod
+operator|==
+literal|0
+condition|?
+literal|0.0
+else|:
+operator|(
+literal|100.0
+operator|*
+name|cnt
+operator|.
+name|v_zfod
+operator|/
+name|cnt
+operator|.
+name|v_nzfod
+operator|)
+argument_list|,
+name|FILLSTATROW
+operator|+
+literal|2
+argument_list|,
+name|FILLSTATCOL
+argument_list|,
+literal|6
+argument_list|,
+literal|2
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|mvprintw
 argument_list|(
 name|DISKROW
