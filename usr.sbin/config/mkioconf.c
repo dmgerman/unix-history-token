@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.42 1998/09/16 09:34:07 dfr Exp $"
+literal|"$Id: mkioconf.c,v 1.43 1998/10/16 15:00:18 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3532,14 +3532,6 @@ end_if
 begin_function_decl
 name|char
 modifier|*
-name|shandler
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 name|sirq
 parameter_list|()
 function_decl|;
@@ -4163,7 +4155,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags  drive alive ri_flags reconfig enabled conflicts next */\n"
+literal|"\ /* id     driver    iobase    irq drq      maddr   msiz intr unit   flags  drive alive ri_flags reconfig enabled conflicts next */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4235,7 +4227,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d, %8s, %3d, 0x%04X, %5d,    0,       0,       0, %6d, %8d,   0 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d,   0, %3d, 0x%04X, %5d,    0,       0,       0, %6d, %8d,   0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4255,11 +4247,6 @@ argument_list|,
 name|mp
 operator|->
 name|d_msize
-argument_list|,
-name|shandler
-argument_list|(
-name|mp
-argument_list|)
 argument_list|,
 name|dp
 operator|->
@@ -4350,7 +4337,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\ /* id     driver    iobase    irq drq      maddr   msiz      intr unit   flags scsiid alive ri_flags reconfig enabled conflicts next */\n"
+literal|"\ /* id     driver    iobase    irq drq      maddr   msiz intr unit   flags scsiid alive ri_flags reconfig enabled conflicts next */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4487,7 +4474,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%6s, %2d, C 0x%05X, %5d, %8s, %3d, 0x%04X,     0,    0,       0,       0, %6d, %8d,   0 },\n"
+literal|"%6s, %2d, C 0x%05X, %5d,   0, %3d, 0x%04X,     0,    0,       0,       0, %6d, %8d,   0 },\n"
 argument_list|,
 name|sirq
 argument_list|(
@@ -4507,11 +4494,6 @@ argument_list|,
 name|dp
 operator|->
 name|d_msize
-argument_list|,
-name|shandler
-argument_list|(
-name|dp
-argument_list|)
 argument_list|,
 name|dp
 operator|->
@@ -5081,70 +5063,6 @@ end_function
 begin_comment
 comment|/*  * XXX - there should be a general function to print devtabs instead of these  * little pieces of it.  */
 end_comment
-
-begin_function
-name|char
-modifier|*
-name|shandler
-parameter_list|(
-name|dp
-parameter_list|)
-specifier|register
-name|struct
-name|device
-modifier|*
-name|dp
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|buf
-index|[
-literal|32
-operator|+
-literal|1
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|dp
-operator|->
-name|d_vec
-operator|==
-name|NULL
-operator|||
-name|dp
-operator|->
-name|d_vec
-operator|->
-name|id
-operator|==
-name|NULL
-condition|)
-return|return
-literal|"NULL"
-return|;
-comment|/* 	 * This is for ISA.  We only support one interrupt handler in the 	 * devtabs.  Handlers in the config file after the first for each 	 * device  are ignored.  Special handlers may be registered at 	 * runtime. 	 */
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%.32s"
-argument_list|,
-name|dp
-operator|->
-name|d_vec
-operator|->
-name|id
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|buf
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 name|char
