@@ -2418,10 +2418,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|msgYesNo
 argument_list|(
 literal|"Do you want to select a default security profile for\n"
-literal|"this host (\"medium\" security being the default)?"
+literal|"this host (select No for \"medium\" security)?"
 argument_list|)
 condition|)
 name|configSecurityProfile
