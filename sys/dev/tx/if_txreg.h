@@ -270,6 +270,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_CFCS_IOEN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* IO Sapce Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CFCS_MAEN
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Memory Space Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_CFCS_BMEN
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Bus Master Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_CONF_WRITE
 parameter_list|(
 name|r

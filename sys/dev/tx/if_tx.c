@@ -12,7 +12,7 @@ comment|/*-  * Copyright (c) 1997 Semen Ustimenko (semen@iclub.nsu.ru)  * All ri
 end_comment
 
 begin_comment
-comment|/*  * EtherPower II 10/100  Fast Ethernet (tx0)  * (aka SMC9432TX based on SMC83c170 EPIC chip)  *   * Thanks are going to Steve Bauer and Jason Wright.  *  * todo:  *	Deal with bus mastering, i.e. i realy don't know what to do with  *	    it and how it can improve performance.  *	Implement FULL IFF_MULTICAST support.  *	Test, test and test again:-(  *	  */
+comment|/*  * EtherPower II 10/100  Fast Ethernet (tx0)  * (aka SMC9432TX based on SMC83c170 EPIC chip)  *   * Thanks are going to Steve Bauer and Jason Wright.  *  * todo:  *	Implement FULL IFF_MULTICAST support.  *	Test, test and test again:-(  *	  */
 end_comment
 
 begin_comment
@@ -2113,6 +2113,9 @@ name|pmembase
 decl_stmt|;
 endif|#
 directive|endif
+name|u_int32_t
+name|command
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -2261,6 +2264,55 @@ name|defined
 argument_list|(
 name|EPIC_USEIOSPACE
 argument_list|)
+name|command
+operator|=
+name|PCI_CONF_READ
+argument_list|(
+name|PCI_CFCS
+argument_list|)
+expr_stmt|;
+name|command
+operator||=
+name|PCI_CFCS_IOEN
+expr_stmt|;
+name|PCI_CONF_WRITE
+argument_list|(
+name|PCI_CFCS
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+name|command
+operator|=
+name|PCI_CONF_READ
+argument_list|(
+name|PCI_CFCS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|command
+operator|&
+name|PCI_CFCS_IOEN
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|": failed to enable memory mapping!\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -2299,6 +2351,55 @@ return|return;
 block|}
 else|#
 directive|else
+name|command
+operator|=
+name|PCI_CONF_READ
+argument_list|(
+name|PCI_CFCS
+argument_list|)
+expr_stmt|;
+name|command
+operator||=
+name|PCI_CFCS_MAEN
+expr_stmt|;
+name|PCI_CONF_WRITE
+argument_list|(
+name|PCI_CFCS
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
+name|command
+operator|=
+name|PCI_CONF_READ
+argument_list|(
+name|PCI_CFCS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|command
+operator|&
+name|PCI_CFCS_MAEN
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|": failed to enable memory mapping!\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -2344,6 +2445,7 @@ return|return;
 block|}
 endif|#
 directive|endif
+comment|/* Do OS independent part, including chip wakeup and reset */
 if|if
 condition|(
 name|epic_common_attach
@@ -2352,6 +2454,25 @@ name|sc
 argument_list|)
 condition|)
 return|return;
+comment|/* Enable BusMaster'ing */
+name|command
+operator|=
+name|PCI_CONF_READ
+argument_list|(
+name|PCI_CFCS
+argument_list|)
+expr_stmt|;
+name|command
+operator||=
+name|PCI_CFCS_BMEN
+expr_stmt|;
+name|PCI_CONF_WRITE
+argument_list|(
+name|PCI_CFCS
+argument_list|,
+name|command
+argument_list|)
+expr_stmt|;
 comment|/* Display ethernet address ,... */
 name|printf
 argument_list|(
@@ -3511,14 +3632,14 @@ operator|*
 operator|)
 name|pool
 expr_stmt|;
-comment|/* Bring the chip out of low-power mode. */
+comment|/* Bring the chip out of low-power mode and reset it. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|GENCTL
 argument_list|,
-literal|0x0000
+name|GENCTL_SOFT_RESET
 argument_list|)
 expr_stmt|;
 comment|/* Workaround for Application Note 7-15 */
