@@ -5668,6 +5668,12 @@ return|return
 name|tcp_rndiss_next
 argument_list|()
 return|;
+default|default:
+name|panic
+argument_list|(
+literal|"cannot happen"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
