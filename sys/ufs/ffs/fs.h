@@ -96,7 +96,18 @@ begin_define
 define|#
 directive|define
 name|MAXMNTLEN
-value|512
+value|472
+end_define
+
+begin_comment
+comment|/*  * The volume name for this filesystem is maintained in fs_volname.  * MAXVOLLEN defines the length of the buffer allocated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXVOLLEN
+value|32
 end_define
 
 begin_comment
@@ -616,6 +627,17 @@ name|MAXMNTLEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
+name|u_char
+name|fs_volname
+index|[
+name|MAXVOLLEN
+index|]
+decl_stmt|;
+comment|/* volume name */
+name|u_int64_t
+name|fs_uuid
+decl_stmt|;
+comment|/* system-wide unique uid */
 comment|/* these fields retain the current block allocation info */
 name|int32_t
 name|fs_cgrotor
