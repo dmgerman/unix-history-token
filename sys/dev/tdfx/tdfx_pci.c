@@ -1659,13 +1659,23 @@ name|nprot
 parameter_list|)
 block|{
 comment|/*  	 * mmap(2) is called by a user process to request that an area of memory 	 * associated with this device be mapped for the process to work with. Nprot 	 * holds the protections requested, PROT_READ, PROT_WRITE, or both. 	 */
+comment|/**** OLD GET CONFIG ****/
+comment|/* struct tdfx_softc* tdfx_info; */
+comment|/* Get the configuration for our card XXX*/
+comment|/*tdfx_info = (struct tdfx_softc*)devclass_get_softc(tdfx_devclass, 			UNIT(minor(dev)));*/
+comment|/************************/
 name|struct
 name|tdfx_softc
 modifier|*
 name|tdfx_info
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* Get the configuration for our card XXX*/
 name|tdfx_info
+index|[
+literal|0
+index|]
 operator|=
 operator|(
 expr|struct
@@ -1676,19 +1686,16 @@ name|devclass_get_softc
 argument_list|(
 name|tdfx_devclass
 argument_list|,
-name|UNIT
-argument_list|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* If, for some reason, its not configured, we bail out */
 if|if
 condition|(
 name|tdfx_info
+index|[
+literal|0
+index|]
 operator|==
 name|NULL
 condition|)
@@ -1718,22 +1725,60 @@ literal|0xff000000
 operator|)
 operator|==
 name|tdfx_info
+index|[
+literal|0
+index|]
 operator|->
 name|addr0
 condition|)
+block|{
 name|offset
 operator|&=
 literal|0xffffff
 expr_stmt|;
-comment|/* See if the Banshee/V3 LFB is being requested */
+return|return
+name|atop
+argument_list|(
+name|rman_get_start
+argument_list|(
+name|tdfx_info
+index|[
+literal|0
+index|]
+operator|->
+name|memrange
+argument_list|)
+operator|+
+name|offset
+argument_list|)
+return|;
+block|}
 if|if
 condition|(
+name|tdfx_count
+operator|>
+literal|1
+condition|)
+block|{
 name|tdfx_info
-operator|->
-name|memrange2
-operator|!=
-name|NULL
-operator|&&
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+expr|struct
+name|tdfx_softc
+operator|*
+operator|)
+name|devclass_get_softc
+argument_list|(
+name|tdfx_devclass
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|offset
 operator|&
@@ -1741,8 +1786,11 @@ literal|0xff000000
 operator|)
 operator|==
 name|tdfx_info
+index|[
+literal|1
+index|]
 operator|->
-name|addr1
+name|addr0
 condition|)
 block|{
 name|offset
@@ -1755,59 +1803,26 @@ argument_list|(
 name|rman_get_start
 argument_list|(
 name|tdfx_info
-operator|->
-name|memrange2
-argument_list|)
-operator|+
-name|offset
-argument_list|)
-return|;
-block|}
-if|if
-condition|(
-operator|(
-name|offset
-operator|>=
-literal|0x1000000
-operator|)
-operator|||
-operator|(
-name|offset
-operator|<
-literal|0
-operator|)
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"tdfx: offset %x out of range\n"
-argument_list|,
-name|offset
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-operator|-
+index|[
 literal|1
-return|;
-block|}
-comment|/* atop -> address to page 	 * rman_get_start, get the (struct resource*)->r_start member, 	 * the mapping base address. 	 */
-return|return
-name|atop
-argument_list|(
-name|rman_get_start
-argument_list|(
-name|tdfx_info
+index|]
 operator|->
 name|memrange
 argument_list|)
 operator|+
 name|offset
 argument_list|)
+return|;
+block|}
+block|}
+comment|/* See if the Banshee/V3 LFB is being requested */
+comment|/*if(tdfx_info->memrange2 != NULL&& (offset& 0xff000000) == 			tdfx_info->addr1) { 	  	offset&= 0xffffff; 		return atop(rman_get_start(tdfx_info[1]->memrange2) + offset); 	}*/
+comment|/* VoodooNG code */
+comment|/* The ret call */
+comment|/* atop -> address to page 	 * rman_get_start, get the (struct resource*)->r_start member, 	 * the mapping base address. 	 */
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function
