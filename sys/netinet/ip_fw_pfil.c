@@ -348,6 +348,11 @@ name|args
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DUMMYNET_LOADED
+operator|&&
+operator|(
 name|dn_tag
 operator|=
 name|m_tag_find
@@ -359,10 +364,7 @@ name|PACKET_TAG_DUMMYNET
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dn_tag
+operator|)
 operator|!=
 name|NULL
 condition|)
@@ -781,6 +783,11 @@ name|args
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DUMMYNET_LOADED
+operator|&&
+operator|(
 name|dn_tag
 operator|=
 name|m_tag_find
@@ -792,10 +799,7 @@ name|PACKET_TAG_DUMMYNET
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dn_tag
+operator|)
 operator|!=
 name|NULL
 condition|)
