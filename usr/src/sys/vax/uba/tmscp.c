@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.12 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.13 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -70,18 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"file.h"
 end_include
 
@@ -125,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|"uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tprintf.h"
 end_include
 
 begin_include
@@ -366,10 +360,10 @@ name|short
 name|tms_format
 decl_stmt|;
 comment|/* the unit's current format (density) */
-name|caddr_t
-name|tms_ctty
+name|tpr_t
+name|tms_tpr
 decl_stmt|;
-comment|/* user's controlling tty (vnode) */
+comment|/* tprintf handle */
 block|}
 name|tms_info
 index|[
@@ -2962,30 +2956,10 @@ literal|1
 expr_stmt|;
 name|tms
 operator|->
-name|tms_ctty
+name|tms_tpr
 operator|=
-call|(
-name|caddr_t
-call|)
-argument_list|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SCTTY
-condition|?
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_session
-operator|->
-name|s_ttyvp
-else|:
-literal|0
-argument_list|)
+name|tprintf_open
+argument_list|()
 expr_stmt|;
 name|s
 operator|=
@@ -3556,6 +3530,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|tprintf_close
+argument_list|(
+name|tms
+operator|->
+name|tms_tpr
+argument_list|)
+expr_stmt|;
 name|tms
 operator|->
 name|tms_openf
@@ -4461,7 +4442,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ctty
+name|tms_tpr
 argument_list|,
 literal|"tms%d: hard error bn%d\n"
 argument_list|,
@@ -6211,7 +6192,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ctty
+name|tms_tpr
 argument_list|,
 literal|"tms%d: hard error bn%d: OFFLINE\n"
 argument_list|,
@@ -6234,7 +6215,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ctty
+name|tms_tpr
 argument_list|,
 literal|"tms%d: hard error: OFFLINE\n"
 argument_list|,
@@ -6821,7 +6802,7 @@ name|tprintf
 argument_list|(
 name|tms
 operator|->
-name|tms_ctty
+name|tms_tpr
 argument_list|,
 literal|"tms%d: hard error bn%d\n"
 argument_list|,
