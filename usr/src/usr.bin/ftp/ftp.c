@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.35 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -730,7 +730,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"Notice: set type-of-service failed: %m"
+literal|"ftp: setsockopt TOS (ignored)"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5872,7 +5872,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"Notice: set type-of-service failed: %m"
+literal|"ftp: setsockopt TOS (ignored)"
 argument_list|)
 expr_stmt|;
 end_if
@@ -6056,7 +6056,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"Notice: set type-of-service failed: %m"
+literal|"ftp: setsockopt TOS (ignored)"
 argument_list|)
 expr_stmt|;
 endif|#
