@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrtoeol.c	5.10 (Berkeley) %G%"
+literal|"@(#)clrtoeol.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,46 @@ name|win
 operator|->
 name|curx
 expr_stmt|;
+if|if
+condition|(
+name|win
+operator|->
+name|lines
+index|[
+name|y
+index|]
+operator|->
+name|flags
+operator|&
+name|__ISPASTEOL
+condition|)
+block|{
+if|if
+condition|(
+name|y
+operator|<
+name|win
+operator|->
+name|maxy
+operator|-
+literal|1
+condition|)
+block|{
+name|y
+operator|++
+expr_stmt|;
+name|x
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+block|}
 name|end
 operator|=
 operator|&
@@ -235,9 +275,7 @@ name|win
 argument_list|,
 name|y
 argument_list|,
-name|win
-operator|->
-name|curx
+name|x
 argument_list|,
 name|win
 operator|->
