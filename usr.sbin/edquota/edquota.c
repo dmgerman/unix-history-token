@@ -523,7 +523,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|30
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 if|if
