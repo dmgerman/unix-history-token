@@ -148,6 +148,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -261,7 +267,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -290,9 +296,48 @@ begin_decl_stmt
 name|int
 name|ohcidebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ohci
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB ohci"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_ohci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ohcidebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"ohci debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -1173,7 +1218,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -3924,7 +3969,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -4130,7 +4175,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -4624,7 +4669,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 name|ohci_softc_t
 modifier|*
 name|sc
@@ -4661,7 +4706,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function
@@ -5452,7 +5497,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -5595,7 +5640,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 name|DPRINTF
 argument_list|(
 operator|(
@@ -5637,7 +5682,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -6756,7 +6801,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -6801,7 +6846,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 name|ohci_dumpregs
 argument_list|(
 name|sc
@@ -7525,7 +7570,7 @@ name|xfer
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -7629,7 +7674,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -8154,7 +8199,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function
@@ -9327,7 +9372,7 @@ expr_stmt|;
 comment|/* force hardware skip */
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 name|DPRINTFN
 argument_list|(
 literal|1
@@ -12506,7 +12551,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -13091,7 +13136,7 @@ name|data
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ohcidebug

@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -170,7 +176,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UKBD_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -199,9 +205,48 @@ begin_decl_stmt
 name|int
 name|ukbddebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ukbd
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB ukbd"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_ukbd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ukbddebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"ukbd debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -4084,7 +4129,7 @@ literal|0
 return|;
 ifdef|#
 directive|ifdef
-name|UKBD_DEBUG
+name|USB_DEBUG
 for|for
 control|(
 name|i
@@ -4212,7 +4257,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* UKBD_DEBUG */
+comment|/* USB_DEBUG */
 if|if
 condition|(
 name|state
@@ -6396,7 +6441,7 @@ argument_list|)
 return|;
 ifdef|#
 directive|ifdef
-name|UKBD_DEBUG
+name|USB_DEBUG
 case|case
 name|USB_SETDEBUG
 case|:

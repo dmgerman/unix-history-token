@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -260,6 +266,28 @@ directive|include
 file|<dev/usb/usb_quirks.h>
 end_include
 
+begin_comment
+comment|/* Define this unconditionally in case a kernel module is loaded that  * has been compiled with debugging options.  */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|usb
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB debugging"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -296,10 +324,31 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|usbdebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"usb debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -317,7 +366,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OHCI_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -1904,9 +1953,6 @@ operator|&
 literal|0x000000ff
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UHCI_DEBUG
 name|uhcidebug
 operator|=
 operator|(
@@ -1924,11 +1970,6 @@ operator|)
 operator|>>
 literal|8
 expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|OHCI_DEBUG
 name|ohcidebug
 operator|=
 operator|(
@@ -1946,8 +1987,6 @@ operator|)
 operator|>>
 literal|16
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 endif|#
 directive|endif

@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -140,7 +146,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -273,9 +279,48 @@ begin_decl_stmt
 name|int
 name|umassdebug
 init|=
-name|UDMASS_ALL
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|umass
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB umass"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_umass
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|umassdebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"umass debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -429,7 +474,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|UMASS_DEBUG
+name|USB_DEBUG
 end_ifndef
 
 begin_define
@@ -1346,7 +1391,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -2094,7 +2139,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_comment
@@ -2832,7 +2877,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 name|printf
 argument_list|(
 literal|", "
@@ -3162,7 +3207,7 @@ name|bEndpointAddress
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|UGETW
@@ -3578,7 +3623,7 @@ name|umass_cbi_state
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 block|}
 else|else
 block|{
@@ -3659,7 +3704,7 @@ name|umass_rbc_transform
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 else|else
 name|panic
 argument_list|(
@@ -8274,7 +8319,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|ccb
@@ -8543,7 +8588,7 @@ return|;
 block|}
 ifndef|#
 directive|ifndef
-name|UMASS_DEBUG
+name|USB_DEBUG
 if|if
 condition|(
 name|bootverbose
@@ -10105,7 +10150,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 name|struct
 name|umass_softc
 modifier|*
@@ -11454,7 +11499,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UMASS_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_function

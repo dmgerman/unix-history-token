@@ -165,6 +165,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -195,7 +201,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UFM_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -224,9 +230,48 @@ begin_decl_stmt
 name|int
 name|ufmdebug
 init|=
-literal|100
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ufm
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB ufm"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_ufm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ufmdebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"ufm debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#

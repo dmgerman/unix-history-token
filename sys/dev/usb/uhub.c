@@ -92,6 +92,12 @@ directive|include
 file|"bus_if.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -141,7 +147,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHUB_DEBUG
+name|USB_DEBUG
 end_ifdef
 
 begin_define
@@ -167,10 +173,52 @@ value|if (uhubdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|uhubdebug
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_usb
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|uhub
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB uhub"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_uhub
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|uhubdebug
+argument_list|,
+literal|0
+argument_list|,
+literal|"uhub debug level"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
