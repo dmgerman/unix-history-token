@@ -1781,16 +1781,6 @@ argument_list|(
 literal|"ffs_reload: dirty1"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * disk device.  See ffs_mountfs() for more details. 	 */
-if|if
-condition|(
-name|vn_isdisk
-argument_list|(
-name|devvp
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
 name|vfs_object_create
 argument_list|(
 name|devvp
@@ -2634,16 +2624,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * disk device. 	 * Note that it is optional that the backing device be VMIOed.  This 	 * increases the opportunity for metadata caching. 	 */
-if|if
-condition|(
-name|vn_isdisk
-argument_list|(
-name|devvp
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
+comment|/* 	 * Note that it is optional that the backing device be VMIOed.  This 	 * increases the opportunity for metadata caching. 	 */
 name|vfs_object_create
 argument_list|(
 name|devvp
