@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_glue.c	8.7 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_glue.c	8.8 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_include
@@ -1060,7 +1060,7 @@ condition|(
 operator|!
 name|enableswap
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1069,6 +1069,10 @@ operator|&
 name|proc0
 argument_list|,
 name|PVM
+argument_list|,
+literal|"noswap"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1166,7 +1170,7 @@ name|SDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"sched: running, procp %x pri %d\n"
+literal|"scheduler: running, procp %x pri %d\n"
 argument_list|,
 name|pp
 argument_list|,
@@ -1187,7 +1191,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sleep
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -1196,6 +1200,10 @@ operator|&
 name|proc0
 argument_list|,
 name|PVM
+argument_list|,
+literal|"scheduler"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1340,7 +1348,7 @@ name|SDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"sched: no room for pid %d(%s), free %d\n"
+literal|"scheduler: no room for pid %d(%s), free %d\n"
 argument_list|,
 name|p
 operator|->
@@ -1382,7 +1390,7 @@ name|SDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"sched: room again, free %d\n"
+literal|"scheduler: room again, free %d\n"
 argument_list|,
 name|cnt
 operator|.
@@ -1914,7 +1922,8 @@ name|event
 parameter_list|,
 name|ruptible
 parameter_list|)
-name|int
+name|void
+modifier|*
 name|event
 decl_stmt|;
 name|boolean_t
@@ -1955,16 +1964,17 @@ name|curproc
 operator|->
 name|p_thread
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|curproc
 operator|->
 name|p_thread
 argument_list|,
 name|PVM
+argument_list|,
+literal|"thrd_block"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1985,7 +1995,8 @@ name|lock
 parameter_list|,
 name|ruptible
 parameter_list|)
-name|int
+name|void
+modifier|*
 name|event
 decl_stmt|;
 name|simple_lock_t
@@ -1995,6 +2006,12 @@ name|boolean_t
 name|ruptible
 decl_stmt|;
 block|{
+name|int
+name|s
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -2003,12 +2020,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
 name|curproc
 operator|->
 name|p_thread
@@ -2026,14 +2037,15 @@ name|curproc
 operator|->
 name|p_thread
 condition|)
-name|sleep
+name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|event
 argument_list|,
 name|PVM
+argument_list|,
+literal|"thrd_sleep"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2050,7 +2062,8 @@ name|thread_wakeup
 parameter_list|(
 name|event
 parameter_list|)
-name|int
+name|void
+modifier|*
 name|event
 decl_stmt|;
 block|{
@@ -2062,9 +2075,6 @@ argument_list|()
 decl_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|event
 argument_list|)
 expr_stmt|;
