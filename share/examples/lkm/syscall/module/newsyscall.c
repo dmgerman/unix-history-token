@@ -16,31 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include
@@ -59,24 +35,6 @@ begin_include
 include|#
 directive|include
 file|<sys/lkm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_comment
@@ -174,7 +132,7 @@ end_decl_stmt
 begin_expr_stmt
 name|MOD_SYSCALL
 argument_list|(
-literal|"newsyscall_mod"
+name|newsyscall_mod
 argument_list|,
 operator|-
 literal|1
@@ -186,7 +144,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This function is called each time the module is loaded.   Technically,  * we could have made this "lkm_nullcmd" in the "DISPATCH" in "newsyscall()",  * but it's a convenient place to kick a copyright out to the console.  */
+comment|/*  * This function is called each time the module is loaded.   Technically,  * we could have made this "lkm_nullcmd" in the "MOD_DISPATCH" in  * "newsyscall()",  but it's a convenient place to kick a copyright out  * to the console.  */
 end_comment
 
 begin_function
@@ -245,7 +203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "lkm_nullcmd".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
+comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "MOD_DISPATCH" will be called under  * their respective circumstances unless their value is "lkm_nullcmd".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
 end_comment
 
 begin_function
@@ -270,8 +228,10 @@ name|int
 name|ver
 decl_stmt|;
 block|{
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+argument|newsyscall_mod
+argument_list|,
 argument|lkmtp
 argument_list|,
 argument|cmd
