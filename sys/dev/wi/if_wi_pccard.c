@@ -909,8 +909,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|100
+literal|0
 operator|)
 return|;
 block|}
@@ -1009,8 +1008,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|100
+literal|0
 operator|)
 return|;
 block|}
