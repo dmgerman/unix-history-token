@@ -1996,11 +1996,7 @@ argument_list|(
 name|ifm_table
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 comment|/* Now dump the routing table */
 name|printf
@@ -2418,11 +2414,7 @@ argument_list|(
 name|ifm_table
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
