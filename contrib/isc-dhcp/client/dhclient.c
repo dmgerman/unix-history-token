@@ -16321,6 +16321,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|doinitcheck
+condition|)
+name|go_daemon
+argument_list|()
+expr_stmt|;
 name|doinitcheck
 operator|=
 literal|1
