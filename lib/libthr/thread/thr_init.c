@@ -643,6 +643,10 @@ condition|(
 name|tdTemp
 operator|!=
 name|NULL
+operator|&&
+name|tdTemp
+operator|!=
+name|td
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -718,7 +722,6 @@ operator|&
 name|_dead_list
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Insert this thread as the first thread in the active list */
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -730,6 +733,7 @@ argument_list|,
 name|tle
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Initialize the active thread list lock and the 	 * dead threads list lock. 	 */
 name|memset
 argument_list|(
