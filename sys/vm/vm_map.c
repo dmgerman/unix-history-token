@@ -878,7 +878,7 @@ argument_list|,
 operator|&
 name|kmapentobj
 argument_list|,
-name|min
+name|lmin
 argument_list|(
 name|cnt
 operator|.
