@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.4	%G%	*/
+comment|/*	up.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -16,6 +16,23 @@ name|NUP
 operator|>
 literal|0
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SC11
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"up.c.SC11"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  */
@@ -3419,6 +3436,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
