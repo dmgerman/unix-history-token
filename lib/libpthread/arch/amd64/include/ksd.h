@@ -25,6 +25,25 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
+end_include
+
+begin_function_decl
+specifier|extern
+name|int
+name|sysarch
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct_decl
 struct_decl|struct
 name|kse
@@ -268,11 +287,17 @@ modifier|*
 name|ksd
 parameter_list|)
 block|{
-comment|/* 	 * Make it fail; only the kernel can do this on amd64. 	 * This interface is going to be removed.  The KSD 	 * will be set by the kernel when the kse is created. 	 */
 return|return
 operator|(
-operator|-
-literal|1
+name|sysarch
+argument_list|(
+name|AMD64_SET_GSBASE
+argument_list|,
+operator|&
+name|ksd
+operator|->
+name|base
+argument_list|)
 operator|)
 return|;
 block|}
