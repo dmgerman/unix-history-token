@@ -648,6 +648,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_LPTSIZE_EXTENDED
+value|8
+end_define
+
+begin_comment
+comment|/* "Extended" LPT controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_LPTSIZE_NORMAL
+value|4
+end_define
+
+begin_comment
+comment|/* "Normal" LPT controllers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_MDASIZE
 value|16
 end_define
