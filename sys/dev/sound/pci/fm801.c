@@ -934,7 +934,8 @@ literal|"fm801 rdcd: write codec invalid\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 return|return
@@ -3159,6 +3160,24 @@ condition|(
 name|codec
 operator|==
 name|NULL
+condition|)
+goto|goto
+name|oops
+goto|;
+comment|/* 	 * XXX: quick check that device actually has sound capabilities. 	 * The problem is that some cards built around fm801 chip only 	 * have radio tuner onboard, but no sound capabilities. 	 */
+if|if
+condition|(
+name|fm801_rdcd
+argument_list|(
+name|NULL
+argument_list|,
+name|fm801
+argument_list|,
+name|AC97_REG_POWER
+argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 goto|goto
 name|oops
