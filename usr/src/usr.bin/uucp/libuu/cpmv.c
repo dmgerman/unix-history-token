@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpmv.c	5.3 (Berkeley) %G%"
+literal|"@(#)cpmv.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,17 +29,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
 begin_comment
-comment|/***  *	xcp(f1, f2)	copy f1 to f2  *	char *f1, *f2;  *  *	return - 0 ok  |  FAIL failed  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	copy f1 to f2  *  *	return - 0 ok  |  FAIL failed  */
 end_comment
 
 begin_macro
