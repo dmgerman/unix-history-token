@@ -606,25 +606,17 @@ begin_function
 name|int
 name|crc
 parameter_list|(
-name|fd
-parameter_list|,
-name|cval
-parameter_list|,
-name|clen
-parameter_list|)
 name|int
 name|fd
-decl_stmt|;
+parameter_list|,
 name|u_int32_t
 modifier|*
 name|cval
-decl_stmt|,
-decl|*
+parameter_list|,
+name|u_int32_t
+modifier|*
 name|clen
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -785,7 +777,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
