@@ -2458,7 +2458,7 @@ name|i
 decl_stmt|,
 name|challenge_len
 decl_stmt|;
-name|u_int8_t
+name|u_int32_t
 name|challenge
 index|[
 literal|32
