@@ -7991,6 +7991,12 @@ name|v_type
 operator|=
 name|VCHR
 expr_stmt|;
+name|vp
+operator|->
+name|v_bsize
+operator|=
+name|DEV_BSIZE
+expr_stmt|;
 name|addalias
 argument_list|(
 name|vp
