@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.1 1998/04/22 18:10:34 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.2 1998/07/13 09:53:09 bde Exp $ */
 end_comment
 
 begin_comment
@@ -433,7 +433,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|(st == I386_BUS_SPACE_IO)? \ 		inw((u_int16_t)sh + offset) : *((u_int16_t *) sh)
+value|(st == I386_BUS_SPACE_IO)? \ 		inw((u_int16_t)sh + offset) : *((u_int16_t *)(uintptr_t)sh)
 end_define
 
 begin_define
@@ -450,7 +450,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|if (st == I386_BUS_SPACE_IO) outw((u_int16_t)sh + offset, val); else \ 		*((u_int16_t *) sh) = val
+value|if (st == I386_BUS_SPACE_IO) outw((u_int16_t)sh + offset, val); else \ 		*((u_int16_t *)(uintptr_t)sh) = val
 end_define
 
 begin_struct

@@ -6012,7 +6012,7 @@ name|PDCB
 call|)
 argument_list|(
 call|(
-name|ULONG
+name|uintptr_t
 call|)
 argument_list|(
 name|pACB
