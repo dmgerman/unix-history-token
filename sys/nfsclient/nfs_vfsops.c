@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_vfsops.c,v 1.15 1995/06/11 19:31:46 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.3 (Berkeley) 1/4/94  * $Id: nfs_vfsops.c,v 1.16 1995/06/27 11:06:51 dfr Exp $  */
 end_comment
 
 begin_include
@@ -367,6 +367,52 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|int
+name|nfs_iosize
+parameter_list|(
+name|nmp
+parameter_list|)
+name|struct
+name|nfsmount
+modifier|*
+name|nmp
+decl_stmt|;
+block|{
+name|int
+name|iosize
+decl_stmt|;
+comment|/* 	 * Calculate the size used for io buffers.  Use the larger 	 * of the two sizes to minimise nfs requests but make sure 	 * that it is at least one VM page to avoid wasting buffer 	 * space. 	 */
+name|iosize
+operator|=
+name|max
+argument_list|(
+name|nmp
+operator|->
+name|nm_rsize
+argument_list|,
+name|nmp
+operator|->
+name|nm_wsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iosize
+operator|<
+name|NBPG
+condition|)
+name|iosize
+operator|=
+name|NBPG
+expr_stmt|;
+return|return
+name|iosize
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * nfs statfs call  */
 end_comment
@@ -692,15 +738,9 @@ name|sbp
 operator|->
 name|f_iosize
 operator|=
-name|min
+name|nfs_iosize
 argument_list|(
 name|nmp
-operator|->
-name|nm_rsize
-argument_list|,
-name|nmp
-operator|->
-name|nm_wsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -3619,15 +3659,9 @@ name|mnt_stat
 operator|.
 name|f_iosize
 operator|=
-name|min
+name|nfs_iosize
 argument_list|(
 name|nmp
-operator|->
-name|nm_rsize
-argument_list|,
-name|nmp
-operator|->
-name|nm_wsize
 argument_list|)
 expr_stmt|;
 comment|/* 	 * A reference count is needed on the nfsnode representing the 	 * remote root.  If this object is not persistent, then backward 	 * traversals of the mount point (i.e. "..") will not work if 	 * the nfsnode gets flushed out of the cache. Ufs does not have 	 * this problem, because one can identify root inodes by their 	 * number == ROOTINO (2). 	 */
