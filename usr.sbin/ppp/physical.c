@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.14 1999/05/24 16:39:12 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.15 1999/06/01 19:08:58 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -3981,6 +3981,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|Enabled
+argument_list|(
+name|p
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|,
+name|OPT_KEEPSESSION
+argument_list|)
+operator|||
 name|tcgetpgrp
 argument_list|(
 name|p
@@ -3999,6 +4010,17 @@ name|getpid
 argument_list|()
 expr_stmt|;
 comment|/* So I'll eventually get HUP'd */
+else|else
+name|p
+operator|->
+name|session_owner
+operator|=
+operator|(
+name|pid_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 name|timer_Stop
 argument_list|(
 operator|&
@@ -4117,6 +4139,15 @@ operator|->
 name|fd
 operator|>=
 literal|0
+operator|&&
+operator|*
+name|p
+operator|->
+name|name
+operator|.
+name|full
+operator|==
+literal|'/'
 operator|&&
 name|p
 operator|->
