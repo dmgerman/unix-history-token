@@ -592,6 +592,7 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|__GNUC__
 operator|==
 literal|3
@@ -599,6 +600,11 @@ operator|&&
 name|__GNUC_MINOR__
 operator|>=
 literal|3
+operator|)
+operator|||
+name|__GNUC__
+operator|>=
+literal|4
 end_if
 
 begin_define
