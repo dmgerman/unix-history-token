@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf_norm.c,v 1.75 2003/08/29 01:49:08 dhartmei Exp $ */
+comment|/*	$OpenBSD: pf_norm.c,v 1.75.2.1 2004/04/30 23:28:36 brad Exp $ */
 end_comment
 
 begin_comment
@@ -8519,17 +8519,27 @@ comment|/* FALLTHROUGH */
 default|default:
 name|hlen
 operator|-=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 name|opt
 operator|+=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -9128,17 +9138,27 @@ comment|/* FALLTHROUGH */
 default|default:
 name|hlen
 operator|-=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 name|opt
 operator|+=
+name|MAX
+argument_list|(
 name|opt
 index|[
 literal|1
 index|]
+argument_list|,
+literal|2
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf_ioctl.c,v 1.81.2.1 2004/03/28 01:34:15 brad Exp $ */
+comment|/*	$OpenBSD: pf_ioctl.c,v 1.81.2.2 2004/04/30 23:28:58 brad Exp $ */
 end_comment
 
 begin_comment
@@ -444,7 +444,7 @@ name|u_int32_t
 parameter_list|,
 name|u_int8_t
 parameter_list|,
-name|u_int8_t
+name|u_int32_t
 parameter_list|,
 name|u_int8_t
 parameter_list|,
@@ -2499,7 +2499,7 @@ parameter_list|,
 name|u_int8_t
 name|rule_action
 parameter_list|,
-name|u_int8_t
+name|u_int32_t
 name|rule_number
 parameter_list|,
 name|u_int8_t
