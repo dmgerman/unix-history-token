@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.12	81/03/09	*/
+comment|/*	init_main.c	4.13	81/04/13	*/
 end_comment
 
 begin_include
@@ -320,6 +320,14 @@ name|INFINITY
 expr_stmt|;
 continue|continue;
 block|}
+name|p
+operator|->
+name|p_maxrss
+operator|=
+name|INFINITY
+operator|/
+name|NBPG
+expr_stmt|;
 name|clkstart
 argument_list|()
 expr_stmt|;
