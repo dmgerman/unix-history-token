@@ -336,6 +336,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/metadata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/proc.h>
 end_include
 
