@@ -3969,11 +3969,11 @@ argument_list|,
 name|source
 argument_list|)
 decl_stmt|;
-name|int
+name|intptr_t
 name|ssz
 init|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|f
 operator|->
