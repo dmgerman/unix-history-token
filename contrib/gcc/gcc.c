@@ -16555,7 +16555,7 @@ literal|"/bin/"
 argument_list|,
 literal|"BINUTILS"
 argument_list|,
-literal|0
+name|PREFIX_PRIORITY_LAST
 argument_list|,
 literal|0
 argument_list|,
