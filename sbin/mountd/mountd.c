@@ -266,11 +266,15 @@ begin_comment
 comment|/* Global defs */
 end_comment
 
+begin_function_decl
+name|void
+name|mntsrv
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
-name|mntsrv
-argument_list|()
-decl_stmt|,
 name|umntall_each
 argument_list|()
 decl_stmt|,
@@ -721,30 +725,25 @@ begin_comment
 comment|/*  * The mount rpc service  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|mntsrv
-argument_list|(
+parameter_list|(
 name|rqstp
-argument_list|,
+parameter_list|,
 name|transp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|svc_req
-operator|*
+modifier|*
 name|rqstp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|SVCXPRT
 modifier|*
 name|transp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1539,7 +1538,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Xdr conversion for a dirpath string  */
@@ -1615,7 +1614,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|long
 name|ok
 init|=
 literal|0
