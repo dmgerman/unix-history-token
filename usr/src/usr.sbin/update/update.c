@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)update.c	4.1 (Berkeley) %G%"
+literal|"@(#)update.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,9 +28,15 @@ init|=
 block|{
 literal|"/bin"
 block|,
+literal|"/lib"
+block|,
 literal|"/usr"
 block|,
 literal|"/usr/bin"
+block|,
+literal|"/usr/lib"
+block|,
+literal|"/usr/ucb"
 block|,
 literal|0
 block|, }
