@@ -709,6 +709,26 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
+block|,
+block|{
+comment|/* 		 * The vendor, product and version strings coming from the 		 * controller are null terminated instead of being padded with 		 * spaces. The trailing wildcard character '*' is required. 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"SMSC*"
+block|,
+literal|"USB FDC*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
