@@ -143,6 +143,30 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|isa_pnp_id
+name|fe_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x101ee0d
+block|,
+name|NULL
+block|}
+block|,
+comment|/* CON0101 - Contec C-NET(98)P2-T */
+block|{
+literal|0
+block|,
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|device_method_t
 name|fe_isa_methods
 index|[]
@@ -322,19 +346,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Check isapnp ids */
-if|if
-condition|(
-name|isa_get_vendorid
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Prepare for the softc struct.  */
 name|sc
 operator|=
@@ -352,10 +363,49 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* Check isapnp ids */
+name|error
+operator|=
+name|ISA_PNP_PROBE
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|fe_ids
+argument_list|)
+expr_stmt|;
+comment|/* If the card had a PnP ID that didn't match any we know about */
+if|if
+condition|(
+name|error
+operator|==
+name|ENXIO
+condition|)
+goto|goto
+name|end
+goto|;
+comment|/* If we had some other problem. */
+if|if
+condition|(
+operator|!
+operator|(
+name|error
+operator|==
+literal|0
+operator|||
+name|error
+operator|==
+name|ENOENT
+operator|)
+condition|)
+goto|goto
+name|end
+goto|;
 comment|/* Probe for supported boards.  */
-ifdef|#
-directive|ifdef
-name|PC98
 if|if
 condition|(
 operator|(
@@ -419,8 +469,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -2784,6 +2832,16 @@ name|typestr
 operator|=
 literal|"C-NET(98)P2"
 expr_stmt|;
+comment|/* Non-PnP mode, set static resource from eeprom. */
+if|if
+condition|(
+operator|!
+name|isa_get_vendorid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
 comment|/* Get IRQ configuration from EEPROM.  */
 name|irq
 operator|=
@@ -2834,6 +2892,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Get Duplex-mode configuration from EEPROM.  */
 name|sc
 operator|->
