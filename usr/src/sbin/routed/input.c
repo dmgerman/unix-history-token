@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.7 (Berkeley) %G%"
+literal|"@(#)input.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,9 +657,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * Update if from gateway, shorter, or getting 			 * stale and equivalent. 			 */
+comment|/* 			 * Update if from gateway and different, 			 * shorter, or getting stale and equivalent. 			 */
 if|if
 condition|(
+operator|(
 name|equal
 argument_list|(
 name|from
@@ -669,6 +670,15 @@ name|rt
 operator|->
 name|rt_router
 argument_list|)
+operator|&&
+name|n
+operator|->
+name|rip_metric
+operator|!=
+name|rt
+operator|->
+name|rt_metric
+operator|)
 operator|||
 call|(
 name|unsigned
