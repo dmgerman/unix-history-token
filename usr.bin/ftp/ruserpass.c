@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$	*/
+comment|/*	$Id: ruserpass.c,v 1.7 1997/12/13 20:38:20 pst Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id$"
+literal|"$Id: ruserpass.c,v 1.7 1997/12/13 20:38:20 pst Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -691,6 +691,7 @@ condition|(
 name|token
 argument_list|()
 condition|)
+block|{
 if|if
 condition|(
 operator|*
@@ -737,6 +738,7 @@ condition|)
 goto|goto
 name|next
 goto|;
+block|}
 block|}
 break|break;
 case|case

@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.9 1997/09/15 00:17:38 ache Exp $"
+literal|"$Id: write.c,v 1.10 1997/09/15 00:40:34 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1316,6 +1316,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -1338,6 +1339,7 @@ name|login
 operator|=
 literal|"???"
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

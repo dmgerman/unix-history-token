@@ -175,6 +175,7 @@ index|]
 operator|==
 literal|'-'
 condition|)
+block|{
 if|if
 condition|(
 name|argv
@@ -228,6 +229,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|argv

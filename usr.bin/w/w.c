@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.33 1999/03/31 21:01:39 brian Exp $"
+literal|"$Id: w.c,v 1.34 1999/04/22 23:40:56 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1662,6 +1662,7 @@ condition|(
 operator|!
 name|nflag
 condition|)
+block|{
 if|if
 condition|(
 name|gethostname
@@ -1726,6 +1727,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 for|for
 control|(

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: term.c,v 1.2 1997/08/18 07:27:56 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,6 +314,7 @@ index|]
 operator|==
 literal|'?'
 condition|)
+block|{
 if|if
 condition|(
 name|ttype
@@ -340,6 +341,7 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Find the termcap entry.  If it doesn't exist, ask the user. */
 while|while
 condition|(

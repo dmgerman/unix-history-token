@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: indent.c,v 1.2 1997/07/15 09:50:59 charnier Exp $"
+literal|"$Id: indent.c,v 1.3 1998/10/18 04:46:24 thepish Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -865,18 +865,17 @@ name|input
 operator|==
 literal|0
 condition|)
-block|{
 name|input
 operator|=
 name|stdin
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|output
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|troff
@@ -898,6 +897,7 @@ expr_stmt|;
 name|bakcopy
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

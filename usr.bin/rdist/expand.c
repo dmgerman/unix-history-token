@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: expand.c,v 1.6 1998/04/06 06:18:20 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2402,6 +2402,7 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|*
@@ -2438,6 +2439,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 name|pathp
 operator|=
 name|spathp

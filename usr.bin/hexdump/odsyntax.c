@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: odsyntax.c,v 1.5 1997/07/10 06:48:21 charnier Exp $"
+literal|"$Id: odsyntax.c,v 1.6 1997/11/04 05:33:14 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -737,6 +737,7 @@ condition|(
 operator|*
 name|p
 condition|)
+block|{
 if|if
 condition|(
 operator|*
@@ -769,6 +770,7 @@ expr_stmt|;
 operator|++
 name|p
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

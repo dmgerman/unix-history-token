@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rpc_cout.c,v 1.5 1997/08/06 06:47:39 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2213,6 +2213,7 @@ name|i
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|sizestr
@@ -2279,7 +2280,8 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|size
@@ -2307,6 +2309,7 @@ argument_list|,
 name|sizestr
 argument_list|)
 expr_stmt|;
+block|}
 name|f_print
 argument_list|(
 name|fout
@@ -2415,6 +2418,7 @@ argument_list|,
 literal|"}\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|size
 operator|=

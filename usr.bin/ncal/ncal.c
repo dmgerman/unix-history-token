@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ncal.c,v 1.6 1998/01/15 10:23:34 helbig Exp $"
+literal|"$Id: ncal.c,v 1.7 1999/03/27 21:08:13 helbig Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2857,6 +2857,7 @@ if|if
 condition|(
 name|flag_weeks
 condition|)
+block|{
 if|if
 condition|(
 name|mpl
@@ -2943,6 +2944,7 @@ operator|.
 name|weeks
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

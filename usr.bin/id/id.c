@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: id.c,v 1.6 1998/02/18 17:35:16 steve Exp $"
+literal|"$Id: id.c,v 1.7 1998/08/21 06:47:58 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -766,6 +766,7 @@ operator|)
 operator|!=
 name|rid
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -800,6 +801,7 @@ argument_list|,
 name|eid
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -816,6 +818,7 @@ name|getegid
 argument_list|()
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -850,6 +853,7 @@ argument_list|,
 name|rid
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

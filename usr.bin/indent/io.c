@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: io.c,v 1.3 1997/07/15 09:50:59 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,6 +226,7 @@ name|prefix_blankline_requested
 operator|&&
 name|not_first_line
 condition|)
+block|{
 if|if
 condition|(
 name|swallow_optional_blanklines
@@ -254,6 +255,7 @@ name|n_real_blanklines
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 while|while
 condition|(
@@ -1209,6 +1211,7 @@ operator|+
 literal|1
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|com_st
@@ -1268,6 +1271,7 @@ argument_list|,
 name|output
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|fwrite
 argument_list|(

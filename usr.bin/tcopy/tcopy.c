@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tcopy.c,v 1.4 1997/08/14 06:41:00 charnier Exp $"
+literal|"$Id: tcopy.c,v 1.5 1999/04/30 13:13:32 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,6 +1348,7 @@ if|if
 condition|(
 name|record
 condition|)
+block|{
 if|if
 condition|(
 name|record
@@ -1377,6 +1378,7 @@ argument_list|,
 name|lastrec
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|msg

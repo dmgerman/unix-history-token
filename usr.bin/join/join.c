@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: join.c,v 1.7 1997/07/15 09:57:28 charnier Exp $"
+literal|"$Id: join.c,v 1.8 1997/08/19 15:58:15 jlemon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2360,6 +2360,7 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|lp
@@ -2418,6 +2419,7 @@ name|fieldno
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

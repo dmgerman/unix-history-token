@@ -380,6 +380,7 @@ name|style
 operator|==
 name|NOTSET
 condition|)
+block|{
 if|if
 condition|(
 name|rflag
@@ -404,6 +405,7 @@ name|style
 operator|=
 name|RLINES
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkpar.c,v 1.7 1997/08/28 06:33:53 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1124,6 +1124,7 @@ if|if
 condition|(
 name|nunused
 condition|)
+block|{
 if|if
 condition|(
 name|nunused
@@ -1143,6 +1144,7 @@ argument_list|,
 name|nunused
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

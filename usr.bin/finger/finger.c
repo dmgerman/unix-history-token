@@ -57,7 +57,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: finger.c,v 1.12 1997/07/02 06:34:48 charnier Exp $"
+literal|"$Id: finger.c,v 1.13 1999/05/08 00:46:04 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,6 +648,7 @@ if|if
 condition|(
 name|entries
 condition|)
+block|{
 if|if
 condition|(
 name|lflag
@@ -659,6 +660,7 @@ else|else
 name|sflag_print
 argument_list|()
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
