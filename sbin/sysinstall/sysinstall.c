@@ -4490,22 +4490,18 @@ argument_list|(
 literal|"Couldn't allocate memory\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|uname
-argument_list|(
-operator|&
-name|utsname
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+comment|/* Later.  Our kernels don't say the right thing at present anyway */
+block|if (uname(&utsname) == -1) {
 comment|/* Fake uname entry */
+block|bcopy("FreeBSD", utsname.sysname, strlen("FreeBSD"));     }
+else|#
+directive|else
 name|bcopy
 argument_list|(
-literal|"FreeBSD"
+literal|"FreeBSD-2.0.ALPHA"
 argument_list|,
 name|utsname
 operator|.
@@ -4513,11 +4509,12 @@ name|sysname
 argument_list|,
 name|strlen
 argument_list|(
-literal|"FreeBSD"
+literal|"FreeBSD-2.0.ALPHA"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 comment|/* XXX - libdialog has particularly bad return value checking */
 name|init_dialog
 argument_list|()
