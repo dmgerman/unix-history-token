@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.23 1996/03/29 15:24:04 ache Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.24 1996/05/11 20:48:36 phk Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -103,12 +103,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|USE_CTSRTS
-end_define
 
 begin_function_decl
 specifier|extern
@@ -1924,9 +1918,10 @@ operator|&
 name|rstio
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_CTSRTS
+if|if
+condition|(
+name|VarCtsRts
+condition|)
 name|rstio
 operator|.
 name|c_cflag
@@ -1937,8 +1932,8 @@ name|CCTS_OFLOW
 operator||
 name|CRTS_IFLOW
 expr_stmt|;
-else|#
-directive|else
+else|else
+block|{
 name|rstio
 operator|.
 name|c_cflag
@@ -1951,8 +1946,7 @@ name|c_iflag
 operator||=
 name|IXOFF
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|rstio
 operator|.
 name|c_iflag
@@ -2242,9 +2236,10 @@ operator|&
 name|rstio
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_CTSRTS
+if|if
+condition|(
+name|VarCtsRts
+condition|)
 name|rstio
 operator|.
 name|c_cflag
@@ -2255,16 +2250,13 @@ name|CCTS_OFLOW
 operator||
 name|CRTS_IFLOW
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|rstio
 operator|.
 name|c_cflag
 operator||=
 name|CLOCAL
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -3397,20 +3389,33 @@ name|PARODD
 condition|)
 name|printf
 argument_list|(
-literal|"odd parity\n"
+literal|"odd parity, "
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"even parity\n"
+literal|"even parity, "
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|printf
 argument_list|(
-literal|"none parity\n"
+literal|"no parity, "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"CTS/RTS %s.\n"
+argument_list|,
+operator|(
+name|VarCtsRts
+condition|?
+literal|"on"
+else|:
+literal|"off"
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
