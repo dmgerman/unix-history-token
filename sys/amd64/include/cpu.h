@@ -307,24 +307,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|intr_nesting_level
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|intr_nesting_level
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|void
 name|fork_trampoline

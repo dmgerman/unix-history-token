@@ -22,12 +22,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/globals.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/npx.h>
 end_include
 
@@ -153,30 +147,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|curpcb
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pcb
-modifier|*
-name|curpcb
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* our current running pcb */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|void

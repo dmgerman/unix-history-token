@@ -15,12 +15,6 @@ directive|define
 name|_MACHINE_SEGMENTS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
-
 begin_comment
 comment|/*  * 386 Segmentation Data Structures and definitions  *	William F. Jolitz (william@ernie.berkeley.edu) 6/20/1989  */
 end_comment

@@ -19,12 +19,6 @@ directive|define
 name|_MACHINE_NPX_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
-
 begin_comment
 comment|/* Environment information of floating point unit */
 end_comment
@@ -168,26 +162,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|npxproc
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proc
-modifier|*
-name|npxproc
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int

@@ -16,12 +16,6 @@ name|_MACHINE_TSS_H_
 value|1
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
-
 begin_comment
 comment|/*  * Intel 386 Context Data Type  */
 end_comment
@@ -156,36 +150,6 @@ comment|/* XXX unimplemented .. i/o permission bitmap */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|common_tss
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|i386tss
-name|common_tss
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
