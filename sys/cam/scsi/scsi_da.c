@@ -1176,6 +1176,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
+block|,
+block|{
+comment|/* 		 * SanDisk ImageMate II compact flash 		 * PR: kern/47877 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"SanDisk"
+block|,
+literal|"ImageMate*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
