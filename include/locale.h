@@ -196,6 +196,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|collate_range_cmp
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
