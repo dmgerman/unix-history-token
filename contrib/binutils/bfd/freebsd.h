@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end definitions used by all FreeBSD a.out targets.    Copyright (C) 1990, 1991, 1992, 1996 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* BFD back-end definitions used by all FreeBSD targets.    Copyright (C) 1990, 1991, 1992, 1996, 2000 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -32,7 +36,7 @@ value|(TARGET_PAGE_SIZE + 0x20)
 end_define
 
 begin_comment
-comment|/*  * FreeBSD uses a weird mix of byte orderings for its a_info field.  * Its assembler emits NetBSD style object files, with a big-endian  * a_info.  Its linker seems to accept either byte ordering, but  * emits a little-endian a_info.  *  * Here, we accept either byte ordering, but always produce  * little-endian.  *  * FIXME - Probably we should always produce the _native_ byte  * ordering.  I.e., it should be in the architecture-specific  * file, not here.  But in reality, there is almost zero chance  * that FreeBSD will ever use a.out in a new port.  */
+comment|/*  * FreeBSD uses a weird mix of byte orderings for its a_info field.  * Its assembler emits NetBSD style object files, with a big-endian  * a_info.  Its linker seems to accept either byte ordering, but  * emits a little-endian a_info.  *  * Here, we accept either byte ordering, but always produce  * little-endian.  *  * FIXME - Probably we should always produce the _native_ byte  * ordering.  I.e., it should be in the architecture-specific  * file, not here.  But in reality, there is no chance  * that FreeBSD will ever use a.out in a new port.  */
 end_comment
 
 begin_define
@@ -138,33 +142,51 @@ begin_define
 define|#
 directive|define
 name|MY_bfd_final_link
-value|freebsd_bfd_final_link
+value|MY(bfd_final_link)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MY_write_object_contents
-value|freebsd_write_object_contents
+value|MY(write_object_contents)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|boolean
-name|freebsd_bfd_final_link
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
+name|MY
+parameter_list|(
+name|bfd_final_link
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *
 operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+function_decl|struct bfd_link_info *
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+specifier|static
+name|boolean
+name|MY
+parameter_list|(
+name|write_object_contents
+parameter_list|)
+function_decl|PARAMS
+parameter_list|(
+function_decl|(bfd *abfd
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 specifier|static
@@ -181,21 +203,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|boolean
-name|freebsd_write_object_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_include
 include|#
 directive|include
@@ -205,7 +212,10 @@ end_include
 begin_function
 specifier|static
 name|boolean
-name|freebsd_bfd_final_link
+name|MY
+function|(
+name|bfd_final_link
+function|)
 parameter_list|(
 name|abfd
 parameter_list|,
@@ -350,7 +360,10 @@ end_comment
 begin_function
 specifier|static
 name|boolean
-name|freebsd_write_object_contents
+name|MY
+function|(
+name|write_object_contents
+function|)
 parameter_list|(
 name|abfd
 parameter_list|)
@@ -373,16 +386,6 @@ argument_list|(
 name|abfd
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-name|CHOOSE_RELOC_SIZE
-name|CHOOSE_RELOC_SIZE
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|obj_reloc_entry_size
 argument_list|(
 name|abfd
@@ -390,8 +393,6 @@ argument_list|)
 operator|=
 name|RELOC_STD_SIZE
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Magic number, maestro, please!  */
 switch|switch
 condition|(

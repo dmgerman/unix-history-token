@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* strings -- print the strings of printable characters in files    Copyright (C) 1993, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* strings -- print the strings of printable characters in files    Copyright (C) 1993, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_escape
@@ -52,6 +56,96 @@ directive|include
 file|"libiberty.h"
 end_include
 
+begin_comment
+comment|/* Some platforms need to put stdin into binary mode, to read     binary files.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SETMODE
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_O_BINARY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|_O_BINARY
+end_define
+
+begin_define
+define|#
+directive|define
+name|setmode
+value|_setmode
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|O_BINARY
+end_if
+
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SET_BINARY
+parameter_list|(
+name|f
+parameter_list|)
+value|do { if (!isatty(f)) setmode(f,O_BINARY); } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -65,7 +159,7 @@ name|isgraphic
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& (isprint (c) || isblank (c)))
+value|(isascii (c)&& (isprint (c) || (c) == '\t'))
 end_define
 
 begin_else
@@ -80,7 +174,7 @@ name|isgraphic
 parameter_list|(
 name|c
 parameter_list|)
-value|(isprint (c) || isblank (c))
+value|(isprint (c) || (c) == '\t')
 end_define
 
 begin_endif
@@ -434,6 +528,38 @@ name|files_given
 init|=
 name|false
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
 name|program_name
 operator|=
 name|argv
@@ -541,20 +667,14 @@ operator|<
 literal|1
 condition|)
 block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: invalid number %s\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"invalid number %s"
+argument_list|)
 argument_list|,
 name|optarg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -673,6 +793,8 @@ condition|)
 name|string_min
 operator|=
 name|optc
+operator|-
+literal|'0'
 expr_stmt|;
 else|else
 name|string_min
@@ -715,6 +837,19 @@ name|datasection_only
 operator|=
 name|false
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SET_BINARY
+name|SET_BINARY
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|print_strings
 argument_list|(
 literal|"{standard input}"
@@ -1681,20 +1816,14 @@ operator|*
 name|p
 condition|)
 block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: invalid integer argument %s\n"
-argument_list|,
-name|program_name
+name|_
+argument_list|(
+literal|"invalid integer argument %s"
+argument_list|)
 argument_list|,
 name|s
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1725,7 +1854,10 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
+name|_
+argument_list|(
 literal|"\ Usage: %s [-afov] [-n min-len] [-min-len] [-t {o,x,d}] [-]\n\        [--all] [--print-file-name] [--bytes=min-len] [--radix={o,x,d}]\n\        [--target=bfdname] [--help] [--version] file...\n"
+argument_list|)
 argument_list|,
 name|program_name
 argument_list|)
@@ -1747,7 +1879,12 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"Report bugs to bug-gnu-utils@gnu.org\n"
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|exit
