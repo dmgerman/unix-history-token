@@ -194,18 +194,36 @@ begin_comment
 comment|/* min value for a long */
 end_comment
 
-begin_comment
-comment|/* Maximum/minimum values for types from<machine/include/ansi.h>. */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_ANSI_SOURCE
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|SIZE_T_MAX
+value|UINT_MAX
+end_define
+
 begin_comment
-comment|/* Quad constants must be written as expressions; #define GCC_ME_HARDER. */
+comment|/* max value for a size_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSIZE_T_MAX
+value|INT_MAX
+end_define
+
+begin_comment
+comment|/* max value for a ssize_t */
+end_comment
+
+begin_comment
+comment|/* GCC requires that quad constants be written as expressions. */
 end_comment
 
 begin_define
@@ -240,13 +258,6 @@ end_define
 begin_comment
 comment|/* min value for a quad_t */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZE_T_MAX
-value|UINT_MAX
-end_define
 
 begin_endif
 endif|#
