@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -2846,39 +2846,6 @@ name|TCPS_SYN_RECEIVED
 expr_stmt|;
 name|trimthenstep6
 label|:
-comment|/* 		 * Must not talk to ourselves. 		 */
-if|if
-condition|(
-name|inp
-operator|->
-name|inp_laddr
-operator|.
-name|s_addr
-operator|==
-name|inp
-operator|->
-name|inp_faddr
-operator|.
-name|s_addr
-operator|&&
-name|inp
-operator|->
-name|inp_lport
-operator|==
-name|inp
-operator|->
-name|inp_fport
-condition|)
-block|{
-name|dropsocket
-operator|=
-literal|1
-expr_stmt|;
-comment|/* do an ECONNRESET */
-goto|goto
-name|dropwithreset
-goto|;
-block|}
 comment|/* 		 * Advance ti->ti_seq to correspond to first data byte. 		 * If data, trim to stay within window, 		 * dropping FIN if necessary. 		 */
 name|ti
 operator|->
@@ -3138,24 +3105,10 @@ block|}
 if|if
 condition|(
 name|todrop
-operator|>
+operator|>=
 name|ti
 operator|->
 name|ti_len
-operator|||
-name|todrop
-operator|==
-name|ti
-operator|->
-name|ti_len
-operator|&&
-operator|(
-name|tiflags
-operator|&
-name|TH_FIN
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|tcpstat
