@@ -162,6 +162,32 @@ name|u_short
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks */
+elif|#
+directive|elif
+name|PAGE_SIZE
+operator|==
+literal|16384
+name|u_int
+name|valid
+decl_stmt|;
+comment|/* map of valid DEV_BSIZE chunks */
+name|u_int
+name|dirty
+decl_stmt|;
+comment|/* map of dirty DEV_BSIZE chunks */
+elif|#
+directive|elif
+name|PAGE_SIZE
+operator|==
+literal|32768
+name|u_long
+name|valid
+decl_stmt|;
+comment|/* map of valid DEV_BSIZE chunks */
+name|u_long
+name|dirty
+decl_stmt|;
+comment|/* map of dirty DEV_BSIZE chunks */
 endif|#
 directive|endif
 name|u_int
