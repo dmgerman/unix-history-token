@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.49 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3547,6 +3547,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* default flow control state */
+name|restartany
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* uninitialized... */
 name|send_do
 argument_list|(
 name|TELOPT_LFLOW
@@ -4799,6 +4805,31 @@ operator|)
 operator|)
 condition|)
 block|{
+name|int
+name|newflow
+init|=
+name|ptyibuf
+index|[
+literal|0
+index|]
+operator|&
+name|TIOCPKT_DOSTOP
+condition|?
+literal|1
+else|:
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|newflow
+operator|!=
+name|flowmode
+condition|)
+block|{
+name|flowmode
+operator|=
+name|newflow
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4814,16 +4845,11 @@ name|SB
 argument_list|,
 name|TELOPT_LFLOW
 argument_list|,
-name|ptyibuf
-index|[
-literal|0
-index|]
-operator|&
-name|TIOCPKT_DOSTOP
+name|flowmode
 condition|?
-literal|1
+name|LFLOW_ON
 else|:
-literal|0
+name|LFLOW_OFF
 argument_list|,
 name|IAC
 argument_list|,
@@ -4834,6 +4860,7 @@ name|nfrontp
 operator|+=
 literal|6
 expr_stmt|;
+block|}
 block|}
 name|pcc
 operator|--

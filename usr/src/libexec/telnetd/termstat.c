@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	5.11 (Berkeley) %G%"
+literal|"@(#)termstat.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,18 +303,20 @@ name|nfrontp
 operator|+=
 literal|6
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|tty_restartany
+argument_list|()
+operator|!=
+name|restartany
+condition|)
+block|{
 name|restartany
 operator|=
 name|tty_restartany
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|restartany
-operator|>=
-literal|0
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -341,7 +343,6 @@ argument_list|,
 name|SE
 argument_list|)
 expr_stmt|;
-block|}
 name|nfrontp
 operator|+=
 literal|6

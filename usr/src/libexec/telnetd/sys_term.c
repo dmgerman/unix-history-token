@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.18 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2865,11 +2865,13 @@ else|#
 directive|else
 return|return
 operator|(
+operator|(
 name|termbuf
 operator|.
 name|c_iflag
 operator|&
 name|IXON
+operator|)
 condition|?
 literal|1
 else|:
@@ -2921,11 +2923,13 @@ else|#
 directive|else
 return|return
 operator|(
+operator|(
 name|termbuf
 operator|.
 name|c_iflag
 operator|&
 name|IXANY
+operator|)
 condition|?
 literal|1
 else|:

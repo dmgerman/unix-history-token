@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	5.11 (Berkeley) %G%"
+literal|"@(#)state.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1863,6 +1863,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+name|TELOPT_LFLOW
+case|:
+name|func
+operator|=
+name|localstat
+expr_stmt|;
+break|break;
 block|}
 block|}
 block|}

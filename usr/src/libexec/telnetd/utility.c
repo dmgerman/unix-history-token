@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	5.9 (Berkeley) %G%"
+literal|"@(#)utility.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2309,7 +2309,7 @@ index|]
 condition|)
 block|{
 case|case
-literal|0
+name|LFLOW_OFF
 case|:
 name|sprintf
 argument_list|(
@@ -2320,13 +2320,35 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|LFLOW_ON
 case|:
 name|sprintf
 argument_list|(
 name|nfrontp
 argument_list|,
 literal|" ON"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LFLOW_RESTART_ANY
+case|:
+name|sprintf
+argument_list|(
+name|nfrontp
+argument_list|,
+literal|" RESTART-ANY"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LFLOW_RESTART_XON
+case|:
+name|sprintf
+argument_list|(
+name|nfrontp
+argument_list|,
+literal|" RESTART-XON"
 argument_list|)
 expr_stmt|;
 break|break;
