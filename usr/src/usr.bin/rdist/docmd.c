@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)docmd.c	5.8 (Berkeley) %G%"
+literal|"@(#)docmd.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1340,11 +1340,48 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|error
 argument_list|(
 literal|"connection failed: version numbers don't match\n"
 argument_list|)
 expr_stmt|;
+name|error
+argument_list|(
+literal|"got unexpected input:"
+argument_list|)
+expr_stmt|;
+do|do
+block|{
+name|error
+argument_list|(
+literal|"%c"
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|'\n'
+operator|&&
+name|read
+argument_list|(
+name|rem
+argument_list|,
+name|cp
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|1
+condition|)
+do|;
+block|}
 name|closeconn
 argument_list|()
 expr_stmt|;
