@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	3.40 (Berkeley) %G%"
+literal|"@(#)cmd2.c	3.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,10 @@ block|,
 literal|"k       Move cursor up"
 block|,
 literal|"l       Move cursor right"
+block|,
+literal|"y       Yank"
+block|,
+literal|"p       Put"
 block|,
 literal|"^S      Stop output in current window"
 block|,
