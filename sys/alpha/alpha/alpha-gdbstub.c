@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/****************************************************************************  		THIS SOFTWARE IS NOT COPYRIGHTED     HP offers the following for use in the public domain.  HP makes no    warranty with regard to the software or its performance and the    user accepts the software "AS IS" with all faults.     HP DISCLAIMS ANY WARRANTIES, EXPRESS OR IMPLIED, WITH REGARD    TO THIS SOFTWARE INCLUDING BUT NOT LIMITED TO THE WARRANTIES    OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  ****************************************************************************/
 end_comment
 
