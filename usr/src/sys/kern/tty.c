@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.13	%G%	*/
+comment|/*	tty.c	3.14	%G%	*/
 end_comment
 
 begin_comment
@@ -1712,6 +1712,10 @@ case|:
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2297,6 +2301,10 @@ block|}
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2316,6 +2324,8 @@ begin_expr_stmt
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|rw
 argument_list|)
 specifier|register
 expr|struct
@@ -2344,6 +2354,13 @@ operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|rw
+operator|&
+name|FREAD
+condition|)
+block|{
 while|while
 condition|(
 name|getc
@@ -2368,6 +2385,14 @@ operator|->
 name|t_rawq
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|rw
+operator|&
+name|FWRITE
+condition|)
+block|{
 name|wakeup
 argument_list|(
 operator|(
@@ -2417,6 +2442,14 @@ operator|>=
 literal|0
 condition|)
 empty_stmt|;
+block|}
+if|if
+condition|(
+name|rw
+operator|&
+name|FREAD
+condition|)
+block|{
 while|while
 condition|(
 name|getc
@@ -2445,10 +2478,17 @@ expr_stmt|;
 comment|/* local */
 name|tp
 operator|->
+name|t_rocol
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
 name|t_lstate
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -3181,6 +3221,10 @@ block|{
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 name|c
@@ -3255,6 +3299,10 @@ block|{
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3479,6 +3527,10 @@ block|{
 name|flushtty
 argument_list|(
 name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
 argument_list|)
 expr_stmt|;
 name|tp
