@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)at.c	4.2 (Berkeley) %G%"
+literal|"@(#)at.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,13 +842,14 @@ name|tmp
 operator|==
 literal|'\''
 condition|)
-name|putc
+name|fputs
 argument_list|(
-literal|'\\'
+literal|"'\\''"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+else|else
 name|putc
 argument_list|(
 operator|*
