@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: kernbb.c,v 1.1 1995/03/10 08:53:55 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -508,6 +508,11 @@ name|pn
 index|[
 name|i
 index|]
+operator|&&
+name|func
+index|[
+name|i
+index|]
 condition|)
 block|{
 name|kvm_read
@@ -612,7 +617,27 @@ block|}
 if|if
 condition|(
 operator|!
+name|pn
+index|[
+name|i
+index|]
+condition|)
+name|pn
+index|[
+name|i
+index|]
+operator|=
+literal|"-"
+expr_stmt|;
+if|if
+condition|(
+operator|!
 name|fn
+index|[
+name|i
+index|]
+operator|&&
+name|file
 index|[
 name|i
 index|]
@@ -717,6 +742,21 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|fn
+index|[
+name|i
+index|]
+condition|)
+name|fn
+index|[
+name|i
+index|]
+operator|=
+literal|"-"
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s %5u %s %u %u\n"
