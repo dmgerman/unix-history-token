@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.22 1995/03/15 14:22:05 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.23 1995/03/15 14:44:01 dufault Exp $  */
 end_comment
 
 begin_define
@@ -2533,7 +2533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * scsi_sense_print will decode the sense data into human  * readable form.  Sense handlers can use this to generate  * a report.  This DOES NOT send the closing "\n".  */
+comment|/*  * scsi_sense_print will decode the sense data into human  * readable form.  Sense handlers can use this to generate  * a report.  This NOW DOES send the closing "\n".  */
 end_comment
 
 begin_function
@@ -2869,22 +2869,52 @@ name|asc
 operator|||
 name|ascq
 condition|)
-name|printf
-argument_list|(
-literal|" asc:%x,%x %s"
-argument_list|,
-name|asc
-argument_list|,
-name|ascq
-argument_list|,
+block|{
+name|char
+modifier|*
+name|desc
+init|=
 name|scsi_sense_desc
 argument_list|(
 name|asc
 argument_list|,
 name|ascq
 argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|" asc:%x,%x"
+argument_list|,
+name|asc
+argument_list|,
+name|ascq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|desc
+argument_list|)
+operator|>
+literal|40
+condition|)
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
+empty_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|desc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ext
@@ -3025,6 +3055,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3412,11 +3447,6 @@ argument_list|(
 name|xs
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -3440,11 +3470,6 @@ block|{
 name|scsi_sense_print
 argument_list|(
 name|xs
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3931,6 +3956,48 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|static
+name|sc_printing
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|sc_print_start
+parameter_list|(
+name|sc_link
+parameter_list|)
+name|struct
+name|scsi_link
+modifier|*
+name|sc_link
+decl_stmt|;
+block|{
+name|sc_print_addr
+argument_list|(
+name|sc_link
+argument_list|)
+expr_stmt|;
+name|sc_printing
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|sc_print_finish
+parameter_list|()
+block|{
+name|sc_printing
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Print out the scsi_link structure's address info.  */
 end_comment
@@ -3947,6 +4014,15 @@ modifier|*
 name|sc_link
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|sc_printing
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp

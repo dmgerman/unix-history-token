@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.24 1995/03/16 18:15:49 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.25 1995/03/19 14:29:06 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1849,15 +1849,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Feel free to take this out when everyone is sure this config  * code works well:  */
+comment|/* Feel free to take this out when everyone is sure this config  * code works well.  For now it lets us tell new configurations from  * old ones.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CONFIGD
-parameter_list|()
-value|printf(" is configured at ")
+name|CONFIG_NOISE
 end_define
 
 begin_comment
@@ -1884,11 +1882,6 @@ name|int
 name|bus
 decl_stmt|;
 comment|/* Which bus is this?  Try to find a match in the "scsi_cinit" 	 * table.  If it isn't wired down auto-configure it at the 	 * next available bus. 	 */
-name|printf
-argument_list|(
-literal|"scbus"
-argument_list|)
-expr_stmt|;
 name|bus
 operator|=
 name|SCCONF_UNSPEC
@@ -1956,9 +1949,6 @@ name|unit
 operator|)
 condition|)
 block|{
-name|CONFIGD
-argument_list|()
-expr_stmt|;
 name|bus
 operator|=
 name|scsi_cinit
@@ -1968,6 +1958,18 @@ index|]
 operator|.
 name|bus
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_NOISE
+name|printf
+argument_list|(
+literal|"Choosing drivers for scbus configured at %d\n"
+argument_list|,
+name|bus
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
@@ -1982,13 +1984,6 @@ name|bus
 operator|=
 name|free_bus
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%d: "
-argument_list|,
-name|bus
-argument_list|)
 expr_stmt|;
 return|return
 name|bus
@@ -2132,7 +2127,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CONFIGD
+name|CONFIG_NOISE
 name|printf
 argument_list|(
 literal|"%s is configured at %d\n"
@@ -2220,6 +2215,24 @@ literal|1
 condition|)
 block|{
 return|return;
+block|}
+comment|/* 	 * if the adapter didn't give us this, set a default 	 * (compatibility with old adapter drivers) 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|sc_link_proto
+operator|->
+name|opennings
+operator|)
+condition|)
+block|{
+name|sc_link_proto
+operator|->
+name|opennings
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|sc_link_proto
 operator|->
@@ -2919,12 +2932,6 @@ operator|*
 name|sc_link_proto
 expr_stmt|;
 comment|/* struct copy */
-name|sc_link
-operator|->
-name|opennings
-operator|=
-literal|1
-expr_stmt|;
 name|sc_link
 operator|->
 name|device

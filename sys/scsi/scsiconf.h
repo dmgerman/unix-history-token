@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.19 1995/03/04 20:51:00 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.20 1995/03/16 18:15:50 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -316,17 +316,6 @@ end_comment
 
 begin_comment
 comment|/*  * Format of adapter_info() response data  * e.g. maximum number of entries queuable to a device by the adapter  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AD_INF_MAX_CMDS
-value|0x000000FF
-end_define
-
-begin_comment
-comment|/* 24 bits of other adapter characteristics go here */
 end_comment
 
 begin_comment
@@ -1102,11 +1091,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* XXX dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SDEV_MEDIA_LOADED
-value|0x00000001
+value|0x0001
 end_define
 
 begin_comment
@@ -1117,7 +1110,7 @@ begin_define
 define|#
 directive|define
 name|SDEV_WAITING
-value|0x00000002
+value|0x0002
 end_define
 
 begin_comment
@@ -1128,22 +1121,18 @@ begin_define
 define|#
 directive|define
 name|SDEV_OPEN
-value|0x00000004
+value|0x0004
 end_define
 
 begin_comment
 comment|/* at least 1 open session */
 end_comment
 
-begin_comment
-comment|/* XXX dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think eventually the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|SDEV_BOUNCE
-value|0x00000008
+value|0x0008
 end_define
 
 begin_comment
@@ -1154,22 +1143,33 @@ begin_define
 define|#
 directive|define
 name|SDEV_DBX
-value|0x000000F0
+value|0x00F0
 end_define
 
 begin_comment
-comment|/* debuging flags (scsi_debug.h) */
+comment|/* debugging flags (scsi_debug.h) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SDEV_ONCE_ONLY
-value|0x00010000
+value|0x0100
 end_define
 
 begin_comment
 comment|/* unit can only be opened once */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDEV_BOOTVERBOSE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* be noisy during boot */
 end_comment
 
 begin_comment
@@ -1834,46 +1834,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|errval
 name|scsi_scsi_cmd
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_link
-modifier|*
-name|sc_link
-parameter_list|,
-name|struct
+operator|*
+operator|,
+expr|struct
 name|scsi_generic
-modifier|*
-name|scsi_cmd
-parameter_list|,
+operator|*
+operator|,
 name|u_int32
-name|cmdlen
-parameter_list|,
+operator|,
 name|u_char
-modifier|*
-name|data_addr
-parameter_list|,
+operator|*
+operator|,
 name|u_int32
-name|datalen
-parameter_list|,
+operator|,
 name|u_int32
-name|retries
-parameter_list|,
+operator|,
 name|u_int32
-name|timeout
-parameter_list|,
-name|struct
+operator|,
+expr|struct
 name|buf
-modifier|*
-name|bp
-parameter_list|,
+operator|*
+operator|,
 name|u_int32
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1982,68 +1976,78 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
 modifier|*
 name|scsi_sense_desc
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
-name|asc
-parameter_list|,
+operator|,
 name|int
-name|ascq
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|scsi_sense_print
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_xfer
-modifier|*
-name|xs
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|show_scsi_xs
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_xfer
-modifier|*
-name|xs
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|show_scsi_cmd
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_xfer
-modifier|*
-name|xs
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|show_mem
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|unsigned
 name|char
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|u_int32
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -2052,11 +2056,9 @@ name|__P
 argument_list|(
 operator|(
 name|u_int32
-name|val
 operator|,
 name|u_char
 operator|*
-name|bytes
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2070,7 +2072,6 @@ argument_list|(
 operator|(
 name|u_char
 operator|*
-name|bytes
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2084,7 +2085,6 @@ argument_list|(
 operator|(
 name|u_char
 operator|*
-name|bytes
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2097,11 +2097,9 @@ name|__P
 argument_list|(
 operator|(
 name|u_int32
-name|val
 operator|,
 name|u_char
 operator|*
-name|bytes
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2115,7 +2113,6 @@ argument_list|(
 operator|(
 name|u_char
 operator|*
-name|bytes
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2128,11 +2125,9 @@ name|__P
 argument_list|(
 operator|(
 name|u_int32
-name|val
 operator|,
 name|u_char
 operator|*
-name|bytes
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2146,53 +2141,86 @@ argument_list|(
 operator|(
 name|u_char
 operator|*
-name|bytes
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|sc_print_addr
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_link
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|void
+name|sc_print_start
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|scsi_link
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sc_print_finish
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|scsi_externalize
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_link
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|void
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 name|size_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|scsi_device_register
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|scsi_device
-modifier|*
+operator|*
 name|sd
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.35 1995/03/04 20:50:42 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.36 1995/03/15 14:22:03 dufault Exp $  */
 end_comment
 
 begin_define
@@ -432,14 +432,6 @@ directive|define
 name|CDINIT
 value|0x04
 comment|/* device has been init'd */
-name|u_int32
-name|ad_info
-decl_stmt|;
-comment|/* info about the adapter */
-name|u_int32
-name|cmdscount
-decl_stmt|;
-comment|/* cmds allowed outstanding by board */
 struct|struct
 name|cd_parms
 block|{
@@ -980,80 +972,15 @@ if|if
 condition|(
 name|sc_link
 operator|->
-name|adapter
-operator|->
-name|adapter_info
-condition|)
-block|{
-name|cd
-operator|->
-name|ad_info
-operator|=
-operator|(
-operator|(
-operator|*
-operator|(
-name|sc_link
-operator|->
-name|adapter
-operator|->
-name|adapter_info
-operator|)
-operator|)
-operator|(
-name|sc_link
-operator|->
-name|adapter_unit
-operator|)
-operator|)
-expr_stmt|;
-name|cd
-operator|->
-name|cmdscount
-operator|=
-name|cd
-operator|->
-name|ad_info
-operator|&
-name|AD_INF_MAX_CMDS
-expr_stmt|;
-if|if
-condition|(
-name|cd
-operator|->
-name|cmdscount
+name|opennings
 operator|>
 name|CDOUTSTANDING
 condition|)
-name|cd
-operator|->
-name|cmdscount
-operator|=
-name|CDOUTSTANDING
-expr_stmt|;
-block|}
-else|else
-block|{
-name|cd
-operator|->
-name|ad_info
-operator|=
-literal|1
-expr_stmt|;
-name|cd
-operator|->
-name|cmdscount
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|sc_link
 operator|->
 name|opennings
 operator|=
-name|cd
-operator|->
-name|cmdscount
+name|CDOUTSTANDING
 expr_stmt|;
 comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
 name|cd_get_parms
@@ -1220,6 +1147,14 @@ name|part
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Check that it is still responding and ok. 	 * if the media has been changed this will result in a 	 * "unit attention" error which the error code will 	 * disregard because the SDEV_OPEN flag is not yet set. 	 * Makes sure that we know it if the media has been changed.. 	 */
+name|scsi_test_unit_ready
+argument_list|(
+name|sc_link
+argument_list|,
+name|SCSI_SILENT
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If it's been invalidated, and not everybody has closed it then 	 * forbid re-entry.  (may have changed media) 	 */
 if|if
 condition|(
@@ -1245,15 +1180,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* 	 * Check that it is still responding and ok. 	 * if the media has been changed this will result in a 	 * "unit attention" error which the error code will 	 * disregard because the SDEV_OPEN flag is not yet set 	 */
-name|scsi_test_unit_ready
-argument_list|(
-name|sc_link
-argument_list|,
-name|SCSI_SILENT
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Next time actually take notice of error returns 	 */
+comment|/* 	 * This time actually take notice of error returns 	 */
 name|sc_link
 operator|->
 name|flags
@@ -1303,7 +1230,7 @@ literal|"Device present\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In case it is a funny one, tell it to start 	 * not needed for some drives 	 */
+comment|/* 	 * In case it is a funny one, tell it to start 	 * not needed for some drives 	 * failure here is ignored. 	 */
 name|scsi_start_unit
 argument_list|(
 name|sc_link
@@ -1327,7 +1254,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"started "
+literal|"'start' attempted "
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1381,7 +1308,14 @@ expr_stmt|;
 comment|/* 	 * Check the partition is legal 	 */
 if|if
 condition|(
-operator|(
+name|part
+operator|!=
+name|RAW_PART
+condition|)
+block|{
+comment|/* 	 	 *  Check that the partition CAN exist 	 	 */
+if|if
+condition|(
 name|part
 operator|>=
 name|cd
@@ -1389,13 +1323,6 @@ operator|->
 name|disklabel
 operator|.
 name|d_npartitions
-operator|)
-operator|&&
-operator|(
-name|part
-operator|!=
-name|RAW_PART
-operator|)
 condition|)
 block|{
 name|SC_DEBUG
@@ -1425,10 +1352,9 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 *  Check that the partition exists 	 */
+comment|/* 	 	 *  and that it DOES exist 	 	 */
 if|if
 condition|(
-operator|(
 name|cd
 operator|->
 name|disklabel
@@ -1441,13 +1367,6 @@ operator|.
 name|p_fstype
 operator|==
 name|FS_UNUSED
-operator|)
-operator|&&
-operator|(
-name|part
-operator|!=
-name|RAW_PART
-operator|)
 condition|)
 block|{
 name|SC_DEBUG
@@ -1470,6 +1389,7 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 block|}
 name|cd
 operator|->
