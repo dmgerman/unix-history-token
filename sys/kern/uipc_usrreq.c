@@ -3784,9 +3784,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|vn_finished_write
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 name|vp
 operator|=
 name|nd
