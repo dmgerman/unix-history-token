@@ -129,7 +129,8 @@ name|sha1_ctxt
 operator|*
 operator|,
 specifier|const
-name|caddr_t
+name|u_char
+operator|*
 operator|,
 name|size_t
 operator|)
