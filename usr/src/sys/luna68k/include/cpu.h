@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  * from: hp300/include/cpu.h	7.13 (Berkeley) 12/27/92  *  *	@(#)cpu.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  * from: hp300/include/cpu.h	7.13 (Berkeley) 12/27/92  *  *	@(#)cpu.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -281,6 +281,52 @@ name|setsoftclock
 parameter_list|()
 value|ssir |= SIR_CLOCK
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mmutype
+decl_stmt|,
+name|machineid
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* values for machineid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LUNA_I
+value|1
+end_define
+
+begin_comment
+comment|/* 20Mhz 68030 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LUNA_II
+value|2
+end_define
+
+begin_comment
+comment|/* 25Mhz 68040 */
+end_comment
 
 begin_comment
 comment|/* values for mmutype (assigned for quick testing) */

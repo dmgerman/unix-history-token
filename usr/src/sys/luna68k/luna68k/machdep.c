@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c   7.36 (Berkeley) 2/10/93  *  *	@(#)machdep.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * from: hp300/hp300/machdep.c   7.36 (Berkeley) 2/10/93  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1213,6 +1213,34 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|LUNA2
+if|if
+condition|(
+name|machineid
+operator|==
+name|LUNA_II
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"LUNA-II (25MHz MC68040 CPU+MMU+FPU)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|cpu_model
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|fpptype
@@ -5127,6 +5155,20 @@ name|void
 name|checkfpp
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|LUNA2
+if|if
+condition|(
+name|machineid
+operator|==
+name|LUNA_II
+condition|)
+block|{
+return|return;
+block|}
+endif|#
+directive|endif
 name|SET_INT_FPP
 expr_stmt|;
 comment|/* internal = on, external = off */
@@ -5170,6 +5212,20 @@ decl_stmt|;
 name|int
 name|external_68882
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LUNA2
+if|if
+condition|(
+name|machineid
+operator|==
+name|LUNA_II
+condition|)
+block|{
+return|return;
+block|}
+endif|#
+directive|endif
 name|SET_INT_FPP
 expr_stmt|;
 comment|/* internal = on, external = off */

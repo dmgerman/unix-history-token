@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: hp300/include/pmap.h	7.11 (Berkeley) 12/27/92  *  *	@(#)pmap.h	7.3 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: hp300/include/pmap.h	7.11 (Berkeley) 12/27/92  *  *	@(#)pmap.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -22,12 +22,38 @@ name|LUNA_PAGE_SIZE
 value|NBPG
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LUNA2
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LUNA_SEG_SIZE
+value|(mmutype == MMU_68040 ? 0x40000 : NBSEG)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LUNA_SEG_SIZE
 value|NBSEG
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

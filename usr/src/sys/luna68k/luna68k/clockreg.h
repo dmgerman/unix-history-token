@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  * from: hp300/hp300/clockreg.h	7.4 (Berkeley) 12/27/92  *  *	@(#)clockreg.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  * from: hp300/hp300/clockreg.h	7.4 (Berkeley) 12/27/92  *  *	@(#)clockreg.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -316,6 +316,103 @@ name|i
 parameter_list|)
 value|(((i)>> 4) *10 + ((i)& 0x0F))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LUNA2
+end_ifdef
+
+begin_struct
+struct|struct
+name|bbc2
+block|{
+name|unsigned
+name|char
+name|cal_sec
+decl_stmt|;
+comment|/* secons resistor */
+name|unsigned
+name|char
+name|cal_sec_alarm
+decl_stmt|;
+comment|/* secons alarm resistor */
+name|unsigned
+name|char
+name|cal_min
+decl_stmt|;
+comment|/* minutes resistor */
+name|unsigned
+name|char
+name|cal_min_alarm
+decl_stmt|;
+comment|/* minutes alarm resistor */
+name|unsigned
+name|char
+name|cal_hour
+decl_stmt|;
+comment|/* hours resitor */
+name|unsigned
+name|char
+name|cal_hour_alarm
+decl_stmt|;
+comment|/* hours alarm resitor */
+name|unsigned
+name|char
+name|cal_dow
+decl_stmt|;
+comment|/* day of the weeks */
+name|unsigned
+name|char
+name|cal_day
+decl_stmt|;
+comment|/* days resistor */
+name|unsigned
+name|char
+name|cal_mon
+decl_stmt|;
+comment|/* months resistor */
+name|unsigned
+name|char
+name|cal_year
+decl_stmt|;
+comment|/* years resistor */
+name|unsigned
+name|char
+name|cal_ctl_a
+decl_stmt|;
+comment|/* calender control resistor */
+name|unsigned
+name|char
+name|cal_ctl_b
+decl_stmt|;
+comment|/* calender control resistor */
+name|unsigned
+name|char
+name|cal_ctl_c
+decl_stmt|;
+comment|/* calender control resistor */
+name|unsigned
+name|char
+name|cal_ctl_d
+decl_stmt|;
+comment|/* calender control resistor */
+name|unsigned
+name|char
+name|nvram
+index|[
+literal|50
+index|]
+decl_stmt|;
+comment|/* non-volatile RAM area */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
