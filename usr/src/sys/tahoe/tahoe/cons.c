@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	1.2	86/01/05	*/
+comment|/*	cons.c	1.3	86/11/03	*/
 end_comment
 
 begin_comment
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|"../tahoe/cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/cpu.h"
 end_include
 
 begin_include

@@ -1,10 +1,64 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	1.4	86/10/13	*/
+comment|/*	param.h	1.4	86/11/03	*/
 end_comment
 
 begin_comment
 comment|/*  * Machine dependent constants for TAHOE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENDIAN
+end_ifndef
+
+begin_comment
+comment|/*  * Definitions for byte order,  * according to byte significance from low address to high.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LITTLE
+value|1234
+end_define
+
+begin_comment
+comment|/* least-significant byte first (vax) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIG
+value|4321
+end_define
+
+begin_comment
+comment|/* most-significant byte first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDP
+value|3412
+end_define
+
+begin_comment
+comment|/* LSB first in word, MSW first in long (pdp) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENDIAN
+value|BIG
+end_define
+
+begin_comment
+comment|/* byte order on tahoe */
 end_comment
 
 begin_define
@@ -132,38 +186,6 @@ comment|/* # data keys, including 0 (reserved) */
 end_comment
 
 begin_comment
-comment|/*  * Statistics maintained for code and  * data cache key allocations algorithms.  */
-end_comment
-
-begin_struct
-struct|struct
-name|keystats
-block|{
-name|long
-name|ks_allocs
-decl_stmt|;
-comment|/* number of keys allocated */
-name|long
-name|ks_free
-decl_stmt|;
-comment|/* key allocated from free slot */
-name|long
-name|ks_norefs
-decl_stmt|;
-comment|/* key marked in use, but refcnt 0 */
-name|long
-name|ks_taken
-decl_stmt|;
-comment|/* key taken from single process */
-name|long
-name|ks_shared
-decl_stmt|;
-comment|/* key taken from multiple processes */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Some macros for units conversion  */
 end_comment
 
@@ -286,6 +308,11 @@ name|n
 parameter_list|)
 value|{ register int N = 3*(n); while (--N> 0); }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

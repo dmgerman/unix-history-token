@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	1.5	86/04/03	*/
+comment|/*	vm_machdep.c	1.6	86/11/03	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/cpu.h"
 end_include
 
 begin_include
