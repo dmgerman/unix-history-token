@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cat.c,v 1.11 1998/05/13 07:16:37 charnier Exp $"
+literal|"$Id: cat.c,v 1.12 1998/09/11 05:48:06 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+name|argc
+operator|,
+name|char
+operator|*
+name|argv
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|raw_args
 name|__P
@@ -210,14 +228,18 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
 name|argc
 parameter_list|,
-name|char
-modifier|*
-modifier|*
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+name|argv
+index|[]
+decl_stmt|;
 block|{
 name|int
 name|ch
@@ -1068,9 +1090,6 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|u_int
-operator|)
 name|bsize
 argument_list|)
 operator|)
