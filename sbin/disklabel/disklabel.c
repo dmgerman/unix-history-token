@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.13 1998/06/04 06:49:13 charnier Exp $"
+literal|"$Id: disklabel.c,v 1.14 1998/06/08 06:41:47 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3506,7 +3506,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"type: %d\n"
+literal|"type: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3618,8 +3618,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"bytes/sector: %ld\n"
+literal|"bytes/sector: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_secsize
@@ -3629,8 +3632,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"sectors/track: %ld\n"
+literal|"sectors/track: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_nsectors
@@ -3640,8 +3646,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"tracks/cylinder: %ld\n"
+literal|"tracks/cylinder: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_ntracks
@@ -3651,8 +3660,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"sectors/cylinder: %ld\n"
+literal|"sectors/cylinder: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_secpercyl
@@ -3662,8 +3674,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"cylinders: %ld\n"
+literal|"cylinders: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_ncylinders
@@ -3673,8 +3688,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"sectors/unit: %ld\n"
+literal|"sectors/unit: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_secperunit
@@ -3684,7 +3702,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"rpm: %d\n"
+literal|"rpm: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3695,7 +3713,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"interleave: %d\n"
+literal|"interleave: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3706,7 +3724,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"trackskew: %d\n"
+literal|"trackskew: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3717,7 +3735,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"cylinderskew: %d\n"
+literal|"cylinderskew: %u\n"
 argument_list|,
 name|lp
 operator|->
@@ -3728,8 +3746,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"headswitch: %ld\t\t# milliseconds\n"
+literal|"headswitch: %lu\t\t# milliseconds\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_headswitch
@@ -3741,6 +3762,9 @@ name|f
 argument_list|,
 literal|"track-to-track seek: %ld\t# milliseconds\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_trkseek
@@ -3805,8 +3829,11 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%ld "
+literal|"%lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_drivedata
@@ -3819,7 +3846,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\n\n%d partitions:\n"
+literal|"\n\n%u partitions:\n"
 argument_list|,
 name|lp
 operator|->
@@ -3869,16 +3896,22 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"  %c: %8ld %8ld  "
+literal|"  %c: %8lu %8lu  "
 argument_list|,
 literal|'a'
 operator|+
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_size
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_offset
@@ -3936,12 +3969,19 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5ld %5ld %5.5s "
+literal|"    %5lu %5lu %5.5s "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_fsize
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_fsize
@@ -3949,6 +3989,7 @@ operator|*
 name|pp
 operator|->
 name|p_frag
+argument_list|)
 argument_list|,
 literal|""
 argument_list|)
@@ -3961,12 +4002,19 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5ld %5ld %5d "
+literal|"    %5lu %5lu %5u "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_fsize
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_fsize
@@ -3974,6 +4022,7 @@ operator|*
 name|pp
 operator|->
 name|p_frag
+argument_list|)
 argument_list|,
 name|pp
 operator|->
@@ -3988,12 +4037,19 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"    %5ld %5ld %5d"
+literal|"    %5lu %5lu %5d"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_fsize
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_fsize
@@ -4001,6 +4057,7 @@ operator|*
 name|pp
 operator|->
 name|p_frag
+argument_list|)
 argument_list|,
 name|pp
 operator|->
@@ -4024,8 +4081,12 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t# (Cyl. %4ld"
+literal|"\t# (Cyl. %4lu"
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 name|pp
 operator|->
 name|p_offset
@@ -4033,6 +4094,7 @@ operator|/
 name|lp
 operator|->
 name|d_secpercyl
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4064,8 +4126,12 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"- %ld"
+literal|"- %lu"
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|(
 name|pp
 operator|->
@@ -4087,6 +4153,7 @@ operator|->
 name|d_secpercyl
 operator|-
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6360,11 +6427,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sector size %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_secsize
+literal|"sector size 0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6386,11 +6449,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sectors/track %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_nsectors
+literal|"sectors/track 0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6412,11 +6471,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"tracks/cylinder %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_ntracks
+literal|"tracks/cylinder 0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6438,11 +6493,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cylinders/unit %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_ncylinders
+literal|"cylinders/unit 0\n"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -6459,11 +6510,7 @@ literal|0
 condition|)
 name|Warning
 argument_list|(
-literal|"revolutions/minute %d"
-argument_list|,
-name|lp
-operator|->
-name|d_rpm
+literal|"revolutions/minute 0"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6519,11 +6566,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"boot block size %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_bbsize
+literal|"boot block size 0\n"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -6559,11 +6602,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"super block size %ld\n"
-argument_list|,
-name|lp
-operator|->
-name|d_sbsize
+literal|"super block size 0\n"
 argument_list|)
 expr_stmt|;
 name|errors
@@ -6596,8 +6635,11 @@ name|MAXPARTITIONS
 condition|)
 name|Warning
 argument_list|(
-literal|"number of partitions (%d)> MAXPARTITIONS (%d)"
+literal|"number of partitions (%lu)> MAXPARTITIONS (%d)"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lp
 operator|->
 name|d_npartitions
@@ -6653,10 +6695,13 @@ literal|0
 condition|)
 name|Warning
 argument_list|(
-literal|"partition %c: size 0, but offset %d"
+literal|"partition %c: size 0, but offset %lu"
 argument_list|,
 name|part
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_offset
@@ -6793,7 +6838,7 @@ name|p_offset
 condition|)
 name|Warning
 argument_list|(
-literal|"unused partition %c: size %d offset %d"
+literal|"unused partition %c: size %d offset %lu"
 argument_list|,
 literal|'a'
 operator|+
@@ -6803,6 +6848,9 @@ name|pp
 operator|->
 name|p_size
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|p_offset
