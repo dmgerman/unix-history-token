@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
+file|<sys/buf.h>
 end_include
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_ifdef
@@ -1357,12 +1363,7 @@ name|dev
 argument_list|,
 literal|"ata"
 argument_list|,
-name|devclass_find_free_unit
-argument_list|(
-name|ata_devclass
-argument_list|,
 literal|2
-argument_list|)
 argument_list|)
 operator|)
 condition|)

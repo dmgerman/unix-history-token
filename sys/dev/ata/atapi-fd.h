@@ -4,12 +4,12 @@ comment|/*-  * Copyright (c) 1998,1999,2000,2001,2002 Søren Schmidt<sos@FreeBSD
 end_comment
 
 begin_comment
-comment|/* MODE SENSE parameter header */
+comment|/* ATAPI Rewriteable drive Capabilities and Mechanical Status Page */
 end_comment
 
 begin_struct
 struct|struct
-name|afd_header
+name|afd_cappage
 block|{
 name|u_int16_t
 name|data_length
@@ -78,18 +78,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* ATAPI Rewriteable drive Capabilities and Mechanical Status Page */
-end_comment
-
-begin_struct
-struct|struct
-name|afd_cappage
-block|{
+comment|/* capabilities page */
 name|u_int8_t
 name|page_code
 range|:
@@ -169,11 +158,11 @@ struct|struct
 name|afd_softc
 block|{
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
-name|atp
+name|device
 decl_stmt|;
-comment|/* controller structure */
+comment|/* device softc */
 name|int
 name|lun
 decl_stmt|;
@@ -184,14 +173,9 @@ decl_stmt|;
 comment|/* max size of each transfer */
 name|struct
 name|buf_queue_head
-name|bio_queue
+name|queue
 decl_stmt|;
 comment|/* queue of i/o requests */
-name|struct
-name|afd_header
-name|header
-decl_stmt|;
-comment|/* capabilities page info */
 name|struct
 name|afd_cappage
 name|cap

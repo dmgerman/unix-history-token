@@ -466,11 +466,11 @@ struct|struct
 name|ast_softc
 block|{
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
-name|atp
+name|device
 decl_stmt|;
-comment|/* controller structure */
+comment|/* device softc */
 name|int
 name|lun
 decl_stmt|;
@@ -510,7 +510,7 @@ decl_stmt|;
 comment|/* block size (512 | 1024) */
 name|struct
 name|buf_queue_head
-name|bio_queue
+name|queue
 decl_stmt|;
 comment|/* queue of i/o requests */
 name|struct

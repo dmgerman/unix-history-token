@@ -36,6 +36,30 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* DVD CSS authentication */
+end_comment
+
+begin_struct
+struct|struct
+name|dvd_miscauth
+block|{
+name|u_int16_t
+name|length
+decl_stmt|;
+name|u_int16_t
+name|reserved
+decl_stmt|;
+name|u_int8_t
+name|data
+index|[
+literal|2048
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* CDROM Audio Control Parameters Page */
 end_comment
 
@@ -1048,6 +1072,24 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|acd_devlist
+block|{
+name|dev_t
+name|dev
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|acd_devlist
+argument_list|)
+name|chain
+expr_stmt|;
+comment|/* list management */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Structure describing an ATAPI CDROM device */
 end_comment
@@ -1057,11 +1099,11 @@ struct|struct
 name|acd_softc
 block|{
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
-name|atp
+name|device
 decl_stmt|;
-comment|/* controller structure */
+comment|/* device softc */
 name|int
 name|lun
 decl_stmt|;
@@ -1077,9 +1119,17 @@ value|0x0001
 comment|/* this unit is locked */
 name|struct
 name|buf_queue_head
-name|bio_queue
+name|queue
 decl_stmt|;
-comment|/* Queue of i/o requests */
+comment|/* queue of i/o requests */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|acd_devlist
+argument_list|)
+name|dev_list
+expr_stmt|;
+comment|/* list of "track" devices */
 name|struct
 name|toc
 name|toc
@@ -1100,39 +1150,11 @@ name|cappage
 name|cap
 decl_stmt|;
 comment|/* capabilities page info */
-struct|struct
-block|{
-comment|/* subchannel info */
-name|u_int8_t
-name|void0
-decl_stmt|;
-name|u_int8_t
-name|audio_status
-decl_stmt|;
-name|u_int16_t
-name|data_length
-decl_stmt|;
-name|u_int8_t
-name|data_format
-decl_stmt|;
-name|u_int8_t
-name|control
-decl_stmt|;
-name|u_int8_t
-name|track
-decl_stmt|;
-name|u_int8_t
-name|indx
-decl_stmt|;
-name|u_int32_t
-name|abslba
-decl_stmt|;
-name|u_int32_t
-name|rellba
-decl_stmt|;
-block|}
+name|struct
+name|cd_sub_channel_info
 name|subchan
-struct|;
+decl_stmt|;
+comment|/* subchannel info */
 name|struct
 name|changer
 modifier|*
@@ -1174,9 +1196,7 @@ name|stats
 decl_stmt|;
 comment|/* devstat entry */
 name|dev_t
-name|dev1
-decl_stmt|,
-name|dev2
+name|dev
 decl_stmt|;
 comment|/* device place holders */
 block|}

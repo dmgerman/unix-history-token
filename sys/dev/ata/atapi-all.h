@@ -607,6 +607,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_PLAY_10
+value|0x45
+end_define
+
+begin_comment
+comment|/* play by lba */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_PLAY_MSF
 value|0x47
 end_define
@@ -794,7 +805,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_PLAY_BIG
+name|ATAPI_PLAY_12
 value|0xa5
 end_define
 
@@ -993,46 +1004,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|atapi_softc
-block|{
-name|struct
-name|ata_softc
-modifier|*
-name|controller
-decl_stmt|;
-comment|/* ptr to controller softc */
-name|int
-name|unit
-decl_stmt|;
-comment|/* ATA_MASTER or ATA_SLAVE */
-name|void
-modifier|*
-name|driver
-decl_stmt|;
-comment|/* ptr to subdriver softc */
-name|char
-modifier|*
-name|devname
-decl_stmt|;
-comment|/* this devices name */
-name|u_int8_t
-name|cmd
-decl_stmt|;
-comment|/* last cmd executed */
-name|int
-name|flags
-decl_stmt|;
-comment|/* drive flags */
-define|#
-directive|define
-name|ATAPI_F_MEDIA_CHANGED
-value|0x0001
-block|}
-struct|;
-end_struct
-
 begin_typedef
 typedef|typedef
 name|int
@@ -1050,11 +1021,11 @@ struct|struct
 name|atapi_request
 block|{
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 name|device
 decl_stmt|;
-comment|/* ptr to parent device */
+comment|/* ptr to parent softc */
 name|u_int8_t
 name|ccb
 index|[
@@ -1159,10 +1130,8 @@ name|void
 name|atapi_attach
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_device
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1172,7 +1141,18 @@ name|void
 name|atapi_detach
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|atapi_reinit
+parameter_list|(
+name|struct
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1183,14 +1163,14 @@ name|void
 name|atapi_start
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|atapi_transfer
 parameter_list|(
 name|struct
@@ -1216,7 +1196,7 @@ name|int
 name|atapi_queue_cmd
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|,
 name|int8_t
@@ -1239,22 +1219,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|atapi_reinit
-parameter_list|(
-name|struct
-name|atapi_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|atapi_test_ready
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1262,10 +1231,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|atapi_wait_ready
+name|atapi_wait_dsc
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|,
 name|int
@@ -1278,7 +1247,7 @@ name|void
 name|atapi_request_sense
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|,
 name|struct
@@ -1308,7 +1277,7 @@ name|int
 name|acdattach
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1319,7 +1288,7 @@ name|void
 name|acddetach
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1330,7 +1299,7 @@ name|void
 name|acd_start
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1341,7 +1310,7 @@ name|int
 name|afdattach
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1352,7 +1321,7 @@ name|void
 name|afddetach
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1363,7 +1332,7 @@ name|void
 name|afd_start
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1374,7 +1343,7 @@ name|int
 name|astattach
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1385,7 +1354,7 @@ name|void
 name|astdetach
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1396,7 +1365,7 @@ name|void
 name|ast_start
 parameter_list|(
 name|struct
-name|atapi_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;

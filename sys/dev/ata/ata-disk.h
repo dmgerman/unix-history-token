@@ -14,7 +14,7 @@ block|{
 name|struct
 name|ad_softc
 modifier|*
-name|device
+name|softc
 decl_stmt|;
 comment|/* ptr to parent device */
 name|u_int32_t
@@ -65,10 +65,6 @@ define|#
 directive|define
 name|ADR_F_FORCE_PIO
 value|0x0010
-define|#
-directive|define
-name|ADR_F_FLUSHCACHE
-value|0x0020
 name|caddr_t
 name|data
 decl_stmt|;
@@ -78,7 +74,7 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* associated buf ptr */
+comment|/* associated bio ptr */
 name|u_int8_t
 name|tag
 decl_stmt|;
@@ -113,15 +109,11 @@ struct|struct
 name|ad_softc
 block|{
 name|struct
-name|ata_softc
+name|ata_device
 modifier|*
-name|controller
+name|device
 decl_stmt|;
-comment|/* ptr to parent ctrl */
-name|int
-name|unit
-decl_stmt|;
-comment|/* ATA_MASTER or ATA_SLAVE */
+comment|/* ptr to device softc */
 name|int
 name|lun
 decl_stmt|;
@@ -164,6 +156,10 @@ define|#
 directive|define
 name|AD_F_TAG_ENABLED
 value|0x0008
+define|#
+directive|define
+name|AD_F_RAID_SUBDISK
+value|0x0010
 name|struct
 name|ad_request
 modifier|*
@@ -205,10 +201,8 @@ name|void
 name|ad_attach
 parameter_list|(
 name|struct
-name|ata_softc
+name|ata_device
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -218,7 +212,20 @@ name|void
 name|ad_detach
 parameter_list|(
 name|struct
-name|ad_softc
+name|ata_device
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ad_reinit
+parameter_list|(
+name|struct
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -229,7 +236,7 @@ name|void
 name|ad_start
 parameter_list|(
 name|struct
-name|ad_softc
+name|ata_device
 modifier|*
 parameter_list|)
 function_decl|;
@@ -272,7 +279,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ad_reinit
+name|ad_print
 parameter_list|(
 name|struct
 name|ad_softc
