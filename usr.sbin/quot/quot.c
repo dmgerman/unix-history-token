@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: quot.c,v 1.5 1997/02/22 16:12:39 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|ino_to_fsba
 argument_list|(
 name|super
@@ -361,6 +364,9 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
+operator|(
+name|off_t
+operator|)
 literal|0
 operator|||
 name|read
