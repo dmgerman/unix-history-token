@@ -39,6 +39,16 @@ begin_comment
 comment|/* PLIP is not supported for old PC-98 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LPT_DRVINIT_AT_ATTACH
+end_define
+
+begin_comment
+comment|/* avoid conflicting with lpt on ppbus */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -879,6 +889,18 @@ name|ointhand2_t
 name|lptintr
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|lpt_drvinit
+parameter_list|(
+name|void
+modifier|*
+name|unused
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -1834,6 +1856,16 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LPT_DRVINIT_AT_ATTACH
+name|lpt_drvinit
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
@@ -6353,6 +6385,12 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LPT_DRVINIT_AT_ATTACH
+end_ifndef
+
 begin_macro
 name|SYSINIT
 argument_list|(
@@ -6367,6 +6405,11 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
