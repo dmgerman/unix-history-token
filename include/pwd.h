@@ -193,6 +193,88 @@ name|_PATH_PWD_MKDB
 value|"/usr/sbin/pwd_mkdb"
 end_define
 
+begin_comment
+comment|/* Historically, the keys in _PATH_MP_DB/_PATH_SMP_DB had the format  * `1 octet tag | key', where the tag is one of the _PW_KEY* values  * listed below.  These values happen to be ASCII digits.  Starting  * with FreeBSD 5.1, the tag is now still a single octet, but the  * upper 4 bits are interpreted as a version.  Pre-FreeBSD 5.1 format  * entries are version `3' -- this conveniently results in the same  * key values as before.  The new, architecture-independent entries  * are version `4'.  * As it happens, some applications read the database directly.  * (Bad app, no cookie!)  Thus, we leave the _PW_KEY* symbols at their  * old pre-FreeBSD 5.1 values so these apps still work.  Consequently  * we have to do muck around a bit more to get the correct, versioned  * tag, and that is what the _PW_VERSIONED macros is about.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PW_VERSION_MASK
+value|'0xF0'
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PW_VERSIONED
+parameter_list|(
+name|x
+parameter_list|,
+name|v
+parameter_list|)
+value|((unsigned char)(((x)& 0xCF) | ((v)<<4)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PW_KEYBYNAME
+value|'\x31'
+end_define
+
+begin_comment
+comment|/* stored by name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PW_KEYBYNUM
+value|'\x32'
+end_define
+
+begin_comment
+comment|/* stored by entry in the "file" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PW_KEYBYUID
+value|'\x33'
+end_define
+
+begin_comment
+comment|/* stored by uid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PW_KEYYPENABLED
+value|'\x34'
+end_define
+
+begin_comment
+comment|/* YP is enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PW_KEYYPBYNUM
+value|'\x35'
+end_define
+
+begin_comment
+comment|/* special +@netgroup entries */
+end_comment
+
+begin_comment
+comment|/* The database also contains a key to indicate the format version of  * the entries therein.  There may be other, older versioned entries  * as well.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -206,78 +288,6 @@ directive|define
 name|_PWD_CURRENT_VERSION
 value|'\x04'
 end_define
-
-begin_define
-define|#
-directive|define
-name|_PW_VERSION_MASK
-value|'0xF0'
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PW_VERSION
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned char)((x)<<4))
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYBYNAME
-value|'\x01'
-end_define
-
-begin_comment
-comment|/* stored by name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYBYNUM
-value|'\x02'
-end_define
-
-begin_comment
-comment|/* stored by entry in the "file" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYBYUID
-value|'\x03'
-end_define
-
-begin_comment
-comment|/* stored by uid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYYPENABLED
-value|'\x04'
-end_define
-
-begin_comment
-comment|/* YP is enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PW_KEYYPBYNUM
-value|'\x05'
-end_define
-
-begin_comment
-comment|/* special +@netgroup entries */
-end_comment
 
 begin_define
 define|#
