@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)termios.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)termios.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  *  posix termios structure  */
+comment|/*  *  termios structure  */
 end_comment
 
 begin_ifndef
@@ -89,6 +89,17 @@ define|#
 directive|define
 name|VERASE
 value|3
+end_define
+
+begin_comment
+comment|/* ICANON */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERASE2
+value|18
 end_define
 
 begin_comment
@@ -274,15 +285,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|POSIX_V_DISABLE
+name|_POSIX_VDISABLE
 value|((unsigned char)'\377')
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX_V_DISABLE
-value|POSIX_V_DISABLE
 end_define
 
 begin_comment
@@ -319,7 +323,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* ignore (throw out) parity errors */
+comment|/* ignore (discard) parity errors */
 end_comment
 
 begin_define
@@ -477,7 +481,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* enable output processing */
+comment|/* enable following output processing */
 end_comment
 
 begin_define
@@ -494,12 +498,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ONLCRNL
+value|ONLCR
+end_define
+
+begin_define
+define|#
+directive|define
 name|OXTABS
 value|0x00000004
 end_define
 
 begin_comment
 comment|/* expand tabs to spaces */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONOEOT
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* discard EOT's (^D) on output) */
 end_comment
 
 begin_comment
@@ -624,7 +646,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* ignore mode status lines */
+comment|/* ignore modem status lines */
 end_comment
 
 begin_define
@@ -639,18 +661,18 @@ comment|/* RTS/CTS flow control */
 end_comment
 
 begin_comment
-comment|/*   * "Local" flags - dumping ground for other state  *  *  Note presence of ISIG and ICANON.  Its not *our* fault.  */
+comment|/*   * "Local" flags - dumping ground for other state  *  * Warning: some flags in this structure begin with  * the letter "I" and look like they belong in the  * input flag.  Isn't history fun.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ECHO
+name|ECHOKE
 value|0x00000001
 end_define
 
 begin_comment
-comment|/* enable echoing */
+comment|/* visual erase for line kill */
 end_comment
 
 begin_define
@@ -673,17 +695,6 @@ end_define
 
 begin_comment
 comment|/* echo NL after line kill */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ECHOKE
-value|0x00000008
-end_define
-
-begin_comment
-comment|/* visual erase for line kill */
 end_comment
 
 begin_define
@@ -744,30 +755,40 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NOFLSH
+name|ALTWERASE
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* don't flush after interrupt */
+comment|/* use alternate WERASE algorithm */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/* XXX already defined in ioctl.h */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TOSTOP
-value|0x00000400
+name|ECHO
+value|0x00000008
 end_define
 
 begin_comment
-comment|/* stop background jobs from output */
+comment|/* enable echoing */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MDMBUF
-value|0x00000800
+value|0x00100000
 end_define
 
 begin_comment
@@ -777,19 +798,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NOHANG
-value|0x00001000
+name|TOSTOP
+value|0x00400000
 end_define
 
 begin_comment
-comment|/* XXX this should go away */
+comment|/* stop background jobs from output */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FLUSHO
-value|0x00002000
+value|0x00800000
 end_define
 
 begin_comment
@@ -799,12 +820,43 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NOHANG
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* XXX this should go away */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PENDIN
-value|0x00004000
+value|0x20000000
 end_define
 
 begin_comment
 comment|/* retype pending input (state) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOFLSH
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* don't flush after interrupt */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*notdef*/
 end_comment
 
 begin_struct
@@ -852,7 +904,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Flags to tcsetattr(), for setting the termios structure.  *   * If TCSASOFT is or'ed in with one of the first three, then  * only the software processing flags in the termios structure  * are set.  That is, the settings of the cflag and speeds  * are ignored.  */
+comment|/*   * Commands passed to tcsetattr() for setting the termios structure.  */
 end_comment
 
 begin_define
@@ -888,6 +940,10 @@ begin_comment
 comment|/* drain output, flush input */
 end_comment
 
+begin_comment
+comment|/*  * TCSASOFT is a flag which can be or'ed in with a command.  * If set, only the software processing flags in the termios   * structure are altered.  That is, the settings of the cflag and   * speeds are ignored.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -900,7 +956,7 @@ comment|/* but ignore hardware settings */
 end_comment
 
 begin_comment
-comment|/*  * Is c equal to control character val?  XXX - should reverse val and c  */
+comment|/*  * Is c equal to control character val?  */
 end_comment
 
 begin_define
@@ -912,7 +968,7 @@ name|val
 parameter_list|,
 name|c
 parameter_list|)
-value|(c == val ? val != POSIX_V_DISABLE : 0)
+value|(c == val ? val != _POSIX_VDISABLE : 0)
 end_define
 
 begin_endif

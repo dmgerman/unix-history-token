@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttydev.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttydev.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -34,106 +34,134 @@ begin_define
 define|#
 directive|define
 name|B50
-value|1
+value|50
 end_define
 
 begin_define
 define|#
 directive|define
 name|B75
-value|2
+value|75
 end_define
 
 begin_define
 define|#
 directive|define
 name|B110
-value|3
+value|110
 end_define
 
 begin_define
 define|#
 directive|define
 name|B134
-value|4
+value|134
 end_define
 
 begin_define
 define|#
 directive|define
 name|B150
-value|5
+value|150
 end_define
 
 begin_define
 define|#
 directive|define
 name|B200
-value|6
+value|200
 end_define
 
 begin_define
 define|#
 directive|define
 name|B300
-value|7
+value|300
 end_define
 
 begin_define
 define|#
 directive|define
 name|B600
-value|8
+value|600
 end_define
 
 begin_define
 define|#
 directive|define
 name|B1200
-value|9
+value|1200
 end_define
 
 begin_define
 define|#
 directive|define
 name|B1800
-value|10
+value|1800
 end_define
 
 begin_define
 define|#
 directive|define
 name|B2400
-value|11
+value|2400
 end_define
 
 begin_define
 define|#
 directive|define
 name|B4800
-value|12
+value|4800
 end_define
 
 begin_define
 define|#
 directive|define
 name|B9600
-value|13
+value|9600
+end_define
+
+begin_define
+define|#
+directive|define
+name|B19200
+value|19200
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXTA
-value|14
+value|B19200
+end_define
+
+begin_define
+define|#
+directive|define
+name|B38400
+value|38400
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXTB
-value|15
+value|B38400
 end_define
+
+begin_struct
+struct|struct
+name|speedtab
+block|{
+name|int
+name|sp_speed
+decl_stmt|;
+name|int
+name|sp_code
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
@@ -173,15 +201,82 @@ name|DMGET
 value|3
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * Exceptional conditions possible on character input.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_FE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Framing error or BREAK condition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_PE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Parity error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_CHARMASK
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* Character mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_QUOTE
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Character quoted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_ERRORMASK
+value|0xff000000
+end_define
+
+begin_comment
+comment|/* Error mask */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _TTYDEV_ */
+end_comment
 
 end_unit
 

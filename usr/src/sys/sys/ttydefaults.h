@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttydefaults.h	1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttydefaults.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|CEOL
-value|POSIX_V_DISABLE
+value|_POSIX_VDISABLE
 end_define
 
 begin_ifdef
@@ -67,13 +67,6 @@ name|CINTR
 value|CTRL('c')
 end_define
 
-begin_define
-define|#
-directive|define
-name|CKILL
-value|CTRL('u')
-end_define
-
 begin_else
 else|#
 directive|else
@@ -93,17 +86,24 @@ name|CINTR
 value|0177
 end_define
 
-begin_define
-define|#
-directive|define
-name|CKILL
-value|CTRL('x')
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|CERASE2
+value|_POSIX_VDISABLE
+end_define
+
+begin_define
+define|#
+directive|define
+name|CKILL
+value|CTRL('u')
+end_define
 
 begin_define
 define|#
@@ -134,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|CTIME
-value|1
+value|0
 end_define
 
 begin_define
@@ -200,11 +200,9 @@ name|CEOT
 value|CEOF
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_43
-end_ifdef
+begin_comment
+comment|/* COMPAT_43 */
+end_comment
 
 begin_define
 define|#
@@ -227,11 +225,6 @@ name|CFLUSH
 value|CFLUSHO
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Settings on first open of a tty.  */
 end_comment
@@ -240,7 +233,7 @@ begin_define
 define|#
 directive|define
 name|TTYDEF_IFLAG
-value|(BRKINT | ISTRIP | IMAXBEL | IEXTEN)
+value|(BRKINT | ISTRIP | IMAXBEL | IEXTEN | IXON)
 end_define
 
 begin_define
@@ -281,7 +274,7 @@ comment|/*_TTYDEFAULTS_*/
 end_comment
 
 begin_comment
-comment|/*  * Define TTYDEFCHARS to include an array of default control characters.  */
+comment|/*  * define TTYDEFCHARS to include an array of default control characters.  */
 end_comment
 
 begin_ifdef
@@ -334,9 +327,9 @@ name|CMIN
 block|,
 name|CTIME
 block|,
-name|POSIX_V_DISABLE
+name|CERASE2
 block|,
-name|POSIX_V_DISABLE
+name|_POSIX_VDISABLE
 block|}
 decl_stmt|;
 end_decl_stmt

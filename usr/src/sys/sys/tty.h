@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -21,6 +21,12 @@ directive|include
 file|"ttydev.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"termios.h"
+end_include
+
 begin_else
 else|#
 directive|else
@@ -36,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ttydev.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/termios.h>
 end_include
 
 begin_endif
@@ -101,7 +113,7 @@ define|#
 directive|define
 name|t_canq
 value|t_nu.t_t.T_canq
-comment|/* raw characters or partial line */
+comment|/* canonicalized lines */
 struct|struct
 block|{
 name|struct
@@ -158,6 +170,14 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* device */
+name|int
+function_decl|(
+modifier|*
+name|t_param
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* device */
 name|struct
 name|proc
 modifier|*
@@ -184,13 +204,19 @@ comment|/* device */
 name|int
 name|t_flags
 decl_stmt|;
-comment|/* some of both */
+comment|/* (old) some of both */
 name|int
 name|t_state
 decl_stmt|;
 comment|/* some of both */
-name|short
-name|t_pgrp
+name|struct
+name|session
+modifier|*
+name|t_session
+decl_stmt|;
+comment|/* tty */
+name|pid_t
+name|t_pgid
 decl_stmt|;
 comment|/* tty */
 name|char
@@ -206,84 +232,75 @@ name|t_col
 decl_stmt|;
 comment|/* tty */
 name|char
-name|t_ispeed
-decl_stmt|,
-name|t_ospeed
-decl_stmt|;
-comment|/* device */
-name|char
 name|t_rocount
 decl_stmt|,
 name|t_rocol
 decl_stmt|;
 comment|/* tty */
-name|struct
-name|ttychars
-name|t_chars
+name|short
+name|t_hiwat
 decl_stmt|;
-comment|/* tty */
+comment|/* hi water mark */
+name|short
+name|t_lowat
+decl_stmt|;
+comment|/* low water mark */
 name|struct
 name|winsize
 name|t_winsize
 decl_stmt|;
 comment|/* window size */
-comment|/* be careful of tchars& co. */
+name|struct
+name|termios
+name|t_termios
+decl_stmt|;
+comment|/* termios state */
 define|#
 directive|define
-name|t_erase
-value|t_chars.tc_erase
+name|t_iflag
+value|t_termios.c_iflag
 define|#
 directive|define
-name|t_kill
-value|t_chars.tc_kill
+name|t_oflag
+value|t_termios.c_oflag
 define|#
 directive|define
-name|t_intrc
-value|t_chars.tc_intrc
+name|t_cflag
+value|t_termios.c_cflag
 define|#
 directive|define
-name|t_quitc
-value|t_chars.tc_quitc
+name|t_lflag
+value|t_termios.c_lflag
 define|#
 directive|define
-name|t_startc
-value|t_chars.tc_startc
+name|t_min
+value|t_termios.c_min
 define|#
 directive|define
-name|t_stopc
-value|t_chars.tc_stopc
+name|t_time
+value|t_termios.c_time
 define|#
 directive|define
-name|t_eofc
-value|t_chars.tc_eofc
+name|t_cc
+value|t_termios.c_cc
 define|#
 directive|define
-name|t_brkc
-value|t_chars.tc_brkc
+name|t_ispeed
+value|t_termios.c_ispeed
 define|#
 directive|define
-name|t_suspc
-value|t_chars.tc_suspc
-define|#
-directive|define
-name|t_dsuspc
-value|t_chars.tc_dsuspc
-define|#
-directive|define
-name|t_rprntc
-value|t_chars.tc_rprntc
-define|#
-directive|define
-name|t_flushc
-value|t_chars.tc_flushc
-define|#
-directive|define
-name|t_werasc
-value|t_chars.tc_werasc
-define|#
-directive|define
-name|t_lnextc
-value|t_chars.tc_lnextc
+name|t_ospeed
+value|t_termios.c_ospeed
+name|long
+name|t_cancc
+decl_stmt|;
+comment|/* stats */
+name|long
+name|t_rawcc
+decl_stmt|;
+name|long
+name|t_outcc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -340,38 +357,32 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_decl_stmt
-name|short
-name|tthiwat
-index|[
-name|NSPEEDS
-index|]
-decl_stmt|,
-name|ttlowat
-index|[
-name|NSPEEDS
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
-name|TTHIWAT
-parameter_list|(
-name|tp
-parameter_list|)
-value|tthiwat[(tp)->t_ospeed&TTMASK]
+name|TTMAXHIWAT
+value|roundup(2048, CBSIZE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TTLOWAT
-parameter_list|(
-name|tp
-parameter_list|)
-value|ttlowat[(tp)->t_ospeed&TTMASK]
+name|TTMINHIWAT
+value|roundup(100, CBSIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTMAXLOWAT
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTMINLOWAT
+value|32
 end_define
 
 begin_decl_stmt
@@ -386,6 +397,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*KERNEL*/
+end_comment
 
 begin_comment
 comment|/* internal state bits */
@@ -574,17 +589,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TS_QUOT
-value|0x020000
-end_define
-
-begin_comment
-comment|/* last character input was \ */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TS_ERASE
 value|0x040000
 end_define
@@ -623,14 +627,14 @@ value|0x200000
 end_define
 
 begin_comment
-comment|/* counting tab width; leave FLUSHO alone */
+comment|/* counting tab width, leave FLUSHO alone */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TS_LOCAL
-value|(TS_BKSL|TS_QUOT|TS_ERASE|TS_LNCH|TS_TYPEN|TS_CNTTB)
+value|(TS_BKSL|TS_ERASE|TS_LNCH|TS_TYPEN|TS_CNTTB)
 end_define
 
 begin_comment
