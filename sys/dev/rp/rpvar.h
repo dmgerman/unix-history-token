@@ -44,39 +44,11 @@ modifier|*
 name|rp_tty
 decl_stmt|;
 comment|/* cross reference */
-comment|/* Initial state */
-name|struct
-name|termios
-name|it_in
-decl_stmt|;
-name|struct
-name|termios
-name|it_out
-decl_stmt|;
-comment|/* Lock state */
-name|struct
-name|termios
-name|lt_in
-decl_stmt|;
-name|struct
-name|termios
-name|lt_out
-decl_stmt|;
-comment|/* Nonzero if callout device is open */
-name|unsigned
-name|char
-name|active_out
-decl_stmt|;
 name|unsigned
 name|char
 name|state
 decl_stmt|;
 comment|/* state of dtr */
-comment|/* Time to hold DTR down on close */
-name|int
-name|wopeners
-decl_stmt|;
-comment|/* processes waiting for DCD */
 name|int
 name|rp_port
 decl_stmt|;
