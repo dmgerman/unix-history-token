@@ -5,7 +5,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int16_t
+name|u_int8_t
 name|adv_mcode
 index|[]
 decl_stmt|;
