@@ -3237,32 +3237,6 @@ begin_comment
 comment|/*========================================================== ** ** **      Global static data. ** ** **========================================================== */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|ident
-index|[]
-init|=
-literal|"\n$FreeBSD$\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
