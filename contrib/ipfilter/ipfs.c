@@ -268,7 +268,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipfs.c,v 2.6.2.12 2002/09/26 12:25:19 darrenr Exp $"
+literal|"@(#)$Id: ipfs.c,v 2.6.2.15 2003/05/31 02:12:21 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,6 +374,13 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
 decl_stmt|;
 end_decl_stmt
 
@@ -587,6 +594,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|usage
@@ -596,7 +610,27 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ usage: ipfs [-nv] -l\n\ usage: ipfs [-nv] -u\n\ usage: ipfs [-nv] [-d<dir>] -R\n\ usage: ipfs [-nv] [-d<dir>] -W\n\ usage: ipfs [-nv] -N [-f<file> | -d<dir>] -r\n\ usage: ipfs [-nv] -S [-f<file> | -d<dir>] -r\n\ usage: ipfs [-nv] -N [-f<file> | -d<dir>] -w\n\ usage: ipfs [-nv] -S [-f<file> | -d<dir>] -w\n\ usage: ipfs [-nv] -N [-f<filename> | -d<dir> ] -i<if1>,<if2>\n\ usage: ipfs [-nv] -S [-f<filename> | -d<dir> ] -i<if1>,<if2>\n\ "
+literal|"\ usage: %s [-nv] -l\n\ usage: %s [-nv] -u\n\ usage: %s [-nv] [-d<dir>] -R\n\ usage: %s [-nv] [-d<dir>] -W\n\ usage: %s [-nv] -N [-f<file> | -d<dir>] -r\n\ usage: %s [-nv] -S [-f<file> | -d<dir>] -r\n\ usage: %s [-nv] -N [-f<file> | -d<dir>] -w\n\ usage: %s [-nv] -S [-f<file> | -d<dir>] -w\n\ usage: %s [-nv] -N [-f<filename> | -d<dir> ] -i<if1>,<if2>\n\ usage: %s [-nv] -S [-f<filename> | -d<dir> ] -i<if1>,<if2>\n\ "
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1295,6 +1329,13 @@ name|ifs
 init|=
 name|NULL
 decl_stmt|;
+name|progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1637,11 +1678,23 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
 default|default :
 name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|optind
+operator|<
+literal|2
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|filename
@@ -3003,9 +3056,6 @@ modifier|*
 name|ipntail
 init|=
 name|NULL
-decl_stmt|,
-modifier|*
-name|ipnp
 decl_stmt|;
 name|int
 name|nfd
@@ -3018,6 +3068,13 @@ decl_stmt|;
 name|nat_t
 modifier|*
 name|nat
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|int
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -3077,11 +3134,6 @@ argument_list|(
 name|ipn
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ipnp
-operator|=
-operator|&
-name|ipn
 expr_stmt|;
 comment|/* 	 * 1. Read all state information in. 	 */
 do|do
@@ -3175,29 +3227,36 @@ operator|>
 literal|0
 condition|)
 block|{
-name|char
-modifier|*
-name|s
-init|=
-name|ipnp
-operator|->
-name|ipn_data
-decl_stmt|;
-name|int
 name|n
-init|=
-name|ipnp
-operator|->
+operator|=
+name|ipn
+operator|.
 name|ipn_dsize
-decl_stmt|;
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+sizeof|sizeof
+argument_list|(
+name|ipn
+operator|.
+name|ipn_data
+argument_list|)
+condition|)
 name|n
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|ipnp
-operator|->
+name|ipn
+operator|.
 name|ipn_data
 argument_list|)
+expr_stmt|;
+else|else
+name|n
+operator|=
+literal|0
 expr_stmt|;
 name|in
 operator|=
@@ -3218,11 +3277,22 @@ operator|!
 name|in
 condition|)
 break|break;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+block|{
 name|s
-operator|+=
+operator|=
+name|in
+operator|->
+name|ipn_data
+operator|+
 sizeof|sizeof
 argument_list|(
-name|ipnp
+name|in
 operator|->
 name|ipn_data
 argument_list|)
@@ -3273,6 +3343,7 @@ literal|1
 return|;
 block|}
 block|}
+block|}
 else|else
 name|in
 operator|=
@@ -3295,7 +3366,8 @@ operator|(
 name|char
 operator|*
 operator|)
-name|ipnp
+operator|&
+name|ipn
 argument_list|,
 operator|(
 name|char
@@ -3309,7 +3381,7 @@ name|ipn
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check to see if this is the first state entry that will 		 * reference a particular rule and if so, flag it as such 		 * else just adjust the rule pointer to become a pointer to 		 * the other.  We do this so we have a means later for tracking 		 * who is referencing us when we get back the real pointer 		 * in is_rule after doing the ioctl. 		 */
+comment|/* 		 * Check to see if this is the first NAT entry that will 		 * reference a particular rule and if so, flag it as such 		 * else just adjust the rule pointer to become a pointer to 		 * the other.  We do this so we have a means later for tracking 		 * who is referencing us when we get back the real pointer 		 * in is_rule after doing the ioctl. 		 */
 name|nat
 operator|=
 operator|&
@@ -3416,6 +3488,11 @@ name|close
 argument_list|(
 name|nfd
 argument_list|)
+expr_stmt|;
+name|nfd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -3944,6 +4021,15 @@ name|dirname
 argument_list|)
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"IPF_SAVEDIR=%s: "
+argument_list|,
+name|dirname
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 literal|"chdir(IPF_SAVEDIR)"

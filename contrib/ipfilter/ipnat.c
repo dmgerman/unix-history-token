@@ -383,7 +383,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.16.2.22 2002/12/06 11:40:26 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.16.2.25 2003/06/05 14:00:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -442,20 +442,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|ipnat_t
-modifier|*
-name|natparse
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
 name|int
-operator|)
-argument_list|)
+name|optind
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|extern	ipnat_t	*natparse __P((char *, int));
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -538,7 +540,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+specifier|static
+name|int
 name|dostats
 name|__P
 argument_list|(
@@ -549,7 +552,12 @@ operator|,
 name|int
 operator|)
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|flushtable
 name|__P
 argument_list|(
@@ -633,7 +641,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+specifier|static
+name|int
 name|showhostmap
 name|__P
 argument_list|(
@@ -647,7 +656,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+specifier|static
+name|int
 name|natstat_dead
 name|__P
 argument_list|(
@@ -677,7 +687,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: [-CFhlnrsv] [-f filename]\n"
+literal|"Usage: %s [-CFhlnrsv] [-f filename]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -891,6 +901,9 @@ operator||=
 name|OPT_VERBOSE
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
 default|default :
 name|usage
 argument_list|(
@@ -901,6 +914,20 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|optind
+operator|<
+literal|2
+condition|)
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1161,11 +1188,18 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|natstat_dead
 argument_list|(
 name|nsp
 argument_list|,
 name|kernel
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1178,13 +1212,22 @@ operator||
 name|OPT_STAT
 operator|)
 condition|)
+block|{
+if|if
+condition|(
 name|dostats
 argument_list|(
 name|nsp
 argument_list|,
 name|opts
 argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -1201,17 +1244,26 @@ operator||
 name|OPT_CLEAR
 operator|)
 condition|)
+if|if
+condition|(
 name|flushtable
 argument_list|(
 name|fd
 argument_list|,
 name|opts
 argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|file
 condition|)
+block|{
+comment|/* NB natparsefile exits with nonzero in case of error */
 name|natparsefile
 argument_list|(
 name|fd
@@ -1221,6 +1273,7 @@ argument_list|,
 name|opts
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|opts
@@ -1231,13 +1284,21 @@ operator||
 name|OPT_STAT
 operator|)
 condition|)
+if|if
+condition|(
 name|dostats
 argument_list|(
 name|nsp
 argument_list|,
 name|opts
 argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+comment|/* TBD why not exit(0)? */
 return|return
 literal|0
 return|;
@@ -1245,11 +1306,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read nat statistic information in using a symbol table and memory file  * rather than doing ioctl's.  */
+comment|/*  * Read NAT statistic information in using a symbol table and memory file  * rather than doing ioctl's.  */
 end_comment
 
 begin_function
-name|void
+specifier|static
+name|int
 name|natstat_dead
 parameter_list|(
 name|nsp
@@ -1343,9 +1405,12 @@ argument_list|,
 literal|"nlist error\n"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
-comment|/* 	 * Normally the ioctl copies all of these values into the structure 	 * for us, before returning it to useland, so here we must copy each 	 * one in individually. 	 */
+comment|/* 	 * Normally the ioctl copies all of these values into the structure 	 * for us, before returning it to userland, so here we must copy each 	 * one in individually. 	 */
 name|kmemcpy
 argument_list|(
 operator|(
@@ -1600,6 +1665,9 @@ name|ns_apslist
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1608,7 +1676,8 @@ comment|/*  * Display NAT statistics.  */
 end_comment
 
 begin_function
-name|void
+specifier|static
+name|int
 name|dostats
 parameter_list|(
 name|nsp
@@ -1638,6 +1707,11 @@ name|nat
 decl_stmt|;
 name|ipnat_t
 name|ipn
+decl_stmt|;
+name|int
+name|rc
+init|=
+literal|0
 decl_stmt|;
 comment|/* 	 * Show statistics ? 	 */
 if|if
@@ -1784,6 +1858,11 @@ argument_list|(
 literal|"kmemcpy"
 argument_list|)
 expr_stmt|;
+name|rc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 break|break;
 block|}
 if|if
@@ -1884,7 +1963,28 @@ argument_list|(
 literal|"kmemcpy"
 argument_list|)
 expr_stmt|;
-return|return;
+name|rc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rc
+condition|)
+block|{
+name|free
+argument_list|(
+name|nt
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+return|return
+name|rc
+return|;
 block|}
 name|printf
 argument_list|(
@@ -1930,7 +2030,10 @@ name|nat
 argument_list|)
 argument_list|)
 condition|)
+block|{
+comment|/* TBD Is this an error? If so, return -1 */
 break|break;
+block|}
 name|printactivenat
 argument_list|(
 operator|&
@@ -1946,11 +2049,29 @@ name|opts
 operator|&
 name|OPT_VERBOSE
 condition|)
+block|{
+if|if
+condition|(
 name|showhostmap
 argument_list|(
 name|nsp
 argument_list|)
+condition|)
+block|{
+name|free
+argument_list|(
+name|nt
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
 name|free
 argument_list|(
 name|nt
@@ -1960,15 +2081,19 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * display the active host mapping table.  */
+comment|/*  * Display the active host mapping table.  */
 end_comment
 
 begin_function
-name|void
+specifier|static
+name|int
 name|showhostmap
 parameter_list|(
 name|nsp
@@ -2050,7 +2175,15 @@ argument_list|(
 literal|"kmemcpy (maptable)"
 argument_list|)
 expr_stmt|;
-return|return;
+name|free
+argument_list|(
+name|maptable
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 for|for
 control|(
@@ -2108,7 +2241,15 @@ argument_list|(
 literal|"kmemcpy (hostmap)"
 argument_list|)
 expr_stmt|;
-return|return;
+name|free
+argument_list|(
+name|maptable
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|printhostmap
 argument_list|(
@@ -2131,6 +2272,9 @@ argument_list|(
 name|maptable
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -2139,7 +2283,8 @@ comment|/*  * Issue an ioctl to flush either the NAT rules table or the active m
 end_comment
 
 begin_function
-name|void
+specifier|static
+name|int
 name|flushtable
 parameter_list|(
 name|fd
@@ -2154,6 +2299,11 @@ decl_stmt|;
 block|{
 name|int
 name|n
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|rc
 init|=
 literal|0
 decl_stmt|;
@@ -2190,12 +2340,20 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"ioctl(SIOCFLNAT)"
 argument_list|)
 expr_stmt|;
+name|rc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"%d entries flushed from NAT table\n"
@@ -2203,6 +2361,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2237,12 +2396,20 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"ioctl(SIOCCNATL)"
 argument_list|)
 expr_stmt|;
+name|rc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"%d entries flushed from NAT list\n"
@@ -2251,6 +2418,10 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+return|return
+name|rc
+return|;
 block|}
 end_function
 

@@ -306,6 +306,7 @@ name|is_p
 operator|==
 name|IPPROTO_TCP
 condition|)
+block|{
 if|#
 directive|if
 name|defined
@@ -338,7 +339,7 @@ name|__OpenBSD__
 argument_list|)
 name|PRINTF
 argument_list|(
-literal|"\t%hu -> %hu %x:%x %u<<%d:%u<<%d"
+literal|"\t%hu -> %hu %x:%x (max %x:%x)\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -361,6 +362,19 @@ argument_list|,
 name|ips
 operator|.
 name|is_dend
+argument_list|,
+name|ips
+operator|.
+name|is_maxsend
+argument_list|,
+name|ips
+operator|.
+name|is_maxdend
+argument_list|)
+expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|"\t%u<<%d:%u<<%d"
 argument_list|,
 name|ips
 operator|.
@@ -391,7 +405,7 @@ else|#
 directive|else
 name|PRINTF
 argument_list|(
-literal|"\t%hu -> %hu %x:%x %u<<%d:%u<<%d"
+literal|"\t%hu -> %hu %x:%x (max %x:%x)\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -414,6 +428,19 @@ argument_list|,
 name|ips
 operator|.
 name|is_dend
+argument_list|,
+name|ips
+operator|.
+name|is_maxsend
+argument_list|,
+name|ips
+operator|.
+name|is_maxdend
+argument_list|)
+expr_stmt|;
+name|PRINTF
+argument_list|(
+literal|"\t%u<<%d:%u<<%d"
 argument_list|,
 name|ips
 operator|.
@@ -442,6 +469,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 elseif|else
 if|if
 condition|(
