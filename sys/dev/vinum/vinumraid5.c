@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Cybernet Corporation and Nan Yang Computer Services Limited.  *      All rights reserved.  *  *  This software was developed as part of the NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Cybernet Corporation   *      and Nan Yang Computer Services Limited  * 4. Neither the name of the Companies nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumraid5.c,v 1.1 1999/08/07 08:22:49 grog Exp $  */
-end_comment
-
-begin_comment
-comment|/*  * XXX To do:  *  * lock ranges while calculating parity  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Cybernet Corporation and Nan Yang Computer Services Limited.  *      All rights reserved.  *  *  This software was developed as part of the NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Cybernet Corporation  *      and Nan Yang Computer Services Limited  * 4. Neither the name of the Companies nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: raid5.c,v 1.15 1999/07/07 03:46:01 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -26,7 +22,7 @@ file|<sys/resourcevar.h>
 end_include
 
 begin_comment
-comment|/*  * Parameters which describe the current transfer.  * These are only used for calculation, but they  * need to be passed to other functions, so it's  * tidier to put them in a struct   */
+comment|/*  * Parameters which describe the current transfer.  * These are only used for calculation, but they  * need to be passed to other functions, so it's  * tidier to put them in a struct  */
 end_comment
 
 begin_struct
@@ -73,7 +69,7 @@ comment|/* These correspond to the fields in rqelement, sort of */
 name|int
 name|useroffset
 decl_stmt|;
-comment|/*      * Initial offset and length values for the first      * data block       */
+comment|/*      * Initial offset and length values for the first      * data block      */
 name|int
 name|initoffset
 decl_stmt|;
@@ -192,7 +188,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * define the low-level requests needed to perform a  * high-level I/O operation for a specific plex 'plexno'.  *  * Return 0 if all subdisks involved in the request are up, 1 if some  * subdisks are not up, and -1 if the request is at least partially  * outside the bounds of the subdisks.  *  * Modify the pointer *diskstart to point to the end address.  On  * read, return on the first bad subdisk, so that the caller  * (build_read_request) can try alternatives.  *  * On entry to this routine, the prq structures are not assigned.  The  * assignment is performed by expandrq().  Strictly speaking, the  * elements rqe->sdno of all entries should be set to -1, since 0  * (from bzero) is a valid subdisk number.  We avoid this problem by  * initializing the ones we use, and not looking at the others (index  *>= prq->requests).  */
+comment|/*  * define the low-level requests needed to perform  * a high-level I/O operation for a specific plex  * 'plexno'.  *  * Return 0 if all subdisks involved in the  * request are up, 1 if some subdisks are not up,  * and -1 if the request is at least partially  * outside the bounds of the subdisks.  *  * Modify the pointer *diskstart to point to the  * end address.  On read, return on the first bad  * subdisk, so that the caller  * (build_read_request) can try alternatives.  *  * On entry to this routine, the prq structures  * are not assigned.  The assignment is performed  * by expandrq().  Strictly speaking, the elements  * rqe->sdno of all entries should be set to -1,  * since 0 (from bzero) is a valid subdisk number.  * We avoid this problem by initializing the ones  * we use, and not looking at the others (index>=  * prq->requests).  */
 end_comment
 
 begin_function
@@ -261,6 +257,11 @@ name|int
 name|rqno
 decl_stmt|;
 comment|/* request number */
+name|rqg
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* shut up, damn compiler */
 name|m
 operator|.
 name|diskstart
@@ -294,14 +295,20 @@ name|diskend
 condition|)
 block|{
 comment|/* until we get it all sorted out */
-name|struct
-name|rqelement
-modifier|*
-name|prqe
-init|=
-name|NULL
-decl_stmt|;
-comment|/* XXX */
+if|if
+condition|(
+operator|*
+name|diskaddr
+operator|>=
+name|plex
+operator|->
+name|length
+condition|)
+comment|/* beyond the end of the plex */
+return|return
+name|REQUEST_EOF
+return|;
+comment|/* can't continue */
 name|m
 operator|.
 name|badsdno
@@ -311,7 +318,7 @@ literal|1
 expr_stmt|;
 comment|/* no bad subdisk yet */
 comment|/* Part A: Define the request */
-comment|/* 	 * First, calculate some sizes: 	 * The offset of the start address from 	 * the start of the stripe  	 */
+comment|/* 	 * First, calculate some sizes: 	 * The offset of the start address from 	 * the start of the stripe. 	 */
 name|m
 operator|.
 name|stripeoffset
@@ -333,7 +340,7 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 	 * The plex-relative address of the 	 * start of the stripe  	 */
+comment|/* 	 * The plex-relative address of the 	 * start of the stripe. 	 */
 name|m
 operator|.
 name|stripebase
@@ -379,7 +386,7 @@ name|plex
 operator|->
 name|subdisks
 expr_stmt|;
-comment|/* 	 * The number of the subdisk in which 	 * the start is located  	 */
+comment|/* 	 * The number of the subdisk in which 	 * the start is located. 	 */
 name|m
 operator|.
 name|firstsdno
@@ -409,7 +416,7 @@ name|firstsdno
 operator|++
 expr_stmt|;
 comment|/* increment it */
-comment|/* 	 * The offset from the beginning of 	 * the stripe on this subdisk  	 */
+comment|/* 	 * The offset from the beginning of 	 * the stripe on this subdisk. 	 */
 name|m
 operator|.
 name|initoffset
@@ -451,7 +458,7 @@ operator|.
 name|diskstart
 expr_stmt|;
 comment|/* The offset of the start in the user buffer */
-comment|/* 	 * The number of sectors to transfer in the 	 * current (first) subdisk  	 */
+comment|/* 	 * The number of sectors to transfer in the 	 * current (first) subdisk. 	 */
 name|m
 operator|.
 name|initlen
@@ -474,7 +481,7 @@ name|initoffset
 argument_list|)
 expr_stmt|;
 comment|/* and the amount left in this block */
-comment|/* 	 * The number of sectors to transfer in this stripe 	 * is the minumum of the amount remaining to transfer 	 * and the amount left in this stripe  	 */
+comment|/* 	 * The number of sectors to transfer in this stripe 	 * is the minumum of the amount remaining to transfer 	 * and the amount left in this stripe. 	 */
 name|m
 operator|.
 name|stripesectors
@@ -528,8 +535,7 @@ name|plex
 operator|->
 name|stripesize
 expr_stmt|;
-comment|/* Part B: decide what kind of transfer this will be */
-comment|/* 	 * start and end addresses of the transfer in 	 * the current block. 	 * 	 * There are a number of different kinds of transfer, each of which relates to a 	 * specific subdisk: 	 * 	 * 1. Normal read.  All participating subdisks are up, and the transfer can be 	 *    made directly to the user buffer.  The bounds of the transfer are described 	 *    by m.dataoffset and m.datalen.  We have already calculated m.initoffset and 	 *    m.initlen, which define the parameters for the first data block. 	 * 	 * 2. Recovery read.  One participating subdisk is down.  To recover data, all 	 *    the other subdisks, including the parity subdisk, must be read.  The data is 	 *    recovered by exclusive-oring all the other blocks.  The bounds of the transfer 	 *    are described by m.groupoffset and m.grouplen. 	 * 	 * 3. A read request may request reading both available data (normal read) and 	 *    non-available data (recovery read).  This can be a problem if the address ranges 	 *    of the two reads do not coincide: in this case, the normal read needs to be 	 *    extended to cover the address range of the recovery read, and must thus be 	 *    performed out of malloced memory. 	 * 	 * 4. Normal write.  All the participating subdisks are up.  The bounds of the transfer 	 *    are described by m.dataoffset and m.datalen.  Since these values differ for each 	 *    block, we calculate the bounds for the parity block independently as the maximum 	 *    of the individual blocks and store these values in m.writeoffset and m.writelen. 	 *    This write proceeds in four phases: 	 * 	 *    i.   Read the old contents of each block and the parity block. 	 * 	 *    ii.  ``Remove'' the old contents from the parity block with exclusive or. 	 * 	 *    iii. ``Insert'' the new contents of the block in the parity block, again with 	 *          exclusive or. 	 * 	 *    iv.   Write the new contents of the data blocks and the parity block.  The data block 	 *          transfers can be made directly from the user buffer. 	 * 	 * 5. Degraded write where the data block is not available.  The bounds of the 	 *    transfer are described by m.groupoffset and m.grouplen. This requires the 	 *    following steps: 	 * 	 *    i.   Read in all the other data blocks, excluding the parity block. 	 * 	 *    ii.  Recreate the parity block from the other data blocks and the data to be written. 	 * 	 *    iii. Write the parity block. 	 * 	 * 6. Parityless write, a write where the parity block is not available.  This 	 *    is in fact the simplest: just write the data blocks.  This can proceed directly 	 *    from the user buffer.  The bounds of the transfer are described 	 *    by m.dataoffset and m.datalen. 	 * 	 * 7. Combination of degraded data block write and normal write.  In this case the 	 *    address ranges of the reads may also need to be extended to cover all 	 *    participating blocks. 	 * 	 * All requests in a group transfer transfer the same address range relative 	 * to their subdisk.  The individual transfers may vary, but since our group of 	 * requests is all in a single slice, we can define a range in which they all 	 * fall. 	 * 	 * In the following code section, we determine which kind of transfer we will perform. 	 * If there is a group transfer, we also decide its bounds relative to the subdisks. 	 * At the end, we have the following values: 	 * 	 *          m.flags indicates the kinds of transfers we will perform 	 *          m.initoffset indicates the offset of the beginning of any data 	 *            operation relative to the beginning of the stripe base. 	 *          m.initlen specifies the length of any data operation. 	 *          m.dataoffset contains the same value as m.initoffset. 	 *          m.datalen contains the same value as m.initlen.  Initially 	 *            dataoffset and datalen describe the parameters for the first 	 *            data block; while building the data block requests, they are 	 *            updated for each block. 	 *          m.groupoffset indicates the offset of any group operation relative 	 *            to the beginning of the stripe base 	 *          m.grouplen specifies the length of any group operation 	 *          m.writeoffset indicates the offset of a normal write relative 	 *            to the beginning of the stripe base.  This value differs from 	 *            m.dataoffset in that it applies to the entire operation, and 	 *            not just the first block. 	 *          m.writelen specifies the total span of a normal write operation. 	 *            writeoffset and writelen are used to define the parity block. 	 */
+comment|/* Part B: decide what kind of transfer this will be.  	 * start and end addresses of the transfer in 	 * the current block. 	 * 	 * There are a number of different kinds of 	 * transfer, each of which relates to a 	 * specific subdisk: 	 * 	 * 1. Normal read.  All participating subdisks 	 *    are up, and the transfer can be made 	 *    directly to the user buffer.  The bounds 	 *    of the transfer are described by 	 *    m.dataoffset and m.datalen.  We have 	 *    already calculated m.initoffset and 	 *    m.initlen, which define the parameters 	 *    for the first data block. 	 * 	 * 2. Recovery read.  One participating 	 *    subdisk is down.  To recover data, all 	 *    the other subdisks, including the parity 	 *    subdisk, must be read.  The data is 	 *    recovered by exclusive-oring all the 	 *    other blocks.  The bounds of the 	 *    transfer are described by m.groupoffset 	 *    and m.grouplen. 	 * 	 * 3. A read request may request reading both 	 *    available data (normal read) and 	 *    non-available data (recovery read). 	 *    This can be a problem if the address 	 *    ranges of the two reads do not coincide: 	 *    in this case, the normal read needs to 	 *    be extended to cover the address range 	 *    of the recovery read, and must thus be 	 *    performed out of malloced memory. 	 * 	 * 4. Normal write.  All the participating 	 *    subdisks are up.  The bounds of the 	 *    transfer are described by m.dataoffset 	 *    and m.datalen.  Since these values 	 *    differ for each block, we calculate the 	 *    bounds for the parity block 	 *    independently as the maximum of the 	 *    individual blocks and store these values 	 *    in m.writeoffset and m.writelen.  This 	 *    write proceeds in four phases: 	 * 	 *    i.  Read the old contents of each block 	 *        and the parity block. 	 *    ii.  ``Remove'' the old contents from 	 *         the parity block with exclusive or. 	 *    iii. ``Insert'' the new contents of the 	 *          block in the parity block, again 	 *          with exclusive or. 	 * 	 *    iv.  Write the new contents of the data 	 *         blocks and the parity block.  The data 	 *         block transfers can be made directly from 	 *         the user buffer. 	 * 	 * 5. Degraded write where the data block is 	 *    not available.  The bounds of the 	 *    transfer are described by m.groupoffset 	 *    and m.grouplen. This requires the 	 *    following steps: 	 * 	 *    i.  Read in all the other data blocks, 	 *        excluding the parity block. 	 * 	 *    ii.  Recreate the parity block from the 	 *         other data blocks and the data to be 	 *         written. 	 * 	 *    iii. Write the parity block. 	 * 	 * 6. Parityless write, a write where the 	 *    parity block is not available.  This is 	 *    in fact the simplest: just write the 	 *    data blocks.  This can proceed directly 	 *    from the user buffer.  The bounds of the 	 *    transfer are described by m.dataoffset 	 *    and m.datalen. 	 * 	 * 7. Combination of degraded data block write 	 *    and normal write.  In this case the 	 *    address ranges of the reads may also 	 *    need to be extended to cover all 	 *    participating blocks. 	 * 	 * All requests in a group transfer transfer 	 * the same address range relative to their 	 * subdisk.  The individual transfers may 	 * vary, but since our group of requests is 	 * all in a single slice, we can define a 	 * range in which they all fall. 	 * 	 * In the following code section, we determine 	 * which kind of transfer we will perform.  If 	 * there is a group transfer, we also decide 	 * its bounds relative to the subdisks.  At 	 * the end, we have the following values: 	 * 	 *  m.flags indicates the kinds of transfers 	 *    we will perform. 	 *  m.initoffset indicates the offset of the 	 *    beginning of any data operation relative 	 *    to the beginning of the stripe base. 	 *  m.initlen specifies the length of any data 	 *    operation. 	 *  m.dataoffset contains the same value as 	 *    m.initoffset. 	 *  m.datalen contains the same value as 	 *    m.initlen.  Initially dataoffset and 	 *    datalen describe the parameters for the 	 *    first data block; while building the data 	 *    block requests, they are updated for each 	 *    block. 	 *  m.groupoffset indicates the offset of any 	 *    group operation relative to the beginning 	 *    of the stripe base. 	 *  m.grouplen specifies the length of any 	 *    group operation. 	 *  m.writeoffset indicates the offset of a 	 *    normal write relative to the beginning of 	 *    the stripe base.  This value differs from 	 *    m.dataoffset in that it applies to the 	 *    entire operation, and not just the first 	 *    block. 	 *  m.writelen specifies the total span of a 	 *    normal write operation.  writeoffset and 	 *    writelen are used to define the parity 	 *    block. 	 */
 name|m
 operator|.
 name|groupoffset
@@ -606,7 +612,7 @@ name|multiblock
 operator|++
 expr_stmt|;
 comment|/* more than one block for the request */
-comment|/* 	     * If we have two transfers that don't overlap, 	     * (one at the end of the first block, the other 	     * at the beginning of the second block), 	     * it's cheaper to split them  	     */
+comment|/* 	     * If we have two transfers that don't overlap, 	     * (one at the end of the first block, the other 	     * at the beginning of the second block), 	     * it's cheaper to split them. 	     */
 if|if
 condition|(
 name|rsectors
@@ -760,7 +766,6 @@ operator|>=
 literal|0
 condition|)
 comment|/* we had one already, */
-comment|/* 			   * XXX be cleverer here.  We can still 			   * read what we can read. 			 */
 return|return
 name|REQUEST_DOWN
 return|;
@@ -957,7 +962,7 @@ comment|/* second bad disk, */
 name|int
 name|sdno
 decl_stmt|;
-comment|/* 			 * If the parity disk is down, there's 			 * no recovery.  We make all involved 			 * subdisks stale.  Otherwise, we 			 * should be able to recover, but it's 			 * like pulling teeth.  Fix it later. 			 * 			 * XXX be cleverer here.  We should 			 * still write what we can write. 			 */
+comment|/* 			 * If the parity disk is down, there's 			 * no recovery.  We make all involved 			 * subdisks stale.  Otherwise, we 			 * should be able to recover, but it's 			 * like pulling teeth.  Fix it later. 			 */
 for|for
 control|(
 name|sdno
@@ -1283,7 +1288,6 @@ name|m
 operator|.
 name|initlen
 expr_stmt|;
-comment|/* 	 * XXX see if we can satisfy a recovery_read from a 	 * different plex.  If so, return from here with no requests WRITEME  	 */
 comment|/* decide how many requests we need */
 if|if
 condition|(
@@ -1401,7 +1405,7 @@ literal|0
 expr_stmt|;
 comment|/* index in the request group */
 comment|/* 1: PARITY BLOCK */
-comment|/* 	 * Are we performing an operation which requires parity?  In that case, 	 * work out the parameters and define the parity block. 	 * XFR_PARITYOP is XFR_NORMAL_WRITE | XFR_RECOVERY_READ | XFR_DEGRADED_WRITE  	 */
+comment|/* 	 * Are we performing an operation which requires parity?  In that case, 	 * work out the parameters and define the parity block. 	 * XFR_PARITYOP is XFR_NORMAL_WRITE | XFR_RECOVERY_READ | XFR_DEGRADED_WRITE 	 */
 if|if
 condition|(
 name|m
@@ -1495,11 +1499,6 @@ name|sd
 operator|->
 name|driveno
 expr_stmt|;
-name|prqe
-operator|=
-name|rqe
-expr_stmt|;
-comment|/* debug XXX */
 if|if
 condition|(
 name|build_rq_buffer
@@ -1534,7 +1533,7 @@ operator|++
 expr_stmt|;
 comment|/* and point to the next request */
 block|}
-comment|/* 	 * 2: DATA BLOCKS 	 * Now build up requests for the blocks required 	 * for individual transfers  	 */
+comment|/* 	 * 2: DATA BLOCKS 	 * Now build up requests for the blocks required 	 * for individual transfers 	 */
 for|for
 control|(
 name|mysdno
@@ -1686,7 +1685,7 @@ operator||=
 name|XFR_BAD_SUBDISK
 expr_stmt|;
 comment|/* note that it's dead */
-comment|/* 		 * we can't read or write from/to it, 		 * but we don't need to malloc  		 */
+comment|/* 		 * we can't read or write from/to it, 		 * but we don't need to malloc 		 */
 name|rqe
 operator|->
 name|flags
@@ -1710,36 +1709,6 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* set up the bounds of the transfer */
-if|#
-directive|if
-name|VINUMDEBUG
-if|if
-condition|(
-name|prqe
-operator|&&
-operator|(
-name|rqe
-operator|->
-name|groupoffset
-operator|+
-name|rqe
-operator|->
-name|sdoffset
-operator|)
-operator|<
-name|prqe
-operator|->
-name|sdoffset
-condition|)
-comment|/* XXX */
-name|Debugger
-argument_list|(
-literal|"Low data block"
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-endif|#
-directive|endif
 name|rqe
 operator|->
 name|useroffset
@@ -1864,7 +1833,7 @@ literal|0
 expr_stmt|;
 comment|/* start at the beginning of next block */
 block|}
-comment|/* 	 * 3: REMAINING BLOCKS FOR RECOVERY 	 * Finally, if we have a recovery operation, build 	 * up transfers for the other subdisks.  Follow the 	 * subdisks around until we get to where we started. 	 * These requests use only the group parameters.  	 */
+comment|/* 	 * 3: REMAINING BLOCKS FOR RECOVERY 	 * Finally, if we have a recovery operation, build 	 * up transfers for the other subdisks.  Follow the 	 * subdisks around until we get to where we started. 	 * These requests use only the group parameters. 	 */
 if|if
 condition|(
 operator|(
@@ -2037,11 +2006,11 @@ name|flags
 operator||
 name|XFR_MALLOCED
 operator|)
+comment|/* transfer flags without data op stuf */
 operator|&
 operator|~
 name|XFR_DATAOP
 expr_stmt|;
-comment|/* transfer flags without data op stuf */
 name|rqe
 operator|->
 name|sdno
@@ -2084,6 +2053,23 @@ expr_stmt|;
 comment|/* we must read first */
 block|}
 block|}
+comment|/* 	 * We need to lock the address range before 	 * doing anything.  We don't have to be 	 * performing a recovery operation: somebody 	 * else could be doing so, and the results could 	 * influence us. 	 */
+name|rqg
+operator|->
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|m
+operator|.
+name|stripebase
+argument_list|,
+name|bp
+argument_list|,
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* lock the stripe */
 if|if
 condition|(
 operator|*
@@ -2106,7 +2092,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Helper function for rqe5: adjust the bounds of the transfers to minimize  * the buffer allocation.  *  * Each request can handle two of three different data ranges:  *  * 1.  The range described by the parameters dataoffset and datalen,  *     for normal read or parityless write.  * 2.  The range described by the parameters groupoffset and grouplen,  *     for recovery read and degraded write.  * 3.  For normal write, the range depends on the kind of block.  For  *     data blocks, the range is defined by dataoffset and datalen.  For  *     parity blocks, it is defined by writeoffset and writelen.  *  * In order not to allocate more memory than necessary, this function  * adjusts the bounds parameter for each request to cover just the minimum  * necessary for the function it performs.  This will normally vary from one  * request to the next.  *  * Things are slightly different for the parity block.  In this case, the bounds  * defined by mp->writeoffset and mp->writelen also play a rôle.  Select this  * case by setting the parameter forparity != 0  */
+comment|/*  * Helper function for rqe5: adjust the bounds of  * the transfers to minimize the buffer  * allocation.  *  * Each request can handle two of three different  * data ranges:  *  * 1.  The range described by the parameters  *     dataoffset and datalen, for normal read or  *     parityless write.  * 2.  The range described by the parameters  *     groupoffset and grouplen, for recovery read  *     and degraded write.  * 3.  For normal write, the range depends on the  *     kind of block.  For data blocks, the range  *     is defined by dataoffset and datalen.  For  *     parity blocks, it is defined by writeoffset  *     and writelen.  *  * In order not to allocate more memory than  * necessary, this function adjusts the bounds  * parameter for each request to cover just the  * minimum necessary for the function it performs.  * This will normally vary from one request to the  * next.  *  * Things are slightly different for the parity  * block.  In this case, the bounds defined by  * mp->writeoffset and mp->writelen also play a  * rôle.  Select this case by setting the  * parameter forparity != 0  */
 end_comment
 
 begin_function
@@ -2157,7 +2143,7 @@ name|XFR_DEGRADED_WRITE
 condition|)
 block|{
 comment|/* also degraded write */
-comment|/* 	     * With a combined normal and degraded write, we 	     * will zero out the area of the degraded write 	     * in the second phase, so we don't need to read 	     * it in.  Unfortunately, we need a way to tell 	     * build_request_buffer the size of the buffer, 	     * and currently that's the length of the read. 	     * As a result, we read everything, even the stuff 	     * that we're going to nuke. 	     * FIXME XXX  	     */
+comment|/* 	     * With a combined normal and degraded write, we 	     * will zero out the area of the degraded write 	     * in the second phase, so we don't need to read 	     * it in.  Unfortunately, we need a way to tell 	     * build_request_buffer the size of the buffer, 	     * and currently that's the length of the read. 	     * As a result, we read everything, even the stuff 	     * that we're going to nuke. 	     * FIXME XXX 	     */
 if|if
 condition|(
 name|mp
@@ -2542,6 +2528,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
