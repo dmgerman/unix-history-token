@@ -27,6 +27,18 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/* Global locks */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|clock_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

@@ -4055,6 +4055,16 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|clock_lock
+argument_list|,
+literal|"clk"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
