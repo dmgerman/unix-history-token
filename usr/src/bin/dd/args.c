@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	5.2 (Berkeley) %G%"
+literal|"@(#)args.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,8 +595,6 @@ operator|(
 name|C_BLOCK
 operator||
 name|C_LCASE
-operator||
-name|C_SWAB
 operator||
 name|C_UCASE
 operator||
@@ -1758,6 +1756,30 @@ name|expr
 expr_stmt|;
 break|break;
 case|case
+literal|'m'
+case|:
+name|t
+operator|=
+name|num
+expr_stmt|;
+name|num
+operator|*=
+literal|1048576
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|>
+name|num
+condition|)
+goto|goto
+name|erange
+goto|;
+operator|++
+name|expr
+expr_stmt|;
+break|break;
+case|case
 literal|'w'
 case|:
 comment|/* POSIX extension. */
@@ -1797,10 +1819,11 @@ literal|'\0'
 case|:
 break|break;
 case|case
-literal|'x'
-case|:
-case|case
 literal|'*'
+case|:
+comment|/* Backward compatible. */
+case|case
+literal|'x'
 case|:
 name|t
 operator|=
