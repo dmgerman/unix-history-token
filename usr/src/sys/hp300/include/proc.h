@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,14 +12,14 @@ struct|struct
 name|mdproc
 block|{
 name|int
-name|md_flags
-decl_stmt|;
-comment|/* machine-dependent flags */
-name|int
 modifier|*
 name|md_regs
 decl_stmt|;
 comment|/* registers on current frame */
+name|int
+name|md_flags
+decl_stmt|;
+comment|/* machine-dependent flags */
 block|}
 struct|;
 end_struct
