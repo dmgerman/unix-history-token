@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_xxx.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -209,31 +209,37 @@ begin_block
 block|{
 specifier|register
 name|int
-name|i
+name|bit
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mask
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
-name|i
+name|bit
 operator|=
 literal|1
 init|;
-name|i
-operator|<
-name|NSIG
 condition|;
-name|i
 operator|++
+name|bit
 control|)
-block|{
 if|if
 condition|(
 name|mask
 operator|&
-literal|1
+literal|0x01
 condition|)
 return|return
 operator|(
-name|i
+name|bit
 operator|)
 return|;
 name|mask
@@ -241,15 +247,10 @@ operator|>>=
 literal|1
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 end_block
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -265,14 +266,14 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|bcmp
-argument_list|(
+unit|bcmp
+operator|(
 name|s1
-argument_list|,
+operator|,
 name|s2
-argument_list|,
+operator|,
 name|len
-argument_list|)
+operator|)
 specifier|register
 name|char
 operator|*
