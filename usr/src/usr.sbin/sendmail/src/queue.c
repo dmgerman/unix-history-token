@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.29 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.30 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.29 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.30 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,13 +240,6 @@ name|ADDRESS
 modifier|*
 name|lastctladdr
 decl_stmt|;
-specifier|static
-name|ADDRESS
-modifier|*
-name|nullctladdr
-init|=
-name|NULL
-decl_stmt|;
 name|char
 name|buf
 index|[
@@ -270,40 +263,6 @@ modifier|*
 name|getctladdr
 parameter_list|()
 function_decl|;
-comment|/* 	**  If we don't have nullctladdr, create one 	*/
-if|if
-condition|(
-name|nullctladdr
-operator|==
-name|NULL
-condition|)
-block|{
-name|nullctladdr
-operator|=
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|xalloc
-argument_list|(
-sizeof|sizeof
-expr|*
-name|nullctladdr
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|nullctladdr
-argument_list|,
-sizeof|sizeof
-name|nullctladdr
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	**  Create control file. 	*/
 name|newid
 operator|=
@@ -791,22 +750,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ctladdr
-operator|==
-name|NULL
-operator|&&
-name|q
-operator|->
-name|q_alias
-operator|!=
-name|NULL
-condition|)
-name|ctladdr
-operator|=
-name|nullctladdr
-expr_stmt|;
-if|if
-condition|(
-name|ctladdr
 operator|!=
 name|lastctladdr
 condition|)
@@ -902,22 +845,6 @@ name|getctladdr
 argument_list|(
 name|q
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ctladdr
-operator|==
-name|NULL
-operator|&&
-name|q
-operator|->
-name|q_alias
-operator|!=
-name|NULL
-condition|)
-name|ctladdr
-operator|=
-name|nullctladdr
 expr_stmt|;
 if|if
 condition|(
@@ -3797,6 +3724,8 @@ argument_list|,
 name|e
 argument_list|,
 name|NULL
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5225,9 +5154,10 @@ name|user
 operator|==
 literal|'\0'
 condition|)
-return|return
-name|NULL
-return|;
+name|user
+operator|=
+name|DefUser
+expr_stmt|;
 comment|/* 	**  Set up addr fields for controlling user. 	*/
 name|a
 operator|=

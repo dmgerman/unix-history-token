@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.22 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1765,6 +1765,19 @@ operator|)
 return|;
 block|}
 end_if
+
+begin_expr_stmt
+name|ee
+operator|->
+name|e_sender
+operator|=
+name|ee
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* push state into submessage */

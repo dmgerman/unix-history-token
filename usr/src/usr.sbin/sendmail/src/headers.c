@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.20 (Berkeley) %G%"
+literal|"@(#)headers.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1171,9 +1171,7 @@ literal|'f'
 argument_list|,
 name|e
 operator|->
-name|e_from
-operator|.
-name|q_paddr
+name|e_sender
 argument_list|,
 name|e
 argument_list|)
@@ -1184,9 +1182,7 @@ literal|'g'
 argument_list|,
 name|e
 operator|->
-name|e_from
-operator|.
-name|q_paddr
+name|e_sender
 argument_list|,
 name|e
 argument_list|)

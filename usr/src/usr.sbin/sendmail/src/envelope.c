@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.22 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1458,34 +1458,52 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETSENDER -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is in an approved list (typically **	    from a network server). **	3.  The address the user is trying to claim has a **	    "!" character in it (since #2 doesn't do it for **	    us if we are dialing out for UUCP). **	A better check to replace #3 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person we would like to believe this message **			is from, as specified on the command line. **		e -- the envelope in which we would like the sender set. **		delimptr -- if non-NULL, set to the location of the **			trailing delimiter. ** **	Returns: **		pointer to the delimiter terminating the from address. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
+comment|/* **  SETSENDER -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is in an approved list (typically **	    from a network server). **	3.  The address the user is trying to claim has a **	    "!" character in it (since #2 doesn't do it for **	    us if we are dialing out for UUCP). **	A better check to replace #3 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person we would like to believe this message **			is from, as specified on the command line. **		e -- the envelope in which we would like the sender set. **		delimptr -- if non-NULL, set to the location of the **			trailing delimiter. **		internal -- set if this address is coming from an internal **			source such as an owner alias. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
 name|setsender
-parameter_list|(
-name|from
-parameter_list|,
-name|e
-parameter_list|,
-name|delimptr
-parameter_list|)
+argument_list|(
+argument|from
+argument_list|,
+argument|e
+argument_list|,
+argument|delimptr
+argument_list|,
+argument|internal
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|from
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|delimptr
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|internal
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|char
@@ -1834,6 +1852,12 @@ parameter_list|()
 function_decl|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|internal
+condition|)
+block|{
 comment|/* if the user has given fullname already, don't redefine */
 if|if
 condition|(
@@ -1884,7 +1908,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			**  We have an alternate address for the sender 			*/
+comment|/* 				**  We have an alternate address for the sender 				*/
 name|pvp
 operator|=
 name|prescan
@@ -1902,6 +1926,7 @@ block|}
 endif|#
 directive|endif
 comment|/* USERDB */
+block|}
 if|if
 condition|(
 operator|(
@@ -1996,6 +2021,9 @@ name|q_user
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|!
+name|internal
 condition|)
 block|{
 name|buildfname
@@ -2036,6 +2064,9 @@ condition|(
 name|FullName
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|internal
 condition|)
 name|define
 argument_list|(
@@ -2047,7 +2078,12 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|internal
+condition|)
 block|{
 if|if
 condition|(
@@ -2162,15 +2198,34 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+name|cataddr
+argument_list|(
+name|pvp
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|'\0'
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_sender
+operator|=
+name|newstr
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 name|define
 argument_list|(
 literal|'f'
 argument_list|,
 name|e
 operator|->
-name|e_from
-operator|.
-name|q_paddr
+name|e_sender
 argument_list|,
 name|e
 argument_list|)
@@ -2178,6 +2233,9 @@ expr_stmt|;
 comment|/* save the domain spec if this mailer wants it */
 if|if
 condition|(
+operator|!
+name|internal
+operator|&&
 name|e
 operator|->
 name|e_from
@@ -2247,7 +2305,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 

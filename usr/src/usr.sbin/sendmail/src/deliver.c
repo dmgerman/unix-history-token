@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.46 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,9 +190,7 @@ decl_stmt|;
 name|char
 name|tobuf
 index|[
-name|MAXLINE
-operator|-
-literal|50
+name|TOBUFSIZE
 index|]
 decl_stmt|;
 comment|/* text line of to people */
@@ -468,20 +466,6 @@ name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|define
-argument_list|(
-literal|'f'
-argument_list|,
-name|e
-operator|->
-name|e_from
-operator|.
-name|q_paddr
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-comment|/* raw return path */
 name|define
 argument_list|(
 literal|'g'
@@ -6271,25 +6255,15 @@ operator||
 name|EF_CLRQUEUE
 operator|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|parseaddr
+name|setsender
 argument_list|(
 name|owner
 argument_list|,
-operator|&
 name|ee
-operator|->
-name|e_from
-argument_list|,
-literal|1
-argument_list|,
-literal|'\0'
 argument_list|,
 name|NULL
 argument_list|,
-name|ee
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -6568,25 +6542,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|parseaddr
+name|setsender
 argument_list|(
 name|owner
 argument_list|,
-operator|&
 name|e
-operator|->
-name|e_from
-argument_list|,
-literal|1
-argument_list|,
-literal|'\0'
 argument_list|,
 name|NULL
 argument_list|,
-name|e
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
