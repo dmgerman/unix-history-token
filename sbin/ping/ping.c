@@ -232,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|TIMEVAL_LEN
-value|((int)sizeof(struct timeval))
+value|((int)sizeof(struct tv32))
 end_define
 
 begin_define
@@ -375,6 +375,20 @@ name|bit
 parameter_list|)
 value|(A(bit)& B(bit))
 end_define
+
+begin_struct
+struct|struct
+name|tv32
+block|{
+name|int32_t
+name|tv32_sec
+decl_stmt|;
+name|int32_t
+name|tv32_usec
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* various options */
@@ -4466,6 +4480,10 @@ name|timeval
 name|now
 decl_stmt|;
 name|struct
+name|tv32
+name|tv32
+decl_stmt|;
+name|struct
 name|ip
 modifier|*
 name|ip
@@ -4560,6 +4578,28 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|tv32
+operator|.
+name|tv32_sec
+operator|=
+name|htonl
+argument_list|(
+name|now
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
+name|tv32
+operator|.
+name|tv32_usec
+operator|=
+name|htonl
+argument_list|(
+name|now
+operator|.
+name|tv_usec
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|options
@@ -4606,7 +4646,7 @@ name|void
 operator|*
 operator|)
 operator|&
-name|now
+name|tv32
 argument_list|,
 operator|(
 name|void
@@ -4622,8 +4662,7 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|timeval
+name|tv32
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5015,6 +5054,10 @@ name|struct
 name|timeval
 name|tv1
 decl_stmt|;
+name|struct
+name|tv32
+name|tv32
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|icmp_data
@@ -5064,14 +5107,36 @@ comment|/* Copy to avoid alignment problems: */
 name|memcpy
 argument_list|(
 operator|&
-name|tv1
+name|tv32
 argument_list|,
 name|tp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|tv1
+name|tv32
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|tv1
+operator|.
+name|tv_sec
+operator|=
+name|ntohl
+argument_list|(
+name|tv32
+operator|.
+name|tv32_sec
+argument_list|)
+expr_stmt|;
+name|tv1
+operator|.
+name|tv_usec
+operator|=
+name|ntohl
+argument_list|(
+name|tv32
+operator|.
+name|tv32_usec
 argument_list|)
 expr_stmt|;
 name|tvsub
