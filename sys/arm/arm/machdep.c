@@ -416,11 +416,13 @@ name|fp
 operator|--
 expr_stmt|;
 comment|/* make the stack aligned */
-operator|(
-name|u_int
-operator|)
 name|fp
 operator|=
+operator|(
+expr|struct
+name|sigframe
+operator|*
+operator|)
 name|_ALIGN
 argument_list|(
 name|fp
