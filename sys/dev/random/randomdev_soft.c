@@ -596,7 +596,7 @@ name|harvest
 operator|.
 name|ethernet
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -630,7 +630,7 @@ name|harvest
 operator|.
 name|point_to_point
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,
@@ -664,7 +664,7 @@ name|harvest
 operator|.
 name|interrupt
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|random_check_boolean
 argument_list|,

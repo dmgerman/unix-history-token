@@ -118,11 +118,11 @@ name|harvest_select
 name|harvest
 init|=
 block|{
-literal|0
+literal|1
 block|,
-literal|0
+literal|1
 block|,
-literal|0
+literal|1
 block|,
 literal|0
 block|}
