@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	7.11 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
+comment|/*  * Copyright (c) 1990, 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *      @(#)bpf.c	7.12 (Berkeley) %G%  *  * static char rcsid[] =  * "$Header: bpf.c,v 1.33 91/10/27 21:21:58 mccanne Exp $";  */
 end_comment
 
 begin_include
@@ -398,6 +398,8 @@ parameter_list|,
 name|mp
 parameter_list|,
 name|sockp
+parameter_list|,
+name|datlen
 parameter_list|)
 specifier|register
 name|struct
@@ -407,7 +409,13 @@ name|uio
 decl_stmt|;
 name|int
 name|linktype
+decl_stmt|,
+decl|*
+name|datlen
 decl_stmt|;
+end_function
+
+begin_decl_stmt
 specifier|register
 name|struct
 name|mbuf
@@ -415,12 +423,18 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|struct
 name|sockaddr
 modifier|*
 name|sockp
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|mbuf
@@ -516,6 +530,13 @@ operator|=
 name|uio
 operator|->
 name|uio_resid
+expr_stmt|;
+operator|*
+name|datlen
+operator|=
+name|len
+operator|-
+name|hlen
 expr_stmt|;
 if|if
 condition|(
@@ -1642,6 +1663,9 @@ name|struct
 name|sockaddr
 name|dst
 decl_stmt|;
+name|int
+name|datlen
+decl_stmt|;
 if|if
 condition|(
 name|d
@@ -1676,21 +1700,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_resid
-operator|>
-name|ifp
-operator|->
-name|if_mtu
-condition|)
-return|return
-operator|(
-name|EMSGSIZE
-operator|)
-return|;
 name|error
 operator|=
 name|bpf_movein
@@ -1711,6 +1720,9 @@ name|m
 argument_list|,
 operator|&
 name|dst
+argument_list|,
+operator|&
+name|datlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -1720,6 +1732,19 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+if|if
+condition|(
+name|datlen
+operator|>
+name|ifp
+operator|->
+name|if_mtu
+condition|)
+return|return
+operator|(
+name|EMSGSIZE
 operator|)
 return|;
 name|s
@@ -4526,7 +4551,7 @@ operator|+
 literal|8
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
