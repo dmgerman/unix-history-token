@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.4 1995/02/17 02:22:45 phk Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.5 1995/05/30 08:00:23 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -630,12 +630,18 @@ modifier|*
 name|ah_next
 decl_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|ah_fun
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*ah_fun
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|ah_arg
+operator|)
+argument_list|)
+expr_stmt|;
 name|void
 modifier|*
 name|ah_arg

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.29 1995/10/21 23:13:07 phk Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.30 1995/11/20 12:42:31 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -101,6 +101,18 @@ begin_comment
 comment|/*  * The following documentation tries to describe the relationship between the  * various structures defined in this file:  *  * each adapter type has a scsi_adapter struct. This describes the adapter and  *    identifies routines that can be called to use the adapter.  * each device type has a scsi_device struct. This describes the device and  *    identifies routines that can be called to use the device.  * each existing device position (scsibus + target + lun)  *    can be described by a scsi_link struct.  *    Only scsi positions that actually have devices, have a scsi_link  *    structure assigned. so in effect each device has scsi_link struct.  *    The scsi_link structure contains information identifying both the  *    device driver and the adapter driver for that position on that scsi bus,  *    and can be said to 'link' the two.  * each individual scsi bus has an array that points to all the scsi_link  *    structs associated with that scsi bus. Slots with no device have  *    a NULL pointer.  * each individual device also knows the address of it's own scsi_link  *    structure.  *  *				-------------  *  * The key to all this is the scsi_link structure which associates all the  * other structures with each other in the correct configuration.  The  * scsi_link is the connecting information that allows each part of the  * scsi system to find the associated other parts.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|buf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|scsi_xfer
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * These entrypoints are called by the high-end drivers to get services from  * whatever low-end drivers they are attached to each adapter type has one of  * these statically allocated.  */
 end_comment
@@ -111,44 +123,71 @@ name|scsi_adapter
 block|{
 comment|/* 04*/
 name|int32
-function_decl|(
-modifier|*
-name|scsi_cmd
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*scsi_cmd
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|scsi_xfer
+operator|*
+name|xs
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 08*/
 name|void
-function_decl|(
-modifier|*
-name|scsi_minphys
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*scsi_minphys
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+name|bp
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 12*/
 name|int32
-function_decl|(
-modifier|*
-name|open_target_lu
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*open_target_lu
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 16*/
 name|int32
-function_decl|(
-modifier|*
-name|close_target_lu
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*close_target_lu
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 20*/
 name|u_int32
-function_decl|(
-modifier|*
-name|adapter_info
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*adapter_info
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* see definitions below */
 comment|/* 24*/
 name|char
@@ -262,25 +301,34 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|scsi_xfer
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|proc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|buf
 struct_decl|;
 end_struct_decl
 
 begin_comment
 comment|/*  * These entry points are called by the low-end drivers to get services from  * whatever high-end drivers they are attached to.  Each device type has one  * of these statically allocated.  *  * XXX dufault@hda.com: Each adapter driver has a scsi_device structure  *     that I don't think should be there.  *     This structure should be rearranged and cleaned up once the  *     instance down in the adapter drivers is removed.  */
 end_comment
+
+begin_comment
+comment|/*  * XXX<devconf.h> already includes too much; avoid including<conf.h>.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|yet_another_d_open_t
+name|__P
+typedef|((
+name|dev_t
+typedef|,
+name|int
+typedef|,
+name|int
+typedef|, struct
+name|proc
+modifier|*
+typedef|));
+end_typedef
 
 begin_struct
 struct|struct
@@ -316,20 +364,31 @@ parameter_list|)
 function_decl|;
 comment|/* 12*/
 name|int32
-function_decl|(
-modifier|*
-name|async
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*async
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 16*/
 name|int32
-function_decl|(
-modifier|*
-name|done
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*done
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|scsi_xfer
+operator|*
+name|xs
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* returns -1 to say done processing complete */
 comment|/* 20*/
 name|char
@@ -374,27 +433,10 @@ name|desc
 decl_stmt|;
 comment|/* Description of device */
 comment|/* 48*/
-name|int
-function_decl|(
+name|yet_another_d_open_t
 modifier|*
 name|open
-function_decl|)
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|fmt
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* 52*/
 name|int
 name|sizeof_scsi_data
@@ -572,7 +614,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* SCSI_DEVICE_ENTRIES: A macro to generate all the entry points from the  * name.  */
+comment|/* SCSI_DEVICE_ENTRIES: A macro to generate all the entry points from the  * name.  * XXX as usual, the extern prototypes belong in a header so that they are  * visible to callers.  */
 end_comment
 
 begin_define
@@ -1774,14 +1816,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|scsibus_data
 modifier|*
 name|scsi_alloc_bus
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|errval
@@ -2321,6 +2368,18 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|scsi_configure_finish
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ukinit
 name|__P
 argument_list|(
 operator|(

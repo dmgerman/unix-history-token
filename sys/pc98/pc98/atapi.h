@@ -1062,6 +1062,33 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|wcd
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|void
+name|atapi_callback_t
+parameter_list|(
+name|struct
+name|wcd
+modifier|*
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|atapires
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|atapicmd
@@ -1097,13 +1124,10 @@ modifier|*
 name|addr
 decl_stmt|;
 comment|/* data to transfer */
-name|void
-function_decl|(
+name|atapi_callback_t
 modifier|*
 name|callback
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 comment|/* call when done */
 name|void
 modifier|*
@@ -1527,12 +1551,9 @@ parameter_list|,
 name|int
 name|count
 parameter_list|,
-name|void
-function_decl|(
+name|atapi_callback_t
 modifier|*
 name|done
-function_decl|)
-parameter_list|()
 parameter_list|,
 name|void
 modifier|*

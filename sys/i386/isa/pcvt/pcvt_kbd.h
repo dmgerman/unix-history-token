@@ -41,7 +41,9 @@ function_decl|(
 modifier|*
 name|func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 comment|/* ptr to function */
 block|}
