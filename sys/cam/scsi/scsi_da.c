@@ -1138,6 +1138,24 @@ name|DA_Q_NO_6_BYTE
 operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/* 		 * HP 315 Digital Camera 		 * PR: kern/41010 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"HP"
+block|,
+literal|"USB Camera*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
