@@ -818,9 +818,6 @@ expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|dialog_update
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
