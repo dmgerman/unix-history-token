@@ -458,6 +458,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|hostinfo
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print host-specific info in messages */
+end_comment
+
+begin_decl_stmt
+name|int
 name|logged_in
 decl_stmt|;
 end_decl_stmt
@@ -1679,7 +1691,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46a:AdDElmMoOp:P:rRSt:T:u:UvW"
+literal|"46a:AdDEhlmMoOp:P:rRSt:T:u:UvW"
 argument_list|)
 operator|)
 operator|!=
@@ -1754,6 +1766,14 @@ case|:
 name|noepsv
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|hostinfo
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3293,6 +3313,10 @@ literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|hostinfo
+condition|)
 name|reply
 argument_list|(
 literal|220
@@ -3302,6 +3326,14 @@ argument_list|,
 name|hostname
 argument_list|,
 name|version
+argument_list|)
+expr_stmt|;
+else|else
+name|reply
+argument_list|(
+literal|220
+argument_list|,
+literal|"FTP server ready."
 argument_list|)
 expr_stmt|;
 for|for
@@ -10341,6 +10373,11 @@ decl_stmt|;
 name|int
 name|ispassive
 decl_stmt|;
+if|if
+condition|(
+name|hostinfo
+condition|)
+block|{
 name|lreply
 argument_list|(
 literal|211
@@ -10355,6 +10392,15 @@ argument_list|(
 literal|"     %s\r\n"
 argument_list|,
 name|version
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|lreply
+argument_list|(
+literal|211
+argument_list|,
+literal|"FTP server status:"
 argument_list|)
 expr_stmt|;
 name|printf
