@@ -346,7 +346,7 @@ begin_define
 define|#
 directive|define
 name|FCNTLFLAGS
-value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK)
+value|(FAPPEND|FASYNC|FFSYNC|FNONBLOCK|FPOSIXSHM)
 end_define
 
 begin_endif
@@ -355,7 +355,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The O_* flags used to have only F* names, which were used in the kernel  * and by fcntl.  We retain the F* names for the kernel f_flags field  * and for backward compatibility for fcntl.  */
+comment|/*  * The O_* flags used to have only F* names, which were used in the kernel  * and by fcntl.  We retain the F* names for the kernel f_flag field  * and for backward compatibility for fcntl.  */
 end_comment
 
 begin_ifndef
@@ -429,6 +429,32 @@ end_define
 begin_comment
 comment|/* compat */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * We are out of bits in f_flag (which is a short).  However,  * the flag bits not set in FMASK are only meaningful in the  * initial open syscall.  Those bits can thus be given a  * different meaning for fcntl(2).  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_comment
+comment|/*  * Set by shm_open(3) to get automatic MAP_ASYNC behavior  * for POSIX shared memory objects (which are otherwise  * implemented as plain files).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPOSIXSHM
+value|O_NOFOLLOW
+end_define
 
 begin_endif
 endif|#

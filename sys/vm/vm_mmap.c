@@ -926,6 +926,19 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 		 * POSIX shared-memory objects are defined to have 		 * kernel persistence, and are not defined to support 		 * read(2)/write(2) -- or even open(2).  Thus, we can 		 * use MAP_ASYNC to trade on-disk coherence for speed. 		 * The shm_open(3) library routine turns on the FPOSIXSHM 		 * flag to request this behavior. 		 */
+if|if
+condition|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FPOSIXSHM
+condition|)
+name|flags
+operator||=
+name|MAP_NOSYNC
+expr_stmt|;
 name|vp
 operator|=
 operator|(
