@@ -5409,7 +5409,7 @@ condition|)
 comment|/* other end of pipe has been closed */
 return|return
 operator|(
-name|EBADF
+name|EPIPE
 operator|)
 return|;
 break|break;
