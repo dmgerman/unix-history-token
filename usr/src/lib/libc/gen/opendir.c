@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	8.3 (Berkeley) %G%"
+literal|"@(#)opendir.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,8 +507,8 @@ name|dirent
 modifier|*
 name|xp
 decl_stmt|;
-comment|/* 				 * If and when whiteouts happen, 				 * this sort would need to be stable. 				 */
-name|heapsort
+comment|/* 				 * This sort must be stable. 				 */
+name|mergesort
 argument_list|(
 name|dpv
 argument_list|,
