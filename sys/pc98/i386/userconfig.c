@@ -1789,8 +1789,11 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
 block|{
-literal|"lpt"
+literal|"olpt"
 block|,
 literal|"Parallel printer port"
 block|,
@@ -1799,6 +1802,8 @@ block|,
 name|CLS_COMMS
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"ppc"
 block|,
@@ -2054,6 +2059,9 @@ block|,
 name|CLS_MMEDIA
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
 block|{
 literal|"nss"
 block|,
@@ -2064,6 +2072,8 @@ block|,
 name|CLS_MMEDIA
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"opl"
 block|,
@@ -2224,6 +2234,21 @@ block|,
 name|CLS_MISC
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"gdc"
+block|,
+literal|"Graphic Display Controller"
+block|,
+name|FLG_INVISIBLE
+block|,
+name|CLS_MISC
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"vga"
 block|,
