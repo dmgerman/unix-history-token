@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	8.1 (Berkeley) %G%"
+literal|"@(#)library.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -939,15 +939,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 end_decl_stmt
 
