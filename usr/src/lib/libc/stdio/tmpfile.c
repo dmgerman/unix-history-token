@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmpfile.c	5.3 (Berkeley) %G%"
+literal|"@(#)tmpfile.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,42 +144,10 @@ name|TRAILER
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sigemptyset
+name|sigfillset
 argument_list|(
 operator|&
 name|set
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGHUP
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGINT
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGQUIT
-argument_list|)
-expr_stmt|;
-name|sigaddset
-argument_list|(
-operator|&
-name|set
-argument_list|,
-name|SIGTERM
 argument_list|)
 expr_stmt|;
 operator|(
@@ -228,10 +196,6 @@ argument_list|,
 operator|&
 name|oset
 argument_list|,
-operator|(
-name|sigset_t
-operator|*
-operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
