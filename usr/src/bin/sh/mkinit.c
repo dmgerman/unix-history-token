@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkinit.c	5.3 (Berkeley) %G%"
+literal|"@(#)mkinit.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -72,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -1887,7 +1899,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
 argument_list|)
