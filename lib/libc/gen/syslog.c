@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: syslog.c,v 1.6 1995/10/21 07:05:01 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,9 +487,6 @@ name|ch
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|t
 decl_stmt|;
 name|time_t
 name|now

@@ -197,7 +197,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|compress_mode
 name|__P
 argument_list|(
@@ -638,6 +638,8 @@ name|mask
 decl_stmt|;
 name|int
 name|equalopdone
+init|=
+literal|0
 decl_stmt|,
 name|permXbits
 decl_stmt|,
@@ -1654,7 +1656,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|compress_mode
 parameter_list|(
 name|set

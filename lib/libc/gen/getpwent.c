@@ -3007,9 +3007,6 @@ modifier|*
 name|s
 decl_stmt|,
 modifier|*
-name|c
-decl_stmt|,
-modifier|*
 name|result
 decl_stmt|;
 specifier|static

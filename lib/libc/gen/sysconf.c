@@ -88,10 +88,6 @@ name|name
 decl_stmt|;
 block|{
 name|struct
-name|clockinfo
-name|clk
-decl_stmt|;
-name|struct
 name|rlimit
 name|rl
 decl_stmt|;
