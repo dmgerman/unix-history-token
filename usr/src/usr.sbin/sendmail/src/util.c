@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -1690,7 +1690,11 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: unlink-fail %e"
+literal|"%s: unlink-fail %d"
+argument_list|,
+name|f
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1707,8 +1711,9 @@ comment|/* **  SFGETS -- "safe" fgets -- times out. ** **	Parameters: **		buf --
 end_comment
 
 begin_decl_stmt
-name|jmp_buf
-name|TimeoFrame
+specifier|static
+name|bool
+name|TimeoutFlag
 decl_stmt|;
 end_decl_stmt
 
@@ -1739,6 +1744,8 @@ specifier|register
 name|EVENT
 modifier|*
 name|ev
+init|=
+name|NULL
 decl_stmt|;
 specifier|register
 name|char
@@ -1753,21 +1760,10 @@ end_function
 begin_if
 if|if
 condition|(
-name|setjmp
-argument_list|(
-name|TimeoFrame
-argument_list|)
+name|ReadTimeout
 operator|!=
 literal|0
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-end_if
-
-begin_expr_stmt
 name|ev
 operator|=
 name|setevent
@@ -1779,9 +1775,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_if
 
 begin_expr_stmt
+name|TimeoutFlag
+operator|=
+name|FALSE
+expr_stmt|;
+end_expr_stmt
+
+begin_do
+do|do
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|p
 operator|=
 name|fgets
@@ -1793,7 +1802,24 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+do|while
+condition|(
+operator|!
+operator|(
+name|p
+operator|!=
+name|NULL
+operator|||
+name|TimeoutFlag
+operator|||
+name|errno
+operator|!=
+name|EINTR
+operator|)
+condition|)
+do|;
+end_do
 
 begin_expr_stmt
 name|clrevent
@@ -1819,12 +1845,9 @@ end_macro
 
 begin_block
 block|{
-name|longjmp
-argument_list|(
-name|TimeoFrame
-argument_list|,
-literal|1
-argument_list|)
+name|TimeoutFlag
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 end_block

@@ -247,40 +247,6 @@ name|ev
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* reschedule next clock tick if appropriate */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|ev
-operator|==
-name|EventQueue
-condition|)
-block|{
-comment|/* we have a new event */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-name|intvl
-argument_list|)
-expr_stmt|;
-block|}
-end_if
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -321,6 +287,12 @@ endif|#
 directive|endif
 endif|DEBUG
 end_endif
+
+begin_expr_stmt
+name|tick
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
@@ -428,6 +400,14 @@ condition|)
 break|break;
 block|}
 comment|/* now remove it */
+if|if
+condition|(
+operator|*
+name|evp
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|*
 name|evp
 operator|=
@@ -440,6 +420,7 @@ argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* restore clocks and pick up anything spare */
 name|tick
 argument_list|()
