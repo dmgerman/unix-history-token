@@ -2354,7 +2354,7 @@ literal|"IPV6-ICMP "
 argument_list|)
 expr_stmt|;
 name|len
-operator|=
+operator|+=
 name|snprintf
 argument_list|(
 name|SNPARGS
