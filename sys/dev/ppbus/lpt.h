@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Copyright (c) 1997, 1999 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Distantly from :  *	@(#)lptreg.h      1.1 (Berkeley) 12/19/90  *	Id: lptreg.h,v 1.6 1997/02/22 09:36:52 peter Exp   *	From Id: nlpt.h,v 1.3 1999/01/10 12:04:54 nsouch Exp  *  *	$Id: lpt.h,v 1.1 1999/02/14 11:59:59 nsouch Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Copyright (c) 1997, 1999 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Distantly from :  *	@(#)lptreg.h      1.1 (Berkeley) 12/19/90  *	Id: lptreg.h,v 1.6 1997/02/22 09:36:52 peter Exp   *	From Id: nlpt.h,v 1.3 1999/01/10 12:04:54 nsouch Exp  *  *	$Id: lpt.h,v 1.2 1999/02/14 16:19:16 nsouch Exp $  */
 end_comment
 
 begin_comment
@@ -23,6 +23,10 @@ begin_comment
 comment|/* machine independent definitions, it shall only depend on the ppbus  * parallel port model */
 end_comment
 
+begin_comment
+comment|/* PIN */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -31,7 +35,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* printer no error */
+comment|/* 15  printer no error */
 end_comment
 
 begin_define
@@ -42,7 +46,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* printer selected */
+comment|/* 13  printer selected */
 end_comment
 
 begin_define
@@ -53,7 +57,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* printer out of paper */
+comment|/* 12  printer out of paper */
 end_comment
 
 begin_define
@@ -64,7 +68,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* printer no ack of data */
+comment|/* 10  printer no ack of data */
 end_comment
 
 begin_define
@@ -75,7 +79,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* printer no ack of data */
+comment|/* 11  printer busy */
 end_comment
 
 begin_define
@@ -86,7 +90,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* strobe data to printer */
+comment|/*  1  strobe data to printer */
 end_comment
 
 begin_define
@@ -97,7 +101,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* automatic linefeed */
+comment|/* 14  automatic linefeed */
 end_comment
 
 begin_define
@@ -108,7 +112,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* initialize printer */
+comment|/* 16  initialize printer */
 end_comment
 
 begin_define
@@ -119,7 +123,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* printer selected */
+comment|/* 17  printer selected */
 end_comment
 
 begin_define
@@ -130,7 +134,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* enable IRQ */
+comment|/*  -  enable IRQ */
 end_comment
 
 begin_endif
