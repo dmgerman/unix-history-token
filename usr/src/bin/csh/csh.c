@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.31 (Berkeley) %G%"
+literal|"@(#)csh.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2203,6 +2203,11 @@ name|osetintr
 init|=
 name|setintr
 decl_stmt|;
+name|sig_t
+name|oparintr
+init|=
+name|parintr
+decl_stmt|;
 name|sigset_t
 name|omask
 init|=
@@ -2218,6 +2223,11 @@ name|setintr
 operator|=
 literal|0
 expr_stmt|;
+name|parintr
+operator|=
+name|SIG_IGN
+expr_stmt|;
+comment|/* Disable onintr */
 ifdef|#
 directive|ifdef
 name|_PATH_DOTCSHRC
@@ -2285,6 +2295,10 @@ expr_stmt|;
 name|setintr
 operator|=
 name|osetintr
+expr_stmt|;
+name|parintr
+operator|=
+name|oparintr
 expr_stmt|;
 block|}
 operator|(
