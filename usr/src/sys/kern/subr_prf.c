@@ -1,90 +1,90 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.31 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"reboot.h"
+file|<sys/reboot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"msgbuf.h"
+file|<sys/msgbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tprintf.h"
+file|<sys/tprintf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_comment
@@ -318,10 +318,25 @@ operator|*
 name|tp
 operator|,
 name|va_list
+name|ap
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|consintr
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Ok to handle console interrupts? */
+end_comment
 
 begin_extern
 extern|extern	cnputc(
@@ -377,10 +392,11 @@ comment|/* routine to putc on virtual console */
 end_comment
 
 begin_comment
-comment|/*  * Variable panicstr contains argument to first call to panic; used  * as flag to indicate that the kernel has already called panic.  */
+comment|/*  * Variable panicstr contains argument to first call to panic; used as flag  * to indicate that the kernel has already called panic.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|panicstr
@@ -393,22 +409,46 @@ end_comment
 
 begin_function
 name|void
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|panic
 parameter_list|(
-name|msg
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|panic
+parameter_list|(
+name|fmt
+comment|/*, va_alist */
 parameter_list|)
 name|char
 modifier|*
-name|msg
+name|fmt
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 name|int
 name|bootopt
-init|=
+decl_stmt|,
+name|savintr
+decl_stmt|;
+name|va_list
+name|ap
+decl_stmt|;
+name|bootopt
+operator|=
 name|RB_AUTOBOOT
 operator||
 name|RB_DUMP
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|panicstr
@@ -420,15 +460,60 @@ expr_stmt|;
 else|else
 name|panicstr
 operator|=
-name|msg
+name|fmt
 expr_stmt|;
-name|printf
+name|savintr
+operator|=
+name|consintr
+expr_stmt|;
+comment|/* disable interrupts */
+name|consintr
+operator|=
+literal|0
+expr_stmt|;
+name|va_start
 argument_list|(
-literal|"panic: %s\n"
+name|ap
 argument_list|,
-name|msg
+name|fmt
 argument_list|)
 expr_stmt|;
+name|kprintf
+argument_list|(
+literal|"panic: "
+argument_list|,
+name|TOCONS
+operator||
+name|TOLOG
+argument_list|,
+name|NULL
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|kprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|TOCONS
+operator||
+name|TOLOG
+argument_list|,
+name|NULL
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|consintr
+operator|=
+name|savintr
+expr_stmt|;
+comment|/* reenable interrupts */
 ifdef|#
 directive|ifdef
 name|KGDB
@@ -1183,18 +1268,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|consintr
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ok to handle console interrupts? */
-end_comment
-
 begin_function
 name|void
 ifdef|#
@@ -1281,20 +1354,43 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * The format %r is supposed to pass an additional format string and argument  * list recursively.  * Its usage is:  *  * fn(otherstuff, char *fmt, ...)  * {  *	va_list ap;  *	va_start(ap, fmt);  *	printf("prefix: %r, other stuff\n", fmt, ap);  *	va_end(ap);  *  * Space or zero padding and a field width are supported for the numeric  * formats only.  */
+comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	kprintf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	kprintf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * The format %r passes an additional format string and argument list  * recursively.  Its usage is:  *  * fn(char *fmt, ...)  * {  *	va_list ap;  *	va_start(ap, fmt);  *	kprintf("prefix: %r: suffix\n", flags, tp, fmt, ap);  *	va_end(ap);  * }  *  * Space or zero padding and a field width are supported for the numeric  * formats only.  */
 end_comment
 
 begin_function
 name|void
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|kprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|kprintf
 parameter_list|(
 name|fmt
 parameter_list|,
 name|flags
 parameter_list|,
 name|tp
-parameter_list|,
-name|ap
 parameter_list|)
 specifier|register
 specifier|const
@@ -1313,6 +1409,8 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 specifier|register
 name|char
