@@ -36,7 +36,7 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|cd
+name|td
 operator|->
 name|td_md
 operator|.
