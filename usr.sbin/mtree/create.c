@@ -149,6 +149,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1193,8 +1199,11 @@ argument_list|,
 operator|&
 name|offset
 argument_list|,
-literal|"size=%qd"
+literal|"size=%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|p
 operator|->
 name|fts_statp

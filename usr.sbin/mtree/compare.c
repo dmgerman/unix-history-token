@@ -131,6 +131,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -844,14 +850,20 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%ssize expected %qd found %qd\n"
+literal|"%ssize expected %jd found %jd\n"
 argument_list|,
 name|tab
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|s
 operator|->
 name|st_size
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|p
 operator|->
 name|fts_statp
