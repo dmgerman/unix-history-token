@@ -293,9 +293,8 @@ parameter_list|,
 name|vm_offset_t
 name|va
 parameter_list|,
-name|struct
-name|tte
-name|tte
+name|u_long
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl
