@@ -131,7 +131,7 @@ name|ISSTR
 parameter_list|(
 name|ch
 parameter_list|)
-value|(isalnum(ch) || ispunct(ch) || isascii(ch)&& isprint(ch) || ch == '\t')
+value|(isalnum(ch) || ispunct(ch) || \ 			 isspace(ch)&& (!iscntrl(ch) || ch == '\t') || \ 			 isascii(ch)&& isprint(ch))
 end_define
 
 begin_typedef
