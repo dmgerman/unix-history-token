@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_umap.c	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_umap.c	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<umapfs/umap_info.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<umapfs/umap.h>
 end_include
 
 begin_include
@@ -68,6 +80,17 @@ define|#
 directive|define
 name|ROOTUSER
 value|0
+end_define
+
+begin_comment
+comment|/* This define controls whether any user but the superuser can own and  * write mapfiles.  If other users can, system security can be gravely  * compromised.  If this is not a concern, undefine SECURITY.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAPSECURITY
+value|1
 end_define
 
 begin_comment
@@ -125,11 +148,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
-name|flags
-init|=
-name|M_NEWTYPE
-decl_stmt|;
 name|char
 modifier|*
 name|fs_type
@@ -150,8 +168,7 @@ decl_stmt|,
 modifier|*
 name|gmapfile
 decl_stmt|;
-name|struct
-name|_iobuf
+name|FILE
 modifier|*
 name|fp
 decl_stmt|,
@@ -167,7 +184,7 @@ name|stat
 name|statbuf
 decl_stmt|;
 name|struct
-name|umap_mountargs
+name|umap_args
 name|args
 decl_stmt|;
 name|mntflags
@@ -264,6 +281,9 @@ name|i
 operator|++
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAPSECURITY
 comment|/* 	 * Check that group and other don't have write permissions on 	 * this mapfile, and that the mapfile belongs to root.  	 */
 if|if
 condition|(
@@ -342,6 +362,9 @@ name|notMounted
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|MAPSECURITY
 comment|/* 	 * Read in uid mapping data. 	 */
 if|if
 condition|(
@@ -662,7 +685,7 @@ block|}
 comment|/* 	 * Setup mount call args. 	 */
 name|args
 operator|.
-name|source
+name|target
 operator|=
 name|source
 expr_stmt|;
@@ -714,11 +737,11 @@ literal|"calling mount_umap(%s,%d,<%s>)\n"
 argument_list|,
 name|target
 argument_list|,
-name|flags
+name|mntflags
 argument_list|,
 name|args
 operator|.
-name|source
+name|target
 argument_list|)
 expr_stmt|;
 if|if
@@ -775,7 +798,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_umap [ -F fsoptions ] target_fs mount_point\n"
+literal|"usage: mount_umap [ -F fsoptions ] target_fs mount_point user_mapfile group_mapfile\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -787,7 +810,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|notMounted
 parameter_list|()
 block|{
