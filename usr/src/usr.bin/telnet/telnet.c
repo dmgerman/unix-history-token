@@ -1571,10 +1571,13 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+operator|!
 name|hisopts
 index|[
 name|TELOPT_ECHO
 index|]
+operator|)
 operator|&&
 operator|!
 name|crmod
