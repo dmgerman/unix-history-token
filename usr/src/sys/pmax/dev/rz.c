@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ufs/ufs/ufs_extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"device.h"
 end_include
 
@@ -143,6 +137,15 @@ begin_function_decl
 specifier|extern
 name|int
 name|physio
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|readdisklabel
 parameter_list|()
 function_decl|;
 end_function_decl
