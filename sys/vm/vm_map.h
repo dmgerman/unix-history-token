@@ -109,6 +109,10 @@ name|int
 name|wired_count
 decl_stmt|;
 comment|/* can be paged if = 0 */
+name|vm_pindex_t
+name|lastr
+decl_stmt|;
+comment|/* last read */
 block|}
 struct|;
 end_struct
