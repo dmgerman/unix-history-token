@@ -1575,6 +1575,7 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 else|else
 name|prev
