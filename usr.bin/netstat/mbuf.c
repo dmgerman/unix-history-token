@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mbuf.c,v 1.7 1997/07/29 06:51:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,6 +151,9 @@ block|,
 literal|"packet headers"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|MT_SOCKET
 block|{
 name|MT_SOCKET
 block|,
@@ -158,6 +161,11 @@ literal|"socket structures"
 block|}
 block|,
 comment|/* XXX */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MT_PCB
 block|{
 name|MT_PCB
 block|,
@@ -165,6 +173,8 @@ literal|"protocol control blocks"
 block|}
 block|,
 comment|/* XXX */
+endif|#
+directive|endif
 block|{
 name|MT_RTABLE
 block|,
@@ -172,6 +182,9 @@ literal|"routing table entries"
 block|}
 block|,
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|MT_HTABLE
 block|{
 name|MT_HTABLE
 block|,
@@ -179,12 +192,19 @@ literal|"IMP host table entries"
 block|}
 block|,
 comment|/* XXX */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MT_ATABLE
 block|{
 name|MT_ATABLE
 block|,
 literal|"address resolution tables"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|MT_FTABLE
 block|,
@@ -204,12 +224,20 @@ block|,
 literal|"socket options"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|MT_RIGHTS
 block|{
 name|MT_RIGHTS
 block|,
 literal|"access rights"
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MT_IFADDR
 block|{
 name|MT_IFADDR
 block|,
@@ -217,6 +245,8 @@ literal|"interface addresses"
 block|}
 block|,
 comment|/* XXX */
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
