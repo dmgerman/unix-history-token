@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	6.8	85/05/22	*/
+comment|/*	kern_exit.c	6.9	85/05/27	*/
 end_comment
 
 begin_include
@@ -353,8 +353,10 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|NOFILE
+operator|<=
+name|u
+operator|.
+name|u_lastfile
 condition|;
 name|i
 operator|++
@@ -374,6 +376,11 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|f
+condition|)
+block|{
 name|u
 operator|.
 name|u_ofile
@@ -397,6 +404,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ilock
 argument_list|(
@@ -643,11 +651,35 @@ name|p_pid
 operator|==
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|p_dsize
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Can't exec /etc/init\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+block|}
+else|else
 name|panic
 argument_list|(
 literal|"init died"
 argument_list|)
 expr_stmt|;
+block|}
 name|done
 label|:
 name|p
@@ -656,11 +688,6 @@ name|p_xstat
 operator|=
 name|rv
 expr_stmt|;
-if|if
-condition|(
-name|m
-condition|)
-block|{
 name|p
 operator|->
 name|p_ru
@@ -693,19 +720,6 @@ operator|&
 name|u
 operator|.
 name|u_cru
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|log
-argument_list|(
-name|KERN_ALERT
-argument_list|,
-literal|"exit: pid %d: no mbuf"
-argument_list|,
-name|p
-operator|->
-name|p_pid
 argument_list|)
 expr_stmt|;
 if|if
