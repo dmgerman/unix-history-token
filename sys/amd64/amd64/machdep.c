@@ -1088,7 +1088,7 @@ name|sf_uc
 operator|.
 name|uc_mcontext
 operator|.
-name|mc_r15
+name|mc_rdi
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1702,7 +1702,7 @@ name|ucp
 operator|->
 name|uc_mcontext
 operator|.
-name|mc_r15
+name|mc_rdi
 argument_list|,
 name|regs
 argument_list|,
