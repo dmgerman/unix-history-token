@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: v.c,v 1.2 1998/12/28 16:32:39 peter Exp $ */
+comment|/* $Id: v.c,v 1.24 1999/01/17 02:53:38 grog Exp grog $ */
 end_comment
 
 begin_include
@@ -123,6 +123,24 @@ begin_include
 include|#
 directive|include
 file|<readline/readline.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_decl_stmt
@@ -333,6 +351,15 @@ begin_comment
 comment|/* vinum super device */
 end_comment
 
+begin_function_decl
+name|void
+name|start_daemon
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -388,6 +415,59 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+if|#
+directive|if
+name|RAID5
+define|#
+directive|define
+name|VINUMMOD
+value|"Vinum"
+else|#
+directive|else
+define|#
+directive|define
+name|VINUMMOD
+value|"vinum"
+endif|#
+directive|endif
+if|if
+condition|(
+name|modfind
+argument_list|(
+name|VINUMMOD
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* need to load the vinum module */
+if|if
+condition|(
+name|kldload
+argument_list|(
+name|VINUMMOD
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|modfind
+argument_list|(
+name|VINUMMOD
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"vinum kernel module not available"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+block|}
 name|superdev
 operator|=
 name|open
@@ -435,6 +515,10 @@ literal|1
 return|;
 block|}
 block|}
+comment|/* Check if the dæmon is running.  If not, start it in the      * background */
+name|start_daemon
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -606,6 +690,36 @@ return|return
 literal|0
 return|;
 comment|/* normal completion */
+block|}
+end_function
+
+begin_comment
+comment|/* stop the hard way */
+end_comment
+
+begin_function
+name|void
+name|vinum_quit
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+block|{
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -789,6 +903,26 @@ block|,
 name|FUNKEY
 argument_list|(
 name|stop
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|makedev
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|help
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|quit
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|setdaemon
 argument_list|)
 block|,
 name|FUNKEY
@@ -1526,6 +1660,8 @@ name|VINUM_DIR
 literal|"/plex "
 name|VINUM_DIR
 literal|"/sd "
+name|VINUM_DIR
+literal|"/rsd "
 name|VINUM_DIR
 literal|"/vol "
 name|VINUM_DIR
@@ -2268,7 +2404,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* And /dev/vinum/sd/<sd> */
+comment|/* /dev/vinum/sd/<sd> */
 name|sprintf
 argument_list|(
 name|filename
@@ -2296,6 +2432,67 @@ operator||
 name|S_IROTH
 operator||
 name|S_IFBLK
+argument_list|,
+name|sddev
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't create %s: %s\n"
+argument_list|,
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* And /dev/vinum/rsd/<sd> */
+name|sprintf
+argument_list|(
+name|filename
+argument_list|,
+name|VINUM_DIR
+literal|"/rsd/%s"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+name|sddev
+operator|=
+name|VINUMCDEV
+argument_list|(
+name|volno
+argument_list|,
+name|plexno
+argument_list|,
+name|sdno
+argument_list|,
+name|VINUM_SD_TYPE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mknod
+argument_list|(
+name|filename
+argument_list|,
+name|S_IRWXU
+operator||
+name|S_IRGRP
+operator||
+name|S_IXGRP
+operator||
+name|S_IROTH
+operator||
+name|S_IFCHR
 argument_list|,
 name|sddev
 argument_list|)
@@ -2382,6 +2579,34 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* command line interface for the 'makedev' command */
+end_comment
+
+begin_function
+name|void
+name|vinum_makedev
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|arg0
+index|[]
+parameter_list|)
+block|{
+name|make_devices
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2649,7 +2874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Continue reviving a plex in the background */
+comment|/* Continue reviving a subdisk in the background */
 end_comment
 
 begin_function
@@ -2657,22 +2882,22 @@ name|void
 name|continue_revive
 parameter_list|(
 name|int
-name|plexno
+name|sdno
 parameter_list|)
 block|{
 name|struct
-name|plex
-name|plex
+name|sd
+name|sd
 decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-name|get_plex_info
+name|get_sd_info
 argument_list|(
 operator|&
-name|plex
+name|sd
 argument_list|,
-name|plexno
+name|sdno
 argument_list|)
 expr_stmt|;
 if|#
@@ -2748,9 +2973,9 @@ name|LOG_INFO
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"reviving plex %s"
+literal|"reviving %s"
 argument_list|,
-name|plex
+name|sd
 operator|.
 name|name
 argument_list|)
@@ -2775,14 +3000,14 @@ name|message
 operator|->
 name|index
 operator|=
-name|plexno
+name|sdno
 expr_stmt|;
-comment|/* pass plex number */
+comment|/* pass sd number */
 name|message
 operator|->
 name|type
 operator|=
-name|plex_object
+name|sd_object
 expr_stmt|;
 comment|/* and type of object */
 name|message
@@ -2814,9 +3039,9 @@ name|LOG_ERR
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"can't revive plex %s: %s"
+literal|"can't revive %s: %s"
 argument_list|,
-name|plex
+name|sd
 operator|.
 name|name
 argument_list|,
@@ -2847,12 +3072,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|get_plex_info
+name|get_sd_info
 argument_list|(
 operator|&
-name|plex
+name|sd
 argument_list|,
-name|plexno
+name|sdno
 argument_list|)
 expr_stmt|;
 comment|/* update the info */
@@ -2862,15 +3087,15 @@ name|LOG_INFO
 operator||
 name|LOG_KERN
 argument_list|,
-literal|"plex %s is %s"
+literal|"%s is %s"
 argument_list|,
-name|plex
+name|sd
 operator|.
 name|name
 argument_list|,
-name|plex_state
+name|sd_state
 argument_list|(
-name|plex
+name|sd
 operator|.
 name|state
 argument_list|)
@@ -2897,7 +3122,7 @@ name|stderr
 argument_list|,
 literal|"Can't continue reviving %s: %s\n"
 argument_list|,
-name|plex
+name|sd
 operator|.
 name|name
 argument_list|,
@@ -2912,9 +3137,161 @@ name|printf
 argument_list|(
 literal|"Reviving %s in the background\n"
 argument_list|,
-name|plex
+name|sd
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Check if the daemon is running,  * start it if it isn't.  The check itself  * could take a while, so we do it as a separate  * process, which will become the daemon if one isn't  * running already */
+end_comment
+
+begin_function
+name|void
+name|start_daemon
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|pid
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|pid
+operator|=
+operator|(
+name|int
+operator|)
+name|fork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* We're the child, do the work */
+name|error
+operator|=
+name|daemon
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* this will fork again, but who's counting? */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't start daemon: %s (%d)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|setproctitle
+argument_list|(
+literal|"Vinum daemon"
+argument_list|)
+expr_stmt|;
+comment|/* show what we're doing */
+name|status
+operator|=
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_FINDDAEMON
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* no daemon, */
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_DAEMON
+argument_list|,
+operator|&
+name|verbose
+argument_list|)
+expr_stmt|;
+comment|/* we should hang here */
+name|syslog
+argument_list|(
+name|LOG_ERR
+operator||
+name|LOG_KERN
+argument_list|,
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* when told to die */
+block|}
+elseif|else
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+comment|/* couldn't fork */
+name|printf
+argument_list|(
+literal|"Can't fork to check daemon\n"
 argument_list|)
 expr_stmt|;
 block|}
