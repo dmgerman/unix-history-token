@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.12 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.12 (Berkeley) 4/22/86"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,22 +140,15 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_comment
-comment|/*  * The following is defined just in case someone should want to run  * this telnet on a 4.2 system.  *  * This has never been tested, so good luck...  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|FD_SETSIZE
 end_ifndef
 
-begin_typedef
-typedef|typedef
-name|long
-name|fd_set
-typedef|;
-end_typedef
+begin_comment
+comment|/*  * The following is defined just in case someone should want to run  * this telnet on a 4.2 system.  *  */
+end_comment
 
 begin_define
 define|#
@@ -166,7 +159,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(*(p) |= (1<<(n)))
+value|((p)->fds_bits[0] |= (1<<(n)))
 end_define
 
 begin_define
@@ -178,7 +171,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(*(p)&= ~(1<<(n)))
+value|((p)->fds_bits[0]&= ~(1<<(n)))
 end_define
 
 begin_define
@@ -190,7 +183,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(*(p)& (1<<(n)))
+value|((p)->fds_bits[0]& (1<<(n)))
 end_define
 
 begin_define
@@ -200,7 +193,7 @@ name|FD_ZERO
 parameter_list|(
 name|p
 parameter_list|)
-value|(*(p) = 0)
+value|((p)->fds_bits[0] = 0)
 end_define
 
 begin_endif
@@ -379,6 +372,51 @@ end_decl_stmt
 begin_comment
 comment|/* one past last byte of urgent data */
 end_comment
+
+begin_decl_stmt
+name|char
+name|subbuffer
+index|[
+literal|100
+index|]
+decl_stmt|,
+modifier|*
+name|subpointer
+decl_stmt|,
+modifier|*
+name|subend
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* buffer for sub-options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SB_CLEAR
+parameter_list|()
+value|subpointer = subbuffer;
+end_define
+
+begin_define
+define|#
+directive|define
+name|SB_TERM
+parameter_list|()
+value|subend = subpointer;
+end_define
+
+begin_define
+define|#
+directive|define
+name|SB_ACCUM
+parameter_list|(
+name|c
+parameter_list|)
+value|if (subpointer< (subbuffer+sizeof subbuffer)) { \ 				*subpointer++ = (c); \ 			}
+end_define
 
 begin_decl_stmt
 name|char
@@ -1251,6 +1289,58 @@ operator|(
 name|buf
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * upcase()  *  *	Upcase (in place) the argument.  */
+end_comment
+
+begin_function
+name|void
+name|upcase
+parameter_list|(
+name|argument
+parameter_list|)
+specifier|register
+name|char
+modifier|*
+name|argument
+decl_stmt|;
+block|{
+specifier|register
+name|int
+name|c
+decl_stmt|;
+while|while
+condition|(
+name|c
+operator|=
+operator|*
+name|argument
+condition|)
+block|{
+if|if
+condition|(
+name|islower
+argument_list|(
+name|c
+argument_list|)
+condition|)
+block|{
+operator|*
+name|argument
+operator|=
+name|toupper
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+name|argument
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2264,6 +2354,8 @@ argument_list|(
 literal|"%s "
 argument_list|,
 name|direction
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2318,7 +2410,16 @@ if|if
 condition|(
 name|option
 operator|<
-name|TELOPT_SUPDUP
+operator|(
+sizeof|sizeof
+name|telopts
+operator|/
+sizeof|sizeof
+name|telopts
+index|[
+literal|0
+index|]
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -3183,7 +3284,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|xxxSO_OOBINLINE
+name|SO_OOBINLINE
 argument_list|)
 name|setsockopt
 argument_list|(
@@ -3193,6 +3294,7 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_OOBINLINE
 argument_list|,
+operator|&
 name|on
 argument_list|,
 sizeof|sizeof
@@ -3201,11 +3303,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(xxxSO_OOBINLINE) */
+comment|/* defined(SO_OOBINLINE) */
 if|if
 condition|(
 name|telnetport
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|hisopts
 index|[
@@ -3216,8 +3321,28 @@ block|{
 name|willoption
 argument_list|(
 name|TELOPT_SGA
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|myopts
+index|[
+name|TELOPT_TTYPE
+index|]
+condition|)
+block|{
+name|dooption
+argument_list|(
+name|TELOPT_TTYPE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 for|for
 control|(
@@ -3449,7 +3574,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|xxxSO_OOBINLINE
+name|SO_OOBINLINE
 argument_list|)
 comment|/* 			 * In 4.2 (and some early 4.3) systems, the 			 * OOB indication and data handling in the kernel 			 * is such that if two separate TCP Urgent requests 			 * come in, one byte of TCP data will be overlaid. 			 * This is fatal for Telnet, but we try to live 			 * with it. 			 * 			 * In addition, in 4.2 (and...), a special protocol 			 * is needed to pick up the TCP Urgent data in 			 * the correct sequence. 			 * 			 * What we do is:  if we think we are in urgent 			 * mode, we look to see if we are "at the mark". 			 * If we are, we do an OOB receive.  If we run 			 * this twice, we will do the OOB receive twice, 			 * but the second will fail, since the second 			 * time we were "at the mark", but there wasn't 			 * any data there (the kernel doesn't reset 			 * "at the mark" until we do a normal read). 			 * Once we've read the OOB data, we go ahead 			 * and do normal reads. 			 * 			 * There is also another problem, which is that 			 * since the OOB byte we read doesn't put us 			 * out of OOB state, and since that byte is most 			 * likely the TELNET DM (data mark), we would 			 * stay in the TELNET SYNCH (SYNCHing) state. 			 * So, clocks to the rescue.  If we've "just" 			 * received a DM, then we test for the 			 * presence of OOB data when the receive OOB 			 * fails (and AFTER we did the normal mode read 			 * to clear "at the mark"). 			 */
 if|if
@@ -3576,7 +3701,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !defined(xxxSO_OOBINLINE) */
+comment|/* !defined(SO_OOBINLINE) */
 name|c
 operator|=
 name|read
@@ -3590,7 +3715,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !defined(xxxSO_OOBINLINE) */
+comment|/* !defined(SO_OOBINLINE) */
 if|if
 condition|(
 name|c
@@ -3702,7 +3827,33 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
+comment|/* EOF detection for line mode!!!! */
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+operator|&&
+name|globalmode
+operator|>=
+literal|3
+condition|)
+block|{
+comment|/* must be an EOF... */
+operator|*
+name|tbp
+operator|=
+name|ntc
+operator|.
+name|t_eofc
+expr_stmt|;
+name|c
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -3715,6 +3866,7 @@ operator|=
 name|c
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|tcc
 operator|+=
@@ -4174,6 +4326,28 @@ name|TS_CR
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|TS_SB
+value|7
+end_define
+
+begin_comment
+comment|/* sub-option collection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_SE
+value|8
+end_define
+
+begin_comment
+comment|/* looking for sub-option end */
+end_comment
+
 begin_macro
 name|telrcv
 argument_list|()
@@ -4478,6 +4652,17 @@ case|case
 name|GA
 case|:
 break|break;
+case|case
+name|SB
+case|:
+name|SB_CLEAR
+argument_list|()
+expr_stmt|;
+name|state
+operator|=
+name|TS_SB
+expr_stmt|;
+continue|continue;
 default|default:
 break|break;
 block|}
@@ -4491,7 +4676,7 @@ name|TS_WILL
 case|:
 name|printoption
 argument_list|(
-literal|"RCVD"
+literal|">RCVD"
 argument_list|,
 name|will
 argument_list|,
@@ -4535,6 +4720,8 @@ block|{
 name|willoption
 argument_list|(
 name|c
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4548,7 +4735,7 @@ name|TS_WONT
 case|:
 name|printoption
 argument_list|(
-literal|"RCVD"
+literal|">RCVD"
 argument_list|,
 name|wont
 argument_list|,
@@ -4590,6 +4777,8 @@ block|{
 name|wontoption
 argument_list|(
 name|c
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -4603,7 +4792,7 @@ name|TS_DO
 case|:
 name|printoption
 argument_list|(
-literal|"RCVD"
+literal|">RCVD"
 argument_list|,
 name|doopt
 argument_list|,
@@ -4639,7 +4828,7 @@ name|TS_DONT
 case|:
 name|printoption
 argument_list|(
-literal|"RCVD"
+literal|">RCVD"
 argument_list|,
 name|dont
 argument_list|,
@@ -4694,7 +4883,7 @@ expr_stmt|;
 comment|/* set new tty mode (maybe) */
 name|printoption
 argument_list|(
-literal|"SENT"
+literal|">SENT"
 argument_list|,
 name|wont
 argument_list|,
@@ -4707,6 +4896,77 @@ operator|=
 name|TS_DATA
 expr_stmt|;
 continue|continue;
+case|case
+name|TS_SB
+case|:
+if|if
+condition|(
+name|c
+operator|==
+name|IAC
+condition|)
+block|{
+name|state
+operator|=
+name|TS_SE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|SB_ACCUM
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
+case|case
+name|TS_SE
+case|:
+if|if
+condition|(
+name|c
+operator|!=
+name|SE
+condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|!=
+name|IAC
+condition|)
+block|{
+name|SB_ACCUM
+argument_list|(
+name|IAC
+argument_list|)
+expr_stmt|;
+block|}
+name|SB_ACCUM
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+name|TS_SB
+expr_stmt|;
+block|}
+else|else
+block|{
+name|SB_TERM
+argument_list|()
+expr_stmt|;
+name|suboption
+argument_list|()
+expr_stmt|;
+comment|/* handle sub-option */
+name|state
+operator|=
+name|TS_DATA
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -4719,12 +4979,16 @@ begin_macro
 name|willoption
 argument_list|(
 argument|option
+argument_list|,
+argument|reply
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|option
+decl_stmt|,
+name|reply
 decl_stmt|;
 end_decl_stmt
 
@@ -4796,9 +5060,23 @@ argument_list|)
 operator|-
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|reply
+condition|)
 name|printoption
 argument_list|(
-literal|"SENT"
+literal|">SENT"
+argument_list|,
+name|fmt
+argument_list|,
+name|option
+argument_list|)
+expr_stmt|;
+else|else
+name|printoption
+argument_list|(
+literal|"<SENT"
 argument_list|,
 name|fmt
 argument_list|,
@@ -4812,12 +5090,16 @@ begin_macro
 name|wontoption
 argument_list|(
 argument|option
+argument_list|,
+argument|reply
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|option
+decl_stmt|,
+name|reply
 decl_stmt|;
 end_decl_stmt
 
@@ -4888,9 +5170,23 @@ argument_list|)
 operator|-
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|reply
+condition|)
 name|printoption
 argument_list|(
-literal|"SENT"
+literal|">SENT"
+argument_list|,
+name|fmt
+argument_list|,
+name|option
+argument_list|)
+expr_stmt|;
+else|else
+name|printoption
+argument_list|(
+literal|"<SENT"
 argument_list|,
 name|fmt
 argument_list|,
@@ -4932,6 +5228,10 @@ operator|=
 name|will
 expr_stmt|;
 break|break;
+case|case
+name|TELOPT_TTYPE
+case|:
+comment|/* terminal type option */
 case|case
 name|TELOPT_SGA
 case|:
@@ -4979,13 +5279,173 @@ literal|2
 expr_stmt|;
 name|printoption
 argument_list|(
-literal|"SENT"
+literal|">SENT"
 argument_list|,
 name|fmt
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * suboption()  *  *	Look at the sub-option buffer, and try to be helpful to the other  * side.  *  *	Currently we recognize:  *  *		Terminal type, send request.  */
+end_comment
+
+begin_macro
+name|suboption
+argument_list|()
+end_macro
+
+begin_block
+block|{
+switch|switch
+condition|(
+name|subbuffer
+index|[
+literal|0
+index|]
+operator|&
+literal|0xff
+condition|)
+block|{
+case|case
+name|TELOPT_TTYPE
+case|:
+if|if
+condition|(
+operator|(
+name|subbuffer
+index|[
+literal|1
+index|]
+operator|&
+literal|0xff
+operator|)
+operator|!=
+name|TELQUAL_SEND
+condition|)
+block|{
+empty_stmt|;
+block|}
+else|else
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|char
+name|namebuf
+index|[
+literal|41
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+name|int
+name|len
+decl_stmt|;
+name|name
+operator|=
+name|getenv
+argument_list|(
+literal|"TERM"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|name
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|)
+operator|>
+literal|40
+operator|)
+condition|)
+block|{
+name|name
+operator|=
+literal|"UNKNOWN"
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|len
+operator|+
+literal|4
+operator|+
+literal|2
+operator|)
+operator|<
+name|NETROOM
+argument_list|()
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|namebuf
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|upcase
+argument_list|(
+name|namebuf
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|nfrontp
+argument_list|,
+literal|"%c%c%c%c%s%c%c"
+argument_list|,
+name|IAC
+argument_list|,
+name|SB
+argument_list|,
+name|TELOPT_TTYPE
+argument_list|,
+name|TELQUAL_IS
+argument_list|,
+name|namebuf
+argument_list|,
+name|IAC
+argument_list|,
+name|SE
+argument_list|)
+expr_stmt|;
+name|nfrontp
+operator|+=
+literal|4
+operator|+
+name|strlen
+argument_list|(
+name|namebuf
+argument_list|)
+operator|+
+literal|2
+expr_stmt|;
+block|}
+block|}
+default|default:
+break|break;
+block|}
 block|}
 end_block
 
@@ -5088,15 +5548,6 @@ argument_list|(
 name|TELOPT_TM
 argument_list|)
 expr_stmt|;
-name|printoption
-argument_list|(
-literal|"SENT"
-argument_list|,
-name|doopt
-argument_list|,
-name|TELOPT_TM
-argument_list|)
-expr_stmt|;
 name|flushline
 operator|=
 literal|1
@@ -5107,6 +5558,16 @@ literal|1
 expr_stmt|;
 name|ttyflush
 argument_list|()
+expr_stmt|;
+comment|/* do printoption AFTER flush, otherwise the output gets tossed... */
+name|printoption
+argument_list|(
+literal|"<SENT"
+argument_list|,
+name|doopt
+argument_list|,
+name|TELOPT_TM
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -5890,6 +6351,9 @@ end_macro
 
 begin_block
 block|{
+ifndef|#
+directive|ifndef
+name|NOT43
 if|if
 condition|(
 name|net
@@ -5926,6 +6390,50 @@ literal|"setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+else|NOT43
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+if|if
+condition|(
+name|net
+operator|>
+literal|0
+operator|&&
+name|setsockopt
+argument_list|(
+name|net
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"setsockopt (SO_DEBUG)"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"Cannot turn off socket debugging\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NOT43
 return|return
 literal|1
 return|;
@@ -6589,6 +7097,17 @@ name|t_quitc
 block|}
 block|,
 block|{
+literal|"eof"
+block|,
+literal|"character to cause an EOF "
+block|,
+operator|&
+name|ntc
+operator|.
+name|t_eofc
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
@@ -6951,6 +7470,8 @@ block|{
 name|wontoption
 argument_list|(
 name|TELOPT_SGA
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6965,6 +7486,8 @@ block|{
 name|wontoption
 argument_list|(
 name|TELOPT_ECHO
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6990,6 +7513,8 @@ block|{
 name|willoption
 argument_list|(
 name|TELOPT_SGA
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7005,6 +7530,8 @@ block|{
 name|willoption
 argument_list|(
 name|TELOPT_ECHO
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8213,6 +8740,9 @@ name|host
 operator|->
 name|h_addrtype
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NOT43
 name|bcopy
 argument_list|(
 name|host
@@ -8235,6 +8765,31 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|NOT43
+name|bcopy
+argument_list|(
+name|host
+operator|->
+name|h_addr
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sin
+operator|.
+name|sin_addr
+argument_list|,
+name|host
+operator|->
+name|h_length
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|NOT43
 name|hostname
 operator|=
 name|host
@@ -8429,6 +8984,9 @@ return|return
 literal|0
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|NOT43
 if|if
 condition|(
 name|debug
@@ -8456,13 +9014,36 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
+else|#
+directive|else
+else|NOT43
+if|if
+condition|(
+name|debug
+operator|&&
+name|setsockopt
+argument_list|(
+name|net
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+endif|#
+directive|endif
+endif|NOT43
 name|perror
 argument_list|(
 literal|"setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|connect
@@ -8486,6 +9067,9 @@ operator|<
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NOT43
 if|if
 condition|(
 name|host
@@ -8581,6 +9165,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
+endif|NOT43
 name|perror
 argument_list|(
 literal|"telnet: connect"
@@ -9788,14 +10375,6 @@ name|ntc
 operator|=
 name|otc
 expr_stmt|;
-name|ntc
-operator|.
-name|t_eofc
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* we don't want to use EOF */
 name|nltc
 operator|=
 name|oltc
