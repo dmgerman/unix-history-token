@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_qe.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -343,6 +343,17 @@ begin_comment
 comment|/* transmit timeout, must be> 1 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QESLOWTIMEOUT
+value|10
+end_define
+
+begin_comment
+comment|/* timeout when no xmits in progress */
+end_comment
+
 begin_comment
 comment|/*  * This constant should really be 60 because the qna adds 4 bytes of crc.  * However when set to 60 our packets are ignored by deuna's , 3coms are  * okay ??????????????????????????????????????????  */
 end_comment
@@ -410,6 +421,10 @@ define|#
 directive|define
 name|QEF_SETADDR
 value|0x02
+define|#
+directive|define
+name|QEF_FASTTIMEO
+value|0x04
 name|int
 name|setupaddr
 decl_stmt|;
@@ -2091,6 +2106,15 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|qe_if
+operator|.
+name|if_timer
+operator|=
+name|QESLOWTIMEOUT
+expr_stmt|;
+comment|/* Start watchdog */
 name|splx
 argument_list|(
 name|s
@@ -2447,6 +2471,13 @@ operator|++
 operator|==
 literal|0
 condition|)
+block|{
+name|sc
+operator|->
+name|qe_flags
+operator||=
+name|QEF_FASTTIMEO
+expr_stmt|;
 name|sc
 operator|->
 name|qe_if
@@ -2455,6 +2486,7 @@ name|if_timer
 operator|=
 name|QETIMEOUT
 expr_stmt|;
+block|}
 comment|/* 		 * See if the xmit list is invalid. 		 */
 if|if
 condition|(
@@ -2588,6 +2620,26 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|qe_flags
+operator|&
+name|QEF_FASTTIMEO
+operator|)
+condition|)
+name|sc
+operator|->
+name|qe_if
+operator|.
+name|if_timer
+operator|=
+name|QESLOWTIMEOUT
+expr_stmt|;
+comment|/* Restart timer clock */
 name|csr
 operator|=
 name|addr
@@ -2856,14 +2908,23 @@ name|nxmit
 operator|==
 literal|0
 condition|)
+block|{
+name|sc
+operator|->
+name|qe_flags
+operator|&=
+operator|~
+name|QEF_FASTTIMEO
+expr_stmt|;
 name|sc
 operator|->
 name|qe_if
 operator|.
 name|if_timer
 operator|=
-literal|0
+name|QESLOWTIMEOUT
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -4281,6 +4342,9 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|log
 argument_list|(
 name|LOG_ERR
@@ -4295,6 +4359,8 @@ name|qe_restarts
 operator|++
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|qerestart
 argument_list|(
 name|sc
