@@ -720,12 +720,6 @@ operator|->
 name|p_leader
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX Shutdown SYSV semaphores 	 */
-name|semexit
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* The next two chunks should probably be moved to vmspace_exit. */
 name|vm
 operator|=

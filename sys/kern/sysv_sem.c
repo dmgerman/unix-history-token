@@ -1345,10 +1345,10 @@ name|semu_list
 operator|=
 name|NULL
 expr_stmt|;
-name|semexit_hook
-operator|=
-operator|&
+name|at_exit
+argument_list|(
 name|semexit_myhook
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1393,9 +1393,10 @@ argument_list|,
 name|M_SEM
 argument_list|)
 expr_stmt|;
-name|semexit_hook
-operator|=
-name|NULL
+name|rm_at_exit
+argument_list|(
+name|semexit_myhook
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
