@@ -114,6 +114,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FTP_CONNECTION_ALREADY_OPEN
+value|125
+end_define
+
+begin_define
+define|#
+directive|define
 name|FTP_OPEN_DATA_CONNECTION
 value|150
 end_define
@@ -2148,6 +2155,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|e
+operator|!=
+name|FTP_CONNECTION_ALREADY_OPEN
+operator|&&
 name|e
 operator|!=
 name|FTP_OPEN_DATA_CONNECTION
