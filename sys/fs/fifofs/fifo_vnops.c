@@ -1478,8 +1478,6 @@ name|uio_td
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|startresid
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1525,12 +1523,6 @@ operator|->
 name|so_state
 operator||=
 name|SS_NBIO
-expr_stmt|;
-name|startresid
-operator|=
-name|uio
-operator|->
-name|uio_resid
 expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(

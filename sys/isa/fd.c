@@ -11967,9 +11967,6 @@ name|fdc_readid
 modifier|*
 name|rid
 decl_stmt|;
-name|size_t
-name|fdblk
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -12514,16 +12511,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|fdblk
-operator|=
-literal|128
-operator|<<
-name|fd
-operator|->
-name|ft
-operator|->
-name|secsize
-expr_stmt|;
 name|error
 operator|=
 literal|0
