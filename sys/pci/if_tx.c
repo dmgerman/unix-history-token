@@ -3576,7 +3576,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"tx%d: WARNING! no link estabilished\n"
+literal|"tx%d: WARNING! no link established\n"
 argument_list|,
 name|sc
 operator|->
