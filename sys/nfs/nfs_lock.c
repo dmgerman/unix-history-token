@@ -294,14 +294,10 @@ condition|(
 name|fl
 operator|->
 name|l_whence
-operator|==
+operator|!=
 name|SEEK_END
 condition|)
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
+block|{
 if|if
 condition|(
 name|fl
@@ -342,6 +338,7 @@ operator|(
 name|EOVERFLOW
 operator|)
 return|;
+block|}
 comment|/* 	 * Fill in the information structure. 	 */
 name|msg
 operator|.
