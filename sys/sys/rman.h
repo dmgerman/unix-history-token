@@ -176,17 +176,6 @@ begin_comment
 comment|/* first in sharing list */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RF_PCCARD_ATTR
-value|0x10000
-end_define
-
-begin_comment
-comment|/* PCCARD attribute memory */
-end_comment
-
 begin_enum
 enum|enum
 name|rman_type
