@@ -214,6 +214,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<netinet6/ah_aesxcbcmac.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1120,6 +1126,24 @@ name|ah_hmac_ripemd160_loop
 block|,
 name|ah_hmac_ripemd160_result
 block|, }
+block|,
+block|{
+name|ah_sumsiz_1216
+block|,
+name|ah_common_mature
+block|,
+literal|128
+block|,
+literal|128
+block|,
+literal|"aes-xcbc-mac"
+block|,
+name|ah_aes_xcbc_mac_init
+block|,
+name|ah_aes_xcbc_mac_loop
+block|,
+name|ah_aes_xcbc_mac_result
+block|, }
 block|, 	}
 decl_stmt|;
 switch|switch
@@ -1215,6 +1239,16 @@ operator|&
 name|ah_algorithms
 index|[
 literal|8
+index|]
+return|;
+case|case
+name|SADB_X_AALG_AES_XCBC_MAC
+case|:
+return|return
+operator|&
+name|ah_algorithms
+index|[
+literal|9
 index|]
 return|;
 default|default:

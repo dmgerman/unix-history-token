@@ -1025,11 +1025,18 @@ begin_define
 define|#
 directive|define
 name|SADB_X_AALG_RIPEMD160HMAC
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SADB_X_AALG_AES_XCBC_MAC
 value|9
 end_define
 
 begin_comment
-comment|/*8*/
+comment|/* draft-ietf-ipsec-ciph-aes-xcbc-mac-04 */
 end_comment
 
 begin_comment

@@ -647,6 +647,17 @@ block|, }
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_AES_XCBC_MAC
+block|{
+name|SADB_X_AALG_AES_XCBC_MAC
+block|,
+literal|"aes-xcbc-mac"
+block|, }
+block|,
+endif|#
+directive|endif
 block|{
 operator|-
 literal|1
