@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_syscalls.c	6.15	85/01/21	*/
+comment|/*	vfs_syscalls.c	6.16	85/02/22	*/
 end_comment
 
 begin_include
@@ -5406,6 +5406,29 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|DIRBLKSIZ
+operator|>
+name|ip
+operator|->
+name|i_fs
+operator|->
+name|fs_fsize
+condition|)
+name|panic
+argument_list|(
+literal|"mkdir: blksize"
+argument_list|)
+expr_stmt|;
+comment|/* XXX - should grow with bmap() */
+else|else
+name|ip
+operator|->
+name|i_size
+operator|=
+name|DIRBLKSIZ
+expr_stmt|;
 comment|/* 	 * Directory all set up, now 	 * install the entry for it in 	 * the parent directory. 	 */
 name|u
 operator|.

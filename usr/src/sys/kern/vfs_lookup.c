@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	6.19	85/02/20	*/
+comment|/*	vfs_lookup.c	6.20	85/02/22	*/
 end_comment
 
 begin_include
@@ -3593,6 +3593,36 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DIRBLKSIZ
+operator|>
+name|dp
+operator|->
+name|i_fs
+operator|->
+name|fs_fsize
+condition|)
+name|panic
+argument_list|(
+literal|"wdir: blksize"
+argument_list|)
+expr_stmt|;
+comment|/* XXX - should grow w/bmap() */
+else|else
+name|dp
+operator|->
+name|i_size
+operator|=
+name|roundup
+argument_list|(
+name|dp
+operator|->
+name|i_size
+argument_list|,
+name|DIRBLKSIZ
+argument_list|)
+expr_stmt|;
 name|iput
 argument_list|(
 name|dp
@@ -3605,7 +3635,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * If ndp->ni_count is non-zero, then namei found space for the new 	 * entry in the range ndp->ni_offset to ndp->ni_offset + ndp->ni_count. 	 * in the directory.  To use this space, we may have to compact 	 * the entries located there, by copying them together towards 	 * the beginning of the block, leaving the free space in 	 * one usable chunk at the end. 	 */
-comment|/* 	 * Increase size of directory if entry eats into new space. 	 * This should never push the size past a new multiple of 	 * DIRBLKSIZE. 	 */
+comment|/* 	 * Increase size of directory if entry eats into new space. 	 * This should never push the size past a new multiple of 	 * DIRBLKSIZE. 	 * 	 * N.B. - THIS IS AN ARTIFACT OF 4.2 AND SHOULD NEVER HAPPEN. 	 */
 if|if
 condition|(
 name|ndp
