@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cluster.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cluster.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2529,16 +2529,10 @@ operator|&
 name|B_DELWRI
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ASYNC
-expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bwrite
+name|bawrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3197,12 +3191,6 @@ operator|->
 name|b_dev
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ASYNC
-expr_stmt|;
 name|notavail
 argument_list|(
 name|bp
@@ -3211,7 +3199,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bwrite
+name|bawrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3346,12 +3334,6 @@ operator|&
 name|B_DELWRI
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ASYNC
-expr_stmt|;
 name|notavail
 argument_list|(
 name|bp
@@ -3368,7 +3350,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bwrite
+name|bawrite
 argument_list|(
 name|bp
 argument_list|)
@@ -3422,7 +3404,7 @@ comment|/* unused */
 end_comment
 
 begin_comment
-comment|/*  * Invalidate in core blocks belonging to closed or umounted filesystem  *  * This is not nicely done at all - the buffer ought to be removed from the  * hash chains& have its dev/blkno fields clobbered, but unfortunately we  * can't do that here, as it is quite possible that the block is still  * being used for i/o. Eventually, all disc drivers should be forced to  * have a close routine, which ought ensure that the queue is empty, then  * properly flush the queues. Until that happy day, this suffices for  * correctness.						... kre  */
+comment|/*  * Invalidate in core blocks belonging to closed or umounted filesystem  *  * We walk through the buffer pool and invalidate any buffers for the  * indicated device. Normally this routine is preceeded by a bflush  * call, so that on a quiescent filesystem there will be no dirty  * buffers when we are done. We return the count of dirty buffers when  * we are finished.  */
 end_comment
 
 begin_macro
@@ -3452,12 +3434,15 @@ name|bufhd
 modifier|*
 name|hp
 decl_stmt|;
+name|int
+name|dirty
+init|=
+literal|0
+decl_stmt|;
 define|#
 directive|define
 name|dp
 value|((struct buf *)hp)
-name|loop
-label|:
 for|for
 control|(
 name|hp
@@ -3475,6 +3460,7 @@ condition|;
 name|hp
 operator|++
 control|)
+block|{
 for|for
 control|(
 name|bp
@@ -3493,14 +3479,15 @@ name|bp
 operator|->
 name|b_forw
 control|)
+block|{
 if|if
 condition|(
 name|bp
 operator|->
 name|b_dev
-operator|==
+operator|!=
 name|dev
-operator|&&
+operator|||
 operator|(
 name|bp
 operator|->
@@ -3508,10 +3495,35 @@ name|b_flags
 operator|&
 name|B_INVAL
 operator|)
-operator|==
-literal|0
+condition|)
+continue|continue;
+name|notavail
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DELWRI
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|bawrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|dirty
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
 name|bp
 operator|->
 name|b_flags
@@ -3523,10 +3535,18 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-goto|goto
-name|loop
-goto|;
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+return|return
+operator|(
+name|dirty
+operator|)
+return|;
 block|}
 end_block
 
