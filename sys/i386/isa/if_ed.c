@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.85 1995/11/15 07:45:56 davidg Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.86 1995/11/16 09:55:51 bde Exp $  */
 end_comment
 
 begin_include
@@ -1267,6 +1267,7 @@ comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_probe
 parameter_list|(
@@ -1370,6 +1371,7 @@ comment|/*  * Generic probe routine for testing for the existance of a DS8390.  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_probe_generic8390
 parameter_list|(
@@ -1450,6 +1452,7 @@ comment|/*  * Probe and vendor-specific initialization routine for SMC/WD80x3 bo
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_probe_WD80x3
 parameter_list|(
@@ -3339,6 +3342,7 @@ comment|/*  * Probe and vendor-specific initialization routine for 3Com 3c503 bo
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_probe_3Com
 parameter_list|(
@@ -4243,6 +4247,7 @@ comment|/*  * Probe and vendor-specific initialization routine for NE1000/2000 b
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_probe_Novell
 parameter_list|(
@@ -5327,6 +5332,7 @@ comment|/*  * Probe and vendor-specific initialization routine for PCCARDs  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_probe_pccard
 parameter_list|(
@@ -5917,6 +5923,7 @@ comment|/*  * Install interface into kernel networking data structures  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_attach
 parameter_list|(
@@ -6210,6 +6217,7 @@ comment|/*  * Reset interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_reset
 parameter_list|(
@@ -6264,6 +6272,7 @@ comment|/*  * Take interface offline.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_stop
 parameter_list|(
@@ -6344,6 +6353,7 @@ comment|/*  * Device timeout/watchdog routine. Entered if the device neglects to
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_watchdog
 parameter_list|(
@@ -6402,6 +6412,7 @@ comment|/*  * Initialize device.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_init
 parameter_list|(
@@ -7059,6 +7070,7 @@ comment|/*  * Start output on interface.  * We make two assumptions here:  *  1)
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_start
 parameter_list|(
@@ -8512,6 +8524,7 @@ comment|/*  * Process an ioctl request. This code needs some work - it looks  *	
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ed_ioctl
 parameter_list|(
@@ -9452,6 +9465,7 @@ comment|/*  * Given a NIC memory source address and a host memory destination  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_pio_readmem
 parameter_list|(
@@ -9614,6 +9628,7 @@ comment|/*  * Stripped down routine for writing a linear buffer to NIC memory.  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ed_pio_writemem
 parameter_list|(
@@ -9806,6 +9821,7 @@ comment|/*  * Write an mbuf chain to the destination NIC memory address using  *
 end_comment
 
 begin_function
+specifier|static
 name|u_short
 name|ed_pio_write_mbufs
 parameter_list|(
@@ -10417,6 +10433,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ed_setrcr
 parameter_list|(
@@ -10852,6 +10869,7 @@ comment|/*  * Compute the multicast address filter from the  * list of multicast
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ds_getmcaf
 parameter_list|(
