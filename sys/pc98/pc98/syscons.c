@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1998 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.126 1999/08/23 13:45:28 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.127 1999/08/27 07:26:25 julian Exp $  */
 end_comment
 
 begin_include
@@ -19303,19 +19303,6 @@ decl_stmt|;
 comment|/* XXX */
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DEVFS
-specifier|static
-name|void
-modifier|*
-name|main_devfs_token
-index|[
-name|MAXCONS
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|SC_NO_FONT_LOADING
@@ -19913,17 +19900,6 @@ name|tty
 operator|=
 name|main_tty
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sc
-operator|->
-name|devfs_token
-operator|=
-name|main_devfs_token
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|console
@@ -20021,30 +19997,6 @@ operator|*
 name|MAXCONS
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|sc
-operator|->
-name|devfs_token
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|*
-name|MAXCONS
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|console
@@ -20864,20 +20816,6 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-name|free
-argument_list|(
-name|sc
-operator|->
-name|devfs_token
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|SC_NO_FONT_LOADING
