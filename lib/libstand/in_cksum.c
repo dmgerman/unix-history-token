@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: in_cksum.c,v 1.3 1995/04/22 13:53:48 cgd Exp $	*/
+comment|/*	$NetBSD: in_cksum.c,v 1.6 2000/03/31 19:55:09 castor Exp $	*/
 end_comment
 
 begin_comment
@@ -25,6 +25,18 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"stand.h"
 end_include
 
 begin_comment
@@ -144,6 +156,11 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|sum
 operator|+=
 operator|*
@@ -158,6 +175,24 @@ operator|*
 name|cp
 operator|++
 expr_stmt|;
+else|#
+directive|else
+name|sum
+operator|+=
+operator|*
+name|cp
+operator|++
+expr_stmt|;
+name|sum
+operator|+=
+operator|*
+name|cp
+operator|++
+operator|<<
+literal|8
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 if|if
@@ -172,6 +207,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
 name|v
 operator|=
 operator|*
@@ -179,6 +219,15 @@ name|cp
 operator|<<
 literal|8
 expr_stmt|;
+else|#
+directive|else
+name|v
+operator|=
+operator|*
+name|cp
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
