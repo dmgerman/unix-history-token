@@ -1383,6 +1383,52 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'q'
+case|:
+comment|/* versatec polygon - ignore */
+while|while
+condition|(
+name|buf
+index|[
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
+if|if
+condition|(
+name|fgets
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"unexpected end of input"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+comment|/* unbordered */
+case|case
 literal|'p'
 case|:
 comment|/* polygon */
