@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.1	82/02/01	*/
+comment|/*	if_imp.c	4.2	82/02/01	*/
 end_comment
 
 begin_include
@@ -369,7 +369,18 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sockaddr_in
-name|impaddr
+name|impdst
+init|=
+block|{
+name|AF_IMPLINK
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+name|impsrc
 init|=
 block|{
 name|AF_IMPLINK
@@ -993,7 +1004,17 @@ name|ip
 operator|->
 name|il_link
 expr_stmt|;
-name|impaddr
+name|impdst
+operator|.
+name|sin_addr
+operator|=
+name|sc
+operator|->
+name|imp_if
+operator|.
+name|if_addr
+expr_stmt|;
+name|impsrc
 operator|.
 name|sin_addr
 operator|.
@@ -1003,7 +1024,7 @@ name|ip
 operator|->
 name|il_network
 expr_stmt|;
-name|impaddr
+name|impsrc
 operator|.
 name|sin_addr
 operator|.
@@ -1013,7 +1034,7 @@ name|ip
 operator|->
 name|il_host
 expr_stmt|;
-name|impaddr
+name|impsrc
 operator|.
 name|sin_addr
 operator|.
@@ -1029,7 +1050,9 @@ name|m
 argument_list|,
 name|impproto
 argument_list|,
-name|impaddr
+name|impdst
+argument_list|,
+name|impsrc
 argument_list|)
 expr_stmt|;
 return|return;

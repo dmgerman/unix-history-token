@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.1	82/02/01	*/
+comment|/*	raw_cb.c	4.2	82/02/01	*/
 end_comment
 
 begin_include
@@ -123,23 +123,6 @@ decl_stmt|;
 name|COUNT
 argument_list|(
 name|RAW_ATTACH
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|so
-operator|->
-name|so_options
-operator|&
-name|SO_DEBUG
-condition|)
-name|printf
-argument_list|(
-literal|"raw_attach: addr=%d\n"
-argument_list|,
-name|addr
-operator|->
-name|sa_family
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Should we verify address not already in use? 	 * Some say yes, others no. 	 */
@@ -398,23 +381,6 @@ argument_list|(
 name|RAW_DETACH
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rp
-operator|->
-name|rcb_socket
-operator|->
-name|so_options
-operator|&
-name|SO_DEBUG
-condition|)
-name|printf
-argument_list|(
-literal|"raw_detach: rp=%X\n"
-argument_list|,
-name|rp
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -469,23 +435,6 @@ block|{
 name|COUNT
 argument_list|(
 name|RAW_DISCONNECT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rp
-operator|->
-name|rcb_socket
-operator|->
-name|so_options
-operator|&
-name|SO_DEBUG
-condition|)
-name|printf
-argument_list|(
-literal|"raw_disconnect: rp=%X\n"
-argument_list|,
-name|rp
 argument_list|)
 expr_stmt|;
 name|rp
@@ -547,39 +496,6 @@ block|{
 name|COUNT
 argument_list|(
 name|RAW_CONNADDR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rp
-operator|->
-name|rcb_socket
-operator|->
-name|so_options
-operator|&
-name|SO_DEBUG
-condition|)
-empty_stmt|;
-name|printf
-argument_list|(
-literal|"raw_connaddr: rp=%x, addr=<%x,%x>\n"
-argument_list|,
-name|rp
-argument_list|,
-name|addr
-operator|->
-name|sa_family
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|addr
-operator|)
-operator|->
-name|sin_addr
 argument_list|)
 expr_stmt|;
 name|bcopy

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.h	4.1	82/02/01	*/
+comment|/*	raw_cb.h	4.2	82/02/01	*/
 end_comment
 
 begin_comment
@@ -99,10 +99,17 @@ name|struct
 name|sockproto
 name|raw_protocol
 decl_stmt|;
+comment|/* format of packet */
 name|struct
 name|sockaddr
-name|raw_address
+name|raw_dst
 decl_stmt|;
+comment|/* dst address for rawintr */
+name|struct
+name|sockaddr
+name|raw_src
+decl_stmt|;
+comment|/* src address for sbappendaddr */
 block|}
 struct|;
 end_struct
