@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.33 1996/11/21 07:18:59 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.34 1997/02/12 16:19:11 mpp Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -5903,14 +5903,14 @@ begin_define
 define|#
 directive|define
 name|devfs_lock
-value|((int (*) __P((struct  vop_lock_args *)))nullop)
+value|((int (*) __P((struct  vop_lock_args *)))vop_nolock)
 end_define
 
 begin_define
 define|#
 directive|define
 name|devfs_unlock
-value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+value|((int (*) __P((struct  vop_unlock_args *)))vop_nounlock)
 end_define
 
 begin_define
@@ -5931,7 +5931,8 @@ begin_define
 define|#
 directive|define
 name|devfs_islocked
-value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+define|\
+value|((int (*) __P((struct vop_islocked_args *)))vop_noislocked)
 end_define
 
 begin_define
