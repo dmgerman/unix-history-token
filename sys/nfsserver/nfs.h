@@ -1394,6 +1394,15 @@ name|vnode
 modifier|*
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|vattr
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
 name|struct
 name|thread
 modifier|*
