@@ -1283,8 +1283,9 @@ if|if
 condition|(
 name|pflag
 condition|)
-name|rval
-operator|=
+block|{
+if|if
+condition|(
 name|setfile
 argument_list|(
 name|curr
@@ -1293,7 +1294,12 @@ name|fts_statp
 argument_list|,
 literal|0
 argument_list|)
+condition|)
+name|rval
+operator|=
+literal|1
 expr_stmt|;
+block|}
 else|else
 block|{
 name|mode
