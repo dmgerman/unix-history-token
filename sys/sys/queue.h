@@ -335,7 +335,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(((head)->stqh_last ==&(head)->stqh_first) ?			\ 		NULL :							\ 		strbase(type, (head)->stqh_last, field))
+value|(STAILQ_EMPTY(head) ?						\ 		NULL :							\ 		strbase(type, (head)->stqh_last, field))
 end_define
 
 begin_define
