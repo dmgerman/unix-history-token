@@ -194,6 +194,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|PCI_PRODUCT_LSI_FC929X
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_LSI_FC929X
+value|0x0626
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|PCI_PRODUCT_LSI_1030
 end_ifndef
 
@@ -643,6 +661,14 @@ case|:
 name|desc
 operator|=
 literal|"LSILogic FC929 FC Adapter"
+expr_stmt|;
+break|break;
+case|case
+name|PCI_PRODUCT_LSI_FC929X
+case|:
+name|desc
+operator|=
+literal|"LSILogic FC929X FC Adapter"
 expr_stmt|;
 break|break;
 case|case
