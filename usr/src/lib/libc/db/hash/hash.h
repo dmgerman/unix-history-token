@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -354,14 +354,14 @@ begin_define
 define|#
 directive|define
 name|DEF_BUCKET_SIZE
-value|256
+value|4096
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEF_BUCKET_SHIFT
-value|8
+value|12
 end_define
 
 begin_comment
@@ -397,7 +397,14 @@ begin_define
 define|#
 directive|define
 name|DEF_FFACTOR
-value|5
+value|65536
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN_FFACTOR
+value|4
 end_define
 
 begin_define
