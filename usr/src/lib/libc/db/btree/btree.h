@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -166,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|BTDATAOFF
-value|(sizeof(PAGE) - sizeof(index_t))
+value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) + \ 			    sizeof(u_long) + sizeof(index_t) + sizeof(index_t))
 end_define
 
 begin_define
