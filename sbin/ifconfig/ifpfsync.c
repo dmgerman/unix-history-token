@@ -155,11 +155,6 @@ name|void
 name|pfsync_status
 parameter_list|(
 name|int
-parameter_list|,
-specifier|const
-name|struct
-name|rt_addrinfo
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -538,13 +533,6 @@ name|pfsync_status
 parameter_list|(
 name|int
 name|s
-parameter_list|,
-specifier|const
-name|struct
-name|rt_addrinfo
-modifier|*
-name|info
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -677,7 +665,7 @@ operator|=
 name|AF_UNSPEC
 block|,
 operator|.
-name|af_status
+name|af_other_status
 operator|=
 name|pfsync_status
 block|, }
