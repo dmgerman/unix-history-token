@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/kern/init_main.c,v 1.2 1993/08/06 09:53:06 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/init_main.c,v 1.3 1993/08/27 02:10:18 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,19 +123,19 @@ end_include
 
 begin_decl_stmt
 name|char
-name|copyright1
+name|bsd_version
 index|[]
 init|=
-literal|"386BSD Release 0.1 by William and Lynne Jolitz."
+literal|"FreeBSD release 1.0"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|copyright2
+name|copyright
 index|[]
 init|=
-literal|"Copyright (c) 1989,1990,1991,1992 William F. Jolitz. All rights reserved.\n\ Based in part on work by the 386BSD User Community and the\n\ BSD Networking Software, Release 2 by UCB EECS Department.\n"
+literal|"Copyright (c) 1989,1990,1991,1992 William F. Jolitz. All rights reserved.\n\ Copyright (c) 1982,1986,1989,1991 The Regents of the University\n\ of California.  All rights reserved.\n\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,18 +310,20 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-name|copyright1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n[0.1.%s]\n%s\n"
+literal|"\n%s  [1.%s]\n"
+argument_list|,
+name|bsd_version
 argument_list|,
 name|version
 operator|+
 literal|9
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
 argument_list|,
-name|copyright2
+name|copyright
 argument_list|)
 expr_stmt|;
 name|vm_mem_init
