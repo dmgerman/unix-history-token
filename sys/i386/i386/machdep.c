@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.14 1993/10/29 09:06:56 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.15 1993/11/07 21:47:00 wollman Exp $  */
 end_comment
 
 begin_include
@@ -297,6 +297,28 @@ end_define
 begin_comment
 comment|/* Set to pause berfore crash in weird cases*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PANIC_REBOOT_WAIT_TIME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PANIC_REBOOT_WAIT_TIME
+value|15
+end_define
+
+begin_comment
+comment|/* default to 15 seconds */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
@@ -2597,7 +2619,88 @@ expr_stmt|;
 name|dumpsys
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
+if|if
+condition|(
+name|PANIC_REBOOT_WAIT_TIME
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|PANIC_REBOOT_WAIT_TIME
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|int
+name|loop
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"Automatic reboot in %d seconds - press a key on the console to abort\n"
+argument_list|,
+name|PANIC_REBOOT_WAIT_TIME
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|loop
+operator|=
+name|PANIC_REBOOT_WAIT_TIME
+init|;
+name|loop
+operator|>
+literal|0
+condition|;
+operator|--
+name|loop
+control|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000
+operator|*
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* one second */
+if|if
+condition|(
+name|sgetc
+argument_list|(
+literal|1
+argument_list|)
+condition|)
+comment|/* Did user type a key? */
+break|break;
+block|}
+if|if
+condition|(
+operator|!
+name|loop
+condition|)
+goto|goto
+name|die
+goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* zero time specified - reboot NOW */
+goto|goto
+name|die
+goto|;
+block|}
+name|printf
+argument_list|(
+literal|"--> Press a key on the console to reboot<--\n"
+argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 ifdef|#
@@ -2622,6 +2725,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|die
+label|:
+name|printf
+argument_list|(
+literal|"Rebooting...\n"
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+comment|/* wait 100ms for printf's to complete */
 name|cpu_reset
 argument_list|()
 expr_stmt|;
@@ -2779,16 +2895,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
-argument_list|(
-literal|"\n\n"
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

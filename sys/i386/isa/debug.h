@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from: debug.h, part of Bruce Evans interrupt code  *	$Id$  */
+comment|/*  *	from: debug.h, part of Bruce Evans interrupt code  *	$Id: debug.h,v 1.2 1993/10/16 13:45:48 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -227,21 +227,6 @@ end_endif
 begin_comment
 comment|/* SHOW_A_LOT */
 end_comment
-
-begin_expr_stmt
-operator|.
-name|data
-operator|.
-name|globl
-name|_bdb_exists
-name|_bdb_exists
-operator|:
-operator|.
-name|long
-literal|0
-operator|.
-name|text
-end_expr_stmt
 
 end_unit
 

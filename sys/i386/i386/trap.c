@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.5 1993/11/01 11:51:29 chmr Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.6 1993/11/04 15:05:41 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -217,6 +217,108 @@ begin_decl_stmt
 specifier|extern
 name|short
 name|cpl
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MAX_TRAP_MSG
+value|27
+end_define
+
+begin_decl_stmt
+name|char
+modifier|*
+name|trap_msg
+index|[]
+init|=
+block|{
+literal|"reserved addressing fault"
+block|,
+comment|/*  0 T_RESADFLT */
+literal|"privileged instruction fault"
+block|,
+comment|/*  1 T_PRIVINFLT */
+literal|"reserved operand fault"
+block|,
+comment|/*  2 T_RESOPFLT */
+literal|"breakpoint instruction fault"
+block|,
+comment|/*  3 T_BPTFLT */
+literal|""
+block|,
+comment|/*  4 unused */
+literal|"system call trap"
+block|,
+comment|/*  5 T_SYSCALL */
+literal|"arithmetic trap"
+block|,
+comment|/*  6 T_ARITHTRAP */
+literal|"system forced exception"
+block|,
+comment|/*  7 T_ASTFLT */
+literal|"segmentation (limit) fault"
+block|,
+comment|/*  8 T_SEGFLT */
+literal|"protection fault"
+block|,
+comment|/*  9 T_PROTFLT */
+literal|"trace trap"
+block|,
+comment|/* 10 T_TRCTRAP */
+literal|""
+block|,
+comment|/* 11 unused */
+literal|"page fault"
+block|,
+comment|/* 12 T_PAGEFLT */
+literal|"page table fault"
+block|,
+comment|/* 13 T_TABLEFLT */
+literal|"alignment fault"
+block|,
+comment|/* 14 T_ALIGNFLT */
+literal|"kernel stack pointer not valid"
+block|,
+comment|/* 15 T_KSPNOTVAL */
+literal|"bus error"
+block|,
+comment|/* 16 T_BUSERR */
+literal|"kernel debugger fault"
+block|,
+comment|/* 17 T_KDBTRAP */
+literal|"integer divide fault"
+block|,
+comment|/* 18 T_DIVIDE */
+literal|"non-maskable interrupt trap"
+block|,
+comment|/* 19 T_NMI */
+literal|"overflow trap"
+block|,
+comment|/* 20 T_OFLOW */
+literal|"FPU bounds check fault"
+block|,
+comment|/* 21 T_BOUND */
+literal|"FPU device not available"
+block|,
+comment|/* 22 T_DNA */
+literal|"double fault"
+block|,
+comment|/* 23 T_DOUBLEFLT */
+literal|"FPU operand fetch fault"
+block|,
+comment|/* 24 T_FPOPFLT */
+literal|"invalid TSS fault"
+block|,
+comment|/* 25 T_TSSFLT */
+literal|"segment not present fault"
+block|,
+comment|/* 26 T_SEGNPFLT */
+literal|"stack fault"
+block|,
+comment|/* 27 T_STKFLT */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -491,9 +593,48 @@ condition|)
 return|return;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|type
+operator|&
+operator|~
+name|T_USER
+operator|)
+operator|<=
+name|MAX_TRAP_MSG
+condition|)
 name|printf
 argument_list|(
-literal|"trap type %d code = %x eip = %x cs = %x eflags = %x "
+literal|"\n\nFatal trap %d: %s while in %s mode\n"
+argument_list|,
+name|type
+operator|&
+operator|~
+name|T_USER
+argument_list|,
+name|trap_msg
+index|[
+name|type
+operator|&
+operator|~
+name|T_USER
+index|]
+argument_list|,
+operator|(
+name|type
+operator|&
+name|T_USER
+operator|)
+condition|?
+literal|"user"
+else|:
+literal|"kernel"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"trap type = %d, code = %x\n     eip = %x, cs = %x, eflags = %x, "
 argument_list|,
 name|frame
 operator|.
@@ -523,18 +664,36 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cr2 %x cpl %x\n"
+literal|"cr2 = %x, current priority = %x\n"
 argument_list|,
 name|eva
 argument_list|,
 name|cpl
 argument_list|)
 expr_stmt|;
-comment|/* type&= ~T_USER; */
-comment|/* XXX what the hell is this */
+name|type
+operator|&=
+operator|~
+name|T_USER
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|<=
+name|MAX_TRAP_MSG
+condition|)
 name|panic
 argument_list|(
-literal|"trap"
+name|trap_msg
+index|[
+name|type
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"unknown/reserved trap"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
