@@ -5026,7 +5026,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 comment|/* 	 * Hunt through all the interrupt mapping regs to look for our 	 * interrupt vector. 	 * 	 * XXX We only compare INOs rather than IGNs since the firmware may 	 * not provide the IGN and the IGN is constant for all device on that 	 * PCI controller.  This could cause problems for the FFB/external 	 * interrupt which has a full vector that can be set arbitrarily. 	 */
@@ -5074,7 +5074,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -5674,7 +5674,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 operator|&
 name|p
