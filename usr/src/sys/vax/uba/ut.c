@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.5	81/11/10	*/
+comment|/*	ut.c	4.6	81/11/11	*/
 end_comment
 
 begin_include
@@ -3221,7 +3221,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"te%d: lost interrupt\n"
+literal|"tj%d: lost interrupt\n"
 argument_list|,
 name|TJUNIT
 argument_list|(
