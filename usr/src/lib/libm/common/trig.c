@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trig.c	1.2 (Berkeley) 8/22/85; 1.5 (ucb.elefunt) %G%"
+literal|"@(#)trig.c	1.2 (Berkeley) 8/22/85; 1.6 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -362,6 +362,42 @@ begin_comment
 comment|/*Hex  2^  2   *  1.921FB54442D18 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NATIONAL
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|long
+name|fmaxx
+index|[]
+init|=
+block|{
+literal|0xffffffff
+block|,
+literal|0x7fefffff
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|fmax
+value|(*(double*)fmaxx)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NATIONAL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -630,6 +666,29 @@ name|c
 operator|)
 return|;
 comment|/* sin/cos */
+ifdef|#
+directive|ifdef
+name|NATIONAL
+elseif|else
+if|if
+condition|(
+name|x
+operator|==
+literal|0.0
+condition|)
+return|return
+name|copysign
+argument_list|(
+name|fmax
+argument_list|,
+name|x
+argument_list|)
+return|;
+comment|/* no inf on 32k */
+endif|#
+directive|endif
+comment|/* NATIONAL */
+else|else
 return|return
 operator|(
 name|c
@@ -643,7 +702,7 @@ name|ss
 operator|)
 operator|)
 return|;
-comment|/*                  ... cos/sin */
+comment|/*          ... cos/sin */
 block|}
 end_function
 
