@@ -374,6 +374,8 @@ decl_stmt|;
 if|if
 condition|(
 name|p
+operator|&&
+name|p
 operator|->
 name|p_flag
 operator|&
