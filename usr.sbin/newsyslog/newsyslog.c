@@ -838,16 +838,6 @@ name|struct
 name|conf_entry
 modifier|*
 name|ent
-parameter_list|,
-name|char
-modifier|*
-name|log
-parameter_list|,
-name|int
-name|numdays
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2292,18 +2282,6 @@ block|}
 name|dotrim
 argument_list|(
 name|ent
-argument_list|,
-name|ent
-operator|->
-name|log
-argument_list|,
-name|ent
-operator|->
-name|numlogs
-argument_list|,
-name|ent
-operator|->
-name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -5832,16 +5810,6 @@ name|struct
 name|conf_entry
 modifier|*
 name|ent
-parameter_list|,
-name|char
-modifier|*
-name|log
-parameter_list|,
-name|int
-name|numdays
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|char
@@ -5890,18 +5858,26 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|int
+name|flags
+decl_stmt|,
 name|notified
 decl_stmt|,
 name|need_notification
 decl_stmt|,
 name|fd
 decl_stmt|,
-name|_numdays
+name|numlogs_c
 decl_stmt|;
 name|struct
 name|stat
 name|st
 decl_stmt|;
+name|flags
+operator|=
+name|ent
+operator|->
+name|flags
+expr_stmt|;
 if|if
 condition|(
 name|archtodir
@@ -5942,6 +5918,8 @@ name|strlcpy
 argument_list|(
 name|dirpart
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|,
 sizeof|sizeof
@@ -6021,6 +5999,8 @@ name|p
 operator|=
 name|rindex
 argument_list|(
+name|ent
+operator|->
 name|log
 argument_list|,
 literal|'/'
@@ -6033,6 +6013,8 @@ name|strlcpy
 argument_list|(
 name|namepart
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|,
 sizeof|sizeof
@@ -6075,7 +6057,9 @@ name|dirpart
 argument_list|,
 name|namepart
 argument_list|,
-name|numdays
+name|ent
+operator|->
+name|numlogs
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6131,9 +6115,13 @@ argument_list|)
 argument_list|,
 literal|"%s.%d"
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|,
-name|numdays
+name|ent
+operator|->
+name|numlogs
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6227,14 +6215,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Move down log files */
-name|_numdays
+name|numlogs_c
 operator|=
-name|numdays
+name|ent
+operator|->
+name|numlogs
 expr_stmt|;
-comment|/* preserve */
+comment|/* copy for countdown */
 while|while
 condition|(
-name|numdays
+name|numlogs_c
 operator|--
 condition|)
 block|{
@@ -6275,7 +6265,7 @@ name|dirpart
 argument_list|,
 name|namepart
 argument_list|,
-name|numdays
+name|numlogs_c
 argument_list|)
 expr_stmt|;
 else|else
@@ -6293,9 +6283,11 @@ argument_list|)
 argument_list|,
 literal|"%s.%d"
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|,
-name|numdays
+name|numlogs_c
 argument_list|)
 expr_stmt|;
 operator|(
@@ -6599,6 +6591,8 @@ name|void
 operator|)
 name|log_trim
 argument_list|(
+name|ent
+operator|->
 name|log
 argument_list|,
 name|ent
@@ -6607,8 +6601,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|_numdays
+name|ent
+operator|->
+name|numlogs
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -6619,6 +6616,8 @@ name|printf
 argument_list|(
 literal|"\trm %s\n"
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|)
 expr_stmt|;
@@ -6628,6 +6627,8 @@ name|void
 operator|)
 name|unlink
 argument_list|(
+name|ent
+operator|->
 name|log
 argument_list|)
 expr_stmt|;
@@ -6642,6 +6643,8 @@ name|printf
 argument_list|(
 literal|"\tmv %s to %s\n"
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|,
 name|file1
@@ -6655,6 +6658,8 @@ name|archtodir
 condition|)
 name|movefile
 argument_list|(
+name|ent
+operator|->
 name|log
 argument_list|,
 name|file1
@@ -6678,6 +6683,8 @@ name|void
 operator|)
 name|rename
 argument_list|(
+name|ent
+operator|->
 name|log
 argument_list|,
 name|file1
@@ -6686,11 +6693,13 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Now move the new log file into place */
-comment|/* XXX - We should replace the above 'rename' with 'link(log, file1)' 	 *	then replace the following with 'createfile(ent)' */
+comment|/* XXX - We should replace the above 'rename' with 	*	'link(ent->log, file1)' and then replace 	 *	the following with 'createfile(ent)' */
 name|strlcpy
 argument_list|(
 name|tfile
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|,
 sizeof|sizeof
@@ -6863,6 +6872,8 @@ literal|"\tmv %s %s\n"
 argument_list|,
 name|tfile
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|)
 expr_stmt|;
@@ -6887,6 +6898,8 @@ name|rename
 argument_list|(
 name|tfile
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|)
 operator|<
@@ -6979,6 +6992,8 @@ name|warnx
 argument_list|(
 literal|"log %s.0 not compressed because daemon(s) not notified"
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|)
 expr_stmt|;
@@ -6997,6 +7012,8 @@ name|printf
 argument_list|(
 literal|"\tgzip %s.0\n"
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|)
 expr_stmt|;
@@ -7005,6 +7022,8 @@ name|printf
 argument_list|(
 literal|"\tbzip2 %s.0\n"
 argument_list|,
+name|ent
+operator|->
 name|log
 argument_list|)
 expr_stmt|;
@@ -7096,6 +7115,8 @@ name|CE_COMPACT
 condition|)
 name|compress_log
 argument_list|(
+name|ent
+operator|->
 name|log
 argument_list|,
 name|flags
@@ -7112,6 +7133,8 @@ name|CE_BZCOMPACT
 condition|)
 name|bzcompress_log
 argument_list|(
+name|ent
+operator|->
 name|log
 argument_list|,
 name|flags
