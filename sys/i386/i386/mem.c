@@ -809,6 +809,12 @@ name|uio
 argument_list|)
 expr_stmt|;
 continue|continue;
+default|default:
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 block|}
 if|if
 condition|(
