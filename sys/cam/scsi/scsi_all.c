@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi_all.c,v 1.1 1998/09/15 06:36:33 gibbs Exp $  */
+comment|/*  * Implementation of Utility functions for all SCSI device types.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi_all.c,v 1.2 1998/09/18 22:33:59 ken Exp $  */
 end_comment
 
 begin_include
@@ -10388,6 +10388,7 @@ if|if
 condition|(
 name|retry
 condition|)
+block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -10395,6 +10396,17 @@ operator|.
 name|retry_count
 operator|--
 expr_stmt|;
+name|error
+operator|=
+name|ERESTART
+expr_stmt|;
+name|print_sense
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -10415,6 +10427,7 @@ name|error_action
 operator|&
 name|SS_ERRMASK
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SSD_KEY_UNIT_ATTENTION
@@ -10458,6 +10471,7 @@ if|if
 condition|(
 name|retry
 condition|)
+block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -10465,6 +10479,17 @@ operator|.
 name|retry_count
 operator|--
 expr_stmt|;
+name|error
+operator|=
+name|ERESTART
+expr_stmt|;
+name|print_sense
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -10486,6 +10511,7 @@ operator|&
 name|SS_ERRMASK
 expr_stmt|;
 block|}
+block|}
 break|break;
 default|default:
 comment|/* decrement the number of retries */
@@ -10503,6 +10529,7 @@ if|if
 condition|(
 name|retry
 condition|)
+block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -10510,6 +10537,17 @@ operator|.
 name|retry_count
 operator|--
 expr_stmt|;
+name|error
+operator|=
+name|ERESTART
+expr_stmt|;
+name|print_sense
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -10531,6 +10569,7 @@ operator|&
 name|SS_ERRMASK
 expr_stmt|;
 block|}
+block|}
 break|break;
 block|}
 default|default:
@@ -10549,6 +10588,7 @@ if|if
 condition|(
 name|retry
 condition|)
+block|{
 name|ccb
 operator|->
 name|ccb_h
@@ -10556,6 +10596,16 @@ operator|.
 name|retry_count
 operator|--
 expr_stmt|;
+name|error
+operator|=
+name|ERESTART
+expr_stmt|;
+name|print_sense
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
 name|error
 operator|=
 name|EIO
