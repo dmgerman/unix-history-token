@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.9 1995/09/09 18:10:09 davidg Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.10 1995/10/21 19:50:00 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1400,7 +1400,9 @@ name|p
 operator|->
 name|p_vmspace
 operator|->
-name|vm_daddr
+name|vm_taddr
+operator|+
+name|MAXTSIZ
 operator|+
 name|MAXDSIZ
 argument_list|)
