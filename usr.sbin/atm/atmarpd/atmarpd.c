@@ -837,24 +837,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up signal handlers 	 */
-name|rc
-operator|=
-operator|(
-name|int
-operator|)
+if|if
+condition|(
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|atmarp_sigint
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rc
 operator|==
-operator|-
-literal|1
+name|SIG_ERR
 condition|)
 block|{
 name|atmarp_log
