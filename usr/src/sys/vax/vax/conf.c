@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.46	82/01/17	*/
+comment|/*	conf.c	4.47	82/02/06	*/
 end_comment
 
 begin_include
@@ -2058,46 +2058,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"un.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NUN
-operator|>
-literal|0
-end_if
-
-begin_decl_stmt
-name|int
-name|unopen
-argument_list|()
-decl_stmt|,
-name|unclose
-argument_list|()
-decl_stmt|,
-name|unread
-argument_list|()
-decl_stmt|,
-name|unwrite
-argument_list|()
-decl_stmt|,
-name|unioctl
-argument_list|()
-decl_stmt|,
-name|unreset
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* #include "un.h" #if NUN> 0 int	unopen(), unclose(), unread(), unwrite(), unioctl(), unreset(); #else */
+end_comment
 
 begin_define
 define|#
@@ -2141,10 +2104,9 @@ name|unreset
 value|nulldev
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #endif */
+end_comment
 
 begin_decl_stmt
 name|int
