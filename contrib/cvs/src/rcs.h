@@ -906,5 +906,47 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* From import.c.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|add_rcs_file
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

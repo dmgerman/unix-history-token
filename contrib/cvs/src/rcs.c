@@ -5176,7 +5176,15 @@ name|c
 operator|==
 name|EOF
 condition|)
+block|{
 comment|/* FIXME: should be including filename in error message.  */
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
 name|error
 argument_list|(
 literal|1
@@ -5186,6 +5194,17 @@ argument_list|,
 literal|"cannot read rcs file"
 argument_list|)
 expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"unexpected end of file reading rcs file"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
@@ -5302,6 +5321,13 @@ name|EOF
 condition|)
 block|{
 comment|/* FIXME: should be including filename in error message.  */
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+condition|)
 name|error
 argument_list|(
 literal|1
@@ -5309,6 +5335,16 @@ argument_list|,
 name|errno
 argument_list|,
 literal|"cannot read rcs file"
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"unexpected end of file reading rcs file"
 argument_list|)
 expr_stmt|;
 block|}

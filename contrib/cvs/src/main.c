@@ -1444,6 +1444,16 @@ literal|2
 block|}
 block|,
 block|{
+literal|"allow-root"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|3
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -1809,6 +1819,16 @@ name|usage
 argument_list|(
 name|cmd_synonyms
 argument_list|()
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+comment|/* --allow-root */
+name|root_allow_add
+argument_list|(
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2419,6 +2439,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* The reason that --allow-root is not a command option 	       is mainly the comment in server() about how argc,argv 	       might be from .cvsrc.  I'm not sure about that, and 	       I'm not sure it is only true of command options, but 	       it seems easier to make it a global option.  */
 comment|/* Gets username and password from client, authenticates, then 	       switches to run as that user and sends an ACK back to the 	       client. */
 name|pserver_authenticate_connection
 argument_list|()
@@ -3436,6 +3457,9 @@ name|free
 argument_list|(
 name|Rcsbin
 argument_list|)
+expr_stmt|;
+name|root_allow_free
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
