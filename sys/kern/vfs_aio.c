@@ -175,6 +175,10 @@ directive|ifdef
 name|VFS_AIO
 end_ifdef
 
+begin_comment
+comment|/*  * Counter for allocating reference ids to new jobs.  Wrapped to 1 on  * overflow.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -1192,6 +1196,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Zones for:  * 	kaio	Per process async io info  *	aiop	async io thread data  *	aiocb	async io jobs  *	aiol	list io job pointer - internal to aio_suspend XXX  *	aiolio	list io jobs  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|vm_zone_t
@@ -1202,12 +1210,7 @@ decl_stmt|,
 name|aiocb_zone
 decl_stmt|,
 name|aiol_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_zone_t
+decl_stmt|,
 name|aiolio_zone
 decl_stmt|;
 end_decl_stmt
@@ -3290,7 +3293,6 @@ name|status
 operator|=
 name|cnt
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3543,7 +3545,7 @@ name|P_SYSTEM
 operator||
 name|P_KTHREADP
 expr_stmt|;
-comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * creating to many daemons.) 	 */
+comment|/* 	 * Wakeup parent process.  (Parent sleeps to keep from blasting away 	 * and creating too many daemons.) 	 */
 name|wakeup
 argument_list|(
 name|mycp
@@ -5694,23 +5696,19 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|job
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|aiocbe
 operator|->
 name|uaiocb
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|aiocbe
 operator|->
 name|uaiocb
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6276,14 +6274,8 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|kevp
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|kev
 argument_list|,
@@ -7089,29 +7081,14 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|cb
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_jobdone
-argument_list|)
-init|;
-name|cb
-condition|;
-name|cb
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|cb
+argument|cb
 argument_list|,
-name|plist
+argument|&ki->kaio_jobdone
+argument_list|,
+argument|plist
 argument_list|)
-control|)
 block|{
 if|if
 condition|(
@@ -7686,29 +7663,14 @@ init|;
 condition|;
 control|)
 block|{
-for|for
-control|(
-name|cb
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_jobdone
-argument_list|)
-init|;
-name|cb
-condition|;
-name|cb
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|cb
+argument|cb
 argument_list|,
-name|plist
+argument|&ki->kaio_jobdone
+argument_list|,
+argument|plist
 argument_list|)
-control|)
 block|{
 for|for
 control|(
@@ -8715,29 +8677,14 @@ condition|)
 return|return
 name|EINVAL
 return|;
-for|for
-control|(
-name|cb
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_jobdone
-argument_list|)
-init|;
-name|cb
-condition|;
-name|cb
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|cb
+argument|cb
 argument_list|,
-name|plist
+argument|&ki->kaio_jobdone
+argument_list|,
+argument|plist
 argument_list|)
-control|)
 block|{
 if|if
 condition|(
@@ -9098,6 +9045,10 @@ comment|/* VFS_AIO */
 block|}
 end_function
 
+begin_comment
+comment|/* syscall - asynchronous read from a file (REALTIME) */
+end_comment
+
 begin_function
 name|int
 name|aio_read
@@ -9139,6 +9090,10 @@ comment|/* VFS_AIO */
 block|}
 end_function
 
+begin_comment
+comment|/* syscall - asynchronous write to a file (REALTIME) */
+end_comment
+
 begin_function
 name|int
 name|aio_write
@@ -9179,6 +9134,10 @@ directive|endif
 comment|/* VFS_AIO */
 block|}
 end_function
+
+begin_comment
+comment|/* syscall - XXX undocumented */
+end_comment
 
 begin_function
 name|int
@@ -9742,29 +9701,14 @@ operator|.
 name|kernelinfo
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|cb
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_jobdone
-argument_list|)
-init|;
-name|cb
-condition|;
-name|cb
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|cb
+argument|cb
 argument_list|,
-name|plist
+argument|&ki->kaio_jobdone
+argument_list|,
+argument|plist
 argument_list|)
-control|)
 block|{
 if|if
 condition|(
@@ -9856,29 +9800,14 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|cb
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|ki
-operator|->
-name|kaio_bufdone
-argument_list|)
-init|;
-name|cb
-condition|;
-name|cb
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|cb
+argument|cb
 argument_list|,
-name|plist
+argument|&ki->kaio_bufdone
+argument_list|,
+argument|plist
 argument_list|)
-control|)
 block|{
 if|if
 condition|(
@@ -9978,7 +9907,7 @@ name|VFS_AIO
 end_ifdef
 
 begin_comment
-comment|/*  * This is a wierd hack so that we can post a signal.  It is safe to do so from  * a timeout routine, but *not* from an interrupt routine.  */
+comment|/*  * This is a weird hack so that we can post a signal.  It is safe to do so from  * a timeout routine, but *not* from an interrupt routine.  */
 end_comment
 
 begin_function
@@ -10402,6 +10331,10 @@ begin_comment
 comment|/* VFS_AIO */
 end_comment
 
+begin_comment
+comment|/* syscall - wait for the next completion of an aio request */
+end_comment
+
 begin_function
 name|int
 name|aio_waitcomplete
@@ -10486,16 +10419,10 @@ name|error
 operator|=
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|uap
 operator|->
 name|timeout
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|ts
 argument_list|,
