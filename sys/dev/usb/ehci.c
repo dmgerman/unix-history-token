@@ -473,38 +473,6 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_function_decl
-name|Static
-name|void
-name|ehci_power
-parameter_list|(
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|Static
 name|usbd_status
@@ -4504,12 +4472,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
+name|TRY_DETATCH_CODE
 argument_list|)
 end_if
 
@@ -4531,6 +4494,17 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 if|if
 condition|(
 name|sc
@@ -4561,6 +4535,37 @@ operator|(
 name|rv
 operator|)
 return|;
+endif|#
+directive|endif
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBINTR
+argument_list|,
+name|sc
+operator|->
+name|sc_eintrs
+argument_list|)
+expr_stmt|;
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBCMD
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|EOWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|EHCI_USBCMD
+argument_list|,
+name|EHCI_CMD_HCRESET
+argument_list|)
+expr_stmt|;
 name|usb_uncallout
 argument_list|(
 name|sc
@@ -4572,6 +4577,17 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 if|if
 condition|(
 name|sc
@@ -4602,6 +4618,8 @@ operator|->
 name|sc_shutdownhook
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|usb_delay_ms
 argument_list|(
 operator|&
@@ -4613,6 +4631,19 @@ literal|300
 argument_list|)
 expr_stmt|;
 comment|/* XXX let stray task complete */
+name|usb_freemem
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_fldma
+argument_list|)
+expr_stmt|;
 comment|/* XXX free other data structures XXX */
 return|return
 operator|(
@@ -4725,7 +4756,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Handle suspend/resume.  *  * We need to switch to polling mode here, because this routine is  * called from an intterupt context.  This is all right since we  * are almost suspended anyway.  */
+comment|/*  * Handle suspend/resume.  *  * We need to switch to polling mode here, because this routine is  * called from an interrupt context.  This is all right since we  * are almost suspended anyway.  */
 end_comment
 
 begin_if
@@ -4733,12 +4764,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
+name|TRY_DETATCH_CODE
 argument_list|)
 end_if
 
@@ -4760,7 +4786,7 @@ name|sc
 init|=
 name|v
 decl_stmt|;
-comment|//u_int32_t ctl;
+comment|/*u_int32_t ctl;*/
 name|int
 name|s
 decl_stmt|;
@@ -4798,9 +4824,22 @@ block|{
 case|case
 name|PWR_SUSPEND
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 case|case
 name|PWR_STANDBY
 case|:
+endif|#
+directive|endif
 name|sc
 operator|->
 name|sc_bus
@@ -4860,6 +4899,17 @@ name|use_polling
 operator|--
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 case|case
 name|PWR_SOFTSUSPEND
 case|:
@@ -4870,6 +4920,8 @@ case|case
 name|PWR_SOFTRESUME
 case|:
 break|break;
+endif|#
+directive|endif
 block|}
 name|splx
 argument_list|(
