@@ -54,6 +54,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"private.h"
 end_include
 
@@ -1530,7 +1542,11 @@ specifier|register
 name|int
 name|doaccess
 decl_stmt|;
-comment|/* 		** Section 4.9.1 of the C standard says that 		** "FILENAME_MAX expands to an integral constant expression 		** that is the sie needed for an array of char large enough 		** to hold the longest file name string that the implementation 		** guarantees can be opened." 		*/
+name|struct
+name|stat
+name|stab
+decl_stmt|;
+comment|/* 		** Section 4.9.1 of the C standard says that 		** "FILENAME_MAX expands to an integral constant expression 		** that is the size needed for an array of char large enough 		** to hold the longest file name string that the implementation 		** guarantees can be opened." 		*/
 name|char
 name|fullname
 index|[
@@ -1686,6 +1702,32 @@ operator|)
 operator|==
 operator|-
 literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+operator|(
+name|fstat
+argument_list|(
+name|fid
+argument_list|,
+operator|&
+name|stab
+argument_list|)
+operator|<
+literal|0
+operator|)
+operator|||
+operator|!
+name|S_ISREG
+argument_list|(
+name|stab
+operator|.
+name|st_mode
+argument_list|)
 condition|)
 return|return
 operator|-
