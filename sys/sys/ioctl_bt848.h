@@ -4,49 +4,49 @@ comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  */
 end_comment
 
 begin_comment
-comment|/*  * tuner types for the   */
+comment|/*  * frequency sets  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TUNERTYPE_NABCST
+name|CHNLSET_NABCST
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|TUNERTYPE_CABLEIRC
+name|CHNLSET_CABLEIRC
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|TUNERTYPE_CABLEHRC
+name|CHNLSET_CABLEHRC
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|TUNERTYPE_WEUROPE
+name|CHNLSET_WEUROPE
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|TUNERTYPE_MIN
-value|TUNERTYPE_NABCST
+name|CHNLSET_MIN
+value|CHNLSET_NABCST
 end_define
 
 begin_define
 define|#
 directive|define
-name|TUNERTYPE_MAX
-value|TUNERTYPE_WEUROPE
+name|CHNLSET_MAX
+value|CHNLSET_WEUROPE
 end_define
 
 begin_comment
@@ -347,6 +347,61 @@ name|BT848_SATVSTEPS
 value|512
 end_define
 
+begin_comment
+comment|/*  * audio stuff  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIO_TUNER
+value|0x00
+end_define
+
+begin_comment
+comment|/* command for the audio routine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIO_EXTERN
+value|0x01
+end_define
+
+begin_comment
+comment|/* don't confuse them with bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIO_INTERN
+value|0x02
+end_define
+
+begin_comment
+comment|/* settings */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUDIO_MUTE
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_UNMUTE
+value|0x81
+end_define
+
+begin_comment
+comment|/*  * EEProm stuff  */
+end_comment
+
 begin_struct
 struct|struct
 name|eeProm
@@ -602,6 +657,39 @@ directive|define
 name|BT848_EEPROM
 value|_IOR('x', 45, struct eeProm)
 end_define
+
+begin_define
+define|#
+directive|define
+name|BT848_SAUDIO
+value|_IOW('x', 46, int)
+end_define
+
+begin_comment
+comment|/* set audio channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_GAUDIO
+value|_IOR('x', 47, int)
+end_define
+
+begin_comment
+comment|/* get audio channel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_SBTSC
+value|_IOW('x', 48, int)
+end_define
+
+begin_comment
+comment|/* set audio channel */
+end_comment
 
 begin_comment
 comment|/*  * XXX: more bad magic,  *      we need to fix the METEORGINPUT to return something public  *      duplicate them here for now...  */
