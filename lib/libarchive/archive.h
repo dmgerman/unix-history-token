@@ -133,7 +133,7 @@ comment|/* Unrecognized or invalid file format. */
 end_comment
 
 begin_comment
-comment|/* #define ARCHIVE_ERRNO_FILE_FORMAT */
+comment|/* #define	ARCHIVE_ERRNO_FILE_FORMAT */
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ comment|/* Illegal usage of the library. */
 end_comment
 
 begin_comment
-comment|/* #define ARCHIVE_ERRNO_PROGRAMMER_ERROR */
+comment|/* #define	ARCHIVE_ERRNO_PROGRAMMER_ERROR */
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ comment|/* Unknown or unclassified error. */
 end_comment
 
 begin_comment
-comment|/* #define ARCHIVE_ERRNO_MISC */
+comment|/* #define	ARCHIVE_ERRNO_MISC */
 end_comment
 
 begin_comment
