@@ -575,6 +575,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|offset
+operator|<
+literal|0
+operator|||
 operator|(
 name|size_t
 operator|)
@@ -628,6 +632,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|offset
+operator|<
+literal|0
+operator|||
 operator|(
 name|size_t
 operator|)
@@ -684,6 +692,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|offset
+operator|<
+literal|0
+operator|||
 operator|(
 name|size_t
 operator|)
@@ -877,6 +889,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|offset
+operator|<
+literal|0
+operator|||
 operator|(
 name|size_t
 operator|)

@@ -1269,6 +1269,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|len
+operator|<
+literal|0
+operator|||
 name|write
 argument_list|(
 name|s

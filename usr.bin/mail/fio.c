@@ -2019,6 +2019,10 @@ expr_stmt|;
 return|return
 operator|(
 name|copylen
+operator|<
+literal|0
+operator|||
+name|copylen
 operator|>=
 name|namelen
 condition|?
