@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* graph.c	1.6	83/07/09  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
+comment|/* graph.c	1.7	83/07/09  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
 end_comment
 
 begin_include
@@ -954,13 +954,17 @@ end_macro
 begin_decl_stmt
 name|int
 name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|linethickness
 operator|=
 name|s
 expr_stmt|;
 block|}
-end_decl_stmt
+end_block
 
 begin_comment
 comment|/*----------------------------------------------------------------------------*  | Routine:	drawstyle (style_bit_map)  |  | Results:	sets the variable "linmod" to the given bit map.  |		NO motion is involved.  *----------------------------------------------------------------------------*/
@@ -976,13 +980,17 @@ end_macro
 begin_decl_stmt
 name|int
 name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|linmod
 operator|=
 name|s
 expr_stmt|;
 block|}
-end_decl_stmt
+end_block
 
 begin_comment
 comment|/*----------------------------------------------------------------------------  * Routine:	picurve (xpoints, ypoints, num_of_points)  *  * Results:	Draws a curve delimited by (not through) the line segments  *		traced by (xpoints, ypoints) point list.  This is the "Pic"  *		style curve.  *  * Bugs:	does nothing yet....  *----------------------------------------------------------------------------*/
