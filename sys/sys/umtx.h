@@ -15,6 +15,12 @@ directive|define
 name|_SYS_UMTX_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/limits.h>
+end_include
+
 begin_comment
 comment|/*   * See pthread_*  */
 end_comment
@@ -24,6 +30,13 @@ define|#
 directive|define
 name|UMTX_UNOWNED
 value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_CONTESTED
+value|LONG_MIN
 end_define
 
 begin_struct
@@ -143,6 +156,55 @@ end_function_decl
 begin_comment
 comment|/*  * Standard api.  Try uncontested acquire/release and asks the  * kernel to resolve failures.  */
 end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|umtx_init
+parameter_list|(
+name|struct
+name|umtx
+modifier|*
+name|umtx
+parameter_list|)
+block|{
+name|umtx
+operator|->
+name|u_owner
+operator|=
+name|UMTX_UNOWNED
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|long
+name|umtx_owner
+parameter_list|(
+name|struct
+name|umtx
+modifier|*
+name|umtx
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|long
+operator|)
+name|umtx
+operator|->
+name|u_owner
+operator|&
+operator|~
+name|LONG_MIN
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -280,6 +342,7 @@ parameter_list|,
 name|long
 name|id
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
@@ -322,6 +385,10 @@ name|id
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|abstime
 argument_list|)
 operator|==
@@ -483,6 +550,7 @@ name|void
 modifier|*
 name|uaddr
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
@@ -501,6 +569,10 @@ name|id
 argument_list|,
 name|uaddr
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|abstime
 argument_list|)
 operator|==

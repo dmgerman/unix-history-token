@@ -318,13 +318,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|UMTX_CONTESTED
-value|LONG_MIN
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -3533,11 +3526,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|td
 operator|->
 name|td_flags
 operator|&
 name|TDF_UMTXQ
+operator|)
 condition|)
 break|break;
 name|umtxq_unlock
