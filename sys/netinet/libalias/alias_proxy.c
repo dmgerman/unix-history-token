@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* file: alias_proxy.c      This file encapsulates special operations related to transparent     proxy redirection.  This is where packets with a particular destination,     usually tcp port 80, are redirected to a proxy server.      When packets are proxied, the destination address and port are     modified.  In certain cases, it is necessary to somehow encode     the original address/port info into the packet.  Two methods are     presently supported: addition of a [DEST addr port] string at the     beginning of a tcp stream, or inclusion of an optional field     in the IP header.      There is one public API function:          PacketAliasProxyRule()    -- Adds and deletes proxy                                      rules.      Rules are stored in a linear linked list, so lookup efficiency     won't be too good for large lists.       Initial development: April, 1998 (cjm) */
+comment|/* file: alias_proxy.c      This file encapsulates special operations related to transparent     proxy redirection.  This is where packets with a particular destination,     usually tcp port 80, are redirected to a proxy server.      When packets are proxied, the destination address and port are     modified.  In certain cases, it is necessary to somehow encode     the original address/port info into the packet.  Two methods are     presently supported: addition of a [DEST addr port] string at the     beginning of a tcp stream, or inclusion of an optional field     in the IP header.      There is one public API function:  	PacketAliasProxyRule()    -- Adds and deletes proxy 				     rules.      Rules are stored in a linear linked list, so lookup efficiency     won't be too good for large lists.       Initial development: April, 1998 (cjm) */
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ comment|/*     File scope variables */
 end_comment
 
 begin_comment
-comment|/* Local (static) functions:      IpMask()                 -- Utility function for creating IP                                 masks from integer (1-32) specification.     IpAddr()                 -- Utility function for converting string                                 to IP address     IpPort()                 -- Utility function for converting string                                 to port number     RuleAdd()                -- Adds an element to the rule list.     RuleDelete()             -- Removes an element from the rule list.     RuleNumberDelete()       -- Removes all elements from the rule list                                 having a certain rule number.     ProxyEncodeTcpStream()   -- Adds [DEST x.x.x.x xxxx] to the beginning                                 of a TCP stream.     ProxyEncodeIpHeader()    -- Adds an IP option indicating the true                                 destination of a proxied IP packet */
+comment|/* Local (static) functions:      IpMask()                 -- Utility function for creating IP 				masks from integer (1-32) specification.     IpAddr()                 -- Utility function for converting string 				to IP address     IpPort()                 -- Utility function for converting string 				to port number     RuleAdd()                -- Adds an element to the rule list.     RuleDelete()             -- Removes an element from the rule list.     RuleNumberDelete()       -- Removes all elements from the rule list 				having a certain rule number.     ProxyEncodeTcpStream()   -- Adds [DEST x.x.x.x xxxx] to the beginning 				of a TCP stream.     ProxyEncodeIpHeader()    -- Adds an IP option indicating the true 				destination of a proxied IP packet */
 end_comment
 
 begin_function_decl
@@ -1599,7 +1599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Functions by other packet alias source files      ProxyCheck()         -- Checks whether an outgoing packet should                             be proxied.     ProxyModify()        -- Encodes the original destination address/port                             for a packet which is to be redirected to                             a proxy server. */
+comment|/* Functions by other packet alias source files      ProxyCheck()         -- Checks whether an outgoing packet should 			    be proxied.     ProxyModify()        -- Encodes the original destination address/port 			    for a packet which is to be redirected to 			    a proxy server. */
 end_comment
 
 begin_function

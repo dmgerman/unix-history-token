@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*     Alias_ftp.c performs special processing for FTP sessions under     TCP.  Specifically, when a PORT/EPRT command from the client     side or 227/229 reply from the server is sent, it is intercepted     and modified.  The address is changed to the gateway machine     and an aliasing port is used.      For this routine to work, the message must fit entirely into a     single TCP packet.  This is typically the case, but exceptions     can easily be envisioned under the actual specifications.      Probably the most troubling aspect of the approach taken here is     that the new message will typically be a different length, and     this causes a certain amount of bookkeeping to keep track of the     changes of sequence and acknowledgment numbers, since the client     machine is totally unaware of the modification to the TCP stream.       References: RFC 959, RFC 2428.      Initial version:  August, 1996  (cjm)      Version 1.6          Brian Somers and Martin Renters identified an IP checksum          error for modified IP packets.      Version 1.7:  January 9, 1996 (cjm)          Differential checksum computation for change          in IP packet length.      Version 2.1:  May, 1997 (cjm)          Very minor changes to conform with          local/global/function naming conventions          within the packet aliasing module.      Version 3.1:  May, 2000 (eds) 	 Add support for passive mode, alias the 227 replies.      See HISTORY file for record of revisions. */
+comment|/*     Alias_ftp.c performs special processing for FTP sessions under     TCP.  Specifically, when a PORT/EPRT command from the client     side or 227/229 reply from the server is sent, it is intercepted     and modified.  The address is changed to the gateway machine     and an aliasing port is used.      For this routine to work, the message must fit entirely into a     single TCP packet.  This is typically the case, but exceptions     can easily be envisioned under the actual specifications.      Probably the most troubling aspect of the approach taken here is     that the new message will typically be a different length, and     this causes a certain amount of bookkeeping to keep track of the     changes of sequence and acknowledgment numbers, since the client     machine is totally unaware of the modification to the TCP stream.       References: RFC 959, RFC 2428.      Initial version:  August, 1996  (cjm)      Version 1.6 	 Brian Somers and Martin Renters identified an IP checksum 	 error for modified IP packets.      Version 1.7:  January 9, 1996 (cjm) 	 Differential checksum computation for change 	 in IP packet length.      Version 2.1:  May, 1997 (cjm) 	 Very minor changes to conform with 	 local/global/function naming conventions 	 within the packet aliasing module.      Version 3.1:  May, 2000 (eds) 	 Add support for passive mode, alias the 227 replies.      See HISTORY file for record of revisions. */
 end_comment
 
 begin_comment
@@ -241,7 +241,7 @@ parameter_list|,
 comment|/* The link to go through (aliased port) */
 name|int
 name|maxpacketsize
-comment|/* The maximum size this packet can grow to         (including headers) */
+comment|/* The maximum size this packet can grow to 	(including headers) */
 parameter_list|)
 block|{
 name|int
