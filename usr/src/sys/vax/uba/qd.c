@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 	@(#)qd.c	1.3  Berkeley  %G%  *  * derived from: "@(#)qd.c	1.40	ULTRIX	10/2/86";  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 	@(#)qd.c	1.4  Berkeley  %G%  *  * derived from: "@(#)qd.c	1.40	ULTRIX	10/2/86";  */
 end_comment
 
 begin_comment
@@ -355,7 +355,7 @@ begin_define
 define|#
 directive|define
 name|DMA_BUFSIZ
-value|(1024 * 3)
+value|(1024 * 10)
 end_define
 
 begin_define
