@@ -322,13 +322,9 @@ begin_decl_stmt
 name|int
 name|ss_fltsz_local
 init|=
-name|TCP_MAXWIN
+literal|4
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* something large */
-end_comment
 
 begin_expr_stmt
 name|SYSCTL_INT
