@@ -3202,7 +3202,7 @@ operator|&
 name|LC_SLEEPLOCK
 condition|)
 block|{
-comment|/* 		 * Since spin locks include a critical section, this check 		 * impliclty enforces a lock order of all sleep locks before 		 * all spin locks. 		 */
+comment|/* 		 * Since spin locks include a critical section, this check 		 * implicitly enforces a lock order of all sleep locks before 		 * all spin locks. 		 */
 if|if
 condition|(
 name|td
@@ -3228,6 +3228,16 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+comment|/* 		 * If this is the first lock acquired then just return as 		 * no order checking is needed. 		 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_sleeplocks
+operator|==
+name|NULL
+condition|)
+return|return;
 name|lock_list
 operator|=
 operator|&
@@ -3237,6 +3247,18 @@ name|td_sleeplocks
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* 		 * If this is the first lock, just return as no order 		 * checking is needed.  We check this in both if clauses 		 * here as unifying the check would require us to use a 		 * critical section to ensure we don't migrate while doing 		 * the check.  Note that if this is not the first lock, we 		 * are already in a critical section and are safe for the 		 * rest of the check. 		 */
+if|if
+condition|(
+name|PCPU_GET
+argument_list|(
+name|spinlocks
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return;
 name|lock_list
 operator|=
 name|PCPU_PTR
@@ -3244,15 +3266,7 @@ argument_list|(
 name|spinlocks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Is this the first lock acquired?  If so, then no order checking 	 * is needed. 	 */
-if|if
-condition|(
-operator|*
-name|lock_list
-operator|==
-name|NULL
-condition|)
-return|return;
+block|}
 comment|/* 	 * Check to see if we are recursing on a lock we already own.  If 	 * so, make sure that we don't mismatch exclusive and shared lock 	 * acquires. 	 */
 name|lock1
 operator|=
