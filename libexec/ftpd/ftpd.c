@@ -546,6 +546,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|dowtmp
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|stats
 decl_stmt|;
 end_decl_stmt
@@ -1658,7 +1666,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46a:AdDElmMoOp:rRSt:T:u:Uv"
+literal|"46a:AdDElmMoOp:rRSt:T:u:UvW"
 argument_list|)
 operator|)
 operator|!=
@@ -1905,6 +1913,14 @@ literal|'v'
 case|:
 name|ftpdebug
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'W'
+case|:
+name|dowtmp
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:
@@ -5565,6 +5581,8 @@ expr_stmt|;
 if|if
 condition|(
 name|logged_in
+operator|&&
+name|dowtmp
 condition|)
 name|ftpd_logwtmp
 argument_list|(
@@ -6646,6 +6664,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* open wtmp before chroot */
+if|if
+condition|(
+name|dowtmp
+condition|)
 name|ftpd_logwtmp
 argument_list|(
 name|ttyline
@@ -11918,6 +11940,8 @@ expr_stmt|;
 if|if
 condition|(
 name|logged_in
+operator|&&
+name|dowtmp
 condition|)
 block|{
 operator|(
