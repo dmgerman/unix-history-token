@@ -1064,7 +1064,7 @@ name|mr_base
 operator|=
 name|msrv
 operator|&
-literal|0x000ffffffffff000L
+literal|0x000000fffffff000L
 expr_stmt|;
 name|msrv
 operator|=
@@ -1112,10 +1112,10 @@ operator|~
 operator|(
 name|msrv
 operator|&
-literal|0x000ffffffffff000L
+literal|0x000000fffffff000L
 operator|)
 operator|&
-literal|0x000fffffffffffffL
+literal|0x000000ffffffffffL
 operator|)
 operator|+
 literal|1
@@ -1778,7 +1778,7 @@ name|mrd
 operator|->
 name|mr_base
 operator|&
-literal|0x000ffffffffff000L
+literal|0x000000fffffff000L
 expr_stmt|;
 name|msrv
 operator||=
@@ -1830,7 +1830,7 @@ operator|-
 literal|1
 operator|)
 operator|&
-literal|0x000ffffffffff000L
+literal|0x000000fffffff000L
 operator|)
 expr_stmt|;
 block|}
@@ -2765,11 +2765,6 @@ operator|=
 name|mtrrcap
 operator|&
 literal|0xff
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Pentium Pro MTRR support enabled\n"
-argument_list|)
 expr_stmt|;
 comment|/* If fixed MTRRs supported and enabled */
 if|if
