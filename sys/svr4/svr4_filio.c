@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/signal.h>
 end_include
 
@@ -54,25 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
 end_include
 
 begin_include

@@ -166,12 +166,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<svr4/svr4.h>
 end_include
 
@@ -215,12 +209,6 @@ begin_include
 include|#
 directive|include
 file|<svr4/svr4_acl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<svr4/svr4_time.h>
 end_include
 
 begin_include
