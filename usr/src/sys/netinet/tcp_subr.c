@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.40	83/02/10	*/
+comment|/*	tcp_subr.c	4.41	83/05/12	*/
 end_comment
 
 begin_include
@@ -1090,15 +1090,20 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
 name|t
 operator|=
 name|tp
 operator|->
 name|seg_next
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 name|t
 operator|!=
 operator|(
@@ -1107,7 +1112,8 @@ name|tcpiphdr
 operator|*
 operator|)
 name|tp
-condition|;
+condition|)
+block|{
 name|t
 operator|=
 operator|(
@@ -1118,15 +1124,29 @@ operator|)
 name|t
 operator|->
 name|ti_next
-control|)
-name|m_freem
-argument_list|(
+expr_stmt|;
+name|m
+operator|=
 name|dtom
 argument_list|(
 name|t
-argument_list|)
+operator|->
+name|ti_prev
 argument_list|)
 expr_stmt|;
+name|remque
+argument_list|(
+name|t
+operator|->
+name|ti_prev
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tp
