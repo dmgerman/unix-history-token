@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rup.c,v 1.4.2.1 1997/08/08 12:06:41 charnier Exp $"
+literal|"$Id: rup.c,v 1.4.2.2 1997/09/15 10:19:53 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,10 +570,20 @@ name|printf
 argument_list|(
 literal|" %2d:%02d%cm  up %9.9s%9.9s load average: %.2f %.2f %.2f\n"
 argument_list|,
+operator|(
 name|host_time
 operator|.
 name|tm_hour
 operator|%
+literal|12
+operator|)
+condition|?
+name|host_time
+operator|.
+name|tm_hour
+operator|%
+literal|12
+else|:
 literal|12
 argument_list|,
 name|host_time
