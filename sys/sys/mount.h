@@ -2600,7 +2600,7 @@ parameter_list|,
 name|REQ
 parameter_list|)
 define|\
-value|((MP) == NULL ? ENOTSUP : \ 	 (*(MP)->mnt_op->vfs_sysctl)(MP, OP, REQ))
+value|(*(MP)->mnt_op->vfs_sysctl)(MP, OP, REQ)
 end_define
 
 begin_include
@@ -3192,6 +3192,12 @@ end_decl_stmt
 begin_decl_stmt
 name|vfs_extattrctl_t
 name|vfs_stdextattrctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vfs_sysctl_t
+name|vfs_stdsysctl
 decl_stmt|;
 end_decl_stmt
 

@@ -1975,6 +1975,20 @@ name|vfs_extattrctl
 operator|=
 name|vfs_stdextattrctl
 expr_stmt|;
+if|if
+condition|(
+name|vfsops
+operator|->
+name|vfs_sysctl
+operator|==
+name|NULL
+condition|)
+name|vfsops
+operator|->
+name|vfs_sysctl
+operator|=
+name|vfs_stdsysctl
+expr_stmt|;
 comment|/* 	 * Call init function for this VFS... 	 */
 operator|(
 operator|*
