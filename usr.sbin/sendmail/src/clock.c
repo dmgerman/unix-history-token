@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.18 (Berkeley) 12/31/96"
+literal|"@(#)clock.c	8.24 (Berkeley) 4/19/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,17 @@ end_endif
 
 begin_comment
 comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Events are stored in a sorted list for fast processing. **	An event only applies to the process that set it. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+end_comment
+
+begin_decl_stmt
+name|EVENT
+modifier|*
+name|FreeEventList
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of free events */
 end_comment
 
 begin_decl_stmt
@@ -121,6 +132,9 @@ specifier|auto
 name|time_t
 name|now
 decl_stmt|;
+name|int
+name|wasblocked
+decl_stmt|;
 if|if
 condition|(
 name|intvl
@@ -141,14 +155,11 @@ name|NULL
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|setsignal
+name|wasblocked
+operator|=
+name|blocksignal
 argument_list|(
 name|SIGALRM
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
 operator|(
@@ -200,6 +211,16 @@ block|}
 comment|/* insert new event */
 name|ev
 operator|=
+name|FreeEventList
+expr_stmt|;
+if|if
+condition|(
+name|ev
+operator|==
+name|NULL
+condition|)
+name|ev
+operator|=
 operator|(
 name|EVENT
 operator|*
@@ -210,6 +231,13 @@ sizeof|sizeof
 expr|*
 name|ev
 argument_list|)
+expr_stmt|;
+else|else
+name|FreeEventList
+operator|=
+name|ev
+operator|->
+name|ev_link
 expr_stmt|;
 name|ev
 operator|->
@@ -282,9 +310,50 @@ operator|)
 name|ev
 argument_list|)
 expr_stmt|;
-name|tick
+name|setsignal
 argument_list|(
+name|SIGALRM
+argument_list|,
+name|tick
+argument_list|)
+expr_stmt|;
+name|intvl
+operator|=
+name|EventQueue
+operator|->
+name|ev_time
+operator|-
+name|now
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|intvl
+operator|<
+literal|1
+condition|?
+literal|1
+else|:
+name|intvl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wasblocked
+operator|==
 literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGALRM
 argument_list|)
 expr_stmt|;
 return|return
@@ -320,6 +389,9 @@ modifier|*
 modifier|*
 name|evp
 decl_stmt|;
+name|int
+name|wasblocked
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -347,14 +419,11 @@ name|NULL
 condition|)
 return|return;
 comment|/* find the parent event */
-operator|(
-name|void
-operator|)
-name|setsignal
+name|wasblocked
+operator|=
+name|blocksignal
 argument_list|(
 name|SIGALRM
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
 for|for
@@ -405,20 +474,41 @@ name|ev
 operator|->
 name|ev_link
 expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ev
-argument_list|)
+operator|->
+name|ev_link
+operator|=
+name|FreeEventList
+expr_stmt|;
+name|FreeEventList
+operator|=
+name|ev
 expr_stmt|;
 block|}
 comment|/* restore clocks and pick up anything spare */
-name|tick
-argument_list|(
+if|if
+condition|(
+name|wasblocked
+operator|==
 literal|0
+condition|)
+name|releasesignal
+argument_list|(
+name|SIGALRM
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EventQueue
+operator|!=
+name|NULL
+condition|)
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+name|SIGALRM
 argument_list|)
 expr_stmt|;
 block|}
@@ -428,7 +518,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  TICK -- take a clock tick ** **	Called by the alarm clock.  This routine runs events as needed. ** **	Parameters: **		One that is ignored; for compatibility with signal handlers. ** **	Returns: **		none. ** **	Side Effects: **		calls the next function in EventQueue. */
+comment|/* **  TICK -- take a clock tick ** **	Called by the alarm clock.  This routine runs events as needed. **	Always called as a signal handler, so we assume that SIGALRM **	has been blocked. ** **	Parameters: **		One that is ignored; for compatibility with signal handlers. ** **	Returns: **		none. ** **	Side Effects: **		calls the next function in EventQueue. */
 end_comment
 
 begin_function
@@ -465,16 +555,6 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|setsignal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|alarm
 argument_list|(
 literal|0
@@ -499,6 +579,17 @@ argument_list|(
 literal|"tick: now=%ld\n"
 argument_list|,
 name|now
+argument_list|)
+expr_stmt|;
+comment|/* reset signal in case System V semantics */
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|tick
 argument_list|)
 expr_stmt|;
 while|while
@@ -603,14 +694,15 @@ name|ev
 operator|->
 name|ev_pid
 expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ev
-argument_list|)
+operator|->
+name|ev_link
+operator|=
+name|FreeEventList
+expr_stmt|;
+name|FreeEventList
+operator|=
+name|ev
 expr_stmt|;
 if|if
 condition|(
@@ -662,25 +754,6 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* restore signals so that we can take ticks while in ev_func */
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|releasesignal
-argument_list|(
-name|SIGALRM
-argument_list|)
-expr_stmt|;
 comment|/* call ev_func */
 name|errno
 operator|=
@@ -708,16 +781,6 @@ name|curtime
 argument_list|()
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|EventQueue

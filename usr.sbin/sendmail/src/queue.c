@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.153 (Berkeley) 1/14/97 (with queueing)"
+literal|"@(#)queue.c	8.169 (Berkeley) 6/14/97 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.153 (Berkeley) 1/14/97 (without queueing)"
+literal|"@(#)queue.c	8.169 (Berkeley) 6/14/97 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,12 +229,13 @@ name|MCI
 name|mcibuf
 decl_stmt|;
 name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|,
 name|tf
+index|[
+name|MAXQFNAME
+index|]
+decl_stmt|;
+name|char
+name|buf
 index|[
 name|MAXLINE
 index|]
@@ -354,9 +355,6 @@ operator|!=
 name|EEXIST
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -371,9 +369,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"queueup: cannot create %s, uid=%d: %s"
 argument_list|,
@@ -388,8 +390,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -409,9 +409,6 @@ name|LOCK_NB
 argument_list|)
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|LOG
 elseif|else
 if|if
 condition|(
@@ -427,9 +424,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"queueup: cannot lock %s: %s"
 argument_list|,
@@ -441,8 +442,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|close
 argument_list|(
 name|fd
@@ -683,7 +682,7 @@ decl_stmt|;
 name|char
 name|dfname
 index|[
-literal|20
+name|MAXQFNAME
 index|]
 decl_stmt|;
 name|struct
@@ -969,6 +968,37 @@ name|FALSE
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_SAVE_CHARSET
+if|if
+condition|(
+name|e
+operator|->
+name|e_charset
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"X%s\n"
+argument_list|,
+name|denlstring
+argument_list|(
+name|e
+operator|->
+name|e_charset
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* message from envelope, if it exists */
 if|if
 condition|(
@@ -1352,15 +1382,15 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"dropenvelope: %s: q_flags = %x, paddr = %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"dropenvelope: q_flags = %x, paddr = %s"
 argument_list|,
 name|q
 operator|->
@@ -2143,9 +2173,6 @@ name|e_flags
 operator||=
 name|EF_INQUEUE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 comment|/* save log info */
 if|if
 condition|(
@@ -2153,22 +2180,19 @@ name|LogLevel
 operator|>
 literal|79
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"%s: queueup, qf=%s"
 argument_list|,
 name|e
 operator|->
 name|e_id
 argument_list|,
+literal|"queueup, qf=%s"
+argument_list|,
 name|qf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 if|if
 condition|(
 name|tTd
@@ -2461,6 +2485,19 @@ begin_comment
 comment|/* the queue run envelope */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|get_num_procs_online
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|bool
 name|runqueue
@@ -2489,6 +2526,9 @@ name|sequenceno
 init|=
 literal|0
 decl_stmt|;
+name|time_t
+name|current_la_time
+decl_stmt|;
 specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
@@ -2509,7 +2549,7 @@ name|runqueueevent
 name|__P
 argument_list|(
 operator|(
-name|bool
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2523,6 +2563,10 @@ name|void
 operator|)
 argument_list|)
 decl_stmt|;
+name|DoQueueRun
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
 name|CurrentLA
 operator|=
@@ -2530,11 +2574,19 @@ name|getla
 argument_list|()
 expr_stmt|;
 comment|/* get load average */
+name|current_la_time
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|CurrentLA
-operator|>=
-name|QueueLA
+name|shouldqueue
+argument_list|(
+name|WkRecipFact
+argument_list|,
+name|current_la_time
+argument_list|)
 condition|)
 block|{
 name|char
@@ -2554,26 +2606,23 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|8
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"runqueue: %s"
 argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|forkflag
@@ -2591,7 +2640,41 @@ name|QueueIntvl
 argument_list|,
 name|runqueueevent
 argument_list|,
-name|TRUE
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+comment|/* 	**  See if we already have too many children. 	*/
+if|if
+condition|(
+name|forkflag
+operator|&&
+name|QueueIntvl
+operator|!=
+literal|0
+operator|&&
+name|MaxChildren
+operator|>
+literal|0
+operator|&&
+name|CurChildren
+operator|>=
+name|MaxChildren
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|setevent
+argument_list|(
+name|QueueIntvl
+argument_list|,
+name|runqueueevent
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2690,18 +2773,17 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|8
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"runqueue: %s: %s"
 argument_list|,
@@ -2710,8 +2792,6 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|QueueIntvl
@@ -2727,7 +2807,7 @@ name|QueueIntvl
 argument_list|,
 name|runqueueevent
 argument_list|,
-name|TRUE
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2807,7 +2887,7 @@ name|QueueIntvl
 argument_list|,
 name|runqueueevent
 argument_list|,
-name|TRUE
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2872,18 +2952,17 @@ argument_list|,
 name|QueueDir
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|69
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"runqueue %s, pid=%d, forkflag=%d"
 argument_list|,
@@ -2895,9 +2974,6 @@ argument_list|,
 name|forkflag
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 comment|/* 	**  Release any resources used by the daemon code. 	*/
 if|#
 directive|if
@@ -2956,6 +3032,7 @@ if|if
 condition|(
 name|forkflag
 condition|)
+block|{
 name|disconnect
 argument_list|(
 literal|1
@@ -2963,6 +3040,13 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|OnlyOneError
+operator|=
+name|QuickAbort
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 comment|/* 	**  Make sure the alias database is open. 	*/
 name|initmaps
 argument_list|(
@@ -3031,7 +3115,74 @@ name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		**  Ignore jobs that are too expensive for the moment. 		*/
+comment|/* 		**  Ignore jobs that are too expensive for the moment. 		** 		**	Get new load average every 30 seconds. 		*/
+if|if
+condition|(
+name|current_la_time
+operator|<
+name|curtime
+argument_list|()
+operator|-
+literal|30
+condition|)
+block|{
+name|CurrentLA
+operator|=
+name|getla
+argument_list|()
+expr_stmt|;
+name|current_la_time
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|shouldqueue
+argument_list|(
+name|WkRecipFact
+argument_list|,
+name|current_la_time
+argument_list|)
+condition|)
+block|{
+name|char
+modifier|*
+name|msg
+init|=
+literal|"Aborting queue run: load average too high"
+decl_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+literal|"%s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"runqueue: %s"
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|sequenceno
 operator|++
 expr_stmt|;
@@ -3053,12 +3204,75 @@ if|if
 condition|(
 name|Verbose
 condition|)
-block|{
 name|message
 argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|QueueSortOrder
+operator|==
+name|QS_BYPRIORITY
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
+argument_list|(
+literal|"Skipping %s (sequence %d of %d) and flushing rest of queue"
+argument_list|,
+name|w
+operator|->
+name|w_name
+operator|+
+literal|2
+argument_list|,
+name|sequenceno
+argument_list|,
+name|njobs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"runqueue: Flushing queue from %s (pri %ld, LA %d, %d of %d)"
+argument_list|,
+name|w
+operator|->
+name|w_name
+operator|+
+literal|2
+argument_list|,
+name|w
+operator|->
+name|w_pri
+argument_list|,
+name|CurrentLA
+argument_list|,
+name|sequenceno
+argument_list|,
+name|njobs
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|Verbose
+condition|)
 name|message
 argument_list|(
 literal|"Skipping %s (sequence %d of %d)"
@@ -3074,7 +3288,6 @@ argument_list|,
 name|njobs
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -3202,22 +3415,11 @@ end_comment
 begin_function
 name|void
 name|runqueueevent
-parameter_list|(
-name|forkflag
-parameter_list|)
-name|bool
-name|forkflag
-decl_stmt|;
+parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|runqueue
-argument_list|(
-name|forkflag
-argument_list|,
-name|FALSE
-argument_list|)
+name|DoQueueRun
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
 end_function
@@ -3536,6 +3738,18 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|strlen
+argument_list|(
+name|d
+operator|->
+name|d_name
+argument_list|)
+operator|>
+name|MAXQFNAME
+condition|)
+continue|continue;
+if|if
+condition|(
 name|QueueLimitId
 operator|!=
 name|NULL
@@ -3650,18 +3864,17 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"orderq: bogus qf name %s"
 argument_list|,
@@ -3670,8 +3883,6 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|strlen
@@ -3740,9 +3951,6 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|wn
@@ -3753,9 +3961,11 @@ name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"WorkList for %s maxed out at %d"
 argument_list|,
@@ -3764,8 +3974,6 @@ argument_list|,
 name|MaxQueueRun
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 continue|continue;
 block|}
 if|if
@@ -3970,11 +4178,60 @@ name|qfver
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
 specifier|extern
 name|bool
 name|strcontainedin
 parameter_list|()
 function_decl|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|lbuf
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+block|{
+comment|/* flush rest of overly long line */
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getc
+argument_list|(
+name|cf
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+operator|&&
+name|c
+operator|!=
+literal|'\n'
+condition|)
+continue|continue;
+block|}
 switch|switch
 condition|(
 name|lbuf
@@ -4925,9 +5182,6 @@ name|WorkList
 operator|=
 name|newlist
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -4935,9 +5189,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"grew WorkList for %s to %d"
 argument_list|,
@@ -4956,9 +5212,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"FAILED to grow WorkList for %s to %d"
 argument_list|,
@@ -4967,8 +5225,6 @@ argument_list|,
 name|newsize
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 if|if
@@ -5484,6 +5740,16 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* child -- error messages to the transcript */
+name|QuickAbort
+operator|=
+name|OnlyOneError
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -5576,32 +5842,26 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|76
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"%s: dowork, pid=%d"
 argument_list|,
 name|e
 operator|->
 name|e_id
 argument_list|,
+literal|"dowork, pid=%d"
+argument_list|,
 name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 comment|/* don't use the headers from sendmail.cf... */
 name|e
 operator|->
@@ -5777,7 +6037,7 @@ decl_stmt|;
 name|char
 name|qf
 index|[
-literal|20
+name|MAXQFNAME
 index|]
 decl_stmt|;
 name|char
@@ -5908,29 +6168,23 @@ operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|19
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"%s: locked"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"locked"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 operator|(
 name|void
 operator|)
@@ -6019,9 +6273,6 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -6029,15 +6280,15 @@ operator|>
 literal|0
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
-argument_list|,
-literal|"%s: bogus queue file, uid=%d, mode=%o"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"bogus queue file, uid=%d, mode=%o"
 argument_list|,
 name|st
 operator|.
@@ -6049,9 +6300,6 @@ name|st_mode
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* LOG */
 if|if
 condition|(
 name|tTd
@@ -6093,7 +6341,21 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* must be a bogus file -- just remove it */
+comment|/* must be a bogus file -- if also old, just remove it */
+if|if
+condition|(
+name|st
+operator|.
+name|st_ctime
+operator|+
+literal|10
+operator|*
+literal|60
+operator|<
+name|curtime
+argument_list|()
+condition|)
+block|{
 name|qf
 index|[
 literal|0
@@ -6124,6 +6386,7 @@ argument_list|(
 name|qf
 argument_list|)
 expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|qfp
@@ -6588,6 +6851,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'L'
+case|:
+comment|/* Solaris Content-Length: */
+case|case
 literal|'M'
 case|:
 comment|/* message */
@@ -6636,6 +6903,29 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_SAVE_CHARSET
+case|case
+literal|'X'
+case|:
+comment|/* character set */
+name|e
+operator|->
+name|e_charset
+operator|=
+name|newstr
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'D'
 case|:
@@ -6710,15 +7000,13 @@ name|e_ntries
 operator|>
 literal|0
 operator|&&
-operator|(
 name|curtime
 argument_list|()
-operator|-
+operator|<
 name|e
 operator|->
 name|e_dtime
-operator|)
-operator|<
+operator|+
 name|MinQueueAge
 condition|)
 block|{
@@ -6765,30 +7053,25 @@ argument_list|,
 name|howlong
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|19
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"%s: too young (%s)"
 argument_list|,
 name|e
 operator|->
 name|e_id
 argument_list|,
+literal|"too young (%s)"
+argument_list|,
 name|howlong
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|e
 operator|->
 name|e_id
@@ -7243,8 +7526,9 @@ name|NGROUPS_MAX
 name|int
 name|n
 decl_stmt|;
+specifier|extern
 name|GIDSET_T
-name|gidset
+name|InitialGidSet
 index|[
 name|NGROUPS_MAX
 index|]
@@ -7278,12 +7562,7 @@ directive|ifdef
 name|NGROUPS_MAX
 name|n
 operator|=
-name|getgroups
-argument_list|(
 name|NGROUPS_MAX
-argument_list|,
-name|gidset
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -7295,7 +7574,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|gidset
+name|InitialGidSet
 index|[
 name|n
 index|]
@@ -8132,7 +8411,7 @@ block|{
 name|char
 name|qf
 index|[
-literal|20
+name|MAXQFNAME
 index|]
 decl_stmt|;
 comment|/* find a unique id */
@@ -8453,29 +8732,23 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|93
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"%s: assigned id"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"assigned id"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 block|}
 if|if
 condition|(
@@ -8614,29 +8887,23 @@ name|NULL
 condition|)
 return|return;
 comment|/* remove the transcript */
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|87
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
-argument_list|,
-literal|"%s: unlock"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+literal|"unlock"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 if|if
 condition|(
 operator|!
@@ -9031,7 +9298,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|40
+name|MAXQFNAME
 index|]
 decl_stmt|;
 if|if
@@ -9109,9 +9376,6 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 elseif|else
 if|if
 condition|(
@@ -9119,9 +9383,13 @@ name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"Losing %s: %s"
 argument_list|,
@@ -9130,8 +9398,6 @@ argument_list|,
 name|why
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
