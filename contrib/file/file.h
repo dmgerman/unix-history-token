@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.45 2003/02/08 18:33:53 christos Exp $  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
+comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian F. Darwin and others;  * maintained 1995-present by Christos Zoulas and others.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Ian F. Darwin and others.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *    * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.61 2004/05/12 14:53:01 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,36 +18,6 @@ define|#
 directive|define
 name|__file_h__
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__linux__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_LARGEFILE_SOURCE
-end_define
-
-begin_define
-define|#
-directive|define
-name|_LARGEFILE64_SOURCE
-end_define
-
-begin_define
-define|#
-directive|define
-name|_FILE_OFFSET_BITS
-value|64
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -65,13 +39,17 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
+
+begin_comment
+comment|/* Include that here, to make sure __P gets defined */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<errno.h>
 end_include
 
 begin_ifdef
@@ -86,14 +64,16 @@ directive|include
 file|<stdint.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_INTTYPES_H
-argument_list|)
-end_elif
+end_ifdef
 
 begin_include
 include|#
@@ -115,6 +95,84 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAGIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAGIC
+value|"/etc/magic"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__EMX__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PATHSEP
+value|';'
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PATHSEP
+value|':'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|private
+value|static
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|protected
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|protected
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|public
+end_define
 
 begin_ifndef
 ifndef|#
@@ -153,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|MAXDESC
-value|50
+value|64
 end_define
 
 begin_comment
@@ -182,47 +240,42 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHECK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|COMPILE
 value|2
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
+begin_define
+define|#
+directive|define
+name|FILE_MAGICSIZE
+value|(32 * 4)
+end_define
 
 begin_define
 define|#
 directive|define
-name|__attribute__
-parameter_list|(
-name|a
-parameter_list|)
+name|FILE_LOAD
+value|0
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|FILE_CHECK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_COMPILE
+value|2
+end_define
 
 begin_struct
 struct|struct
 name|magic
 block|{
+comment|/* Word 1 */
 name|uint16_t
 name|cont_level
 decl_stmt|;
@@ -249,6 +302,7 @@ directive|define
 name|OFFADD
 value|4
 comment|/* if '>&' appears,  */
+comment|/* Word 2 */
 name|uint8_t
 name|reln
 decl_stmt|;
@@ -267,68 +321,157 @@ decl_stmt|;
 comment|/* type of indirrection */
 define|#
 directive|define
-name|BYTE
+name|FILE_BYTE
 value|1
 define|#
 directive|define
-name|SHORT
+name|FILE_SHORT
 value|2
 define|#
 directive|define
-name|LONG
+name|FILE_LONG
 value|4
 define|#
 directive|define
-name|STRING
+name|FILE_STRING
 value|5
 define|#
 directive|define
-name|DATE
+name|FILE_DATE
 value|6
 define|#
 directive|define
-name|BESHORT
+name|FILE_BESHORT
 value|7
 define|#
 directive|define
-name|BELONG
+name|FILE_BELONG
 value|8
 define|#
 directive|define
-name|BEDATE
+name|FILE_BEDATE
 value|9
 define|#
 directive|define
-name|LESHORT
+name|FILE_LESHORT
 value|10
 define|#
 directive|define
-name|LELONG
+name|FILE_LELONG
 value|11
 define|#
 directive|define
-name|LEDATE
+name|FILE_LEDATE
 value|12
 define|#
 directive|define
-name|PSTRING
+name|FILE_PSTRING
 value|13
 define|#
 directive|define
-name|LDATE
+name|FILE_LDATE
 value|14
 define|#
 directive|define
-name|BELDATE
+name|FILE_BELDATE
 value|15
 define|#
 directive|define
-name|LELDATE
+name|FILE_LELDATE
 value|16
 define|#
 directive|define
-name|REGEX
+name|FILE_REGEX
 value|17
+define|#
+directive|define
+name|FILE_FORMAT_NAME
+define|\
+comment|/* 0 */
+value|"invalid 0",		\
+comment|/* 1 */
+value|"byte",			\
+comment|/* 2 */
+value|"short",		\
+comment|/* 3 */
+value|"invalid 3",		\
+comment|/* 4 */
+value|"long",			\
+comment|/* 5 */
+value|"string",		\
+comment|/* 6 */
+value|"date",			\
+comment|/* 7 */
+value|"beshort",		\
+comment|/* 8 */
+value|"belong",		\
+comment|/* 9 */
+value|"bedate"		\
+comment|/* 10 */
+value|"leshort",		\
+comment|/* 11 */
+value|"lelong",		\
+comment|/* 12 */
+value|"ledate",		\
+comment|/* 13 */
+value|"pstring",		\
+comment|/* 14 */
+value|"ldate",		\
+comment|/* 15 */
+value|"beldate",		\
+comment|/* 16 */
+value|"leldate",		\
+comment|/* 17 */
+value|"regex",
+define|#
+directive|define
+name|FILE_FMT_NUM
+value|"cduxXi"
+define|#
+directive|define
+name|FILE_FMT_STR
+value|"s"
+define|#
+directive|define
+name|FILE_FORMAT_STRING
+define|\
+comment|/* 0 */
+value|NULL,			\
+comment|/* 1 */
+value|FILE_FMT_NUM,		\
+comment|/* 2 */
+value|FILE_FMT_NUM,		\
+comment|/* 3 */
+value|NULL,			\
+comment|/* 4 */
+value|FILE_FMT_NUM,		\
+comment|/* 5 */
+value|FILE_FMT_STR,		\
+comment|/* 6 */
+value|FILE_FMT_STR,		\
+comment|/* 7 */
+value|FILE_FMT_NUM,		\
+comment|/* 8 */
+value|FILE_FMT_NUM,		\
+comment|/* 9 */
+value|FILE_FMT_STR,		\
+comment|/* 10 */
+value|FILE_FMT_NUM,		\
+comment|/* 11 */
+value|FILE_FMT_NUM,		\
+comment|/* 12 */
+value|FILE_FMT_STR,		\
+comment|/* 13 */
+value|FILE_FMT_STR,		\
+comment|/* 14 */
+value|FILE_FMT_STR,		\
+comment|/* 15 */
+value|FILE_FMT_STR,		\
+comment|/* 16 */
+value|FILE_FMT_STR,		\
+comment|/* 17 */
+value|FILE_FMT_STR,
+comment|/* Word 3 */
 name|uint8_t
 name|in_op
 decl_stmt|;
@@ -337,50 +480,76 @@ name|uint8_t
 name|mask_op
 decl_stmt|;
 comment|/* operator for mask */
+name|uint8_t
+name|dummy1
+decl_stmt|;
+name|uint8_t
+name|dummy2
+decl_stmt|;
 define|#
 directive|define
-name|OPAND
+name|FILE_OPS
+value|"&|^+-*/%"
+define|#
+directive|define
+name|FILE_OPAND
+value|0
+define|#
+directive|define
+name|FILE_OPOR
 value|1
 define|#
 directive|define
-name|OPOR
+name|FILE_OPXOR
 value|2
 define|#
 directive|define
-name|OPXOR
+name|FILE_OPADD
 value|3
 define|#
 directive|define
-name|OPADD
+name|FILE_OPMINUS
 value|4
 define|#
 directive|define
-name|OPMINUS
+name|FILE_OPMULTIPLY
 value|5
 define|#
 directive|define
-name|OPMULTIPLY
+name|FILE_OPDIVIDE
 value|6
 define|#
 directive|define
-name|OPDIVIDE
+name|FILE_OPMODULO
 value|7
 define|#
 directive|define
-name|OPMODULO
-value|8
-define|#
-directive|define
-name|OPINVERSE
+name|FILE_OPINVERSE
 value|0x80
-name|int32_t
+comment|/* Word 4 */
+name|uint32_t
 name|offset
 decl_stmt|;
 comment|/* offset to magic number */
-name|int32_t
+comment|/* Word 5 */
+name|uint32_t
 name|in_offset
 decl_stmt|;
 comment|/* offset from indirection */
+comment|/* Word 6 */
+name|uint32_t
+name|mask
+decl_stmt|;
+comment|/* mask before comparison with value */
+comment|/* Word 7 */
+name|uint32_t
+name|dummy3
+decl_stmt|;
+comment|/* Word 8 */
+name|uint32_t
+name|dummp4
+decl_stmt|;
+comment|/* Words 9-16 */
 union|union
 name|VALUETYPE
 block|{
@@ -421,10 +590,7 @@ block|}
 name|value
 union|;
 comment|/* either number or string */
-name|uint32_t
-name|mask
-decl_stmt|;
-comment|/* mask before comparison with value */
+comment|/* Words 17..31 */
 name|char
 name|desc
 index|[
@@ -433,12 +599,6 @@ index|]
 decl_stmt|;
 comment|/* description */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
 struct|;
 end_struct
 
@@ -512,6 +672,10 @@ name|uint32_t
 name|nmagic
 decl_stmt|;
 comment|/* number of entries in array */
+name|int
+name|mapped
+decl_stmt|;
+comment|/* allocation type: 0 => apprentice_file 		      *                  1 => apprentice_map + malloc 		      *                  2 => apprentice_map + mmap */
 name|struct
 name|mlist
 modifier|*
@@ -524,62 +688,69 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-specifier|extern
-name|int
-name|apprentice
-parameter_list|(
-specifier|const
+begin_struct
+struct|struct
+name|magic_set
+block|{
+name|struct
+name|mlist
+modifier|*
+name|mlist
+decl_stmt|;
+struct|struct
+name|cont
+block|{
+name|size_t
+name|len
+decl_stmt|;
+name|int32_t
+modifier|*
+name|off
+decl_stmt|;
+block|}
+name|c
+struct|;
+struct|struct
+name|out
+block|{
+comment|/* Accumulation buffer */
 name|char
 modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|ascmagic
-parameter_list|(
-name|unsigned
+name|buf
+decl_stmt|;
 name|char
 modifier|*
-parameter_list|,
+name|ptr
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+comment|/* Printable buffer */
+name|char
+modifier|*
+name|pbuf
+decl_stmt|;
+name|size_t
+name|psize
+decl_stmt|;
+block|}
+name|o
+struct|;
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|error
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ckfputs
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|haderr
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct_decl
 struct_decl|struct
@@ -588,10 +759,45 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|fsmagic
+name|protected
+name|char
+modifier|*
+name|file_fmttime
 parameter_list|(
+name|uint32_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_buffer
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_fsmagic
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -604,212 +810,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|fmttime
-parameter_list|(
-name|long
-parameter_list|,
+name|protected
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|is_compress
-parameter_list|(
-specifier|const
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|is_tar
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|magwarn
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|mdump
+name|file_pipe2file
 parameter_list|(
 name|struct
-name|magic
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|process
-parameter_list|(
-specifier|const
-name|char
+name|magic_set
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|showstr
-parameter_list|(
-name|FILE
-modifier|*
 parameter_list|,
 specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|softmagic
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|tryit
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|zmagic
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|ckfprintf
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|uint32_t
-name|signextend
-parameter_list|(
-name|struct
-name|magic
-modifier|*
-parameter_list|,
-name|unsigned
-name|int32
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|tryelf
-parameter_list|(
-name|int
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|pipe2file
-parameter_list|(
-name|int
-parameter_list|,
 name|void
 modifier|*
 parameter_list|,
@@ -818,138 +829,313 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|char
+begin_function_decl
+name|protected
+name|int
+name|file_printf
+parameter_list|(
+name|struct
+name|magic_set
 modifier|*
-name|progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the program name 			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|magicfile
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* name of the magic file		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|protected
 name|int
-name|lineno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current line number in magic file	*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
+name|file_reset
+parameter_list|(
 name|struct
-name|mlist
-name|mlist
-decl_stmt|;
-end_decl_stmt
+name|magic_set
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* list of arrays of magic entries	*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
+begin_function_decl
+name|protected
 name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* enable debugging?			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
+name|file_tryelf
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
 name|int
-name|zflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* process compressed files?		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|lflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* follow symbolic links?		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* read/analyze block special files?	*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|iflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Output types as mime-types		*/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEED_GETOPT
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* From getopt(3)			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
+parameter_list|,
+specifier|const
+name|unsigned
 name|char
 modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+name|protected
+name|int
+name|file_zmagic
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_ascmagic
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_is_tar
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|file_softmagic
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|struct
+name|mlist
+modifier|*
+name|file_apprentice
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|uint32_t
+name|file_signextend
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+name|struct
+name|magic
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_delmagic
+parameter_list|(
+name|struct
+name|magic
+modifier|*
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|size_t
+name|entries
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_badread
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_badseek
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_oomem
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_error
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_magwarn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_mdump
+parameter_list|(
+name|struct
+name|magic
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|void
+name|file_showstr
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|size_t
+name|file_mbswidth
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+specifier|const
+name|char
+modifier|*
+name|file_getbuffer
+parameter_list|(
+name|struct
+name|magic_set
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -1055,6 +1241,11 @@ parameter_list|)
 define|\
 value|static const char *rcsid(const char *p) { \ 	return rcsid(p = id); \ }
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_endif
 endif|#
