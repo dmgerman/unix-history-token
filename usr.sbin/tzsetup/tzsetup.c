@@ -473,7 +473,7 @@ begin_define
 define|#
 directive|define
 name|NCONTINENTS
-value|((sizeof continents)/(sizeof continents[0]))
+value|(int)((sizeof continents)/(sizeof continents[0]))
 end_define
 
 begin_define
