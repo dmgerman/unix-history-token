@@ -13,16 +13,6 @@ directive|define
 name|YES_UNDERSCORES
 end_define
 
-begin_comment
-comment|/* Don't assume anything about the header files. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_IMPLICIT_EXTERN_C
-end_define
-
 begin_include
 include|#
 directive|include
@@ -171,7 +161,17 @@ name|HAVE_ATEXIT
 end_define
 
 begin_comment
-comment|/* Redefine this to use %eax instead of %edx.  */
+comment|/* Tell final.c that we don't need a label passed to mcount.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_DATA
+end_define
+
+begin_comment
+comment|/* Redefine this to not pass an unused label in %edx.  */
 end_comment
 
 begin_undef
@@ -220,19 +220,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
+comment|/* Override the default comment-starter of "/".  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|COMMENT_BEGIN
+name|ASM_COMMENT_START
 end_undef
 
 begin_define
 define|#
 directive|define
-name|COMMENT_BEGIN
+name|ASM_COMMENT_START
 value|"#"
 end_define
 
