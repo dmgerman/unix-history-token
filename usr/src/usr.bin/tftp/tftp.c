@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftp.c	4.3	82/11/14	*/
+comment|/*	tftp.c	4.4	82/11/15	*/
 end_comment
 
 begin_comment
@@ -358,6 +358,8 @@ name|size
 operator|+
 literal|4
 argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -368,8 +370,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -410,6 +410,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -418,8 +420,6 @@ name|from
 argument_list|,
 operator|&
 name|fromlen
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -784,6 +784,8 @@ name|buf
 argument_list|,
 name|size
 argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -794,8 +796,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|!=
 name|size
@@ -823,6 +823,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -831,8 +833,6 @@ name|from
 argument_list|,
 operator|&
 name|fromlen
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1044,6 +1044,8 @@ name|buf
 argument_list|,
 literal|4
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|sin
 argument_list|,
@@ -1051,8 +1053,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|(

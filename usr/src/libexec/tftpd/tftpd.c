@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tftpd.c	4.4	82/11/14	*/
+comment|/*	tftpd.c	4.5	82/11/15	*/
 end_comment
 
 begin_comment
@@ -406,6 +406,8 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
+literal|0
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -414,8 +416,6 @@ name|from
 argument_list|,
 operator|&
 name|fromlen
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if
