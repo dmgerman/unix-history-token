@@ -7518,7 +7518,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If the old symbol stems from a old style function definition 		 * we have remembered the params in rdsmy->s_args and compare 		 * them with the params of the prototype. 		 */
+comment|/* 		 * If the old symbol stems from an old style function definition 		 * we have remembered the params in rdsmy->s_args and compare 		 * them with the params of the prototype. 		 */
 if|if
 condition|(
 name|rdsym
@@ -10720,7 +10720,7 @@ name|dsym
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Before we can check the size we must wait for a initialisation 	 * which may follow. 	 */
+comment|/* 	 * Before we can check the size we must wait for an initialisation 	 * which may follow. 	 */
 block|}
 end_function
 

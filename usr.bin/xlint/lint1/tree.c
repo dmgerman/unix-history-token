@@ -3256,7 +3256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a node for a integer constant.  */
+comment|/*  * Create a node for an integer constant.  */
 end_comment
 
 begin_function
@@ -11852,7 +11852,7 @@ name|xmsk1
 operator|)
 condition|)
 block|{
-comment|/* 			 * Loss of significant bit(s). All truncated bits 			 * of unsigned types or all truncated bits plus the 			 * msb of the target for signed types are considered 			 * to be significant bits. Loss of significant bits 			 * means that at least on of the bits was set in an 			 * unsigned type or that at least one, but not all of 			 * the bits was set in a signed type. 			 * Loss of significant bits means that it is not 			 * possible, also not with necessary casts, to convert 			 * back to the original type. A example for a 			 * necessary cast is: 			 *	char c;	int	i; c = 128; 			 *	i = c;			** yields -128 ** 			 *	i = (unsigned char)c;	** yields 128 ** 			 */
+comment|/* 			 * Loss of significant bit(s). All truncated bits 			 * of unsigned types or all truncated bits plus the 			 * msb of the target for signed types are considered 			 * to be significant bits. Loss of significant bits 			 * means that at least on of the bits was set in an 			 * unsigned type or that at least one, but not all of 			 * the bits was set in a signed type. 			 * Loss of significant bits means that it is not 			 * possible, also not with necessary casts, to convert 			 * back to the original type. An example for a 			 * necessary cast is: 			 *	char c;	int	i; c = 128; 			 *	i = c;			** yields -128 ** 			 *	i = (unsigned char)c;	** yields 128 ** 			 */
 if|if
 condition|(
 name|op
@@ -12110,7 +12110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called if incompatible types were detected.  * Prints a appropriate warning.  */
+comment|/*  * Called if incompatible types were detected.  * Prints an appropriate warning.  */
 end_comment
 
 begin_function
@@ -19190,7 +19190,7 @@ name|tn_sym
 operator|->
 name|s_scl
 expr_stmt|;
-comment|/* 			 * Look if there was a asm statement in one of the 			 * compound statements we are in. If not, we don't 			 * print a warning. 			 */
+comment|/* 			 * Look if there was an asm statement in one of the 			 * compound statements we are in. If not, we don't 			 * print a warning. 			 */
 for|for
 control|(
 name|di

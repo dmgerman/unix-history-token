@@ -10,6 +10,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|"lint.h"
 end_include
 
@@ -619,7 +633,7 @@ name|s_inline
 range|:
 literal|1
 decl_stmt|;
-comment|/* true if this is a inline function */
+comment|/* true if this is an inline function */
 name|struct
 name|sym
 modifier|*
@@ -658,7 +672,7 @@ name|enum_t
 modifier|*
 name|_s_et
 decl_stmt|;
-comment|/* tag, if it is a enumerator */
+comment|/* tag, if it is an enumerator */
 name|tspec_t
 name|_s_tsp
 decl_stmt|;

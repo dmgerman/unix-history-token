@@ -41,6 +41,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -134,7 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * If a complaint stems from a included file, print the name of the included  * file instead of the name spezified at the command line followed by '?'  */
+comment|/*  * If a complaint stems from an included file, print the name of the included  * file instead of the name spezified at the command line followed by '?'  */
 end_comment
 
 begin_decl_stmt
