@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (as ipovly).  The mbuf chain containing the packet will  * be freed.  The mbuf opt, if present, will not be freed.  */
+comment|/*  * IP output.  The packet in mbuf chain m contains a skeletal IP  * header (with len, off, ttl, proto, tos, src, dst).  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  */
 end_comment
 
 begin_macro
