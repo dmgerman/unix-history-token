@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: msgs.c,v 1.9 1997/07/29 06:47:18 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -806,6 +806,11 @@ name|blast
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|stat
+name|buf
+decl_stmt|;
+comment|/* stat to check access of bounds */
 name|FILE
 modifier|*
 name|bounds
@@ -1087,6 +1092,30 @@ argument_list|,
 name|BOUNDS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|fname
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|bounds
 operator|=
 name|fopen
