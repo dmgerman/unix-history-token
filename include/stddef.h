@@ -103,6 +103,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -121,6 +127,11 @@ undef|#
 directive|undef
 name|_BSD_WCHAR_T_
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
