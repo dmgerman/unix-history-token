@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)inode.h	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)inode.h	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ modifier|*
 name|i_dquot
 decl_stmt|;
 comment|/* quota structure controlling this file */
+name|struct
+name|text
+modifier|*
+name|i_text
+decl_stmt|;
+comment|/* text entry, if any (should be region) */
 union|union
 block|{
 name|daddr_t
