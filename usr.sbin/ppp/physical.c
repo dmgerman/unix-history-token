@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.10 1999/05/09 20:13:51 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.11 1999/05/12 09:48:56 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -5370,6 +5370,7 @@ name|handler
 operator|==
 name|NULL
 condition|)
+block|{
 name|physical_SetupStack
 argument_list|(
 name|p
@@ -5377,19 +5378,6 @@ argument_list|,
 name|PHYSICAL_NOFORCE
 argument_list|)
 expr_stmt|;
-name|physical_Found
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|handler
-operator|==
-name|NULL
-condition|)
 name|log_Printf
 argument_list|(
 name|LogDEBUG
@@ -5401,6 +5389,12 @@ operator|->
 name|link
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+block|}
+name|physical_Found
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
