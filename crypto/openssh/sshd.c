@@ -3634,6 +3634,11 @@ operator|)
 name|myaddr
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|newsock
+argument_list|)
+expr_stmt|;
 name|ratelim_exceeded
 operator|=
 literal|0
