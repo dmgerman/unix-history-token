@@ -158,10 +158,6 @@ name|void
 name|localstat
 parameter_list|()
 block|{
-name|void
-name|netflush
-parameter_list|()
-function_decl|;
 name|int
 name|need_will_echo
 init|=
@@ -824,10 +820,6 @@ decl_stmt|,
 name|parm2
 decl_stmt|;
 block|{
-name|void
-name|netflush
-parameter_list|()
-function_decl|;
 comment|/* 	 * Get a copy of terminal characteristics. 	 */
 name|init_termbuf
 argument_list|()

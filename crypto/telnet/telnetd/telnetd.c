@@ -4298,10 +4298,6 @@ name|char
 modifier|*
 name|IM
 decl_stmt|;
-name|void
-name|netflush
-parameter_list|()
-function_decl|;
 name|int
 name|nfd
 decl_stmt|;
