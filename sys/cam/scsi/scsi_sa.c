@@ -9244,7 +9244,8 @@ argument_list|,
 name|CAM_DEBUG_INFO
 argument_list|,
 operator|(
-literal|"Key 0x%x ASC/ASCQ 		    0x%x 0x%x flags 0x%x resid %d dxfer_len %d\n"
+literal|"Key 0x%x ASC/ASCQ "
+literal|"0x%x 0x%x flags 0x%x resid %d dxfer_len %d\n"
 operator|,
 name|sense_key
 operator|,
