@@ -5577,6 +5577,10 @@ name|void
 operator|*
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|mask_rnhead
 argument_list|,
