@@ -2352,7 +2352,18 @@ name|uppervp
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * dvp lock state, determine whether to relock dvp.  dvp is expected 	 * to be locked on return if: 	 * 	 *	- there was an error (except not EJUSTRETURN), or 	 *	- we hit the last component and lockparent is true 	 * 	 * dvp_is_locked is the current state of the dvp lock, not counting 	 * the possibility that *ap->a_vpp == dvp (in which case it is locked 	 * anyway).  Note that *ap->a_vpp == dvp only if no error occured. 	 */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|||
+name|error
+operator|==
+name|EJUSTRETURN
+condition|)
+block|{
+comment|/* 		 * dvp lock state, determine whether to relock dvp. 		 * We are expected to unlock dvp unless: 		 * 		 *      - there was an error (other than EJUSTRETURN), or 		 *      - we hit the last component and lockparent is true 		 */
 if|if
 condition|(
 operator|*
@@ -2365,17 +2376,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|error
-operator|==
-literal|0
-operator|||
-name|error
-operator|==
-name|EJUSTRETURN
-operator|)
-operator|&&
-operator|(
 operator|!
 name|lockparent
 operator|||
@@ -2388,24 +2388,17 @@ name|ISLASTCN
 operator|)
 operator|==
 literal|0
-operator|)
 condition|)
-block|{
 name|VOP_UNLOCK
 argument_list|(
 name|dvp
 argument_list|,
 literal|0
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * Diagnostics 	 */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|cnp
@@ -2431,10 +2424,33 @@ operator|!=
 name|dvp
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|vprint
+argument_list|(
+literal|"union_lookup: vp"
+argument_list|,
+operator|*
+name|ap
+operator|->
+name|a_vpp
+argument_list|)
+expr_stmt|;
+name|vprint
+argument_list|(
+literal|"union_lookup: dvp"
+argument_list|,
+name|dvp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|panic
 argument_list|(
-literal|"union_lookup returning . (%p) not same as startdir (%p)"
+literal|"union_lookup returning . (%p) != startdir (%p)"
 argument_list|,
+operator|*
 name|ap
 operator|->
 name|a_vpp
@@ -2443,8 +2459,7 @@ name|dvp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
+block|}
 return|return
 operator|(
 name|error
