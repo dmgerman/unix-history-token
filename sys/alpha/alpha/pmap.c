@@ -5733,6 +5733,12 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
