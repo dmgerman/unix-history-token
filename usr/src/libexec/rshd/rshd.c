@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.13 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,6 +141,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|keepalive
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|index
@@ -238,7 +246,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"l"
+literal|"ln"
 argument_list|)
 operator|)
 operator|!=
@@ -256,6 +264,14 @@ case|case
 literal|'l'
 case|:
 name|_check_rhosts_file
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|keepalive
 operator|=
 literal|0
 expr_stmt|;
@@ -329,6 +345,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|keepalive
+operator|&&
 name|setsockopt
 argument_list|(
 literal|0
