@@ -4454,8 +4454,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|mtx_pool_lock
 argument_list|(
+name|ndis_mtxpool
+argument_list|,
 name|sc
 operator|->
 name|ndis_intrmtx
@@ -4466,8 +4468,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_pool_unlock
 argument_list|(
+name|ndis_mtxpool
+argument_list|,
 name|sc
 operator|->
 name|ndis_intrmtx
@@ -4542,8 +4546,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock
+name|mtx_pool_lock
 argument_list|(
+name|ndis_mtxpool
+argument_list|,
 name|sc
 operator|->
 name|ndis_intrmtx
@@ -4584,8 +4590,10 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|mtx_unlock
+name|mtx_pool_unlock
 argument_list|(
+name|ndis_mtxpool
+argument_list|,
 name|sc
 operator|->
 name|ndis_intrmtx
