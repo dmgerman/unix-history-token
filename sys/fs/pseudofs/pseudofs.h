@@ -431,6 +431,48 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Getextattr callback  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFS_GETEXTATTR_ARGS
+define|\
+value|struct thread *td, struct proc *p, struct pfs_node *pn, \ 	int attrnamespace, const char *name, struct uio *uio,	\ 	struct ucred *cred
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_GETEXTATTR_PROTO
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|int name(PFS_GETEXTATTR_ARGS);
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pfs_getextattr_t
+function_decl|)
+parameter_list|(
+name|PFS_GETEXTATTR_ARGS
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * Last-close callback  */
 end_comment
 
@@ -559,6 +601,9 @@ name|pn_attr
 decl_stmt|;
 name|pfs_vis_t
 name|pn_vis
+decl_stmt|;
+name|pfs_getextattr_t
+name|pn_getextattr
 decl_stmt|;
 name|void
 modifier|*
