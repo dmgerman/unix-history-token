@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysconf.c	8.1 (Berkeley) %G%"
+literal|"@(#)sysconf.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ literal|1
 else|:
 name|rl
 operator|.
-name|rlim_max
+name|rlim_cur
 operator|)
 return|;
 case|case
@@ -222,7 +222,7 @@ literal|1
 else|:
 name|rl
 operator|.
-name|rlim_max
+name|rlim_cur
 operator|)
 return|;
 case|case
