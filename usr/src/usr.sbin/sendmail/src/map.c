@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.64 (Berkeley) %G%"
+literal|"@(#)map.c	8.65 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,19 +74,14 @@ directive|ifdef
 name|NIS
 end_ifdef
 
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|dom_binding
-block|{
-name|int
-name|dummy
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_comment
-comment|/* needed on IRIX */
+comment|/* forward reference needed on IRIX */
 end_comment
 
 begin_include
@@ -2809,6 +2804,20 @@ operator|&=
 operator|~
 name|MF_INCLNULL
 expr_stmt|;
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|map
+operator|->
+name|map_file
+argument_list|,
+literal|"/yp/"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2851,6 +2860,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|inclnull
@@ -9590,14 +9600,16 @@ name|mode
 operator|==
 name|O_RDONLY
 operator|||
-name|access
+name|strstr
 argument_list|(
-literal|"/var/yp/Makefile"
+name|map
+operator|->
+name|map_file
 argument_list|,
-name|R_OK
+literal|"/yp/"
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|NULL
 condition|)
 endif|#
 directive|endif
