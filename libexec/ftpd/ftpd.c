@@ -9911,8 +9911,6 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|err
-operator|=
 name|cnt
 operator|=
 name|offset
@@ -9921,11 +9919,6 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
-name|err
-operator|!=
-operator|-
-literal|1
-operator|&&
 name|filesize
 operator|>
 literal|0
