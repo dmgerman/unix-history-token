@@ -56,7 +56,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Normalise a sequence number or a difference between sequence numbers */
+comment|/* Normalise a sequence number or a difference between sequence numbers. */
 end_comment
 
 begin_define
@@ -84,7 +84,7 @@ value|((seq) % (mbp)->msg_size)
 end_define
 
 begin_comment
-comment|/* Subtract sequence numbers, but note that only positive values result. */
+comment|/* Subtract sequence numbers.  Note that only positive values result. */
 end_comment
 
 begin_define
@@ -244,25 +244,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|msgbuf_reinit
-parameter_list|(
-name|struct
-name|msgbuf
-modifier|*
-name|mbp
-parameter_list|,
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|msgbuf_peekbytes
 parameter_list|(
@@ -285,15 +266,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_function_decl
+name|void
+name|msgbuf_reinit
+parameter_list|(
+name|struct
+name|msgbuf
+modifier|*
+name|mbp
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MSGBUF_SIZE
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -312,10 +308,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* KERNEL */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_SYS_MSGBUF_H_ */
+end_comment
 
 end_unit
 
