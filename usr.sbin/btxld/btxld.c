@@ -53,6 +53,29 @@ directive|include
 file|<sys/mman.h>
 end_include
 
+begin_comment
+comment|/* XXX make this work as an i386/amd64 cross-tool */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/exec.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|__LDPGSZ
+end_undef
+
+begin_define
+define|#
+directive|define
+name|__LDPGSZ
+value|4096
+end_define
+
 begin_include
 include|#
 directive|include
