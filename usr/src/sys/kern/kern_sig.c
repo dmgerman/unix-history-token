@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.4	82/08/22	*/
+comment|/*	kern_sig.c	5.5	82/09/04	*/
 end_comment
 
 begin_include
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/clock.h"
 end_include
 
 begin_include
@@ -120,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/vlimit.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/acct.h"
 end_include
 
@@ -177,6 +165,24 @@ end_block
 
 begin_macro
 name|sigstack
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|kill
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|killpg
 argument_list|()
 end_macro
 
@@ -2206,6 +2212,13 @@ name|action
 argument_list|)
 expr_stmt|;
 block|}
+name|u
+operator|.
+name|u_ru
+operator|.
+name|ru_nsignals
+operator|++
+expr_stmt|;
 name|sendsig
 argument_list|(
 name|action
@@ -2439,10 +2452,12 @@ argument_list|)
 operator|>=
 name|u
 operator|.
-name|u_limit
+name|u_rlimit
 index|[
-name|LIM_CORE
+name|RLIMIT_CORE
 index|]
+operator|.
+name|rlim_cur
 condition|)
 return|return
 operator|(
@@ -2756,23 +2771,12 @@ operator|)
 block|{
 specifier|register
 expr|struct
-name|proc
-operator|*
-name|p
-block|;
-specifier|register
-name|c
-block|;
-specifier|register
-expr|struct
 name|a
 block|{
 name|int
 name|deltat
 block|; 	}
 operator|*
-name|uap
-block|;
 name|uap
 operator|=
 operator|(
@@ -2784,25 +2788,29 @@ name|u
 operator|.
 name|u_ap
 block|;
+specifier|register
+expr|struct
+name|proc
+operator|*
 name|p
 operator|=
 name|u
 operator|.
 name|u_procp
 block|;
-name|c
+name|int
+name|s
 operator|=
-name|p
-operator|->
-name|p_clktim
+name|spl7
+argument_list|()
 block|;
 name|p
 operator|->
-name|p_clktim
+name|p_realtimer
+operator|.
+name|itimer_reload
 operator|=
-name|uap
-operator|->
-name|deltat
+literal|0
 block|;
 name|u
 operator|.
@@ -2810,7 +2818,40 @@ name|u_r
 operator|.
 name|r_val1
 operator|=
-name|c
+name|p
+operator|->
+name|p_realtimer
+operator|.
+name|itimer_value
+operator|.
+name|tv_sec
+block|;
+name|p
+operator|->
+name|p_realtimer
+operator|.
+name|itimer_value
+operator|.
+name|tv_sec
+operator|=
+name|uap
+operator|->
+name|deltat
+block|;
+name|p
+operator|->
+name|p_realtimer
+operator|.
+name|itimer_value
+operator|.
+name|tv_usec
+operator|=
+literal|0
+block|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 block|; }
 comment|/*  * indefinite wait.  * no one should wakeup(&u)  */
 name|opause
