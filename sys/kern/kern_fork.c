@@ -1025,15 +1025,17 @@ operator|=
 name|fdinit
 argument_list|(
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 name|fdfree
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
 name|p1
 operator|->
 name|p_fd
@@ -1681,6 +1683,10 @@ operator|=
 name|fdinit
 argument_list|(
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1719,6 +1725,8 @@ operator|=
 name|fdshare
 argument_list|(
 name|p1
+operator|->
+name|p_fd
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make a proc table entry for the new process. 	 * Start by zeroing the section of proc that is zero-initialized, 	 * then copy the section that is copied directly from the parent. 	 */

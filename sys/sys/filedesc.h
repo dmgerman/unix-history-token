@@ -512,9 +512,9 @@ modifier|*
 name|fdinit
 parameter_list|(
 name|struct
-name|thread
+name|filedesc
 modifier|*
-name|td
+name|fdp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -526,9 +526,9 @@ modifier|*
 name|fdshare
 parameter_list|(
 name|struct
-name|proc
+name|filedesc
 modifier|*
-name|p
+name|fdp
 parameter_list|)
 function_decl|;
 end_function_decl
