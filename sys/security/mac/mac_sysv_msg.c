@@ -346,12 +346,6 @@ operator|=
 name|mac_sysv_msgqueue_label_alloc
 argument_list|()
 expr_stmt|;
-name|msqkptr
-operator|->
-name|label
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 end_function
 
