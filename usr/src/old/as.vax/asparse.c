@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.10 %G%"
+literal|"@(#)asparse.c 4.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,6 +412,14 @@ name|int
 name|toconv
 decl_stmt|;
 comment|/* how to convert bignums */
+name|int
+name|incasetable
+decl_stmt|;
+comment|/* set if in a case table */
+name|incasetable
+operator|=
+literal|0
+expr_stmt|;
 name|xp
 operator|=
 name|explist
@@ -832,7 +840,17 @@ argument|:	reloc_how = TYPB; break; 				case NBPW/
 literal|2
 argument|:	reloc_how = TYPW; break; 				case NBPW:	reloc_how = TYPL; break; 			} 			if (passno ==
 literal|1
-argument|){ 				dotp->e_xvalue += ty_nbyte[reloc_how]; 			} else { 				outrel(locxp, reloc_how); 			} 		} else { 			field_value = locxp->e_xvalue& ( (
+argument|){ 				dotp->e_xvalue += ty_nbyte[reloc_how]; 			} else { 				outrel(locxp, reloc_how); 			} 		} else {
+comment|/* 			 *	 			 *	See if we are doing a case instruction. 			 *	If so, then see if the branch distance, 			 *	stored as a word, 			 *	is going to loose sig bits. 			 */
+argument|if (passno ==
+literal|2
+argument|&& incasetable){ 				if (  (locxp->e_xvalue< -
+literal|32768
+argument|) 				    ||(locxp->e_xvalue>
+literal|32767
+argument|)){ 					yyerror(
+literal|"Case will branch too far"
+argument|); 				} 			} 			field_value = locxp->e_xvalue& ( (
 literal|1L
 argument|<< field_width)-
 literal|1
@@ -1136,7 +1154,9 @@ argument|) { 		np->s_value = locxp->e_xvalue; 		if (auxval == ICOMM) 			np->s_ty
 comment|/* .align<expr> */
 argument|stpt = (struct symtab *)yylval; 	shift; 	expr(locxp, val); 	jalign(locxp, stpt); 	break;     case INST0:
 comment|/* instructions w/o arguments*/
-argument|insout(yyopcode, (struct arg *)
+argument|incasetable =
+literal|0
+argument|; 	insout(yyopcode, (struct arg *)
 literal|0
 argument|,
 literal|0
@@ -1199,7 +1219,23 @@ argument|if (argcnt>
 literal|6
 argument|){ 		yyerror(
 literal|"More than 6 arguments"
-argument|); 		goto errorfix; 	}  	insout(yyopcode, arglist, 		auxval == INSTn ? argcnt : - argcnt); 	break;     case IQUAD:		toconv = TYPQ;	goto bignumlist;    case IOCTA:		toconv = TYPO;	goto bignumlist;     case IFFLOAT:	toconv = TYPF;	goto bignumlist;    case IDFLOAT:	toconv = TYPD;	goto bignumlist;    case IGFLOAT:	toconv = TYPG;	goto bignumlist;    case IHFLOAT:	toconv = TYPH;	goto bignumlist;    bignumlist:
+argument|); 		goto errorfix; 	}
+comment|/* 	 *	See if this is a case instruction, 	 *	so we can set up tests on the following 	 *	vector of branch displacements 	 */
+argument|if (yyopcode.Op_eopcode == CORE){ 		switch(yyopcode.Op_popcode){ 		case
+literal|0x8f
+argument|:
+comment|/* caseb */
+argument|case
+literal|0xaf
+argument|:
+comment|/* casew */
+argument|case
+literal|0xcf
+argument|:
+comment|/* casel */
+argument|incasetable++; 			break; 		default: 			incasetable =
+literal|0
+argument|; 			break; 		} 	}  	insout(yyopcode, arglist, 		auxval == INSTn ? argcnt : - argcnt); 	break;     case IQUAD:		toconv = TYPQ;	goto bignumlist;    case IOCTA:		toconv = TYPO;	goto bignumlist;     case IFFLOAT:	toconv = TYPF;	goto bignumlist;    case IDFLOAT:	toconv = TYPD;	goto bignumlist;    case IGFLOAT:	toconv = TYPG;	goto bignumlist;    case IHFLOAT:	toconv = TYPH;	goto bignumlist;    bignumlist:
 comment|/* 	 *	eat a list of non 32 bit numbers. 	 *	IQUAD and IOCTA can, possibly, return 	 *	INT's, if the numbers are "small". 	 * 	 *	The value of the numbers is coming back 	 *	as an expression, NOT in yybignum. 	 */
 argument|shift;
 comment|/* over the opener */
