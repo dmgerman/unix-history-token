@@ -42,7 +42,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|STRINGS_H
+name|HAVE_STRINGS_H
 end_ifdef
 
 begin_include
