@@ -224,6 +224,10 @@ literal|"WILDABBR"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * In June 2004 it was decided UTC was a more appropriate default time  * zone than GMT.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -231,7 +235,7 @@ name|char
 name|gmt
 index|[]
 init|=
-literal|"GMT"
+literal|"UTC"
 decl_stmt|;
 end_decl_stmt
 
