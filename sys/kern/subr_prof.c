@@ -723,9 +723,6 @@ name|tmp_addr
 decl_stmt|;
 endif|#
 directive|endif
-name|tcov_init
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Round lowpc and highpc to multiples of the density we're using 	 * so the rest of the scaling (here and in gprof) stays in ints. 	 */
 name|p
 operator|->
@@ -2665,7 +2662,7 @@ end_function
 begin_macro
 name|SYSINIT
 argument_list|(
-argument|kmem
+argument|tcov_init
 argument_list|,
 argument|SI_SUB_KPROF
 argument_list|,
