@@ -5017,11 +5017,15 @@ operator|=
 name|p
 expr_stmt|;
 block|}
-name|strcat
+name|BUF_strlcat
 argument_list|(
 name|str
 argument_list|,
 name|a
+argument_list|,
+name|s
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

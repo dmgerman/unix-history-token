@@ -4230,6 +4230,10 @@ literal|"%s [%p]\n"
 argument_list|,
 name|label
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|adata
 argument_list|)
 expr_stmt|;
@@ -7654,6 +7658,10 @@ name|printf
 argument_list|(
 literal|"%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|kssl_ctx
 argument_list|)
 expr_stmt|;

@@ -31,11 +31,22 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_WINDOWS_BRAINDEATH
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"buildinf.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|const
@@ -78,8 +89,11 @@ operator|+
 literal|11
 index|]
 decl_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"built on: %s"
@@ -124,8 +138,11 @@ operator|+
 literal|11
 index|]
 decl_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"compiler: %s"
@@ -170,8 +187,11 @@ operator|+
 literal|11
 index|]
 decl_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"platform: %s"

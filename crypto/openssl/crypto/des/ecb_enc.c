@@ -31,6 +31,12 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bio.h>
+end_include
+
 begin_decl_stmt
 name|OPENSSL_GLOBAL
 specifier|const
@@ -184,8 +190,11 @@ name|size
 operator|=
 literal|"long"
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"des(%s,%s,%s,%s)"

@@ -1197,6 +1197,11 @@ condition|(
 name|cipher
 operator|==
 name|NULL
+operator|&&
+name|OPENSSL_issetugid
+argument_list|()
+operator|==
+literal|0
 condition|)
 name|cipher
 operator|=

@@ -2080,6 +2080,10 @@ name|unsigned
 name|long
 name|ti
 decl_stmt|;
+define|#
+directive|define
+name|BUF_REMAIN
+value|(sizeof buf - (size_t)(bufp - buf))
 if|if
 condition|(
 name|m
@@ -2112,9 +2116,11 @@ operator|->
 name|time
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|bufp
+argument_list|,
+name|BUF_REMAIN
 argument_list|,
 literal|"[%02d:%02d:%02d] "
 argument_list|,
@@ -2139,9 +2145,11 @@ name|bufp
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|bufp
+argument_list|,
+name|BUF_REMAIN
 argument_list|,
 literal|"%5lu file=%s, line=%d, "
 argument_list|,
@@ -2172,9 +2180,11 @@ operator|&
 name|V_CRYPTO_MDEBUG_THREAD
 condition|)
 block|{
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|bufp
+argument_list|,
+name|BUF_REMAIN
 argument_list|,
 literal|"thread=%lu, "
 argument_list|,
@@ -2191,9 +2201,11 @@ name|bufp
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|bufp
+argument_list|,
+name|BUF_REMAIN
 argument_list|,
 literal|"number=%d, address=%08lX\n"
 argument_list|,
@@ -2281,10 +2293,15 @@ argument_list|,
 name|ami_cnt
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|buf
 operator|+
+name|ami_cnt
+argument_list|,
+sizeof|sizeof
+name|buf
+operator|-
 name|ami_cnt
 argument_list|,
 literal|" thread=%lu, file=%s, line=%d, info=\""
@@ -2355,7 +2372,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|buf
 operator|+
@@ -2364,6 +2381,11 @@ argument_list|,
 name|amip
 operator|->
 name|info
+argument_list|,
+sizeof|sizeof
+name|buf
+operator|-
+name|buf_len
 argument_list|)
 expr_stmt|;
 name|buf_len
@@ -2374,10 +2396,15 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|buf
 operator|+
+name|buf_len
+argument_list|,
+sizeof|sizeof
+name|buf
+operator|-
 name|buf_len
 argument_list|,
 literal|"\"\n"

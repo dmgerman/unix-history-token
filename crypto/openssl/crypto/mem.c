@@ -1520,7 +1520,7 @@ decl_stmt|;
 if|if
 condition|(
 name|num
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return
@@ -1720,7 +1720,7 @@ decl_stmt|;
 if|if
 condition|(
 name|num
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return
@@ -1878,7 +1878,7 @@ return|;
 if|if
 condition|(
 name|num
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return
@@ -2012,7 +2012,7 @@ return|;
 if|if
 condition|(
 name|num
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return
@@ -2054,6 +2054,7 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
 name|memcpy
 argument_list|(
 name|ret
@@ -2075,6 +2076,7 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|LEVITTE_DEBUG_MEM

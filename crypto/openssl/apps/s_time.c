@@ -2166,8 +2166,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"GET %s HTTP/1.0\r\n\r\n"
@@ -2448,8 +2451,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"GET %s HTTP/1.0\r\n\r\n"
@@ -2616,8 +2622,11 @@ condition|(
 name|s_www_path
 condition|)
 block|{
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"GET %s HTTP/1.0\r\n\r\n"

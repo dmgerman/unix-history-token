@@ -90,6 +90,9 @@ name|r
 init|=
 literal|1
 decl_stmt|;
+name|size_t
+name|p_maxlen
+decl_stmt|;
 if|if
 condition|(
 name|BIO_CB_RETURN
@@ -100,8 +103,11 @@ name|r
 operator|=
 name|ret
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"BIO[%08lX]:"
@@ -123,6 +129,13 @@ literal|14
 index|]
 operator|)
 expr_stmt|;
+name|p_maxlen
+operator|=
+sizeof|sizeof
+name|buf
+operator|-
+literal|14
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -131,9 +144,11 @@ block|{
 case|case
 name|BIO_CB_FREE
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"Free - %s\n"
 argument_list|,
@@ -158,9 +173,11 @@ name|type
 operator|&
 name|BIO_TYPE_DESCRIPTOR
 condition|)
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"read(%d,%d) - %s fd=%d\n"
 argument_list|,
@@ -182,9 +199,11 @@ name|num
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"read(%d,%d) - %s\n"
 argument_list|,
@@ -215,9 +234,11 @@ name|type
 operator|&
 name|BIO_TYPE_DESCRIPTOR
 condition|)
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"write(%d,%d) - %s fd=%d\n"
 argument_list|,
@@ -239,9 +260,11 @@ name|num
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"write(%d,%d) - %s\n"
 argument_list|,
@@ -262,9 +285,11 @@ break|break;
 case|case
 name|BIO_CB_PUTS
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"puts() - %s\n"
 argument_list|,
@@ -279,9 +304,11 @@ break|break;
 case|case
 name|BIO_CB_GETS
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"gets(%d) - %s\n"
 argument_list|,
@@ -298,9 +325,11 @@ break|break;
 case|case
 name|BIO_CB_CTRL
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"ctrl(%d) - %s\n"
 argument_list|,
@@ -319,9 +348,11 @@ name|BIO_CB_RETURN
 operator||
 name|BIO_CB_READ
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"read return %ld\n"
 argument_list|,
@@ -334,9 +365,11 @@ name|BIO_CB_RETURN
 operator||
 name|BIO_CB_WRITE
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"write return %ld\n"
 argument_list|,
@@ -349,9 +382,11 @@ name|BIO_CB_RETURN
 operator||
 name|BIO_CB_GETS
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"gets return %ld\n"
 argument_list|,
@@ -364,9 +399,11 @@ name|BIO_CB_RETURN
 operator||
 name|BIO_CB_PUTS
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"puts return %ld\n"
 argument_list|,
@@ -379,9 +416,11 @@ name|BIO_CB_RETURN
 operator||
 name|BIO_CB_CTRL
 case|:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"ctrl return %ld\n"
 argument_list|,
@@ -390,9 +429,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|p_maxlen
 argument_list|,
 literal|"bio callback - unknown type (%d)\n"
 argument_list|,

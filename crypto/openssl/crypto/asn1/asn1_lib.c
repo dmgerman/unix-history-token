@@ -1915,8 +1915,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf1
+argument_list|,
+sizeof|sizeof
 name|buf1
 argument_list|,
 literal|"%lu"
@@ -1928,8 +1931,11 @@ operator|)
 name|address
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf2
+argument_list|,
+sizeof|sizeof
 name|buf2
 argument_list|,
 literal|"%d"

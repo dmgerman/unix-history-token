@@ -401,7 +401,12 @@ name|out
 index|[
 name|n
 index|]
-operator|^=
+operator|=
+name|tmp
+index|[
+name|n
+index|]
+operator|^
 name|ivec
 index|[
 name|n

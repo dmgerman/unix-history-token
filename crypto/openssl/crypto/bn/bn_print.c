@@ -420,6 +420,10 @@ condition|)
 goto|goto
 name|err
 goto|;
+define|#
+directive|define
+name|BUF_REMAIN
+value|(num+3 - (size_t)(p - buf))
 name|p
 operator|=
 name|buf
@@ -501,9 +505,11 @@ name|lp
 operator|--
 expr_stmt|;
 comment|/* We now have a series of blocks, BN_DEC_NUM chars 		 * in length, where the last one needs truncation. 		 * The blocks need to be reversed in order. */
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|BUF_REMAIN
 argument_list|,
 name|BN_DEC_FMT1
 argument_list|,
@@ -529,9 +535,11 @@ block|{
 name|lp
 operator|--
 expr_stmt|;
-name|sprintf
+name|BIO_snprintf
 argument_list|(
 name|p
+argument_list|,
+name|BUF_REMAIN
 argument_list|,
 name|BN_DEC_FMT2
 argument_list|,

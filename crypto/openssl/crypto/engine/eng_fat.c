@@ -348,7 +348,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|list
+name|def_list
 parameter_list|)
 block|{
 name|unsigned
@@ -362,7 +362,7 @@ condition|(
 operator|!
 name|CONF_parse_list
 argument_list|(
-name|list
+name|def_list
 argument_list|,
 literal|','
 argument_list|,
@@ -388,7 +388,7 @@ literal|2
 argument_list|,
 literal|"str="
 argument_list|,
-name|list
+name|def_list
 argument_list|)
 expr_stmt|;
 return|return

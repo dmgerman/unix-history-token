@@ -202,8 +202,11 @@ operator|)
 operator|==
 name|V_ASN1_PRIVATE
 condition|)
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|str
+argument_list|,
+sizeof|sizeof
 name|str
 argument_list|,
 literal|"priv [ %d ] "
@@ -222,8 +225,11 @@ operator|)
 operator|==
 name|V_ASN1_CONTEXT_SPECIFIC
 condition|)
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|str
+argument_list|,
+sizeof|sizeof
 name|str
 argument_list|,
 literal|"cont [ %d ]"
@@ -242,8 +248,11 @@ operator|)
 operator|==
 name|V_ASN1_APPLICATION
 condition|)
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|str
+argument_list|,
+sizeof|sizeof
 name|str
 argument_list|,
 literal|"appl [ %d ]"

@@ -499,8 +499,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|BN_LLONG
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|data
+argument_list|,
+sizeof|sizeof
 name|data
 argument_list|,
 literal|"bn(%d,%d)"
@@ -528,8 +531,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|data
+argument_list|,
+sizeof|sizeof
 name|data
 argument_list|,
 literal|"bn(%d,%d)"

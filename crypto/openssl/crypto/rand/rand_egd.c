@@ -23,6 +23,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/buffer.h>
+end_include
+
 begin_comment
 comment|/*  * Query the EGD<URL: http://www.lothar.com/tech/crypto/>.  *  * This module supplies three routines:  *  * RAND_query_egd_bytes(path, buf, bytes)  *   will actually query "bytes" bytes of entropy form the egd-socket located  *   at path and will write them to buf (if supplied) or will directly feed  *   it to RAND_seed() if buf==NULL.  *   The number of bytes is not limited by the maximum chunk size of EGD,  *   which is 255 bytes. If more than 255 bytes are wanted, several chunks  *   of entropy bytes are requested. The connection is left open until the  *   query is competed.  *   RAND_query_egd_bytes() returns with  *     -1  if an error occured during connection or communication.  *     num the number of bytes read from the EGD socket. This number is either  *         the number of bytes requested or smaller, if the EGD pool is  *         drained and the daemon signals that the pool is empty.  *   This routine does not touch any RAND_status(). This is necessary, since  *   PRNG functions may call it during initialization.  *  * RAND_egd_bytes(path, bytes) will query "bytes" bytes and have them  *   used to seed the PRNG.  *   RAND_egd_bytes() is a wrapper for RAND_query_egd_bytes() with buf=NULL.  *   Unlike RAND_query_egd_bytes(), RAND_status() is used to test the  *   seed status so that the return value can reflect the seed state:  *     -1  if an error occured during connection or communication _or_  *         if the PRNG has still not received the required seeding.  *     num the number of bytes read from the EGD socket. This number is either  *         the number of bytes requested or smaller, if the EGD pool is  *         drained and the daemon signals that the pool is empty.  *  * RAND_egd(path) will query 255 bytes and use the bytes retreived to seed  *   the PRNG.  *   RAND_egd() is a wrapper for RAND_egd_bytes() with numbytes=255.  */
 end_comment
@@ -347,13 +353,18 @@ operator|-
 literal|1
 operator|)
 return|;
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|addr
 operator|.
 name|sun_path
 argument_list|,
 name|path
+argument_list|,
+sizeof|sizeof
+name|addr
+operator|.
+name|sun_path
 argument_list|)
 expr_stmt|;
 name|len

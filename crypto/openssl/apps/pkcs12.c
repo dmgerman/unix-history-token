@@ -3005,11 +3005,14 @@ condition|(
 operator|!
 name|twopass
 condition|)
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|macpass
 argument_list|,
 name|pass
+argument_list|,
+sizeof|sizeof
+name|macpass
 argument_list|)
 expr_stmt|;
 comment|/* Turn certbags into encrypted authsafe */
@@ -3448,11 +3451,14 @@ condition|(
 operator|!
 name|twopass
 condition|)
-name|strcpy
+name|BUF_strlcpy
 argument_list|(
 name|macpass
 argument_list|,
 name|pass
+argument_list|,
+sizeof|sizeof
+name|macpass
 argument_list|)
 expr_stmt|;
 if|if

@@ -19,14 +19,14 @@ begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_NUMBER
-value|0x0090703fL
+value|0x0090704fL
 end_define
 
 begin_define
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 0.9.7c 30 Sep 2003"
+value|"OpenSSL 0.9.7d 17 Mar 2004"
 end_define
 
 begin_define

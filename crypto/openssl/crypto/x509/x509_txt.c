@@ -372,9 +372,28 @@ operator|(
 literal|"unhandled critical extension"
 operator|)
 return|;
+case|case
+name|X509_V_ERR_KEYUSAGE_NO_CRL_SIGN
+case|:
+return|return
+operator|(
+literal|"key usage does not include CRL signing"
+operator|)
+return|;
+case|case
+name|X509_V_ERR_UNHANDLED_CRITICAL_CRL_EXTENSION
+case|:
+return|return
+operator|(
+literal|"unhandled critical CRL extension"
+operator|)
+return|;
 default|default:
-name|sprintf
+name|BIO_snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"error number %ld"
