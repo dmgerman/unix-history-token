@@ -222,6 +222,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|tcptimers
