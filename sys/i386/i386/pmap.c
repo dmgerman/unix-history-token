@@ -4553,6 +4553,8 @@ operator||
 name|VM_ALLOC_RETRY
 operator||
 name|VM_ALLOC_WIRED
+operator||
+name|VM_ALLOC_ZERO
 argument_list|)
 expr_stmt|;
 name|vm_page_flag_clear
