@@ -19024,25 +19024,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* If additional nonloadable filepos adjustments are required,      do them now. */
-if|if
-condition|(
-name|bed
-operator|->
-name|set_nonloadable_filepos
-condition|)
-call|(
-modifier|*
-name|bed
-operator|->
-name|set_nonloadable_filepos
-call|)
-argument_list|(
-name|abfd
-argument_list|,
-name|phdrs
-argument_list|)
-expr_stmt|;
 comment|/* Clear out any program headers we allocated but did not use.  */
 for|for
 control|(
@@ -21601,19 +21582,6 @@ name|base
 parameter_list|)
 define|\
 value|(section->lma>= base							\&& (section->lma + section->_raw_size				\<= SEGMENT_END (segment, base)))
-comment|/* Returns true if the given section is contained within the      given segment.  Filepos addresses are compared in an elf      backend function. */
-define|#
-directive|define
-name|IS_CONTAINED_BY_FILEPOS
-parameter_list|(
-name|sec
-parameter_list|,
-name|seg
-parameter_list|,
-name|bed
-parameter_list|)
-define|\
-value|(bed->is_contained_by_filepos						\&& (*bed->is_contained_by_filepos) (sec, seg))
 comment|/* Special case: corefile "NOTE" section containing regs, prpsinfo etc.  */
 define|#
 directive|define
@@ -21648,7 +21616,7 @@ parameter_list|,
 name|bed
 parameter_list|)
 define|\
-value|((((segment->p_paddr							\       ? IS_CONTAINED_BY_LMA (section, segment, segment->p_paddr)	\       : IS_CONTAINED_BY_VMA (section, segment))				\&& (section->flags& SEC_ALLOC) != 0)				\     || IS_COREFILE_NOTE (segment, section)				\     || (IS_CONTAINED_BY_FILEPOS (section, segment, bed)			\&& (section->flags& SEC_ALLOC) == 0))				\&& section->output_section != NULL					\&& ! section->segment_mark)
+value|((((segment->p_paddr							\       ? IS_CONTAINED_BY_LMA (section, segment, segment->p_paddr)	\       : IS_CONTAINED_BY_VMA (section, segment))				\&& (section->flags& SEC_ALLOC) != 0)				\     || IS_COREFILE_NOTE (segment, section))				\&& section->output_section != NULL					\&& ! section->segment_mark)
 comment|/* Returns true iff seg1 starts after the end of seg2.  */
 define|#
 directive|define
@@ -22497,15 +22465,6 @@ operator|->
 name|p_paddr
 argument_list|)
 operator|||
-name|IS_CONTAINED_BY_FILEPOS
-argument_list|(
-name|section
-argument_list|,
-name|segment
-argument_list|,
-name|bed
-argument_list|)
-operator|||
 name|IS_COREFILE_NOTE
 argument_list|(
 name|segment
@@ -23227,9 +23186,6 @@ directive|undef
 name|IS_CONTAINED_BY_LMA
 undef|#
 directive|undef
-name|IS_CONTAINED_BY_FILEPOS
-undef|#
-directive|undef
 name|IS_COREFILE_NOTE
 undef|#
 directive|undef
@@ -23289,17 +23245,6 @@ decl_stmt|,
 modifier|*
 name|ohdr
 decl_stmt|;
-specifier|const
-name|struct
-name|elf_backend_data
-modifier|*
-name|bed
-init|=
-name|get_elf_backend_data
-argument_list|(
-name|ibfd
-argument_list|)
-decl_stmt|;
 if|if
 condition|(
 name|ibfd
@@ -23321,47 +23266,6 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* Copy over private BFD data if it has not already been copied.      This must be done here, rather than in the copy_private_bfd_data      entry point, because the latter is called after the section      contents have been set, which means that the program headers have      already been worked out.  The backend function provides a way to      override the test conditions and code path for the call to      copy_private_bfd_data.  */
-if|if
-condition|(
-name|bed
-operator|->
-name|copy_private_bfd_data_p
-condition|)
-block|{
-if|if
-condition|(
-call|(
-modifier|*
-name|bed
-operator|->
-name|copy_private_bfd_data_p
-call|)
-argument_list|(
-name|ibfd
-argument_list|,
-name|isec
-argument_list|,
-name|obfd
-argument_list|,
-name|osec
-argument_list|)
-condition|)
-if|if
-condition|(
-operator|!
-name|copy_private_bfd_data
-argument_list|(
-name|ibfd
-argument_list|,
-name|obfd
-argument_list|)
-condition|)
-return|return
-name|false
-return|;
-block|}
-elseif|else
 if|if
 condition|(
 name|elf_tdata

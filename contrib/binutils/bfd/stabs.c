@@ -1142,6 +1142,9 @@ if|if
 condition|(
 name|type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_BINCL
 condition|)
 block|{
@@ -1217,6 +1220,9 @@ if|if
 condition|(
 name|incl_type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_EINCL
 condition|)
 block|{
@@ -1236,6 +1242,9 @@ if|if
 condition|(
 name|incl_type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_BINCL
 condition|)
 operator|++
@@ -1423,6 +1432,9 @@ name|ne
 operator|->
 name|type
 operator|=
+operator|(
+name|int
+operator|)
 name|N_BINCL
 expr_stmt|;
 name|ne
@@ -1511,6 +1523,9 @@ name|ne
 operator|->
 name|type
 operator|=
+operator|(
+name|int
+operator|)
 name|N_EXCL
 expr_stmt|;
 comment|/* Mark the skipped symbols.  */
@@ -1558,6 +1573,9 @@ if|if
 condition|(
 name|incl_type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_EINCL
 condition|)
 block|{
@@ -1591,6 +1609,9 @@ if|if
 condition|(
 name|incl_type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_BINCL
 condition|)
 operator|++
@@ -2124,6 +2145,9 @@ if|if
 condition|(
 name|type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_FUN
 condition|)
 block|{
@@ -2224,10 +2248,16 @@ if|if
 condition|(
 name|type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_STSYM
 operator|||
 name|type
 operator|==
+operator|(
+name|int
+operator|)
 name|N_LCSYM
 condition|)
 if|if
@@ -2420,11 +2450,14 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
+call|(
+name|boolean
+call|)
+argument_list|(
 name|skip
 operator|>
 literal|0
-operator|)
+argument_list|)
 return|;
 name|error_return
 label|:

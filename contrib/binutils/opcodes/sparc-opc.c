@@ -30346,7 +30346,7 @@ literal|"cb"
 argument_list|,
 literal|0x8
 argument_list|,
-literal|0
+name|F_UNBR
 argument_list|)
 block|,
 name|CONDFCL
@@ -30357,6 +30357,8 @@ literal|"cba"
 argument_list|,
 literal|0x8
 argument_list|,
+name|F_UNBR
+operator||
 name|F_ALIAS
 argument_list|)
 block|,
@@ -30368,7 +30370,7 @@ literal|"cb0"
 argument_list|,
 literal|0x9
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDF
@@ -30377,6 +30379,8 @@ literal|"fbz"
 argument_list|,
 literal|0x9
 argument_list|,
+name|F_CONDBR
+operator||
 name|F_ALIAS
 argument_list|)
 block|,
@@ -30388,7 +30392,7 @@ literal|"cb2"
 argument_list|,
 literal|0x6
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30399,7 +30403,7 @@ literal|"cb02"
 argument_list|,
 literal|0xb
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30410,7 +30414,7 @@ literal|"cb1"
 argument_list|,
 literal|0x4
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30421,7 +30425,7 @@ literal|"cb01"
 argument_list|,
 literal|0xd
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30432,7 +30436,7 @@ literal|"cb12"
 argument_list|,
 literal|0x2
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFCL
@@ -30443,7 +30447,7 @@ literal|"cbn"
 argument_list|,
 literal|0x0
 argument_list|,
-literal|0
+name|F_UNBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30454,7 +30458,7 @@ literal|"cb123"
 argument_list|,
 literal|0x1
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDF
@@ -30463,6 +30467,8 @@ literal|"fbnz"
 argument_list|,
 literal|0x1
 argument_list|,
+name|F_CONDBR
+operator||
 name|F_ALIAS
 argument_list|)
 block|,
@@ -30474,7 +30480,7 @@ literal|"cb012"
 argument_list|,
 literal|0xf
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30485,7 +30491,7 @@ literal|"cb3"
 argument_list|,
 literal|0x7
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30496,7 +30502,7 @@ literal|"cb03"
 argument_list|,
 literal|0xa
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30507,7 +30513,7 @@ literal|"cb23"
 argument_list|,
 literal|0x5
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30518,7 +30524,7 @@ literal|"cb023"
 argument_list|,
 literal|0xc
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30529,7 +30535,7 @@ literal|"cb13"
 argument_list|,
 literal|0x3
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 name|CONDFC
@@ -30540,7 +30546,7 @@ literal|"cb013"
 argument_list|,
 literal|0xe
 argument_list|,
-literal|0
+name|F_CONDBR
 argument_list|)
 block|,
 undef|#

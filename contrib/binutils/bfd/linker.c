@@ -343,6 +343,11 @@ condition|)
 block|{
 name|entry
 operator|=
+operator|(
+expr|struct
+name|bfd_hash_entry
+operator|*
+operator|)
 name|bfd_hash_allocate
 argument_list|(
 name|table
@@ -1210,6 +1215,11 @@ condition|)
 block|{
 name|entry
 operator|=
+operator|(
+expr|struct
+name|bfd_hash_entry
+operator|*
+operator|)
 name|bfd_hash_allocate
 argument_list|(
 name|table
@@ -3715,6 +3725,11 @@ name|generic_link_hash_entry
 modifier|*
 name|h
 decl_stmt|;
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|bh
+decl_stmt|;
 name|name
 operator|=
 name|bfd_asymbol_name
@@ -3804,7 +3819,7 @@ name|string
 operator|=
 name|NULL
 expr_stmt|;
-name|h
+name|bh
 operator|=
 name|NULL
 expr_stmt|;
@@ -3839,20 +3854,23 @@ name|false
 argument_list|,
 name|collect
 argument_list|,
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|*
-operator|)
 operator|&
-name|h
+name|bh
 argument_list|)
 operator|)
 condition|)
 return|return
 name|false
 return|;
+name|h
+operator|=
+operator|(
+expr|struct
+name|generic_link_hash_entry
+operator|*
+operator|)
+name|bh
+expr_stmt|;
 comment|/* If this is a constructor symbol, and the linker didn't do              anything with it, then we want to just pass the symbol              through to the output file.  This will happen when              linking with -r.  */
 if|if
 condition|(
@@ -6709,6 +6727,10 @@ name|section
 operator|->
 name|linker_mark
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|true
 expr_stmt|;
 comment|/* Build the output symbol table.  */

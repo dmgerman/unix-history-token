@@ -173,6 +173,10 @@ name|PARAMS
 argument_list|(
 operator|(
 expr|struct
+name|elf_backend_data
+operator|*
+operator|,
+expr|struct
 name|elf_link_hash_entry
 operator|*
 operator|,
@@ -217,7 +221,7 @@ name|elf_s390_gc_mark_hook
 name|PARAMS
 argument_list|(
 operator|(
-name|bfd
+name|asection
 operator|*
 operator|,
 expr|struct
@@ -2309,10 +2313,8 @@ expr|struct
 name|elf_s390_link_hash_table
 operator|*
 operator|)
-name|bfd_alloc
+name|bfd_malloc
 argument_list|(
-name|abfd
-argument_list|,
 name|amt
 argument_list|)
 expr_stmt|;
@@ -2341,10 +2343,8 @@ name|link_hash_newfunc
 argument_list|)
 condition|)
 block|{
-name|bfd_release
+name|free
 argument_list|(
-name|abfd
-argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
@@ -2726,10 +2726,17 @@ specifier|static
 name|void
 name|elf_s390_copy_indirect_symbol
 parameter_list|(
+name|bed
+parameter_list|,
 name|dir
 parameter_list|,
 name|ind
 parameter_list|)
+name|struct
+name|elf_backend_data
+modifier|*
+name|bed
+decl_stmt|;
 name|struct
 name|elf_link_hash_entry
 modifier|*
@@ -2929,6 +2936,8 @@ expr_stmt|;
 block|}
 name|_bfd_elf_link_hash_copy_indirect
 argument_list|(
+name|bed
+argument_list|,
 name|dir
 argument_list|,
 name|ind
@@ -4036,7 +4045,7 @@ name|asection
 modifier|*
 name|elf_s390_gc_mark_hook
 parameter_list|(
-name|abfd
+name|sec
 parameter_list|,
 name|info
 parameter_list|,
@@ -4046,9 +4055,9 @@ name|h
 parameter_list|,
 name|sym
 parameter_list|)
-name|bfd
+name|asection
 modifier|*
-name|abfd
+name|sec
 decl_stmt|;
 name|struct
 name|bfd_link_info
@@ -4143,18 +4152,18 @@ block|}
 block|}
 block|}
 else|else
-block|{
 return|return
 name|bfd_section_from_elf_index
 argument_list|(
-name|abfd
+name|sec
+operator|->
+name|owner
 argument_list|,
 name|sym
 operator|->
 name|st_shndx
 argument_list|)
 return|;
-block|}
 return|return
 name|NULL
 return|;
@@ -4705,7 +4714,7 @@ name|unsigned
 name|int
 name|power_of_two
 decl_stmt|;
-comment|/* If this is a function, put it in the procedure linkage table.  We      will fill in the contents of the procedure linkage table later      (although we could actually do it here). */
+comment|/* If this is a function, put it in the procedure linkage table.  We      will fill in the contents of the procedure linkage table later      (although we could actually do it here).  */
 if|if
 condition|(
 name|h
@@ -8316,16 +8325,13 @@ break|break;
 default|default:
 break|break;
 block|}
+comment|/* Dynamic relocs are not propagated for SEC_DEBUGGING sections 	 because such sections are not SEC_ALLOC and thus ld.so will 	 not process them.  */
 if|if
 condition|(
 name|unresolved_reloc
 operator|&&
 operator|!
 operator|(
-name|info
-operator|->
-name|shared
-operator|&&
 operator|(
 name|input_section
 operator|->

@@ -2874,8 +2874,14 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|code
 operator|>
+operator|(
+name|int
+operator|)
 name|BFD_RELOC_UNUSED
 condition|)
 return|return
@@ -3174,6 +3180,10 @@ name|input_section
 operator|->
 name|reloc_done
 operator|=
+operator|(
+name|unsigned
+name|int
+operator|)
 name|true
 expr_stmt|;
 name|reloc_count

@@ -10554,6 +10554,8 @@ condition|;
 name|addr_offset
 operator|+=
 name|onaline
+operator|/
+name|opb
 control|)
 block|{
 name|bfd_size_type
@@ -10652,6 +10654,8 @@ control|(
 name|j
 operator|=
 name|addr_offset
+operator|*
+name|opb
 init|;
 name|j
 operator|<

@@ -173,11 +173,16 @@ operator|!=
 name|bfd_unknown
 condition|)
 return|return
+call|(
+name|boolean
+call|)
+argument_list|(
 name|abfd
 operator|->
 name|format
 operator|==
 name|format
+argument_list|)
 return|;
 comment|/* Since the target type was defaulted, check them      all in the hope that one will be uniquely recognized.  */
 name|save_targ
@@ -802,11 +807,16 @@ operator|!=
 name|bfd_unknown
 condition|)
 return|return
+call|(
+name|boolean
+call|)
+argument_list|(
 name|abfd
 operator|->
 name|format
 operator|==
 name|format
+argument_list|)
 return|;
 comment|/* Presume the answer is yes.  */
 name|abfd

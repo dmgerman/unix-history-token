@@ -7279,6 +7279,11 @@ modifier|*
 name|myh
 decl_stmt|;
 name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|bh
+decl_stmt|;
+name|struct
 name|coff_arm_link_hash_table
 modifier|*
 name|globals
@@ -7403,6 +7408,10 @@ return|return;
 comment|/* we've already seen this guy */
 block|}
 comment|/* The only trick here is using globals->arm_glue_size as the value. Even      though the section isn't allocated yet, this is where we will be putting      it.  */
+name|bh
+operator|=
+name|NULL
+expr_stmt|;
 name|val
 operator|=
 name|globals
@@ -7433,14 +7442,8 @@ name|true
 argument_list|,
 name|false
 argument_list|,
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|*
-operator|)
 operator|&
-name|myh
+name|bh
 argument_list|)
 expr_stmt|;
 name|free
@@ -7510,6 +7513,11 @@ name|struct
 name|coff_link_hash_entry
 modifier|*
 name|myh
+decl_stmt|;
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|bh
 decl_stmt|;
 name|struct
 name|coff_arm_link_hash_table
@@ -7635,6 +7643,10 @@ expr_stmt|;
 return|return;
 comment|/* we've already seen this guy */
 block|}
+name|bh
+operator|=
+name|NULL
+expr_stmt|;
 name|val
 operator|=
 name|globals
@@ -7665,17 +7677,20 @@ name|true
 argument_list|,
 name|false
 argument_list|,
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|*
-operator|)
 operator|&
-name|myh
+name|bh
 argument_list|)
 expr_stmt|;
 comment|/* If we mark it 'thumb', the disassembler will do a better job.  */
+name|myh
+operator|=
+operator|(
+expr|struct
+name|coff_link_hash_entry
+operator|*
+operator|)
+name|bh
+expr_stmt|;
 name|myh
 operator|->
 name|class
@@ -7741,7 +7756,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|myh
+name|bh
 operator|=
 name|NULL
 expr_stmt|;
@@ -7783,14 +7798,8 @@ name|true
 argument_list|,
 name|false
 argument_list|,
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|*
-operator|)
 operator|&
-name|myh
+name|bh
 argument_list|)
 expr_stmt|;
 name|free

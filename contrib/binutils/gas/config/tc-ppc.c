@@ -203,7 +203,7 @@ name|PPC_HIGHER
 parameter_list|(
 name|v
 parameter_list|)
-value|(((v)>> 32)& 0xffff)
+value|(((v)>> 16>> 16)& 0xffff)
 end_define
 
 begin_comment
@@ -231,7 +231,7 @@ name|PPC_HIGHEST
 parameter_list|(
 name|v
 parameter_list|)
-value|(((v)>> 48)& 0xffff)
+value|(((v)>> 24>> 24)& 0xffff)
 end_define
 
 begin_comment
@@ -4099,10 +4099,29 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|BFD64
 name|ppc_obj64
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|as_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"%s unsupported"
+argument_list|)
+argument_list|,
+literal|"-a64"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 elseif|else
 if|if
 condition|(
@@ -4856,6 +4875,17 @@ condition|)
 block|{
 if|if
 condition|(
+name|ppc_obj64
+condition|)
+name|ppc_cpu
+operator|=
+name|PPC_OPCODE_PPC
+operator||
+name|PPC_OPCODE_64
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|strncmp
 argument_list|(
 name|default_os
@@ -5102,11 +5132,26 @@ name|long
 name|ppc_mach
 parameter_list|()
 block|{
-return|return
+if|if
+condition|(
 name|ppc_obj64
-condition|?
+condition|)
+return|return
 name|bfd_mach_ppc64
-else|:
+return|;
+elseif|else
+if|if
+condition|(
+name|ppc_arch
+argument_list|()
+operator|==
+name|bfd_arch_rs6000
+condition|)
+return|return
+name|bfd_mach_rs6k
+return|;
+else|else
+return|return
 name|bfd_mach_ppc
 return|;
 block|}

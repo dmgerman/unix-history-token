@@ -1562,6 +1562,10 @@ name|pad
 argument_list|)
 expr_stmt|;
 return|return
+call|(
+name|boolean
+call|)
+argument_list|(
 name|entry
 operator|==
 name|NULL
@@ -1571,6 +1575,7 @@ operator|->
 name|secinfo
 operator|!=
 name|secinfo
+argument_list|)
 return|;
 block|}
 end_function
@@ -3366,6 +3371,13 @@ condition|)
 block|{
 name|s
 operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|(
 name|e
 operator|->
 name|root
@@ -3381,6 +3393,7 @@ operator|->
 name|u
 operator|.
 name|entsize
+operator|)
 expr_stmt|;
 name|hash
 operator|=
@@ -3500,6 +3513,13 @@ expr_stmt|;
 block|}
 name|s
 operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|(
 name|e
 operator|->
 name|root
@@ -3515,6 +3535,7 @@ operator|->
 name|u
 operator|.
 name|entsize
+operator|)
 expr_stmt|;
 name|hash
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-s390.c -- Assemble for the S390    Copyright 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+comment|/* tc-s390.c -- Assemble for the S390    Copyright 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -324,7 +324,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Pseudo-ops which must be defined. */
+comment|/* Pseudo-ops which must be defined.  */
 block|{
 literal|"bss"
 block|,
@@ -421,7 +421,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* List of registers that are pre-defined:     Each access register has a predefined name of the form:      a<reg_num> which has the value<reg_num>.     Each control register has a predefined name of the form:      c<reg_num> which has the value<reg_num>.     Each general register has a predefined name of the form:      r<reg_num> which has the value<reg_num>.     Each floating point register a has predefined name of the form:      f<reg_num> which has the value<reg_num>.     There are individual registers as well:      sp     has the value 15      lit    has the value 12     The table is sorted. Suitable for searching by a binary search. */
+comment|/* List of registers that are pre-defined:     Each access register has a predefined name of the form:      a<reg_num> which has the value<reg_num>.     Each control register has a predefined name of the form:      c<reg_num> which has the value<reg_num>.     Each general register has a predefined name of the form:      r<reg_num> which has the value<reg_num>.     Each floating point register a has predefined name of the form:      f<reg_num> which has the value<reg_num>.     There are individual registers as well:      sp     has the value 15      lit    has the value 12     The table is sorted. Suitable for searching by a binary search.  */
 end_comment
 
 begin_decl_stmt
@@ -1289,7 +1289,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|CONST
+specifier|const
 name|char
 modifier|*
 name|md_shortopts
@@ -4163,7 +4163,7 @@ do|;
 name|input_line_pointer
 operator|--
 expr_stmt|;
-comment|/* Put terminator back into stream. */
+comment|/* Put terminator back into stream.  */
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
@@ -4354,6 +4354,7 @@ name|input_line_pointer
 operator|=
 name|str
 expr_stmt|;
+comment|/* Parse the operand.  */
 if|if
 condition|(
 operator|!
@@ -4363,7 +4364,6 @@ operator|&
 name|ex
 argument_list|)
 condition|)
-comment|/* parse the operand */
 name|expression
 argument_list|(
 operator|&
@@ -6245,7 +6245,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* nothing to be done */
+comment|/* Nothing to be done.  */
 comment|/* Emit symbol for start of literal pool.  */
 name|S_SET_SEGMENT
 argument_list|(
@@ -6942,7 +6942,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Don't adjust pc-relative references to merge sections.  */
+comment|/* Don't adjust references to merge sections.  */
 if|if
 condition|(
 operator|(
@@ -6959,10 +6959,6 @@ name|SEC_MERGE
 operator|)
 operator|!=
 literal|0
-operator|&&
-name|fixP
-operator|->
-name|fx_pcrel
 condition|)
 return|return
 literal|0

@@ -4261,6 +4261,12 @@ directive|undef
 name|USE_BRL
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BRL
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -4307,6 +4313,11 @@ literal|0xc0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -4424,6 +4435,11 @@ comment|/*               br b6;;            */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
@@ -6887,6 +6903,13 @@ name|elfNN_ia64_link_hash_table
 modifier|*
 name|ia64_info
 decl_stmt|;
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|bh
+init|=
+name|NULL
+decl_stmt|;
 name|bed
 operator|=
 name|get_elf_backend_data
@@ -6940,20 +6963,23 @@ name|bed
 operator|->
 name|collect
 argument_list|,
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|*
-operator|)
 operator|&
-name|h
+name|bh
 argument_list|)
 operator|)
 condition|)
 return|return
 name|false
 return|;
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|bh
+expr_stmt|;
 name|h
 operator|->
 name|elf_link_hash_flags

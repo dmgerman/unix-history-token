@@ -87,10 +87,26 @@ name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|)
 end_if
 
 begin_comment
 comment|/* All known AIX compilers implement these things (but don't always    define __STDC__).  The RISC/OS MIPS compiler defines these things    in SVR4 mode, but does not define __STDC__.  */
+end_comment
+
+begin_comment
+comment|/* eraxxon@alumni.rice.edu: The Compaq C++ compiler, unlike many other    C++ compilers, does not define __STDC__, though it acts as if this    was so. (Verified versions: 5.7, 6.2, 6.3, 6.5) */
 end_comment
 
 begin_define
