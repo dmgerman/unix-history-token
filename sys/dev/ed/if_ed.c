@@ -9810,6 +9810,10 @@ name|if_bpf
 operator|&&
 name|do_bridge
 operator|&&
+name|bdg_forward_ptr
+operator|!=
+name|NULL
+operator|&&
 name|BDG_USED
 argument_list|(
 operator|(
@@ -9845,7 +9849,7 @@ argument_list|)
 expr_stmt|;
 name|bif
 operator|=
-name|bridge_in
+name|bridge_in_ptr
 argument_list|(
 operator|&
 name|sc
