@@ -6283,6 +6283,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_ASSERTLOCK
 expr_stmt|;
+comment|/* Avoid reentry if already attempting to suspend. */
 if|if
 condition|(
 name|sc
@@ -6296,7 +6297,7 @@ argument_list|(
 name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
-comment|/* avoid reentry */
+comment|/* We recently woke up so don't suspend again for a while. */
 if|if
 condition|(
 name|sc
@@ -6313,44 +6314,6 @@ condition|(
 name|state
 condition|)
 block|{
-case|case
-name|ACPI_STATE_S0
-case|:
-comment|/* XXX only for testing */
-name|status
-operator|=
-name|AcpiEnterSleepState
-argument_list|(
-operator|(
-name|UINT8
-operator|)
-name|state
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|status
-argument_list|)
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|acpi_dev
-argument_list|,
-literal|"AcpiEnterSleepState failed - %s\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|status
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
 case|case
 name|ACPI_STATE_S1
 case|:
@@ -6379,6 +6342,27 @@ operator|&
 name|TypeB
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|acpi_dev
+argument_list|,
+literal|"Sleep state S%d not supported by BIOS\n"
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+elseif|else
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -6602,6 +6586,9 @@ name|RB_POWEROFF
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_STATE_S0
+case|:
 default|default:
 name|status
 operator|=
@@ -6609,6 +6596,7 @@ name|AE_BAD_PARAMETER
 expr_stmt|;
 break|break;
 block|}
+comment|/* Disable a second sleep request for a short period */
 if|if
 condition|(
 name|sc
