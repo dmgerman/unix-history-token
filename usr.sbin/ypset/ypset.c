@@ -626,7 +626,6 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-operator|&
 name|hent
 operator|->
 name|h_addr_list
