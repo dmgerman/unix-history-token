@@ -10946,6 +10946,12 @@ name|end
 operator|=
 name|addr
 expr_stmt|;
+name|stack_entry
+operator|->
+name|avail_ssize
+operator|-=
+name|grow_amount
+expr_stmt|;
 name|rv
 operator|=
 name|KERN_SUCCESS
