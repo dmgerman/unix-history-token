@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.86 1997/05/19 17:32:07 jmz Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.87 1997/05/21 19:35:11 joerg Exp $  */
 end_comment
 
 begin_include
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|"od.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pt.h"
 end_include
 
 begin_include
@@ -1803,6 +1809,33 @@ block|,
 endif|#
 directive|endif
 comment|/* NWORM */
+if|#
+directive|if
+name|NPT
+operator|>
+literal|0
+comment|/* 	 * Some of the Epson scanners erroneously respond to more than 	 * one LUN. 	 */
+block|{
+name|T_PROCESSOR
+block|,
+name|T_PROCESSOR
+block|,
+name|T_FIXED
+block|,
+literal|"EPSON SC"
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|,
+literal|"pt"
+block|,
+name|SC_ONE_LU
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* NPT */
 comment|/* 	 * Wildcard entries.  Keep them down here below all device 	 * specific entries, so the above ones can override the type 	 * driver if necessary. 	 */
 if|#
 directive|if
