@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startslip.c	5.5 (Berkeley) %G%"
+literal|"@(#)startslip.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,6 +1351,16 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|printd
+argument_list|(
+literal|"Sent login: %s\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -1376,6 +1386,16 @@ argument_list|(
 name|wfd
 argument_list|,
 literal|"%s\r"
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|printd
+argument_list|(
+literal|"Sent password: %s\n"
 argument_list|,
 name|argv
 index|[
@@ -1682,6 +1702,13 @@ name|i
 index|]
 operator|==
 literal|'\r'
+operator|||
+name|buf
+index|[
+name|i
+index|]
+operator|==
+literal|'\0'
 condition|)
 name|buf
 index|[
@@ -1716,14 +1743,8 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
-name|debug
-condition|)
-name|fprintf
+name|printd
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Got %d: \"%s\"\n"
 argument_list|,
 name|i
