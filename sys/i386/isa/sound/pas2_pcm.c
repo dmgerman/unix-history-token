@@ -6,7 +6,7 @@ name|_PAS2_PCM_C_
 end_define
 
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/pas2_pcm.c  *   * The low level driver for the Pro Audio Spectrum ADC/DAC.  *   * (C) 1992  Hannu Savolainen (hsavolai@cs.helsinki.fi) Craig Metz  * (cmetz@thor.tjhsst.edu) See COPYING for further details. Should be  * distributed with this file.  */
+comment|/*  * sound/pas2_pcm.c  *  * The low level driver for the Pro Audio Spectrum ADC/DAC.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* (WHAT) */
+comment|/* 				   * * * (WHAT)   */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ value|(0x08)
 end_define
 
 begin_comment
-comment|/* Sample buffer timer interrupt enable */
+comment|/*  * Sample buffer timer interrupt enable  */
 end_comment
 
 begin_define
@@ -113,7 +113,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* channels/sample (1 or 2) */
+comment|/* channels (1 or 2) */
 end_comment
 
 begin_decl_stmt
@@ -226,7 +226,15 @@ literal|5000
 expr_stmt|;
 name|foo
 operator|=
+operator|(
 literal|1193180
+operator|+
+operator|(
+name|arg
+operator|/
+literal|2
+operator|)
+operator|)
 operator|/
 name|arg
 expr_stmt|;
@@ -259,6 +267,99 @@ argument_list|(
 name|FILTER_FREQUENCY
 argument_list|)
 expr_stmt|;
+comment|/*  * Set anti-aliasing filters according to sample rate. You reall *NEED*  * to enable this feature for all normal recording unless you want to  * experiment with aliasing effects.  * These filters apply to the selected "recording" source.  * I (pfw) don't know the encoding of these 5 bits. The values shown  * come from the SDK found on ftp.uwp.edu:/pub/msdos/proaudio/. */
+if|#
+directive|if
+operator|!
+name|defined
+name|NO_AUTO_FILTER_SET
+name|tmp
+operator|&=
+literal|0xe0
+expr_stmt|;
+if|if
+condition|(
+name|pcm_speed
+operator|>=
+literal|2
+operator|*
+literal|17897
+condition|)
+name|tmp
+operator||=
+literal|0x21
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pcm_speed
+operator|>=
+literal|2
+operator|*
+literal|15909
+condition|)
+name|tmp
+operator||=
+literal|0x22
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pcm_speed
+operator|>=
+literal|2
+operator|*
+literal|11931
+condition|)
+name|tmp
+operator||=
+literal|0x29
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pcm_speed
+operator|>=
+literal|2
+operator|*
+literal|8948
+condition|)
+name|tmp
+operator||=
+literal|0x31
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pcm_speed
+operator|>=
+literal|2
+operator|*
+literal|5965
+condition|)
+name|tmp
+operator||=
+literal|0x39
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pcm_speed
+operator|>=
+literal|2
+operator|*
+literal|2982
+condition|)
+name|tmp
+operator||=
+literal|0x24
+expr_stmt|;
+name|pcm_filter
+operator|=
+name|tmp
+expr_stmt|;
+endif|#
+directive|endif
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -382,7 +483,7 @@ argument_list|(
 name|pcm_speed
 argument_list|)
 expr_stmt|;
-comment|/* The speed must be reinitialized */
+comment|/* 					 * The speed must be reinitialized 					 */
 block|}
 return|return
 name|pcm_channels
@@ -564,6 +665,16 @@ break|break;
 case|case
 name|SOUND_PCM_WRITE_CHANNELS
 case|:
+if|if
+condition|(
+name|local
+condition|)
+return|return
+name|pcm_set_channels
+argument_list|(
+name|arg
+argument_list|)
+return|;
 return|return
 name|IOCTL_OUT
 argument_list|(
@@ -599,7 +710,7 @@ argument_list|)
 return|;
 break|break;
 case|case
-name|SNDCTL_DSP_SAMPLESIZE
+name|SNDCTL_DSP_SETFMT
 case|:
 if|if
 condition|(
@@ -647,7 +758,7 @@ return|;
 case|case
 name|SOUND_PCM_WRITE_FILTER
 case|:
-comment|/* NOT YET IMPLEMENTED */
+comment|/* 					 * NOT YET IMPLEMENTED 					 */
 if|if
 condition|(
 name|IOCTL_IN
@@ -765,29 +876,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mode
-operator|!=
-name|OPEN_READ
-operator|&&
-name|mode
-operator|!=
-name|OPEN_WRITE
-condition|)
-block|{
-name|printk
-argument_list|(
-literal|"PAS2: Attempt to open PCM device for simultaneous read and write"
-argument_list|)
-expr_stmt|;
-return|return
-name|RET_ERROR
-argument_list|(
-name|EINVAL
-argument_list|)
-return|;
-block|}
-if|if
-condition|(
 operator|(
 name|err
 operator|=
@@ -804,11 +892,12 @@ name|err
 return|;
 if|if
 condition|(
-operator|!
 name|DMAbuf_open_dma
 argument_list|(
 name|dev
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|pas_remove_intr
@@ -826,21 +915,6 @@ block|}
 name|pcm_count
 operator|=
 literal|0
-expr_stmt|;
-name|pcm_set_bits
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-name|pcm_set_channels
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|pcm_set_speed
-argument_list|(
-name|DSP_DEFAULT_SPEED
-argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -918,6 +992,9 @@ name|count
 parameter_list|,
 name|int
 name|intrflag
+parameter_list|,
+name|int
+name|restart_dma
 parameter_list|)
 block|{
 name|unsigned
@@ -944,10 +1021,12 @@ name|count
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -955,15 +1034,16 @@ name|cnt
 operator|>>=
 literal|1
 expr_stmt|;
-name|cnt
-operator|--
-expr_stmt|;
 if|if
 condition|(
-name|sound_dma_automode
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|flags
+operator|&
+name|DMA_AUTOMODE
 operator|&&
 name|intrflag
 operator|&&
@@ -972,7 +1052,7 @@ operator|==
 name|pcm_count
 condition|)
 return|return;
-comment|/* Auto mode on. No need to react */
+comment|/* 				 * Auto mode on. No need to react 				 */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -991,6 +1071,10 @@ argument_list|,
 name|PCM_CONTROL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|restart_dma
+condition|)
 name|DMAbuf_start_dma
 argument_list|(
 name|dev
@@ -1004,19 +1088,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
 name|count
 operator|>>=
 literal|1
-expr_stmt|;
-name|count
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -1145,6 +1228,9 @@ name|count
 parameter_list|,
 name|int
 name|intrflag
+parameter_list|,
+name|int
+name|restart_dma
 parameter_list|)
 block|{
 name|unsigned
@@ -1172,10 +1258,12 @@ name|count
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -1183,15 +1271,16 @@ name|cnt
 operator|>>=
 literal|1
 expr_stmt|;
-name|cnt
-operator|--
-expr_stmt|;
 if|if
 condition|(
-name|sound_dma_automode
+name|audio_devs
 index|[
 name|my_devnum
 index|]
+operator|->
+name|flags
+operator|&
+name|DMA_AUTOMODE
 operator|&&
 name|intrflag
 operator|&&
@@ -1200,12 +1289,16 @@ operator|==
 name|pcm_count
 condition|)
 return|return;
-comment|/* Auto mode on. No need to react */
+comment|/* 				 * Auto mode on. No need to react 				 */
 name|DISABLE_INTR
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|restart_dma
+condition|)
 name|DMAbuf_start_dma
 argument_list|(
 name|dev
@@ -1219,19 +1312,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
 name|count
 operator|>>=
 literal|1
-expr_stmt|;
-name|count
-operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -1397,38 +1489,35 @@ init|=
 block|{
 literal|"Pro Audio Spectrum"
 block|,
+name|DMA_AUTOMODE
+block|,
+name|AFMT_U8
+operator||
+name|AFMT_S16_LE
+block|,
+name|NULL
+block|,
 name|pas_pcm_open
 block|,
-comment|/* */
 name|pas_pcm_close
 block|,
-comment|/* */
 name|pas_pcm_output_block
 block|,
-comment|/* */
 name|pas_pcm_start_input
 block|,
-comment|/* */
 name|pas_pcm_ioctl
 block|,
-comment|/* */
 name|pas_pcm_prepare_for_input
 block|,
-comment|/* */
 name|pas_pcm_prepare_for_output
 block|,
-comment|/* */
 name|pas_pcm_reset
 block|,
-comment|/* */
 name|pas_pcm_reset
 block|,
-comment|/* halt_xfer */
 name|NULL
 block|,
-comment|/* has_output_drained */
 name|NULL
-comment|/* copy_from_user */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1480,88 +1569,53 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|num_dspdevs
+name|num_audiodevs
 operator|<
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 condition|)
 block|{
-name|dsp_devs
+name|audio_devs
 index|[
 name|my_devnum
 operator|=
-name|num_dspdevs
+name|num_audiodevs
 operator|++
 index|]
 operator|=
 operator|&
 name|pas_pcm_operations
 expr_stmt|;
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|my_devnum
 index|]
+operator|->
+name|dmachan
 operator|=
 name|hw_config
 operator|->
 name|dma
 expr_stmt|;
-if|if
-condition|(
-name|hw_config
-operator|->
-name|dma
-operator|>
-literal|3
-condition|)
-block|{
-name|sound_buffcounts
+name|audio_devs
 index|[
 name|my_devnum
 index|]
+operator|->
+name|buffcount
 operator|=
 literal|1
 expr_stmt|;
-name|sound_buffsizes
+name|audio_devs
 index|[
 name|my_devnum
 index|]
+operator|->
+name|buffsize
 operator|=
 literal|2
 operator|*
-literal|65536
-expr_stmt|;
-name|sound_dma_automode
-index|[
-name|my_devnum
-index|]
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sound_buffcounts
-index|[
-name|my_devnum
-index|]
-operator|=
-literal|1
-expr_stmt|;
-name|sound_buffsizes
-index|[
-name|my_devnum
-index|]
-operator|=
 name|DSP_BUFFSIZE
 expr_stmt|;
-name|sound_dma_automode
-index|[
-name|my_devnum
-index|]
-operator|=
-literal|1
-expr_stmt|;
-block|}
 block|}
 else|else
 name|printk
@@ -1593,16 +1647,22 @@ name|cause
 operator|==
 literal|1
 condition|)
-comment|/* PCM buffer done */
+comment|/* 				 * PCM buffer done 				 */
 block|{
 comment|/*        * Halt the PCM first. Otherwise we don't have time to start a new        * block before the PCM chip proceeds to the next sample        */
 if|if
 condition|(
 operator|!
-name|sound_dma_automode
+operator|(
+name|audio_devs
 index|[
 name|my_devnum
 index|]
+operator|->
+name|flags
+operator|&
+name|DMA_AUTOMODE
+operator|)
 condition|)
 block|{
 name|pas_write
@@ -1630,6 +1690,8 @@ case|:
 name|DMAbuf_outputintr
 argument_list|(
 name|my_devnum
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;

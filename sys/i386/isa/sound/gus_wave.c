@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/gus_wave.c  *   * Driver for the Gravis UltraSound wave table synth.  *   * (C) 1993  Hannu Savolainen (hsavolai@cs.helsinki.fi) See COPYING for further  * details. Should be distributed with this file.  */
-end_comment
-
-begin_comment
-comment|/* #define GUS_LINEAR_VOLUME	 */
+comment|/*  * sound/gus_wave.c  *  * Driver for the Gravis UltraSound wave table synth.  *  * Copyright by Hannu Savolainen 1993, 1994  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -44,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|MAX_SAMPLE
-value|256
+value|128
 end_define
 
 begin_define
@@ -120,6 +116,10 @@ define|#
 directive|define
 name|VMODE_ENVELOPE
 value|2
+define|#
+directive|define
+name|VMODE_START_NOTE
+value|3
 name|int
 name|env_phase
 decl_stmt|;
@@ -145,9 +145,34 @@ name|expression_vol
 decl_stmt|,
 name|patch_vol
 decl_stmt|;
+comment|/* Variables for "Ultraclick" removal */
+name|int
+name|dev_pending
+decl_stmt|,
+name|note_pending
+decl_stmt|,
+name|volume_pending
+decl_stmt|,
+name|sample_pending
+decl_stmt|;
+name|char
+name|kill_pending
+decl_stmt|;
+name|long
+name|offset_pending
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|voice_alloc_info
+modifier|*
+name|voice_alloc
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -162,44 +187,6 @@ name|int
 name|gus_irq
 decl_stmt|,
 name|gus_dma
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|snd_raw_buf
-index|[
-name|MAX_DSP_DEV
-index|]
-index|[
-name|DSP_BUFFCOUNT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|long
-name|snd_raw_buf_phys
-index|[
-name|MAX_DSP_DEV
-index|]
-index|[
-name|DSP_BUFFCOUNT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|snd_raw_count
-index|[
-name|MAX_DSP_DEV
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -239,10 +226,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Number of currently allowed voices */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -263,12 +246,23 @@ name|volume_method
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|VOL_METHOD_ADAGIO
-value|1
-end_define
+begin_decl_stmt
+specifier|static
+name|int
+name|gus_recmask
+init|=
+name|SOUND_MASK_MIC
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|recording_active
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -278,9 +272,34 @@ literal|60
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Master wolume for wave (0 to 100) */
-end_comment
+begin_decl_stmt
+name|int
+name|gus_pcm_volume
+init|=
+literal|80
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|have_gus_max
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|gus_line_vol
+init|=
+literal|100
+decl_stmt|,
+name|gus_mic_vol
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -293,7 +312,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Current version of this_one driver doesn't allow synth and PCM functions  * at the same time. The active_device specifies the active driver  */
+comment|/*  * Current version of this driver doesn't allow synth and PCM functions  * at the same time. The active_device specifies the active driver  */
 end_comment
 
 begin_decl_stmt
@@ -335,7 +354,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* PCM device, transfer the second 					 * chn */
+comment|/* PCM device, transfer done ch. 1/2 */
 end_comment
 
 begin_decl_stmt
@@ -377,7 +396,7 @@ begin_define
 define|#
 directive|define
 name|MAX_PCM_BUFFERS
-value|32
+value|(32*MAX_REALTIME_FACTOR)
 end_define
 
 begin_comment
@@ -389,17 +408,11 @@ specifier|static
 name|int
 name|pcm_bsize
 decl_stmt|,
-comment|/* Current blocksize */
 name|pcm_nblk
 decl_stmt|,
-comment|/* Current # of blocks */
 name|pcm_banksize
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* # bytes allocated for channels */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -410,10 +423,6 @@ name|MAX_PCM_BUFFERS
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Actual # of bytes in blk */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -427,15 +436,28 @@ name|pcm_qlen
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* DRAM queue */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|volatile
 name|int
 name|pcm_active
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|int
+name|dma_active
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pcm_opened
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -556,12 +578,8 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|patch_info
+modifier|*
 name|samples
-index|[
-name|MAX_SAMPLE
-operator|+
-literal|1
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -694,6 +712,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
+name|unsigned
+name|short
+name|gus_linear_vol
+parameter_list|(
+name|int
+name|vol
+parameter_list|,
+name|int
+name|mainvol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|compute_volume
@@ -707,6 +740,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|do_volume_irq
+parameter_list|(
+name|int
+name|voice
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|set_input_volumes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -715,7 +769,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/* Dont use ramping */
+comment|/* Instant change. No ramping */
 end_comment
 
 begin_define
@@ -810,7 +864,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Put silence here */
+comment|/* Put a silent sample to the beginning */
 name|gus_poke
 argument_list|(
 literal|1
@@ -894,6 +948,7 @@ name|char
 name|data
 parameter_list|)
 block|{
+comment|/* Writes a byte to the DRAM */
 name|unsigned
 name|long
 name|flags
@@ -977,6 +1032,7 @@ name|long
 name|addr
 parameter_list|)
 block|{
+comment|/* Reads a byte from the DRAM */
 name|unsigned
 name|long
 name|flags
@@ -1065,10 +1121,11 @@ name|int
 name|reg
 parameter_list|,
 name|unsigned
-name|char
+name|int
 name|data
 parameter_list|)
 block|{
+comment|/* Writes to an indirect register (8 bit) */
 name|unsigned
 name|long
 name|flags
@@ -1087,7 +1144,15 @@ argument_list|)
 expr_stmt|;
 name|OUTB
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|data
+operator|&
+literal|0xff
+argument_list|)
 argument_list|,
 name|u_DataHi
 argument_list|)
@@ -1109,6 +1174,7 @@ name|int
 name|reg
 parameter_list|)
 block|{
+comment|/* Reads from an indirect register (8 bit). Offset 0x80. */
 name|unsigned
 name|long
 name|flags
@@ -1158,6 +1224,7 @@ name|int
 name|reg
 parameter_list|)
 block|{
+comment|/* Reads from an indirect register (8 bit). No additional offset. */
 name|unsigned
 name|long
 name|flags
@@ -1204,10 +1271,11 @@ name|int
 name|reg
 parameter_list|,
 name|unsigned
-name|short
+name|int
 name|data
 parameter_list|)
 block|{
+comment|/* Writes to an indirect register (16 bit) */
 name|unsigned
 name|long
 name|flags
@@ -1226,14 +1294,25 @@ argument_list|)
 expr_stmt|;
 name|OUTB
 argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|data
 operator|&
 literal|0xff
+argument_list|)
 argument_list|,
 name|u_DataLo
 argument_list|)
 expr_stmt|;
 name|OUTB
+argument_list|(
+call|(
+name|unsigned
+name|char
+call|)
 argument_list|(
 operator|(
 name|data
@@ -1242,6 +1321,7 @@ literal|8
 operator|)
 operator|&
 literal|0xff
+argument_list|)
 argument_list|,
 name|u_DataHi
 argument_list|)
@@ -1263,6 +1343,7 @@ name|int
 name|reg
 parameter_list|)
 block|{
+comment|/* Reads from an indirect register (16 bit). Offset 0x80. */
 name|unsigned
 name|long
 name|flags
@@ -1337,10 +1418,20 @@ name|int
 name|is16bit
 parameter_list|)
 block|{
+comment|/* Writes an 24 bit memory address */
 name|unsigned
 name|long
 name|hold_address
 decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is16bit
@@ -1410,6 +1501,55 @@ literal|0xffff
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Could writing twice fix problems with GUS_VOICE_POS() ? Lets try... */
+name|gus_delay
+argument_list|()
+expr_stmt|;
+name|gus_write16
+argument_list|(
+name|reg
+argument_list|,
+call|(
+name|unsigned
+name|short
+call|)
+argument_list|(
+operator|(
+name|address
+operator|>>
+literal|7
+operator|)
+operator|&
+literal|0xffff
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|gus_write16
+argument_list|(
+name|reg
+operator|+
+literal|1
+argument_list|,
+call|(
+name|unsigned
+name|short
+call|)
+argument_list|(
+operator|(
+name|address
+operator|<<
+literal|9
+operator|)
+operator|&
+literal|0xffff
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1472,6 +1612,10 @@ name|nvoices
 operator|=
 literal|32
 expr_stmt|;
+name|voice_alloc
+operator|->
+name|max_voice
+operator|=
 name|nr_voices
 operator|=
 name|nvoices
@@ -1498,7 +1642,7 @@ name|void
 name|gus_voice_on
 parameter_list|(
 name|unsigned
-name|char
+name|int
 name|mode
 parameter_list|)
 block|{
@@ -1506,9 +1650,15 @@ name|gus_write8
 argument_list|(
 literal|0x00
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|mode
 operator|&
 literal|0xfc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gus_delay
@@ -1518,9 +1668,15 @@ name|gus_write8
 argument_list|(
 literal|0x00
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|mode
 operator|&
 literal|0xfc
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1555,10 +1711,24 @@ name|void
 name|gus_voice_mode
 parameter_list|(
 name|unsigned
-name|char
-name|mode
+name|int
+name|m
 parameter_list|)
 block|{
+name|unsigned
+name|char
+name|mode
+init|=
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
+name|m
+operator|&
+literal|0xff
+argument_list|)
+decl_stmt|;
 name|gus_write8
 argument_list|(
 literal|0x00
@@ -1579,7 +1749,7 @@ literal|0xfc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Don't start or stop 								 * voice */
+comment|/* Don't touch last two bits */
 name|gus_delay
 argument_list|()
 expr_stmt|;
@@ -1677,7 +1847,7 @@ name|void
 name|gus_voice_volume
 parameter_list|(
 name|unsigned
-name|short
+name|int
 name|vol
 parameter_list|)
 block|{
@@ -1693,9 +1863,15 @@ name|gus_write16
 argument_list|(
 literal|0x09
 argument_list|,
+call|(
+name|unsigned
+name|short
+call|)
+argument_list|(
 name|vol
 operator|<<
 literal|4
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1707,7 +1883,7 @@ name|void
 name|gus_voice_balance
 parameter_list|(
 name|unsigned
-name|char
+name|int
 name|balance
 parameter_list|)
 block|{
@@ -1715,7 +1891,15 @@ name|gus_write8
 argument_list|(
 literal|0x0c
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 name|balance
+operator|&
+literal|0xff
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1727,11 +1911,11 @@ name|void
 name|gus_ramp_range
 parameter_list|(
 name|unsigned
-name|short
+name|int
 name|low
 parameter_list|,
 name|unsigned
-name|short
+name|int
 name|high
 parameter_list|)
 block|{
@@ -1739,6 +1923,11 @@ name|gus_write8
 argument_list|(
 literal|0x07
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 operator|(
 name|low
 operator|>>
@@ -1747,11 +1936,17 @@ operator|)
 operator|&
 literal|0xff
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|gus_write8
 argument_list|(
 literal|0x08
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 operator|(
 name|high
 operator|>>
@@ -1759,6 +1954,7 @@ literal|4
 operator|)
 operator|&
 literal|0xff
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1770,11 +1966,11 @@ name|void
 name|gus_ramp_rate
 parameter_list|(
 name|unsigned
-name|char
+name|int
 name|scale
 parameter_list|,
 name|unsigned
-name|char
+name|int
 name|rate
 parameter_list|)
 block|{
@@ -1782,6 +1978,11 @@ name|gus_write8
 argument_list|(
 literal|0x06
 argument_list|,
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
 operator|(
 operator|(
 name|scale
@@ -1798,6 +1999,7 @@ operator|&
 literal|0x3f
 operator|)
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1808,10 +2010,24 @@ name|void
 name|gus_rampon
 parameter_list|(
 name|unsigned
-name|char
-name|mode
+name|int
+name|m
 parameter_list|)
 block|{
+name|unsigned
+name|char
+name|mode
+init|=
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
+name|m
+operator|&
+literal|0xff
+argument_list|)
+decl_stmt|;
 name|gus_write8
 argument_list|(
 literal|0x0d
@@ -1842,10 +2058,24 @@ name|void
 name|gus_ramp_mode
 parameter_list|(
 name|unsigned
-name|char
-name|mode
+name|int
+name|m
 parameter_list|)
 block|{
+name|unsigned
+name|char
+name|mode
+init|=
+call|(
+name|unsigned
+name|char
+call|)
+argument_list|(
+name|m
+operator|&
+literal|0xff
+argument_list|)
+decl_stmt|;
 name|gus_write8
 argument_list|(
 literal|0x0d
@@ -1866,7 +2096,7 @@ literal|0xfc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Don't start or stop 								 * ramping */
+comment|/* Leave the last 2 bits alone */
 name|gus_delay
 argument_list|()
 expr_stmt|;
@@ -1906,6 +2136,91 @@ argument_list|(
 literal|0x0d
 argument_list|,
 literal|0x03
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|gus_set_voice_pos
+parameter_list|(
+name|int
+name|voice
+parameter_list|,
+name|long
+name|position
+parameter_list|)
+block|{
+name|int
+name|sample_no
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|sample_no
+operator|=
+name|sample_map
+index|[
+name|voice
+index|]
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+if|if
+condition|(
+name|position
+operator|<
+name|samples
+index|[
+name|sample_no
+index|]
+operator|.
+name|len
+condition|)
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|==
+name|VMODE_START_NOTE
+condition|)
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|offset_pending
+operator|=
+name|position
+expr_stmt|;
+else|else
+name|gus_write_addr
+argument_list|(
+literal|0x0a
+argument_list|,
+name|sample_ptrs
+index|[
+name|sample_no
+index|]
+operator|+
+name|position
+argument_list|,
+name|samples
+index|[
+name|sample_no
+index|]
+operator|.
+name|mode
+operator|&
+name|WAVE_16_BITS
 argument_list|)
 expr_stmt|;
 block|}
@@ -1965,11 +2280,32 @@ literal|0x03
 argument_list|)
 expr_stmt|;
 comment|/* Ramping off */
+name|voice_alloc
+operator|->
+name|map
+index|[
+name|voice
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|RESTORE_INTR
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|gus_voice_init2
+parameter_list|(
+name|int
+name|voice
+parameter_list|)
+block|{
 name|voices
 index|[
 name|voice
@@ -2114,6 +2450,16 @@ name|expression_vol
 operator|=
 literal|127
 expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -2137,6 +2483,10 @@ name|unsigned
 name|char
 name|rate
 decl_stmt|;
+name|long
+name|int
+name|flags
+decl_stmt|;
 if|if
 condition|(
 name|voices
@@ -2158,11 +2508,26 @@ operator|==
 literal|2
 condition|)
 block|{
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
 name|gus_rampoff
 argument_list|()
 expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 return|return;
-comment|/* Sustain */
+comment|/*        * Sustain phase begins. Continue envelope after receiving note off.        */
 block|}
 if|if
 condition|(
@@ -2176,7 +2541,7 @@ operator|>=
 literal|5
 condition|)
 block|{
-comment|/*        * Shoot the voice off        */
+comment|/* Envelope finished. Shoot the voice down */
 name|gus_voice_init
 argument_list|(
 name|voice
@@ -2192,11 +2557,6 @@ name|voice
 index|]
 operator|.
 name|current_volume
-expr_stmt|;
-name|gus_voice_volume
-argument_list|(
-name|prev_vol
-argument_list|)
 expr_stmt|;
 name|phase
 operator|=
@@ -2253,6 +2613,21 @@ index|[
 name|phase
 index|]
 expr_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
+name|gus_voice_volume
+argument_list|(
+name|prev_vol
+argument_list|)
+expr_stmt|;
 name|gus_write8
 argument_list|(
 literal|0x06
@@ -2286,12 +2661,17 @@ literal|0
 condition|)
 comment|/* No significant volume change */
 block|{
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 name|step_envelope
 argument_list|(
 name|voice
 argument_list|)
 expr_stmt|;
-comment|/* Continue with the next phase */
+comment|/* Continue the envelope on the next step */
 return|return;
 block|}
 if|if
@@ -2329,7 +2709,7 @@ argument_list|(
 literal|0x20
 argument_list|)
 expr_stmt|;
-comment|/* Increasing, irq */
+comment|/* Increasing volume, with IRQ */
 block|}
 else|else
 block|{
@@ -2347,7 +2727,7 @@ name|gus_ramp_range
 argument_list|(
 name|vol
 argument_list|,
-literal|4095
+literal|4030
 argument_list|)
 expr_stmt|;
 name|gus_rampon
@@ -2355,7 +2735,7 @@ argument_list|(
 literal|0x60
 argument_list|)
 expr_stmt|;
-comment|/* Decreasing, irq */
+comment|/* Decreasing volume, with IRQ */
 block|}
 name|voices
 index|[
@@ -2365,6 +2745,11 @@ operator|.
 name|current_volume
 operator|=
 name|vol
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2412,6 +2797,10 @@ name|start_release
 parameter_list|(
 name|int
 name|voice
+parameter_list|,
+name|long
+name|int
+name|flags
 parameter_list|)
 block|{
 if|if
@@ -2470,6 +2859,11 @@ expr_stmt|;
 name|gus_rampoff
 argument_list|()
 expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 name|step_envelope
 argument_list|(
 name|voice
@@ -2497,6 +2891,20 @@ index|]
 decl_stmt|,
 name|is16bits
 decl_stmt|;
+name|long
+name|int
+name|flags
+decl_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|instr_no
@@ -2516,6 +2924,20 @@ literal|0x03
 argument_list|)
 expr_stmt|;
 comment|/* Hard stop */
+name|voice_alloc
+operator|->
+name|map
+index|[
+name|voice
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|is16bits
@@ -2535,7 +2957,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-comment|/* 8 or 16 bit samples */
+comment|/* 8 or 16 bits */
 if|if
 condition|(
 name|voices
@@ -2551,6 +2973,8 @@ block|{
 name|start_release
 argument_list|(
 name|voice
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2558,14 +2982,17 @@ block|}
 comment|/*    * Ramp the volume down but not too quickly.    */
 if|if
 condition|(
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|gus_read16
 argument_list|(
 literal|0x09
 argument_list|)
 operator|>>
 literal|4
-operator|)
+argument_list|)
 operator|<
 literal|100
 condition|)
@@ -2588,7 +3015,7 @@ name|gus_ramp_range
 argument_list|(
 literal|65
 argument_list|,
-literal|4095
+literal|4030
 argument_list|)
 expr_stmt|;
 name|gus_ramp_rate
@@ -2605,7 +3032,7 @@ operator||
 literal|0x20
 argument_list|)
 expr_stmt|;
-comment|/* Down, once, irq */
+comment|/* Down, once, with IRQ */
 name|voices
 index|[
 name|voice
@@ -2614,6 +3041,11 @@ operator|.
 name|volume_irq_mode
 operator|=
 name|VMODE_HALT
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2666,6 +3098,11 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|/* Turn voice off */
+name|gus_voice_init2
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 name|INB
 argument_list|(
@@ -2937,7 +3374,7 @@ operator|+
 literal|0x0f
 argument_list|)
 expr_stmt|;
-comment|/*    * Now set up the DMA and IRQ interface    *     * The GUS supports two IRQs and two DMAs.    *     * If GUS_MIDI_IRQ is defined and if it's != GUS_IRQ, separate Midi IRQ is set    * up. Otherwise the same IRQ is shared by the both devices.    *     * Just one DMA channel is used. This prevents simultaneous ADC and DAC.    * Adding this support requires significant changes to the dmabuf.c, dsp.c    * and audio.c also.    */
+comment|/*    * Now set up the DMA and IRQ interface    *    * The GUS supports two IRQs and two DMAs.    *    * Just one DMA channel is used. This prevents simultaneous ADC and DAC.    * Adding this support requires significant changes to the dmabuf.c, dsp.c    * and audio.c also.    */
 name|irq_image
 operator|=
 literal|0
@@ -2963,47 +3400,6 @@ name|irq_image
 operator||=
 name|tmp
 expr_stmt|;
-if|if
-condition|(
-name|GUS_MIDI_IRQ
-operator|!=
-name|gus_irq
-condition|)
-block|{
-comment|/* The midi irq was defined and != wave irq */
-name|tmp
-operator|=
-name|gus_irq_map
-index|[
-name|GUS_MIDI_IRQ
-index|]
-expr_stmt|;
-name|tmp
-operator|<<=
-literal|3
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|tmp
-condition|)
-name|printk
-argument_list|(
-literal|"Warning! GUS Midi IRQ not selected\n"
-argument_list|)
-expr_stmt|;
-else|else
-name|gus_set_midi_irq
-argument_list|(
-name|GUS_MIDI_IRQ
-argument_list|)
-expr_stmt|;
-name|irq_image
-operator||=
-name|tmp
-expr_stmt|;
-block|}
-else|else
 name|irq_image
 operator||=
 literal|0x40
@@ -3036,7 +3432,7 @@ operator||=
 name|tmp
 expr_stmt|;
 comment|/*    * For some reason the IRQ and DMA addresses must be written twice    */
-comment|/* Doing it first time */
+comment|/*    * Doing it first time    */
 name|OUTB
 argument_list|(
 name|mix_image
@@ -3048,6 +3444,8 @@ comment|/* Select DMA control */
 name|OUTB
 argument_list|(
 name|dma_image
+operator||
+literal|0x80
 argument_list|,
 name|u_IRQDMAControl
 argument_list|)
@@ -3071,7 +3469,7 @@ name|u_IRQDMAControl
 argument_list|)
 expr_stmt|;
 comment|/* Set IRQ address */
-comment|/* Doing it second time */
+comment|/*    * Doing it second time    */
 name|OUTB
 argument_list|(
 name|mix_image
@@ -3130,7 +3528,7 @@ argument_list|,
 name|u_Mixer
 argument_list|)
 expr_stmt|;
-comment|/* Turn mixer channels on */
+comment|/* 				 * Turn mixer channels on 				 * Note! Mic in is left off. 				 */
 name|gus_select_voice
 argument_list|(
 literal|0
@@ -3159,6 +3557,14 @@ name|int
 name|baseaddr
 parameter_list|)
 block|{
+name|unsigned
+name|long
+name|i
+decl_stmt|;
+name|unsigned
+name|long
+name|loc
+decl_stmt|;
 name|gus_base
 operator|=
 name|baseaddr
@@ -3191,16 +3597,115 @@ expr_stmt|;
 name|gus_delay
 argument_list|()
 expr_stmt|;
+comment|/* See if there is first block there.... */
 name|gus_poke
 argument_list|(
-literal|0x000
+literal|0L
 argument_list|,
 literal|0xaa
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gus_peek
+argument_list|(
+literal|0L
+argument_list|)
+operator|!=
+literal|0xaa
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Now zero it out so that I can check for mirroring .. */
 name|gus_poke
 argument_list|(
-literal|0x100
+literal|0L
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1L
+init|;
+name|i
+operator|<
+literal|1024L
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|int
+name|n
+decl_stmt|,
+name|failed
+decl_stmt|;
+comment|/* check for mirroring ... */
+if|if
+condition|(
+name|gus_peek
+argument_list|(
+literal|0L
+argument_list|)
+operator|!=
+literal|0
+condition|)
+break|break;
+name|loc
+operator|=
+name|i
+operator|<<
+literal|10
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+name|loc
+operator|-
+literal|1
+operator|,
+name|failed
+operator|=
+literal|0
+init|;
+name|n
+operator|<=
+name|loc
+condition|;
+name|n
+operator|++
+control|)
+block|{
+name|gus_poke
+argument_list|(
+name|loc
+argument_list|,
+literal|0xaa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gus_peek
+argument_list|(
+name|loc
+argument_list|)
+operator|!=
+literal|0xaa
+condition|)
+name|failed
+operator|=
+literal|1
+expr_stmt|;
+name|gus_poke
+argument_list|(
+name|loc
 argument_list|,
 literal|0x55
 argument_list|)
@@ -3209,103 +3714,28 @@ if|if
 condition|(
 name|gus_peek
 argument_list|(
-literal|0x000
-argument_list|)
-operator|!=
-literal|0xaa
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
-name|gus_peek
-argument_list|(
-literal|0x100
+name|loc
 argument_list|)
 operator|!=
 literal|0x55
 condition|)
-return|return
-literal|0
-return|;
-name|gus_mem_size
+name|failed
 operator|=
-literal|0x40000
+literal|1
 expr_stmt|;
-comment|/* 256k */
-name|gus_poke
-argument_list|(
-literal|0x40000
-argument_list|,
-literal|0xaa
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
-name|gus_peek
-argument_list|(
-literal|0x40000
-argument_list|)
-operator|!=
-literal|0xaa
+name|failed
 condition|)
-return|return
-literal|1
-return|;
+break|break;
+block|}
 name|gus_mem_size
 operator|=
-literal|0x80000
+name|i
+operator|<<
+literal|10
 expr_stmt|;
-comment|/* 512k */
-name|gus_poke
-argument_list|(
-literal|0x80000
-argument_list|,
-literal|0xaa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|gus_peek
-argument_list|(
-literal|0x80000
-argument_list|)
-operator|!=
-literal|0xaa
-condition|)
-return|return
-literal|1
-return|;
-name|gus_mem_size
-operator|=
-literal|0xc0000
-expr_stmt|;
-comment|/* 768k */
-name|gus_poke
-argument_list|(
-literal|0xc0000
-argument_list|,
-literal|0xaa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|gus_peek
-argument_list|(
-literal|0xc0000
-argument_list|)
-operator|!=
-literal|0xaa
-condition|)
-return|return
-literal|1
-return|;
-name|gus_mem_size
-operator|=
-literal|0x100000
-expr_stmt|;
-comment|/* 1M */
 return|return
 literal|1
 return|;
@@ -3454,6 +3884,31 @@ argument_list|(
 name|EINVAL
 argument_list|)
 return|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|==
+name|VMODE_START_NOTE
+condition|)
+block|{
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+operator|=
+name|instr_no
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|sample_no
 operator|=
 name|patch_table
@@ -3555,6 +4010,9 @@ name|int
 name|voice
 parameter_list|,
 name|int
+name|note
+parameter_list|,
+name|int
 name|velocity
 parameter_list|)
 block|{
@@ -3567,9 +4025,47 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-name|gus_select_voice
-argument_list|(
+name|voice_alloc
+operator|->
+name|map
+index|[
 name|voice
+index|]
+operator|=
+literal|0xffff
+expr_stmt|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|==
+name|VMODE_START_NOTE
+condition|)
+block|{
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|kill_pending
+operator|=
+literal|1
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|RESTORE_INTR
+argument_list|(
+name|flags
 argument_list|)
 expr_stmt|;
 name|gus_voice_fade
@@ -3577,11 +4073,7 @@ argument_list|(
 name|voice
 argument_list|)
 expr_stmt|;
-name|RESTORE_INTR
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -3613,7 +4105,7 @@ name|long
 name|flags
 decl_stmt|;
 return|return;
-comment|/* Currently disabled */
+comment|/* Procedure currently disabled */
 if|if
 condition|(
 name|voice
@@ -3763,7 +4255,7 @@ argument_list|(
 literal|0x58
 argument_list|)
 expr_stmt|;
-comment|/* Bidirectional, Down, Loop */
+comment|/* Bidirectional, dow, loop */
 name|RESTORE_INTR
 argument_list|(
 name|flags
@@ -3812,6 +4304,35 @@ end_function
 begin_function
 specifier|static
 name|void
+name|guswave_volume_method
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+block|{
+if|if
+condition|(
+name|mode
+operator|==
+name|VOL_METHOD_LINEAR
+operator|||
+name|mode
+operator|==
+name|VOL_METHOD_ADAGIO
+condition|)
+name|volume_method
+operator|=
+name|mode
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|compute_volume
 parameter_list|(
 name|int
@@ -3827,7 +4348,6 @@ name|volume
 operator|<
 literal|128
 condition|)
-block|{
 name|voices
 index|[
 name|voice
@@ -3854,7 +4374,12 @@ name|initial_volume
 operator|=
 name|gus_adagio_vol
 argument_list|(
-name|volume
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|midi_volume
 argument_list|,
 name|voices
 index|[
@@ -3879,6 +4404,30 @@ name|patch_vol
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|VOL_METHOD_LINEAR
+case|:
+comment|/* Totally ignores patch-volume and expression */
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|initial_volume
+operator|=
+name|gus_linear_vol
+argument_list|(
+name|volume
+argument_list|,
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|main_vol
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|voices
 index|[
@@ -3890,12 +4439,16 @@ operator|=
 name|volume_base
 operator|+
 operator|(
-name|volume
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|midi_volume
 operator|*
 name|volume_scale
 operator|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -3906,7 +4459,7 @@ index|]
 operator|.
 name|initial_volume
 operator|>
-literal|4095
+literal|4030
 condition|)
 name|voices
 index|[
@@ -3915,7 +4468,7 @@ index|]
 operator|.
 name|initial_volume
 operator|=
-literal|4095
+literal|4030
 expr_stmt|;
 block|}
 end_function
@@ -3942,6 +4495,10 @@ name|target
 decl_stmt|,
 name|rate
 decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
 name|compute_volume
 argument_list|(
 name|voice
@@ -3962,6 +4519,17 @@ name|voice
 index|]
 operator|.
 name|initial_volume
+expr_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+comment|/*  * CAUTION! Interrupts disabled. Enable them before returning  */
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
 expr_stmt|;
 name|current
 operator|=
@@ -3994,6 +4562,11 @@ expr_stmt|;
 name|gus_voice_volume
 argument_list|(
 name|target
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4032,7 +4605,7 @@ literal|64
 operator|==
 literal|0
 condition|)
-comment|/* Too close */
+comment|/* Close enough to target. */
 block|{
 name|gus_rampoff
 argument_list|()
@@ -4040,6 +4613,11 @@ expr_stmt|;
 name|gus_voice_volume
 argument_list|(
 name|target
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4079,7 +4657,7 @@ argument_list|(
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* Ramp up, once, no irq */
+comment|/* Ramp up, once, no IRQ */
 block|}
 else|else
 block|{
@@ -4107,6 +4685,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Ramp down, once, no irq */
 block|}
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4144,7 +4727,7 @@ argument_list|(
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* Voice status */
+comment|/* Get voice status */
 name|RESTORE_INTR
 argument_list|(
 name|flags
@@ -4157,7 +4740,7 @@ operator|&
 literal|0x03
 condition|)
 return|return;
-comment|/* Voice not started */
+comment|/* Voice was not running */
 if|if
 condition|(
 operator|!
@@ -4261,15 +4844,6 @@ operator|.
 name|midi_volume
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Is this really required */
-block|voices[voice].current_volume =     gus_read16 (0x09)>> 4;
-comment|/* Get current volume */
-block|voices[voice].env_phase--;   step_envelope (voice);
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -4327,6 +4901,18 @@ name|bender
 operator|=
 name|value
 expr_stmt|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|!=
+name|VMODE_START_NOTE
+condition|)
+block|{
 name|freq
 operator|=
 name|compute_finetune
@@ -4377,6 +4963,7 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|CTRL_PITCH_BENDER_RANGE
@@ -4392,12 +4979,22 @@ name|value
 expr_stmt|;
 break|break;
 case|case
+name|CTL_EXPRESSION
+case|:
+name|value
+operator|/=
+literal|128
+expr_stmt|;
+case|case
 name|CTRL_EXPRESSION
 case|:
+if|if
+condition|(
 name|volume_method
-operator|=
+operator|==
 name|VOL_METHOD_ADAGIO
-expr_stmt|;
+condition|)
+block|{
 name|voices
 index|[
 name|voice
@@ -4407,19 +5004,59 @@ name|expression_vol
 operator|=
 name|value
 expr_stmt|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|!=
+name|VMODE_START_NOTE
+condition|)
 name|dynamic_volume_change
 argument_list|(
 name|voice
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
+case|case
+name|CTL_PAN
+case|:
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|panning
+operator|=
+operator|(
+name|value
+operator|*
+literal|2
+operator|)
+operator|-
+literal|128
+expr_stmt|;
+break|break;
+case|case
+name|CTL_MAIN_VOLUME
+case|:
+name|value
+operator|=
+operator|(
+name|value
+operator|*
+literal|100
+operator|)
+operator|/
+literal|16383
+expr_stmt|;
 case|case
 name|CTRL_MAIN_VOLUME
 case|:
-name|volume_method
-operator|=
-name|VOL_METHOD_ADAGIO
-expr_stmt|;
 name|voices
 index|[
 name|voice
@@ -4429,6 +5066,17 @@ name|main_vol
 operator|=
 name|value
 expr_stmt|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|!=
+name|VMODE_START_NOTE
+condition|)
 name|dynamic_volume_change
 argument_list|(
 name|voice
@@ -4436,7 +5084,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Ignore */
 break|break;
 block|}
 block|}
@@ -4445,7 +5092,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|guswave_start_note
+name|guswave_start_note2
 parameter_list|(
 name|int
 name|dev
@@ -4716,7 +5363,7 @@ index|]
 operator|.
 name|key
 expr_stmt|;
-comment|/* Follow link */
+comment|/* 						 * Follow link 						 */
 block|}
 if|if
 condition|(
@@ -4768,7 +5415,6 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-comment|/* 8 or 16 bit samples */
 name|voices
 index|[
 name|voice
@@ -4886,7 +5532,7 @@ name|base_note
 operator|/
 literal|100
 expr_stmt|;
-comment|/* To avoid overflows */
+comment|/* Try to avoid overflows */
 name|note_freq
 operator|/=
 literal|100
@@ -5045,7 +5691,7 @@ literal|"GUS: Sample address error\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*************************************************************************  *	CAUTION!	Interrupts disabled. Don't return before enabling  *************************************************************************/
+comment|/*************************************************************************    *    CAUTION!        Interrupts disabled. Don't return before enabling    *************************************************************************/
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -5059,9 +5705,13 @@ expr_stmt|;
 name|gus_voice_off
 argument_list|()
 expr_stmt|;
-comment|/* It may still be running */
 name|gus_rampoff
 argument_list|()
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5098,6 +5748,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|samples
@@ -5124,11 +5784,18 @@ name|sample
 index|]
 operator|.
 name|len
+operator|-
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|offset_pending
 argument_list|,
 name|is16bits
 argument_list|)
 expr_stmt|;
-comment|/* Sample start=end */
+comment|/* start=end */
 else|else
 name|gus_write_addr
 argument_list|(
@@ -5138,6 +5805,13 @@ name|sample_ptrs
 index|[
 name|sample
 index|]
+operator|+
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|offset_pending
 argument_list|,
 name|is16bits
 argument_list|)
@@ -5159,7 +5833,6 @@ name|mode
 operator||=
 literal|0x08
 expr_stmt|;
-comment|/* Looping on */
 if|if
 condition|(
 name|samples
@@ -5175,7 +5848,6 @@ name|mode
 operator||=
 literal|0x10
 expr_stmt|;
-comment|/* Bidirectional looping on */
 if|if
 condition|(
 name|samples
@@ -5192,7 +5864,6 @@ name|gus_write_addr
 argument_list|(
 literal|0x0a
 argument_list|,
-comment|/* Put the current location = loop_end */
 name|sample_ptrs
 index|[
 name|sample
@@ -5204,6 +5875,13 @@ name|sample
 index|]
 operator|.
 name|loop_end
+operator|-
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|offset_pending
 argument_list|,
 name|is16bits
 argument_list|)
@@ -5212,7 +5890,6 @@ name|mode
 operator||=
 literal|0x40
 expr_stmt|;
-comment|/* Loop backwards */
 block|}
 name|gus_write_addr
 argument_list|(
@@ -5261,7 +5938,7 @@ name|mode
 operator||=
 literal|0x20
 expr_stmt|;
-comment|/* Loop irq at the end */
+comment|/* Loop IRQ at the end */
 name|voices
 index|[
 name|voice
@@ -5271,7 +5948,7 @@ name|loop_irq_mode
 operator|=
 name|LMODE_FINISH
 expr_stmt|;
-comment|/* Ramp it down at the 							 * end */
+comment|/* Ramp down at the end */
 name|voices
 index|[
 name|voice
@@ -5309,6 +5986,8 @@ name|sample
 index|]
 operator|.
 name|len
+operator|-
+literal|1
 argument_list|,
 name|is16bits
 argument_list|)
@@ -5341,6 +6020,328 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * New guswave_start_note by Andrew J. Robinson attempts to minimize clicking  * when the note playing on the voice is changed.  It uses volume  * ramping.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|guswave_start_note
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|voice
+parameter_list|,
+name|int
+name|note_num
+parameter_list|,
+name|int
+name|volume
+parameter_list|)
+block|{
+name|long
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|int
+name|ret_val
+init|=
+literal|0
+decl_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|note_num
+operator|==
+literal|255
+condition|)
+block|{
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|==
+name|VMODE_START_NOTE
+condition|)
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_pending
+operator|=
+name|volume
+expr_stmt|;
+else|else
+block|{
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|ret_val
+operator|=
+name|guswave_start_note2
+argument_list|(
+name|dev
+argument_list|,
+name|voice
+argument_list|,
+name|note_num
+argument_list|,
+name|volume
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
+name|mode
+operator|=
+name|gus_read8
+argument_list|(
+literal|0x00
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+literal|0x20
+condition|)
+name|gus_write8
+argument_list|(
+literal|0x00
+argument_list|,
+name|mode
+operator|&
+literal|0xdf
+argument_list|)
+expr_stmt|;
+comment|/* No interrupt! */
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|offset_pending
+operator|=
+literal|0
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|kill_pending
+operator|=
+literal|0
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|=
+literal|0
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|loop_irq_mode
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+operator|>=
+literal|0
+condition|)
+block|{
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|guswave_set_instr
+argument_list|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|dev_pending
+argument_list|,
+name|voice
+argument_list|,
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+argument_list|)
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+literal|0x01
+operator|)
+operator|||
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+name|gus_read16
+argument_list|(
+literal|0x09
+argument_list|)
+operator|>>
+literal|4
+operator|)
+operator|<
+literal|2065
+argument_list|)
+condition|)
+block|{
+name|ret_val
+operator|=
+name|guswave_start_note2
+argument_list|(
+name|dev
+argument_list|,
+name|voice
+argument_list|,
+name|note_num
+argument_list|,
+name|volume
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|dev_pending
+operator|=
+name|dev
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|note_pending
+operator|=
+name|note_num
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_pending
+operator|=
+name|volume
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|=
+name|VMODE_START_NOTE
+expr_stmt|;
+name|gus_rampoff
+argument_list|()
+expr_stmt|;
+name|gus_ramp_range
+argument_list|(
+literal|2000
+argument_list|,
+literal|4065
+argument_list|)
+expr_stmt|;
+name|gus_ramp_rate
+argument_list|(
+literal|0
+argument_list|,
+literal|63
+argument_list|)
+expr_stmt|;
+comment|/* Fastest possible rate */
+name|gus_rampon
+argument_list|(
+literal|0x20
+operator||
+literal|0x40
+argument_list|)
+expr_stmt|;
+comment|/* Ramp down, once, irq */
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+name|ret_val
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -5366,11 +6367,18 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|gus_voice_init
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+name|gus_voice_init2
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5399,6 +6407,9 @@ argument_list|(
 name|EBUSY
 argument_list|)
 return|;
+name|gus_initialize
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5409,10 +6420,19 @@ argument_list|(
 name|gus_devnum
 argument_list|)
 operator|)
+operator|<
+literal|0
 condition|)
 return|return
 name|err
 return|;
+name|RESET_WAIT_QUEUE
+argument_list|(
+name|dram_sleeper
+argument_list|,
+name|dram_sleep_flag
+argument_list|)
+expr_stmt|;
 name|gus_busy
 operator|=
 literal|1
@@ -5490,6 +6510,9 @@ decl_stmt|;
 name|int
 name|instr
 decl_stmt|;
+name|long
+name|sizeof_patch
+decl_stmt|;
 name|unsigned
 name|long
 name|blk_size
@@ -5502,6 +6525,26 @@ name|src_offs
 decl_stmt|,
 name|target
 decl_stmt|;
+name|sizeof_patch
+operator|=
+operator|(
+name|long
+operator|)
+operator|&
+name|patch
+operator|.
+name|data
+index|[
+literal|0
+index|]
+operator|-
+operator|(
+name|long
+operator|)
+operator|&
+name|patch
+expr_stmt|;
+comment|/* Header size */
 if|if
 condition|(
 name|format
@@ -5511,27 +6554,11 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"GUS Error: Invalid patch format (key) 0x%04x\n"
+literal|"GUS Error: Invalid patch format (key) 0x%x\n"
 argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|CPU_I486
-if|if
-condition|(
-name|format
-operator|==
-name|OBSOLETE_GUS_PATCH
-condition|)
-name|printk
-argument_list|(
-literal|"GUS Error: obsolete patch format\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 name|RET_ERROR
 argument_list|(
@@ -5543,10 +6570,7 @@ if|if
 condition|(
 name|count
 operator|<
-sizeof|sizeof
-argument_list|(
-name|patch
-argument_list|)
+name|sizeof_patch
 condition|)
 block|{
 name|printk
@@ -5563,10 +6587,7 @@ return|;
 block|}
 name|count
 operator|-=
-sizeof|sizeof
-argument_list|(
-name|patch
-argument_list|)
+name|sizeof_patch
 expr_stmt|;
 if|if
 condition|(
@@ -5607,10 +6628,7 @@ name|addr
 argument_list|,
 name|offs
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|patch
-argument_list|)
+name|sizeof_patch
 operator|-
 name|offs
 argument_list|)
@@ -5661,6 +6679,9 @@ literal|"GUS Warning: Patch record too short (%d<%d)\n"
 argument_list|,
 name|count
 argument_list|,
+operator|(
+name|int
+operator|)
 name|patch
 operator|.
 name|len
@@ -5692,6 +6713,9 @@ name|printk
 argument_list|(
 literal|"GUS: Invalid sample length %d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|patch
 operator|.
 name|len
@@ -5785,7 +6809,7 @@ operator|&
 operator|~
 literal|31
 expr_stmt|;
-comment|/* Alignment 32 bytes */
+comment|/* 32 byte alignment */
 define|#
 directive|define
 name|GUS_BANK_SIZE
@@ -5813,6 +6837,9 @@ name|printk
 argument_list|(
 literal|"GUS: Sample (16 bit) too long %d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|patch
 operator|.
 name|len
@@ -5850,7 +6877,7 @@ name|unsigned
 name|long
 name|tmp_mem
 init|=
-comment|/* Align to 256K*N */
+comment|/* Aling to 256K */
 operator|(
 operator|(
 name|free_mem_ptr
@@ -5913,7 +6940,7 @@ index|]
 operator|=
 name|free_mem_ptr
 expr_stmt|;
-comment|/* Tremolo is not possible with envelopes */
+comment|/*    * Tremolo is not possible with envelopes    */
 if|if
 condition|(
 name|patch
@@ -5944,10 +6971,7 @@ argument_list|,
 operator|&
 name|patch
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|patch
-argument_list|)
+name|sizeof_patch
 argument_list|)
 expr_stmt|;
 comment|/*    * Link this_one sample to the list of samples for patch 'instr'.    */
@@ -5989,14 +7013,16 @@ while|while
 condition|(
 name|left
 condition|)
-comment|/* Not all moved */
+comment|/* Not completely transferred yet */
 block|{
 name|blk_size
 operator|=
-name|sound_buffsizes
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|buffsize
 expr_stmt|;
 if|if
 condition|(
@@ -6030,7 +7056,7 @@ literal|18
 operator|)
 condition|)
 block|{
-comment|/* Have to split the block */
+comment|/* Split the block */
 name|blk_end
 operator|&=
 operator|~
@@ -6049,9 +7075,17 @@ operator|-
 name|target
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|GUS_NO_DMA
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GUS_PATCH_NO_DMA
+argument_list|)
 comment|/*        * For some reason the DMA is not possible. We have to use PIO.        */
 block|{
 name|long
@@ -6081,14 +7115,41 @@ name|data
 argument_list|,
 name|addr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|patch
-argument_list|)
+name|sizeof_patch
 operator|+
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|patch
+operator|.
+name|mode
+operator|&
+name|WAVE_UNSIGNED
+condition|)
+if|if
+condition|(
+operator|!
+operator|(
+name|patch
+operator|.
+name|mode
+operator|&
+name|WAVE_16_BITS
+operator|)
+operator|||
+operator|(
+name|i
+operator|&
+literal|0x01
+operator|)
+condition|)
+name|data
+operator|^=
+literal|0x80
+expr_stmt|;
+comment|/* Convert to signed */
 name|gus_poke
 argument_list|(
 name|target
@@ -6114,29 +7175,40 @@ name|unsigned
 name|char
 name|dma_command
 decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
 comment|/* 	 * OK, move now. First in and then out. 	 */
 name|COPY_FROM_USER
 argument_list|(
-name|snd_raw_buf
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|dmap
+operator|->
+name|raw_buf
 index|[
 literal|0
 index|]
 argument_list|,
 name|addr
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|patch
-argument_list|)
+name|sizeof_patch
 operator|+
 name|src_offs
 argument_list|,
 name|blk_size
 argument_list|)
 expr_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+comment|/******** INTERRUPTS DISABLED NOW ********/
 name|gus_write8
 argument_list|(
 literal|0x41
@@ -6149,10 +7221,14 @@ name|DMAbuf_start_dma
 argument_list|(
 name|gus_devnum
 argument_list|,
-name|snd_raw_buf_phys
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|dmap
+operator|->
+name|raw_buf_phys
 index|[
 literal|0
 index|]
@@ -6169,10 +7245,12 @@ name|target
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -6248,10 +7326,12 @@ expr_stmt|;
 comment|/* 16 bit _DATA_ */
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -6259,7 +7339,7 @@ name|dma_command
 operator||=
 literal|0x04
 expr_stmt|;
-comment|/* 16 bit DMA channel */
+comment|/* 16 bit DMA _channel_ */
 name|gus_write8
 argument_list|(
 literal|0x41
@@ -6267,17 +7347,38 @@ argument_list|,
 name|dma_command
 argument_list|)
 expr_stmt|;
-comment|/* Let's go luteet (=bugs) */
+comment|/* Lets bo luteet (=bugs) */
 comment|/* 	 * Sleep here until the DRAM DMA done interrupt is served 	 */
 name|active_device
 operator|=
 name|GUS_DEV_WAVE
 expr_stmt|;
-name|INTERRUPTIBLE_SLEEP_ON
+name|DO_SLEEP
 argument_list|(
 name|dram_sleeper
 argument_list|,
 name|dram_sleep_flag
+argument_list|,
+name|HZ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TIMED_OUT
+argument_list|(
+name|dram_sleeper
+argument_list|,
+name|dram_sleep_flag
+argument_list|)
+condition|)
+name|printk
+argument_list|(
+literal|"GUS: DMA Transfer timed out\n"
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -6428,6 +7529,36 @@ index|[
 literal|4
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_irq_mode
+operator|==
+name|VMODE_START_NOTE
+operator|)
+operator|&&
+operator|(
+name|cmd
+operator|!=
+name|_GUS_VOICESAMPLE
+operator|)
+operator|&&
+operator|(
+name|cmd
+operator|!=
+name|_GUS_VOICE_POS
+operator|)
+condition|)
+name|do_volume_irq
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -6488,7 +7619,7 @@ operator|&=
 operator|~
 literal|0x20
 expr_stmt|;
-comment|/* Disable intr */
+comment|/* Don't allow interrupts */
 name|gus_voice_on
 argument_list|(
 name|p1
@@ -6525,24 +7656,9 @@ break|break;
 case|case
 name|_GUS_VOICEFADE
 case|:
-name|DISABLE_INTR
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
-name|gus_select_voice
-argument_list|(
-name|voice
-argument_list|)
-expr_stmt|;
 name|gus_voice_fade
 argument_list|(
 name|voice
-argument_list|)
-expr_stmt|;
-name|RESTORE_INTR
-argument_list|(
-name|flags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6564,7 +7680,7 @@ operator|&=
 operator|~
 literal|0x20
 expr_stmt|;
-comment|/* Disable intr */
+comment|/* Don't allow interrupts */
 name|gus_voice_mode
 argument_list|(
 name|p1
@@ -6651,7 +7767,7 @@ break|break;
 case|case
 name|_GUS_VOICEVOL2
 case|:
-comment|/* Just update the voice value */
+comment|/* Just update the software voice level */
 name|voices
 index|[
 name|voice
@@ -6723,7 +7839,7 @@ operator|&
 name|WAVE_ENVELOPES
 condition|)
 break|break;
-comment|/* NO-NO */
+comment|/* NJET-NJET */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -6778,7 +7894,7 @@ operator|&=
 operator|~
 literal|0x20
 expr_stmt|;
-comment|/* Disable intr */
+comment|/* Don't allow interrupts */
 name|gus_ramp_mode
 argument_list|(
 name|p1
@@ -6805,7 +7921,7 @@ operator|&
 name|WAVE_ENVELOPES
 condition|)
 break|break;
-comment|/* NO-NO */
+comment|/* EI-EI */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -6821,7 +7937,7 @@ operator|&=
 operator|~
 literal|0x20
 expr_stmt|;
-comment|/* Disable intr */
+comment|/* Don't allow interrupts */
 name|gus_rampon
 argument_list|(
 name|p1
@@ -6848,7 +7964,7 @@ operator|&
 name|WAVE_ENVELOPES
 condition|)
 break|break;
-comment|/* NO-NO */
+comment|/* NEJ-NEJ */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -6878,6 +7994,32 @@ expr_stmt|;
 name|volume_scale
 operator|=
 name|p2
+expr_stmt|;
+break|break;
+case|case
+name|_GUS_VOICE_POS
+case|:
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
+name|gus_set_voice_pos
+argument_list|(
+name|voice
+argument_list|,
+name|plong
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -7123,6 +8265,16 @@ break|break;
 case|case
 name|SOUND_PCM_WRITE_CHANNELS
 case|:
+if|if
+condition|(
+name|local
+condition|)
+return|return
+name|gus_sampling_set_channels
+argument_list|(
+name|arg
+argument_list|)
+return|;
 return|return
 name|IOCTL_OUT
 argument_list|(
@@ -7158,7 +8310,7 @@ argument_list|)
 return|;
 break|break;
 case|case
-name|SNDCTL_DSP_SAMPLESIZE
+name|SNDCTL_DSP_SETFMT
 case|:
 if|if
 condition|(
@@ -7206,7 +8358,7 @@ return|;
 case|case
 name|SOUND_PCM_WRITE_FILTER
 case|:
-comment|/* NOT YET IMPLEMENTED */
+comment|/* NOT POSSIBLE */
 return|return
 name|IOCTL_OUT
 argument_list|(
@@ -7300,6 +8452,9 @@ argument_list|(
 name|EBUSY
 argument_list|)
 return|;
+name|gus_initialize
+argument_list|()
+expr_stmt|;
 name|gus_busy
 operator|=
 literal|1
@@ -7319,25 +8474,33 @@ argument_list|(
 literal|14
 argument_list|)
 expr_stmt|;
-name|gus_sampling_set_bits
-argument_list|(
-literal|8
-argument_list|)
-expr_stmt|;
-name|gus_sampling_set_channels
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|gus_sampling_set_speed
-argument_list|(
-name|DSP_DEFAULT_SPEED
-argument_list|)
-expr_stmt|;
 name|pcm_active
 operator|=
 literal|0
 expr_stmt|;
+name|dma_active
+operator|=
+literal|0
+expr_stmt|;
+name|pcm_opened
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|OPEN_READ
+condition|)
+block|{
+name|recording_active
+operator|=
+literal|1
+expr_stmt|;
+name|set_input_volumes
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -7360,9 +8523,105 @@ name|gus_busy
 operator|=
 literal|0
 expr_stmt|;
+name|pcm_opened
+operator|=
+literal|0
+expr_stmt|;
 name|active_device
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|recording_active
+condition|)
+name|set_input_volumes
+argument_list|()
+expr_stmt|;
+name|recording_active
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|gus_sampling_update_volume
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+name|int
+name|voice
+decl_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pcm_active
+operator|&&
+name|pcm_opened
+condition|)
+for|for
+control|(
+name|voice
+operator|=
+literal|0
+init|;
+name|voice
+operator|<
+name|gus_sampling_channels
+condition|;
+name|voice
+operator|++
+control|)
+block|{
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
+name|gus_rampoff
+argument_list|()
+expr_stmt|;
+name|gus_voice_volume
+argument_list|(
+literal|1530
+operator|+
+operator|(
+literal|25
+operator|*
+name|gus_pcm_volume
+operator|)
+argument_list|)
+expr_stmt|;
+name|gus_ramp_range
+argument_list|(
+literal|65
+argument_list|,
+literal|1530
+operator|+
+operator|(
+literal|25
+operator|*
+name|gus_pcm_volume
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -7460,7 +8719,7 @@ index|]
 operator||=
 literal|0x20
 expr_stmt|;
-comment|/* Loop irq */
+comment|/* Loop IRQ */
 name|voices
 index|[
 name|chn
@@ -7518,7 +8777,7 @@ operator|-
 literal|1
 operator|)
 condition|)
-comment|/* Last of the DRAM buffers */
+comment|/* Last fragment of the DRAM buffer */
 block|{
 name|mode
 index|[
@@ -7535,7 +8794,7 @@ index|]
 operator|=
 literal|0x03
 expr_stmt|;
-comment|/* Disable rollover */
+comment|/* Disable rollover bit */
 block|}
 else|else
 block|{
@@ -7606,26 +8865,37 @@ condition|(
 operator|!
 name|pcm_active
 condition|)
-comment|/* Voice not started yet */
+comment|/* Playback not already active */
 block|{
 comment|/* 	   * The playback was not started yet (or there has been a pause). 	   * Start the voice (again) and ask for a rollover irq at the end of 	   * this_one block. If this_one one is last of the buffers, use just 	   * the normal loop with irq. 	   */
 name|gus_voice_off
 argument_list|()
 expr_stmt|;
-comment|/* It could already be running */
 name|gus_rampoff
 argument_list|()
 expr_stmt|;
 name|gus_voice_volume
 argument_list|(
-literal|4000
+literal|1530
+operator|+
+operator|(
+literal|25
+operator|*
+name|gus_pcm_volume
+operator|)
 argument_list|)
 expr_stmt|;
 name|gus_ramp_range
 argument_list|(
 literal|65
 argument_list|,
-literal|4030
+literal|1530
+operator|+
+operator|(
+literal|25
+operator|*
+name|gus_pcm_volume
+operator|)
 argument_list|)
 expr_stmt|;
 name|gus_write_addr
@@ -7649,7 +8919,7 @@ argument_list|,
 name|is16bits
 argument_list|)
 expr_stmt|;
-comment|/* Loop start location */
+comment|/* Loop start */
 if|if
 condition|(
 name|chn
@@ -7702,7 +8972,7 @@ index|]
 operator||=
 literal|0x08
 expr_stmt|;
-comment|/* Enable loop */
+comment|/* Enable looping */
 if|if
 condition|(
 name|pcm_datasize
@@ -7713,7 +8983,7 @@ operator|!=
 name|pcm_bsize
 condition|)
 block|{
-comment|/* Incomplete block. Possibly the last one. */
+comment|/* 	   * Incompletely filled block. Possibly the last one. 	   */
 if|if
 condition|(
 name|chn
@@ -7729,7 +8999,7 @@ operator|&=
 operator|~
 literal|0x08
 expr_stmt|;
-comment|/* Disable loop */
+comment|/* Disable looping */
 name|mode
 index|[
 name|chn
@@ -7737,7 +9007,7 @@ index|]
 operator||=
 literal|0x20
 expr_stmt|;
-comment|/* Enable loop IRQ */
+comment|/* Enable IRQ at the end */
 name|voices
 index|[
 literal|0
@@ -7781,7 +9051,7 @@ operator|&=
 operator|~
 literal|0x08
 expr_stmt|;
-comment|/* Disable loop */
+comment|/* Disable looping */
 block|}
 block|}
 name|RESTORE_INTR
@@ -7867,7 +9137,7 @@ name|int
 name|chn
 parameter_list|)
 block|{
-comment|/*    * This routine transfers one block of audio data to the DRAM. In mono mode    * it's called just once. When in stereo mode, this_one routine is called    * once for both channels.    *     * The left/mono channel data is transferred to the beginning of dram and the    * right data to the area pointed by gus_page_size.    */
+comment|/*    * This routine transfers one block of audio data to the DRAM. In mono mode    * it's called just once. When in stereo mode, this_one routine is called    * once for both channels.    *    * The left/mono channel data is transferred to the beginning of dram and the    * right data to the area pointed by gus_page_size.    */
 name|int
 name|this_one
 decl_stmt|,
@@ -7987,10 +9257,12 @@ name|pcm_banksize
 expr_stmt|;
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -8056,10 +9328,12 @@ expr_stmt|;
 comment|/* Invert MSB */
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -8075,7 +9349,7 @@ argument_list|,
 name|dma_command
 argument_list|)
 expr_stmt|;
-comment|/* Kick on */
+comment|/* Kickstart */
 if|if
 condition|(
 name|chn
@@ -8088,7 +9362,12 @@ operator|)
 condition|)
 comment|/* Last channel */
 block|{
-comment|/* Last (right or mono) channel data */
+comment|/*        * Last (right or mono) channel data        */
+name|dma_active
+operator|=
+literal|1
+expr_stmt|;
+comment|/* DMA started. There is a unacknowledged buffer */
 name|active_device
 operator|=
 name|GUS_DEV_PCM_DONE
@@ -8101,7 +9380,7 @@ operator|&&
 operator|(
 name|pcm_qlen
 operator|>
-literal|2
+literal|0
 operator|||
 name|count
 operator|<
@@ -8115,11 +9394,13 @@ expr_stmt|;
 block|}
 block|}
 else|else
-comment|/* Left channel data. The right channel is 				 * transferred after DMA interrupt */
+block|{
+comment|/* 	 * Left channel data. The right channel 	 * is transferred after DMA interrupt 	 */
 name|active_device
 operator|=
 name|GUS_DEV_PCM_CONTINUE
 expr_stmt|;
+block|}
 name|RESTORE_INTR
 argument_list|(
 name|flags
@@ -8145,6 +9426,9 @@ name|total_count
 parameter_list|,
 name|int
 name|intrflag
+parameter_list|,
+name|int
+name|restart_dma
 parameter_list|)
 block|{
 name|pcm_current_buf
@@ -8196,6 +9480,9 @@ name|count
 parameter_list|,
 name|int
 name|intrflag
+parameter_list|,
+name|int
+name|restart_dma
 parameter_list|)
 block|{
 name|unsigned
@@ -8226,13 +9513,15 @@ name|mode
 operator|=
 literal|0xa0
 expr_stmt|;
-comment|/* DMA IRQ enable, invert MSB */
+comment|/* DMA IRQ enabled, invert MSB */
 if|if
 condition|(
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|dev
 index|]
+operator|->
+name|dmachan
 operator|>
 literal|3
 condition|)
@@ -8314,7 +9603,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* Set sampling frequency */
+comment|/* Set sampling rate */
 if|if
 condition|(
 name|gus_sampling_bits
@@ -8475,14 +9764,13 @@ end_function
 begin_function
 specifier|static
 name|int
-name|gus_has_output_drained
+name|gus_local_qlen
 parameter_list|(
 name|int
 name|dev
 parameter_list|)
 block|{
 return|return
-operator|!
 name|pcm_qlen
 return|;
 block|}
@@ -8520,6 +9808,7 @@ name|gus_sampling_channels
 operator|==
 literal|1
 condition|)
+block|{
 name|COPY_FROM_USER
 argument_list|(
 operator|&
@@ -8535,6 +9824,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -8753,39 +10043,124 @@ init|=
 block|{
 literal|"Gravis UltraSound"
 block|,
+name|NEEDS_RESTART
+block|,
+name|AFMT_U8
+operator||
+name|AFMT_S16_LE
+block|,
+name|NULL
+block|,
 name|gus_sampling_open
 block|,
-comment|/* */
 name|gus_sampling_close
 block|,
-comment|/* */
 name|gus_sampling_output_block
 block|,
-comment|/* */
 name|gus_sampling_start_input
 block|,
-comment|/* */
 name|gus_sampling_ioctl
 block|,
-comment|/* */
 name|gus_sampling_prepare_for_input
 block|,
-comment|/* */
 name|gus_sampling_prepare_for_output
 block|,
-comment|/* */
 name|gus_sampling_reset
 block|,
-comment|/* */
 name|gus_sampling_reset
 block|,
-comment|/* halt_xfer */
-name|gus_has_output_drained
+name|gus_local_qlen
 block|,
 name|gus_copy_from_user
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|guswave_bender
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|voice
+parameter_list|,
+name|int
+name|value
+parameter_list|)
+block|{
+name|int
+name|freq
+decl_stmt|;
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|bender
+operator|=
+name|value
+operator|-
+literal|8192
+expr_stmt|;
+name|freq
+operator|=
+name|compute_finetune
+argument_list|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|orig_freq
+argument_list|,
+name|value
+argument_list|,
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|bender_range
+argument_list|)
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|current_freq
+operator|=
+name|freq
+expr_stmt|;
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|gus_select_voice
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
+name|gus_voice_freq
+argument_list|(
+name|freq
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -9067,7 +10442,7 @@ index|[
 name|ptr
 index|]
 expr_stmt|;
-comment|/* DRAM address */
+comment|/* DRAM location */
 name|rec
 operator|->
 name|parm2
@@ -9274,7 +10649,7 @@ name|len
 operator|-
 name|offs
 expr_stmt|;
-comment|/* Nr of bytes left */
+comment|/* Num of bytes left */
 if|if
 condition|(
 name|l
@@ -9321,7 +10696,7 @@ argument_list|(
 name|EINVAL
 argument_list|)
 return|;
-comment|/* Was there a bug? */
+comment|/* 					 * Was there a bug? 					 */
 name|offs
 operator|+=
 name|sample_ptrs
@@ -9329,7 +10704,7 @@ index|[
 name|sample
 index|]
 expr_stmt|;
-comment|/* Begin offsess + offset to DRAM */
+comment|/* 					 * Begin offsess + offset to DRAM 					 */
 for|for
 control|(
 name|n
@@ -9364,7 +10739,7 @@ name|parm1
 operator|=
 name|n
 expr_stmt|;
-comment|/* Nr of bytes copied */
+comment|/* 				 * Nr of bytes copied 				 */
 block|}
 return|return
 literal|0
@@ -9373,7 +10748,7 @@ break|break;
 case|case
 name|PM_WRITE_PATCH
 case|:
-comment|/* Writes a block of wave data to the DRAM */
+comment|/* 				 * Writes a block of wave data to the DRAM 				 */
 block|{
 name|int
 name|sample
@@ -9436,7 +10811,7 @@ argument_list|(
 name|EINVAL
 argument_list|)
 return|;
-comment|/* Invalid offset */
+comment|/* 					 * Invalid offset 					 */
 name|n
 operator|=
 name|samples
@@ -9448,7 +10823,7 @@ name|len
 operator|-
 name|offs
 expr_stmt|;
-comment|/* Nr of bytes left */
+comment|/* 						 * Nr of bytes left 						 */
 if|if
 condition|(
 name|l
@@ -9495,7 +10870,7 @@ argument_list|(
 name|EINVAL
 argument_list|)
 return|;
-comment|/* Was there a bug? */
+comment|/* 					 * Was there a bug? 					 */
 name|offs
 operator|+=
 name|sample_ptrs
@@ -9503,7 +10878,7 @@ index|[
 name|sample
 index|]
 expr_stmt|;
-comment|/* Begin offsess + offset to DRAM */
+comment|/* 					 * Begin offsess + offset to DRAM 					 */
 for|for
 control|(
 name|n
@@ -9538,7 +10913,7 @@ name|parm1
 operator|=
 name|n
 expr_stmt|;
-comment|/* Nr of bytes copied */
+comment|/* 				 * Nr of bytes copied 				 */
 block|}
 return|return
 literal|0
@@ -9555,6 +10930,158 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|guswave_alloc
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|chn
+parameter_list|,
+name|int
+name|note
+parameter_list|,
+name|struct
+name|voice_alloc_info
+modifier|*
+name|alloc
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|alloc
+operator|->
+name|ptr
+expr_stmt|;
+comment|/*  * First look for a completely stopped voice  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|alloc
+operator|->
+name|max_voice
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|alloc
+operator|->
+name|map
+index|[
+name|p
+index|]
+operator|==
+literal|0
+condition|)
+block|{
+name|alloc
+operator|->
+name|ptr
+operator|=
+name|p
+expr_stmt|;
+return|return
+name|p
+return|;
+block|}
+name|p
+operator|=
+operator|(
+name|p
+operator|+
+literal|1
+operator|)
+operator|%
+name|alloc
+operator|->
+name|max_voice
+expr_stmt|;
+block|}
+comment|/*  * Then look for a releasing voice  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|alloc
+operator|->
+name|max_voice
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|alloc
+operator|->
+name|map
+index|[
+name|p
+index|]
+operator|==
+literal|0xffff
+condition|)
+block|{
+name|alloc
+operator|->
+name|ptr
+operator|=
+name|p
+expr_stmt|;
+return|return
+name|p
+return|;
+block|}
+name|p
+operator|=
+operator|(
+name|p
+operator|+
+literal|1
+operator|)
+operator|%
+name|alloc
+operator|->
+name|max_voice
+expr_stmt|;
+block|}
+name|printk
+argument_list|(
+literal|"GUS: Out of free voices\n"
+argument_list|)
+expr_stmt|;
+name|alloc
+operator|->
+name|ptr
+operator|=
+name|p
+expr_stmt|;
+return|return
+name|p
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -9564,6 +11091,8 @@ init|=
 block|{
 operator|&
 name|gus_info
+block|,
+literal|0
 block|,
 name|SYNTH_TYPE_SAMPLE
 block|,
@@ -9593,10 +11122,666 @@ name|guswave_controller
 block|,
 name|guswave_panning
 block|,
+name|guswave_volume_method
+block|,
 name|guswave_patchmgr
+block|,
+name|guswave_bender
+block|,
+name|guswave_alloc
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|set_input_volumes
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+name|unsigned
+name|char
+name|mask
+init|=
+literal|0xff
+operator|&
+operator|~
+literal|0x06
+decl_stmt|;
+comment|/* Just line out enabled */
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+comment|/*  *    Enable channels having vol> 10%  *      Note! bit 0x01 means line in DISABLED while 0x04 means  *            mic in ENABLED.  */
+if|if
+condition|(
+name|gus_line_vol
+operator|>
+literal|10
+condition|)
+name|mask
+operator|&=
+operator|~
+literal|0x01
+expr_stmt|;
+if|if
+condition|(
+name|gus_mic_vol
+operator|>
+literal|10
+condition|)
+name|mask
+operator||=
+literal|0x04
+expr_stmt|;
+if|if
+condition|(
+name|recording_active
+condition|)
+block|{
+comment|/*  *    Disable channel, if not selected for recording  */
+if|if
+condition|(
+operator|!
+operator|(
+name|gus_recmask
+operator|&
+name|SOUND_MASK_LINE
+operator|)
+condition|)
+name|mask
+operator||=
+literal|0x01
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|gus_recmask
+operator|&
+name|SOUND_MASK_MIC
+operator|)
+condition|)
+name|mask
+operator|&=
+operator|~
+literal|0x04
+expr_stmt|;
+block|}
+name|mix_image
+operator|&=
+operator|~
+literal|0x07
+expr_stmt|;
+name|mix_image
+operator||=
+name|mask
+operator|&
+literal|0x07
+expr_stmt|;
+name|OUTB
+argument_list|(
+name|mix_image
+argument_list|,
+name|u_Mixer
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|gus_default_mixer_ioctl
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+name|cmd
+parameter_list|,
+name|unsigned
+name|int
+name|arg
+parameter_list|)
+block|{
+define|#
+directive|define
+name|MIX_DEVS
+value|(SOUND_MASK_MIC|SOUND_MASK_LINE| \ 			 SOUND_MASK_SYNTH|SOUND_MASK_PCM)
+if|if
+condition|(
+operator|(
+operator|(
+name|cmd
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+operator|==
+literal|'M'
+condition|)
+block|{
+if|if
+condition|(
+name|cmd
+operator|&
+name|IOC_IN
+condition|)
+switch|switch
+condition|(
+name|cmd
+operator|&
+literal|0xff
+condition|)
+block|{
+case|case
+name|SOUND_MIXER_RECSRC
+case|:
+name|gus_recmask
+operator|=
+name|IOCTL_IN
+argument_list|(
+name|arg
+argument_list|)
+operator|&
+name|MIX_DEVS
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|gus_recmask
+operator|&
+operator|(
+name|SOUND_MASK_MIC
+operator||
+name|SOUND_MASK_LINE
+operator|)
+operator|)
+condition|)
+name|gus_recmask
+operator|=
+name|SOUND_MASK_MIC
+expr_stmt|;
+comment|/* Note! Input volumes are updated during next open for recording */
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_recmask
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_MIC
+case|:
+block|{
+name|int
+name|vol
+init|=
+name|IOCTL_IN
+argument_list|(
+name|arg
+argument_list|)
+operator|&
+literal|0xff
+decl_stmt|;
+if|if
+condition|(
+name|vol
+operator|<
+literal|0
+condition|)
+name|vol
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|vol
+operator|>
+literal|100
+condition|)
+name|vol
+operator|=
+literal|100
+expr_stmt|;
+name|gus_mic_vol
+operator|=
+name|vol
+expr_stmt|;
+name|set_input_volumes
+argument_list|()
+expr_stmt|;
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|vol
+operator||
+operator|(
+name|vol
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+block|}
+break|break;
+case|case
+name|SOUND_MIXER_LINE
+case|:
+block|{
+name|int
+name|vol
+init|=
+name|IOCTL_IN
+argument_list|(
+name|arg
+argument_list|)
+operator|&
+literal|0xff
+decl_stmt|;
+if|if
+condition|(
+name|vol
+operator|<
+literal|0
+condition|)
+name|vol
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|vol
+operator|>
+literal|100
+condition|)
+name|vol
+operator|=
+literal|100
+expr_stmt|;
+name|gus_line_vol
+operator|=
+name|vol
+expr_stmt|;
+name|set_input_volumes
+argument_list|()
+expr_stmt|;
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|vol
+operator||
+operator|(
+name|vol
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+block|}
+break|break;
+case|case
+name|SOUND_MIXER_PCM
+case|:
+name|gus_pcm_volume
+operator|=
+name|IOCTL_IN
+argument_list|(
+name|arg
+argument_list|)
+operator|&
+literal|0xff
+expr_stmt|;
+if|if
+condition|(
+name|gus_pcm_volume
+operator|<
+literal|0
+condition|)
+name|gus_pcm_volume
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|gus_pcm_volume
+operator|>
+literal|100
+condition|)
+name|gus_pcm_volume
+operator|=
+literal|100
+expr_stmt|;
+name|gus_sampling_update_volume
+argument_list|()
+expr_stmt|;
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_pcm_volume
+operator||
+operator|(
+name|gus_pcm_volume
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_SYNTH
+case|:
+block|{
+name|int
+name|voice
+decl_stmt|;
+name|gus_wave_volume
+operator|=
+name|IOCTL_IN
+argument_list|(
+name|arg
+argument_list|)
+operator|&
+literal|0xff
+expr_stmt|;
+if|if
+condition|(
+name|gus_wave_volume
+operator|<
+literal|0
+condition|)
+name|gus_wave_volume
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|gus_wave_volume
+operator|>
+literal|100
+condition|)
+name|gus_wave_volume
+operator|=
+literal|100
+expr_stmt|;
+if|if
+condition|(
+name|active_device
+operator|==
+name|GUS_DEV_WAVE
+condition|)
+for|for
+control|(
+name|voice
+operator|=
+literal|0
+init|;
+name|voice
+operator|<
+name|nr_voices
+condition|;
+name|voice
+operator|++
+control|)
+name|dynamic_volume_change
+argument_list|(
+name|voice
+argument_list|)
+expr_stmt|;
+comment|/* Apply the new vol */
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_wave_volume
+operator||
+operator|(
+name|gus_wave_volume
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+block|}
+break|break;
+default|default:
+return|return
+name|RET_ERROR
+argument_list|(
+name|EINVAL
+argument_list|)
+return|;
+block|}
+else|else
+switch|switch
+condition|(
+name|cmd
+operator|&
+literal|0xff
+condition|)
+comment|/* 				 * Return parameters 				 */
+block|{
+case|case
+name|SOUND_MIXER_RECSRC
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_recmask
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_DEVMASK
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|MIX_DEVS
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_STEREODEVS
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+literal|0
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_RECMASK
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|SOUND_MASK_MIC
+operator||
+name|SOUND_MASK_LINE
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_CAPS
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+literal|0
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_MIC
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_mic_vol
+operator||
+operator|(
+name|gus_mic_vol
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_LINE
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_line_vol
+operator||
+operator|(
+name|gus_line_vol
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_PCM
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_pcm_volume
+operator||
+operator|(
+name|gus_pcm_volume
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+break|break;
+case|case
+name|SOUND_MIXER_SYNTH
+case|:
+return|return
+name|IOCTL_OUT
+argument_list|(
+name|arg
+argument_list|,
+name|gus_wave_volume
+operator||
+operator|(
+name|gus_wave_volume
+operator|<<
+literal|8
+operator|)
+argument_list|)
+return|;
+break|break;
+default|default:
+return|return
+name|RET_ERROR
+argument_list|(
+name|EINVAL
+argument_list|)
+return|;
+block|}
+block|}
+else|else
+return|return
+name|RET_ERROR
+argument_list|(
+name|EINVAL
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mixer_operations
+name|gus_mixer_operations
+init|=
+block|{
+name|gus_default_mixer_ioctl
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|long
+name|gus_default_mixer_init
+parameter_list|(
+name|long
+name|mem_start
+parameter_list|)
+block|{
+if|if
+condition|(
+name|num_mixers
+operator|<
+name|MAX_MIXER_DEV
+condition|)
+comment|/* 					 * Don't install if there is another 					 * mixer 					 */
+name|mixer_devs
+index|[
+name|num_mixers
+operator|++
+index|]
+operator|=
+operator|&
+name|gus_mixer_operations
+expr_stmt|;
+return|return
+name|mem_start
+return|;
+block|}
+end_function
 
 begin_function
 name|long
@@ -9612,15 +11797,276 @@ name|int
 name|dma
 parameter_list|)
 block|{
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+name|unsigned
+name|char
+name|val
+decl_stmt|;
+name|char
+modifier|*
+name|model_num
+init|=
+literal|"2.4"
+decl_stmt|;
+name|int
+name|gus_type
+init|=
+literal|0x24
+decl_stmt|;
+comment|/* 2.4 */
+name|int
+name|mixer_type
+init|=
+literal|0
+decl_stmt|;
+comment|/*  * Try to identify the GUS model.  *  *	Versions< 3.6 don't have the digital ASIC. Try to probe it first.  */
+name|DISABLE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+name|OUTB
+argument_list|(
+literal|0x20
+argument_list|,
+name|gus_base
+operator|+
+literal|0x0f
+argument_list|)
+expr_stmt|;
+name|val
+operator|=
+name|INB
+argument_list|(
+name|gus_base
+operator|+
+literal|0x0f
+argument_list|)
+expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|!=
+literal|0xff
+operator|&&
+operator|(
+name|val
+operator|&
+literal|0x06
+operator|)
+condition|)
+comment|/* Should be 0x02?? */
+block|{
+comment|/* 	 * It has the digital ASIC so the card is at least v3.4. 	 * Next try to detect the true model. 	 */
+name|val
+operator|=
+name|INB
+argument_list|(
+name|u_MixSelect
+argument_list|)
+expr_stmt|;
+comment|/*          * Value 255 means pre-3.7 which don't have mixer.          * Values 5 thru 9 mean v3.7 which has a ICS2101 mixer.          * 10 and above is GUS MAX which has the CS4231 codec/mixer.          *          * Sorry. No GUS max support yet but it should be available 	 * soon after the SDK for GUS MAX is available. 	 */
+if|if
+condition|(
+name|val
+operator|==
+literal|255
+operator|||
+name|val
+operator|<
+literal|5
+condition|)
+block|{
+name|model_num
+operator|=
+literal|"3.4"
+expr_stmt|;
+name|gus_type
+operator|=
+literal|0x34
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|val
+operator|<
+literal|10
+condition|)
+block|{
+name|model_num
+operator|=
+literal|"3.7"
+expr_stmt|;
+name|gus_type
+operator|=
+literal|0x37
+expr_stmt|;
+name|mixer_type
+operator|=
+name|ICS2101
+expr_stmt|;
+block|}
+else|else
+block|{
+name|model_num
+operator|=
+literal|"MAX"
+expr_stmt|;
+name|gus_type
+operator|=
+literal|0x40
+expr_stmt|;
+name|mixer_type
+operator|=
+name|CS4231
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|EXCLUDE_GUSMAX
+block|{
+name|unsigned
+name|char
+name|max_config
+init|=
+literal|0x40
+decl_stmt|;
+comment|/* Codec enable */
+if|if
+condition|(
+name|dma
+operator|>
+literal|3
+condition|)
+name|max_config
+operator||=
+literal|0x30
+expr_stmt|;
+comment|/* 16 bit playback and capture DMAs */
+name|max_config
+operator||=
+operator|(
+name|gus_base
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x0f
+expr_stmt|;
+comment|/* Extract the X from 2X0 */
+name|OUTB
+argument_list|(
+name|max_config
+argument_list|,
+name|gus_base
+operator|+
+literal|0x106
+argument_list|)
+expr_stmt|;
+comment|/* UltraMax control */
+block|}
+if|if
+condition|(
+name|ad1848_detect
+argument_list|(
+name|gus_base
+operator|+
+literal|0x10c
+argument_list|)
+condition|)
+block|{
+name|gus_mic_vol
+operator|=
+name|gus_line_vol
+operator|=
+name|gus_pcm_volume
+operator|=
+literal|100
+expr_stmt|;
+name|gus_wave_volume
+operator|=
+literal|90
+expr_stmt|;
+name|have_gus_max
+operator|=
+literal|1
+expr_stmt|;
+name|ad1848_init
+argument_list|(
+literal|"GUS MAX"
+argument_list|,
+name|gus_base
+operator|+
+literal|0x10c
+argument_list|,
+operator|-
+name|irq
+argument_list|,
+name|dma
+argument_list|,
+name|dma
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|printk
 argument_list|(
-literal|"<Gravis UltraSound %dk>"
+literal|"[Where's the CS4231?]"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+block|}
+else|else
+block|{
+comment|/* 	 * ASIC not detected so the card must be 2.2 or 2.4. 	 * There could still be the 16-bit/mixer daughter card. 	 * It has the same codec/mixer than MAX. 	 * At this time there is no support for it but it will appear soon. 	 */
+block|}
+name|printk
+argument_list|(
+literal|"<Gravis UltraSound %s (%dk)>"
 argument_list|,
+name|model_num
+argument_list|,
+operator|(
+name|int
+operator|)
 name|gus_mem_size
 operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SCO
+name|sprintf
+argument_list|(
+name|gus_info
+operator|.
+name|name
+argument_list|,
+literal|"Gravis UltraSound %s (%dk)"
+argument_list|,
+name|model_num
+argument_list|,
+operator|(
+name|int
+operator|)
+name|gus_mem_size
+operator|/
+literal|1024
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|irq
@@ -9685,6 +12131,14 @@ literal|"GUS Error: Too many synthesizers\n"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|voice_alloc
+operator|=
+operator|&
+name|guswave_operations
+operator|.
+name|alloc
+expr_stmt|;
 name|synth_devs
 index|[
 name|num_synths
@@ -9694,6 +12148,30 @@ operator|=
 operator|&
 name|guswave_operations
 expr_stmt|;
+block|}
+name|PERMANENT_MALLOC
+argument_list|(
+expr|struct
+name|patch_info
+operator|*
+argument_list|,
+name|samples
+argument_list|,
+operator|(
+name|MAX_SAMPLE
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|samples
+argument_list|)
+argument_list|,
+name|mem_start
+argument_list|)
+expr_stmt|;
 name|reset_sample_memory
 argument_list|()
 expr_stmt|;
@@ -9702,49 +12180,48 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|num_dspdevs
+name|num_audiodevs
 operator|<
-name|MAX_DSP_DEV
+name|MAX_AUDIO_DEV
 condition|)
 block|{
-name|dsp_devs
+name|audio_devs
 index|[
 name|gus_devnum
 operator|=
-name|num_dspdevs
+name|num_audiodevs
 operator|++
 index|]
 operator|=
 operator|&
 name|gus_sampling_operations
 expr_stmt|;
-name|sound_dsp_dmachan
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|dmachan
 operator|=
 name|dma
 expr_stmt|;
-name|sound_buffcounts
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|buffcount
 operator|=
 literal|1
 expr_stmt|;
-name|sound_buffsizes
+name|audio_devs
 index|[
 name|gus_devnum
 index|]
+operator|->
+name|buffsize
 operator|=
 name|DSP_BUFFSIZE
-expr_stmt|;
-name|sound_dma_automode
-index|[
-name|gus_devnum
-index|]
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -9753,6 +12230,45 @@ argument_list|(
 literal|"GUS: Too many PCM devices available\n"
 argument_list|)
 expr_stmt|;
+comment|/*  *  Mixer dependent initialization.  */
+switch|switch
+condition|(
+name|mixer_type
+condition|)
+block|{
+case|case
+name|ICS2101
+case|:
+name|gus_mic_vol
+operator|=
+name|gus_line_vol
+operator|=
+name|gus_pcm_volume
+operator|=
+literal|100
+expr_stmt|;
+name|gus_wave_volume
+operator|=
+literal|90
+expr_stmt|;
+return|return
+name|ics2101_mixer_init
+argument_list|(
+name|mem_start
+argument_list|)
+return|;
+case|case
+name|CS4231
+case|:
+comment|/* Initialized elsewhere (ad1848.c) */
+default|default:
+return|return
+name|gus_default_mixer_init
+argument_list|(
+name|mem_start
+argument_list|)
+return|;
+block|}
 return|return
 name|mem_start
 return|;
@@ -9803,7 +12319,7 @@ operator|&=
 operator|~
 literal|0x20
 expr_stmt|;
-comment|/* Disable wave IRQ for this_one voice */
+comment|/* 				 * Disable wave IRQ for this_one voice 				 */
 name|gus_write8
 argument_list|(
 literal|0x00
@@ -9846,21 +12362,24 @@ block|{
 case|case
 name|LMODE_FINISH
 case|:
-comment|/* Final loop finished, shoot volume down */
+comment|/* 				 * Final loop finished, shoot volume down 				 */
 if|if
 condition|(
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|gus_read16
 argument_list|(
 literal|0x09
 argument_list|)
 operator|>>
 literal|4
-operator|)
+argument_list|)
 operator|<
 literal|100
 condition|)
-comment|/* Get current volume */
+comment|/* 						 * Get current volume 						 */
 block|{
 name|gus_voice_off
 argument_list|()
@@ -9873,7 +12392,7 @@ argument_list|(
 name|voice
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 name|gus_ramp_range
 argument_list|(
@@ -9889,7 +12408,7 @@ argument_list|,
 literal|63
 argument_list|)
 expr_stmt|;
-comment|/* Fastest possible rate */
+comment|/* 				 * Fastest possible rate 				 */
 name|gus_rampon
 argument_list|(
 literal|0x20
@@ -9897,7 +12416,7 @@ operator||
 literal|0x40
 argument_list|)
 expr_stmt|;
-comment|/* Ramp down, once, irq */
+comment|/* 				 * Ramp down, once, irq 				 */
 name|voices
 index|[
 name|voice
@@ -9915,7 +12434,7 @@ name|pcm_active
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Requires extensive processing */
+comment|/* Signal to the play_next_pcm_block routine */
 case|case
 name|LMODE_PCM
 case|:
@@ -9925,6 +12444,10 @@ name|orig_qlen
 init|=
 name|pcm_qlen
 decl_stmt|;
+name|int
+name|flag
+decl_stmt|;
+comment|/* 0 or 2 */
 name|pcm_qlen
 operator|--
 expr_stmt|;
@@ -9949,7 +12472,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Out of data. Just stop the voice */
+comment|/* Underrun. Just stop the voice */
 name|gus_voice_off
 argument_list|()
 expr_stmt|;
@@ -9961,19 +12484,46 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/*  * If the queue was full before this interrupt, the DMA transfer was  * suspended. Let it continue now.  */
 if|if
 condition|(
-name|orig_qlen
-operator|==
-name|pcm_nblk
+name|dma_active
 condition|)
 block|{
+if|if
+condition|(
+name|pcm_qlen
+operator|==
+literal|0
+condition|)
+name|flag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Underflow */
+else|else
+name|flag
+operator|=
+literal|0
+expr_stmt|;
+name|dma_active
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|flag
+operator|=
+literal|2
+expr_stmt|;
+comment|/* Just notify the dmabuf.c */
 name|DMAbuf_outputintr
 argument_list|(
 name|gus_devnum
+argument_list|,
+name|flag
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 break|break;
 default|default:
@@ -10031,7 +12581,7 @@ operator|&=
 operator|~
 literal|0x20
 expr_stmt|;
-comment|/* Disable volume ramp IRQ */
+comment|/* 				 * Disable volume ramp IRQ 				 */
 name|gus_write8
 argument_list|(
 literal|0x0d
@@ -10074,7 +12624,12 @@ block|{
 case|case
 name|VMODE_HALT
 case|:
-comment|/* Decay phase finished */
+comment|/* 				 * Decay phase finished 				 */
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 name|gus_voice_init
 argument_list|(
 name|voice
@@ -10087,20 +12642,127 @@ case|:
 name|gus_rampoff
 argument_list|()
 expr_stmt|;
+name|RESTORE_INTR
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 name|step_envelope
 argument_list|(
 name|voice
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-empty_stmt|;
-block|}
+case|case
+name|VMODE_START_NOTE
+case|:
 name|RESTORE_INTR
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
+name|guswave_start_note2
+argument_list|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|dev_pending
+argument_list|,
+name|voice
+argument_list|,
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|note_pending
+argument_list|,
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|volume_pending
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|kill_pending
+condition|)
+name|guswave_kill_note
+argument_list|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|dev_pending
+argument_list|,
+name|voice
+argument_list|,
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|note_pending
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+operator|>=
+literal|0
+condition|)
+block|{
+name|guswave_set_instr
+argument_list|(
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|dev_pending
+argument_list|,
+name|voice
+argument_list|,
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+argument_list|)
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|sample_pending
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+break|break;
+default|default:
+empty_stmt|;
+block|}
 block|}
 end_function
 
@@ -10143,7 +12805,7 @@ argument_list|(
 literal|0x0f
 argument_list|)
 expr_stmt|;
-comment|/* Get source info */
+comment|/* 				 * Get source info 				 */
 name|voice
 operator|=
 name|src
@@ -10165,7 +12827,7 @@ literal|0x40
 operator|)
 condition|)
 return|return;
-comment|/* No interrupt */
+comment|/* 				 * No interrupt 				 */
 name|voice_bit
 operator|=
 literal|1
@@ -10181,7 +12843,7 @@ operator|&
 literal|0x80
 operator|)
 condition|)
-comment|/* Wave IRQ pending */
+comment|/* 				 * Wave IRQ pending 				 */
 if|if
 condition|(
 operator|!
@@ -10191,11 +12853,14 @@ operator|&
 name|voice_bit
 operator|)
 operator|&&
+operator|(
+name|int
+operator|)
 name|voice
 operator|<
 name|nr_voices
 condition|)
-comment|/* Not done yet */
+comment|/* 								 * Not done 								 * yet 								 */
 block|{
 name|wave_ignore
 operator||=
@@ -10216,7 +12881,7 @@ operator|&
 literal|0x40
 operator|)
 condition|)
-comment|/* Volume IRQ pending */
+comment|/* 				 * Volume IRQ pending 				 */
 if|if
 condition|(
 operator|!
@@ -10226,11 +12891,14 @@ operator|&
 name|voice_bit
 operator|)
 operator|&&
+operator|(
+name|int
+operator|)
 name|voice
 operator|<
 name|nr_voices
 condition|)
-comment|/* Not done yet */
+comment|/* 								 * Not done 								 * yet 								 */
 block|{
 name|volume_ignore
 operator||=
@@ -10271,7 +12939,7 @@ name|status
 operator|&
 literal|0x40
 condition|)
-comment|/* DMA Irq pending */
+comment|/* DMA interrupt pending */
 switch|switch
 condition|(
 name|active_device
@@ -10282,17 +12950,25 @@ name|GUS_DEV_WAVE
 case|:
 if|if
 condition|(
+name|SOMEONE_WAITING
+argument_list|(
+name|dram_sleeper
+argument_list|,
 name|dram_sleep_flag
+argument_list|)
 condition|)
 name|WAKE_UP
 argument_list|(
 name|dram_sleeper
+argument_list|,
+name|dram_sleep_flag
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|GUS_DEV_PCM_CONTINUE
 case|:
+comment|/* Left channel data transferred */
 name|gus_transfer_output_block
 argument_list|(
 name|pcm_current_dev
@@ -10310,6 +12986,7 @@ break|break;
 case|case
 name|GUS_DEV_PCM_DONE
 case|:
+comment|/* Right or mono channel data transferred */
 if|if
 condition|(
 name|pcm_qlen
@@ -10317,9 +12994,38 @@ operator|<
 name|pcm_nblk
 condition|)
 block|{
+name|int
+name|flag
+init|=
+operator|(
+literal|1
+operator|-
+name|dma_active
+operator|)
+operator|*
+literal|2
+decl_stmt|;
+comment|/* 0 or 2 */
+if|if
+condition|(
+name|pcm_qlen
+operator|==
+literal|0
+condition|)
+name|flag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Underrun */
+name|dma_active
+operator|=
+literal|0
+expr_stmt|;
 name|DMAbuf_outputintr
 argument_list|(
 name|gus_devnum
+argument_list|,
+name|flag
 argument_list|)
 expr_stmt|;
 block|}
@@ -10334,14 +13040,14 @@ argument_list|(
 literal|0x49
 argument_list|)
 expr_stmt|;
-comment|/* Get Sampling IRQ Status */
+comment|/* 				 * Get Sampling IRQ Status 				 */
 if|if
 condition|(
 name|status
 operator|&
 literal|0x40
 condition|)
-comment|/* Sampling Irq pending */
+comment|/* 				 * Sampling Irq pending 				 */
 block|{
 name|DMAbuf_inputintr
 argument_list|(

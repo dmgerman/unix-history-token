@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/chr_drv/sound/pas2_midi.c  *   * The low level driver for the PAS Midi Interface.  *   * (C) 1992  Hannu Savolainen (hsavolai@cs.helsinki.fi) See COPYING for further  * details. Should be distributed with this file.  */
+comment|/*  * sound/pas2_midi.c  *  * The low level driver for the PAS Midi Interface.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -102,6 +102,24 @@ name|qtail
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+function_decl|(
+modifier|*
+name|midi_input_intr
+function_decl|)
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|char
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|int
@@ -112,6 +130,30 @@ name|dev
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|input
+function_decl|)
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|unsigned
+name|char
+name|data
+parameter_list|)
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|output
+function_decl|)
+parameter_list|(
+name|int
+name|dev
+parameter_list|)
 parameter_list|)
 block|{
 name|int
@@ -142,7 +184,7 @@ name|EBUSY
 argument_list|)
 return|;
 block|}
-comment|/* Reset input and output FIFO pointers */
+comment|/*    * Reset input and output FIFO pointers    */
 name|pas_write
 argument_list|(
 name|M_C_RESET_INPUT_FIFO
@@ -173,7 +215,7 @@ condition|)
 return|return
 name|err
 return|;
-comment|/* Enable input available and output FIFO empty interrupts */
+comment|/*    * Enable input available and output FIFO empty interrupts    */
 name|ctrl
 operator|=
 literal|0
@@ -181,6 +223,10 @@ expr_stmt|;
 name|input_opened
 operator|=
 literal|0
+expr_stmt|;
+name|midi_input_intr
+operator|=
+name|input
 expr_stmt|;
 if|if
 condition|(
@@ -197,7 +243,7 @@ name|ctrl
 operator||=
 name|M_C_ENA_INPUT_IRQ
 expr_stmt|;
-comment|/* Enable input */
+comment|/* 					 * Enable input 					 */
 name|input_opened
 operator|=
 literal|1
@@ -218,7 +264,7 @@ name|ctrl
 operator||=
 name|M_C_ENA_OUTPUT_IRQ
 operator||
-comment|/* Enable output */
+comment|/* 					 * Enable output 					 */
 name|M_C_ENA_OUTPUT_HALF_IRQ
 expr_stmt|;
 block|}
@@ -229,7 +275,7 @@ argument_list|,
 name|MIDI_CONTROL
 argument_list|)
 expr_stmt|;
-comment|/* Acknowledge any pending interrupts */
+comment|/*    * Acknowledge any pending interrupts    */
 name|pas_write
 argument_list|(
 literal|0xff
@@ -273,7 +319,7 @@ name|int
 name|dev
 parameter_list|)
 block|{
-comment|/* Reset FIFO pointers, disable intrs */
+comment|/*    * Reset FIFO pointers, disable intrs    */
 name|pas_write
 argument_list|(
 name|M_C_RESET_INPUT_FIFO
@@ -343,12 +389,12 @@ operator|>
 literal|13
 operator|)
 condition|)
-comment|/* Fifo full */
+comment|/* 									 * Fifo 									 * full 									 */
 block|{
 return|return
 literal|0
 return|;
-comment|/* Upper layer will call again */
+comment|/* 				 * Upper layer will call again 				 */
 block|}
 name|ofifo_bytes
 operator|++
@@ -430,7 +476,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* OK */
+comment|/* 				 * OK 				 */
 comment|/*    * Put to the local queue    */
 if|if
 condition|(
@@ -441,7 +487,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Local queue full */
+comment|/* 				 * Local queue full 				 */
 name|DISABLE_INTR
 argument_list|(
 name|flags
@@ -557,6 +603,26 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|MIDI_SYNTH_NAME
+value|"Pro Audio Spectrum Midi"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_SYNTH_CAPS
+value|SYNTH_CAP_INPUT
+end_define
+
+begin_include
+include|#
+directive|include
+file|"midi_synth.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -568,7 +634,14 @@ block|{
 literal|"Pro Audio Spectrum"
 block|,
 literal|0
+block|,
+literal|0
+block|,
+name|SNDCARD_PAS
 block|}
+block|,
+operator|&
+name|std_midi_synth
 block|,
 name|pas_midi_open
 block|,
@@ -586,8 +659,10 @@ name|pas_midi_kick
 block|,
 name|NULL
 block|,
-comment|/* command */
+comment|/* 				 * command 				 */
 name|pas_buffer_status
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -600,6 +675,26 @@ name|long
 name|mem_start
 parameter_list|)
 block|{
+if|if
+condition|(
+name|num_midis
+operator|>=
+name|MAX_MIDI_DEV
+condition|)
+block|{
+name|printk
+argument_list|(
+literal|"Sound: Too many midi devices detected\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|mem_start
+return|;
+block|}
+name|std_midi_synth
+operator|.
+name|midi_dev
+operator|=
 name|my_dev
 operator|=
 name|num_midis
@@ -652,7 +747,7 @@ name|stat
 operator|&
 name|M_S_INPUT_AVAIL
 condition|)
-comment|/* Input byte available */
+comment|/* 				 * Input byte available 				 */
 block|{
 name|incount
 operator|=
@@ -663,7 +758,7 @@ argument_list|)
 operator|&
 literal|0x0f
 expr_stmt|;
-comment|/* Input FIFO count */
+comment|/* 							 * Input FIFO count 							 */
 if|if
 condition|(
 operator|!
@@ -691,7 +786,7 @@ condition|(
 name|input_opened
 condition|)
 block|{
-name|sequencer_midi_input
+name|midi_input_intr
 argument_list|(
 name|my_dev
 argument_list|,
@@ -708,7 +803,7 @@ argument_list|(
 name|MIDI_DATA
 argument_list|)
 expr_stmt|;
-comment|/* Flush */
+comment|/* 				 * Flush 				 */
 block|}
 if|if
 condition|(
@@ -794,7 +889,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"MIDI output overrun %02x,%02x,%d \n"
+literal|"MIDI output overrun %x,%x,%d \n"
 argument_list|,
 name|pas_read
 argument_list|(
@@ -818,7 +913,7 @@ argument_list|,
 name|MIDI_STATUS
 argument_list|)
 expr_stmt|;
-comment|/* Acknowledge interrupts */
+comment|/* 					 * Acknowledge interrupts 					 */
 block|}
 end_function
 

@@ -39,14 +39,46 @@ directive|define
 name|EXCLUDE_MPU401
 end_define
 
-begin_comment
-comment|/* Not ready yet */
-end_comment
+begin_define
+define|#
+directive|define
+name|EXCLUDE_UART6850
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCLUDE_PSS
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|EXCLUDE_GUS16
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|EXCLUDE_GUSMAX
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|EXCLUDE_MSS
+end_undef
 
 begin_undef
 undef|#
 directive|undef
 name|EXCLUDE_SBPRO
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|EXCLUDE_SB16
 end_undef
 
 begin_undef
@@ -73,12 +105,6 @@ directive|undef
 name|EXCLUDE_SEQUENCER
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|EXCLUDE_CHIP_MIDI
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -90,7 +116,42 @@ begin_define
 define|#
 directive|define
 name|SELECTED_SOUND_OPTIONS
-value|0xffffffff
+value|0xffffff8f
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_VERSION_STRING
+value|"2.90-2"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_CONFIG_DATE
+value|"Thu Sep 29 15:33:39 PDT 1994"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_CONFIG_BY
+value|"swallace"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_CONFIG_HOST
+value|"pal-r32-a07b.slip.nts.uci.edu"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_CONFIG_DOMAIN
+value|""
 end_define
 
 end_unit

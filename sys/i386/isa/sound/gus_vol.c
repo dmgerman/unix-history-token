@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * gus_vol.c - Compute volume for GUS.  *   * Greg Lee 1993.  */
+comment|/*  * gus_vol.c - Compute volume for GUS.  *  * Greg Lee 1993.  */
 end_comment
 
 begin_include
@@ -14,6 +14,12 @@ ifndef|#
 directive|ifndef
 name|EXCLUDE_GUS
 end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"gus_linearvol.h"
+end_include
 
 begin_define
 define|#
@@ -30,7 +36,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Calculate gus volume from note velocity, main volume, expression, and  * intrinsic patch volume given in patch library.  Expression is multiplied  * in, so it emphasizes differences in note velocity, while main volume is  * added in -- I don't know whether this is right, but it seems reasonable to  * me.  (In the previous stage, main volume controller messages were changed  * to expression controller messages, if they were found to be used for  * dynamic volume adjustments, so here, main volume can be assumed to be  * constant throughout a song.)  *   * Intrinsic patch volume is added in, but if over 64 is also multiplied in, so  * we can give a big boost to very weak voices like nylon guitar and the  * basses.  The normal value is 64.  Strings are assigned lower values.  */
+comment|/*  * Calculate gus volume from note velocity, main volume, expression, and  * intrinsic patch volume given in patch library.  Expression is multiplied  * in, so it emphasizes differences in note velocity, while main volume is  * added in -- I don't know whether this is right, but it seems reasonable to  * me.  (In the previous stage, main volume controller messages were changed  * to expression controller messages, if they were found to be used for  * dynamic volume adjustments, so here, main volume can be assumed to be  * constant throughout a song.)  *  * Intrinsic patch volume is added in, but if over 64 is also multiplied in, so  * we can give a big boost to very weak voices like nylon guitar and the  * basses.  The normal value is 64.  Strings are assigned lower values.  */
 end_comment
 
 begin_function
@@ -73,7 +79,7 @@ operator|-
 literal|64
 operator|)
 expr_stmt|;
-comment|/* Boost expression by voice volume above neutral. */
+comment|/*    * Boost expression by voice volume above neutral.    */
 if|if
 condition|(
 name|voicev
@@ -96,7 +102,7 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-comment|/* Combine multiplicative and level components. */
+comment|/*    * Combine multiplicative and level components.    */
 name|x
 operator|=
 name|vel
@@ -116,7 +122,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GUS_VOLUME
-comment|/*    * Further adjustment by installation-specific master volume control    * (default 50).    */
+comment|/*    * Further adjustment by installation-specific master volume control    * (default 60).    */
 name|x
 operator|=
 operator|(
@@ -131,21 +137,44 @@ literal|10000
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|GUS_USE_CHN_MAIN_VOLUME
+comment|/*    * Experimental support for the channel main volume    */
+name|mainv
+operator|=
+operator|(
+name|mainv
+operator|/
+literal|2
+operator|)
+operator|+
+literal|64
+expr_stmt|;
+comment|/* Scale to 64 to 127 */
+name|x
+operator|=
+operator|(
+name|x
+operator|*
+name|mainv
+operator|*
+name|mainv
+operator|)
+operator|/
+literal|16384
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|x
 operator|<
-operator|(
-literal|1
-operator|<<
-literal|11
-operator|)
+literal|2
 condition|)
 return|return
 operator|(
-literal|11
-operator|<<
-literal|8
+literal|0
 operator|)
 return|;
 elseif|else
@@ -227,7 +256,7 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
-comment|/* Adjust mantissa to 8 bits. */
+comment|/*    * Adjust mantissa to 8 bits.    */
 if|if
 condition|(
 name|m
@@ -261,20 +290,6 @@ operator|-
 name|i
 expr_stmt|;
 block|}
-comment|/* low volumes give occasional sour notes */
-if|if
-condition|(
-name|i
-operator|<
-literal|11
-condition|)
-return|return
-operator|(
-literal|11
-operator|<<
-literal|8
-operator|)
-return|;
 return|return
 operator|(
 operator|(
@@ -285,6 +300,116 @@ operator|)
 operator|+
 name|m
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Volume-values are interpreted as linear values. Volume is based on the  * value supplied with SEQ_START_NOTE(), channel main volume (if compiled in)  * and the volume set by the mixer-device (default 60%).  */
+end_comment
+
+begin_function
+name|unsigned
+name|short
+name|gus_linear_vol
+parameter_list|(
+name|int
+name|vol
+parameter_list|,
+name|int
+name|mainvol
+parameter_list|)
+block|{
+name|int
+name|mixer_mainvol
+decl_stmt|;
+if|if
+condition|(
+name|vol
+operator|<=
+literal|0
+condition|)
+name|vol
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vol
+operator|>=
+literal|127
+condition|)
+name|vol
+operator|=
+literal|127
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GUS_VOLUME
+name|mixer_mainvol
+operator|=
+name|GUS_VOLUME
+expr_stmt|;
+else|#
+directive|else
+name|mixer_mainvol
+operator|=
+literal|100
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|GUS_USE_CHN_MAIN_VOLUME
+if|if
+condition|(
+name|mainvol
+operator|<=
+literal|0
+condition|)
+name|mainvol
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mainvol
+operator|>=
+literal|127
+condition|)
+name|mainvol
+operator|=
+literal|127
+expr_stmt|;
+else|#
+directive|else
+name|mainvol
+operator|=
+literal|128
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|gus_linearvol
+index|[
+operator|(
+operator|(
+operator|(
+name|vol
+operator|*
+name|mainvol
+operator|)
+operator|/
+literal|128
+operator|)
+operator|*
+name|mixer_mainvol
+operator|)
+operator|/
+literal|100
+index|]
 return|;
 block|}
 end_function
