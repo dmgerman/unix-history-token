@@ -5057,37 +5057,26 @@ name|PCMCIA_STR_BILLIONTON_LNT10TN
 value|"Billionton Systems Inc. LNT-10TN NE2000 Compatible Card"
 end_define
 
-begin_expr_stmt
-operator|+
-name|product
-name|BILLIONTON
-name|CFLT10N
-block|{
-literal|"CF"
-block|,
-literal|"10Base-Ethernet"
-block|,
-literal|"1.0"
-block|,
-name|NULL
-block|}
-name|Billionproduct
-name|CNET
-name|NE2000
-block|{
-literal|"CNet"
-block|,
-literal|"CN40BC&spEthernet"
-block|,
-literal|"D"
-block|,
-literal|"NE2000"
-block|}
-name|CNet
-name|CN40BC
-name|NE2000
-name|Compatible
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_CNET_NE2000
+value|{ "CNet", "CN40BC Ethernet", "D", "NE2000" }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_CNET_NE2000
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_CNET_NE2000
+value|"CNet CN40BC NE2000 Compatible"
+end_define
 
 begin_define
 define|#
@@ -6376,6 +6365,27 @@ define|#
 directive|define
 name|PCMCIA_STR_SMC_2632W
 value|"SMC 2632 EZ Connect Wireless PC Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_SMC_8041
+value|{ "SMC", "8041TX-10/100-PC-Card-V2", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_SMC_8041
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_SMC_8041
+value|"SMC 8041TX 10/100 PC Card"
 end_define
 
 begin_define
