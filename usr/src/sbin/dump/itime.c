@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)itime.c	5.2 (Berkeley) %G%"
+literal|"@(#)itime.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1115,50 +1115,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|i
-operator|,
-name|n
-expr_stmt|;
-name|n
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|msiz
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|map
-index|[
-name|i
-index|]
-condition|)
-name|n
-operator|=
-name|i
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|<
-literal|0
-condition|)
-return|return;
-name|n
-operator|++
-expr_stmt|;
 name|esize
 operator|++
 expr_stmt|;
@@ -1166,7 +1122,7 @@ name|esize
 operator|+=
 name|howmany
 argument_list|(
-name|n
+name|msiz
 operator|*
 sizeof|sizeof
 name|map
