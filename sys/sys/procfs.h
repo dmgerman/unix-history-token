@@ -114,6 +114,17 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|PRFNAMESZ
+value|16
+end_define
+
+begin_comment
+comment|/* Maximum command length saved */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PRARGSZ
 value|80
 end_define
@@ -149,7 +160,7 @@ comment|/* sizeof(prpsinfo_t) (1) */
 name|char
 name|pr_fname
 index|[
-name|MAXCOMLEN
+name|PRFNAMESZ
 operator|+
 literal|1
 index|]
