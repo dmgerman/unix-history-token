@@ -173,7 +173,7 @@ struct|struct
 name|fd_set
 block|{
 name|__fd_mask
-name|fds_bits
+name|__fds_bits
 index|[
 name|_howmany
 argument_list|(
@@ -188,6 +188,24 @@ name|fd_set
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|fds_bits
+value|__fds_bits
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -195,7 +213,7 @@ name|__fdset_mask
 parameter_list|(
 name|n
 parameter_list|)
-value|((fd_mask)1<< ((n) % _NFDBITS))
+value|((__fd_mask)1<< ((n) % _NFDBITS))
 end_define
 
 begin_define
@@ -216,10 +234,6 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_comment
-comment|/* XXX bcopy() not in scope, so<strings.h> is required; see also FD_ZERO(). */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -229,7 +243,7 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|bcopy(f, t, sizeof(*(f)))
+value|(void)(*(t) = *(f))
 end_define
 
 begin_endif
@@ -268,7 +282,7 @@ name|FD_ZERO
 parameter_list|(
 name|p
 parameter_list|)
-value|bzero(p, sizeof(*(p)))
+value|do {					\ 	fd_set *_p;					\ 	__size_t _n;					\ 							\ 	_p = (p);					\ 	_n = _howmany(FD_SETSIZE, _NFDBITS);		\ 	while (_n> 0)					\ 		_p->__fds_bits[--_n] = 0;		\ } while (0)
 end_define
 
 begin_ifndef
