@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	5.7 (Berkeley) %G%"
+literal|"@(#)config.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,6 +355,8 @@ block|{
 specifier|static
 name|size_t
 name|buflen
+decl_stmt|,
+name|boff
 decl_stmt|;
 specifier|static
 name|char
@@ -409,6 +411,16 @@ argument_list|,
 literal|1024
 argument_list|)
 expr_stmt|;
+name|boff
+operator|=
+name|bp
+condition|?
+name|bp
+operator|-
+name|pathbuf
+else|:
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -427,13 +439,15 @@ condition|)
 name|enomem
 argument_list|()
 expr_stmt|;
-name|endp
-operator|=
-operator|(
 name|bp
 operator|=
 name|pathbuf
-operator|)
+operator|+
+name|boff
+expr_stmt|;
+name|endp
+operator|=
+name|pathbuf
 operator|+
 name|buflen
 expr_stmt|;
