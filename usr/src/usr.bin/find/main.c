@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,15 +152,21 @@ begin_comment
 comment|/* don't permit xargs delimiting chars */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -172,8 +178,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -186,11 +192,6 @@ modifier|*
 modifier|*
 name|start
 decl_stmt|;
-name|PLAN
-modifier|*
-name|find_formplan
-parameter_list|()
-function_decl|;
 name|int
 name|ch
 decl_stmt|;
@@ -288,11 +289,6 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|ftsoptions
-operator|&=
-operator|~
-name|FTS_NOSTAT
-expr_stmt|;
 name|ftsoptions
 operator||=
 name|FTS_XDEV
