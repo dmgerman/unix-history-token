@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.16 (Berkeley) %G%"
+literal|"@(#)su.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberosIV/krb.h>
 end_include
 
 begin_include
