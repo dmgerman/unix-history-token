@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988,1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988,1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|"msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../ufs/quota.h"
 end_include
 
 begin_include
@@ -670,35 +664,6 @@ operator|-
 name|kmempt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
-name|valloclim
-argument_list|(
-name|quota
-argument_list|,
-expr|struct
-name|quota
-argument_list|,
-name|nquota
-argument_list|,
-name|quotaNQUOTA
-argument_list|)
-expr_stmt|;
-name|valloclim
-argument_list|(
-name|dquot
-argument_list|,
-expr|struct
-name|dquot
-argument_list|,
-name|ndquot
-argument_list|,
-name|dquotNDQUOT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Determine how many buffers to allocate. 	 * Use 10% of memory for the first 2 Meg, 5% of the remaining 	 * memory. Insure a minimum of 16 buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
