@@ -1539,11 +1539,11 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
 name|int
 name|cmd
+parameter_list|,
+name|caddr_t
+name|addr
 parameter_list|,
 name|int
 name|flag
