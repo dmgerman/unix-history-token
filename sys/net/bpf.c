@@ -1470,6 +1470,12 @@ name|bd_sig
 operator|=
 name|SIGIO
 expr_stmt|;
+name|d
+operator|->
+name|bd_seesent
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2388,7 +2394,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  */
+comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  *  BIOCGSEESENT	Get "see packets sent" flag  *  BIOCSSEESENT	Set "see packets sent" flag  */
 comment|/* ARGSUSED */
 specifier|static
 name|int
@@ -3074,6 +3080,38 @@ condition|?
 literal|1
 else|:
 literal|0
+expr_stmt|;
+break|break;
+comment|/* 	 * Get "see sent packets" flag 	 */
+case|case
+name|BIOCGSEESENT
+case|:
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|addr
+operator|=
+name|d
+operator|->
+name|bd_seesent
+expr_stmt|;
+break|break;
+comment|/* 	 * Set "see sent packets" flag 	 */
+case|case
+name|BIOCSSEESENT
+case|:
+name|d
+operator|->
+name|bd_seesent
+operator|=
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|addr
 expr_stmt|;
 break|break;
 case|case
@@ -4093,6 +4131,24 @@ operator|->
 name|bd_next
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|d
+operator|->
+name|bd_seesent
+operator|&&
+operator|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|==
+name|NULL
+operator|)
+condition|)
+continue|continue;
 operator|++
 name|d
 operator|->

@@ -101,6 +101,10 @@ name|bd_hdrcmplt
 decl_stmt|;
 comment|/* false to fill in src lladdr automatically */
 name|int
+name|bd_seesent
+decl_stmt|;
+comment|/* true if bpf should see sent packets */
+name|int
 name|bd_async
 decl_stmt|;
 comment|/* non-zero if packet reception should generate signal */
