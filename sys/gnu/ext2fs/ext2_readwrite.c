@@ -1016,24 +1016,17 @@ operator|+
 name|xfersize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fs
-operator|->
-name|s_frag_size
-operator|>
-name|xfersize
-condition|)
+comment|/*   		 * Avoid a data-consistency race between write() and mmap() 		 * by ensuring that newly allocated blocks are zerod.  The 		 * race can occur even in the case where the write covers 		 * the entire block. 		 */
 name|flags
 operator||=
 name|B_CLRBUF
 expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|B_CLRBUF
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (fs->s_frag_size> xfersize) 			flags |= B_CLRBUF; 		else 			flags&= ~B_CLRBUF;
+endif|#
+directive|endif
 name|error
 operator|=
 name|ext2_balloc
