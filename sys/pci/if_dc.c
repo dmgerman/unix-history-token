@@ -344,6 +344,14 @@ name|DC_VENDORID_MX
 block|,
 name|DC_DEVICEID_987x5
 block|,
+literal|"Macronix 98715AEC-C 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DC_VENDORID_MX
+block|,
+name|DC_DEVICEID_987x5
+block|,
 literal|"Macronix 98725 10/100BaseTX"
 block|}
 block|,
@@ -3768,15 +3776,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|DC_BITS
+name|DC_BITS_512
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|DC_BITS_PNIC_II
+name|DC_BITS_128
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_BITS_64
+value|6
 end_define
 
 begin_function
@@ -3874,13 +3889,14 @@ literal|0
 operator|)
 expr_stmt|;
 block|}
-comment|/* The hash table on the PNIC II is only 128 bits wide. */
+comment|/* 	 * The hash table on the PNIC II and the MX98715AEC-C/D/E 	 * chips is only 128 bits wide. 	 */
 if|if
 condition|(
-name|DC_IS_PNICII
-argument_list|(
 name|sc
-argument_list|)
+operator|->
+name|dc_flags
+operator|&
+name|DC_128BIT_HASH
 condition|)
 return|return
 operator|(
@@ -3890,7 +3906,31 @@ operator|(
 operator|(
 literal|1
 operator|<<
-name|DC_BITS_PNIC_II
+name|DC_BITS_128
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+return|;
+comment|/* The hash table on the MX98715BEC is only 64 bits wide. */
+if|if
+condition|(
+name|sc
+operator|->
+name|dc_flags
+operator|&
+name|DC_64BIT_HASH
+condition|)
+return|return
+operator|(
+name|crc
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+name|DC_BITS_64
 operator|)
 operator|-
 literal|1
@@ -3905,7 +3945,7 @@ operator|(
 operator|(
 literal|1
 operator|<<
-name|DC_BITS
+name|DC_BITS_512
 operator|)
 operator|-
 literal|1
@@ -6107,6 +6147,21 @@ name|DC_DEVICEID_987x5
 operator|&&
 name|rev
 operator|>=
+name|DC_REVISION_98715AEC_C
+condition|)
+name|t
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|dc_did
+operator|==
+name|DC_DEVICEID_987x5
+operator|&&
+name|rev
+operator|>=
 name|DC_REVISION_98725
 condition|)
 name|t
@@ -7021,6 +7076,23 @@ case|:
 case|case
 name|DC_DEVICEID_EN1217
 case|:
+comment|/* 		 * Macronix MX98715AEC-C/D/E parts have only a 		 * 128-bit hash table. We need to deal with these 		 * in the same manner as the PNIC II so that we 		 * get the right number of bits out of the 		 * CRC routine. 		 */
+if|if
+condition|(
+name|revision
+operator|>=
+name|DC_REVISION_98715AEC_C
+operator|&&
+name|revision
+operator|<
+name|DC_REVISION_98725
+condition|)
+name|sc
+operator|->
+name|dc_flags
+operator||=
+name|DC_128BIT_HASH
+expr_stmt|;
 name|sc
 operator|->
 name|dc_type
@@ -7060,6 +7132,8 @@ operator||=
 name|DC_TX_POLL
 operator||
 name|DC_TX_USE_TX_INTR
+operator||
+name|DC_128BIT_HASH
 expr_stmt|;
 name|sc
 operator|->
