@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  -*- mode: c; tab-width: 8; c-basic-indent: 4; -*-     Alias_db.c encapsulates all data structures used for storing     packet aliasing data.  Other parts of the aliasing software     access data through functions provided in this file.      Data storage is based on the notion of a "link", which is     established for ICMP echo/reply packets, UDP datagrams and     TCP stream connections.  A link stores the original source     and destination addresses.  For UDP and TCP, it also stores     source and destination port numbers, as well as an alias     port number.  Links are also used to store information about     fragments.      There is a facility for sweeping through and deleting old     links as new packets are sent through.  A simple timeout is     used for ICMP and UDP links.  TCP links are left alone unless     there is an incomplete connection, in which case the link     can be deleted after a certain amount of time.       This software is placed into the public domain with no restrictions     on its distribution.      Initial version: August, 1996  (cjm)      Version 1.4: September 16, 1996 (cjm)         Facility for handling incoming links added.      Version 1.6: September 18, 1996 (cjm)         ICMP data handling simplified.      Version 1.7: January 9, 1997 (cjm)         Fragment handling simplified.         Saves pointers for unresolved fragments.         Permits links for unspecied remote ports           or unspecified remote addresses.         Fixed bug which did not properly zero port           table entries after a link was deleted.         Cleaned up some obsolete comments.      Version 1.8: January 14, 1997 (cjm)         Fixed data type error in StartPoint().         (This error did not exist prior to v1.7         and was discovered and fixed by Ari Suutari)      Version 1.9: February 1, 1997         Optionally, connections initiated from packet aliasing host         machine will will not have their port number aliased unless it         conflicts with an aliasing port already being used. (cjm)          All options earlier being #ifdef'ed now are available through         a new interface, SetPacketAliasMode().  This allow run time         control (which is now available in PPP+pktAlias through the         'alias' keyword). (ee)          Added ability to create an alias port without         either destination address or port specified.         port type = ALIAS_PORT_UNKNOWN_DEST_ALL (ee)          Removed K&R style function headers         and general cleanup. (ee)          Added packetAliasMode to replace compiler #defines's (ee)          Allocates sockets for partially specified         ports if ALIAS_USE_SOCKETS defined. (cjm)      Version 2.0: March, 1997         SetAliasAddress() will now clean up alias links         if the aliasing address is changed. (cjm)          PacketAliasPermanentLink() function added to support permanent         links.  (J. Fortes suggested the need for this.)         Examples:          (192.168.0.1, port 23)<-> alias port 6002, unknown dest addr/port          (192.168.0.2, port 21)<-> alias port 3604, known dest addr                                                      unknown dest port          These permament links allow for incoming connections to         machines on the local network.  They can be given with a         user-chosen amount of specificity, with increasing specificity         meaning more security. (cjm)          Quite a bit of rework to the basic engine.  The portTable[]         array, which kept track of which ports were in use was replaced         by a table/linked list structure. (cjm)          SetExpire() function added. (cjm)          DeleteLink() no longer frees memory association with a pointer         to a fragment (this bug was first recognized by E. Eklund in         v1.9).      Version 2.1: May, 1997 (cjm)         Packet aliasing engine reworked so that it can handle         multiple external addresses rather than just a single         host address.          PacketAliasRedirectPort() and PacketAliasRedirectAddr()         added to the API.  The first function is a more generalized         version of PacketAliasPermanentLink().  The second function         implements static network address translation.      See HISTORY file for additional revisions. */
+comment|/*  -*- mode: c; tab-width: 8; c-basic-indent: 4; -*-     Alias_db.c encapsulates all data structures used for storing     packet aliasing data.  Other parts of the aliasing software     access data through functions provided in this file.      Data storage is based on the notion of a "link", which is     established for ICMP echo/reply packets, UDP datagrams and     TCP stream connections.  A link stores the original source     and destination addresses.  For UDP and TCP, it also stores     source and destination port numbers, as well as an alias     port number.  Links are also used to store information about     fragments.      There is a facility for sweeping through and deleting old     links as new packets are sent through.  A simple timeout is     used for ICMP and UDP links.  TCP links are left alone unless     there is an incomplete connection, in which case the link     can be deleted after a certain amount of time.       This software is placed into the public domain with no restrictions     on its distribution.      Initial version: August, 1996  (cjm)      Version 1.4: September 16, 1996 (cjm)         Facility for handling incoming links added.      Version 1.6: September 18, 1996 (cjm)         ICMP data handling simplified.      Version 1.7: January 9, 1997 (cjm)         Fragment handling simplified.         Saves pointers for unresolved fragments.         Permits links for unspecied remote ports           or unspecified remote addresses.         Fixed bug which did not properly zero port           table entries after a link was deleted.         Cleaned up some obsolete comments.      Version 1.8: January 14, 1997 (cjm)         Fixed data type error in StartPoint().         (This error did not exist prior to v1.7         and was discovered and fixed by Ari Suutari)      Version 1.9: February 1, 1997         Optionally, connections initiated from packet aliasing host         machine will will not have their port number aliased unless it         conflicts with an aliasing port already being used. (cjm)          All options earlier being #ifdef'ed now are available through         a new interface, SetPacketAliasMode().  This allow run time         control (which is now available in PPP+pktAlias through the         'alias' keyword). (ee)          Added ability to create an alias port without         either destination address or port specified.         port type = ALIAS_PORT_UNKNOWN_DEST_ALL (ee)          Removed K&R style function headers         and general cleanup. (ee)          Added packetAliasMode to replace compiler #defines's (ee)          Allocates sockets for partially specified         ports if ALIAS_USE_SOCKETS defined. (cjm)      Version 2.0: March, 1997         SetAliasAddress() will now clean up alias links         if the aliasing address is changed. (cjm)          PacketAliasPermanentLink() function added to support permanent         links.  (J. Fortes suggested the need for this.)         Examples:          (192.168.0.1, port 23)<-> alias port 6002, unknown dest addr/port          (192.168.0.2, port 21)<-> alias port 3604, known dest addr                                                      unknown dest port          These permament links allow for incoming connections to         machines on the local network.  They can be given with a         user-chosen amount of specificity, with increasing specificity         meaning more security. (cjm)          Quite a bit of rework to the basic engine.  The portTable[]         array, which kept track of which ports were in use was replaced         by a table/linked list structure. (cjm)          SetExpire() function added. (cjm)          DeleteLink() no longer frees memory association with a pointer         to a fragment (this bug was first recognized by E. Eklund in         v1.9).      Version 2.1: May, 1997 (cjm)         Packet aliasing engine reworked so that it can handle         multiple external addresses rather than just a single         host address.          PacketAliasRedirectPort() and PacketAliasRedirectAddr()         added to the API.  The first function is a more generalized         version of PacketAliasPermanentLink().  The second function         implements static network address translation.      See HISTORY file for additional revisions.      $FreeBSD$ */
 end_comment
 
 begin_comment
 comment|/* System include files */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -23,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -136,7 +136,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* Timouts (in seconds) for different link types) */
+comment|/* Timeouts (in seconds) for different link types */
 end_comment
 
 begin_define
@@ -853,7 +853,7 @@ comment|/* packets.           		*/
 end_comment
 
 begin_comment
-comment|/* Internal utility routines (used only in alias_db.c)  Lookup table starting points:     StartPointIn()           -- link table initial search point for                                 outgoing packets     StartPointOut()          -- port table initial search point for                                 incoming packets      Miscellaneous:     SeqDiff()                -- difference between two TCP sequences     ShowAliasStats()         -- send alias statistics to a monitor file */
+comment|/* Internal utility routines (used only in alias_db.c)  Lookup table starting points:     StartPointIn()           -- link table initial search point for                                 incoming packets     StartPointOut()          -- port table initial search point for                                 outgoing packets      Miscellaneous:     SeqDiff()                -- difference between two TCP sequences     ShowAliasStats()         -- send alias statistics to a monitor file */
 end_comment
 
 begin_comment
@@ -1324,6 +1324,8 @@ parameter_list|,
 name|u_short
 parameter_list|,
 name|u_short
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -3190,6 +3192,9 @@ name|dst_port
 parameter_list|,
 name|int
 name|link_type
+parameter_list|,
+name|int
+name|replace_partial_links
 parameter_list|)
 block|{
 name|u_int
@@ -3300,6 +3305,103 @@ name|link
 operator|->
 name|next_out
 expr_stmt|;
+block|}
+comment|/* Search for partially specified links. */
+if|if
+condition|(
+name|link
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|dst_port
+operator|!=
+literal|0
+condition|)
+block|{
+name|link
+operator|=
+name|FindLinkOut
+argument_list|(
+name|src_addr
+argument_list|,
+name|dst_addr
+argument_list|,
+name|src_port
+argument_list|,
+literal|0
+argument_list|,
+name|link_type
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|link
+operator|!=
+name|NULL
+operator|&&
+name|replace_partial_links
+condition|)
+block|{
+name|link
+operator|=
+name|ReLink
+argument_list|(
+name|link
+argument_list|,
+name|src_addr
+argument_list|,
+name|dst_addr
+argument_list|,
+name|link
+operator|->
+name|alias_addr
+argument_list|,
+name|src_port
+argument_list|,
+name|dst_port
+argument_list|,
+name|link
+operator|->
+name|alias_port
+argument_list|,
+name|link_type
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|dst_addr
+operator|.
+name|s_addr
+operator|!=
+literal|0
+condition|)
+block|{
+name|link
+operator|=
+name|FindLinkOut
+argument_list|(
+name|src_addr
+argument_list|,
+name|nullAddress
+argument_list|,
+name|src_port
+argument_list|,
+literal|0
+argument_list|,
+name|link_type
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -3905,6 +4007,8 @@ argument_list|,
 name|NO_DEST_PORT
 argument_list|,
 name|LINK_ICMP
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4343,6 +4447,8 @@ argument_list|,
 name|dst_port
 argument_list|,
 name|link_type
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4503,6 +4609,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|LINK_ADDR
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
