@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	1.3	86/01/12	*/
+comment|/*	vm_machdep.c	1.4	86/01/24	*/
 end_comment
 
 begin_include
@@ -1417,34 +1417,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_struct
-struct|struct
-name|keystats
-block|{
-name|long
-name|ks_allocs
-decl_stmt|;
-comment|/* number of keys allocated */
-name|long
-name|ks_free
-decl_stmt|;
-comment|/* key allocated from free slot */
-name|long
-name|ks_norefs
-decl_stmt|;
-comment|/* key marked in use, but refcnt 0 */
-name|long
-name|ks_taken
-decl_stmt|;
-comment|/* key taken from single process */
-name|long
-name|ks_shared
-decl_stmt|;
-comment|/* key taken from multiple processes */
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 name|struct
