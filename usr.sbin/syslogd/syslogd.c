@@ -297,6 +297,12 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ttymsg.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -409,6 +415,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|funixn
@@ -642,7 +649,7 @@ name|int
 name|f_prevcount
 decl_stmt|;
 comment|/* repetition cnt of prevline */
-name|int
+name|u_int
 name|f_repeatcount
 decl_stmt|;
 comment|/* number of "repeated" msgs */
@@ -911,6 +918,7 @@ comment|/* pipe to program */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|TypeNames
@@ -989,6 +997,7 @@ comment|/* our hostname */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|LocalDomain
@@ -1230,6 +1239,7 @@ name|cfline
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1237,9 +1247,11 @@ expr|struct
 name|filed
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1248,6 +1260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|cvthname
@@ -1355,6 +1368,7 @@ operator|*
 operator|,
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1413,9 +1427,11 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1461,6 +1477,7 @@ name|printline
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1490,6 +1507,7 @@ name|p_open
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1518,28 +1536,6 @@ name|reapchild
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ttymsg
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|iovec
-operator|*
-operator|,
-name|int
-operator|,
-name|char
-operator|*
-operator|,
 name|int
 operator|)
 argument_list|)
@@ -1687,9 +1683,6 @@ modifier|*
 name|fp
 decl_stmt|;
 name|char
-modifier|*
-name|hname
-decl_stmt|,
 name|line
 index|[
 name|MAXLINE
@@ -1701,6 +1694,9 @@ specifier|const
 name|char
 modifier|*
 name|bindhostname
+decl_stmt|,
+modifier|*
+name|hname
 decl_stmt|;
 name|struct
 name|timeval
@@ -3240,7 +3236,7 @@ name|sin6
 decl_stmt|;
 name|struct
 name|sockaddr_in
-name|sin
+name|sin4
 decl_stmt|;
 if|if
 condition|(
@@ -3265,7 +3261,7 @@ argument_list|)
 operator|||
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sin4
 argument_list|)
 operator|>
 name|sa
@@ -3297,23 +3293,23 @@ return|return;
 name|memset
 argument_list|(
 operator|&
-name|sin
+name|sin4
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sin4
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sin4
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sin4
 operator|.
 name|sin_len
 operator|=
@@ -3326,7 +3322,7 @@ expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
-name|sin
+name|sin4
 operator|.
 name|sin_addr
 argument_list|,
@@ -3342,13 +3338,13 @@ index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sin4
 operator|.
 name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sin
+name|sin4
 operator|.
 name|sin_port
 operator|=
@@ -3361,9 +3357,9 @@ argument_list|(
 name|sa
 argument_list|,
 operator|&
-name|sin
+name|sin4
 argument_list|,
-name|sin
+name|sin4
 operator|.
 name|sin_len
 argument_list|)
@@ -3410,6 +3406,7 @@ name|hname
 parameter_list|,
 name|msg
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|hname
@@ -4028,6 +4025,7 @@ parameter_list|)
 name|int
 name|pri
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -4061,6 +4059,7 @@ name|omask
 decl_stmt|,
 name|prilev
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|timestamp
@@ -4895,6 +4894,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -4943,7 +4943,11 @@ name|greetings
 index|[
 literal|200
 index|]
+decl_stmt|,
+modifier|*
+name|wmsg
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|msgret
@@ -5328,11 +5332,19 @@ condition|(
 name|msg
 condition|)
 block|{
+name|wmsg
+operator|=
+name|strdup
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+comment|/* XXX iov_base needs a `const' sibling. */
 name|v
 operator|->
 name|iov_base
 operator|=
-name|msg
+name|wmsg
 expr_stmt|;
 name|v
 operator|->
@@ -6086,6 +6098,11 @@ name|f_prevcount
 operator|=
 literal|0
 expr_stmt|;
+name|free
+argument_list|(
+name|wmsg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6128,6 +6145,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -6385,6 +6403,7 @@ name|signo
 parameter_list|)
 name|int
 name|signo
+name|__unused
 decl_stmt|;
 block|{
 name|int
@@ -6523,6 +6542,7 @@ comment|/*  * Return a printable representation of a host address.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|cvthname
@@ -6784,6 +6804,7 @@ name|signo
 parameter_list|)
 name|int
 name|signo
+name|__unused
 decl_stmt|;
 block|{
 name|MarkSet
@@ -8221,6 +8242,7 @@ name|prog
 parameter_list|,
 name|host
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|line
@@ -8230,10 +8252,12 @@ name|filed
 modifier|*
 name|f
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|prog
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|host
@@ -8253,15 +8277,17 @@ name|i
 decl_stmt|,
 name|pri
 decl_stmt|;
+specifier|const
 name|char
-modifier|*
-name|bp
-decl_stmt|,
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|q
+decl_stmt|;
+name|char
+modifier|*
+name|bp
 decl_stmt|;
 name|char
 name|buf
@@ -11044,7 +11070,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 decl_stmt|,
 modifier|*
 name|a4p
@@ -11332,7 +11358,7 @@ operator|==
 name|AF_INET
 condition|)
 block|{
-name|sin
+name|sin4
 operator|=
 operator|(
 expr|struct
@@ -11368,7 +11394,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 operator|.
@@ -11709,6 +11735,7 @@ name|prog
 parameter_list|,
 name|pid
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prog
@@ -11857,21 +11884,30 @@ index|[
 literal|0
 index|]
 operator|=
+name|strdup
+argument_list|(
 literal|"sh"
+argument_list|)
 expr_stmt|;
 name|argv
 index|[
 literal|1
 index|]
 operator|=
+name|strdup
+argument_list|(
 literal|"-c"
+argument_list|)
 expr_stmt|;
 name|argv
 index|[
 literal|2
 index|]
 operator|=
+name|strdup
+argument_list|(
 name|prog
+argument_list|)
 expr_stmt|;
 name|argv
 index|[
