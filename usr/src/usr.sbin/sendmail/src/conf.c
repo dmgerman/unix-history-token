@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.169 (Berkeley) %G%"
+literal|"@(#)conf.c	8.170 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -10903,13 +10903,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<arpa/inet.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
+file|<sys/time.h>
 end_include
 
 begin_include

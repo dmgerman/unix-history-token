@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.37 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.38 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.37 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.38 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -576,8 +576,8 @@ goto|;
 case|case
 name|HOST_NOT_FOUND
 case|:
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|BROKEN_RES_SEARCH
 case|case
 literal|0

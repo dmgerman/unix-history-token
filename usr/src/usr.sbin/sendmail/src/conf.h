@@ -1,10 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.161 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.162 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/* **  CONF.H -- All user-configurable parameters for sendmail */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|rusage
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* forward declaration to get gcc to shut up in wait.h */
 end_comment
 
 begin_include
@@ -873,6 +883,13 @@ end_define
 begin_comment
 comment|/* no vfork primitive available */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
 
 begin_define
 define|#
@@ -2285,6 +2302,16 @@ begin_comment
 comment|/* has sa_len */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETLINK
+end_define
+
+begin_comment
+comment|/* supports AF_LINK */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2386,6 +2413,16 @@ end_define
 
 begin_comment
 comment|/* has sa_len */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETLINK
+end_define
+
+begin_comment
+comment|/* supports AF_LINK */
 end_comment
 
 begin_define
@@ -2601,6 +2638,16 @@ end_define
 
 begin_comment
 comment|/* has sa_len */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETLINK
+end_define
+
+begin_comment
+comment|/* supports AF_LINK */
 end_comment
 
 begin_ifndef

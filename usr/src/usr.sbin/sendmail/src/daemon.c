@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.89 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.90 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.89 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.90 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3636,7 +3636,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|AF_LINK
+name|NETLINK
 end_ifdef
 
 begin_include
@@ -3780,7 +3780,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|AF_LINK
+name|NETLINK
 case|case
 name|AF_LINK
 case|:
