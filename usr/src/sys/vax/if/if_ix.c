@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ix.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ix.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1059,7 +1059,7 @@ condition|)
 block|{
 name|pri
 operator|=
-name|spl4
+name|spl5
 argument_list|()
 expr_stmt|;
 name|NpAddCQE
@@ -1187,7 +1187,7 @@ else|else
 block|{
 name|pri
 operator|=
-name|spl4
+name|spl5
 argument_list|()
 expr_stmt|;
 name|NpAddCQE
@@ -2061,7 +2061,7 @@ begin_decl_stmt
 name|int
 name|ix_MacLoop
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2924,6 +2924,13 @@ operator|&
 name|IXF_STATPENDING
 condition|)
 block|{
+name|ix
+operator|->
+name|ix_flags
+operator|&=
+operator|~
+name|IXF_STATPENDING
+expr_stmt|;
 name|ix
 operator|->
 name|ix_flags
@@ -4164,7 +4171,7 @@ name|IXF_RCVPENDING
 expr_stmt|;
 name|s
 operator|=
-name|spl4
+name|spl5
 argument_list|()
 expr_stmt|;
 name|NpAddCQE
