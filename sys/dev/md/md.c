@@ -2767,14 +2767,16 @@ operator|->
 name|cred
 argument_list|)
 expr_stmt|;
+name|crhold
+argument_list|(
+name|cred
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|cred
 operator|=
-name|crdup
-argument_list|(
 name|cred
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Horrible kludge to establish credentials for NFS  XXX. 	 */
 if|if
