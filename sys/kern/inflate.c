@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.c,v 1.2 1994/10/07 23:18:09 csgr Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  */
+comment|/*  * Most parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.c,v 1.3 1994/10/11 11:29:11 csgr Exp $  *  *  */
 end_comment
 
 begin_include
@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/inflate.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/inflate.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -44,6 +44,31 @@ include|#
 directive|include
 file|<vm/vm_kern.h>
 end_include
+
+begin_comment
+comment|/* needed to make inflate() work */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uch
+value|u_char
+end_define
+
+begin_define
+define|#
+directive|define
+name|ush
+value|u_short
+end_define
+
+begin_define
+define|#
+directive|define
+name|ulg
+value|u_long
+end_define
 
 begin_comment
 comment|/* Stuff to make inflate() work */
@@ -77,637 +102,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|EOF
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CHECK_EOF
-end_define
-
-begin_function
-specifier|static
-name|int
-name|NextByte
-parameter_list|(
-name|struct
-name|gzip
-modifier|*
-name|gz
-parameter_list|)
-block|{
-name|int
-name|error
-decl_stmt|;
-if|if
-condition|(
-name|gz
-operator|->
-name|idx
-operator|>=
-name|gz
-operator|->
-name|len
-condition|)
-block|{
-name|gz
-operator|->
-name|where
-operator|=
-name|__LINE__
-expr_stmt|;
-return|return
-name|EOF
-return|;
-block|}
-if|if
-condition|(
-operator|(
-operator|!
-name|gz
-operator|->
-name|inbuf
-operator|)
-operator|||
-name|gz
-operator|->
-name|idx
-operator|>=
-operator|(
-name|gz
-operator|->
-name|offset
-operator|+
-name|PAGE_SIZE
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|gz
-operator|->
-name|inbuf
-condition|)
-block|{
-name|error
-operator|=
-name|vm_deallocate
-argument_list|(
-name|kernel_map
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|gz
-operator|->
-name|inbuf
-argument_list|,
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|gz
-operator|->
-name|where
-operator|=
-name|__LINE__
-expr_stmt|;
-name|gz
-operator|->
-name|error
-operator|=
-name|error
-expr_stmt|;
-return|return
-name|EOF
-return|;
-block|}
-block|}
-name|gz
-operator|->
-name|offset
-operator|+=
-name|PAGE_SIZE
-expr_stmt|;
-name|error
-operator|=
-name|vm_mmap
-argument_list|(
-name|kernel_map
-argument_list|,
-comment|/* map */
-operator|(
-name|vm_offset_t
-operator|*
-operator|)
-operator|&
-name|gz
-operator|->
-name|inbuf
-argument_list|,
-comment|/* address */
-name|PAGE_SIZE
-argument_list|,
-comment|/* size */
-name|VM_PROT_READ
-argument_list|,
-comment|/* protection */
-name|VM_PROT_READ
-argument_list|,
-comment|/* max protection */
-literal|0
-argument_list|,
-comment|/* flags */
-operator|(
-name|caddr_t
-operator|)
-name|gz
-operator|->
-name|ip
-operator|->
-name|vnodep
-argument_list|,
-comment|/* vnode */
-name|gz
-operator|->
-name|offset
-argument_list|)
-expr_stmt|;
-comment|/* offset */
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|gz
-operator|->
-name|where
-operator|=
-name|__LINE__
-expr_stmt|;
-name|gz
-operator|->
-name|error
-operator|=
-name|error
-expr_stmt|;
-return|return
-name|EOF
-return|;
-block|}
-block|}
-return|return
-name|gz
-operator|->
-name|inbuf
-index|[
-operator|(
-name|gz
-operator|->
-name|idx
-operator|++
-operator|)
-operator|-
-name|gz
-operator|->
-name|offset
-index|]
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|NEXTBYTE
-value|NextByte(gz)
-end_define
-
-begin_function
-specifier|static
-name|int
-name|Flush
-parameter_list|(
-name|struct
-name|gzip
-modifier|*
-name|gz
-parameter_list|,
-name|u_long
-name|siz
-parameter_list|)
-block|{
-name|u_char
-modifier|*
-name|p
-init|=
-name|slide
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-comment|/* First, find a a.out-header */
-if|if
-condition|(
-name|gz
-operator|->
-name|output
-operator|<
-sizeof|sizeof
-name|gz
-operator|->
-name|a_out
-condition|)
-block|{
-name|q
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|gz
-operator|->
-name|a_out
-expr_stmt|;
-name|i
-operator|=
-name|min
-argument_list|(
-name|siz
-argument_list|,
-sizeof|sizeof
-name|gz
-operator|->
-name|a_out
-operator|-
-name|gz
-operator|->
-name|output
-argument_list|)
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|p
-argument_list|,
-name|q
-operator|+
-name|gz
-operator|->
-name|output
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|gz
-operator|->
-name|output
-operator|+=
-name|i
-expr_stmt|;
-name|p
-operator|+=
-name|i
-expr_stmt|;
-name|siz
-operator|-=
-name|i
-expr_stmt|;
-if|if
-condition|(
-name|gz
-operator|->
-name|output
-operator|==
-sizeof|sizeof
-name|gz
-operator|->
-name|a_out
-condition|)
-block|{
-name|i
-operator|=
-name|do_aout_hdr
-argument_list|(
-name|gz
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|gz
-operator|->
-name|where
-operator|=
-name|__LINE__
-expr_stmt|;
-name|gz
-operator|->
-name|error
-operator|=
-name|ENOEXEC
-expr_stmt|;
-return|return
-name|ENOEXEC
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|i
-condition|)
-block|{
-name|gz
-operator|->
-name|where
-operator|=
-name|__LINE__
-expr_stmt|;
-name|gz
-operator|->
-name|error
-operator|=
-name|i
-expr_stmt|;
-return|return
-name|ENOEXEC
-return|;
-block|}
-if|if
-condition|(
-name|gz
-operator|->
-name|file_offset
-operator|<
-sizeof|sizeof
-name|gz
-operator|->
-name|a_out
-condition|)
-block|{
-name|q
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|gz
-operator|->
-name|virtual_offset
-operator|+
-name|gz
-operator|->
-name|output
-operator|-
-name|gz
-operator|->
-name|file_offset
-expr_stmt|;
-name|bcopy
-argument_list|(
-operator|&
-name|gz
-operator|->
-name|a_out
-argument_list|,
-name|q
-argument_list|,
-sizeof|sizeof
-name|gz
-operator|->
-name|a_out
-operator|-
-name|gz
-operator|->
-name|file_offset
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-comment|/* Skip over zero-padded first PAGE if needed */
-if|if
-condition|(
-name|gz
-operator|->
-name|output
-operator|<
-name|gz
-operator|->
-name|file_offset
-operator|&&
-operator|(
-name|gz
-operator|->
-name|output
-operator|+
-name|siz
-operator|)
-operator|>
-name|gz
-operator|->
-name|file_offset
-condition|)
-block|{
-name|i
-operator|=
-name|min
-argument_list|(
-name|siz
-argument_list|,
-name|gz
-operator|->
-name|file_offset
-operator|-
-name|gz
-operator|->
-name|output
-argument_list|)
-expr_stmt|;
-name|gz
-operator|->
-name|output
-operator|+=
-name|i
-expr_stmt|;
-name|p
-operator|+=
-name|i
-expr_stmt|;
-name|siz
-operator|-=
-name|i
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|gz
-operator|->
-name|output
-operator|>=
-name|gz
-operator|->
-name|file_offset
-operator|&&
-name|gz
-operator|->
-name|output
-operator|<
-name|gz
-operator|->
-name|file_end
-condition|)
-block|{
-name|i
-operator|=
-name|min
-argument_list|(
-name|siz
-argument_list|,
-name|gz
-operator|->
-name|file_end
-operator|-
-name|gz
-operator|->
-name|output
-argument_list|)
-expr_stmt|;
-name|q
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|gz
-operator|->
-name|virtual_offset
-operator|+
-name|gz
-operator|->
-name|output
-operator|-
-name|gz
-operator|->
-name|file_offset
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|p
-argument_list|,
-name|q
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|gz
-operator|->
-name|output
-operator|+=
-name|i
-expr_stmt|;
-name|p
-operator|+=
-name|i
-expr_stmt|;
-name|siz
-operator|-=
-name|i
-expr_stmt|;
-block|}
-name|gz
-operator|->
-name|output
-operator|+=
-name|siz
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
 name|FLUSH
 parameter_list|(
 name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|{int foo = Flush(x,y); if (foo) return foo;}
-end_define
-
-begin_function
-specifier|static
-name|void
-modifier|*
-name|myalloc
-parameter_list|(
-name|u_long
-name|size
-parameter_list|)
-block|{
-return|return
-name|malloc
-argument_list|(
-name|size
-argument_list|,
-name|M_GZIP
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|malloc
-value|myalloc
-end_define
-
-begin_function
-specifier|static
-name|void
-name|myfree
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-name|free
-argument_list|(
-name|ptr
-argument_list|,
-name|M_GZIP
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|free
-value|myfree
+value|{						\ 	int foo = (*x->gz_output)(x->gz_private,x->gz_slide,y);	\ 	if (foo) 						\ 		return foo;					\ 	}
 end_define
 
 begin_decl_stmt
@@ -720,21 +121,8 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|Trace
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
 begin_comment
-comment|/* */
-end_comment
-
-begin_comment
-comment|/* This came from unzip-5.12.  I have changed it to pass a "gz" pointer  * around, thus hopefully making it re-entrant.  Poul-Henningi  */
+comment|/*  * This came from unzip-5.12.  I have changed it the flow to pass  * a structure pointer around, thus hopefully making it re-entrant.  * Poul-Henning  */
 end_comment
 
 begin_comment
@@ -742,11 +130,11 @@ comment|/* inflate.c -- put in the public domain by Mark Adler    version c14o, 
 end_comment
 
 begin_comment
-comment|/* You can do whatever you like with this source file, though I would    prefer that if you modify it and redistribute it that you include    comments to that effect with your name and the date.  Thank you.     History:    vers    date          who           what    ----  ---------  --------------  ------------------------------------     a    ~~ Feb 92  M. Adler        used full (large, one-step) lookup table     b1   21 Mar 92  M. Adler        first version with partial lookup tables     b2   21 Mar 92  M. Adler        fixed bug in fixed-code blocks     b3   22 Mar 92  M. Adler        sped up match copies, cleaned up some     b4   25 Mar 92  M. Adler        added prototypes; removed window[] (now                                     is the responsibility of unzip.h--also                                     changed name to slide[]), so needs diffs                                     for unzip.c and unzip.h (this allows                                     compiling in the small model on MSDOS);                                     fixed cast of q in huft_build();     b5   26 Mar 92  M. Adler        got rid of unintended macro recursion.     b6   27 Mar 92  M. Adler        got rid of nextbyte() routine.  fixed                                     bug in inflate_fixed().     c1   30 Mar 92  M. Adler        removed lbits, dbits environment variables.                                     changed BMAX to 16 for explode.  Removed                                     OUTB usage, and replaced it with flush()--                                     this was a 20% speed improvement!  Added                                     an explode.c (to replace unimplod.c) that                                     uses the huft routines here.  Removed                                     register union.     c2    4 Apr 92  M. Adler        fixed bug for file sizes a multiple of 32k.     c3   10 Apr 92  M. Adler        reduced memory of code tables made by                                     huft_build significantly (factor of two to                                     three).     c4   15 Apr 92  M. Adler        added NOMEMCPY do kill use of memcpy().                                     worked around a Turbo C optimization bug.     c5   21 Apr 92  M. Adler        added the WSIZE #define to allow reducing                                     the 32K window size for specialized                                     applications.     c6   31 May 92  M. Adler        added some typecasts to eliminate warnings     c7   27 Jun 92  G. Roelofs      added some more typecasts (444:  MSC bug).     c8    5 Oct 92  J-l. Gailly     added ifdef'd code to deal with PKZIP bug.     c9    9 Oct 92  M. Adler        removed a memory error message (~line 416).     c10  17 Oct 92  G. Roelofs      changed ULONG/UWORD/byte to ulg/ush/uch,                                     removed old inflate, renamed inflate_entry                                     to inflate, added Mark's fix to a comment.    c10.5 14 Dec 92  M. Adler        fix up error messages for incomplete trees.     c11   2 Jan 93  M. Adler        fixed bug in detection of incomplete                                     tables, and removed assumption that EOB is                                     the longest code (bad assumption).     c12   3 Jan 93  M. Adler        make tables for fixed blocks only once.     c13   5 Jan 93  M. Adler        allow all zero length codes (pkzip 2.04c                                     outputs one zero length code for an empty                                     distance tree).     c14  12 Mar 93  M. Adler        made inflate.c standalone with the                                     introduction of inflate.h.    c14b  16 Jul 93  G. Roelofs      added (unsigned) typecast to w at 470.    c14c  19 Jul 93  J. Bush         changed v[N_MAX], l[288], ll[28x+3x] arrays                                     to static for Amiga.    c14d  13 Aug 93  J-l. Gailly     de-complicatified Mark's c[*p++]++ thing.    c14e   8 Oct 93  G. Roelofs      changed memset() to memzero().    c14f  22 Oct 93  G. Roelofs      renamed quietflg to qflag; made Trace()                                     conditional; added inflate_free().    c14g  28 Oct 93  G. Roelofs      changed l/(lx+1) macro to pointer (Cray bug)    c14h   7 Dec 93  C. Ghisler      huft_build() optimizations.    c14i   9 Jan 94  A. Verheijen    set fixed_t{d,l} to NULL after freeing;                     G. Roelofs      check NEXTBYTE macro for EOF.    c14j  23 Jan 94  G. Roelofs      removed Ghisler "optimizations"; ifdef'd                                     EOF check.    c14k  27 Feb 94  G. Roelofs      added some typecasts to avoid warnings.    c14l   9 Apr 94  G. Roelofs      fixed split comments on preprocessor lines                                     to avoid bug in Encore compiler.    c14m   7 Jul 94  P. Kienitz      modified to allow assembler version of                                     inflate_codes() (define ASM_INFLATECODES)    c14n  22 Jul 94  G. Roelofs      changed fprintf to FPRINTF for DLL versions    c14o  23 Aug 94  C. Spieler      added a newline to a debug statement;                     G. Roelofs      added another typecast to avoid MSC warning  */
+comment|/* You can do whatever you like with this source file, though I would    prefer that if you modify it and redistribute it that you include    comments to that effect with your name and the date.  Thank you.     History:    vers    date          who           what    ----  ---------  --------------  ------------------------------------     a    ~~ Feb 92  M. Adler        used full (large, one-step) lookup table     b1   21 Mar 92  M. Adler        first version with partial lookup tables     b2   21 Mar 92  M. Adler        fixed bug in fixed-code blocks     b3   22 Mar 92  M. Adler        sped up match copies, cleaned up some     b4   25 Mar 92  M. Adler        added prototypes; removed window[] (now                                     is the responsibility of unzip.h--also                                     changed name to slide[]), so needs diffs                                     for unzip.c and unzip.h (this allows                                     compiling in the small model on MSDOS);                                     fixed cast of q in huft_build();     b5   26 Mar 92  M. Adler        got rid of unintended macro recursion.     b6   27 Mar 92  M. Adler        got rid of nextbyte() routine.  fixed                                     bug in inflate_fixed().     c1   30 Mar 92  M. Adler        removed lbits, dbits environment variables.                                     changed BMAX to 16 for explode.  Removed                                     OUTB usage, and replaced it with flush()--                                     this was a 20% speed improvement!  Added                                     an explode.c (to replace unimplod.c) that                                     uses the huft routines here.  Removed                                     register union.     c2    4 Apr 92  M. Adler        fixed bug for file sizes a multiple of 32k.     c3   10 Apr 92  M. Adler        reduced memory of code tables made by                                     huft_build significantly (factor of two to                                     three).     c4   15 Apr 92  M. Adler        added NOMEMCPY do kill use of memcpy().                                     worked around a Turbo C optimization bug.     c5   21 Apr 92  M. Adler        added the GZ_WSIZE #define to allow reducing                                     the 32K window size for specialized                                     applications.     c6   31 May 92  M. Adler        added some typecasts to eliminate warnings     c7   27 Jun 92  G. Roelofs      added some more typecasts (444:  MSC bug).     c8    5 Oct 92  J-l. Gailly     added ifdef'd code to deal with PKZIP bug.     c9    9 Oct 92  M. Adler        removed a memory error message (~line 416).     c10  17 Oct 92  G. Roelofs      changed ULONG/UWORD/byte to ulg/ush/uch,                                     removed old inflate, renamed inflate_entry                                     to inflate, added Mark's fix to a comment.    c10.5 14 Dec 92  M. Adler        fix up error messages for incomplete trees.     c11   2 Jan 93  M. Adler        fixed bug in detection of incomplete                                     tables, and removed assumption that EOB is                                     the longest code (bad assumption).     c12   3 Jan 93  M. Adler        make tables for fixed blocks only once.     c13   5 Jan 93  M. Adler        allow all zero length codes (pkzip 2.04c                                     outputs one zero length code for an empty                                     distance tree).     c14  12 Mar 93  M. Adler        made inflate.c standalone with the                                     introduction of inflate.h.    c14b  16 Jul 93  G. Roelofs      added (unsigned) typecast to w at 470.    c14c  19 Jul 93  J. Bush         changed v[N_MAX], l[288], ll[28x+3x] arrays                                     to static for Amiga.    c14d  13 Aug 93  J-l. Gailly     de-complicatified Mark's c[*p++]++ thing.    c14e   8 Oct 93  G. Roelofs      changed memset() to memzero().    c14f  22 Oct 93  G. Roelofs      renamed quietflg to qflag; made Trace()                                     conditional; added inflate_free().    c14g  28 Oct 93  G. Roelofs      changed l/(lx+1) macro to pointer (Cray bug)    c14h   7 Dec 93  C. Ghisler      huft_build() optimizations.    c14i   9 Jan 94  A. Verheijen    set fixed_t{d,l} to NULL after freeing;                     G. Roelofs      check NEXTBYTE macro for GZ_EOF.    c14j  23 Jan 94  G. Roelofs      removed Ghisler "optimizations"; ifdef'd                                     GZ_EOF check.    c14k  27 Feb 94  G. Roelofs      added some typecasts to avoid warnings.    c14l   9 Apr 94  G. Roelofs      fixed split comments on preprocessor lines                                     to avoid bug in Encore compiler.    c14m   7 Jul 94  P. Kienitz      modified to allow assembler version of                                     inflate_codes() (define ASM_INFLATECODES)    c14n  22 Jul 94  G. Roelofs      changed fprintf to FPRINTF for DLL versions    c14o  23 Aug 94  C. Spieler      added a newline to a debug statement;                     G. Roelofs      added another typecast to avoid MSC warning  */
 end_comment
 
 begin_comment
-comment|/*    Inflate deflated (PKZIP's method 8 compressed) data.  The compression    method searches for as much of the current string of bytes (up to a    length of 258) in the previous 32K bytes.  If it doesn't find any    matches (of at least length 3), it codes the next byte.  Otherwise, it    codes the length of the matched string and its distance backwards from    the current position.  There is a single Huffman code that codes both    single bytes (called "literals") and match lengths.  A second Huffman    code codes the distance information, which follows a length code.  Each    length or distance code actually represents a base value and a number    of "extra" (sometimes zero) bits to get to add to the base value.  At    the end of each deflated block is a special end-of-block (EOB) literal/    length code.  The decoding process is basically: get a literal/length    code; if EOB then done; if a literal, emit the decoded byte; if a    length then get the distance and emit the referred-to bytes from the    sliding window of previously emitted data.     There are (currently) three kinds of inflate blocks: stored, fixed, and    dynamic.  The compressor outputs a chunk of data at a time and decides    which method to use on a chunk-by-chunk basis.  A chunk might typically    be 32K to 64K, uncompressed.  If the chunk is uncompressible, then the    "stored" method is used.  In this case, the bytes are simply stored as    is, eight bits per byte, with none of the above coding.  The bytes are    preceded by a count, since there is no longer an EOB code.     If the data is compressible, then either the fixed or dynamic methods    are used.  In the dynamic method, the compressed data is preceded by    an encoding of the literal/length and distance Huffman codes that are    to be used to decode this block.  The representation is itself Huffman    coded, and so is preceded by a description of that code.  These code    descriptions take up a little space, and so for small blocks, there is    a predefined set of codes, called the fixed codes.  The fixed method is    used if the block ends up smaller that way (usually for quite small    chunks); otherwise the dynamic method is used.  In the latter case, the    codes are customized to the probabilities in the current block and so    can code it much better than the pre-determined fixed codes can.      The Huffman codes themselves are decoded using a mutli-level table    lookup, in order to maximize the speed of decoding plus the speed of    building the decoding tables.  See the comments below that precede the    lbits and dbits tuning parameters.  */
+comment|/*    Inflate deflated (PKZIP's method 8 compressed) data.  The compression    method searches for as much of the current string of bytes (up to a    length of 258) in the previous 32K bytes.  If it doesn't find any    matches (of at least length 3), it codes the next byte.  Otherwise, it    codes the length of the matched string and its distance backwards from    the current position.  There is a single Huffman code that codes both    single bytes (called "literals") and match lengths.  A second Huffman    code codes the distance information, which follows a length code.  Each    length or distance code actually represents a base value and a number    of "extra" (sometimes zero) bits to get to add to the base value.  At    the end of each deflated block is a special end-of-block (EOB) literal/    length code.  The decoding process is basically: get a literal/length    code; if EOB then done; if a literal, emit the decoded byte; if a    length then get the distance and emit the referred-to bytes from the    sliding window of previously emitted data.     There are (currently) three kinds of inflate blocks: stored, fixed, and    dynamic.  The compressor outputs a chunk of data at a time and decides    which method to use on a chunk-by-chunk basis.  A chunk might typically    be 32K to 64K, uncompressed.  If the chunk is uncompressible, then the    "stored" method is used.  In this case, the bytes are simply stored as    is, eight bits per byte, with none of the above coding.  The bytes are    preceded by a count, since there is no longer an EOB code.     If the data is compressible, then either the fixed or dynamic methods    are used.  In the dynamic method, the compressed data is preceded by    an encoding of the literal/length and distance Huffman codes that are    to be used to decode this block.  The representation is itself Huffman    coded, and so is preceded by a description of that code.  These code    descriptions take up a little space, and so for small blocks, there is    a predefined set of codes, called the fixed codes.  The fixed method is    used if the block ends up smaller that way (usually for quite small    chunks); otherwise the dynamic method is used.  In the latter case, the    codes are customized to the probabilities in the current block and so    can code it much better than the pre-determined fixed codes can.     The Huffman codes themselves are decoded using a mutli-level table    lookup, in order to maximize the speed of decoding plus the speed of    building the decoding tables.  See the comments below that precede the    lbits and dbits tuning parameters.  */
 end_comment
 
 begin_comment
@@ -764,7 +152,7 @@ comment|/* PKZIP 1.93a problem--live with it */
 end_comment
 
 begin_comment
-comment|/*     inflate.h must supply the uch slide[WSIZE] array and the NEXTBYTE,     FLUSH() and memzero macros.  If the window size is not 32K, it     should also define WSIZE.  If INFMOD is defined, it can include     compiled functions to support the NEXTBYTE and/or FLUSH() macros.     There are defaults for NEXTBYTE and FLUSH() below for use as     examples of what those functions need to do.  Normally, you would     also want FLUSH() to compute a crc on the data.  inflate.h also     needs to provide these typedefs:          typedef unsigned char uch;         typedef unsigned short ush;         typedef unsigned long ulg;      This module uses the external functions malloc() and free() (and     probably memset() or bzero() in the memzero() macro).  Their     prototypes are normally found in<string.h> and<stdlib.h>.  */
+comment|/*     inflate.h must supply the uch slide[GZ_WSIZE] array and the NEXTBYTE,     FLUSH() and memzero macros.  If the window size is not 32K, it     should also define GZ_WSIZE.  If INFMOD is defined, it can include     compiled functions to support the NEXTBYTE and/or FLUSH() macros.     There are defaults for NEXTBYTE and FLUSH() below for use as     examples of what those functions need to do.  Normally, you would     also want FLUSH() to compute a crc on the data.  inflate.h also     needs to provide these typedefs:          typedef unsigned char uch;         typedef unsigned short ush;         typedef unsigned long ulg;      This module uses the external functions malloc() and free() (and     probably memset() or bzero() in the memzero() macro).  Their     prototypes are normally found in<string.h> and<stdlib.h>.  */
 end_comment
 
 begin_define
@@ -774,7 +162,7 @@ name|INFMOD
 end_define
 
 begin_comment
-comment|/* tell inflate.h to include code to be compiled */
+comment|/* tell inflate.h to include code to be 				 * compiled */
 end_comment
 
 begin_comment
@@ -798,7 +186,7 @@ block|{
 name|ush
 name|n
 decl_stmt|;
-comment|/* literal, length base, or distance base */
+comment|/* literal, length base, or distance 					 * base */
 name|struct
 name|huft
 modifier|*
@@ -816,70 +204,15 @@ begin_comment
 comment|/* Function prototypes */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OF
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OF
-parameter_list|(
-name|a
-parameter_list|)
-value|a
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__STDC__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OF
-parameter_list|(
-name|a
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ?__STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|int
 name|huft_build
-name|OF
+name|__P
 argument_list|(
 operator|(
 expr|struct
-name|gzip
+name|inflate
 operator|*
 operator|,
 name|unsigned
@@ -904,10 +237,6 @@ operator|*
 operator|,
 name|int
 operator|*
-operator|,
-expr|struct
-name|gz_global
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -917,11 +246,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|huft_free
-name|OF
+name|__P
 argument_list|(
 operator|(
 expr|struct
-name|gzip
+name|inflate
 operator|*
 operator|,
 expr|struct
@@ -936,11 +265,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|inflate_codes
-name|OF
+name|__P
 argument_list|(
 operator|(
 expr|struct
-name|gzip
+name|inflate
 operator|*
 operator|,
 expr|struct
@@ -954,10 +283,6 @@ operator|,
 name|int
 operator|,
 name|int
-operator|,
-expr|struct
-name|gz_global
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -967,15 +292,26 @@ begin_decl_stmt
 specifier|static
 name|int
 name|inflate_stored
-name|OF
+name|__P
 argument_list|(
 operator|(
 expr|struct
-name|gzip
+name|inflate
 operator|*
-operator|,
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|xinflate
+name|__P
+argument_list|(
+operator|(
 expr|struct
-name|gz_global
+name|inflate
 operator|*
 operator|)
 argument_list|)
@@ -986,15 +322,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|inflate_fixed
-name|OF
+name|__P
 argument_list|(
 operator|(
 expr|struct
-name|gzip
-operator|*
-operator|,
-expr|struct
-name|gz_global
+name|inflate
 operator|*
 operator|)
 argument_list|)
@@ -1005,15 +337,11 @@ begin_decl_stmt
 specifier|static
 name|int
 name|inflate_dynamic
-name|OF
+name|__P
 argument_list|(
 operator|(
 expr|struct
-name|gzip
-operator|*
-operator|,
-expr|struct
-name|gz_global
+name|inflate
 operator|*
 operator|)
 argument_list|)
@@ -1024,39 +352,19 @@ begin_decl_stmt
 specifier|static
 name|int
 name|inflate_block
-name|OF
+name|__P
 argument_list|(
 operator|(
 expr|struct
-name|gzip
+name|inflate
 operator|*
 operator|,
 name|int
-operator|*
-operator|,
-expr|struct
-name|gz_global
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* never used - why not ? */
-end_comment
-
-begin_endif
-unit|static int inflate_free OF((struct gzip *, struct gz_global *));
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The inflate algorithm uses a sliding 32K byte window on the uncompressed    stream to find repeated byte strings.  This is implemented here as a    circular buffer.  The index is updated simply by incrementing and then    and'ing with 0x7fff (32K-1). */
@@ -1070,6 +378,10 @@ begin_comment
 comment|/* Tables for deflate from PKZIP's appnote.txt. */
 end_comment
 
+begin_comment
+comment|/* Order of the bit length code lengths */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -1078,7 +390,6 @@ name|border
 index|[]
 init|=
 block|{
-comment|/* Order of the bit length code lengths */
 literal|16
 block|,
 literal|17
@@ -1470,74 +781,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Macros for inflate() bit peeking and grabbing.    The usage is:             NEEDBITS(j)         x = b& mask[j];         DUMPBITS(j)     where NEEDBITS makes sure that b has at least j bits in it, and    DUMPBITS removes the bits from b.  The macros use the variable k    for the number of bits in b.  Normally, b and k are register    variables for speed, and are initialized at the begining of a    routine that uses these macros from a global bit buffer and count.     In order to not ask for more bits than there are in the compressed    stream, the Huffman tables are constructed to only ask for just    enough bits to make up the end-of-block code (value 256).  Then no    bytes need to be "returned" to the buffer at the end of the last    block.  See the huft_build() routine.  */
+comment|/* Macros for inflate() bit peeking and grabbing.    The usage is:          NEEDBITS(glbl,j)         x = b& mask[j];         DUMPBITS(j)     where NEEDBITS makes sure that b has at least j bits in it, and    DUMPBITS removes the bits from b.  The macros use the variable k    for the number of bits in b.  Normally, b and k are register    variables for speed, and are initialized at the begining of a    routine that uses these macros from a global bit buffer and count.     In order to not ask for more bits than there are in the compressed    stream, the Huffman tables are constructed to only ask for just    enough bits to make up the end-of-block code (value 256).  Then no    bytes need to be "returned" to the buffer at the end of the last    block.  See the huft_build() routine.  */
 end_comment
 
 begin_comment
-comment|/*  * The following 2 were global variables.  * They are now fields of the gz_global structure.  */
+comment|/*  * The following 2 were global variables.  * They are now fields of the inflate structure.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|bb
-value|(glbl->gz_bb)
-end_define
-
-begin_comment
-comment|/* bit buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|bk
-value|(glbl->gz_bk)
-end_define
-
-begin_comment
-comment|/* bits in bit buffer */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CHECK_EOF
-end_ifndef
 
 begin_define
 define|#
 directive|define
 name|NEEDBITS
 parameter_list|(
+name|glbl
+parameter_list|,
 name|n
 parameter_list|)
-value|{while(k<(n)){b|=((ulg)NEXTBYTE)<<k;k+=8;}}
+value|{						\ 		while(k<(n)) {						\ 			int c=(*glbl->gz_input)(glbl->gz_private);	\ 			if(c==GZ_EOF)					\ 				return 1; 				\ 			b|=((ulg)c)<<k;					\ 			k+=8;						\ 		}							\ 	}
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NEEDBITS
-parameter_list|(
-name|n
-parameter_list|)
-value|{while(k<(n)){int c=NEXTBYTE;if(c==EOF)return 1;\     b|=((ulg)c)<<k;k+=8;}}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Piet Plomp:  change "return 1" to "break" */
-end_comment
 
 begin_define
 define|#
@@ -1593,7 +854,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* maximum bit length of any code (16 for explode) */
+comment|/* maximum bit length of any code (16 for 				 * explode) */
 end_comment
 
 begin_define
@@ -1608,22 +869,15 @@ comment|/* maximum number of codes in any set */
 end_comment
 
 begin_comment
-comment|/*  * This also used to be a global variable  */
+comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return zero on success, one if    the given code set is incomplete (the tables are still built in this    case), two if the input is invalid (all zero length codes or an    oversubscribed set of lengths), and three if not enough memory.    The code with value 256 is special, and the tables are constructed    so that no bits beyond that code are fetched when that code is    decoded. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|hufts
-value|(glbl->gz_hufts)
-end_define
 
 begin_function
 specifier|static
 name|int
 name|huft_build
 parameter_list|(
-name|gz
+name|glbl
 parameter_list|,
 name|b
 parameter_list|,
@@ -1638,13 +892,11 @@ parameter_list|,
 name|t
 parameter_list|,
 name|m
-parameter_list|,
-name|glbl
 parameter_list|)
 name|struct
-name|gzip
+name|inflate
 modifier|*
-name|gz
+name|glbl
 decl_stmt|;
 name|unsigned
 modifier|*
@@ -1683,12 +935,6 @@ modifier|*
 name|m
 decl_stmt|;
 comment|/* maximum lookup bits, returns actual */
-name|struct
-name|gz_global
-modifier|*
-name|glbl
-decl_stmt|;
-comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return zero on success, one if    the given code set is incomplete (the tables are still built in this    case), two if the input is invalid (all zero length codes or an    oversubscribed set of lengths), and three if not enough memory.    The code with value 256 is special, and the tables are constructed    so that no bits beyond that code are fetched when that code is    decoded. */
 block|{
 name|unsigned
 name|a
@@ -1879,8 +1125,8 @@ index|]
 operator|==
 name|n
 condition|)
-comment|/* null input--all zero length codes */
 block|{
+comment|/* null input--all zero length codes */
 operator|*
 name|t
 operator|=
@@ -2212,7 +1458,7 @@ name|a
 operator|--
 condition|)
 block|{
-comment|/* here i is the Huffman code of length k bits for value *p */
+comment|/* 			 * here i is the Huffman code of length k bits for 			 * value *p 			 */
 comment|/* make tables up to required level */
 while|while
 condition|(
@@ -2235,7 +1481,7 @@ operator|++
 index|]
 expr_stmt|;
 comment|/* add bits already decoded */
-comment|/* compute minimum size table less than or equal to *m bits */
+comment|/* 				 * compute minimum size table less than or 				 * equal to *m bits 				 */
 name|z
 operator|=
 operator|(
@@ -2278,16 +1524,16 @@ name|a
 operator|+
 literal|1
 condition|)
-comment|/* try a k-w bit table */
 block|{
-comment|/* too few codes for k-w bit table */
+comment|/* try a k-w bit table */
+comment|/* t 									 * oo few codes for k-w 									 * bit table */
 name|f
 operator|-=
 name|a
 operator|+
 literal|1
 expr_stmt|;
-comment|/* deduct codes from patterns left */
+comment|/* deduct codes from 							 * patterns left */
 name|xp
 operator|=
 name|c
@@ -2301,8 +1547,8 @@ name|j
 operator|<
 name|z
 condition|)
-comment|/* try smaller tables up to z bits */
 block|{
+comment|/* try smaller tables up 								 * to z bits */
 if|if
 condition|(
 operator|(
@@ -2316,13 +1562,13 @@ operator|++
 name|xp
 condition|)
 break|break;
-comment|/* enough codes to use up j bits */
+comment|/* enough codes to use 								 * up j bits */
 name|f
 operator|-=
 operator|*
 name|xp
 expr_stmt|;
-comment|/* else deduct codes from patterns */
+comment|/* else deduct codes 								 * from patterns */
 block|}
 block|}
 if|if
@@ -2349,14 +1595,14 @@ name|el
 operator|-
 name|w
 expr_stmt|;
-comment|/* make EOB code end at table */
+comment|/* make EOB code end at 							 * table */
 name|z
 operator|=
 literal|1
 operator|<<
 name|j
 expr_stmt|;
-comment|/* table entries for j-bit table */
+comment|/* table entries for j-bit 						 * table */
 name|l
 index|[
 name|h
@@ -2389,6 +1635,10 @@ argument_list|(
 expr|struct
 name|huft
 argument_list|)
+argument_list|,
+name|M_GZIP
+argument_list|,
+name|M_WAITOK
 argument_list|)
 operator|)
 operator|==
@@ -2406,7 +1656,7 @@ name|h
 condition|)
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|u
 index|[
@@ -2419,7 +1669,9 @@ literal|3
 return|;
 comment|/* not enough memory */
 block|}
-name|hufts
+name|glbl
+operator|->
+name|gz_hufts
 operator|+=
 name|z
 operator|+
@@ -2433,7 +1685,7 @@ name|q
 operator|+
 literal|1
 expr_stmt|;
-comment|/* link to list for huft_free() */
+comment|/* link to list for 						 * huft_free() */
 operator|*
 operator|(
 name|t
@@ -2477,7 +1729,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|/* save pattern for backing up */
+comment|/* save pattern for 							 * backing up */
 name|r
 operator|.
 name|b
@@ -2492,7 +1744,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-comment|/* bits to dump before this table */
+comment|/* bits to dump before 								 * this table */
 name|r
 operator|.
 name|e
@@ -2586,7 +1838,7 @@ name|e
 operator|=
 literal|99
 expr_stmt|;
-comment|/* out of values--invalid code */
+comment|/* out of values--invalid 						 * code */
 elseif|else
 if|if
 condition|(
@@ -2614,7 +1866,7 @@ else|:
 literal|15
 argument_list|)
 expr_stmt|;
-comment|/* 256 is end-of-block code */
+comment|/* 256 is end-of-block 									 * code */
 name|r
 operator|.
 name|v
@@ -2625,7 +1877,7 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
-comment|/* simple code is just the value */
+comment|/* simple code is just the 						 * value */
 block|}
 else|else
 block|{
@@ -2644,7 +1896,7 @@ operator|-
 name|s
 index|]
 expr_stmt|;
-comment|/* non-simple--look up in lists */
+comment|/* non-simple--look up 							 * in lists */
 name|r
 operator|.
 name|v
@@ -2784,14 +2036,14 @@ specifier|static
 name|int
 name|huft_free
 parameter_list|(
-name|gz
+name|glbl
 parameter_list|,
 name|t
 parameter_list|)
 name|struct
-name|gzip
+name|inflate
 modifier|*
-name|gz
+name|glbl
 decl_stmt|;
 name|struct
 name|huft
@@ -2841,6 +2093,8 @@ expr_stmt|;
 name|free
 argument_list|(
 name|p
+argument_list|,
+name|M_GZIP
 argument_list|)
 expr_stmt|;
 name|p
@@ -2854,64 +2108,16 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ASM_INFLATECODES
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|inflate_codes
-parameter_list|(
-name|tl
-parameter_list|,
-name|td
-parameter_list|,
-name|bl
-parameter_list|,
-name|bd
-parameter_list|)
-value|flate_codes(tl,td,bl,bd,(uch *)slide)
-end_define
-
-begin_decl_stmt
-name|int
-name|flate_codes
-name|OF
-argument_list|(
-operator|(
-expr|struct
-name|huft
-operator|*
-operator|,
-expr|struct
-name|huft
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|uch
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* inflate (decompress) the codes in a deflated (compressed) block.    Return an error code or zero if it all goes ok. */
+end_comment
 
 begin_function
 specifier|static
 name|int
 name|inflate_codes
 parameter_list|(
-name|gz
+name|glbl
 parameter_list|,
 name|tl
 parameter_list|,
@@ -2920,13 +2126,11 @@ parameter_list|,
 name|bl
 parameter_list|,
 name|bd
-parameter_list|,
-name|glbl
 parameter_list|)
 name|struct
-name|gzip
+name|inflate
 modifier|*
-name|gz
+name|glbl
 decl_stmt|;
 name|struct
 name|huft
@@ -2952,22 +2156,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of bits decoded by tl[] and td[] */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|gz_global
-modifier|*
-name|glbl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* global variables */
-end_comment
-
-begin_comment
-comment|/* inflate (decompress) the codes in a deflated (compressed) block.    Return an error code or zero if it all goes ok. */
 end_comment
 
 begin_block
@@ -3012,16 +2200,22 @@ comment|/* number of bits in bit buffer */
 comment|/* make local copies of globals */
 name|b
 operator|=
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 expr_stmt|;
 comment|/* initialize bit buffer */
 name|k
 operator|=
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 expr_stmt|;
 name|w
 operator|=
-name|wp
+name|glbl
+operator|->
+name|gz_wp
 expr_stmt|;
 comment|/* initialize window position */
 comment|/* inflate the coded data */
@@ -3044,11 +2238,13 @@ while|while
 condition|(
 literal|1
 condition|)
-comment|/* do until end of block */
 block|{
+comment|/* do until end of block */
 name|NEEDBITS
 argument_list|(
-argument|(unsigned)bl
+argument|glbl
+argument_list|,
+argument|(unsigned) bl
 argument_list|)
 if|if
 condition|(
@@ -3096,6 +2292,8 @@ literal|16
 expr_stmt|;
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 argument|e
 argument_list|)
 block|}
@@ -3142,9 +2340,11 @@ name|e
 operator|==
 literal|16
 condition|)
-comment|/* then it's a literal */
 block|{
-name|slide
+comment|/* then it's a literal */
+name|glbl
+operator|->
+name|gz_slide
 index|[
 name|w
 operator|++
@@ -3163,12 +2363,12 @@ if|if
 condition|(
 name|w
 operator|==
-name|WSIZE
+name|GZ_WSIZE
 condition|)
 block|{
 name|FLUSH
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|w
 argument_list|)
@@ -3180,8 +2380,8 @@ expr_stmt|;
 block|}
 block|}
 else|else
-comment|/* it's an EOB or a length */
 block|{
+comment|/* it's an EOB or a length */
 comment|/* exit if end of block */
 if|if
 condition|(
@@ -3193,6 +2393,8 @@ break|break;
 comment|/* get length of block to copy */
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 argument|e
 argument_list|)
 name|n
@@ -3223,7 +2425,9 @@ expr_stmt|;
 comment|/* decode distance of block to copy */
 name|NEEDBITS
 argument_list|(
-argument|(unsigned)bd
+argument|glbl
+argument_list|,
+argument|(unsigned) bd
 argument_list|)
 if|if
 condition|(
@@ -3271,6 +2475,8 @@ literal|16
 expr_stmt|;
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 argument|e
 argument_list|)
 block|}
@@ -3313,6 +2519,8 @@ argument|t->b
 argument_list|)
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 argument|e
 argument_list|)
 name|d
@@ -3352,13 +2560,13 @@ operator|=
 operator|(
 name|e
 operator|=
-name|WSIZE
+name|GZ_WSIZE
 operator|-
 operator|(
 operator|(
 name|d
 operator|&=
-name|WSIZE
+name|GZ_WSIZE
 operator|-
 literal|1
 operator|)
@@ -3389,15 +2597,19 @@ name|d
 operator|>=
 name|e
 condition|)
-comment|/* (this test assumes unsigned comparison) */
 block|{
+comment|/* (this test assumes 							 * unsigned comparison) */
 name|memcpy
 argument_list|(
-name|slide
+name|glbl
+operator|->
+name|gz_slide
 operator|+
 name|w
 argument_list|,
-name|slide
+name|glbl
+operator|->
+name|gz_slide
 operator|+
 name|d
 argument_list|,
@@ -3414,19 +2626,23 @@ name|e
 expr_stmt|;
 block|}
 else|else
-comment|/* do it slow to avoid memcpy() overlap */
+comment|/* do it slow to avoid memcpy() 					 * overlap */
 endif|#
 directive|endif
 comment|/* !NOMEMCPY */
 do|do
 block|{
-name|slide
+name|glbl
+operator|->
+name|gz_slide
 index|[
 name|w
 operator|++
 index|]
 operator|=
-name|slide
+name|glbl
+operator|->
+name|gz_slide
 index|[
 name|d
 operator|++
@@ -3443,12 +2659,12 @@ if|if
 condition|(
 name|w
 operator|==
-name|WSIZE
+name|GZ_WSIZE
 condition|)
 block|{
 name|FLUSH
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|w
 argument_list|)
@@ -3467,17 +2683,23 @@ do|;
 block|}
 block|}
 comment|/* restore the globals from the locals */
-name|wp
+name|glbl
+operator|->
+name|gz_wp
 operator|=
 name|w
 expr_stmt|;
 comment|/* restore global window pointer */
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 operator|=
 name|b
 expr_stmt|;
 comment|/* restore global bit buffer */
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 operator|=
 name|k
 expr_stmt|;
@@ -3488,13 +2710,8 @@ return|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* ASM_INFLATECODES */
+comment|/* "decompress" an inflated type 0 (stored) block. */
 end_comment
 
 begin_function
@@ -3502,21 +2719,13 @@ specifier|static
 name|int
 name|inflate_stored
 parameter_list|(
-name|gz
-parameter_list|,
 name|glbl
 parameter_list|)
 name|struct
-name|gzip
-modifier|*
-name|gz
-decl_stmt|;
-name|struct
-name|gz_global
+name|inflate
 modifier|*
 name|glbl
 decl_stmt|;
-comment|/* "decompress" an inflated type 0 (stored) block. */
 block|{
 name|unsigned
 name|n
@@ -3537,27 +2746,24 @@ name|k
 decl_stmt|;
 comment|/* number of bits in bit buffer */
 comment|/* make local copies of globals */
-name|Trace
-argument_list|(
-operator|(
-name|stderr
-operator|,
-literal|"\nstored block"
-operator|)
-argument_list|)
-expr_stmt|;
 name|b
 operator|=
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 expr_stmt|;
 comment|/* initialize bit buffer */
 name|k
 operator|=
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 expr_stmt|;
 name|w
 operator|=
-name|wp
+name|glbl
+operator|->
+name|gz_wp
 expr_stmt|;
 comment|/* initialize window position */
 comment|/* go to byte boundary */
@@ -3575,6 +2781,8 @@ expr_stmt|;
 comment|/* get the length and its complement */
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|16
 argument_list|)
 name|n
@@ -3594,6 +2802,8 @@ literal|16
 argument_list|)
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|16
 argument_list|)
 if|if
@@ -3629,9 +2839,13 @@ condition|)
 block|{
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|8
 argument_list|)
-name|slide
+name|glbl
+operator|->
+name|gz_slide
 index|[
 name|w
 operator|++
@@ -3646,12 +2860,12 @@ if|if
 condition|(
 name|w
 operator|==
-name|WSIZE
+name|GZ_WSIZE
 condition|)
 block|{
 name|FLUSH
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|w
 argument_list|)
@@ -3667,17 +2881,23 @@ literal|8
 argument_list|)
 block|}
 comment|/* restore the globals from the locals */
-name|wp
+name|glbl
+operator|->
+name|gz_wp
 operator|=
 name|w
 expr_stmt|;
 comment|/* restore global window pointer */
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 operator|=
 name|b
 expr_stmt|;
 comment|/* restore global bit buffer */
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 operator|=
 name|k
 expr_stmt|;
@@ -3688,75 +2908,28 @@ block|}
 end_function
 
 begin_comment
-comment|/* Globals for literal tables (built once) */
+comment|/* decompress an inflated type 1 (fixed Huffman codes) block.  We should    either replace this with a custom decoder, or at least precompute the    Huffman tables. */
 end_comment
-
-begin_comment
-comment|/* The real variables are now in the struct gz_global */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|fixed_tl
-value|(glbl->gz_fixed_tl)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fixed_td
-value|(glbl->gz_fixed_td)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fixed_bl
-value|(glbl->gz_fixed_bl)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fixed_bd
-value|(glbl->gz_fixed_bd)
-end_define
 
 begin_function
 specifier|static
 name|int
 name|inflate_fixed
 parameter_list|(
-name|gz
-parameter_list|,
 name|glbl
 parameter_list|)
 name|struct
-name|gzip
-modifier|*
-name|gz
-decl_stmt|;
-name|struct
-name|gz_global
+name|inflate
 modifier|*
 name|glbl
 decl_stmt|;
-comment|/* decompress an inflated type 1 (fixed Huffman codes) block.  We should    either replace this with a custom decoder, or at least precompute the    Huffman tables. */
 block|{
 comment|/* if first time, set up tables for fixed blocks */
-name|Trace
-argument_list|(
-operator|(
-name|stderr
-operator|,
-literal|"\nliteral block"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|fixed_tl
+name|glbl
+operator|->
+name|gz_fixed_tl
 operator|==
 operator|(
 expr|struct
@@ -3843,7 +3016,7 @@ condition|;
 name|i
 operator|++
 control|)
-comment|/* make a complete, but wrong code set */
+comment|/* make a complete, but wrong code 					 * set */
 name|l
 index|[
 name|i
@@ -3851,7 +3024,9 @@ index|]
 operator|=
 literal|8
 expr_stmt|;
-name|fixed_bl
+name|glbl
+operator|->
+name|gz_fixed_bl
 operator|=
 literal|7
 expr_stmt|;
@@ -3862,7 +3037,7 @@ name|i
 operator|=
 name|huft_build
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|l
 argument_list|,
@@ -3875,19 +3050,23 @@ argument_list|,
 name|cplext
 argument_list|,
 operator|&
-name|fixed_tl
+name|glbl
+operator|->
+name|gz_fixed_tl
 argument_list|,
 operator|&
-name|fixed_bl
-argument_list|,
 name|glbl
+operator|->
+name|gz_fixed_bl
 argument_list|)
 operator|)
 operator|!=
 literal|0
 condition|)
 block|{
-name|fixed_tl
+name|glbl
+operator|->
+name|gz_fixed_tl
 operator|=
 operator|(
 expr|struct
@@ -3914,7 +3093,7 @@ condition|;
 name|i
 operator|++
 control|)
-comment|/* make an incomplete code set */
+comment|/* make an incomplete code 						 * set */
 name|l
 index|[
 name|i
@@ -3922,7 +3101,9 @@ index|]
 operator|=
 literal|5
 expr_stmt|;
-name|fixed_bd
+name|glbl
+operator|->
+name|gz_fixed_bd
 operator|=
 literal|5
 expr_stmt|;
@@ -3933,7 +3114,7 @@ name|i
 operator|=
 name|huft_build
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|l
 argument_list|,
@@ -3946,12 +3127,14 @@ argument_list|,
 name|cpdext
 argument_list|,
 operator|&
-name|fixed_td
+name|glbl
+operator|->
+name|gz_fixed_td
 argument_list|,
 operator|&
-name|fixed_bd
-argument_list|,
 name|glbl
+operator|->
+name|gz_fixed_bd
 argument_list|)
 operator|)
 operator|>
@@ -3960,12 +3143,16 @@ condition|)
 block|{
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
-name|fixed_tl
+name|glbl
+operator|->
+name|gz_fixed_tl
 argument_list|)
 expr_stmt|;
-name|fixed_tl
+name|glbl
+operator|->
+name|gz_fixed_tl
 operator|=
 operator|(
 expr|struct
@@ -3983,17 +3170,23 @@ comment|/* decompress until an end-of-block code */
 return|return
 name|inflate_codes
 argument_list|(
-name|gz
-argument_list|,
-name|fixed_tl
-argument_list|,
-name|fixed_td
-argument_list|,
-name|fixed_bl
-argument_list|,
-name|fixed_bd
+name|glbl
 argument_list|,
 name|glbl
+operator|->
+name|gz_fixed_tl
+argument_list|,
+name|glbl
+operator|->
+name|gz_fixed_td
+argument_list|,
+name|glbl
+operator|->
+name|gz_fixed_bl
+argument_list|,
+name|glbl
+operator|->
+name|gz_fixed_bd
 argument_list|)
 operator|!=
 literal|0
@@ -4001,26 +3194,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* decompress an inflated type 2 (dynamic Huffman codes) block. */
+end_comment
+
 begin_function
 specifier|static
 name|int
 name|inflate_dynamic
 parameter_list|(
-name|gz
-parameter_list|,
 name|glbl
 parameter_list|)
 name|struct
-name|gzip
-modifier|*
-name|gz
-decl_stmt|;
-name|struct
-name|gz_global
+name|inflate
 modifier|*
 name|glbl
 decl_stmt|;
-comment|/* decompress an inflated type 2 (dynamic Huffman codes) block. */
 block|{
 name|int
 name|i
@@ -4084,7 +3273,7 @@ operator|+
 literal|32
 index|]
 decl_stmt|;
-comment|/* literal/length and distance code lengths */
+comment|/* literal/length and distance code 					 * lengths */
 else|#
 directive|else
 name|unsigned
@@ -4095,7 +3284,7 @@ operator|+
 literal|30
 index|]
 decl_stmt|;
-comment|/* literal/length and distance code lengths */
+comment|/* literal/length and distance code 					 * lengths */
 endif|#
 directive|endif
 specifier|register
@@ -4109,26 +3298,23 @@ name|k
 decl_stmt|;
 comment|/* number of bits in bit buffer */
 comment|/* make local bit buffer */
-name|Trace
-argument_list|(
-operator|(
-name|stderr
-operator|,
-literal|"\ndynamic block"
-operator|)
-argument_list|)
-expr_stmt|;
 name|b
 operator|=
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 expr_stmt|;
 name|k
 operator|=
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 expr_stmt|;
 comment|/* read in table lengths */
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|5
 argument_list|)
 name|nl
@@ -4144,13 +3330,15 @@ operator|&
 literal|0x1f
 operator|)
 expr_stmt|;
-comment|/* number of literal/length codes */
+comment|/* number of 							 * literal/length codes */
 name|DUMPBITS
 argument_list|(
 literal|5
 argument_list|)
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|5
 argument_list|)
 name|nd
@@ -4173,6 +3361,8 @@ literal|5
 argument_list|)
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|4
 argument_list|)
 name|nb
@@ -4241,6 +3431,8 @@ control|)
 block|{
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|3
 argument_list|)
 name|ll
@@ -4295,7 +3487,7 @@ name|i
 operator|=
 name|huft_build
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|ll
 argument_list|,
@@ -4312,8 +3504,6 @@ name|tl
 argument_list|,
 operator|&
 name|bl
-argument_list|,
-name|glbl
 argument_list|)
 operator|)
 operator|!=
@@ -4328,7 +3518,7 @@ literal|1
 condition|)
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|tl
 argument_list|)
@@ -4370,7 +3560,9 @@ condition|)
 block|{
 name|NEEDBITS
 argument_list|(
-argument|(unsigned)bl
+argument|glbl
+argument_list|,
+argument|(unsigned) bl
 argument_list|)
 name|j
 operator|=
@@ -4428,10 +3620,12 @@ name|j
 operator|==
 literal|16
 condition|)
-comment|/* repeat last length 3 to 6 times */
 block|{
+comment|/* repeat last length 3 to 6 times */
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|2
 argument_list|)
 name|j
@@ -4486,10 +3680,12 @@ name|j
 operator|==
 literal|17
 condition|)
-comment|/* 3 to 10 zero length codes */
 block|{
+comment|/* 3 to 10 zero length codes */
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|3
 argument_list|)
 name|j
@@ -4542,10 +3738,12 @@ literal|0
 expr_stmt|;
 block|}
 else|else
-comment|/* j == 18: 11 to 138 zero length codes */
 block|{
+comment|/* j == 18: 11 to 138 zero length codes */
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|7
 argument_list|)
 name|j
@@ -4601,17 +3799,21 @@ block|}
 comment|/* free decoding table for trees */
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|tl
 argument_list|)
 expr_stmt|;
 comment|/* restore the global bit buffer */
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 operator|=
 name|b
 expr_stmt|;
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 operator|=
 name|k
 expr_stmt|;
@@ -4620,14 +3822,11 @@ name|bl
 operator|=
 name|lbits
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|i
 operator|=
 name|huft_build
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|ll
 argument_list|,
@@ -4644,10 +3843,11 @@ name|tl
 argument_list|,
 operator|&
 name|bl
-argument_list|,
-name|glbl
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|i
 operator|!=
 literal|0
 condition|)
@@ -4669,7 +3869,7 @@ argument_list|)
 expr_stmt|;
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|tl
 argument_list|)
@@ -4684,14 +3884,11 @@ name|bd
 operator|=
 name|dbits
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|i
 operator|=
 name|huft_build
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|ll
 operator|+
@@ -4710,10 +3907,11 @@ name|td
 argument_list|,
 operator|&
 name|bd
-argument_list|,
-name|glbl
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|i
 operator|!=
 literal|0
 condition|)
@@ -4745,7 +3943,7 @@ else|#
 directive|else
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|td
 argument_list|)
@@ -4753,7 +3951,7 @@ expr_stmt|;
 block|}
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|tl
 argument_list|)
@@ -4776,7 +3974,7 @@ if|if
 condition|(
 name|inflate_codes
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|tl
 argument_list|,
@@ -4785,8 +3983,6 @@ argument_list|,
 name|bl
 argument_list|,
 name|bd
-argument_list|,
-name|glbl
 argument_list|)
 condition|)
 return|return
@@ -4801,7 +3997,7 @@ end_comment
 begin_expr_stmt
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|tl
 argument_list|)
@@ -4811,7 +4007,7 @@ end_expr_stmt
 begin_expr_stmt
 name|huft_free
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 name|td
 argument_list|)
@@ -4824,33 +4020,30 @@ literal|0
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/* decompress an inflated block */
+end_comment
+
 begin_function
-unit|}    static
+unit|static
 name|int
 name|inflate_block
 parameter_list|(
-name|gz
+name|glbl
 parameter_list|,
 name|e
-parameter_list|,
-name|glbl
 parameter_list|)
 name|struct
-name|gzip
+name|inflate
 modifier|*
-name|gz
+name|glbl
 decl_stmt|;
 name|int
 modifier|*
 name|e
 decl_stmt|;
 comment|/* last block flag */
-name|struct
-name|gz_global
-modifier|*
-name|glbl
-decl_stmt|;
-comment|/* decompress an inflated block */
 block|{
 name|unsigned
 name|t
@@ -4869,15 +4062,21 @@ comment|/* number of bits in bit buffer */
 comment|/* make local bit buffer */
 name|b
 operator|=
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 expr_stmt|;
 name|k
 operator|=
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 expr_stmt|;
 comment|/* read in last block bit */
 name|NEEDBITS
 argument_list|(
+name|glbl
+argument_list|,
 literal|1
 argument_list|)
 operator|*
@@ -4897,6 +4096,8 @@ argument_list|)
 comment|/* read in block type */
 name|NEEDBITS
 argument_list|(
+argument|glbl
+argument_list|,
 literal|2
 argument_list|)
 name|t
@@ -4913,11 +4114,15 @@ argument_list|(
 literal|2
 argument_list|)
 comment|/* restore the global bit buffer */
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 operator|=
 name|b
 expr_stmt|;
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 operator|=
 name|k
 expr_stmt|;
@@ -4931,8 +4136,6 @@ condition|)
 return|return
 name|inflate_dynamic
 argument_list|(
-name|gz
-argument_list|,
 name|glbl
 argument_list|)
 return|;
@@ -4945,8 +4148,6 @@ condition|)
 return|return
 name|inflate_stored
 argument_list|(
-name|gz
-argument_list|,
 name|glbl
 argument_list|)
 return|;
@@ -4959,8 +4160,6 @@ condition|)
 return|return
 name|inflate_fixed
 argument_list|(
-name|gz
-argument_list|,
 name|glbl
 argument_list|)
 return|;
@@ -4971,25 +4170,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* decompress an inflated entry */
+end_comment
+
 begin_function
+specifier|static
 name|int
-name|inflate
+name|xinflate
 parameter_list|(
-name|gz
-parameter_list|,
 name|glbl
 parameter_list|)
 name|struct
-name|gzip
-modifier|*
-name|gz
-decl_stmt|;
-name|struct
-name|gz_global
+name|inflate
 modifier|*
 name|glbl
 decl_stmt|;
-comment|/* decompress an inflated entry */
 block|{
 name|int
 name|e
@@ -5003,7 +4199,9 @@ name|unsigned
 name|h
 decl_stmt|;
 comment|/* maximum struct huft's malloc'ed */
-name|fixed_tl
+name|glbl
+operator|->
+name|gz_fixed_tl
 operator|=
 operator|(
 expr|struct
@@ -5013,15 +4211,21 @@ operator|)
 name|NULL
 expr_stmt|;
 comment|/* initialize window, bit buffer */
-name|wp
+name|glbl
+operator|->
+name|gz_wp
 operator|=
 literal|0
 expr_stmt|;
-name|bk
+name|glbl
+operator|->
+name|gz_bk
 operator|=
 literal|0
 expr_stmt|;
-name|bb
+name|glbl
+operator|->
+name|gz_bb
 operator|=
 literal|0
 expr_stmt|;
@@ -5032,7 +4236,9 @@ literal|0
 expr_stmt|;
 do|do
 block|{
-name|hufts
+name|glbl
+operator|->
+name|gz_hufts
 operator|=
 literal|0
 expr_stmt|;
@@ -5043,12 +4249,10 @@ name|r
 operator|=
 name|inflate_block
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
 operator|&
 name|e
-argument_list|,
-name|glbl
 argument_list|)
 operator|)
 operator|!=
@@ -5059,13 +4263,17 @@ name|r
 return|;
 if|if
 condition|(
-name|hufts
+name|glbl
+operator|->
+name|gz_hufts
 operator|>
 name|h
 condition|)
 name|h
 operator|=
-name|hufts
+name|glbl
+operator|->
+name|gz_hufts
 expr_stmt|;
 block|}
 do|while
@@ -5077,56 +4285,190 @@ do|;
 comment|/* flush out slide */
 name|FLUSH
 argument_list|(
-name|gz
+name|glbl
 argument_list|,
-name|wp
+name|glbl
+operator|->
+name|gz_wp
 argument_list|)
 expr_stmt|;
 comment|/* return success */
-name|Trace
-argument_list|(
-operator|(
-name|stderr
-operator|,
-literal|"\n%u bytes in Huffman tables (%d/entry)\n"
-operator|,
-name|h
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|huft
-argument_list|)
-operator|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|huft
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
 comment|/* Nobody uses this - why not? */
 end_comment
 
-begin_endif
-unit|static int inflate_free(gz, glbl) struct gzip *gz; struct gz_global * glbl; {   if (fixed_tl != (struct huft *)NULL)   {     huft_free(gz,fixed_td);     huft_free(gz,fixed_tl);     fixed_td = fixed_tl = (struct huft *)NULL;   }   return 0; }
-endif|#
-directive|endif
-end_endif
+begin_function
+name|int
+name|inflate
+parameter_list|(
+name|glbl
+parameter_list|)
+name|struct
+name|inflate
+modifier|*
+name|glbl
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
+name|u_char
+modifier|*
+name|p
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|glbl
+operator|->
+name|gz_slide
+condition|)
+name|p
+operator|=
+name|glbl
+operator|->
+name|gz_slide
+operator|=
+name|malloc
+argument_list|(
+name|GZ_WSIZE
+argument_list|,
+name|M_GZIP
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|glbl
+operator|->
+name|gz_slide
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+name|i
+operator|=
+name|xinflate
+argument_list|(
+name|glbl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|glbl
+operator|->
+name|gz_fixed_td
+operator|!=
+operator|(
+expr|struct
+name|huft
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|huft_free
+argument_list|(
+name|glbl
+argument_list|,
+name|glbl
+operator|->
+name|gz_fixed_td
+argument_list|)
+expr_stmt|;
+name|glbl
+operator|->
+name|gz_fixed_td
+operator|=
+operator|(
+expr|struct
+name|huft
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|glbl
+operator|->
+name|gz_fixed_tl
+operator|!=
+operator|(
+expr|struct
+name|huft
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+name|huft_free
+argument_list|(
+name|glbl
+argument_list|,
+name|glbl
+operator|->
+name|gz_fixed_tl
+argument_list|)
+expr_stmt|;
+name|glbl
+operator|->
+name|gz_fixed_tl
+operator|=
+operator|(
+expr|struct
+name|huft
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|p
+operator|==
+name|glbl
+operator|->
+name|gz_slide
+condition|)
+block|{
+name|free
+argument_list|(
+name|glbl
+operator|->
+name|gz_slide
+argument_list|,
+name|M_GZIP
+argument_list|)
+expr_stmt|;
+name|glbl
+operator|->
+name|gz_slide
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+return|return
+name|i
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ----------------------- END INFLATE.C */
+end_comment
 
 end_unit
 
