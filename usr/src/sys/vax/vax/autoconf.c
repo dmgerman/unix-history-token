@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	6.5	84/02/03	*/
+comment|/*	autoconf.c	6.6	84/02/15	*/
 end_comment
 
 begin_comment

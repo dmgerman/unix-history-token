@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	6.1	83/08/11	*/
+comment|/*	Locore.c	6.2	84/02/15	*/
 end_comment
 
 begin_include
@@ -748,7 +748,7 @@ name|struct
 name|pte
 name|UMEMmap
 index|[
-name|MAXNUBA
+name|NUBA
 index|]
 index|[
 literal|512
@@ -760,7 +760,7 @@ begin_decl_stmt
 name|char
 name|umem
 index|[
-name|MAXNUBA
+name|NUBA
 index|]
 index|[
 literal|512
