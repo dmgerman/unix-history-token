@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)access.c 4.4 %G%"
+literal|"@(#)access.c 4.4 5/15/81"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,8 +391,13 @@ name|file
 argument_list|,
 name|addr
 argument_list|,
+name|rd
+condition|?
 operator|&
 name|w
+else|:
+operator|&
+name|value
 argument_list|,
 name|rd
 argument_list|)
