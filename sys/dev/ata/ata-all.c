@@ -1250,6 +1250,19 @@ return|;
 case|case
 literal|0x522910b9
 case|:
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|<
+literal|0x20
+condition|)
+return|return
+literal|"AcerLabs Aladdin ATA controller"
+return|;
+else|else
 return|return
 literal|"AcerLabs Aladdin ATA33 controller"
 return|;
