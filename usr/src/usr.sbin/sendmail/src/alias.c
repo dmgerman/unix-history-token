@@ -107,7 +107,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.3 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.4 (Berkeley) %G% (with NEWDB)"
 expr_stmt|;
 end_expr_stmt
 
@@ -128,7 +128,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.3 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.4 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.3 (Berkeley) %G% (without NDBM)"
+literal|"@(#)alias.c	6.4 (Berkeley) %G% (without NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -699,6 +699,11 @@ block|}
 endif|#
 directive|endif
 comment|/* NDBM */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 else|#
 directive|else
 comment|/* not NEWDB */
@@ -754,13 +759,13 @@ operator|->
 name|s_alias
 operator|)
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
