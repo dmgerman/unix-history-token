@@ -8,8 +8,21 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.8 93/08/31 21:40:16 julian Exp Locker: julian $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.6 1993/09/05 15:42:20 rgrimes Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SCSI_SCSI_TAPE_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SCSI_SCSI_TAPE_H_
+value|1
+end_define
 
 begin_comment
 comment|/*  * SCSI command formats  */
@@ -498,6 +511,15 @@ directive|define
 name|DAT
 value|-1		0x13
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SCSI_SCSI_TAPE_H_ */
+end_comment
 
 end_unit
 
