@@ -1120,6 +1120,18 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX - In certain instances VOP_CLOSE has to do the vrele 	 * itself. If the vrele has been done, it will return EAGAIN 	 * to indicate that the vrele should not be done again. When 	 * this happens, we just return success. The correct thing to 	 * do would be to have all VOP_CLOSE instances do the vrele. 	 */
+if|if
+condition|(
+name|error
+operator|==
+name|EAGAIN
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|vrele
 argument_list|(
 name|vp
