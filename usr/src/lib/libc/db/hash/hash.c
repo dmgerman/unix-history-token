@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.22 (Berkeley) %G%"
+literal|"@(#)hash.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -587,9 +587,13 @@ name|O_CREAT
 operator||
 name|O_EXCL
 operator||
+name|O_EXLOCK
+operator||
 name|O_RDONLY
 operator||
 name|O_RDWR
+operator||
+name|O_SHLOCK
 operator||
 name|O_TRUNC
 operator||
