@@ -725,6 +725,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_PCCARD_ALTOFFSET
+value|0x0e
+end_define
+
+begin_comment
+comment|/* do for PCCARD devices */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_ALTIOSIZE
 value|0x01
 end_define
@@ -1629,12 +1640,16 @@ name|ATA_USE_16BIT
 value|0x04
 define|#
 directive|define
-name|ATA_ATTACHED
+name|ATA_NO_SLAVE
 value|0x08
 define|#
 directive|define
-name|ATA_QUEUED
+name|ATA_ATTACHED
 value|0x10
+define|#
+directive|define
+name|ATA_QUEUED
+value|0x20
 name|int
 name|devices
 decl_stmt|;

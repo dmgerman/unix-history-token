@@ -901,7 +901,11 @@ name|scp
 operator|->
 name|flags
 operator||=
+operator|(
 name|ATA_USE_16BIT
+operator||
+name|ATA_NO_SLAVE
+operator|)
 expr_stmt|;
 return|return
 name|ata_probe
@@ -3699,7 +3703,7 @@ name|altioaddr
 operator|=
 name|ioaddr
 operator|+
-name|ATA_IOSIZE
+name|ATA_PCCARD_ALTOFFSET
 expr_stmt|;
 name|rid
 operator|=
@@ -6358,6 +6362,21 @@ name|DELAY
 argument_list|(
 literal|3000
 argument_list|)
+expr_stmt|;
+comment|/* in some setups we dont want to test for a slave */
+if|if
+condition|(
+name|scp
+operator|->
+name|flags
+operator|&
+name|ATA_NO_SLAVE
+condition|)
+operator|*
+name|mask
+operator|&=
+operator|~
+literal|0x02
 expr_stmt|;
 comment|/* wait for BUSY to go inactive */
 for|for
