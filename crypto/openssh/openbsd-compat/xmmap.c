@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2002 Tim Rice.  All rights reserved.  * MAP_FAILED c
 end_comment
 
 begin_comment
-comment|/* $Id: xmmap.c,v 1.3 2003/06/02 02:25:27 tim Exp $ */
+comment|/* $Id: xmmap.c,v 1.5 2004/08/14 13:55:38 dtucker Exp $ */
 end_comment
 
 begin_include
@@ -74,6 +74,9 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -100,6 +103,9 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -130,11 +136,26 @@ decl_stmt|;
 name|int
 name|tmpfd
 decl_stmt|;
+name|mode_t
+name|old_umask
+decl_stmt|;
+name|old_umask
+operator|=
+name|umask
+argument_list|(
+literal|0177
+argument_list|)
+expr_stmt|;
 name|tmpfd
 operator|=
 name|mkstemp
 argument_list|(
 name|tmpname
+argument_list|)
+expr_stmt|;
+name|umask
+argument_list|(
+name|old_umask
 argument_list|)
 expr_stmt|;
 if|if
@@ -184,6 +205,9 @@ name|MAP_SHARED
 argument_list|,
 name|tmpfd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

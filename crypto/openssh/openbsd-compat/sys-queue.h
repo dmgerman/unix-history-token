@@ -4,7 +4,7 @@ comment|/* OPENBSD ORIGINAL: sys/sys/queue.h */
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: queue.h,v 1.23 2003/06/02 23:28:21 millert Exp $	*/
+comment|/*	$OpenBSD: queue.h,v 1.25 2004/04/08 16:08:21 henning Exp $	*/
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ name|_FAKE_QUEUE_H_
 end_define
 
 begin_comment
-comment|/*  * Ignore all<sys/queue.h> since older platforms have broken/incomplete  *<sys/queue.h> that are too hard to work around.  */
+comment|/*  * Require for OS/X and other platforms that have old/broken/incomplete  *<sys/queue.h>.  */
 end_comment
 
 begin_undef
@@ -47,6 +47,12 @@ begin_undef
 undef|#
 directive|undef
 name|SLIST_ENTRY
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SLIST_FOREACH_PREVPTR
 end_undef
 
 begin_undef
@@ -107,6 +113,12 @@ begin_undef
 undef|#
 directive|undef
 name|SLIST_REMOVE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SLIST_REMOVE_NEXT
 end_undef
 
 begin_undef
@@ -595,6 +607,23 @@ define|\
 value|for((var) = SLIST_FIRST(head);					\ 	    (var) != SLIST_END(head);					\ 	    (var) = SLIST_NEXT(var, field))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SLIST_FOREACH_PREVPTR
+parameter_list|(
+name|var
+parameter_list|,
+name|varp
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|for ((varp) =&SLIST_FIRST((head));				\ 	    ((var) = *(varp)) != SLIST_END(head);			\ 	    (varp) =&SLIST_NEXT((var), field))
+end_define
+
 begin_comment
 comment|/*  * Singly-linked List functions.  */
 end_comment
@@ -635,6 +664,20 @@ parameter_list|,
 name|field
 parameter_list|)
 value|do {			\ 	(elm)->field.sle_next = (head)->slh_first;			\ 	(head)->slh_first = (elm);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLIST_REMOVE_NEXT
+parameter_list|(
+name|head
+parameter_list|,
+name|elm
+parameter_list|,
+name|field
+parameter_list|)
+value|do {			\ 	(elm)->field.sle_next = (elm)->field.sle_next->field.sle_next;	\ } while (0)
 end_define
 
 begin_define
@@ -1181,9 +1224,9 @@ name|var
 parameter_list|,
 name|head
 parameter_list|,
-name|field
-parameter_list|,
 name|headname
+parameter_list|,
+name|field
 parameter_list|)
 define|\
 value|for((var) = TAILQ_LAST(head, headname);				\ 	    (var) != TAILQ_END(head);					\ 	    (var) = TAILQ_PREV(var, headname, field))

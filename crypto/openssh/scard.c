@@ -26,7 +26,7 @@ end_if
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scard.c,v 1.28 2003/06/12 19:12:02 markus Exp $"
+literal|"$OpenBSD: scard.c,v 1.29 2004/05/08 00:21:31 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readpass.h"
+file|"misc.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: auth2-gss.c,v 1.7 2003/11/21 11:57:03 djm Exp $	*/
+comment|/*	$OpenBSD: auth2-gss.c,v 1.8 2004/06/21 17:36:31 avsm Exp $	*/
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ name|authctxt
 parameter_list|)
 block|{
 name|gss_OID_desc
-name|oid
+name|goid
 init|=
 block|{
 literal|0
@@ -301,7 +301,7 @@ operator|-
 literal|2
 condition|)
 block|{
-name|oid
+name|goid
 operator|.
 name|elements
 operator|=
@@ -309,7 +309,7 @@ name|doid
 operator|+
 literal|2
 expr_stmt|;
-name|oid
+name|goid
 operator|.
 name|length
 operator|=
@@ -323,7 +323,7 @@ operator|&
 name|ms
 argument_list|,
 operator|&
-name|oid
+name|goid
 argument_list|,
 name|supported
 argument_list|,
@@ -389,7 +389,7 @@ operator|&
 name|ctxt
 argument_list|,
 operator|&
-name|oid
+name|goid
 argument_list|)
 argument_list|)
 argument_list|)

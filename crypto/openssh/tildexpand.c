@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: tildexpand.c,v 1.13 2002/06/23 03:25:50 deraadt Exp $"
+literal|"$OpenBSD: tildexpand.c,v 1.15 2004/05/21 08:43:03 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tildexpand.h"
+file|"misc.h"
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-misc.h,v 1.15 2004/03/08 11:59:03 dtucker Exp $ */
+comment|/* $Id: bsd-misc.h,v 1.17 2004/08/15 08:41:00 djm Exp $ */
 end_comment
 
 begin_comment

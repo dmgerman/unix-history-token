@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh-gss.h,v 1.4 2003/11/17 11:06:07 markus Exp $	*/
+comment|/*	$OpenBSD: ssh-gss.h,v 1.5 2004/06/21 17:36:31 avsm Exp $	*/
 end_comment
 
 begin_comment
@@ -379,14 +379,11 @@ name|ssh_gssapi_check_oid
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|,
 name|void
 modifier|*
-name|data
 parameter_list|,
 name|size_t
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -397,14 +394,11 @@ name|ssh_gssapi_set_oid_data
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|,
 name|void
 modifier|*
-name|data
 parameter_list|,
 name|size_t
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -415,10 +409,8 @@ name|ssh_gssapi_set_oid
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|,
 name|gss_OID
-name|oid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -429,7 +421,6 @@ name|ssh_gssapi_supported_oids
 parameter_list|(
 name|gss_OID_set
 modifier|*
-name|oidset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -441,7 +432,6 @@ name|ssh_gssapi_get_ctype
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctxt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -452,12 +442,10 @@ name|ssh_gssapi_import_name
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|host
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -468,7 +456,6 @@ name|ssh_gssapi_acquire_cred
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -479,22 +466,17 @@ name|ssh_gssapi_init_ctx
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|,
 name|int
-name|deleg_creds
 parameter_list|,
 name|gss_buffer_desc
 modifier|*
-name|recv_tok
 parameter_list|,
 name|gss_buffer_desc
 modifier|*
-name|send_tok
 parameter_list|,
 name|OM_uint32
 modifier|*
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -505,19 +487,15 @@ name|ssh_gssapi_accept_ctx
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|,
 name|gss_buffer_desc
 modifier|*
-name|recv_tok
 parameter_list|,
 name|gss_buffer_desc
 modifier|*
-name|send_tok
 parameter_list|,
 name|OM_uint32
 modifier|*
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -528,7 +506,6 @@ name|ssh_gssapi_getclient
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|,
 name|ssh_gssapi_client
 modifier|*
@@ -542,7 +519,6 @@ name|ssh_gssapi_error
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -554,15 +530,12 @@ name|ssh_gssapi_last_error
 parameter_list|(
 name|Gssctxt
 modifier|*
-name|ctxt
 parameter_list|,
 name|OM_uint32
 modifier|*
-name|maj
 parameter_list|,
 name|OM_uint32
 modifier|*
-name|min
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -574,7 +547,6 @@ parameter_list|(
 name|Gssctxt
 modifier|*
 modifier|*
-name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -586,7 +558,6 @@ parameter_list|(
 name|Gssctxt
 modifier|*
 modifier|*
-name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -612,10 +583,8 @@ parameter_list|(
 name|Gssctxt
 modifier|*
 modifier|*
-name|ctx
 parameter_list|,
 name|gss_OID
-name|oid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -679,11 +648,9 @@ name|char
 modifier|*
 modifier|*
 modifier|*
-name|envp
 parameter_list|,
 name|u_int
 modifier|*
-name|envsizep
 parameter_list|)
 function_decl|;
 end_function_decl

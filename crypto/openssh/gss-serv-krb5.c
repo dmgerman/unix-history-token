@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-serv-krb5.c,v 1.2 2003/11/21 11:57:03 djm Exp $	*/
+comment|/*	$OpenBSD: gss-serv-krb5.c,v 1.3 2004/07/21 10:36:23 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -130,7 +130,9 @@ begin_function
 specifier|static
 name|int
 name|ssh_gssapi_krb5_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|krb5_error_code
 name|problem
@@ -407,6 +409,9 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+name|mode_t
+name|old_umask
+decl_stmt|;
 name|snprintf
 argument_list|(
 name|ccname
@@ -422,9 +427,13 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|old_umask
+operator|=
+name|umask
+argument_list|(
+literal|0177
+argument_list|)
+expr_stmt|;
 name|tmpfd
 operator|=
 name|mkstemp
@@ -436,7 +445,15 @@ argument_list|(
 literal|"FILE:"
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+name|umask
+argument_list|(
+name|old_umask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmpfd
 operator|==
 operator|-
 literal|1

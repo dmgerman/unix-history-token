@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexdhc.c,v 1.1 2003/02/16 17:09:57 markus Exp $"
+literal|"$OpenBSD: kexdhc.c,v 1.2 2004/06/13 12:53:24 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -115,11 +115,44 @@ decl_stmt|,
 name|sbloblen
 decl_stmt|;
 comment|/* generate and send 'e', client DH public key */
+switch|switch
+condition|(
+name|kex
+operator|->
+name|kex_type
+condition|)
+block|{
+case|case
+name|KEX_DH_GRP1_SHA1
+case|:
 name|dh
 operator|=
 name|dh_new_group1
 argument_list|()
 expr_stmt|;
+break|break;
+case|case
+name|KEX_DH_GRP14_SHA1
+case|:
+name|dh
+operator|=
+name|dh_new_group14
+argument_list|()
+expr_stmt|;
+break|break;
+default|default:
+name|fatal
+argument_list|(
+literal|"%s: Unexpected KEX type %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|kex
+operator|->
+name|kex_type
+argument_list|)
+expr_stmt|;
+block|}
 name|dh_gen_key
 argument_list|(
 name|dh

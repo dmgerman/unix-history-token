@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keysign.c,v 1.15 2004/01/19 21:25:15 markus Exp $"
+literal|"$OpenBSD: ssh-keysign.c,v 1.16 2004/04/18 23:10:26 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -113,6 +113,12 @@ directive|include
 file|"readconf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"uidswap.h"
+end_include
+
 begin_comment
 comment|/* XXX readconf.c needs these */
 end_comment
@@ -123,12 +129,6 @@ name|original_real_uid
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE___PROGNAME
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -136,23 +136,6 @@ modifier|*
 name|__progname
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -677,16 +660,35 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
-name|seteuid
+if|if
+condition|(
+operator|(
+name|pw
+operator|=
+name|getpwuid
 argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
-expr_stmt|;
-name|setuid
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
 argument_list|(
-name|getuid
-argument_list|()
+literal|"getpwuid failed"
+argument_list|)
+expr_stmt|;
+name|pw
+operator|=
+name|pwcopy
+argument_list|(
+name|pw
+argument_list|)
+expr_stmt|;
+name|permanently_set_uid
+argument_list|(
+name|pw
 argument_list|)
 expr_stmt|;
 name|init_rng
@@ -738,6 +740,8 @@ literal|""
 argument_list|,
 operator|&
 name|options
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|fill_default_options
@@ -782,32 +786,6 @@ condition|)
 name|fatal
 argument_list|(
 literal|"could not open any host key"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|pw
-operator|=
-name|getpwuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"getpwuid failed"
-argument_list|)
-expr_stmt|;
-name|pw
-operator|=
-name|pwcopy
-argument_list|(
-name|pw
 argument_list|)
 expr_stmt|;
 name|SSLeay_add_all_algorithms

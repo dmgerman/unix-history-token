@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.47 2004/03/03 09:30:42 djm Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.51 2004/07/11 17:48:47 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -98,6 +98,14 @@ include|#
 directive|include
 file|"sftp-client.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|sig_atomic_t
+name|interrupted
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1589,6 +1597,8 @@ block|}
 for|for
 control|(
 init|;
+operator|!
+name|interrupted
 condition|;
 control|)
 block|{
@@ -2018,6 +2028,47 @@ argument_list|(
 name|handle
 argument_list|)
 expr_stmt|;
+comment|/* Don't return partial matches on interrupt */
+if|if
+condition|(
+name|interrupted
+operator|&&
+name|dir
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|dir
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free_sftp_dirents
+argument_list|(
+operator|*
+name|dir
+argument_list|)
+expr_stmt|;
+operator|*
+name|dir
+operator|=
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+operator|*
+name|dir
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+operator|*
+name|dir
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -3209,7 +3260,7 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-comment|/* Send rename request */
+comment|/* Send symlink request */
 name|id
 operator|=
 name|conn
@@ -4089,6 +4140,25 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
+comment|/* 		 * Simulate EOF on interrupt: stop sending new requests and 		 * allow outstanding requests to drain gracefully 		 */
+if|if
+condition|(
+name|interrupted
+condition|)
+block|{
+if|if
+condition|(
+name|num_req
+operator|==
+literal|0
+condition|)
+comment|/* If we haven't started yet... */
+break|break;
+name|max_req
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* Send some more requests */
 while|while
 condition|(
@@ -4620,12 +4690,10 @@ elseif|else
 if|if
 condition|(
 name|max_req
-operator|<
+operator|<=
 name|conn
 operator|->
 name|num_requests
-operator|+
-literal|1
 condition|)
 block|{
 operator|++
@@ -4992,6 +5060,8 @@ name|struct
 name|outstanding_ack
 modifier|*
 name|ack
+init|=
+name|NULL
 decl_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -5316,7 +5386,16 @@ block|{
 name|int
 name|len
 decl_stmt|;
-comment|/* 		 * Can't use atomicio here because it returns 0 on EOF, thus losing 		 * the last block of the file 		 */
+comment|/* 		 * Can't use atomicio here because it returns 0 on EOF, 		 * thus losing the last block of the file. 		 * Simulate an EOF on interrupt, allowing ACKs from the 		 * server to drain. 		 */
+if|if
+condition|(
+name|interrupted
+condition|)
+name|len
+operator|=
+literal|0
+expr_stmt|;
+else|else
 do|do
 name|len
 operator|=

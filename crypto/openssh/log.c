@@ -107,6 +107,20 @@ name|__progname
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|LOG_SYSLOG_VIS
+value|(VIS_CSTYLE|VIS_NL|VIS_TAB|VIS_OCTAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOG_STDERR_VIS
+value|(VIS_SAFE|VIS_OCTAL)
+end_define
+
 begin_comment
 comment|/* textual representation of log-facilities/levels */
 end_comment
@@ -1128,9 +1142,11 @@ argument_list|(
 name|fmtbuf
 argument_list|)
 argument_list|,
-name|VIS_SAFE
-operator||
-name|VIS_OCTAL
+name|log_on_stderr
+condition|?
+name|LOG_STDERR_VIS
+else|:
+name|LOG_SYSLOG_VIS
 argument_list|)
 expr_stmt|;
 if|if
