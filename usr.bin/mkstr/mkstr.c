@@ -745,6 +745,26 @@ init|;
 condition|;
 control|)
 block|{
+if|if
+condition|(
+name|cp
+operator|==
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|2
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"message too long"
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 name|getchar
