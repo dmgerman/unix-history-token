@@ -2154,6 +2154,13 @@ expr_stmt|;
 if|if
 condition|(
 name|fdp
+operator|==
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|fdp
 operator|->
 name|fd_cdir
 operator|==
