@@ -5445,7 +5445,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test securelevel values against passed required securelevel.  * _gt implements (level> securelevel), _ge implements (level<=  * securelevel).  Returns 0 or EPERM.  *  * cr is permitted to be NULL for the time being, as there were some  * existing securelevel checks that occurred without a process/credential  * context.  In the future this will be disallowed, so a kernel  * message is displayed.  *  * XXX: The redundant construction below is to facilitate the merging  * of support for per-jail securelevels, which maintain a local  * jail securelevel in the process credential.  */
+comment|/*  * Test securelevel values against passed required securelevel.  * _gt implements (securelevel> level), and _ge implements  * (securelevel>= level).  Returns 0 oer EPERM.  *  * cr is permitted to be NULL for the time being, as there were some  * existing securelevel checks that occurred without a process/credential  * context.  In the future this will be disallowed, so a kernel  * message is displayed.  *  * XXX: The redundant construction below is to facilitate the merging  * of support for per-jail securelevels, which maintain a local  * jail securelevel in the process credential.  */
 end_comment
 
 begin_function
