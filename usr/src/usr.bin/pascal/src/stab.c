@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.7 %G%"
+literal|"@(#)stab.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"0.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfmt.h"
 end_include
 
 begin_include
