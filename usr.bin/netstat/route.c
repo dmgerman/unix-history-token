@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.14 1996/06/08 00:20:42 julian Exp $"
+literal|"$Id: route.c,v 1.15 1996/06/10 21:03:38 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -323,6 +323,18 @@ block|{
 name|RTF_PROTO3
 block|,
 literal|'3'
+block|}
+block|,
+block|{
+name|RTF_BLACKHOLE
+block|,
+literal|'B'
+block|}
+block|,
+block|{
+name|RTF_BROADCAST
+block|,
+literal|'b'
 block|}
 block|,
 block|{
