@@ -1098,7 +1098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove drive from the configuration.  * Caller must ensure that it isn't active  */
+comment|/*  * Remove drive from the configuration.  * Caller must ensure that it isn't active.  */
 end_comment
 
 begin_function
@@ -1122,12 +1122,15 @@ index|[
 name|driveno
 index|]
 decl_stmt|;
-name|int64_t
-name|nomagic
-init|=
-name|VINUM_NOMAGIC
+name|struct
+name|vinum_hdr
+modifier|*
+name|vhdr
 decl_stmt|;
-comment|/* no magic number */
+comment|/* buffer for header */
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|drive
@@ -1146,23 +1149,85 @@ name|state
 operator|==
 name|drive_up
 condition|)
-name|write_drive
+block|{
+name|vhdr
+operator|=
+operator|(
+expr|struct
+name|vinum_hdr
+operator|*
+operator|)
+name|Malloc
+argument_list|(
+name|VINUMHEADERLEN
+argument_list|)
+expr_stmt|;
+comment|/* allocate buffer */
+name|CHECKALLOC
+argument_list|(
+name|vhdr
+argument_list|,
+literal|"Can't allocate memory"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|read_drive
 argument_list|(
 name|drive
 argument_list|,
-comment|/* obliterate the magic, but leave a hint */
 operator|(
-name|char
+name|void
 operator|*
 operator|)
-operator|&
-name|nomagic
+name|vhdr
 argument_list|,
-literal|8
+name|VINUMHEADERLEN
 argument_list|,
 name|VINUM_LABEL_OFFSET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|drive
+operator|->
+name|lasterror
+operator|=
+name|error
+expr_stmt|;
+else|else
+block|{
+name|vhdr
+operator|->
+name|magic
+operator|=
+name|VINUM_NOMAGIC
+expr_stmt|;
+comment|/* obliterate the magic, but leave the rest */
+name|write_drive
+argument_list|(
+name|drive
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|vhdr
+argument_list|,
+name|VINUMHEADERLEN
+argument_list|,
+name|VINUM_LABEL_OFFSET
+argument_list|)
+expr_stmt|;
+block|}
+name|Free
+argument_list|(
+name|vhdr
+argument_list|)
+expr_stmt|;
+block|}
 name|free_drive
 argument_list|(
 name|drive
