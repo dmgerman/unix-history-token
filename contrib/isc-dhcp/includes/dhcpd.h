@@ -2854,6 +2854,10 @@ name|linkstate
 decl_stmt|;
 comment|/* True if we have link */
 name|int
+name|polling
+decl_stmt|;
+comment|/* True if polling is enabled */
+name|int
 name|forcediscover
 decl_stmt|;
 comment|/* True if a discover is needed */

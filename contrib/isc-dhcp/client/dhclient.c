@@ -1460,6 +1460,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Init some interface vars, enable polling */
+ifdef|#
+directive|ifdef
+name|ENABLE_POLLING_MODE
 name|tmp
 operator|->
 name|forcediscover
@@ -1472,6 +1476,15 @@ name|linkstate
 operator|=
 literal|0
 expr_stmt|;
+name|tmp
+operator|->
+name|polling
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ifdef ENABLE_POLLING_MODE */
 if|if
 condition|(
 name|interfaces
@@ -4294,6 +4307,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ENABLE_POLLING_MODE
+comment|/* Init some interface vars, enable polling */
 name|client
 operator|->
 name|interface
@@ -4309,6 +4323,14 @@ operator|->
 name|forcediscover
 operator|=
 literal|0
+expr_stmt|;
+name|client
+operator|->
+name|interface
+operator|->
+name|polling
+operator|=
+literal|1
 expr_stmt|;
 endif|#
 directive|endif
@@ -6473,6 +6495,20 @@ name|increase
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_POLLING_MODE
+comment|/* Disable polling for this interface */
+name|client
+operator|->
+name|interface
+operator|->
+name|polling
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Figure out how long it's been since we started transmitting. */
 name|interval
 operator|=
@@ -7117,6 +7153,20 @@ argument_list|,
 literal|"seconds"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_POLLING_MODE
+comment|/* Enable polling for thsi interface */
+name|client
+operator|->
+name|interface
+operator|->
+name|polling
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|add_timeout
 argument_list|(
 name|client
@@ -7323,6 +7373,20 @@ argument_list|(
 literal|"No working leases in persistent database - sleeping."
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_POLLING_MODE
+comment|/* Enable polling for this interface */
+name|client
+operator|->
+name|interface
+operator|->
+name|polling
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|script_init
 argument_list|(
 name|client
@@ -16272,16 +16336,6 @@ name|client_state
 modifier|*
 name|client
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Polling interface status\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|ip
@@ -16297,9 +16351,26 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+operator|!
+name|ip
+operator|->
+name|polling
+condition|)
+continue|continue;
 ifdef|#
 directive|ifdef
 name|DEBUG
+name|printf
+argument_list|(
+literal|"%s: Polling interface state\n"
+argument_list|,
+name|ip
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|client
