@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)npx.c	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)npx.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -193,6 +193,15 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* insure EM bit off */
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+argument_list|)
+expr_stmt|;
 asm|asm("	fninit ");
 comment|/* put device in known state */
 comment|/* check for a proper status of zero */
@@ -235,6 +244,14 @@ return|;
 block|}
 block|}
 comment|/* insure EM bit on */
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator||
+name|CR0_EM
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -270,7 +287,6 @@ literal|0x262
 argument_list|)
 expr_stmt|;
 comment|/* check for ET bit to decide 387/287 */
-comment|/*outb(0xb1,0);		/* reset processor */
 name|npxexists
 operator|++
 expr_stmt|;
@@ -338,68 +354,6 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Load floating point context and record ownership to suite  */
-end_comment
-
-begin_macro
-name|npxload
-argument_list|()
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|npxproc
-condition|)
-name|panic
-argument_list|(
-literal|"npxload"
-argument_list|)
-expr_stmt|;
-name|npxproc
-operator|=
-name|curproc
-expr_stmt|;
-name|npxpcb
-operator|=
-name|curpcb
-expr_stmt|;
-asm|asm("	frstor %0 " : : "g" (curpcb->pcb_savefpu) );
-block|}
-end_block
-
-begin_comment
-comment|/*  * Unload floating point context and relinquish ownership  */
-end_comment
-
-begin_macro
-name|npxunload
-argument_list|()
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|npxproc
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"npxunload"
-argument_list|)
-expr_stmt|;
-asm|asm("	fsave %0 " : : "g" (npxpcb->pcb_savefpu) );
-name|npxproc
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * Record information needed in processing an exception and clear status word  */
 end_comment
 
@@ -419,10 +373,20 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|trapframe
-name|tf
-decl_stmt|;
+if|if
+condition|(
+name|npxexists
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"stray npxintr\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|outb
 argument_list|(
 literal|0xf0
@@ -430,83 +394,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* reset processor */
-comment|/* sync state in process context structure, in advance of debugger/process looking for it */
+comment|/* reset coprocessor */
+comment|/* 	 * npxproc may be NULL, if this is a delayed interrupt from 	 * a process that just exited. 	 */
 if|if
 condition|(
 name|npxproc
-operator|==
-literal|0
-operator|||
-name|npxexists
-operator|==
-literal|0
 condition|)
-name|panic
+block|{
+comment|/* 		 * sync state in process context structure, in advance  		 * of debugger/process looking for it. 		 */
+asm|asm("fnsave %0" :: "g" (npxproc->p_addr->u_pcb.pcb_savefpu));
+name|psignal
 argument_list|(
-literal|"npxintr"
-argument_list|)
-expr_stmt|;
-asm|asm ("	fnsave %0 " : : "g" (npxproc->p_addr->u_pcb.pcb_savefpu) );
-comment|/* 	 * Prepair a trap frame for our generic exception processing routine, trap() 	 */
-name|bcopy
-argument_list|(
-operator|&
-name|frame
-operator|.
-name|if_es
+name|npxproc
 argument_list|,
-operator|&
-name|tf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tf
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|tf
-operator|.
-name|tf_trapno
-operator|=
-name|T_ARITHTRAP
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
-comment|/* encode the appropriate code for detailed information on this exception */
-name|tf
-operator|.
-name|tf_err
-operator|=
-operator|???
-expr_stmt|;
-endif|#
-directive|endif
-name|trap
-argument_list|(
-name|tf
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Restore with any changes to superior frame 	 */
-name|bcopy
-argument_list|(
-operator|&
-name|tf
-argument_list|,
-operator|&
-name|frame
-operator|.
-name|if_es
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tf
-argument_list|)
+name|SIGFPE
 argument_list|)
 expr_stmt|;
 comment|/* clear the exception so we can catch others like it */
 asm|asm ("	fnclex");
+block|}
 block|}
 end_block
 
@@ -532,115 +438,34 @@ operator|(
 literal|0
 operator|)
 return|;
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+argument_list|)
+expr_stmt|;
+comment|/* stop emulating */
 if|if
 condition|(
 name|npxproc
-operator|==
+operator|!=
 name|curproc
 condition|)
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator|&
-operator|~
-name|CR0_EM
-argument_list|)
-expr_stmt|;
-comment|/* stop emulating */
-else|else
 block|{
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator|&
-operator|~
-name|CR0_EM
-argument_list|)
-expr_stmt|;
-comment|/* stop emulating */
 if|if
 condition|(
 name|npxproc
 condition|)
-asm|asm(" fnsave %0 "::"g" (npxproc->p_addr->u_pcb.pcb_savefpu));
+asm|asm(" fnsave %0 "::"g" 			    (npxproc->p_addr->u_pcb.pcb_savefpu));
 asm|asm("	frstor %0 " : : "g" (curpcb->pcb_savefpu));
 name|npxproc
 operator|=
 name|curproc
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|garbage
-if|if
-condition|(
-operator|!
-operator|(
-name|curpcb
-operator|->
-name|pcb_flags
-operator|&
-name|FP_WASUSED
-operator|)
-operator|||
-operator|(
-name|curpcb
-operator|->
-name|pcb_flags
-operator|&
-name|FP_NEEDSRESTORE
-operator|)
-condition|)
-block|{
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator|&
-operator|~
-name|CR0_EM
-argument_list|)
-expr_stmt|;
-comment|/* stop emulating */
-asm|asm("	frstor %0 " : : "g" (curpcb->pcb_savefpu));
-name|curpcb
-operator|->
-name|pcb_flags
-operator||=
-name|FP_WASUSED
-operator||
-name|FP_NEEDSSAVE
-expr_stmt|;
-name|curpcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|FP_NEEDSRESTORE
-expr_stmt|;
-name|npxproc
-operator|=
-name|curproc
-expr_stmt|;
-name|npxpcb
-operator|=
-name|curpcb
-expr_stmt|;
-block|}
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator|&
-operator|~
-name|CR0_EM
-argument_list|)
-expr_stmt|;
-comment|/* stop emulating */
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
