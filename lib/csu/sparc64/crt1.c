@@ -83,19 +83,6 @@ name|weak
 name|_DYNAMIC
 end_pragma
 
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|fptr
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_function_decl
 specifier|extern
 name|void
