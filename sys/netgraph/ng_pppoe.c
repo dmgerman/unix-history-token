@@ -12,15 +12,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|AAA
-value|printf("pppoe: %s\n", __func__ );
-end_define
-
-begin_define
-define|#
-directive|define
-name|BBB
-value|printf("-%d-", __LINE__ );
+name|DBG
+value|printf("pppoe: %s\n", __func__ )
 end_define
 
 begin_else
@@ -31,13 +24,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|AAA
-end_define
-
-begin_define
-define|#
-directive|define
-name|BBB
+name|DBG
 end_define
 
 begin_endif
@@ -1227,14 +1214,15 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|restart
-range|:
+label|:
 name|val
 operator|=
 name|pppoe_sid
 operator|++
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * Spec says 0xFFFF is reserved. 	 * Also don't use 0x0000 	 */
 if|if
 condition|(
@@ -1422,7 +1410,8 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* 	 * Keep processing tags while a tag header will still fit. 	 */
-name|AAA
+name|DBG
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1518,7 +1507,8 @@ name|sessp
 name|sp
 parameter_list|)
 block|{
-name|AAA
+name|DBG
+expr_stmt|;
 if|if
 condition|(
 name|sp
@@ -1567,7 +1557,8 @@ decl_stmt|;
 name|negp
 name|neg
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1677,7 +1668,8 @@ name|length
 init|=
 literal|0
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1951,17 +1943,15 @@ decl_stmt|;
 name|hook_p
 name|hook
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
-name|hook
+argument|hook
 argument_list|,
-operator|&
-name|node
-operator|->
-name|nd_hooks
+argument|&node->nd_hooks
 argument_list|,
-name|hk_hooks
+argument|hk_hooks
 argument_list|)
 block|{
 comment|/* skip any hook that is debug or ethernet */
@@ -2145,17 +2135,15 @@ name|sid
 argument_list|)
 decl_stmt|;
 comment|/* 	 * find matching peer/session combination. 	 */
-name|AAA
+name|DBG
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
-name|hook
+argument|hook
 argument_list|,
-operator|&
-name|node
-operator|->
-name|nd_hooks
+argument|&node->nd_hooks
 argument_list|,
-name|hk_hooks
+argument|hk_hooks
 argument_list|)
 block|{
 comment|/* don't check special hooks */
@@ -2290,7 +2278,8 @@ name|union
 name|uniq
 name|uniq
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|tag
@@ -2307,7 +2296,7 @@ name|void
 operator|*
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* cycle through all known hooks */
 name|LIST_FOREACH
 argument_list|(
@@ -2387,7 +2376,8 @@ block|{
 name|priv_p
 name|privdata
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 comment|/* Initialize private descriptor */
 name|MALLOC
 argument_list|(
@@ -2407,7 +2397,7 @@ name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|privdata
@@ -2481,7 +2471,8 @@ decl_stmt|;
 name|sessp
 name|sp
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -2664,14 +2655,15 @@ name|ng_mesg
 modifier|*
 name|msg
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|NGI_GET_MSG
 argument_list|(
 name|item
 argument_list|,
 name|msg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* Deal with message according to cookie and command */
 switch|switch
 condition|(
@@ -3916,13 +3908,14 @@ name|__packed
 name|uniqtag
 struct|;
 comment|/*  	 * kick the state machine into starting up 	 */
-name|AAA
+name|DBG
+expr_stmt|;
 name|sp
 operator|->
 name|state
-init|=
+operator|=
 name|PPPOE_SINIT
-decl_stmt|;
+expr_stmt|;
 comment|/* Reset the packet header to broadcast. Since we are in a client 	 * mode use configured ethertype. */
 name|memcpy
 argument_list|(
@@ -4377,14 +4370,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|NGI_GET_M
 argument_list|(
 name|item
 argument_list|,
 name|m
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|NG_HOOK_PRIVATE
@@ -6487,14 +6481,15 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|NG_NODE_SET_PRIVATE
 argument_list|(
 name|node
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|NG_NODE_UNREF
 argument_list|(
 name|privdata
@@ -6574,14 +6569,15 @@ decl_stmt|;
 name|int
 name|hooks
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|hooks
-init|=
+operator|=
 name|NG_NODE_NUMHOOKS
 argument_list|(
 name|node
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* this one already not counted */
 if|if
 condition|(
@@ -7110,7 +7106,8 @@ name|hook
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 switch|switch
 condition|(
 name|sp
@@ -7282,7 +7279,8 @@ name|hook
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 switch|switch
 condition|(
 name|sp
@@ -7530,7 +7528,8 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* 	 * Keep processing tags while a tag header will still fit. 	 */
-name|AAA
+name|DBG
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -7674,7 +7673,8 @@ name|ngpppoe_sts
 modifier|*
 name|sts
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|NG_MKMESSAGE
 argument_list|(
 name|msg
@@ -7691,7 +7691,7 @@ argument_list|)
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|msg

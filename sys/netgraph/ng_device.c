@@ -12,8 +12,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|AAA
-value|printf("ng_device: %s\n", __func__ );
+name|DBG
+value|printf("ng_device: %s\n", __func__ )
 end_define
 
 begin_else
@@ -24,7 +24,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|AAA
+name|DBG
 end_define
 
 begin_endif
@@ -527,7 +527,8 @@ block|{
 name|priv_p
 name|priv
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|priv
@@ -546,7 +547,7 @@ name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|priv
@@ -990,7 +991,8 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 comment|/* We have only one hook per node */
 if|if
 condition|(
@@ -1051,14 +1053,15 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|NGI_GET_M
 argument_list|(
 name|item
 argument_list|,
 name|m
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|NG_FREE_ITEM
 argument_list|(
 name|item
@@ -1198,14 +1201,15 @@ name|hook
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|priv
 operator|->
 name|ngddev
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -1347,7 +1351,8 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1355,7 +1360,7 @@ name|priv
 operator|->
 name|ngd_mtx
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|priv
 operator|->
 name|flags
@@ -1414,7 +1419,8 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1422,7 +1428,7 @@ name|priv
 operator|->
 name|ngd_mtx
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|priv
 operator|->
 name|flags
@@ -1461,7 +1467,7 @@ comment|/*  * process ioctl  *  * they are translated into netgraph messages and
 end_comment
 
 begin_comment
-unit|static int ngdioctl(struct cdev *dev, u_long cmd, caddr_t addr, int flag, struct thread *td) { 	struct ngd_softc *sc =&ngd_softc; 	struct ngd_connection * connection = NULL; 	struct ngd_connection * tmp; 	int error = 0; 	struct ng_mesg *msg; 	struct ngd_param_s * datap;  AAA  	SLIST_FOREACH(tmp,&sc->head,links) { 		if(tmp->ngddev == dev) { 			connection = tmp; 		} 	} 	if(connection == NULL) { 		printf("%s(): connection is still NULL, no dev found\n",__func__); 		return(-1); 	}  	NG_MKMESSAGE(msg, NGM_DEVICE_COOKIE, cmd, sizeof(struct ngd_param_s), 			M_NOWAIT); 	if (msg == NULL) { 		printf("%s(): msg == NULL\n",__func__); 		goto nomsg; 	}
+unit|static int ngdioctl(struct cdev *dev, u_long cmd, caddr_t addr, int flag, struct thread *td) { 	struct ngd_softc *sc =&ngd_softc; 	struct ngd_connection * connection = NULL; 	struct ngd_connection * tmp; 	int error = 0; 	struct ng_mesg *msg; 	struct ngd_param_s * datap;  	DBG;  	SLIST_FOREACH(tmp,&sc->head,links) { 		if(tmp->ngddev == dev) { 			connection = tmp; 		} 	} 	if(connection == NULL) { 		printf("%s(): connection is still NULL, no dev found\n",__func__); 		return(-1); 	}  	NG_MKMESSAGE(msg, NGM_DEVICE_COOKIE, cmd, sizeof(struct ngd_param_s), 			M_NOWAIT); 	if (msg == NULL) { 		printf("%s(): msg == NULL\n",__func__); 		goto nomsg; 	}
 comment|/* pass the ioctl data into the ->data area */
 end_comment
 
@@ -1520,7 +1526,8 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 comment|/* get an mbuf */
 do|do
 block|{
@@ -1732,7 +1739,8 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 if|if
 condition|(
 name|uio
@@ -1909,7 +1917,8 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|AAA
+name|DBG
+expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -1917,7 +1926,7 @@ name|ng_device_mtx
 argument_list|,
 name|MA_OWNED
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/* When there is no list yet, the first device unit is always 0. */
 if|if SLIST_EMPTY
 condition|(
