@@ -3929,14 +3929,11 @@ name|P_SUGID
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|p
 operator|->
 name|p_pfsflags
 operator|&
 name|PF_ISUGID
-operator|)
 condition|)
 name|p
 operator|->
