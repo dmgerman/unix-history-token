@@ -2402,21 +2402,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|pbreassignbuf
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-parameter_list|,
-name|struct
-name|vnode
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|buf
 modifier|*

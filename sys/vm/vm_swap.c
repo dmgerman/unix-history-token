@@ -542,14 +542,13 @@ name|v_numoutput
 operator|++
 expr_stmt|;
 block|}
-name|pbreassignbuf
-argument_list|(
 name|bp
-argument_list|,
+operator|->
+name|b_vp
+operator|=
 name|sp
 operator|->
 name|sw_vp
-argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(

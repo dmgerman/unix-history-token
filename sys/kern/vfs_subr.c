@@ -6232,53 +6232,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change the vnode a pager buffer is associated with.  */
-end_comment
-
-begin_function
-name|void
-name|pbreassignbuf
-parameter_list|(
-name|bp
-parameter_list|,
-name|newvp
-parameter_list|)
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|newvp
-decl_stmt|;
-block|{
-name|KASSERT
-argument_list|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_PAGING
-argument_list|,
-operator|(
-literal|"pbreassignbuf() on non phys bp %p"
-operator|,
-name|bp
-operator|)
-argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_vp
-operator|=
-name|newvp
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Reassign a buffer from one vnode to another.  * Used to assign file specific control information  * (indirect blocks) to the vnode to which they belong.  */
 end_comment
 
