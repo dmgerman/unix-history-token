@@ -1268,14 +1268,34 @@ comment|/* FIFO */
 end_comment
 
 begin_comment
-comment|/*  * Enabling cluster read/write operations.  * Default is off until we trust them.  */
+comment|/*  * Enabling cluster read/write operations.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
 
 begin_decl_stmt
 name|int
 name|doclusterread
 init|=
-literal|0
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug11
+init|=
+block|{
+literal|"doclusterread"
+block|,
+operator|&
+name|doclusterread
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,7 +1303,21 @@ begin_decl_stmt
 name|int
 name|doclusterwrite
 init|=
-literal|0
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ctldebug
+name|debug12
+init|=
+block|{
+literal|"doclusterwrite"
+block|,
+operator|&
+name|doclusterwrite
+block|}
 decl_stmt|;
 end_decl_stmt
 
