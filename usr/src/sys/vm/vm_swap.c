@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_swap.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -586,12 +586,6 @@ name|swdevt
 modifier|*
 name|sp
 decl_stmt|;
-specifier|register
-name|struct
-name|nameidata
-modifier|*
-name|ndp
-decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
@@ -623,32 +617,23 @@ operator|(
 name|error
 operator|)
 return|;
-name|ndp
-operator|=
+name|NDINIT
+argument_list|(
 operator|&
 name|nd
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_nameiop
-operator|=
+argument_list|,
 name|LOOKUP
-operator||
+argument_list|,
 name|FOLLOW
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_segflg
-operator|=
+argument_list|,
 name|UIO_USERSPACE
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_dirp
-operator|=
+argument_list|,
 name|uap
 operator|->
 name|name
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -656,9 +641,8 @@ name|error
 operator|=
 name|namei
 argument_list|(
-name|ndp
-argument_list|,
-name|p
+operator|&
+name|nd
 argument_list|)
 condition|)
 return|return
@@ -668,8 +652,8 @@ operator|)
 return|;
 name|vp
 operator|=
-name|ndp
-operator|->
+name|nd
+operator|.
 name|ni_vp
 expr_stmt|;
 if|if
