@@ -13985,6 +13985,8 @@ name|b_data
 argument_list|,
 name|prot
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
 name|vm_page_lock_queues
