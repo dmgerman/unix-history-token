@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.37 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,6 +507,17 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+name|path
+index|[
+literal|100
+index|]
+init|=
+literal|"PATH="
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|envinit
 index|[]
@@ -516,7 +527,7 @@ name|homedir
 block|,
 name|shell
 block|,
-name|_PATH_DEFPATH
+name|path
 block|,
 name|username
 block|,
@@ -2318,6 +2329,13 @@ name|homedir
 argument_list|)
 operator|-
 literal|6
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|path
+argument_list|,
+name|_PATH_DEFPATH
 argument_list|)
 expr_stmt|;
 name|strncat
