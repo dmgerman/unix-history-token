@@ -99,12 +99,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"uio.h"
 end_include
 

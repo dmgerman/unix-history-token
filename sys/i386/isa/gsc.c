@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/uio.h>
 end_include
 
