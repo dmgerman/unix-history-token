@@ -1010,7 +1010,23 @@ name|subdisks
 operator|==
 name|MAXSD
 condition|)
+block|{
 comment|/* we already have our maximum */
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|==
+name|sd_unallocated
+condition|)
+comment|/* haven't finished allocating the sd, */
+name|free_sd
+argument_list|(
+name|sdno
+argument_list|)
+expr_stmt|;
+comment|/* free it to return drive space */
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1027,6 +1043,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|plex
 operator|->
 name|subdisks
@@ -3508,6 +3525,13 @@ name|subdisks
 operator|--
 expr_stmt|;
 comment|/* one less subdisk */
+comment|/*      * If we come here as the result of a      * configuration error, we may not yet have      * created a device entry for the subdisk.      */
+if|if
+condition|(
+name|sd
+operator|->
+name|dev
+condition|)
 name|destroy_dev
 argument_list|(
 name|sd
@@ -5645,7 +5669,6 @@ name|state
 operator|=
 name|sd_crashed
 expr_stmt|;
-comment|/*      * This is tacky.  If something goes wrong      * with the checks, we may end up losing drive      * space.  FIXME.      */
 if|if
 condition|(
 name|autosize
@@ -5765,7 +5788,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 comment|/* no way */
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|==
+name|sd_unallocated
+condition|)
+comment|/* haven't finished allocating the sd, */
+name|free_sd
+argument_list|(
+name|sdno
+argument_list|)
+expr_stmt|;
+comment|/* free it to return drive space */
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
@@ -5773,6 +5812,7 @@ argument_list|,
 literal|"Unnamed sd is not associated with a plex"
 argument_list|)
 expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|sdsuffix
