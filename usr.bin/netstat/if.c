@@ -778,8 +778,12 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
 operator|!
 name|sflag
+operator|||
+name|iflag
+operator|)
 operator|&&
 operator|!
 name|pflag
