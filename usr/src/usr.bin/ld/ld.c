@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	6.10 (Berkeley) %G%"
+literal|"@(#)ld.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7564,12 +7564,11 @@ name|symbol_name_string_index
 argument_list|)
 expr_stmt|;
 comment|/* If we find a symbol that appears to be needed, think carefully 	       about the archive member that the symbol is in.  */
+comment|/* 	     * Per Mike Karels' recommendation, we no longer load library 	     * files if the only reference(s) that would be satisfied are 	     * 'common' references.  This prevents some problems with name 	     * pollution (e.g. a global common 'utime' linked to a function). 	     */
 if|if
 condition|(
 name|sp
 operator|&&
-operator|(
-operator|(
 name|sp
 operator|->
 name|referenced
@@ -7578,18 +7577,6 @@ operator|!
 name|sp
 operator|->
 name|defined
-operator|)
-operator|||
-operator|(
-name|sp
-operator|->
-name|defined
-operator|&&
-name|sp
-operator|->
-name|max_common_size
-operator|)
-operator|)
 condition|)
 block|{
 name|int
@@ -8229,9 +8216,9 @@ operator|!
 name|sp
 condition|)
 continue|continue;
+comment|/* 	   * We don't load a file if it merely satisfies a common reference 	   * (see explanation above in symdef_library()). 	   */
 if|if
 condition|(
-operator|(
 name|sp
 operator|->
 name|referenced
@@ -8240,17 +8227,6 @@ operator|!
 name|sp
 operator|->
 name|defined
-operator|)
-operator|||
-operator|(
-name|sp
-operator|->
-name|defined
-operator|&&
-name|sp
-operator|->
-name|max_common_size
-operator|)
 condition|)
 block|{
 comment|/* This is a symbol we are looking for.  It is either 	         not yet defined or defined as a common.  */
