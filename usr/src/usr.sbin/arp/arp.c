@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.15 (Berkeley) %G%"
+literal|"@(#)arp.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -1336,11 +1342,6 @@ name|u_char
 modifier|*
 name|ea
 decl_stmt|;
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
 name|sin_m
 operator|=
 name|blank_sin
