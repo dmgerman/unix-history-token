@@ -425,7 +425,8 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 specifier|const
 modifier|*
 name|p
@@ -464,7 +465,8 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 specifier|const
 modifier|*
 name|p
@@ -521,7 +523,8 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 specifier|const
 modifier|*
 name|p
@@ -565,7 +568,8 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 specifier|const
 modifier|*
 name|p
@@ -604,7 +608,8 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 specifier|const
 modifier|*
 name|p
@@ -661,7 +666,8 @@ modifier|*
 name|pp
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 specifier|const
 modifier|*
 name|p
@@ -707,7 +713,8 @@ name|uint16_t
 name|u
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|p
 init|=
@@ -752,7 +759,8 @@ name|uint32_t
 name|u
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|p
 init|=
@@ -823,7 +831,8 @@ name|uint64_t
 name|u
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|p
 init|=
@@ -866,7 +875,8 @@ name|uint16_t
 name|u
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|p
 init|=
@@ -911,7 +921,8 @@ name|uint32_t
 name|u
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|p
 init|=
@@ -982,7 +993,8 @@ name|uint64_t
 name|u
 parameter_list|)
 block|{
-name|u_char
+name|unsigned
+name|char
 modifier|*
 name|p
 init|=
