@@ -406,16 +406,6 @@ block|,
 block|{
 name|JUST_COPY
 block|,
-literal|"kerberosIV"
-block|,
-name|TRUE
-block|,
-name|NULL
-block|}
-block|,
-block|{
-name|JUST_COPY
-block|,
 literal|"localtime"
 block|,
 name|TRUE

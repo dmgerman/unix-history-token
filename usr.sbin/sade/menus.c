@@ -60,8 +60,6 @@ name|DIST_CRYPTO_SCRYPTO
 operator||
 name|DIST_CRYPTO_SSECURE
 operator||
-name|DIST_CRYPTO_SKERBEROS4
-operator||
 name|DIST_CRYPTO_SKERBEROS5
 operator|)
 expr_stmt|;
@@ -99,8 +97,6 @@ operator|(
 name|DIST_CRYPTO_SCRYPTO
 operator||
 name|DIST_CRYPTO_SSECURE
-operator||
-name|DIST_CRYPTO_SKERBEROS4
 operator||
 name|DIST_CRYPTO_SKERBEROS5
 operator|)
@@ -5465,29 +5461,6 @@ name|DIST_CRYPTO_CRYPTO
 block|, }
 block|,
 block|{
-literal|" krb4"
-block|,
-literal|"KerberosIV authentication services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_KERBEROS4
-block|}
-block|,
-block|{
 literal|" krb5"
 block|,
 literal|"Kerberos5 authentication services"
@@ -6141,29 +6114,6 @@ block|,
 literal|']'
 block|,
 name|DIST_SRC_SHARE
-block|}
-block|,
-block|{
-literal|" skrb4"
-block|,
-literal|"/usr/src/kerberosIV (sources for KerberosIV)"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_SKERBEROS4
 block|}
 block|,
 block|{
