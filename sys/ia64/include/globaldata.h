@@ -85,6 +85,12 @@ name|u_int64_t
 name|gd_pending_ipis
 decl_stmt|;
 comment|/* pending IPI events */
+name|struct
+name|pmap
+modifier|*
+name|gd_current_pmap
+decl_stmt|;
+comment|/* which pmap is active */
 name|u_int32_t
 name|gd_next_asn
 decl_stmt|;

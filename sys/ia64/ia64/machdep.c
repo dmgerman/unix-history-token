@@ -1830,7 +1830,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|DDBxx
 name|ksym_start
 operator|=
 operator|(

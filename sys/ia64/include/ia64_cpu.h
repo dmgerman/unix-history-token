@@ -767,6 +767,87 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Generate a ptc.e instruction.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_ptc_e
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("ptc.e %0;;" :: "r"(v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Generate a ptc.g instruction.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_ptc_g
+parameter_list|(
+name|u_int64_t
+name|va
+parameter_list|,
+name|u_int64_t
+name|log2size
+parameter_list|)
+block|{
+asm|__asm __volatile("ptc.g %0,%1;;" :: "r"(va), "r"(log2size));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Generate a ptc.ga instruction.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_ptc_ga
+parameter_list|(
+name|u_int64_t
+name|va
+parameter_list|,
+name|u_int64_t
+name|log2size
+parameter_list|)
+block|{
+asm|__asm __volatile("ptc.ga %0,%1;;" :: "r"(va), "r"(log2size));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Generate a ptc.l instruction.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_ptc_l
+parameter_list|(
+name|u_int64_t
+name|va
+parameter_list|,
+name|u_int64_t
+name|log2size
+parameter_list|)
+block|{
+asm|__asm __volatile("ptc.l %0,%1;;" :: "r"(va), "r"(log2size));
+block|}
+end_function
+
+begin_comment
 comment|/*  * Read the value of ar.k0.  */
 end_comment
 

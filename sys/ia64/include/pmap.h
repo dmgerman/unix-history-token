@@ -553,6 +553,10 @@ argument_list|)
 name|pm_pvlist
 expr_stmt|;
 comment|/* list of mappings in pmap */
+name|u_int64_t
+name|pm_rid
+decl_stmt|;
+comment|/* base RID for pmap */
 name|int
 name|pm_count
 decl_stmt|;
@@ -565,14 +569,6 @@ name|int
 name|pm_active
 decl_stmt|;
 comment|/* active flag */
-name|int
-name|pm_asn
-decl_stmt|;
-comment|/* address space number */
-name|u_int
-name|pm_asngen
-decl_stmt|;
-comment|/* generation number of pm_asn */
 name|struct
 name|pmap_statistics
 name|pm_stats
@@ -730,18 +726,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|char
-modifier|*
-name|ptvmmap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* poor name! */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|vm_offset_t
 name|virtual_avail
 decl_stmt|;
@@ -891,39 +875,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|pmap_deactivate
+name|struct
+name|pmap
+modifier|*
+name|pmap_install
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|proc
+name|pmap
 operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|pmap_emulate_reference
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-name|vm_offset_t
-name|v
-operator|,
-name|int
-name|user
-operator|,
-name|int
-name|write
+name|pmap
 operator|)
 argument_list|)
 decl_stmt|;

@@ -88,7 +88,7 @@ name|CLKF_INTR
 parameter_list|(
 name|framep
 parameter_list|)
-value|(intr_nesting_level>= 2)
+value|(PCPU_GET(intr_nesting_level)>= 2)
 end_define
 
 begin_comment
@@ -153,17 +153,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|u_int32_t
-name|intr_nesting_level
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* bookeeping only; counts sw intrs */
-end_comment
 
 begin_decl_stmt
 specifier|extern
