@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1998, 1999 and 2000  *      HAYAKAWA Koichi.  All ri
 end_comment
 
 begin_comment
-comment|/*  * Driver for PCI to Cardbus Bridge chips  *  * References:  *  TI Datasheets:  *   http://www-s.ti.com/cgi-bin/sc/generic2.cgi?family=PCI+CARDBUS+CONTROLLERS  *  * Written by Jonathan Chen<jon@freebsd.org>  * The author would like to acknowledge:  *  * HAYAKAWA Koichi: Author of the NetBSD code for the same thing  *  * Warner Losh: Newbus/newcard guru and author of the pccard side of things  *  * YAMAMOTO Shigeru: Author of another FreeBSD cardbus driver  *  * David Cross: Author of the initial ugly hack for a specific cardbus card  */
+comment|/*  * Driver for PCI to CardBus Bridge chips  *  * References:  *  TI Datasheets:  *   http://www-s.ti.com/cgi-bin/sc/generic2.cgi?family=PCI+CARDBUS+CONTROLLERS  *  * Written by Jonathan Chen<jon@freebsd.org>  * The author would like to acknowledge:  *  * HAYAKAWA Koichi: Author of the NetBSD code for the same thing  *  * Warner Losh: Newbus/newcard guru and author of the pccard side of things  *  * YAMAMOTO Shigeru: Author of another FreeBSD cardbus driver  *  * David Cross: Author of the initial ugly hack for a specific cardbus card  */
 end_comment
 
 begin_include
@@ -2446,7 +2446,7 @@ expr_stmt|;
 name|topic_common
 label|:
 empty_stmt|;
-comment|/* 		 * At offset 0xa0: SLOT CONTROL 		 * 0x80 Enable Cardbus Functionality 		 * 0x40 Enable Cardbus and PC Card registers 		 * 0x20 Lock ID in exca regs 		 * 0x10 Write protect ID in config regs 		 * Clear the rest of the bits, which defaults the slot 		 * in legacy mode to 0x3e0 and offset 0. (legacy 		 * mode is determined elsewhere) 		 */
+comment|/* 		 * At offset 0xa0: SLOT CONTROL 		 * 0x80 Enable CardBus Functionality 		 * 0x40 Enable CardBus and PC Card registers 		 * 0x20 Lock ID in exca regs 		 * 0x10 Write protect ID in config regs 		 * Clear the rest of the bits, which defaults the slot 		 * in legacy mode to 0x3e0 and offset 0. (legacy 		 * mode is determined elsewhere) 		 */
 name|pci_write_config
 argument_list|(
 name|sc
@@ -4742,6 +4742,12 @@ name|flags
 operator||=
 name|CBB_16BIT_CARD
 expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator||=
+name|CBB_CARD_OK
+expr_stmt|;
 if|if
 condition|(
 name|CARD_ATTACH_CARD
@@ -4753,6 +4759,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -4762,13 +4769,14 @@ argument_list|,
 literal|"PC Card card activation failed\n"
 argument_list|)
 expr_stmt|;
-else|else
 name|sc
 operator|->
 name|flags
-operator||=
+operator|&=
+operator|~
 name|CBB_CARD_OK
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -4807,6 +4815,12 @@ operator|&=
 operator|~
 name|CBB_16BIT_CARD
 expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator||=
+name|CBB_CARD_OK
+expr_stmt|;
 if|if
 condition|(
 name|CARD_ATTACH_CARD
@@ -4818,6 +4832,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|sc
@@ -4827,13 +4842,14 @@ argument_list|,
 literal|"CardBus card activation failed\n"
 argument_list|)
 expr_stmt|;
-else|else
 name|sc
 operator|->
 name|flags
-operator||=
+operator|&=
+operator|~
 name|CBB_CARD_OK
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -4843,7 +4859,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"CardBUS card inserted, but no cardbus bus.\n"
+literal|"CardBus card inserted, but no cardbus bus.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5914,7 +5930,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Cardbus power functions						*/
+comment|/* CardBus power functions						*/
 end_comment
 
 begin_comment
@@ -6123,7 +6139,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Cardbus Resource							*/
+comment|/* CardBus Resource							*/
 end_comment
 
 begin_comment
