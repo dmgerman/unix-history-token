@@ -103,24 +103,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vinum_inactive
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|free_vinum
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|attachobject
 parameter_list|(
@@ -255,6 +237,7 @@ block|{
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
+comment|/* ordinary super device */
 name|ioctl_reply
 operator|=
 operator|(
@@ -402,8 +385,11 @@ name|error
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* first time, */
+name|ioctl_reply
+operator|->
+name|error
+operator|=
 name|parse_user_config
 argument_list|(
 operator|(
@@ -412,19 +398,11 @@ operator|*
 operator|)
 name|data
 argument_list|,
+comment|/* update the config */
 operator|&
 name|keyword_set
 argument_list|)
 expr_stmt|;
-comment|/* update the config */
-name|ioctl_reply
-operator|->
-name|error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no error if we make it here */
-block|}
 elseif|else
 if|if
 condition|(
@@ -777,6 +755,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+comment|/* 	     * We get called in two places: one from the 	     * userland config routines, which call us 	     * to complete the config and save it.  This 	     * call supplies the value 0 as a parameter. 	     * 	     * The other place is from the user "saveconfig" 	     * routine, which can only work if we're *not* 	     * configuring.  In this case, supply parameter 1. 	     */
 case|case
 name|VINUM_SAVECONFIG
 case|:
@@ -788,25 +767,36 @@ name|VF_CONFIGURING
 condition|)
 block|{
 comment|/* must be us, the others are asleep */
+if|if
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|==
+literal|0
+condition|)
+comment|/* finish config */
 name|finish_config
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
 comment|/* finish the configuration and update it */
+else|else
+return|return
+name|EBUSY
+return|;
+comment|/* can't do it now */
+block|}
 name|save_config
 argument_list|()
 expr_stmt|;
 comment|/* save configuration to disk */
-block|}
-else|else
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* queue up for this one, please */
 return|return
-name|error
+literal|0
 return|;
 case|case
 name|VINUM_RELEASECONFIG
@@ -894,8 +884,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* clean up everything */
-name|printf
+name|log
 argument_list|(
+name|LOG_NOTICE
+argument_list|,
 literal|"vinum: CONFIGURATION OBLITERATED\n"
 argument_list|)
 expr_stmt|;
@@ -1265,8 +1257,10 @@ default|default:
 comment|/* FALLTHROUGH */
 block|}
 default|default:
-name|printf
+name|log
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"vinumioctl: invalid ioctl from process %d (%s): %lx\n"
 argument_list|,
 name|curproc
@@ -3021,7 +3015,16 @@ operator|==
 name|plex_striped
 operator|)
 comment|/* we've just mutilated our plex, */
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+operator|)
 condition|)
+comment|/* the data no longer matches */
 name|set_plex_state
 argument_list|(
 name|plex
