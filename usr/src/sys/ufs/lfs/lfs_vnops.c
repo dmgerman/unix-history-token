@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.54	83/03/31	*/
+comment|/*	lfs_vnops.c	4.55	83/04/01	*/
 end_comment
 
 begin_include
@@ -2926,6 +2926,10 @@ name|u_ap
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|suser
+argument_list|()
+operator|||
 operator|(
 name|ip
 operator|=
@@ -3054,14 +3058,6 @@ name|f_inode
 expr_stmt|;
 if|if
 condition|(
-name|ip
-operator|->
-name|i_uid
-operator|!=
-name|u
-operator|.
-name|u_uid
-operator|&&
 operator|!
 name|suser
 argument_list|()
@@ -3163,29 +3159,6 @@ name|ip
 operator|->
 name|i_gid
 expr_stmt|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_uid
-operator|&&
-name|ip
-operator|->
-name|i_gid
-operator|!=
-name|gid
-operator|&&
-operator|!
-name|groupmember
-argument_list|(
-name|gid
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
 ifdef|#
 directive|ifdef
 name|QUOTA
