@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	8.1 (Berkeley) %G%"
+literal|"@(#)if.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -110,12 +116,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -151,7 +151,7 @@ name|sidewaysintpr
 name|__P
 argument_list|(
 operator|(
-name|unsigned
+name|u_int
 operator|,
 name|u_long
 operator|)
@@ -166,6 +166,7 @@ name|catchalarm
 name|__P
 argument_list|(
 operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -447,15 +448,18 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
-operator|*
 name|cp
-operator|++
-operator|=
+operator|+=
+name|sprintf
+argument_list|(
+name|cp
+argument_list|,
+literal|"%d"
+argument_list|,
 name|ifnet
 operator|.
 name|if_unit
-operator|+
-literal|'0'
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1923,7 +1927,12 @@ begin_function
 specifier|static
 name|void
 name|catchalarm
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|signalled
 operator|=
