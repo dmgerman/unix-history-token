@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -60,6 +60,14 @@ name|u_long
 name|su_lastmod
 decl_stmt|;
 comment|/* SEGUSE last modified timestamp */
+name|u_short
+name|su_nsums
+decl_stmt|;
+comment|/* number of summaries in segment */
+name|u_short
+name|su_ninos
+decl_stmt|;
+comment|/* number of inode blocks in seg */
 define|#
 directive|define
 name|SEGUSE_ACTIVE
@@ -75,11 +83,6 @@ directive|define
 name|SEGUSE_SUPERBLOCK
 value|0x4
 comment|/* segment contains a superblock */
-define|#
-directive|define
-name|SEGUSE_LIVELOG
-value|0x8
-comment|/* segment has not been checkpointed */
 name|u_long
 name|su_flags
 decl_stmt|;
@@ -90,12 +93,22 @@ end_struct
 begin_define
 define|#
 directive|define
+name|SEGUPB
+parameter_list|(
+name|fs
+parameter_list|)
+value|(1<< (fs)->lfs_sushift);
+end_define
+
+begin_define
+define|#
+directive|define
 name|SEGTABSIZE_SU
 parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|(((fs)->lfs_nseg * sizeof(SEGUSE) + \ 	((fs)->lfs_bsize - 1))>> (fs)->lfs_bshift)
+value|((fs)->lfs_nseg>> ((fs)->lfs_bshift - (fs)->lfs_sushift))
 end_define
 
 begin_comment
@@ -193,7 +206,7 @@ comment|/* start of the free list */
 name|u_long
 name|lfs_bfree
 decl_stmt|;
-comment|/* number of free blocks */
+comment|/* number of free disk blocks */
 name|u_long
 name|lfs_nfiles
 decl_stmt|;
@@ -312,6 +325,10 @@ name|u_long
 name|lfs_fsbtodb
 decl_stmt|;
 comment|/* fsbtodb and dbtofsb shift constant */
+name|u_long
+name|lfs_sushift
+decl_stmt|;
+comment|/* fast mult/div for segusage table */
 define|#
 directive|define
 name|LFS_MIN_SBINTERVAL
@@ -729,6 +746,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|dbtofsb
+parameter_list|(
+name|fs
+parameter_list|,
+name|b
+parameter_list|)
+value|((b)>> (fs)->lfs_fsbtodb)
+end_define
+
+begin_define
+define|#
+directive|define
 name|lblkno
 parameter_list|(
 name|fs
@@ -847,7 +876,7 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, (IN) / (F)->lfs_sepb + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(SP) = (SEGUSE *)(BP)->b_un.b_addr + (IN) % (F)->lfs_sepb; \ }
+value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, \ 	    ((IN)>> (F)->lfs_sushift) + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(SP) = (SEGUSE *)(BP)->b_un.b_addr + ((IN)& (F)->lfs_sepb - 1); \ }
 end_define
 
 begin_comment
