@@ -1095,6 +1095,24 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ident
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no ident line specified\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|next
 label|:
 comment|/* 	 * filename	[ standard | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] 	 *	[ compile-with "compile rule" ] 	 */
