@@ -6989,6 +6989,16 @@ name|object
 operator|->
 name|size
 condition|)
+block|{
+if|if
+condition|(
+name|object
+operator|->
+name|size
+operator|<
+name|pindex
+condition|)
+return|return;
 name|psize
 operator|=
 name|object
@@ -6997,6 +7007,7 @@ name|size
 operator|-
 name|pindex
 expr_stmt|;
+block|}
 comment|/* 	 * if we are processing a major portion of the object, then scan the 	 * entire thing. 	 */
 if|if
 condition|(
