@@ -1781,6 +1781,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
+begin_comment
+comment|/* XXX - COMPAT_FBSD3 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2044,6 +2054,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_43 */
+end_comment
 
 begin_comment
 comment|/*  * Initialize signal state for process 0;  * set to ignore signals that are ignored by default.  */
@@ -2589,6 +2608,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
+begin_comment
+comment|/* XXX - COMPAT_FBSD3 */
+end_comment
+
 begin_comment
 comment|/*  * osigprocmask() - MP SAFE  */
 end_comment
@@ -2694,6 +2723,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_43 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2763,6 +2801,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
+begin_comment
+comment|/* XXX - COMPAT_FBSD3 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2829,6 +2877,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_43 */
+end_comment
 
 begin_if
 if|#
@@ -3518,6 +3575,16 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
+begin_comment
+comment|/* XXX - COMPAT_FBSD3 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3644,6 +3711,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_43 */
+end_comment
 
 begin_if
 if|#
