@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -122,7 +122,6 @@ name|vpp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN */
 name|struct
 name|vnode
 modifier|*
@@ -2278,8 +2277,6 @@ name|dvp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.  */
-comment|/* old: ufs_direnter(ip, ndp) */
 name|struct
 name|inode
 modifier|*
@@ -2959,7 +2956,6 @@ name|dvp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.  */
 name|struct
 name|vnode
 modifier|*
@@ -2970,7 +2966,6 @@ name|componentname
 modifier|*
 name|cnp
 decl_stmt|;
-comment|/* old: ufs_dirremove(ndp) */
 block|{
 specifier|register
 name|struct
