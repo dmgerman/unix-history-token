@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.12 %G%"
+literal|"@(#)lval.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,6 +1221,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+return|return
+name|NLNIL
+return|;
 block|}
 if|if
 condition|(
@@ -1781,7 +1784,7 @@ condition|)
 block|{
 name|constsub
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 block|}
 else|else
