@@ -2909,21 +2909,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * If Fibre Channel, stop and drain all activity to this bus. 	 */
-if|#
-directive|if
-literal|0
-block|if (IS_FC(isp)) { 		ISP_LOCK(isp); 		frozen = 1; 		xpt_freeze_simq(isp->isp_sim, 1); 		isp->isp_osinfo.drain = 1; 		while (isp->isp_osinfo.drain) { 			(void) msleep(&isp->isp_osinfo.drain,&isp->isp_lock, 			    PRIBIO, "ispdrain", 10 * hz); 		} 		ISP_UNLOCK(isp); 	}
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* we don't need this */
-comment|/* 	 * Check to see if we're enabling on fibre channel and 	 * don't yet have a notion of who the heck we are (no 	 * loop yet). 	 */
-block|if (IS_FC(isp)&& cel->enable&& 	    (isp->isp_osinfo.tmflags& TM_TMODE_ENABLED) == 0) { 		fcparam *fcp = isp->isp_param; 		int rv;  		rv = isp_fc_runstate(isp, 2 * 1000000); 		if (fcp->isp_fwstate != FW_READY || 		    fcp->isp_loopstate != LOOP_READY) { 			xpt_print_path(ccb->ccb_h.path); 			isp_prt(isp, ISP_LOGWARN, 			    "could not get a good port database read"); 			ccb->ccb_h.status = CAM_REQ_CMP_ERR; 			if (frozen) { 				ISPLOCK_2_CAMLOCK(isp); 				xpt_release_simq(isp->isp_sim, 1); 				CAMLOCK_2_ISPLOCK(isp); 			} 			return; 		} 	}
-endif|#
-directive|endif
 comment|/* 	 * Next check to see whether this is a target/lun wildcard action. 	 * 	 * If so, we enable/disable target mode but don't do any lun enabling. 	 */
 if|if
 condition|(
@@ -7550,27 +7535,22 @@ argument_list|(
 name|sim
 argument_list|)
 expr_stmt|;
+name|nflags
+operator|=
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|nvrm_flags
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|ISP_TARGET_MODE
-if|if
-condition|(
-name|tgt
-operator|==
-name|sdp
-operator|->
-name|isp_initiator_id
-condition|)
-block|{
 name|nflags
-operator|=
-name|DPARM_DEFAULT
-expr_stmt|;
-block|}
-else|else
-block|{
-name|nflags
-operator|=
+operator|&=
 name|DPARM_SAFE_DFLT
 expr_stmt|;
 if|if
@@ -7586,7 +7566,6 @@ name|DPARM_NARROW
 operator||
 name|DPARM_ASYNC
 expr_stmt|;
-block|}
 block|}
 else|#
 directive|else
@@ -7605,7 +7584,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 expr_stmt|;
 name|sdp
 operator|->
@@ -7614,7 +7593,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 operator|=
 name|nflags
 expr_stmt|;
@@ -7661,7 +7640,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 operator|=
 name|oflags
 expr_stmt|;
@@ -8181,6 +8160,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|isp_ktmature
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -8256,6 +8244,46 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|)
+operator|->
+name|isp_fwstate
+operator|!=
+name|FW_READY
+operator|||
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|)
+operator|->
+name|isp_loopstate
+operator|<
+name|LOOP_PDB_RCVD
+condition|)
+block|{
+if|if
+condition|(
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|)
+operator|->
+name|loop_seen_once
+operator|==
+literal|0
+operator|||
+name|isp_ktmature
+operator|==
+literal|0
+condition|)
+block|{
+break|break;
+block|}
+block|}
 name|isp
 operator|->
 name|isp_osinfo
@@ -8284,6 +8312,11 @@ operator|=
 name|iok
 expr_stmt|;
 block|}
+comment|/* 		 * Even if we didn't get good loop state we may be 		 * unfreezing the SIMQ so that we can kill off 		 * commands (if we've never seen loop before, e.g.) 		 */
+name|isp_ktmature
+operator|=
+literal|1
+expr_stmt|;
 name|isp
 operator|->
 name|isp_osinfo
@@ -8893,6 +8926,49 @@ break|break;
 case|case
 name|CMD_RQLATER
 case|:
+comment|/* 			 * This can only happen for Fibre Channel 			 */
+name|KASSERT
+argument_list|(
+operator|(
+name|IS_FC
+argument_list|(
+name|isp
+argument_list|)
+operator|)
+argument_list|,
+operator|(
+literal|"CMD_RQLATER for FC only"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|FCPARAM
+argument_list|(
+name|isp
+argument_list|)
+operator|->
+name|loop_seen_once
+operator|==
+literal|0
+operator|&&
+name|isp_ktmature
+condition|)
+block|{
+name|XS_SETERR
+argument_list|(
+name|ccb
+argument_list|,
+name|CAM_SEL_TIMEOUT
+argument_list|)
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|wakeup
 argument_list|(
 operator|&
@@ -9627,6 +9703,30 @@ name|ccb
 operator|->
 name|cts
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|IS_CURRENT_SETTINGS
+argument_list|(
+name|cts
+argument_list|)
+condition|)
+block|{
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|=
+name|CAM_REQ_INVALID
+expr_stmt|;
+name|xpt_done
+argument_list|(
+name|ccb
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|tgt
 operator|=
 name|cts
@@ -9678,7 +9778,7 @@ name|sdp
 operator|+=
 name|bus
 expr_stmt|;
-comment|/* 			 * We always update (internally) from dev_flags 			 * so any request to change settings just gets 			 * vectored to that location. 			 */
+comment|/* 			 * We always update (internally) from goal_flags 			 * so any request to change settings just gets 			 * vectored to that location. 			 */
 name|dptr
 operator|=
 operator|&
@@ -9689,9 +9789,9 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|goal_flags
 expr_stmt|;
-comment|/* 			 * Note that these operations affect the 			 * the goal flags (dev_flags)- not 			 * the current state flags. Then we mark 			 * things so that the next operation to 			 * this HBA will cause the update to occur. 			 */
+comment|/* 			 * Note that these operations affect the 			 * the goal flags (goal_flags)- not 			 * the current state flags. Then we mark 			 * things so that the next operation to 			 * this HBA will cause the update to occur. 			 */
 if|if
 condition|(
 name|cts
@@ -9856,20 +9956,20 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%d.%d set %s period 0x%x offset 0x%x flags 0x%x"
+literal|"SET bus %d targ %d to flags %x off %x per %x"
 argument_list|,
 name|bus
 argument_list|,
 name|tgt
 argument_list|,
-name|IS_CURRENT_SETTINGS
-argument_list|(
-name|cts
-argument_list|)
-condition|?
-literal|"current"
-else|:
-literal|"user"
+name|sdp
+operator|->
+name|isp_devparam
+index|[
+name|tgt
+index|]
+operator|.
+name|goal_flags
 argument_list|,
 name|sdp
 operator|->
@@ -9878,7 +9978,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_period
+name|goal_offset
 argument_list|,
 name|sdp
 operator|->
@@ -9887,16 +9987,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_offset
-argument_list|,
-name|sdp
-operator|->
-name|isp_devparam
-index|[
-name|tgt
-index|]
-operator|.
-name|dev_flags
+name|goal_period
 argument_list|)
 expr_stmt|;
 name|sdp
@@ -9920,10 +10011,6 @@ operator|<<
 name|bus
 operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 			 * What, if anything, are we supposed to do? 			 */
 block|}
 name|ISPLOCK_2_CAMLOCK
 argument_list|(
@@ -10086,7 +10173,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_dflags
+name|actv_flags
 expr_stmt|;
 name|oval
 operator|=
@@ -10097,7 +10184,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_offset
+name|actv_offset
 expr_stmt|;
 name|pval
 operator|=
@@ -10108,7 +10195,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_period
+name|actv_period
 expr_stmt|;
 block|}
 else|else
@@ -10122,7 +10209,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|dev_flags
+name|nvrm_flags
 expr_stmt|;
 name|oval
 operator|=
@@ -10133,7 +10220,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_offset
+name|nvrm_offset
 expr_stmt|;
 name|pval
 operator|=
@@ -10144,7 +10231,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|sync_period
+name|nvrm_period
 expr_stmt|;
 block|}
 name|cts
@@ -10259,26 +10346,26 @@ name|isp
 argument_list|,
 name|ISP_LOGDEBUG0
 argument_list|,
-literal|"%d.%d get %s period 0x%x offset 0x%x flags 0x%x"
-argument_list|,
-name|bus
-argument_list|,
-name|tgt
+literal|"GET %s bus %d targ %d to flags %x off %x per %x"
 argument_list|,
 name|IS_CURRENT_SETTINGS
 argument_list|(
 name|cts
 argument_list|)
 condition|?
-literal|"current"
+literal|"ACTIVE"
 else|:
-literal|"user"
+literal|"NVRAM"
 argument_list|,
-name|pval
+name|bus
+argument_list|,
+name|tgt
+argument_list|,
+name|dval
 argument_list|,
 name|oval
 argument_list|,
-name|dval
+name|pval
 argument_list|)
 expr_stmt|;
 block|}
@@ -11374,6 +11461,11 @@ name|sdp
 operator|+=
 name|bus
 expr_stmt|;
+name|ISPLOCK_2_CAMLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xpt_create_path
@@ -11404,6 +11496,11 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
+name|CAMLOCK_2_ISPLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|isp_prt
 argument_list|(
 name|isp
@@ -11424,6 +11521,11 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+name|CAMLOCK_2_ISPLOCK
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
 name|flags
 operator|=
 name|sdp
@@ -11433,7 +11535,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_dflags
+name|actv_flags
 expr_stmt|;
 name|cts
 operator|.
@@ -11508,7 +11610,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_period
+name|actv_period
 expr_stmt|;
 name|cts
 operator|.
@@ -11521,7 +11623,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_offset
+name|actv_offset
 expr_stmt|;
 if|if
 condition|(
@@ -11558,7 +11660,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_period
+name|actv_period
 argument_list|,
 name|sdp
 operator|->
@@ -11567,7 +11669,7 @@ index|[
 name|tgt
 index|]
 operator|.
-name|cur_offset
+name|actv_offset
 argument_list|,
 name|flags
 argument_list|)
@@ -11599,14 +11701,14 @@ operator|&
 name|cts
 argument_list|)
 expr_stmt|;
-name|CAMLOCK_2_ISPLOCK
-argument_list|(
-name|isp
-argument_list|)
-expr_stmt|;
 name|xpt_free_path
 argument_list|(
 name|tmppath
+argument_list|)
+expr_stmt|;
+name|CAMLOCK_2_ISPLOCK
+argument_list|(
+name|isp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12076,11 +12178,7 @@ if|if
 condition|(
 name|arg
 operator|==
-operator|(
-name|void
-operator|*
-operator|)
-literal|1
+name|ISPASYNC_CHANGE_PDB
 condition|)
 block|{
 name|isp_prt
@@ -12089,11 +12187,17 @@ name|isp
 argument_list|,
 name|ISP_LOGINFO
 argument_list|,
-literal|"Name Server Database Changed"
+literal|"Port Database Changed"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|arg
+operator|==
+name|ISPASYNC_CHANGE_SNS
+condition|)
 block|{
 name|isp_prt
 argument_list|(
