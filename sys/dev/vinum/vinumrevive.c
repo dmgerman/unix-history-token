@@ -563,8 +563,10 @@ name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* bring the sd up */
-name|printf
+name|log
 argument_list|(
+name|LOG_INFO
+argument_list|,
 literal|"vinum: %s is %s\n"
 argument_list|,
 name|sd
@@ -616,8 +618,10 @@ name|debug
 operator|&
 name|DEBUG_REVIVECONFLICT
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"Relaunch revive conflict sd %d: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
 argument_list|,
 name|rq

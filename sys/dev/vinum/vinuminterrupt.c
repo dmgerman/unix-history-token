@@ -259,8 +259,10 @@ operator|&
 name|B_READ
 condition|)
 block|{
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"%s: fatal read I/O error\n"
 argument_list|,
 name|SD
@@ -289,8 +291,10 @@ block|}
 else|else
 block|{
 comment|/* write operation */
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"%s: fatal write I/O error\n"
 argument_list|,
 name|SD
@@ -326,8 +330,10 @@ name|ENXIO
 condition|)
 block|{
 comment|/* the drive's down too */
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"%s: fatal drive I/O error\n"
 argument_list|,
 name|DRIVE
@@ -626,8 +632,10 @@ literal|'<'
 condition|)
 block|{
 comment|/* and not what we expected */
-name|printf
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"At 0x%x (offset 0x%x): '%c' (0x%x)\n"
 argument_list|,
 call|(
