@@ -3170,13 +3170,6 @@ name|csession
 modifier|*
 name|cse
 decl_stmt|;
-comment|/* 	 * XXXRW: The cryptodev and called code all appears to be 	 * MPSAFE, but I'm not set up to test it.  Acquire Giant 	 * for now. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3225,12 +3218,6 @@ operator|->
 name|f_data
 operator|=
 name|NULL
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 return|return
 literal|0
