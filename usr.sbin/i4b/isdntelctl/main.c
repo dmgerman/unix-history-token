@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isdntelctl - i4b set telephone interface options  *	------------------------------------------------  *  *	$Id: main.c,v 1.4 1998/12/14 10:31:57 hm Exp $  *  *      last edit-date: [Sat Dec  5 18:17:17 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isdntelctl - i4b set telephone interface options  *	------------------------------------------------  *  *	$Id: main.c,v 1.7 1999/02/16 10:40:18 hm Exp $  *  *      last edit-date: [Tue Feb 16 11:32:09 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -144,6 +144,14 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|opt_R
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	program entry  *---------------------------------------------------------------------------*/
 end_comment
@@ -187,7 +195,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cgu:AU?"
+literal|"cgu:AUR?"
 argument_list|)
 operator|)
 operator|!=
@@ -256,6 +264,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'R'
+case|:
+name|opt_R
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -271,11 +287,17 @@ name|opt_get
 operator|==
 literal|0
 operator|&&
+name|opt_R
+operator|==
+literal|0
+operator|&&
 name|opt_U
 operator|==
 literal|0
 operator|&&
 name|opt_A
+operator|==
+literal|0
 operator|&&
 name|opt_C
 operator|==
@@ -291,6 +313,8 @@ if|if
 condition|(
 operator|(
 name|opt_get
+operator|+
+name|opt_R
 operator|+
 name|opt_U
 operator|+
@@ -429,6 +453,22 @@ name|namebuffer
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|format
+operator|==
+name|CVT_ALAW_CANON
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"device %s uses canonical A-Law sound format\n"
+argument_list|,
+name|namebuffer
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|printf
@@ -509,6 +549,59 @@ name|int
 name|format
 init|=
 name|CVT_ALAW2ULAW
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+name|telfd
+argument_list|,
+name|I4B_TEL_SETAUDIOFMT
+argument_list|,
+operator|&
+name|format
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ioctl I4B_TEL_SETAUDIOFMT failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|opt_R
+condition|)
+block|{
+name|int
+name|format
+init|=
+name|CVT_ALAW_CANON
 decl_stmt|;
 if|if
 condition|(
@@ -646,7 +739,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: isdndebug -e -h -g -l<layer> -m -r -s<value> -u<unit> -z -H\n"
+literal|"usage: isdntelctl -g -u<unit> -A -U -c\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -675,6 +768,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"       -U            set interface to u-Law coding\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -R            set interface to canonical (regular) A-Law coding\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - misc support routines  *	----------------------------------  *  *	$Id: support.c,v 1.43 1998/12/18 09:47:09 hm Exp $   *  *      last edit-date: [Mon Dec 14 11:17:22 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - misc support routines  *	----------------------------------  *  *	$Id: support.c,v 1.48 1999/02/17 14:31:42 hm Exp $   *  *      last edit-date: [Mon Feb 15 16:40:05 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -2013,6 +2013,8 @@ block|,
 literal|"ELSA MicroLink MCall"
 block|,
 literal|"ITK ix1 micro"
+block|,
+literal|"AVM Fritz!Card PCI"
 block|}
 decl_stmt|;
 specifier|static
@@ -2294,13 +2296,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DBGL
+argument_list|(
+name|DL_RCCF
+argument_list|,
+operator|(
 name|log
 argument_list|(
-name|LL_DMN
+name|LL_DBG
 argument_list|,
 literal|"init_controller: found %d ISDN controller(s)"
 argument_list|,
 name|max
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2333,6 +2342,8 @@ block|,
 literal|"ipr"
 block|,
 literal|"isp"
+block|,
+literal|"ibc"
 block|}
 decl_stmt|;
 if|if
@@ -2343,7 +2354,7 @@ name|BDRV_RBCH
 operator|&&
 name|drivertype
 operator|<=
-name|BDRV_ISPPP
+name|BDRV_IBC
 condition|)
 return|return
 operator|(
@@ -2602,7 +2613,28 @@ name|cep
 operator|->
 name|cdid
 expr_stmt|;
+comment|/* init the short hold data based on the shorthold algorithm type */
+switch|switch
+condition|(
+name|cep
+operator|->
+name|shorthold_algorithm
+condition|)
+block|{
+case|case
+name|msg_alg__fix_unit_size
+case|:
 name|tupd
+operator|.
+name|shorthold_data
+operator|.
+name|shorthold_algorithm
+operator|=
+name|msg_alg__fix_unit_size
+expr_stmt|;
+name|tupd
+operator|.
+name|shorthold_data
 operator|.
 name|unitlen_time
 operator|=
@@ -2612,6 +2644,8 @@ name|unitlength
 expr_stmt|;
 name|tupd
 operator|.
+name|shorthold_data
+operator|.
 name|idle_time
 operator|=
 name|cep
@@ -2620,12 +2654,68 @@ name|idle_time_out
 expr_stmt|;
 name|tupd
 operator|.
+name|shorthold_data
+operator|.
 name|earlyhup_time
 operator|=
 name|cep
 operator|->
 name|earlyhangup
 expr_stmt|;
+break|break;
+case|case
+name|msg_alg__var_unit_size
+case|:
+name|tupd
+operator|.
+name|shorthold_data
+operator|.
+name|shorthold_algorithm
+operator|=
+name|msg_alg__var_unit_size
+expr_stmt|;
+name|tupd
+operator|.
+name|shorthold_data
+operator|.
+name|unitlen_time
+operator|=
+name|cep
+operator|->
+name|unitlength
+expr_stmt|;
+name|tupd
+operator|.
+name|shorthold_data
+operator|.
+name|idle_time
+operator|=
+name|cep
+operator|->
+name|idle_time_out
+expr_stmt|;
+name|tupd
+operator|.
+name|shorthold_data
+operator|.
+name|earlyhup_time
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+name|log
+argument_list|(
+name|LL_ERR
+argument_list|,
+literal|"unitlen_chkupd bad shorthold_algorithm %d"
+argument_list|,
+name|cep
+operator|->
+name|shorthold_algorithm
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(

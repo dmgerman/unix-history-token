@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  *	$Id: isdnd.h,v 1.56 1998/12/16 13:39:46 hm Exp $   *  *      last edit-date: [Mon Dec 14 10:06:39 1998]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - main header file  *	-----------------------------  *  *	$Id: isdnd.h,v 1.59 1999/02/15 15:02:58 hm Exp $   *  *      last edit-date: [Mon Feb 15 15:42:37 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -347,6 +347,17 @@ begin_comment
 comment|/* messages related to controller state	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DL_RCCF
+value|0x0200
+end_define
+
+begin_comment
+comment|/* messages related to isdnd.rc at boot	*/
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -674,21 +685,13 @@ struct|struct
 name|rates
 block|{
 name|int
-name|start_hr
+name|start_time
 decl_stmt|;
-comment|/* hour at which this rate starts, e.g. 12 */
+comment|/* hour and min at which this rate starts, e.g. 12:20 12*60+20*/
 name|int
-name|start_min
+name|end_time
 decl_stmt|;
-comment|/* minute of start ... */
-name|int
-name|end_hr
-decl_stmt|;
-comment|/* hour at which this rate ends, e.g. 19 */
-name|int
-name|end_min
-decl_stmt|;
-comment|/* minute of end ... */
+comment|/* hour and min at which this rate ends, e.g. 19:10 19*60+10*/
 name|int
 name|rate
 decl_stmt|;
@@ -1000,6 +1003,10 @@ name|int
 name|idle_time_out
 decl_stmt|;
 comment|/* max idle time outgoing calls */
+name|msg_shorthold_algorithm_t
+name|shorthold_algorithm
+decl_stmt|;
+comment|/* shorthold algorithm		*/
 name|int
 name|unitlength
 decl_stmt|;
