@@ -3724,7 +3724,7 @@ name|m
 operator|->
 name|m_len
 argument_list|,
-name|TYPE_COMPRESSED_TCP
+name|TYPE_UNCOMPRESSED_TCP
 argument_list|,
 operator|&
 name|sp
@@ -3738,7 +3738,7 @@ operator|&
 name|hlen
 argument_list|)
 operator|)
-operator|<=
+operator|!=
 literal|0
 condition|)
 goto|goto
