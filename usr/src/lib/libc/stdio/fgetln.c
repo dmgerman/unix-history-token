@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fgetln.c	8.1 (Berkeley) %G%"
+literal|"@(#)fgetln.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,13 +166,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get an input line.  The returned pointer often (but not always)  * points into a stdio buffer.  Fgetline does not alter the text of  * the returned line (which is thus not a C string because it will  * not necessarily end with '\0'), but does allow callers to modify  * it if they wish.  Thus, we set __SMOD in case the caller does.  */
+comment|/*  * Get an input line.  The returned pointer often (but not always)  * points into a stdio buffer.  Fgetln does not alter the text of  * the returned line (which is thus not a C string because it will  * not necessarily end with '\0'), but does allow callers to modify  * it if they wish.  Thus, we set __SMOD in case the caller does.  */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|fgetline
+name|fgetln
 parameter_list|(
 name|fp
 parameter_list|,
