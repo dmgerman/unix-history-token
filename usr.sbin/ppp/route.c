@@ -2903,10 +2903,10 @@ operator|->
 name|sa_family
 operator|==
 name|AF_INET
-operator|||
 ifndef|#
 directive|ifndef
 name|NOINET6
+operator|||
 name|sa
 index|[
 name|RTAX_DST
