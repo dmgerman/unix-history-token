@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.53 (Berkeley) %G%"
+literal|"@(#)util.c	8.39.1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5785,6 +5785,8 @@ argument_list|(
 name|f
 argument_list|,
 name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5858,7 +5860,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DENLSTRING -- convert newlines in a string to spaces ** **	Parameters: **		s -- the input string **		logattacks -- if set, log attempted attacks. ** **	Returns: **		A pointer to a version of the string with newlines **		mapped to spaces.  This should be copied. */
+comment|/* **  DENLSTRING -- convert newlines in a string to spaces ** **	Parameters: **		s -- the input string **		strict -- if set, don't permit continuation lines. **		logattacks -- if set, log attempted attacks. ** **	Returns: **		A pointer to a version of the string with newlines **		mapped to spaces.  This should be copied. */
 end_comment
 
 begin_function
@@ -5868,11 +5870,16 @@ name|denlstring
 parameter_list|(
 name|s
 parameter_list|,
+name|strict
+parameter_list|,
 name|logattacks
 parameter_list|)
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|int
+name|strict
 decl_stmt|;
 name|int
 name|logattacks
@@ -5899,14 +5906,46 @@ name|bl
 init|=
 literal|0
 decl_stmt|;
-if|if
+name|p
+operator|=
+name|s
+expr_stmt|;
+while|while
 condition|(
+operator|(
+name|p
+operator|=
 name|strchr
 argument_list|(
-name|s
+name|p
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|strict
+operator|||
+operator|(
+operator|*
+operator|++
+name|p
+operator|!=
+literal|' '
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\t'
+operator|)
+condition|)
+break|break;
+if|if
+condition|(
+name|p
 operator|==
 name|NULL
 condition|)

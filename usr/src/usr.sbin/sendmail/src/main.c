@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.86 (Berkeley) %G%"
+literal|"@(#)main.c	8.55.1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2496,6 +2496,8 @@ argument_list|(
 name|optarg
 argument_list|,
 name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3617,6 +3619,8 @@ argument_list|(
 name|denlstring
 argument_list|(
 name|FullName
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)
