@@ -745,6 +745,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|syswarn
 argument_list|(
 literal|1
@@ -756,6 +757,13 @@ argument_list|,
 name|chdname
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* 	 * set up is based on device type 	 */
 if|if
 condition|(
