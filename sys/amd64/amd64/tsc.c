@@ -2538,6 +2538,7 @@ comment|/*  * i8254_restore is called from apm_default_resume() to reload  * the
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|i8254_restore
 parameter_list|(
@@ -2585,6 +2586,57 @@ operator|&
 name|clock_lock
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|rtc_restore
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Reenable RTC updates and interrupts. */
+comment|/* XXX locking is needed for RTC access? */
+name|writertc
+argument_list|(
+name|RTC_STATUSB
+argument_list|,
+name|RTCSB_HALT
+operator||
+name|RTCSB_24HR
+argument_list|)
+expr_stmt|;
+name|writertc
+argument_list|(
+name|RTC_STATUSB
+argument_list|,
+name|rtc_statusb
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Restore all the timers atomically.  */
+end_comment
+
+begin_function
+name|void
+name|timer_restore
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|i8254_restore
+argument_list|()
+expr_stmt|;
+comment|/* restore timer_freq and hz */
+name|rtc_restore
+argument_list|()
+expr_stmt|;
+comment|/* reenable RTC interrupts */
 block|}
 end_function
 

@@ -243,7 +243,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|i8254_restore
+name|timer_restore
 name|__P
 argument_list|(
 operator|(

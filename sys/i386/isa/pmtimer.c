@@ -215,10 +215,10 @@ operator|=
 name|splsoftclock
 argument_list|()
 expr_stmt|;
-name|i8254_restore
+name|timer_restore
 argument_list|()
 expr_stmt|;
-comment|/* restore timer_freq and hz */
+comment|/* restore the all timers */
 name|inittodr
 argument_list|(
 literal|0
