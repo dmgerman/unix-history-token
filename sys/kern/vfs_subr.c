@@ -10308,6 +10308,35 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 		 * This vnode could have been reclaimed while we were 		 * waiting for the lock since we are not holding a 		 * reference. 		 * Start over if the vnode was reclaimed. 		 */
+if|if
+condition|(
+name|vp
+operator|->
+name|v_mount
+operator|!=
+name|mp
+condition|)
+block|{
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|mntvnode_mtx
+argument_list|)
+expr_stmt|;
+goto|goto
+name|loop
+goto|;
+block|}
 comment|/* 		 * Skip over a vnodes marked VV_SYSTEM. 		 */
 if|if
 condition|(
