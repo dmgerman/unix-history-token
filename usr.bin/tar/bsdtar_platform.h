@@ -105,6 +105,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_FNM_LEADING_DIR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_FTRUNCATE
 value|1
 end_define
