@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	mkheaders.c	1.7	82/03/28  * Make all the .h files for the optional entries  */
+comment|/*  *	mkheaders.c	1.8	82/07/21  * Make all the .h files for the optional entries  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"y.tab.h"
 end_include
 
 begin_comment
@@ -175,6 +181,31 @@ name|dev
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|d_type
+operator|==
+name|PSEUDO_DEVICE
+condition|)
+block|{
+name|count
+operator|=
+name|dp
+operator|->
+name|d_slave
+operator|!=
+name|UNKNOWN
+condition|?
+name|dp
+operator|->
+name|d_slave
+else|:
+literal|1
+expr_stmt|;
+break|break;
+block|}
 name|count
 operator|++
 expr_stmt|;
