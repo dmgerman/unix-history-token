@@ -532,8 +532,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: last [-y] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h host]\n"
-literal|"\t[-n maxrec] [-t tty] [-s|w] [user ...]\n"
+literal|"usage: last [-swy] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h host]\n"
+literal|"            [-n maxrec] [-t tty] [user ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
