@@ -994,6 +994,16 @@ name|int
 name|eject
 parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|cd_fd
+argument_list|,
+name|CDIOCALLOW
+argument_list|)
+expr_stmt|;
 return|return
 name|ioctl
 argument_list|(
