@@ -338,11 +338,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|device
-modifier|*
-name|child
-decl_stmt|;
-name|struct
 name|pccard_config_entry
 modifier|*
 name|cfe
@@ -622,10 +617,7 @@ begin_function_decl
 name|int
 name|pccard_scan_cis
 parameter_list|(
-name|struct
-name|device
-modifier|*
-name|dev
+name|device_t
 parameter_list|,
 name|int
 function_decl|(
@@ -1008,36 +1000,11 @@ begin_enum
 enum|enum
 block|{
 name|PCCARD_A_MEM_ATTR
+init|=
+literal|0x1
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|/* Set the */
-end_comment
-
-begin_function
-specifier|static
-name|__inline__
-name|void
-name|pccard_set_attribute
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-name|r
-parameter_list|,
-name|int
-name|rid
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-block|{ }
-end_function
 
 end_unit
 

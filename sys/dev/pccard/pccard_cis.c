@@ -95,6 +95,18 @@ directive|include
 file|<dev/pccard/pccardvar.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"card_if.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|PCCARDCISDEBUG
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -105,7 +117,7 @@ begin_decl_stmt
 name|int
 name|pccardcis_debug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -348,6 +360,11 @@ name|pf
 operator|=
 name|NULL
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"Calling scan_cis\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pccard_scan_cis
@@ -475,7 +492,6 @@ argument_list|,
 name|PCCARD_CIS_SIZE
 argument_list|,
 name|RF_ACTIVE
-comment|/* | RF_PCCARD_ATTR */
 argument_list|)
 expr_stmt|;
 if|if
@@ -485,9 +501,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|device_printf
 argument_list|(
 name|dev
@@ -495,13 +508,27 @@ argument_list|,
 literal|"can't alloc memory to read attributes\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|-
 literal|1
 return|;
 block|}
+name|CARD_SET_RES_FLAGS
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|rid
+argument_list|,
+name|PCCARD_A_MEM_ATTR
+argument_list|)
+expr_stmt|;
 name|tuple
 operator|.
 name|memt

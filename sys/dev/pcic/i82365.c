@@ -139,6 +139,12 @@ directive|include
 file|<dev/pcic/i82365var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"card_if.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -319,6 +325,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pcic_attach_card
 parameter_list|(
@@ -330,6 +337,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pcic_detach_card
 parameter_list|(
@@ -342,16 +350,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|pcic_deactivate_card
-parameter_list|(
-name|struct
-name|pcic_handle
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void		pcic_deactivate_card(struct pcic_handle *);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -3199,48 +3208,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* if there's a card there, then attach it. */
-name|reg
-operator|=
-name|pcic_read
-argument_list|(
-name|h
-argument_list|,
-name|PCIC_IF_STATUS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|reg
-operator|&
-name|PCIC_IF_STATUS_CARDDETECT_MASK
-operator|)
-operator|==
-name|PCIC_IF_STATUS_CARDDETECT_PRESENT
-condition|)
-block|{
-name|pcic_attach_card
-argument_list|(
-name|h
-argument_list|)
-expr_stmt|;
-name|h
-operator|->
-name|laststate
-operator|=
-name|PCIC_LASTSTATE_PRESENT
-expr_stmt|;
-block|}
-else|else
-block|{
 name|h
 operator|->
 name|laststate
 operator|=
 name|PCIC_LASTSTATE_EMPTY
 expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* XXX */
+comment|/*	SHould do this later */
+block|if ((reg& PCIC_IF_STATUS_CARDDETECT_MASK) == 	    PCIC_IF_STATUS_CARDDETECT_PRESENT) { 		pcic_attach_card(h); 		h->laststate = PCIC_LASTSTATE_PRESENT; 	} else { 		h->laststate = PCIC_LASTSTATE_EMPTY; 	}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3476,13 +3457,15 @@ name|h
 operator|->
 name|dev
 operator|,
-literal|"deactivating card\n"
+literal|"detaching card\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|pcic_deactivate_card
+name|pcic_detach_card
 argument_list|(
 name|h
+argument_list|,
+name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
 name|DEVPRINTF
@@ -3684,6 +3667,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_attach_card
 parameter_list|(
@@ -3696,13 +3680,30 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"pcic_attach_card h %p h->dev %p\n"
+literal|"pcic_attach_card h %p h->dev %p %s %s\n"
 operator|,
 name|h
 operator|,
 name|h
 operator|->
 name|dev
+operator|,
+name|device_get_name
+argument_list|(
+name|h
+operator|->
+name|dev
+argument_list|)
+operator|,
+name|device_get_name
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|h
+operator|->
+name|dev
+argument_list|)
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3719,7 +3720,7 @@ operator|)
 condition|)
 block|{
 comment|/* call the MI attach function */
-name|pccard_card_attach
+name|CARD_ATTACH_CARD
 argument_list|(
 name|h
 operator|->
@@ -3747,6 +3748,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcic_detach_card
 parameter_list|(
@@ -3776,7 +3778,7 @@ operator|~
 name|PCIC_FLAG_CARDP
 expr_stmt|;
 comment|/* call the MI detach function */
-name|pccard_card_detach
+name|CARD_DETACH_CARD
 argument_list|(
 name|h
 operator|->
@@ -3799,46 +3801,32 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|pcic_deactivate_card
-parameter_list|(
-name|struct
-name|pcic_handle
-modifier|*
-name|h
-parameter_list|)
-block|{
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|void pcic_deactivate_card(struct pcic_handle *h) {
 comment|/* call the MI deactivate function */
-name|pccard_card_deactivate
-argument_list|(
-name|h
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
+end_comment
+
+begin_comment
+unit|pccard_card_deactivate(h->dev);
 comment|/* power down the socket */
-name|pcic_write
-argument_list|(
-name|h
-argument_list|,
-name|PCIC_PWRCTL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+end_comment
+
+begin_comment
+unit|pcic_write(h, PCIC_PWRCTL, 0);
 comment|/* reset the socket */
-name|pcic_write
-argument_list|(
-name|h
-argument_list|,
-name|PCIC_INTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|pcic_write(h, PCIC_INTR, 0); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -4752,22 +4740,13 @@ name|windowp
 operator|=
 name|win
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* XXX this is pretty gross */
-if|if
-condition|(
-name|sc
-operator|->
-name|memt
-operator|!=
-name|pcmhp
-operator|->
-name|memt
-condition|)
-name|panic
-argument_list|(
-literal|"pcic_chip_mem_map memt is bogus"
-argument_list|)
-expr_stmt|;
+block|if (sc->memt != pcmhp->memt) 		panic("pcic_chip_mem_map memt is bogus");
+endif|#
+directive|endif
 name|busaddr
 operator|=
 name|pcmhp
@@ -5677,22 +5656,13 @@ name|windowp
 operator|=
 name|win
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* XXX this is pretty gross */
-if|if
-condition|(
-name|sc
-operator|->
-name|iot
-operator|!=
-name|pcihp
-operator|->
-name|iot
-condition|)
-name|panic
-argument_list|(
-literal|"pcic_chip_io_map iot is bogus"
-argument_list|)
-expr_stmt|;
+block|if (sc->iot != pcihp->iot) 		panic("pcic_chip_io_map iot is bogus");
+endif|#
+directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -6245,13 +6215,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* set the card type */
-name|cardtype
-operator|=
-name|pccard_card_gettype
+name|CARD_GET_TYPE
 argument_list|(
 name|h
 operator|->
 name|dev
+argument_list|,
+operator|&
+name|cardtype
 argument_list|)
 expr_stmt|;
 name|reg
@@ -7426,6 +7397,111 @@ name|dev
 parameter_list|)
 block|{
 comment|/* Need to port pcic_power from newer netbsd versions of this file */
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|pcic_set_res_flags
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|rid
+parameter_list|,
+name|u_int32_t
+name|flags
+parameter_list|)
+block|{
+name|struct
+name|pcic_handle
+modifier|*
+name|h
+init|=
+name|pcic_get_handle
+argument_list|(
+name|dev
+argument_list|,
+name|child
+argument_list|)
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"%p %p %d %d %#x\n"
+argument_list|,
+name|dev
+argument_list|,
+name|child
+argument_list|,
+name|type
+argument_list|,
+name|rid
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|!=
+name|SYS_RES_MEMORY
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|h
+operator|->
+name|mem
+index|[
+name|rid
+index|]
+operator|.
+name|kind
+operator|=
+name|PCCARD_MEM_ATTR
+expr_stmt|;
+name|pcic_chip_do_mem_map
+argument_list|(
+name|h
+argument_list|,
+name|rid
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|pcic_set_memory_offset
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|rid
+parameter_list|,
+name|u_int32_t
+name|offset
+parameter_list|)
+block|{
 return|return
 literal|0
 return|;
