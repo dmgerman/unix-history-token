@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctags.c	5.3 (Berkeley) %G%"
+literal|"@(#)ctags.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -898,6 +898,9 @@ comment|/* lex */
 else|else
 block|{
 comment|/* 				 * we search all 3 parts of a lex file 				 * for C references.  This may be wrong. 				 */
+name|toss_yysec
+argument_list|()
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -912,7 +915,12 @@ name|pfnote
 argument_list|(
 literal|"yylex"
 argument_list|,
-literal|0
+name|lineno
+argument_list|)
+expr_stmt|;
+name|rewind
+argument_list|(
+name|inf
 argument_list|)
 expr_stmt|;
 block|}
@@ -938,6 +946,23 @@ block|{
 comment|/* 			 * we search only the 3rd part of a yacc file 			 * for C references.  This may be wrong. 			 */
 name|toss_yysec
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|lbuf
+argument_list|,
+literal|"%%$"
+argument_list|)
+expr_stmt|;
+name|pfnote
+argument_list|(
+literal|"yyparse"
+argument_list|,
+name|lineno
+argument_list|)
 expr_stmt|;
 name|y_entries
 argument_list|()
