@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init_disp.c	5.4 (Berkeley) %G%"
+literal|"@(#)init_disp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,13 +35,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"talk.h"
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl_compat.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"talk.h"
 end_include
 
 begin_comment
