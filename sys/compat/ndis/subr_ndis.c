@@ -11333,6 +11333,12 @@ name|lf
 expr_stmt|;
 name|fh
 operator|->
+name|nf_map
+operator|=
+name|NULL
+expr_stmt|;
+name|fh
+operator|->
 name|nf_type
 operator|=
 name|NDIS_FH_TYPE_MODULE
