@@ -93,14 +93,6 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
-comment|/* Define if you need to in order for stat and other things to work.  */
-end_comment
-
-begin_comment
-comment|/* #undef _POSIX_SOURCE */
-end_comment
-
-begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
 end_comment
 
@@ -244,6 +236,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SETLOCALE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the setmode function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETMODE
 value|1
 end_define
 
@@ -438,7 +441,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "000427" */
+comment|/* #define VERSION "2.11" */
 end_comment
 
 begin_comment
