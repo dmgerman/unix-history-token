@@ -1006,7 +1006,7 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|scp->dev->id_iobase = ioport;   scp->dev->id_alive  = 0x10;
+block|scp->dev->id_iobase = ioport;
 endif|#
 directive|endif
 comment|/* magic to set up the ethernet */
