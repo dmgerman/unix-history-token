@@ -691,6 +691,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pccard/pccardvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"card_if.h"
 end_include
 
@@ -7487,7 +7493,7 @@ name|SYS_RES_MEMORY
 argument_list|,
 name|rid
 argument_list|,
-literal|2
+name|PCCARD_A_MEM_8BIT
 argument_list|)
 expr_stmt|;
 if|if
