@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.1 %G%"
+literal|"@(#)af.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,9 @@ decl_stmt|,
 name|null_portmatch
 argument_list|()
 decl_stmt|,
+name|null_portcheck
+argument_list|()
+decl_stmt|,
 name|null_checkhost
 argument_list|()
 decl_stmt|,
@@ -90,6 +93,9 @@ decl_stmt|,
 name|inet_portmatch
 argument_list|()
 decl_stmt|,
+name|inet_portcheck
+argument_list|()
+decl_stmt|,
 name|inet_checkhost
 argument_list|()
 decl_stmt|,
@@ -103,7 +109,7 @@ define|#
 directive|define
 name|NIL
 define|\
-value|{ null_hash,		null_netmatch,		null_output, \ 	  null_portmatch,	null_checkhost,		null_canon }
+value|{ null_hash,		null_netmatch,		null_output, \ 	  null_portmatch,	null_portcheck,		null_checkhost, \ 	  null_canon }
 end_define
 
 begin_define
@@ -111,7 +117,7 @@ define|#
 directive|define
 name|INET
 define|\
-value|{ inet_hash,		inet_netmatch,		inet_output, \ 	  inet_portmatch,	inet_checkhost,		inet_canon }
+value|{ inet_hash,		inet_netmatch,		inet_output, \ 	  inet_portmatch,	inet_portcheck,		inet_checkhost, \ 	  inet_canon }
 end_define
 
 begin_decl_stmt
@@ -275,6 +281,47 @@ operator|(
 name|port
 operator|==
 name|IPPORT_ROUTESERVER
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Verify the message is from a "trusted" port.  */
+end_comment
+
+begin_macro
+name|inet_portcheck
+argument_list|(
+argument|sin
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|port
+init|=
+name|ntohs
+argument_list|(
+name|sin
+operator|->
+name|sin_port
+argument_list|)
+decl_stmt|;
+return|return
+operator|(
+name|port
+operator|<=
+name|IPPORT_RESERVED
 operator|)
 return|;
 block|}
@@ -580,6 +627,35 @@ end_comment
 
 begin_macro
 name|null_portmatch
+argument_list|(
+argument|a1
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|sockaddr
+modifier|*
+name|a1
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
+name|null_portcheck
 argument_list|(
 argument|a1
 argument_list|)
