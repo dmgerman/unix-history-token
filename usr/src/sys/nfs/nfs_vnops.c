@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.99 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.100 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1535,7 +1535,7 @@ decl_stmt|,
 modifier|*
 name|mb2
 decl_stmt|;
-comment|/* 	 * There is no way to check accessibility via. ordinary nfs, so if 	 * access isn't allowed they will get burned later. 	 */
+comment|/* 	 * For nqnfs, do an access rpc, otherwise you are stuck emulating 	 * ufs_access() locally using the vattr. This may not be correct, 	 * since the server may apply other access criteria such as 	 * client uid-->server uid mapping that we do not know about, but 	 * this is better than just returning anything that is lying about 	 * in the cache. 	 */
 if|if
 condition|(
 name|VFSTONFS
@@ -1675,7 +1675,10 @@ block|}
 else|else
 return|return
 operator|(
-literal|0
+name|nfsspec_access
+argument_list|(
+name|ap
+argument_list|)
 operator|)
 return|;
 block|}
@@ -12422,8 +12425,8 @@ name|found
 label|:
 empty_stmt|;
 block|}
-if|if
-condition|(
+return|return
+operator|(
 operator|(
 name|vap
 operator|->
@@ -12431,16 +12434,11 @@ name|va_mode
 operator|&
 name|mode
 operator|)
-operator|!=
+operator|==
+name|mode
+condition|?
 literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-return|return
-operator|(
+else|:
 name|EACCES
 operator|)
 return|;
