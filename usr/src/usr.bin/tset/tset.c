@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.19 (Berkeley) %G%"
+literal|"@(#)tset.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,16 +160,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|dosetenv
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* output TERMCAP strings */
-end_comment
-
-begin_decl_stmt
-name|int
 name|erasechar
 decl_stmt|;
 end_decl_stmt
@@ -206,46 +196,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* new kill character */
-end_comment
-
-begin_decl_stmt
-name|int
-name|noinit
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't output initialization string */
-end_comment
-
-begin_decl_stmt
-name|int
-name|noset
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* only report term type */
-end_comment
-
-begin_decl_stmt
-name|int
-name|quiet
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't display ctrl key settings */
-end_comment
-
-begin_decl_stmt
-name|int
-name|showterm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* display term on stderr */
 end_comment
 
 begin_decl_stmt
@@ -289,7 +239,17 @@ directive|endif
 name|int
 name|ch
 decl_stmt|,
-name|csh
+name|noinit
+decl_stmt|,
+name|noset
+decl_stmt|,
+name|quiet
+decl_stmt|,
+name|Sflag
+decl_stmt|,
+name|sflag
+decl_stmt|,
+name|showterm
 decl_stmt|,
 name|usingupper
 decl_stmt|;
@@ -395,6 +355,20 @@ argument_list|(
 name|argv
 argument_list|)
 expr_stmt|;
+name|noinit
+operator|=
+name|noset
+operator|=
+name|quiet
+operator|=
+name|Sflag
+operator|=
+name|sflag
+operator|=
+name|showterm
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -406,7 +380,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-a:d:e:Ii:k:m:np:Qrs"
+literal|"-a:d:e:Ii:k:m:np:QSrs"
 argument_list|)
 operator|)
 operator|!=
@@ -421,7 +395,7 @@ block|{
 case|case
 literal|'-'
 case|:
-comment|/* OBSOLETE: display term only */
+comment|/* display term only */
 name|noset
 operator|=
 literal|1
@@ -497,7 +471,7 @@ break|break;
 case|case
 literal|'I'
 case|:
-comment|/* no initialization */
+comment|/* no initialization strings */
 name|noinit
 operator|=
 literal|1
@@ -621,8 +595,17 @@ break|break;
 case|case
 literal|'Q'
 case|:
-comment|/* be quiet */
+comment|/* don't output control key settings */
 name|quiet
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* output TERM/TERMCAP strings */
+name|Sflag
 operator|=
 literal|1
 expr_stmt|;
@@ -639,8 +622,8 @@ break|break;
 case|case
 literal|'s'
 case|:
-comment|/* print commands to set environment */
-name|dosetenv
+comment|/* output TERM/TERMCAP strings */
+name|sflag
 operator|=
 literal|1
 expr_stmt|;
@@ -973,17 +956,33 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-name|dosetenv
+name|Sflag
 condition|)
-name|exit
+block|{
+operator|(
+name|void
+operator|)
+name|printf
 argument_list|(
-literal|0
+literal|"%s "
+argument_list|,
+name|ttype
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Figure out what shell we're using.  A hack, we look for a $SHELL 	 * ending in "csh". 	 */
-name|csh
-operator|=
+name|wrtermcap
+argument_list|(
+name|tcapbuf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sflag
+condition|)
+block|{
+comment|/* 		 * Figure out what shell we're using.  A hack, we look for an 		 * environmental variable SHELL ending in "csh". 		 */
+if|if
+condition|(
 operator|(
 name|p
 operator|=
@@ -1007,28 +1006,34 @@ literal|3
 argument_list|,
 literal|"csh"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|csh
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
+block|{
+name|p
+operator|=
 literal|"set noglob;\nsetenv TERM %s;\nsetenv TERMCAP '"
-argument_list|,
-name|ttype
-argument_list|)
 expr_stmt|;
+name|t
+operator|=
+literal|"';\nunset noglob;\n"
+expr_stmt|;
+block|}
 else|else
+block|{
+name|p
+operator|=
+literal|"TERM=%s;\nTERMCAP='"
+expr_stmt|;
+name|t
+operator|=
+literal|"';\nexport TERMCAP TERM;\n"
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"TERM=%s;\nTERMCAP='"
+name|p
 argument_list|,
 name|ttype
 argument_list|)
@@ -1038,27 +1043,15 @@ argument_list|(
 name|tcapbuf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|csh
-condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"';\nunset noglob;\n"
+name|t
 argument_list|)
 expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"';\nexport TERMCAP TERM;\n"
-argument_list|)
-expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
@@ -1408,7 +1401,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tset [-IQrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
+literal|"usage: tset [-IQrSs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
 argument_list|)
 expr_stmt|;
 name|exit
