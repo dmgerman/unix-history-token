@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights res
 end_comment
 
 begin_comment
-comment|/*  * PCIM_xxx: mask to locate subfield in register  * PCIR_xxx: config register offset  * PCIC_xxx: device class  * PCIS_xxx: device subclass  * PCIP_xxx: device programming interface  * PCIV_xxx: PCI vendor ID (only required to fixup ancient devices)  * PCID_xxx: device ID  */
+comment|/*  * PCIM_xxx: mask to locate subfield in register  * PCIR_xxx: config register offset  * PCIC_xxx: device class  * PCIS_xxx: device subclass  * PCIP_xxx: device programming interface  * PCIV_xxx: PCI vendor ID (only required to fixup ancient devices)  * PCID_xxx: device ID  * PCIY_xxx: capability identification number  */
 end_comment
 
 begin_comment
@@ -284,6 +284,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_HEADERTYPE_NORMAL
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_HEADERTYPE_BRIDGE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_HEADERTYPE_CARDBUS
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIM_MFDEV
 value|0x80
 end_define
@@ -293,6 +314,59 @@ define|#
 directive|define
 name|PCIR_BIST
 value|0x0f
+end_define
+
+begin_comment
+comment|/* Capability Identification Numbers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIY_PMG
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIY_AGP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIY_VPD
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIY_SLOTID
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIY_MSI
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIY_CHSWP
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIY_PCIX
+value|0x07
 end_define
 
 begin_comment
