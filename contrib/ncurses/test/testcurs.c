@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * This is a test program for the PDCurses screen package for IBM PC type  * machines.  *  * This program was written by John Burnell (johnb@kea.am.dsir.govt.nz)  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either  *                  PDCurses or under Unix System V, R4  *  * $Id: testcurs.c,v 1.28 2002/02/03 00:29:22 tom Exp $  */
+comment|/*  *  * This is a test program for the PDCurses screen package for IBM PC type  * machines.  *  * This program was written by John Burnell (johnb@kea.am.dsir.govt.nz)  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either  *                  PDCurses or under Unix System V, R4  *  * $Id: testcurs.c,v 1.29 2002/06/01 16:17:52 tom Exp $  */
 end_comment
 
 begin_include
@@ -2022,6 +2022,7 @@ expr_stmt|;
 do|do
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -2037,6 +2038,7 @@ block|,
 literal|"%d %[^0-9]"
 block|}
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|format

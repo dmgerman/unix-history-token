@@ -30,7 +30,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_traceatr.c,v 1.41 2002/02/10 01:26:56 tom Exp $"
+literal|"$Id: lib_traceatr.c,v 1.42 2002/06/16 00:35:01 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1184,11 +1184,6 @@ argument_list|)
 decl_stmt|;
 name|attr_t
 name|attr
-init|=
-name|AttrOfD
-argument_list|(
-name|ch
-argument_list|)
 decl_stmt|;
 specifier|const
 name|char
@@ -1200,6 +1195,20 @@ argument_list|(
 name|buf
 argument_list|,
 name|l_brace
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|!=
+literal|0
+condition|)
+block|{
+name|attr
+operator|=
+name|AttrOfD
+argument_list|(
+name|ch
 argument_list|)
 expr_stmt|;
 if|if
@@ -1435,6 +1444,7 @@ name|attr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|strcat

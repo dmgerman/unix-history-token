@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_getch.c,v 1.60 2002/03/17 00:46:01 tom Exp $"
+literal|"$Id: lib_getch.c,v 1.61 2002/06/16 00:31:57 tom Exp $"
 argument_list|)
 end_macro
 
@@ -937,6 +937,13 @@ argument_list|()
 expr_stmt|;
 name|returnCode
 argument_list|(
+operator|*
+name|result
+operator|>=
+name|KEY_MIN
+condition|?
+name|KEY_CODE_YES
+else|:
 name|OK
 argument_list|)
 expr_stmt|;

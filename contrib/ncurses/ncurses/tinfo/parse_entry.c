@@ -11,6 +11,12 @@ begin_comment
 comment|/*  *	parse_entry.c -- compile one terminfo or termcap entry  *  *	Get an exact in-core representation of an entry.  Don't  *	try to resolve use or tc capabilities, that is someone  *	else's job.  Depends on the lexical analyzer to get tokens  *	from the input stream.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__INTERNAL_CAPS_VISIBLE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -29,12 +35,6 @@ directive|include
 file|<tic.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|__INTERNAL_CAPS_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: parse_entry.c,v 1.55 2002/04/22 00:01:30 tom Exp $"
+literal|"$Id: parse_entry.c,v 1.56 2002/05/25 12:23:51 tom Exp $"
 argument_list|)
 end_macro
 
