@@ -1875,6 +1875,16 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|setenv
+argument_list|(
+literal|"MAKEDEVPATH"
+argument_list|,
+literal|"/sbin:/bin:/stand:"
+literal|"/mnt2/sbin:/mnt2/bin:/mnt2/stand"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
