@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|MAXPREFIXES
-value|50
+value|100
 end_define
 
 begin_define
@@ -125,6 +125,7 @@ value|'!'
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|powerstring
@@ -198,8 +199,8 @@ end_struct
 
 begin_decl_stmt
 name|char
-modifier|*
 name|NULLUNIT
+index|[]
 init|=
 literal|""
 decl_stmt|;
@@ -214,7 +215,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|SEPERATOR
+name|SEPARATOR
 value|";"
 end_define
 
@@ -252,6 +253,7 @@ name|char
 modifier|*
 name|dupstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -302,28 +304,9 @@ end_function
 
 begin_function
 name|void
-name|readerror
-parameter_list|(
-name|int
-name|linenum
-parameter_list|)
-block|{
-name|warnx
-argument_list|(
-literal|"error in units file '%s' line %d"
-argument_list|,
-name|UNITSFILE
-argument_list|,
-name|linenum
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
 name|readunits
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|userfile
@@ -336,7 +319,7 @@ decl_stmt|;
 name|char
 name|line
 index|[
-literal|80
+literal|512
 index|]
 decl_stmt|,
 modifier|*
@@ -515,7 +498,10 @@ name|fgets
 argument_list|(
 name|line
 argument_list|,
-literal|79
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 name|unitfile
 argument_list|)
@@ -672,22 +658,6 @@ name|len
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strlen
-argument_list|(
-name|lineptr
-argument_list|)
-condition|)
-block|{
-name|readerror
-argument_list|(
-name|linenum
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 name|lineptr
 operator|+=
 name|strspn
@@ -706,6 +676,22 @@ argument_list|,
 literal|"\n\t"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"unexpected end of prefix on line %d"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|lineptr
 index|[
 name|len
@@ -822,8 +808,10 @@ name|lineptr
 argument_list|)
 condition|)
 block|{
-name|readerror
+name|warnx
 argument_list|(
+literal|"unexpected end of unit on line %d"
+argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
@@ -1246,7 +1234,9 @@ end_function
 begin_function
 name|void
 name|zeroerror
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|warnx
 argument_list|(
@@ -1719,6 +1709,7 @@ name|strcmp
 argument_list|(
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -1727,6 +1718,7 @@ name|item1
 argument_list|,
 operator|*
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
@@ -1752,6 +1744,7 @@ modifier|*
 modifier|*
 name|ptr
 decl_stmt|;
+name|unsigned
 name|int
 name|count
 decl_stmt|;
@@ -1951,6 +1944,7 @@ name|char
 modifier|*
 name|lookupunit
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|unit
@@ -2279,6 +2273,19 @@ name|i
 operator|++
 control|)
 block|{
+name|size_t
+name|len
+init|=
+name|strlen
+argument_list|(
+name|prefixtable
+index|[
+name|i
+index|]
+operator|.
+name|prefixname
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2293,41 +2300,25 @@ name|prefixname
 argument_list|,
 name|unit
 argument_list|,
-name|strlen
-argument_list|(
-name|prefixtable
-index|[
-name|i
-index|]
-operator|.
-name|prefixname
-argument_list|)
+name|len
 argument_list|)
 condition|)
 block|{
-name|unit
-operator|+=
-name|strlen
-argument_list|(
-name|prefixtable
-index|[
-name|i
-index|]
-operator|.
-name|prefixname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|strlen
 argument_list|(
 name|unit
+operator|+
+name|len
 argument_list|)
 operator|||
 name|lookupunit
 argument_list|(
 name|unit
+operator|+
+name|len
 argument_list|)
 condition|)
 block|{
@@ -2350,6 +2341,8 @@ operator|.
 name|prefixval
 argument_list|,
 name|unit
+operator|+
+name|len
 argument_list|)
 expr_stmt|;
 return|return
@@ -2839,7 +2832,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -3131,7 +3126,10 @@ name|fgets
 argument_list|(
 name|havestr
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|havestr
+argument_list|)
 argument_list|,
 name|stdin
 argument_list|)
@@ -3198,7 +3196,10 @@ name|fgets
 argument_list|(
 name|wantstr
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|wantstr
+argument_list|)
 argument_list|,
 name|stdin
 argument_list|)
