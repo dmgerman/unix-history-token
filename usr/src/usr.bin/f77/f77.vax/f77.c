@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)f77.c	5.3 (Berkeley) %G%"
+literal|"@(#)f77.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|xxxvers
-index|[]
 init|=
 literal|"\n@(#) F77 DRIVER, VERSION 4.2,   1984 JULY 28\n"
 decl_stmt|;
