@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	8.4 (Berkeley) %G%"
+literal|"@(#)str.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -407,6 +407,7 @@ expr_stmt|;
 else|else
 break|break;
 else|else
+block|{
 name|inquote
 operator|=
 operator|(
@@ -414,6 +415,30 @@ name|char
 operator|)
 name|ch
 expr_stmt|;
+comment|/* Don't miss "" or '' */
+if|if
+condition|(
+name|start
+operator|==
+name|NULL
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+name|inquote
+condition|)
+block|{
+name|start
+operator|=
+name|t
+operator|+
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
 continue|continue;
 case|case
 literal|' '
