@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.27 1995/05/30 05:01:44 rgrimes Exp $  */
+comment|/*  *	$Id: ld.c,v 1.27.4.1 1995/06/28 05:54:50 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2040,7 +2040,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no input files"
+literal|"No input files specified"
 argument_list|)
 expr_stmt|;
 name|p
