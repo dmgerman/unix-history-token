@@ -6,20 +6,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEB
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DDB
-parameter_list|(
-name|x
-parameter_list|)
-value|x
+name|DUMMYNET_DEBUG
 end_define
 
 begin_comment
@@ -410,7 +397,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|struct
-name|callout_handle
+name|callout
 name|dn_timeout
 decl_stmt|;
 end_decl_stmt
@@ -679,6 +666,140 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|DUMMYNET_DEBUG
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DUMMYNET_DEBUG
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|dummynet_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_dummynet
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dummynet_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"control debugging printfs"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|X
+parameter_list|)
+value|if (dummynet_debug) printf X
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|X
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|dummynet_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * NB: Recursion is needed to deal with re-entry via ICMP.  That is,  *     a packet may be dispatched via ip_input from dummynet_io and  *     re-enter through ip_output.  Yech.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUMMYNET_LOCK_INIT
+parameter_list|()
+define|\
+value|mtx_init(&dummynet_mtx, "dummynet", NULL, MTX_DEF | MTX_RECURSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMMYNET_LOCK_DESTROY
+parameter_list|()
+value|mtx_destroy(&dummynet_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMMYNET_LOCK
+parameter_list|()
+value|mtx_lock(&dummynet_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMMYNET_UNLOCK
+parameter_list|()
+value|mtx_unlock(&dummynet_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMMYNET_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&dummynet_mtx, MA_OWNED)
+end_define
+
 begin_function_decl
 specifier|static
 name|int
@@ -915,7 +1036,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dummynet: heap_init, Bogus call, have %d want %d\n"
+literal|"dummynet: %s, Bogus call, have %d want %d\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|h
 operator|->
@@ -965,7 +1088,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dummynet: heap_init, resize %d failed\n"
+literal|"dummynet: %s, resize %d failed\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|new_size
 argument_list|)
@@ -1777,6 +1902,7 @@ name|BDG_LOADED
 condition|)
 block|{
 comment|/* somebody unloaded the bridge module. Drop pkt */
+comment|/* XXX rate limit */
 name|printf
 argument_list|(
 literal|"dummynet: dropping bridged packet trapped in pipe\n"
@@ -2110,6 +2236,9 @@ decl_stmt|;
 name|int
 name|p_was_empty
 decl_stmt|;
+name|DUMMYNET_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2348,6 +2477,9 @@ operator|->
 name|not_eligible_heap
 operator|)
 decl_stmt|;
+name|DUMMYNET_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2398,12 +2530,21 @@ condition|)
 return|return ;
 else|else
 block|{
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"dummynet: pipe %d ready from %s --\n"
-argument|, 		p->pipe_nr, p->if_name);
+operator|,
+name|p
+operator|->
+name|pipe_nr
+operator|,
+name|p
+operator|->
+name|if_name
+operator|)
 argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/*      * While we have backlogged traffic AND credit, we need to do      * something on the queue.      */
@@ -2997,9 +3138,6 @@ name|dn_heap
 modifier|*
 name|h
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|dn_heap
 modifier|*
@@ -3043,12 +3181,9 @@ operator|&
 name|extract_heap
 expr_stmt|;
 comment|/* delay line */
-name|s
-operator|=
-name|splimp
+name|DUMMYNET_LOCK
 argument_list|()
 expr_stmt|;
-comment|/* see note on top, splnet() is not enough */
 name|curr_time
 operator|++
 expr_stmt|;
@@ -3096,16 +3231,42 @@ name|curr_time
 argument_list|)
 condition|)
 block|{
-name|DDB
+if|if
+condition|(
+name|h
+operator|->
+name|p
+index|[
+literal|0
+index|]
+operator|.
+name|key
+operator|>
+name|curr_time
+condition|)
+name|printf
 argument_list|(
-argument|if (h->p[
-literal|0
-argument|].key> curr_time) 		printf(
 literal|"dummynet: warning, heap %d is %d ticks late\n"
-argument|, 		    i, (int)(curr_time - h->p[
+argument_list|,
+name|i
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|curr_time
+operator|-
+name|h
+operator|->
+name|p
+index|[
 literal|0
-argument|].key));
+index|]
+operator|.
+name|key
 argument_list|)
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|h
@@ -3281,20 +3442,19 @@ operator|->
 name|weight
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
-name|dn_timeout
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
+operator|&
+name|dn_timeout
+argument_list|,
+literal|1
+argument_list|,
 name|dummynet
 argument_list|,
 name|NULL
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3319,6 +3479,9 @@ name|dn_pipe
 modifier|*
 name|p
 decl_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -3403,12 +3566,15 @@ name|ifp
 operator|=
 name|ifp
 expr_stmt|;
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"dummynet: ++ tx rdy from %s (now found)\n"
-argument|, buf);
+operator|,
+name|buf
+operator|)
 argument_list|)
+expr_stmt|;
 break|break ;
 block|}
 block|}
@@ -3419,12 +3585,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"dummynet: ++ tx rdy from %s%d - qlen %d\n"
-argument|, ifp->if_name, 		ifp->if_unit, ifp->if_snd.ifq_len);
+operator|,
+name|ifp
+operator|->
+name|if_name
+operator|,
+name|ifp
+operator|->
+name|if_unit
+operator|,
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_len
+operator|)
 argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|numbytes
@@ -3438,6 +3619,9 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -4271,12 +4455,20 @@ name|q
 operator|->
 name|len
 decl_stmt|;
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"\ndummynet: %d q: %2u "
-argument|, (int) curr_time, q_size);
+operator|,
+operator|(
+name|int
+operator|)
+name|curr_time
+operator|,
+name|q_size
+operator|)
 argument_list|)
+expr_stmt|;
 comment|/* average queue size estimation */
 if|if
 condition|(
@@ -4381,12 +4573,20 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"dummynet: avg: %u "
-argument|, SCALE_VAL(q->avg));
+operator|,
+name|SCALE_VAL
+argument_list|(
+name|q
+operator|->
+name|avg
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* should i drop ? */
 if|if
 condition|(
@@ -4466,13 +4666,13 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"dummynet: - drop"
-argument|);
+operator|)
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -4584,12 +4784,13 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"dummynet: - red drop"
-argument|);
+operator|)
 argument_list|)
+expr_stmt|;
 comment|/* after a drop we calculate a new random value */
 name|q
 operator|->
@@ -4986,12 +5187,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|;
-name|int
 name|is_pipe
 decl_stmt|;
 if|#
@@ -5059,6 +5254,9 @@ directive|endif
 name|pipe_nr
 operator|&=
 literal|0xffff
+expr_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
 expr_stmt|;
 comment|/*      * This is a dummynet rule, so we expect an O_PIPE or O_QUEUE rule.      */
 name|fs
@@ -5771,12 +5969,28 @@ argument_list|(
 literal|"dummynet: OUCH! pipe should have been idle!\n"
 argument_list|)
 expr_stmt|;
-name|DEB
+name|DPRINTF
 argument_list|(
-argument|printf(
+operator|(
 literal|"dummynet: waking up pipe %d at %d\n"
-argument|, 			pipe->pipe_nr, (int)(q->F>> MY_M));
+operator|,
+name|pipe
+operator|->
+name|pipe_nr
+operator|,
+call|(
+name|int
+call|)
+argument_list|(
+name|q
+operator|->
+name|F
+operator|>>
+name|MY_M
 argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|pipe
 operator|->
 name|sched_time
@@ -5793,21 +6007,14 @@ block|}
 block|}
 name|done
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
 return|;
 name|dropit
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|q
@@ -5816,6 +6023,9 @@ name|q
 operator|->
 name|drops
 operator|++
+expr_stmt|;
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 name|m_freem
 argument_list|(
@@ -5892,6 +6102,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|DUMMYNET_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6144,12 +6357,7 @@ decl_stmt|,
 modifier|*
 name|curr_fs
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splimp
+name|DUMMYNET_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* remove all references to pipes ...*/
@@ -6194,10 +6402,8 @@ operator|&
 name|extract_heap
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 comment|/*      * Now purge all queued pkts and delete all pipes      */
 comment|/* scan and purge all flow_sets. */
@@ -6393,6 +6599,9 @@ name|dn_flow_set
 modifier|*
 name|fs
 decl_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 comment|/*      * If the rule references a queue (dn_flow_set), then scan      * the flow set, otherwise scan pipes. Should do either, but doing      * both does not harm.      */
 for|for
 control|(
@@ -6478,6 +6687,9 @@ operator|=
 name|ip_fw_default_rule
 expr_stmt|;
 block|}
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -7118,8 +7330,6 @@ name|int
 name|i
 decl_stmt|,
 name|r
-decl_stmt|,
-name|s
 decl_stmt|;
 name|struct
 name|dn_flow_set
@@ -7209,6 +7419,9 @@ decl_stmt|,
 modifier|*
 name|b
 decl_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* locate pipe */
 for|for
 control|(
@@ -7342,11 +7555,6 @@ name|x
 operator|=
 name|b
 expr_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 comment|/* Flush accumulated credit for all queues */
 for|for
 control|(
@@ -7392,17 +7600,7 @@ name|numbytes
 operator|=
 literal|0
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|x
 operator|->
 name|bandwidth
@@ -7494,16 +7692,14 @@ condition|(
 name|r
 condition|)
 block|{
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|x
 argument_list|,
 name|M_DUMMYNET
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -7534,10 +7730,8 @@ operator|=
 name|x
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -7554,6 +7748,9 @@ decl_stmt|,
 modifier|*
 name|b
 decl_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* locate flow_set */
 for|for
 control|(
@@ -7638,6 +7835,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"dummynet: no memory for new flow_set\n"
@@ -7728,11 +7928,6 @@ operator|=
 name|b
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|set_fs_parms
 argument_list|(
 name|x
@@ -7764,16 +7959,14 @@ condition|(
 name|r
 condition|)
 block|{
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|x
 argument_list|,
 name|M_DUMMYNET
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -7804,10 +7997,8 @@ operator|=
 name|x
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 return|return
@@ -8041,6 +8232,9 @@ name|dn_pkt
 modifier|*
 name|pkt
 decl_stmt|;
+name|DUMMYNET_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|heap_free
 argument_list|(
 operator|&
@@ -8153,9 +8347,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 name|p
@@ -8217,6 +8408,9 @@ name|dn_flow_set
 modifier|*
 name|fs
 decl_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* locate pipe */
 for|for
 control|(
@@ -8265,15 +8459,15 @@ operator|->
 name|pipe_nr
 operator|)
 condition|)
+block|{
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
 comment|/* not found */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
+block|}
 comment|/* unlink from list of pipes */
 if|if
 condition|(
@@ -8394,10 +8588,8 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -8418,6 +8610,9 @@ decl_stmt|,
 modifier|*
 name|b
 decl_stmt|;
+name|DUMMYNET_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* locate set */
 for|for
 control|(
@@ -8470,15 +8665,15 @@ operator|.
 name|fs_nr
 operator|)
 condition|)
+block|{
+name|DUMMYNET_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
 comment|/* not found */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|a
@@ -8586,10 +8781,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 return|return
@@ -8640,6 +8833,9 @@ operator|*
 operator|)
 name|bp
 decl_stmt|;
+name|DUMMYNET_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -8823,15 +9019,12 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
 decl_stmt|;
-name|s
-operator|=
-name|splimp
+comment|/* XXX lock held too long */
+name|DUMMYNET_LOCK
 argument_list|()
 expr_stmt|;
 comment|/*      * compute size of data structures: list of pipes and flow_sets.      */
@@ -8923,10 +9116,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 name|ENOBUFS
@@ -9143,10 +9334,8 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
+name|DUMMYNET_UNLOCK
+argument_list|()
 expr_stmt|;
 name|error
 operator|=
@@ -9382,10 +9571,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"DUMMYNET initialized (011031)\n"
 argument_list|)
+expr_stmt|;
+name|DUMMYNET_LOCK_INIT
+argument_list|()
 expr_stmt|;
 name|all_pipes
 operator|=
@@ -9455,31 +9651,78 @@ name|ip_dn_ruledel_ptr
 operator|=
 name|dn_rule_delete
 expr_stmt|;
-name|bzero
+name|callout_init
 argument_list|(
 operator|&
 name|dn_timeout
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|callout_handle
-argument_list|)
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
-name|dn_timeout
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
+operator|&
+name|dn_timeout
+argument_list|,
+literal|1
+argument_list|,
 name|dummynet
 argument_list|,
 name|NULL
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLD_MODULE
+end_ifdef
+
+begin_function
+specifier|static
+name|void
+name|ip_dn_destroy
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ip_dn_ctl_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ip_dn_io_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|ip_dn_ruledel_ptr
+operator|=
+name|NULL
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|dn_timeout
+argument_list|)
+expr_stmt|;
+name|dummynet_flush
+argument_list|()
+expr_stmt|;
+name|DUMMYNET_LOCK_DESTROY
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KLD_MODULE */
+end_comment
 
 begin_function
 specifier|static
@@ -9497,9 +9740,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -9508,21 +9748,11 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|DUMMYNET_LOADED
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"DUMMYNET already loaded\n"
@@ -9534,11 +9764,6 @@ return|;
 block|}
 name|ip_dn_init
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -9561,39 +9786,8 @@ name|EINVAL
 return|;
 else|#
 directive|else
-name|s
-operator|=
-name|splimp
+name|ip_dn_destroy
 argument_list|()
-expr_stmt|;
-name|untimeout
-argument_list|(
-name|dummynet
-argument_list|,
-name|NULL
-argument_list|,
-name|dn_timeout
-argument_list|)
-expr_stmt|;
-name|dummynet_flush
-argument_list|()
-expr_stmt|;
-name|ip_dn_ctl_ptr
-operator|=
-name|NULL
-expr_stmt|;
-name|ip_dn_io_ptr
-operator|=
-name|NULL
-expr_stmt|;
-name|ip_dn_ruledel_ptr
-operator|=
-name|NULL
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
