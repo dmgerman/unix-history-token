@@ -898,7 +898,7 @@ operator|<=
 literal|0
 operator|||
 name|sig
-operator|>=
+operator|>
 name|_SIG_MAXSIG
 condition|)
 return|return
@@ -4373,7 +4373,7 @@ operator|)
 name|uap
 operator|->
 name|signum
-operator|>=
+operator|>
 name|_SIG_MAXSIG
 condition|)
 return|return
@@ -4596,7 +4596,7 @@ operator|)
 name|uap
 operator|->
 name|signum
-operator|>=
+operator|>
 name|_SIG_MAXSIG
 condition|)
 return|return
@@ -5053,7 +5053,7 @@ decl_stmt|;
 if|if
 condition|(
 name|sig
-operator|>=
+operator|>
 name|_SIG_MAXSIG
 operator|||
 name|sig
