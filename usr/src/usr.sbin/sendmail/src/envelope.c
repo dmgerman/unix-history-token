@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.25 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1415,13 +1415,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SETSENDER -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is in an approved list (typically **	    from a network server). **	3.  The address the user is trying to claim has a **	    "!" character in it (since #2 doesn't do it for **	    us if we are dialing out for UUCP). **	A better check to replace #3 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person we would like to believe this message **			is from, as specified on the command line. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
+comment|/* **  SETSENDER -- set the person who this message is from ** **	Under certain circumstances allow the user to say who **	s/he is (using -f or -r).  These are: **	1.  The user's uid is zero (root). **	2.  The user's login name is in an approved list (typically **	    from a network server). **	3.  The address the user is trying to claim has a **	    "!" character in it (since #2 doesn't do it for **	    us if we are dialing out for UUCP). **	A better check to replace #3 would be if the **	effective uid is "UUCP" -- this would require me **	to rewrite getpwent to "grab" uucp as it went by, **	make getname more nasty, do another passwd file **	scan, or compile the UID of "UUCP" into the code, **	all of which are reprehensible. ** **	Assuming all of these fail, we figure out something **	ourselves. ** **	Parameters: **		from -- the person we would like to believe this message **			is from, as specified on the command line. **		e -- the envelope in which we would like the sender set. ** **	Returns: **		none. ** **	Side Effects: **		sets sendmail's notion of who the from person is. */
 end_comment
 
 begin_macro
 name|setsender
 argument_list|(
 argument|from
+argument_list|,
+argument|e
 argument_list|)
 end_macro
 
@@ -1429,6 +1431,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|from
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 end_decl_stmt
 
@@ -1620,7 +1630,7 @@ argument_list|(
 name|from
 argument_list|,
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_from
 argument_list|,
@@ -1700,7 +1710,7 @@ argument_list|(
 name|from
 argument_list|,
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_from
 argument_list|,
@@ -1716,7 +1726,7 @@ argument_list|(
 literal|"postmaster"
 argument_list|,
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_from
 argument_list|,
@@ -1740,7 +1750,7 @@ name|FromFlag
 operator|=
 name|TRUE
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1751,7 +1761,7 @@ expr_stmt|;
 name|loweraddr
 argument_list|(
 operator|&
-name|CurEnv
+name|e
 operator|->
 name|e_from
 argument_list|)
@@ -1762,7 +1772,7 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1775,7 +1785,7 @@ name|pw
 operator|=
 name|getpwnam
 argument_list|(
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1788,7 +1798,7 @@ condition|)
 block|{
 comment|/* 		**  Process passwd file entry. 		*/
 comment|/* extract home directory */
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1805,17 +1815,17 @@ name|define
 argument_list|(
 literal|'z'
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
 name|q_home
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* extract user and group id */
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1825,7 +1835,7 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1848,7 +1858,7 @@ name|macvalue
 argument_list|(
 literal|'x'
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -1887,7 +1897,7 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1903,7 +1913,7 @@ name|pw
 operator|->
 name|pw_gecos
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1941,7 +1951,7 @@ literal|'x'
 argument_list|,
 name|FullName
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -1949,7 +1959,7 @@ else|else
 block|{
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1957,7 +1967,7 @@ name|q_home
 operator|==
 name|NULL
 condition|)
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1968,7 +1978,7 @@ argument_list|(
 literal|"HOME"
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -1977,7 +1987,7 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -2068,11 +2078,11 @@ sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_sender
 operator|=
-name|CurEnv
+name|e
 operator|->
 name|e_returnpath
 operator|=
@@ -2086,7 +2096,7 @@ directive|ifdef
 name|USERDB
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -2168,7 +2178,7 @@ sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
-name|CurEnv
+name|e
 operator|->
 name|e_sender
 operator|=
@@ -2187,17 +2197,17 @@ name|define
 argument_list|(
 literal|'f'
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_sender
 argument_list|,
-name|CurEnv
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* save the domain spec if this mailer wants it */
 if|if
 condition|(
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -2209,7 +2219,7 @@ name|bitnset
 argument_list|(
 name|M_CANONICAL
 argument_list|,
-name|CurEnv
+name|e
 operator|->
 name|e_from
 operator|.
@@ -2253,7 +2263,7 @@ name|pvp
 operator|!=
 name|NULL
 condition|)
-name|CurEnv
+name|e
 operator|->
 name|e_fromdomain
 operator|=
