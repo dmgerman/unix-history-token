@@ -1330,7 +1330,7 @@ name|wwmaskc
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)& 0x7f)
+value|((c)& 0xff)
 end_define
 
 begin_define
