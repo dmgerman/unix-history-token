@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	5.2 (Berkeley) %G%"
+literal|"@(#)test.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -425,10 +425,14 @@ name|skipping
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|p
+operator|=
 name|argv
 index|[
 literal|0
 index|]
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -447,8 +451,19 @@ block|}
 if|if
 condition|(
 operator|*
-operator|*
-name|argv
+name|p
+operator|!=
+literal|'\0'
+operator|&&
+name|p
+index|[
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+operator|-
+literal|1
+index|]
 operator|==
 literal|'['
 condition|)
@@ -459,9 +474,8 @@ name|strcmp
 argument_list|(
 name|argv
 index|[
+operator|--
 name|argc
-operator|-
-literal|1
 index|]
 argument_list|,
 literal|"]"
@@ -475,8 +489,6 @@ expr_stmt|;
 name|argv
 index|[
 name|argc
-operator|-
-literal|1
 index|]
 operator|=
 name|NULL
