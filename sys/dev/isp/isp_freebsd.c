@@ -13,6 +13,12 @@ directive|include
 file|<dev/isp/isp_freebsd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|void
@@ -11553,12 +11559,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
 
 begin_function
 name|void
