@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.25 (Berkeley) %G%"
+literal|"@(#)map.c	6.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1407,7 +1407,7 @@ name|aliaswait
 argument_list|(
 name|map
 argument_list|,
-literal|".dir"
+literal|".pag"
 argument_list|)
 expr_stmt|;
 return|return
