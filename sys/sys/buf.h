@@ -292,18 +292,6 @@ name|off_t
 name|b_offset
 decl_stmt|;
 comment|/* Offset into file. */
-ifdef|#
-directive|ifdef
-name|USE_BUFHASH
-name|LIST_ENTRY
-argument_list|(
-argument|buf
-argument_list|)
-name|b_hash
-expr_stmt|;
-comment|/* Hash chain. */
-endif|#
-directive|endif
 name|TAILQ_ENTRY
 argument_list|(
 argument|buf

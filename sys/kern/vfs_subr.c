@@ -7079,12 +7079,6 @@ block|}
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|USE_BUFHASH
-end_ifndef
-
 begin_comment
 comment|/*  * Lookup a buffer using the splay tree.  Note that we specifically avoid  * shadow buffers used in background bitmap writes.  *  * This code isn't quite efficient as it could be because we are maintaining  * two sorted lists and do not know which list the block resides in.  */
 end_comment
@@ -7207,11 +7201,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Associate a buffer with a vnode.  */
