@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.2 1998/08/31 21:10:42 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootstrap.h,v 1.3 1998/09/03 02:10:07 msmith Exp $  */
 end_comment
 
 begin_include
@@ -323,6 +323,86 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Plug-and-play enumerator/configurator interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pnpinfo
+block|{
+name|char
+modifier|*
+name|pi_ident
+decl_stmt|;
+comment|/* ASCII identifier, actual format varies with bus/handler */
+name|int
+name|pi_revision
+decl_stmt|;
+comment|/* optional revision (or -1) if not supported */
+name|char
+modifier|*
+name|pi_module
+decl_stmt|;
+comment|/* module/args nominated to handle device */
+name|int
+name|pi_argc
+decl_stmt|;
+comment|/* module arguments */
+name|char
+modifier|*
+modifier|*
+name|pi_argv
+decl_stmt|;
+name|int
+name|pi_handler
+decl_stmt|;
+comment|/* handler which detected this device */
+name|struct
+name|pnpinfo
+modifier|*
+name|pi_next
+decl_stmt|;
+block|}
+decl|struct
+name|pnphandler
+block|{
+name|char
+modifier|*
+name|pp_name
+decl_stmt|;
+comment|/* handler/bus name */
+name|struct
+name|pnpinfo
+modifier|*
+function_decl|(
+name|pp_enumerate
+modifier|*
+function_decl|)
+parameter_list|(
+name|int
+name|index
+parameter_list|)
+function_decl|;
+comment|/* return a string identifying device (index) */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pnphandler
+modifier|*
+name|pnphandlers
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* provided by MD code */
+end_comment
 
 begin_comment
 comment|/*  * Module metadata header.  *  * Metadata are allocated on our heap, and copied into kernel space  * before executing the kernel.  */
