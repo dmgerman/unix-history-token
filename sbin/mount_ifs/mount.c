@@ -2531,15 +2531,12 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|int
-name|f
-decl_stmt|;
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s on %s"
+literal|"%s on %s (%s"
 argument_list|,
 name|sfp
 operator|->
@@ -2548,6 +2545,10 @@ argument_list|,
 name|sfp
 operator|->
 name|f_mntonname
+argument_list|,
+name|sfp
+operator|->
+name|f_fstypename
 argument_list|)
 expr_stmt|;
 name|flags
@@ -2560,10 +2561,6 @@ name|MNT_VISFLAGMASK
 expr_stmt|;
 for|for
 control|(
-name|f
-operator|=
-literal|0
-operator|,
 name|o
 operator|=
 name|optnames
@@ -2591,15 +2588,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s%s"
-argument_list|,
-operator|!
-name|f
-operator|++
-condition|?
-literal|" ("
-else|:
-literal|", "
+literal|", %s"
 argument_list|,
 name|o
 operator|->
@@ -2626,15 +2615,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%smounted by "
-argument_list|,
-operator|!
-name|f
-operator|++
-condition|?
-literal|" ("
-else|:
-literal|", "
+literal|", mounted by "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2697,15 +2678,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%swrites: sync %ld async %ld"
-argument_list|,
-operator|!
-name|f
-operator|++
-condition|?
-literal|" ("
-else|:
-literal|", "
+literal|", writes: sync %ld async %ld"
 argument_list|,
 name|sfp
 operator|->
@@ -2721,13 +2694,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|f
-condition|?
-literal|")"
-else|:
-literal|""
+literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3164,11 +3131,17 @@ argument_list|(
 literal|""
 argument_list|)
 return|;
+if|if
+condition|(
+name|fstab
+operator|==
+name|NULL
+condition|)
 name|fstab
 operator|=
 name|strdup
 argument_list|(
-name|fstab
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* remove meta options from list */
@@ -3272,6 +3245,12 @@ name|o
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fstab
+operator|==
+literal|""
+condition|)
 name|free
 argument_list|(
 name|fstab
