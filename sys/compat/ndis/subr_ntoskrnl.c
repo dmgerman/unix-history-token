@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -7107,12 +7113,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"ntoskrnl_debugger(): breakpoint"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
