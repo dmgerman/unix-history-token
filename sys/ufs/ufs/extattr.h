@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|UFS_EXTATTR_VERSION
-value|0x00000002
+value|0x00000003
 end_define
 
 begin_define
@@ -148,14 +148,6 @@ name|u_int
 name|uef_size
 decl_stmt|;
 comment|/* size of attributes, w/o header */
-name|u_int
-name|uef_read_perm
-decl_stmt|;
-comment|/* permissions to read attribute */
-name|u_int
-name|uef_write_perm
-decl_stmt|;
-comment|/* permissions to write attribute */
 block|}
 struct|;
 end_struct
