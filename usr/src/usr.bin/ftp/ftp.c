@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.19 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -849,7 +849,7 @@ name|getlogin
 argument_list|()
 decl_stmt|,
 modifier|*
-name|mygetpass
+name|getpass
 argument_list|()
 decl_stmt|;
 name|int
@@ -1024,7 +1024,7 @@ name|NULL
 condition|)
 name|pass
 operator|=
-name|mygetpass
+name|getpass
 argument_list|(
 literal|"Password:"
 argument_list|)
@@ -1051,7 +1051,7 @@ operator|++
 expr_stmt|;
 name|acct
 operator|=
-name|mygetpass
+name|getpass
 argument_list|(
 literal|"Account:"
 argument_list|)
@@ -2108,7 +2108,7 @@ init|=
 literal|0
 decl_stmt|,
 modifier|*
-name|mypopen
+name|popen
 argument_list|()
 decl_stmt|;
 name|int
@@ -2118,7 +2118,7 @@ name|closefunc
 argument_list|)
 argument_list|()
 decl_stmt|,
-name|mypclose
+name|pclose
 argument_list|()
 decl_stmt|,
 name|fclose
@@ -2324,7 +2324,7 @@ argument_list|)
 expr_stmt|;
 name|fin
 operator|=
-name|mypopen
+name|popen
 argument_list|(
 name|local
 operator|+
@@ -2376,7 +2376,7 @@ return|return;
 block|}
 name|closefunc
 operator|=
-name|mypclose
+name|pclose
 expr_stmt|;
 block|}
 else|else
@@ -3253,7 +3253,7 @@ init|=
 literal|0
 decl_stmt|,
 modifier|*
-name|mypopen
+name|popen
 argument_list|()
 decl_stmt|;
 name|int
@@ -3263,7 +3263,7 @@ name|closefunc
 argument_list|)
 argument_list|()
 decl_stmt|,
-name|mypclose
+name|pclose
 argument_list|()
 decl_stmt|,
 name|fclose
@@ -3981,7 +3981,7 @@ argument_list|)
 expr_stmt|;
 name|fout
 operator|=
-name|mypopen
+name|popen
 argument_list|(
 name|local
 operator|+
@@ -4010,7 +4010,7 @@ goto|;
 block|}
 name|closefunc
 operator|=
-name|mypclose
+name|pclose
 expr_stmt|;
 block|}
 else|else
