@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.29 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3857,12 +3857,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|s
-operator|->
-name|siso_nlen
-operator|-=
-name|nsellength
-expr_stmt|;
 name|s
 operator|->
 name|siso_tlen
