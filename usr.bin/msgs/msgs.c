@@ -2381,7 +2381,7 @@ name|lct
 condition|)
 name|printf
 argument_list|(
-literal|"(%d%slines) "
+literal|"(%d%sline%s) "
 argument_list|,
 name|lct
 argument_list|,
@@ -2390,6 +2390,16 @@ condition|?
 literal|" "
 else|:
 literal|" more "
+argument_list|,
+operator|(
+name|lct
+operator|==
+literal|1
+operator|)
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 if|if
