@@ -13498,6 +13498,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * This can happen when the key is yanked after the 			 * frame was queued.  Just discard the frame; the 			 * 802.11 layer counts failures and provides 			 * debugging/diagnostics. 			 */
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return
 name|EIO
 return|;

@@ -4614,6 +4614,11 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 block|}
