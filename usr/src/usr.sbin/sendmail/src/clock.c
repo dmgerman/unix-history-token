@@ -15,7 +15,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|3.4
+literal|3.5
 operator|%
 name|G
 operator|%
@@ -83,6 +83,37 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_if
+if|if
+condition|(
+name|intvl
+operator|<=
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"setevent: intvl=%ld\n"
+argument_list|,
+name|intvl
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_if
+
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
 
 begin_expr_stmt
 operator|(
@@ -339,6 +370,13 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+if|if
+condition|(
+name|ev
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* find the parent event */
 for|for
 control|(
@@ -606,6 +644,16 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_if
+if|if
+condition|(
+name|intvl
+operator|==
+literal|0
+condition|)
+return|return;
+end_if
 
 begin_expr_stmt
 name|SleepDone
