@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.85 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	7.86 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -438,14 +438,6 @@ block|,
 comment|/* blkatoff */
 block|{
 operator|&
-name|vop_vget_desc
-block|,
-name|ffs_vget
-block|}
-block|,
-comment|/* vget */
-block|{
-operator|&
 name|vop_valloc_desc
 block|,
 name|ffs_valloc
@@ -815,14 +807,6 @@ name|spec_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
-block|{
-operator|&
-name|vop_vget_desc
-block|,
-name|spec_vget
-block|}
-block|,
-comment|/* vget */
 block|{
 operator|&
 name|vop_valloc_desc
@@ -1200,14 +1184,6 @@ name|fifo_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
-block|{
-operator|&
-name|vop_vget_desc
-block|,
-name|fifo_vget
-block|}
-block|,
-comment|/* vget */
 block|{
 operator|&
 name|vop_valloc_desc
@@ -1776,10 +1752,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_TRUNCATE
-expr_stmt|;
-name|USES_VOP_UPDATE
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2415,8 +2387,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_UPDATE
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2669,12 +2639,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_TRUNCATE
-expr_stmt|;
-name|USES_VOP_UPDATE
-expr_stmt|;
-name|USES_VOP_VFREE
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
