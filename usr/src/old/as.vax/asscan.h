@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.6 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.7 %G%  */
 end_comment
 
 begin_comment
@@ -477,7 +477,7 @@ begin_define
 define|#
 directive|define
 name|MAXSTRLG
-value|2048
+value|4000
 end_define
 
 begin_struct
