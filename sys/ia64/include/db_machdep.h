@@ -51,22 +51,11 @@ directive|define
 name|DB_NO_AOUT
 end_define
 
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|ia64_bundle
-block|{
-name|u_int64_t
-name|slot
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|int
-name|template
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
