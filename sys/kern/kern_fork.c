@@ -2342,6 +2342,14 @@ name|p2
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|PROC_UNLOCK
+argument_list|(
+name|p1
+operator|->
+name|p_leader
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
