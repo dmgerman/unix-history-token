@@ -106,6 +106,35 @@ name|fp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|fastfind
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|pathpart
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|patprep
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|name
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -199,21 +228,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|fastfind
-argument_list|(
-argument|pathpart
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pathpart
+parameter_list|)
 name|char
 modifier|*
 name|pathpart
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -243,10 +267,6 @@ name|patend
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|,
-modifier|*
-name|patprep
-argument_list|()
 decl_stmt|;
 name|char
 name|bigram1
@@ -564,7 +584,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * extract last glob-free subpattern in name for fast pre-match; prepend  * '\0' for backwards match; return end of new pattern  */
