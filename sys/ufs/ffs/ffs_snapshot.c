@@ -3913,6 +3913,11 @@ name|si_snaplistsize
 operator|=
 name|snaplistsize
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|devvp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|space
@@ -3924,11 +3929,6 @@ argument_list|(
 name|space
 argument_list|,
 name|M_UFSMNT
-argument_list|)
-expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|devvp
 argument_list|)
 expr_stmt|;
 name|done
