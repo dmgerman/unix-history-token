@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)ns_cksum.c	1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *      @(#)ns_cksum.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ file|"mbuf.h"
 end_include
 
 begin_comment
-comment|/*  * Checksum routine for Network Systems Protocol Packets.  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  */
+comment|/*  * Checksum routine for Network Systems Protocol Packets (Big-Endian).  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  */
 end_comment
 
 begin_define
@@ -525,21 +525,21 @@ name|commoncase
 goto|;
 name|uuuuglyy
 label|:
+comment|/* Big-Endian; else reverse ww and vv */
 define|#
 directive|define
 name|ww
 parameter_list|(
 name|n
 parameter_list|)
-value|(((char *)w)[n + n])
+value|(((u_char *)w)[n + n + 1])
 define|#
 directive|define
 name|vv
 parameter_list|(
 name|n
 parameter_list|)
-value|(((char *)w)[n + n + 1])
-comment|/* Big-Endian; else reverse ww and vv */
+value|(((u_char *)w)[n + n])
 name|sum2
 operator|=
 literal|0
