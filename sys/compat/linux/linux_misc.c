@@ -6298,7 +6298,7 @@ literal|0
 expr_stmt|;
 name|ldt
 operator|->
-name|desc
+name|descs
 operator|=
 name|uap
 operator|->
@@ -6446,7 +6446,7 @@ name|entry_number
 expr_stmt|;
 name|ldt
 operator|->
-name|desc
+name|descs
 operator|=
 name|desc
 expr_stmt|;
