@@ -88,23 +88,23 @@ name|off_t
 name|base_off
 decl_stmt|;
 comment|/* Base offset for ATIO */
-name|size_t
+name|uint
 name|total_len
 decl_stmt|;
 comment|/* Total xfer len for this ATIO */
-name|size_t
+name|uint
 name|init_req
 decl_stmt|;
 comment|/* Transfer count requested to/from init */
-name|size_t
+name|uint
 name|init_ack
 decl_stmt|;
 comment|/* Data transferred ok to/from init */
-name|size_t
+name|uint
 name|targ_req
 decl_stmt|;
 comment|/* Transfer count requested to/from target */
-name|size_t
+name|uint
 name|targ_ack
 decl_stmt|;
 comment|/* Data transferred ok to/from target */
