@@ -1726,7 +1726,7 @@ name|ih
 operator|->
 name|ih_flags
 operator|&
-name|INTR_FAST
+name|IH_FAST
 operator|)
 operator|!=
 literal|0
