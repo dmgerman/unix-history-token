@@ -2406,12 +2406,6 @@ name|error
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|kern_sigaction
@@ -2429,12 +2423,6 @@ argument_list|,
 name|KSA_FREEBSD4
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|oactp
@@ -2442,7 +2430,6 @@ operator|&&
 operator|!
 name|error
 condition|)
-block|{
 name|error
 operator|=
 name|copyout
@@ -2459,7 +2446,6 @@ name|oact
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
