@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reset.c	5.1 (Berkeley) %G%"
+literal|"@(#)reset.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,16 @@ decl_stmt|;
 name|struct
 name|ltchars
 name|ltbuf
+decl_stmt|;
+specifier|static
+name|int
+name|lclear
+init|=
+name|LMDMBUF
+operator||
+name|LLITOUT
+operator||
+name|LPASS8
 decl_stmt|;
 name|ioctl
 argument_list|(
@@ -260,6 +270,16 @@ name|CWERASE
 argument_list|)
 expr_stmt|;
 comment|/* brkc is left alone */
+name|ioctl
+argument_list|(
+literal|2
+argument_list|,
+name|TIOCLBIC
+argument_list|,
+operator|&
+name|lclear
+argument_list|)
+expr_stmt|;
 name|ioctl
 argument_list|(
 literal|2
