@@ -1131,48 +1131,6 @@ file|<sys/select.h>
 end_include
 
 begin_comment
-comment|/* XXX should be moved to<sys/param.h>. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NBBY
-value|8
-end_define
-
-begin_comment
-comment|/* number of bits in a byte */
-end_comment
-
-begin_comment
-comment|/* XXX should be removed, since<sys/param.h> has this. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|howmany
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|howmany
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x) + ((y) - 1U)) / (y))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * These declarations belong elsewhere, but are repeated here and in  *<stdio.h> to give broken programs a better chance of working with  * 64-bit off_t's.  */
 end_comment
 
