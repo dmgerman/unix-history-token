@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.21	%G%	*/
+comment|/*	kern_proc.c	3.22	%G%	*/
 end_comment
 
 begin_include
@@ -648,15 +648,15 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-if|if
-condition|(
 name|getxfile
 argument_list|(
 name|ip
 argument_list|,
 name|nc
 argument_list|)
-operator|||
+expr_stmt|;
+if|if
+condition|(
 name|u
 operator|.
 name|u_error
@@ -1008,7 +1008,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Read in and set up memory for executed file.  * Zero return is normal;  * non-zero means only the text is being replaced  */
+comment|/*  * Read in and set up memory for executed file.  */
 end_comment
 
 begin_expr_stmt
@@ -1029,9 +1029,6 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|sep
-expr_stmt|;
-specifier|register
 name|size_t
 name|ts
 decl_stmt|,
@@ -1040,14 +1037,11 @@ decl_stmt|,
 name|ss
 decl_stmt|;
 name|int
-name|overlay
-decl_stmt|;
-name|int
 name|pagi
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * read in first few bytes 	 * of file for segment 	 * sizes: 	 * ux_mag = 407/410/411/405 	 *  407 is plain executable 	 *  410 is RO text 	 *  411 is separated ID 	 *  405 is overlaid text 	 *  412 is demand paged plain executable (NOT IMPLEMENTED) 	 *  413 is demand paged RO text 	 */
+comment|/* 	 * read in first few bytes 	 * of file for segment 	 * sizes: 	 * ux_mag = 407/410/413 	 *  407 is plain executable 	 *  410 is RO text 	 *  413 is demand paged RO text 	 */
 name|u
 operator|.
 name|u_base
@@ -1122,14 +1116,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|sep
-operator|=
-literal|0
-expr_stmt|;
-name|overlay
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|u
@@ -1139,25 +1125,6 @@ operator|.
 name|ux_mag
 condition|)
 block|{
-case|case
-literal|0405
-case|:
-name|overlay
-operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|0412
-case|:
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENOEXEC
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
 case|case
 literal|0407
 case|:
@@ -1215,18 +1182,6 @@ name|bad
 goto|;
 block|}
 break|break;
-case|case
-literal|0411
-case|:
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENOEXEC
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
 default|default:
 name|u
 operator|.
@@ -1367,101 +1322,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|overlay
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SPAGI
-operator|)
-operator|||
-name|u
-operator|.
-name|u_sep
-operator|==
-literal|0
-operator|&&
-name|ctos
-argument_list|(
-name|ts
-argument_list|)
-operator|!=
-name|ctos
-argument_list|(
-name|u
-operator|.
-name|u_tsize
-argument_list|)
-operator|||
-name|nargc
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-name|ds
-operator|=
-name|u
-operator|.
-name|u_dsize
-expr_stmt|;
-name|ss
-operator|=
-name|u
-operator|.
-name|u_ssize
-expr_stmt|;
-name|sep
-operator|=
-name|u
-operator|.
-name|u_sep
-expr_stmt|;
-name|xfree
-argument_list|()
-expr_stmt|;
-name|xalloc
-argument_list|(
-name|ip
-argument_list|,
-name|pagi
-argument_list|)
-expr_stmt|;
-name|u
-operator|.
-name|u_ar0
-index|[
-name|PC
-index|]
-operator|=
-name|u
-operator|.
-name|u_exdata
-operator|.
-name|ux_entloc
-operator|+
-literal|2
-expr_stmt|;
-comment|/* skip over entry mask */
-block|}
-else|else
-block|{
-if|if
-condition|(
 name|chksize
 argument_list|(
 name|ts
@@ -1510,7 +1370,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-comment|/* 		 * At this point, committed to the new image! 		 * Release virtual memory resources of old process, and 		 * initialize the virtual memory of the new process. 		 * If we resulted from vfork(), instead wakeup our 		 * parent who will set SVFDONE when he has taken back 		 * our resources. 		 */
+comment|/* 	 * At this point, committed to the new image! 	 * Release virtual memory resources of old process, and 	 * initialize the virtual memory of the new process. 	 * If we resulted from vfork(), instead wakeup our 	 * parent who will set SVFDONE when he has taken back 	 * our resources. 	 */
 name|u
 operator|.
 name|u_prof
@@ -1620,6 +1480,8 @@ operator||
 name|SANOM
 operator||
 name|SUANOM
+operator||
+name|SNUSIG
 operator|)
 expr_stmt|;
 name|u
@@ -1662,7 +1524,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Read in data segment. 			 */
+comment|/* 		 * Read in data segment. 		 */
 name|u
 operator|.
 name|u_base
@@ -1779,7 +1641,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * set SUID/SGID protections, if no tracing 		 */
+comment|/* 	 * set SUID/SGID protections, if no tracing 	 */
 if|if
 condition|(
 operator|(
@@ -1858,7 +1720,6 @@ argument_list|,
 name|SIGTRAP
 argument_list|)
 expr_stmt|;
-block|}
 name|u
 operator|.
 name|u_tsize
@@ -1877,19 +1738,9 @@ name|u_ssize
 operator|=
 name|ss
 expr_stmt|;
-name|u
-operator|.
-name|u_sep
-operator|=
-name|sep
-expr_stmt|;
 name|bad
 label|:
-return|return
-operator|(
-name|overlay
-operator|)
-return|;
+return|return;
 block|}
 end_block
 
@@ -3273,7 +3124,34 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	if (setjmp(u.u_qsav)) { 		u.u_eosys = RESTARTSYS; 		return; 	} */
+if|if
+condition|(
+operator|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SNUSIG
+operator|)
+operator|&&
+name|setjmp
+argument_list|(
+name|u
+operator|.
+name|u_qsav
+argument_list|)
+condition|)
+block|{
+name|u
+operator|.
+name|u_eosys
+operator|=
+name|RESTARTSYS
+expr_stmt|;
+return|return;
+block|}
 name|sleep
 argument_list|(
 operator|(
