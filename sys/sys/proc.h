@@ -460,6 +460,10 @@ name|u_char
 name|td_lastcpu
 decl_stmt|;
 comment|/* (j) Last cpu we were on. */
+name|u_char
+name|td_inktr
+decl_stmt|;
+comment|/* (k) Currently handling a KTR. */
 name|short
 name|td_locks
 decl_stmt|;
