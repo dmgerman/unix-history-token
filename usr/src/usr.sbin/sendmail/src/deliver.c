@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.39 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4404,6 +4404,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|setgid
+argument_list|(
+name|DefGid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setuid
 argument_list|(
 name|DefUid
@@ -4429,6 +4437,16 @@ name|ctladdr
 operator|->
 name|q_user
 argument_list|,
+name|ctladdr
+operator|->
+name|q_gid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
 name|ctladdr
 operator|->
 name|q_gid
