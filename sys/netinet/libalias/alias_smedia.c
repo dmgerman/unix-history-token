@@ -725,7 +725,7 @@ name|links_created
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Find an even numbered port number base that 		     satisfies the contiguous number of ports we need  */
+comment|/* 					 * Find an even numbered port 					 * number base that satisfies the 					 * contiguous number of ports we 					 * need 					 */
 name|null_addr
 operator|.
 name|s_addr
@@ -803,7 +803,7 @@ name|j
 operator|++
 control|)
 block|{
-comment|/* Establish link to port found in RTSP packet */
+comment|/* 							 * Establish link 							 * to port found in 							 * RTSP packet 							 */
 name|rtsp_link
 operator|=
 name|FindRtspOut
@@ -844,7 +844,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|NO_FW_PUNCH
-comment|/* Punch hole in firewall */
+comment|/* 								 * Punch 								 * hole in 								 * firewall 								 */
 name|PunchFWHole
 argument_list|(
 name|rtsp_link
@@ -1654,7 +1654,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* When aliasing a server, check for the 200 reply          Accomodate varying number of blanks between 200& OK */
+comment|/* 		 * When aliasing a server, check for the 200 reply 		 * Accomodate varying number of blanks between 200& OK 		 */
 if|if
 condition|(
 name|dlen

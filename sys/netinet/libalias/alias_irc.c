@@ -121,7 +121,7 @@ parameter_list|,
 comment|/* Which link are we on? */
 name|int
 name|maxsize
-comment|/* Maximum size of IP packet including headers */
+comment|/* Maximum size of IP packet including 				 * headers */
 parameter_list|)
 block|{
 name|int
@@ -204,7 +204,7 @@ name|tlen
 operator|-
 name|hlen
 expr_stmt|;
-comment|/* Return if data length is too short - assume an entire PRIVMSG in each packet. */
+comment|/* 	 * Return if data length is too short - assume an entire PRIVMSG in 	 * each packet. 	 */
 if|if
 condition|(
 name|dlen
@@ -234,7 +234,7 @@ name|maxsize
 operator|-=
 name|hlen
 expr_stmt|;
-comment|/* We're interested in maximum size of data, not packet */
+comment|/* We're interested in maximum size of 				 * data, not packet */
 comment|/* Search for a CTCP command [Note 1] */
 for|for
 control|(
@@ -275,7 +275,7 @@ index|[
 literal|65536
 index|]
 decl_stmt|;
-comment|/* Estimate of maximum packet size :) */
+comment|/* Estimate of maximum packet size 					 * :) */
 name|int
 name|copyat
 init|=
@@ -287,7 +287,7 @@ name|iCopy
 init|=
 literal|0
 decl_stmt|;
-comment|/* How much data have we written to copy-back string? */
+comment|/* How much data have we written to 				 * copy-back string? */
 name|unsigned
 name|long
 name|org_addr
@@ -297,7 +297,7 @@ name|unsigned
 name|short
 name|org_port
 decl_stmt|;
-comment|/* Original source port address */
+comment|/* Original source port 						 * address */
 name|lCTCP_START
 label|:
 if|if
@@ -328,7 +328,7 @@ name|i
 operator|++
 index|]
 expr_stmt|;
-comment|/* Copy the CTCP start character */
+comment|/* Copy the CTCP start 						 * character */
 comment|/* Start of a CTCP */
 if|if
 condition|(
@@ -457,7 +457,7 @@ literal|"Found DCC\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Skip any extra spaces (should not occur according to           protocol, but DCC breaks CTCP protocol anyway */
+comment|/* 		 * Skip any extra spaces (should not occur according to 		 * protocol, but DCC breaks CTCP protocol anyway 		 */
 while|while
 condition|(
 name|sptr
@@ -578,7 +578,7 @@ literal|"Done command - removing spaces\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Skip any extra spaces (should not occur according to           protocol, but DCC breaks CTCP protocol anyway */
+comment|/* 		 * Skip any extra spaces (should not occur according to 		 * protocol, but DCC breaks CTCP protocol anyway 		 */
 while|while
 condition|(
 name|sptr
@@ -699,7 +699,7 @@ literal|"Done filename - removing spaces\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Skip any extra spaces (should not occur according to           protocol, but DCC breaks CTCP protocol anyway */
+comment|/* 		 * Skip any extra spaces (should not occur according to 		 * protocol, but DCC breaks CTCP protocol anyway 		 */
 while|while
 condition|(
 name|sptr
@@ -845,7 +845,7 @@ goto|goto
 name|lBAD_CTCP
 goto|;
 block|}
-comment|/* Skip any extra spaces (should not occur according to           protocol, but DCC breaks CTCP protocol anyway, so we might           as well play it safe */
+comment|/* 		 * Skip any extra spaces (should not occur according to 		 * protocol, but DCC breaks CTCP protocol anyway, so we 		 * might as well play it safe 		 */
 while|while
 condition|(
 name|sptr
@@ -910,7 +910,7 @@ operator|>
 literal|6554
 condition|)
 block|{
-comment|/* Terminate on overflow (65536/10 rounded up*/
+comment|/* Terminate on overflow 						 * (65536/10 rounded up */
 name|DBprintf
 argument_list|(
 operator|(
@@ -1045,7 +1045,7 @@ condition|)
 goto|goto
 name|lBAD_CTCP
 goto|;
-comment|/* Steal the FTP_DATA_PORT - it doesn't really matter, and this 				 would probably allow it through at least _some_ 				 firewalls. */
+comment|/* 			 * Steal the FTP_DATA_PORT - it doesn't really 			 * matter, and this would probably allow it through 			 * at least _some_ firewalls. 			 */
 name|dcc_link
 operator|=
 name|FindUdpTcpOut
@@ -1085,7 +1085,7 @@ comment|/* Address from aliasing */
 name|u_short
 name|alias_port
 decl_stmt|;
-comment|/* Port given by aliasing */
+comment|/* Port given by 							 * aliasing */
 name|int
 name|n
 decl_stmt|;
@@ -1169,7 +1169,7 @@ name|newpacket
 argument_list|)
 condition|)
 block|{
-comment|/* Truncated/fit exactly - bad news */
+comment|/* Truncated/fit exactly 										 * - bad news */
 name|DBprintf
 argument_list|(
 operator|(
@@ -1235,7 +1235,7 @@ name|iCopy
 operator|+=
 name|n
 expr_stmt|;
-comment|/* Done - truncated cases will be taken care of by lBAD_CTCP */
+comment|/* 				 * Done - truncated cases will be taken 				 * care of by lBAD_CTCP 				 */
 name|DBprintf
 argument_list|(
 operator|(
@@ -1254,7 +1254,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* An uninteresting CTCP - state entered right after '\001' has           been pushed.  Also used to copy the rest of a DCC, after IP           address and port has been handled */
+comment|/* 		 * An uninteresting CTCP - state entered right after '\001' 		 * has been pushed.  Also used to copy the rest of a DCC, 		 * after IP address and port has been handled 		 */
 name|lBAD_CTCP
 label|:
 for|for

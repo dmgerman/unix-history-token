@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  -*- mode: c; tab-width: 8; c-basic-indent: 4; -*- */
-end_comment
-
-begin_comment
 comment|/*-  * Copyright (c) 2001 Charles Mott<cm@linktel.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -317,8 +313,8 @@ end_comment
 begin_struct
 struct|struct
 name|ack_data_record
-comment|/* used to save changes to ACK/sequence numbers */
 block|{
+comment|/* used to save changes to ACK/sequence 				 * numbers */
 name|u_long
 name|ack_old
 decl_stmt|;
@@ -338,8 +334,8 @@ end_struct
 begin_struct
 struct|struct
 name|tcp_state
-comment|/* Information about TCP connection        */
 block|{
+comment|/* Information about TCP connection        */
 name|int
 name|in
 decl_stmt|;
@@ -355,7 +351,7 @@ comment|/* Index to ACK data array                 */
 name|int
 name|ack_modified
 decl_stmt|;
-comment|/* Indicates whether ACK and sequence numbers */
+comment|/* Indicates whether ACK and 					 * sequence numbers */
 comment|/* been modified                           */
 block|}
 struct|;
@@ -369,7 +365,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Number of distinct ACK number changes                                saved for a modified TCP stream */
+comment|/* Number of distinct ACK number changes 				 * saved for a modified TCP stream */
 end_comment
 
 begin_struct
@@ -390,7 +386,7 @@ decl_stmt|;
 name|int
 name|fwhole
 decl_stmt|;
-comment|/* Which firewall record is used for this hole? */
+comment|/* Which firewall record is used for this 				 * hole? */
 block|}
 struct|;
 end_struct
@@ -398,8 +394,8 @@ end_struct
 begin_struct
 struct|struct
 name|server
-comment|/* LSNAT server pool (circular list) */
 block|{
+comment|/* LSNAT server pool (circular list) */
 name|struct
 name|in_addr
 name|addr
@@ -419,8 +415,8 @@ end_struct
 begin_struct
 struct|struct
 name|alias_link
-comment|/* Main data structure */
 block|{
+comment|/* Main data structure */
 name|struct
 name|libalias
 modifier|*
@@ -463,7 +459,7 @@ decl_stmt|;
 name|int
 name|link_type
 decl_stmt|;
-comment|/* Type of link: TCP, UDP, ICMP, proto, frag */
+comment|/* Type of link: TCP, UDP, ICMP, 					 * proto, frag */
 comment|/* values for link_type */
 define|#
 directive|define
@@ -541,17 +537,17 @@ argument|alias_link
 argument_list|)
 name|list_out
 expr_stmt|;
-comment|/* Linked list of pointers for     */
+comment|/* Linked list of 								 * pointers for     */
 name|LIST_ENTRY
 argument_list|(
 argument|alias_link
 argument_list|)
 name|list_in
 expr_stmt|;
-comment|/* input and output lookup tables  */
+comment|/* input and output 								 * lookup tables  */
 union|union
-comment|/* Auxiliary data                      */
 block|{
+comment|/* Auxiliary data                      */
 name|char
 modifier|*
 name|frag_ptr
@@ -1269,7 +1265,7 @@ operator|==
 name|GET_ALIAS_PORT
 condition|)
 block|{
-comment|/*          * The aliasing port is automatically selected          * by one of two methods below:          */
+comment|/* 		 * The aliasing port is automatically selected by one of 		 * two methods below: 		 */
 name|max_trials
 operator|=
 name|GET_NEW_PORT_MAX_ATTEMPTS
@@ -1283,7 +1279,7 @@ operator|&
 name|PKT_ALIAS_SAME_PORTS
 condition|)
 block|{
-comment|/*              * When the PKT_ALIAS_SAME_PORTS option is              * chosen, the first try will be the              * actual source port. If this is already              * in use, the remainder of the trials              * will be random.              */
+comment|/* 			 * When the PKT_ALIAS_SAME_PORTS option is chosen, 			 * the first try will be the actual source port. If 			 * this is already in use, the remainder of the 			 * trials will be random. 			 */
 name|port_net
 operator|=
 name|link
@@ -1862,7 +1858,7 @@ decl_stmt|;
 name|int
 name|link_type
 decl_stmt|;
-comment|/*      * Get link_type from protocol      */
+comment|/* 	 * Get link_type from protocol 	 */
 switch|switch
 condition|(
 name|proto
@@ -1892,7 +1888,7 @@ operator|)
 return|;
 break|break;
 block|}
-comment|/*      * The aliasing port is automatically selected      * by one of two methods below:      */
+comment|/* 	 * The aliasing port is automatically selected by one of two 	 * methods below: 	 */
 name|max_trials
 operator|=
 name|GET_NEW_PORT_MAX_ATTEMPTS
@@ -1906,7 +1902,7 @@ operator|&
 name|PKT_ALIAS_SAME_PORTS
 condition|)
 block|{
-comment|/*        * When the ALIAS_SAME_PORTS option is        * chosen, the first try will be the        * actual source port. If this is already        * in use, the remainder of the trials        * will be random.        */
+comment|/* 		 * When the ALIAS_SAME_PORTS option is chosen, the first 		 * try will be the actual source port. If this is already 		 * in use, the remainder of the trials will be random. 		 */
 name|port_sys
 operator|=
 name|ntohs
@@ -2657,9 +2653,9 @@ comment|/* if less than zero, alias   */
 name|int
 name|link_type
 parameter_list|)
-comment|/* port will be automatically */
 block|{
-comment|/* chosen. If greater than    */
+comment|/* port will be automatically */
+comment|/* chosen. 				 * If greater than    */
 name|u_int
 name|start_point
 decl_stmt|;
@@ -3255,9 +3251,9 @@ comment|/* if less than zero, alias   */
 name|int
 name|link_type
 parameter_list|)
-comment|/* port will be automatically */
 block|{
-comment|/* chosen. If greater than    */
+comment|/* port will be automatically */
+comment|/* chosen. 				 * If greater than    */
 name|struct
 name|alias_link
 modifier|*
@@ -3679,7 +3675,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* The following allows permanent links to be        specified as using the default source address        (i.e. device interface address) without knowing        in advance what that address is. */
+comment|/* 		 * The following allows permanent links to be specified as 		 * using the default source address (i.e. device interface 		 * address) without knowing in advance what that address 		 * is. 		 */
 if|if
 condition|(
 name|la
@@ -4321,7 +4317,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* The following allows permanent links to be        specified as using the default aliasing address        (i.e. device interface address) without knowing        in advance what that address is. */
+comment|/* 		 * The following allows permanent links to be specified as 		 * using the default aliasing address (i.e. device 		 * interface address) without knowing in advance what that 		 * address is. 		 */
 if|if
 condition|(
 name|la
@@ -4692,12 +4688,12 @@ name|struct
 name|in_addr
 name|dst_addr
 parameter_list|,
-comment|/* Doesn't add a link if one */
+comment|/* Doesn't add a link if 								 * one */
 name|struct
 name|in_addr
 name|alias_addr
 parameter_list|,
-comment|/*   is not found.           */
+comment|/* is not found.           */
 name|u_short
 name|ip_id
 parameter_list|)
@@ -7625,7 +7621,7 @@ name|struct
 name|timezone
 name|tz
 decl_stmt|;
-comment|/*      * Save system time (seconds) in global variable timeStamp for      * use by other functions. This is done so as not to unnecessarily      * waste timeline by making system calls.      */
+comment|/* 	 * Save system time (seconds) in global variable timeStamp for use 	 * by other functions. This is done so as not to unnecessarily 	 * waste timeline by making system calls. 	 */
 name|gettimeofday
 argument_list|(
 operator|&
@@ -8933,7 +8929,7 @@ comment|/* Which state to bring flags to */
 name|unsigned
 name|int
 name|mask
-comment|/* Mask of which flags to affect (use 0 to do a                            probe for flag values) */
+comment|/* Mask of which flags to affect (use 0 to 				 * do a probe for flag values) */
 parameter_list|)
 block|{
 comment|/* Enable logging? */
@@ -9612,7 +9608,7 @@ value|while(0)
 end_define
 
 begin_comment
-comment|/*lint -restore */
+comment|/* lint -restore */
 end_comment
 
 begin_define
@@ -9633,7 +9629,7 @@ value|while(0)
 end_define
 
 begin_comment
-comment|/*lint -restore */
+comment|/* lint -restore */
 end_comment
 
 begin_define
@@ -9992,7 +9988,7 @@ name|fwhole
 operator|+
 literal|1
 expr_stmt|;
-comment|/*      * generate two rules of the form      *      *	add fwhole accept tcp from OAddr OPort to DAddr DPort      *	add fwhole accept tcp from DAddr DPort to OAddr OPort      */
+comment|/* 	 * generate two rules of the form 	 *  	 * add fwhole accept tcp from OAddr OPort to DAddr DPort add fwhole 	 * accept tcp from DAddr DPort to OAddr OPort 	 */
 if|#
 directive|if
 name|IPFW2
@@ -10280,7 +10276,7 @@ name|link
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Skip non-bound links - XXX should not be strictly necessary,        but seems to leave hole if not done.  Leak of non-bound links?        (Code should be left even if the problem is fixed - it is a        clear optimization) */
+comment|/* 	 * Skip non-bound links - XXX should not be strictly necessary, but 	 * seems to leave hole if not done.  Leak of non-bound links? (Code 	 * should be left even if the problem is fixed - it is a clear 	 * optimization) 	 */
 if|if
 condition|(
 name|rule
@@ -10499,7 +10495,7 @@ name|tcp
 operator|->
 name|fwhole
 decl_stmt|;
-comment|/* Where is the firewall hole? */
+comment|/* Where is the firewall 							 * hole? */
 name|struct
 name|ip_fw
 name|rule

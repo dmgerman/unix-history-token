@@ -63,26 +63,26 @@ name|int
 name|packetAliasMode
 decl_stmt|;
 comment|/* Mode flags                      */
-comment|/*        - documented in alias.h  */
+comment|/* - documented in alias.h  */
 name|struct
 name|in_addr
 name|aliasAddress
 decl_stmt|;
 comment|/* Address written onto source     */
-comment|/*   field of IP packet.           */
+comment|/* field of IP packet.           */
 name|struct
 name|in_addr
 name|targetAddress
 decl_stmt|;
 comment|/* IP address incoming packets     */
-comment|/*   are sent to if no aliasing    */
-comment|/*   link already exists           */
+comment|/* are sent to if no aliasing    */
+comment|/* link already exists           */
 name|struct
 name|in_addr
 name|nullAddress
 decl_stmt|;
 comment|/* Used as a dummy parameter for   */
-comment|/*   some function calls           */
+comment|/* some function calls           */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -94,7 +94,7 @@ name|LINK_TABLE_OUT_SIZE
 index|]
 expr_stmt|;
 comment|/* Lookup table of pointers to     */
-comment|/*   chains of link records. Each  */
+comment|/* chains of link records. Each  */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -105,9 +105,9 @@ index|[
 name|LINK_TABLE_IN_SIZE
 index|]
 expr_stmt|;
-comment|/*   link record is doubly indexed */
-comment|/*   into input and output lookup  */
-comment|/*   tables.                       */
+comment|/* link record is doubly indexed */
+comment|/* into input and output lookup  */
+comment|/* tables.                       */
 comment|/* Link statistics                 */
 name|int
 name|icmpLinkCount
@@ -146,7 +146,7 @@ comment|/* current packet                  */
 name|int
 name|lastCleanupTime
 decl_stmt|;
-comment|/* Last time IncrementalCleanup()  */
+comment|/* Last time 						 * IncrementalCleanup()  */
 comment|/* was called                      */
 name|int
 name|houseKeepingResidual
@@ -183,15 +183,15 @@ comment|/* flag.                           */
 name|int
 name|fireWallBaseNum
 decl_stmt|;
-comment|/* The first firewall entry free for our use */
+comment|/* The first firewall entry 						 * free for our use */
 name|int
 name|fireWallNumNums
 decl_stmt|;
-comment|/* How many entries can we use? */
+comment|/* How many entries can we 						 * use? */
 name|int
 name|fireWallActiveNum
 decl_stmt|;
-comment|/* Which entry did we last use? */
+comment|/* Which entry did we last 						 * use? */
 name|char
 modifier|*
 name|fireWallField

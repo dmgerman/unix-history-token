@@ -151,7 +151,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* Flags, pruning bitfield, packet counts etc */
+comment|/* Flags, pruning bitfield, packet 					 * counts etc */
 block|}
 struct|;
 end_struct

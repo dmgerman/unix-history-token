@@ -2068,7 +2068,7 @@ block|}
 name|a
 operator|++
 expr_stmt|;
-comment|/*XXXX*/
+comment|/* XXXX */
 name|bcount
 operator|-=
 name|SizeOfResourceA

@@ -241,7 +241,7 @@ parameter_list|,
 comment|/* The link to go through (aliased port) */
 name|int
 name|maxpacketsize
-comment|/* The maximum size this packet can grow to (including headers) */
+comment|/* The maximum size this packet can grow to         (including headers) */
 parameter_list|)
 block|{
 name|int
@@ -496,7 +496,7 @@ operator|->
 name|ip_len
 argument_list|)
 expr_stmt|;
-comment|/* recalc tlen, pkt may have grown */
+comment|/* recalc tlen, pkt may 						 * have grown */
 if|if
 condition|(
 name|sptr

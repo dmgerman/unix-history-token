@@ -24,7 +24,7 @@ name|_ALIAS_H_
 end_define
 
 begin_comment
-comment|/*  * The external interface to libalias, the packet aliasing engine.  *  * There are two sets of functions:  *  * PacketAlias*() the old API which doesn't take an instance pointer  * and therefore can only have one packet engine at a time.  *  * LibAlias*() the new API which takes as first argument a pointer to   * the instance of the packet aliasing engine.  *  * The functions otherwise correspond to each other one for one, except  * for the LibAliasUnaliasOut()/PacketUnaliasOut() function which were   * were misnamed in the old API.  */
+comment|/*  * The external interface to libalias, the packet aliasing engine.  *  * There are two sets of functions:  *  * PacketAlias*() the old API which doesn't take an instance pointer  * and therefore can only have one packet engine at a time.  *  * LibAlias*() the new API which takes as first argument a pointer to  * the instance of the packet aliasing engine.  *  * The functions otherwise correspond to each other one for one, except  * for the LibAliasUnaliasOut()/PacketUnaliasOut() function which were  * were misnamed in the old API.  */
 end_comment
 
 begin_comment

@@ -76,7 +76,7 @@ file|"alias_local.h"
 end_include
 
 begin_comment
-comment|/*  * alias_skinny.c handles the translation for the Cisco Skinny Station  * protocol.  Skinny typically uses TCP port 2000 to set up calls between  * a Cisco Call Manager and a Cisco IP phone.  When a phone comes on line,  * it first needs to register with the Call Manager.  To do this it sends  * a registration message.  This message contains the IP address of the  * IP phone.  This message must then be translated to reflect our global  * IP address.  Along with the registration message (and usually in the  * same packet), the phone sends an IP port message.  This message indicates  * the TCP port over which it will communicate.  *  * When a call is placed from the phone, the Call Manager will send an  * Open Receive Channel message to the phone to let the caller know someone  * has answered.  The phone then sends back an Open Receive Channel  * Acknowledgement.  In this packet, the phone sends its IP address again,  * and the UDP port over which the voice traffic should flow.  These values  * need translation.  Right after the Open Receive Channel Acknowledgement,   * the Call Manager sends a Start Media Transmission message indicating the  * call is connected.  This message contains the IP address and UDP port   * number of the remote (called) party.  Once this message is translated, the   * call can commence.  The called part sends the first UDP packet to the  * calling phone at the pre-arranged UDP port in the Open Receive Channel  * Acknowledgement.  *  * Skinny is a Cisco-proprietary protocol and is a trademark of Cisco Systems,  * Inc.  All rights reserved. */
+comment|/*  * alias_skinny.c handles the translation for the Cisco Skinny Station  * protocol.  Skinny typically uses TCP port 2000 to set up calls between  * a Cisco Call Manager and a Cisco IP phone.  When a phone comes on line,  * it first needs to register with the Call Manager.  To do this it sends  * a registration message.  This message contains the IP address of the  * IP phone.  This message must then be translated to reflect our global  * IP address.  Along with the registration message (and usually in the  * same packet), the phone sends an IP port message.  This message indicates  * the TCP port over which it will communicate.  *  * When a call is placed from the phone, the Call Manager will send an  * Open Receive Channel message to the phone to let the caller know someone  * has answered.  The phone then sends back an Open Receive Channel  * Acknowledgement.  In this packet, the phone sends its IP address again,  * and the UDP port over which the voice traffic should flow.  These values  * need translation.  Right after the Open Receive Channel Acknowledgement,  * the Call Manager sends a Start Media Transmission message indicating the  * call is connected.  This message contains the IP address and UDP port  * number of the remote (called) party.  Once this message is translated, the  * call can commence.  The called part sends the first UDP packet to the  * calling phone at the pre-arranged UDP port in the Open Receive Channel  * Acknowledgement.  *  * Skinny is a Cisco-proprietary protocol and is a trademark of Cisco Systems,  * Inc.  All rights reserved. */
 end_comment
 
 begin_comment
@@ -174,7 +174,7 @@ decl_stmt|;
 name|u_int32_t
 name|stationIpPort
 decl_stmt|;
-comment|/* Note: Skinny uses 32-bit port                                      * numbers */
+comment|/* Note: Skinny uses 32-bit port 					 * numbers */
 block|}
 struct|;
 end_struct
@@ -375,7 +375,7 @@ name|s_addr
 operator|=
 name|localIpAddr
 expr_stmt|;
-comment|/* XXX I should probably handle in bound global translations as well. */
+comment|/* 	 * XXX I should probably handle in bound global translations as 	 * well. 	 */
 return|return
 literal|0
 return|;
@@ -727,7 +727,7 @@ operator|+
 name|hlen
 operator|)
 expr_stmt|;
-comment|/*    * XXX This direction is reserved for future use.  I still need to    * handle the scenario where the call manager is on the inside, and    * the calling phone is on the global outside.    */
+comment|/* 	 * XXX This direction is reserved for future use.  I still need to 	 * handle the scenario where the call manager is on the inside, and 	 * the calling phone is on the global outside. 	 */
 if|if
 condition|(
 name|ntohs
@@ -787,7 +787,7 @@ name|orig_len
 operator|=
 name|dlen
 expr_stmt|;
-comment|/*    * Skinny packets can contain many messages.  We need to loop through    * the packet using len to determine message boundaries.  This comes    * into play big time with port messages being in the same packet as    * register messages.  Also, open receive channel acks are    * usually buried in a pakcet some 400 bytes long.    */
+comment|/* 	 * Skinny packets can contain many messages.  We need to loop 	 * through the packet using len to determine message boundaries. 	 * This comes into play big time with port messages being in the 	 * same packet as register messages.  Also, open receive channel 	 * acks are usually buried in a pakcet some 400 bytes long. 	 */
 while|while
 condition|(
 name|dlen
@@ -920,8 +920,8 @@ argument_list|,
 name|direction
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|IP_PORT_MSG
 case|:
@@ -992,8 +992,8 @@ argument_list|,
 name|direction
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|OPNRCVCH_ACK
 case|:
@@ -1070,8 +1070,8 @@ argument_list|,
 name|direction
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 case|case
 name|START_MEDIATX
 case|:
@@ -1145,8 +1145,8 @@ argument_list|,
 name|direction
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+block|}
 default|default:
 break|break;
 block|}

@@ -74,8 +74,8 @@ end_comment
 begin_struct
 struct|struct
 name|grehdr
-comment|/* Enhanced GRE header. */
 block|{
+comment|/* Enhanced GRE header. */
 name|u_int16_t
 name|gh_flags
 decl_stmt|;
@@ -99,7 +99,7 @@ comment|/* Sequence number (optional). */
 name|u_int32_t
 name|gh_ack_no
 decl_stmt|;
-comment|/* Acknowledgment number (optional). */
+comment|/* Acknowledgment number 					 * (optional). */
 block|}
 struct|;
 end_struct
@@ -347,8 +347,8 @@ name|alias_link
 modifier|*
 name|link
 parameter_list|)
-comment|/* The PPTP control link */
 block|{
+comment|/* The PPTP control link */
 name|struct
 name|alias_link
 modifier|*
@@ -405,7 +405,7 @@ case|:
 case|case
 name|PPTP_InCallReply
 case|:
-comment|/* Establish PPTP link for address and Call ID found in control message. */
+comment|/* 		 * Establish PPTP link for address and Call ID found in 		 * control message. 		 */
 name|pptp_link
 operator|=
 name|AddPptp
@@ -439,7 +439,7 @@ case|:
 case|case
 name|PPTP_CallDiscNotify
 case|:
-comment|/* Find PPTP link for address and Call ID found in control message. */
+comment|/* 		 * Find PPTP link for address and Call ID found in control 		 * message. 		 */
 name|pptp_link
 operator|=
 name|FindPptpOutByCallId
@@ -558,12 +558,12 @@ name|resCode
 operator|==
 literal|1
 condition|)
-comment|/* Connection established, */
+comment|/* Connection 							 * established, */
 name|SetDestCallId
 argument_list|(
 name|pptp_link
 argument_list|,
-comment|/* note the Peer's Call ID. */
+comment|/* note the Peer's Call 								 * ID. */
 name|cptr
 operator|->
 name|cid2
@@ -616,8 +616,8 @@ name|alias_link
 modifier|*
 name|link
 parameter_list|)
-comment|/* The PPTP control link */
 block|{
+comment|/* The PPTP control link */
 name|struct
 name|alias_link
 modifier|*
@@ -848,7 +848,7 @@ name|resCode
 operator|==
 literal|1
 condition|)
-comment|/* Connection established, */
+comment|/* Connection 							 * established, */
 name|SetDestCallId
 argument_list|(
 name|pptp_link
@@ -887,8 +887,8 @@ name|u_int16_t
 modifier|*
 name|ptype
 parameter_list|)
-comment|/* IP packet to examine/patch */
 block|{
+comment|/* IP packet to examine/patch */
 name|int
 name|hlen
 decl_stmt|,
