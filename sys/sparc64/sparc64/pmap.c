@@ -376,24 +376,6 @@ name|pmap_context_base
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Virtual addresses of free space for temporary mappings.  Used for copying,  * zeroing and mapping physical pages for /dev/mem accesses.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|CADDR1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|vm_offset_t
-name|CADDR2
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 specifier|static
 name|boolean_t
@@ -1478,23 +1460,6 @@ name|sparc64_btop
 argument_list|(
 name|avail_end
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Allocate virtual address space for copying and zeroing pages of 	 * physical memory. 	 */
-name|CADDR1
-operator|=
-name|virtual_avail
-expr_stmt|;
-name|virtual_avail
-operator|+=
-name|PAGE_SIZE
-expr_stmt|;
-name|CADDR2
-operator|=
-name|virtual_avail
-expr_stmt|;
-name|virtual_avail
-operator|+=
-name|PAGE_SIZE
 expr_stmt|;
 comment|/* 	 * Allocate virtual address space for the message buffer. 	 */
 name|msgbufp
