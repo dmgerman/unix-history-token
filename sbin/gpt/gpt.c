@@ -2158,7 +2158,7 @@ literal|"add"
 block|}
 block|,
 block|{
-name|NULL
+name|cmd_create
 block|,
 literal|"create"
 block|}
