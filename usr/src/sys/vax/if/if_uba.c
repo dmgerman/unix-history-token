@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.c	4.7	81/12/21	*/
+comment|/*	if_uba.c	4.8	81/12/23	*/
 end_comment
 
 begin_include
@@ -935,7 +935,9 @@ block|}
 else|else
 name|totlen
 operator|-=
-name|len
+name|m
+operator|->
+name|m_len
 expr_stmt|;
 block|}
 return|return
