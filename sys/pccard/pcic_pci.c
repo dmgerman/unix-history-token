@@ -1670,7 +1670,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"I/O mapped device!\n"
+literal|"I/O mapped device, might not work.\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1797,6 +1797,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Memory mapped device, will work.\n"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|memrid
@@ -2183,6 +2190,15 @@ operator|->
 name|irqres
 operator|=
 name|r
+expr_stmt|;
+name|sc
+operator|->
+name|irq
+operator|=
+name|rman_get_start
+argument_list|(
+name|r
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
