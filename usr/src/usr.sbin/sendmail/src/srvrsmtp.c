@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.18 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.19 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.18 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.19 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3251,6 +3251,26 @@ argument_list|(
 literal|"%s: lost child"
 argument_list|,
 name|label
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|WIFEXITED
+argument_list|(
+name|st
+argument_list|)
+condition|)
+name|syserr
+argument_list|(
+literal|"%s: died on signal %d"
+argument_list|,
+name|label
+argument_list|,
+name|st
+operator|&
+literal|0177
 argument_list|)
 expr_stmt|;
 comment|/* if we exited on a QUIT command, complete the process */
