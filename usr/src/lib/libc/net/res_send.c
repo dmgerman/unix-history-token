@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.9 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,14 @@ name|HEADER
 operator|*
 operator|)
 name|answer
+decl_stmt|;
+specifier|extern
+name|u_short
+name|htons
+argument_list|()
+decl_stmt|,
+name|ntohs
+argument_list|()
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -393,11 +401,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"socket failed %d\n"
-argument_list|,
-name|errno
+literal|"socket failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -442,11 +448,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"connect failed %d\n"
-argument_list|,
-name|errno
+literal|"connect failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -485,6 +489,10 @@ name|write
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|len
 argument_list|,
@@ -522,11 +530,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"write failed %d\n"
-argument_list|,
-name|errno
+literal|"write failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -572,8 +578,15 @@ name|read
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|cp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|)
 operator|)
@@ -608,11 +621,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"read failed %d\n"
-argument_list|,
-name|errno
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -664,8 +675,15 @@ name|read
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|cp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|)
 operator|)
@@ -700,11 +718,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"read failed %d\n"
-argument_list|,
-name|errno
+literal|"read failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -799,11 +815,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"connect/send errno = %d\n"
-argument_list|,
-name|errno
+literal|"connect"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -855,11 +869,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"sendto errno = %d\n"
-argument_list|,
-name|errno
+literal|"sendto"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -870,26 +882,42 @@ block|}
 endif|#
 directive|endif
 endif|BSD
-comment|/* 			 * Wait for reply  			 */
+comment|/* 			 * Wait for reply 			 */
 name|timeout
 operator|.
 name|tv_sec
 operator|=
 operator|(
-operator|(
 name|_res
 operator|.
 name|retrans
-operator|*
+operator|<<
+operator|(
 name|_res
 operator|.
 name|retry
+operator|-
+name|retry
+operator|)
 operator|)
 operator|/
 name|_res
 operator|.
 name|nscount
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|timeout
+operator|.
+name|tv_sec
+operator|<=
+literal|0
+condition|)
+name|timeout
+operator|.
+name|tv_sec
+operator|=
+literal|1
 expr_stmt|;
 name|timeout
 operator|.
@@ -942,11 +970,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"select errno = %d\n"
-argument_list|,
-name|errno
+literal|"select"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1018,11 +1044,9 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"recvfrom, errno=%d\n"
-argument_list|,
-name|errno
+literal|"recvfrom"
 argument_list|)
 expr_stmt|;
 endif|#
