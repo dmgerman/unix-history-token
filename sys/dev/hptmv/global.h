@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/hptmv/mvSata.h>
+file|<dev/hptmv/mvSata.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/hptmv/mvStorageDev.h>
+file|<dev/hptmv/mvStorageDev.h>
 end_include
 
 begin_define
@@ -955,31 +955,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|<contrib/dev/hptmv/atapi.h>
+file|<dev/hptmv/atapi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/hptmv/command.h>
+file|<dev/hptmv/command.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/hptmv/array.h>
+file|<dev/hptmv/array.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/hptmv/raid5n.h>
+file|<dev/hptmv/raid5n.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<contrib/dev/hptmv/vdevice.h>
+file|<dev/hptmv/vdevice.h>
 end_include
 
 begin_function_decl
