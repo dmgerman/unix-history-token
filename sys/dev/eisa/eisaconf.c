@@ -582,8 +582,6 @@ block|{
 name|int
 name|devices_found
 decl_stmt|,
-name|i
-decl_stmt|,
 name|slot
 decl_stmt|;
 name|struct
@@ -630,7 +628,7 @@ if|if
 condition|(
 name|eisa_probe_slot
 argument_list|(
-name|i
+name|slot
 argument_list|,
 operator|&
 name|eisa_id
