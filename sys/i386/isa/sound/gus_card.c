@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/gus_card.c  *  * Detection routine for the Gravis Ultrasound.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * gus_card.c,v 1.11 1994/10/14 09:04:19 jkh Exp  */
+comment|/*  * sound/gus_card.c  *  * Detection routine for the Gravis Ultrasound.  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -84,6 +84,8 @@ operator|->
 name|irq
 argument_list|,
 name|gusintr
+argument_list|,
+literal|"Gravis Ultrasound"
 argument_list|)
 expr_stmt|;
 if|if
@@ -110,6 +112,10 @@ argument_list|,
 name|hw_config
 operator|->
 name|dma
+argument_list|,
+name|hw_config
+operator|->
+name|dma_read
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -201,6 +207,10 @@ argument_list|,
 name|hw_config
 operator|->
 name|dma
+argument_list|,
+name|hw_config
+operator|->
+name|dma_read
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -310,13 +320,17 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 name|void
 name|gusintr
-parameter_list|(
-name|int
+argument_list|(
+name|INT_HANDLER_PARMS
+argument_list|(
 name|irq
-parameter_list|)
+argument_list|,
+name|dummy
+argument_list|)
+argument_list|)
 block|{
 name|unsigned
 name|char
@@ -337,11 +351,32 @@ if|if
 condition|(
 name|have_gus_max
 condition|)
-name|adintr
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|ad1848_interrupt
+argument_list|(
+name|INT_HANDLER_CALL
+argument_list|(
+name|gus_irq
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|ad1848_interrupt
+argument_list|(
+name|INT_HANDLER_CALL
 argument_list|(
 name|irq
 argument_list|)
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 while|while
@@ -442,7 +477,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -465,12 +500,6 @@ operator|!
 name|defined
 argument_list|(
 name|EXCLUDE_GUS16
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|EXCLUDE_GUS
 argument_list|)
 end_if
 
@@ -518,7 +547,7 @@ literal|90
 expr_stmt|;
 name|ad1848_init
 argument_list|(
-literal|"gusxvi0:<GUS 16 bit sampling>"
+literal|"GUS 16 bit sampling"
 argument_list|,
 name|hw_config
 operator|->

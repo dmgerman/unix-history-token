@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pas.h,v 1.6 1994/10/01 12:42:17 ache Exp  */
-end_comment
-
-begin_comment
 comment|/* 																*/
 end_comment
 
@@ -257,6 +253,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHIP_REV
+value|0xFF88
+end_define
+
+begin_comment
+comment|/* R	0=PAS, 1=PAS+, 2=CDPC, 3=PAS16C, 4=PAS16D */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SYSTEM_CONFIGURATION_1
 value|0x8388
 end_define
@@ -428,6 +435,17 @@ end_define
 
 begin_comment
 comment|/* R W  Control		1=reset board on warm boot, 0=don't		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I_C_1_JOYSTICK_ENABLE
+value|0x40
+end_define
+
+begin_comment
+comment|/* R W  Control		1=enable joystick port, 0=don't		        */
 end_comment
 
 begin_define
@@ -647,7 +665,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* R	FM		1=stereo, 0=mono FM chip			*/
+comment|/* R	FM		1=sterero, 0=mono FM chip			*/
 end_comment
 
 begin_define
@@ -915,7 +933,7 @@ comment|/* R W	Mixer		Filter translation				*/
 end_comment
 
 begin_comment
-unit|unsigned int freq:24; 		unsigned int value:8; 	} F_F_FILTER_translate[] = 	{ { 73500, 0x01 },
+unit|unsigned int freq:24; 		unsigned int value:8; 	} F_F_FILTER_translate[] =  	{ { 73500, 0x01 },
 comment|/* 73500Hz - divide by  16 */
 end_comment
 
@@ -1001,17 +1019,6 @@ end_define
 
 begin_comment
 comment|/* R W 	PCM		1=enable, 0=disable sample buffer counter	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHIP_REV
-value|0xFF88
-end_define
-
-begin_comment
-comment|/* R	Control		0=PAS, 1=PAS+, 2=CDPC, 3=PAS16C, 4=PAS16D	*/
 end_comment
 
 begin_define

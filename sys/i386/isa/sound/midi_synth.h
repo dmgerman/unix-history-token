@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * midi_synth.h,v 1.2 1994/10/01 02:16:47 swallace Exp  */
-end_comment
-
 begin_function_decl
 name|int
 name|midi_synth_ioctl
@@ -231,6 +227,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|midi_synth_setup_voice
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|voice
+parameter_list|,
+name|int
+name|chn
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -310,6 +322,11 @@ block|,
 name|midi_synth_patchmgr
 block|,
 name|midi_synth_bender
+block|,
+name|NULL
+block|,
+comment|/* alloc_voice */
+name|midi_synth_setup_voice
 block|}
 decl_stmt|;
 end_decl_stmt

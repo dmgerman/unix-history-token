@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/opl3.c  *  * A low level driver for Yamaha YM3812 and OPL-3 -chips  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * opl3.c,v 1.7 1994/10/01 02:16:50 swallace Exp  */
+comment|/*  * sound/opl3.c  *  * A low level driver for Yamaha YM3812 and OPL-3 -chips  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/*  * Major improvements to the FM handling 30AUG92 by Rob Hooft,  * hooft@chem.ruu.nl  */
+comment|/*  * Major improvements to the FM handling 30AUG92 by Rob Hooft,  */
+end_comment
+
+begin_comment
+comment|/*  * hooft@chem.ruu.nl  */
 end_comment
 
 begin_include
@@ -56,6 +60,15 @@ begin_decl_stmt
 specifier|static
 name|int
 name|opl3_enabled
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|opl4_enabled
 init|=
 literal|0
 decl_stmt|;
@@ -800,6 +813,8 @@ name|char
 name|stat1
 decl_stmt|,
 name|stat2
+decl_stmt|,
+name|signature
 decl_stmt|;
 name|int
 name|i
@@ -822,6 +837,7 @@ name|ioaddr
 operator|=
 name|left_address
 expr_stmt|;
+comment|/* Reset timers 1 and 2 */
 name|opl3_command
 argument_list|(
 name|ioaddr
@@ -833,7 +849,7 @@ operator||
 name|TIMER2_MASK
 argument_list|)
 expr_stmt|;
-comment|/* 										 * Reset 										 * timers 										 * 1 										 * and 										 * 2 										 */
+comment|/* Reset the IRQ of the FM chip */
 name|opl3_command
 argument_list|(
 name|ioaddr
@@ -843,7 +859,8 @@ argument_list|,
 name|IRQ_RESET
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Reset the 								 * IRQ of FM 								 * * chicp 								 */
+name|signature
+operator|=
 name|stat1
 operator|=
 name|INB
@@ -851,7 +868,7 @@ argument_list|(
 name|ioaddr
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Read status register 				 */
+comment|/* Status register */
 if|if
 condition|(
 operator|(
@@ -877,7 +894,7 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Set timer 1 to 							 * 0xff 							 */
+comment|/* Set timer1 to 0xff */
 name|opl3_command
 argument_list|(
 name|ioaddr
@@ -890,7 +907,7 @@ name|TIMER1_START
 argument_list|)
 expr_stmt|;
 comment|/* 						 * Unmask and start timer 1 						 */
-comment|/*    * Now we have to delay at least 80 msec    */
+comment|/*    * Now we have to delay at least 80 usec    */
 for|for
 control|(
 name|i
@@ -907,7 +924,6 @@ control|)
 name|tenmicrosec
 argument_list|()
 expr_stmt|;
-comment|/* 				 * To be sure 				 */
 name|stat2
 operator|=
 name|INB
@@ -917,6 +933,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 				 * Read status after timers have expired 				 */
 comment|/*    * Stop the timers    */
+comment|/* Reset timers 1 and 2 */
 name|opl3_command
 argument_list|(
 name|ioaddr
@@ -928,7 +945,7 @@ operator||
 name|TIMER2_MASK
 argument_list|)
 expr_stmt|;
-comment|/* 										 * Reset 										 * timers 										 * 1 										 * and 										 * 2 										 */
+comment|/* Reset the IRQ of the FM chip */
 name|opl3_command
 argument_list|(
 name|ioaddr
@@ -938,7 +955,6 @@ argument_list|,
 name|IRQ_RESET
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Reset the 								 * IRQ of FM 								 * * chicp 								 */
 if|if
 condition|(
 operator|(
@@ -955,7 +971,106 @@ literal|0
 return|;
 comment|/* 				 * There is no YM3812 				 */
 block|}
-comment|/*    * There is a FM chicp in this address. Now set some default values.    */
+comment|/*    * There is a FM chicp in this address. Detect the type (OPL2 to OPL4)    */
+if|if
+condition|(
+name|signature
+operator|==
+literal|0x06
+condition|)
+comment|/* OPL2 */
+block|{
+name|opl3_enabled
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|signature
+operator|==
+literal|0x00
+condition|)
+comment|/* OPL3 or OPL4 */
+block|{
+name|unsigned
+name|char
+name|tmp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|opl3_enabled
+condition|)
+comment|/* Was not already enabled */
+block|{
+name|left_address
+operator|=
+name|ioaddr
+expr_stmt|;
+name|right_address
+operator|=
+name|ioaddr
+operator|+
+literal|2
+expr_stmt|;
+name|opl3_enabled
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/*        * Detect availability of OPL4 (_experimental_). Works propably        * only after a cold boot. In addition the OPL4 port        * of the chip may not be connected to the PC bus at all.        */
+name|opl3_command
+argument_list|(
+name|right_address
+argument_list|,
+name|OPL3_MODE_REGISTER
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+name|opl3_command
+argument_list|(
+name|right_address
+argument_list|,
+name|OPL3_MODE_REGISTER
+argument_list|,
+name|OPL3_ENABLE
+operator||
+name|OPL4_ENABLE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tmp
+operator|=
+name|INB
+argument_list|(
+name|ioaddr
+argument_list|)
+operator|)
+operator|==
+literal|0x02
+condition|)
+comment|/* Have a OPL4 */
+block|{
+name|opl4_enabled
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|opl3_command
+argument_list|(
+name|right_address
+argument_list|,
+name|OPL3_MODE_REGISTER
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1485,7 +1600,7 @@ block|,
 operator|-
 literal|6
 block|,
-comment|/* 					 * 32 -  39 					 */
+comment|/* 					   * 32 -  39 					 */
 operator|-
 literal|5
 block|,
@@ -1510,7 +1625,7 @@ block|,
 operator|-
 literal|4
 block|,
-comment|/* 					 * 40 -  47 					 */
+comment|/* 					   * 40 -  47 					 */
 operator|-
 literal|3
 block|,
@@ -1535,7 +1650,7 @@ block|,
 operator|-
 literal|2
 block|,
-comment|/* 					 * 48 -  55 					 */
+comment|/* 					   * 48 -  55 					 */
 operator|-
 literal|2
 block|,
@@ -1964,7 +2079,7 @@ argument_list|,
 name|vol1
 argument_list|)
 expr_stmt|;
-comment|/* 									 * Modulator 									 * volume 									 */
+comment|/* 									   * Modulator 									   * volume 									 */
 name|opl3_command
 argument_list|(
 name|map
@@ -1983,7 +2098,7 @@ argument_list|,
 name|vol2
 argument_list|)
 expr_stmt|;
-comment|/* 									 * Carrier 									 * volume 									 */
+comment|/* 									   * Carrier 									   * volume 									 */
 block|}
 else|else
 block|{
@@ -2149,7 +2264,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 				 * Why ?? 	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  	  				 */
+comment|/* 				 * Why ?? 				 */
 empty_stmt|;
 block|}
 name|opl3_command
@@ -3717,6 +3832,9 @@ name|int
 name|mode
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -3742,6 +3860,57 @@ name|opl3_busy
 operator|=
 literal|1
 expr_stmt|;
+name|voice_alloc
+operator|->
+name|max_voice
+operator|=
+name|nr_voices
+operator|=
+name|opl3_enabled
+condition|?
+literal|18
+else|:
+literal|9
+expr_stmt|;
+name|voice_alloc
+operator|->
+name|timestamp
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|18
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|voice_alloc
+operator|->
+name|map
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|voice_alloc
+operator|->
+name|alloc_times
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|connection_mask
 operator|=
 literal|0x00
@@ -4588,7 +4757,15 @@ name|i
 decl_stmt|,
 name|p
 decl_stmt|,
+name|best
+decl_stmt|,
+name|first
+decl_stmt|,
 name|avail_voices
+decl_stmt|,
+name|best_time
+init|=
+literal|0x7fffffff
 decl_stmt|;
 name|struct
 name|sbi_instrument
@@ -4679,6 +4856,8 @@ condition|(
 name|is4op
 condition|)
 block|{
+name|first
+operator|=
 name|p
 operator|=
 literal|0
@@ -4697,11 +4876,15 @@ operator|==
 literal|12
 condition|)
 comment|/* 4 OP mode. Use the '2 OP only' voices first */
+name|first
+operator|=
 name|p
 operator|=
 literal|6
 expr_stmt|;
 else|else
+name|first
+operator|=
 name|p
 operator|=
 literal|0
@@ -4711,7 +4894,11 @@ operator|=
 name|nr_voices
 expr_stmt|;
 block|}
-comment|/*  *    Now try to find a free voice  */
+comment|/*      *    Now try to find a free voice    */
+name|best
+operator|=
+name|first
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4742,6 +4929,33 @@ return|return
 name|p
 return|;
 block|}
+if|if
+condition|(
+name|alloc
+operator|->
+name|alloc_times
+index|[
+name|p
+index|]
+operator|<
+name|best_time
+condition|)
+comment|/* Find oldest playing note */
+block|{
+name|best_time
+operator|=
+name|alloc
+operator|->
+name|alloc_times
+index|[
+name|p
+index|]
+expr_stmt|;
+name|best
+operator|=
+name|p
+expr_stmt|;
+block|}
 name|p
 operator|=
 operator|(
@@ -4750,19 +4964,90 @@ operator|+
 literal|1
 operator|)
 operator|%
-name|nr_voices
+name|avail_voices
 expr_stmt|;
 block|}
-comment|/*  *    Insert some kind of priority mechanism here.  */
-name|printk
-argument_list|(
-literal|"OPL3: Out of free voices\n"
-argument_list|)
+comment|/*      *    Insert some kind of priority mechanism here.    */
+if|if
+condition|(
+name|best
+operator|<
+literal|0
+condition|)
+name|best
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|best
+operator|>
+name|nr_voices
+condition|)
+name|best
+operator|-=
+name|nr_voices
 expr_stmt|;
 return|return
-literal|0
+name|best
 return|;
 comment|/* All voices in use. Select the first one. */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|opl3_setup_voice
+parameter_list|(
+name|int
+name|dev
+parameter_list|,
+name|int
+name|voice
+parameter_list|,
+name|int
+name|chn
+parameter_list|)
+block|{
+name|struct
+name|channel_info
+modifier|*
+name|info
+init|=
+operator|&
+name|synth_devs
+index|[
+name|dev
+index|]
+operator|->
+name|chn_info
+index|[
+name|chn
+index|]
+decl_stmt|;
+name|opl3_set_instr
+argument_list|(
+name|dev
+argument_list|,
+name|voice
+argument_list|,
+name|info
+operator|->
+name|pgm_num
+argument_list|)
+expr_stmt|;
+name|voices
+index|[
+name|voice
+index|]
+operator|.
+name|bender
+operator|=
+name|info
+operator|->
+name|bender_value
+expr_stmt|;
 block|}
 end_function
 
@@ -4813,6 +5098,8 @@ block|,
 name|opl3_bender
 block|,
 name|opl3_alloc_voice
+block|,
+name|opl3_setup_voice
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4900,9 +5187,22 @@ condition|(
 name|opl3_enabled
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|if
+condition|(
+name|opl4_enabled
+condition|)
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+name|printk
+argument_list|(
+literal|"opl0:<Yamaha OPL4/OPL3 FM>"
+argument_list|)
+expr_stmt|;
+else|else
 name|printk
 argument_list|(
 literal|"opl0:<Yamaha OPL-3 FM>"
@@ -4910,6 +5210,12 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|printk
+argument_list|(
+literal|"<Yamaha OPL4/OPL3 FM>"
+argument_list|)
+expr_stmt|;
+else|else
 name|printk
 argument_list|(
 literal|"<Yamaha OPL-3 FM>"
@@ -4941,9 +5247,6 @@ name|capabilities
 operator||=
 name|SYNTH_CAP_OPL3
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCO
 name|strcpy
 argument_list|(
 name|fm_info
@@ -4953,8 +5256,6 @@ argument_list|,
 literal|"Yamaha OPL-3"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|i
@@ -4998,7 +5299,6 @@ name|ioaddr
 operator|=
 name|right_address
 expr_stmt|;
-comment|/* Enable OPL-3 mode */
 name|opl3_command
 argument_list|(
 name|right_address
@@ -5008,7 +5308,7 @@ argument_list|,
 name|OPL3_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* Select all 2-OP voices */
+comment|/* 									 * Enable 									 * OPL-3 									 * mode 									 */
 name|opl3_command
 argument_list|(
 name|right_address
@@ -5018,12 +5318,16 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
+comment|/* 									 * Select 									 * all 									 * 2-OP 									 * * 									 * voices 									 */
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|printk
 argument_list|(
 literal|"opl0:<Yamaha 2-OP FM>"

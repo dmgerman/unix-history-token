@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/uart6850.c  *  * Copyright by Hannu Savolainen 1993  *  * Mon Nov 22 22:38:35 MET 1993 marco@driq.home.usn.nl:  *      added 6850 support, used with COVOX SoundMaster II and custom cards.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * uart6850.c,v 1.2 1994/10/01 02:17:17 swallace Exp  */
+comment|/*  * sound/uart6850.c  *  * Copyright by Hannu Savolainen 1993  *  * Mon Nov 22 22:38:35 MET 1993 marco@driq.home.usn.nl:  *      added 6850 support, used with COVOX SoundMaster II and custom cards.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met: 1. Redistributions of source code must retain the above copyright  * notice, this list of conditions and the following disclaimer. 2.  * Redistributions in binary form must reproduce the above copyright notice,  * this list of conditions and the following disclaimer in the documentation  * and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -295,19 +295,18 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 name|void
 name|m6850intr
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-block|{
-name|printk
 argument_list|(
-literal|"M"
+name|INTR_HANDLER_PARMS
+argument_list|(
+name|irq
+argument_list|,
+name|dummy
 argument_list|)
-expr_stmt|;
+argument_list|)
+block|{
 if|if
 condition|(
 name|input_avail
@@ -317,7 +316,7 @@ name|uart6850_input_loop
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * It looks like there is no input interrupts in the UART mode. Let's try  * polling.  */
@@ -715,6 +714,10 @@ block|,
 operator|&
 name|std_midi_synth
 block|,
+block|{
+literal|0
+block|}
+block|,
 name|uart6850_open
 block|,
 name|uart6850_close
@@ -835,9 +838,12 @@ argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
 name|printk
 argument_list|(
 literal|"uart0:<6850 Midi Interface>"
@@ -927,6 +933,8 @@ argument_list|(
 name|uart6850_irq
 argument_list|,
 name|m6850intr
+argument_list|,
+literal|"MIDI6850"
 argument_list|)
 operator|<
 literal|0
