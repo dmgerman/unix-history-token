@@ -1448,11 +1448,20 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"   srr0            = 0x%x"
+literal|"   srr0            = 0x%x\n"
 argument_list|,
 name|frame
 operator|->
 name|srr0
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   srr1            = 0x%x\n"
+argument_list|,
+name|frame
+operator|->
+name|srr1
 argument_list|)
 expr_stmt|;
 name|printf
