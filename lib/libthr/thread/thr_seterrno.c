@@ -19,22 +19,11 @@ begin_comment
 comment|/*  * This function needs to reference the global error variable which is  * normally hidden from the user.   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|errno
-end_ifdef
-
 begin_undef
 undef|#
 directive|undef
 name|errno
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -59,7 +48,11 @@ if|if
 condition|(
 name|thread
 operator|==
-name|_thread_initial
+name|NULL
+operator|||
+name|thread
+operator|==
+name|_thr_initial
 condition|)
 comment|/* The initial thread always uses the global error variable: */
 name|errno

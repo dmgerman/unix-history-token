@@ -32,10 +32,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|_thr_check_init
+argument_list|()
+expr_stmt|;
 comment|/* Return the running thread pointer: */
 return|return
 operator|(
-name|curthread
+name|_get_curthread
+argument_list|()
 operator|)
 return|;
 block|}

@@ -141,27 +141,15 @@ literal|"Waiting on a mutex"
 block|}
 block|,
 block|{
-name|PS_COND_WAIT
-block|,
-literal|"Waiting on a condition variable"
-block|}
-block|,
-block|{
-name|PS_SLEEP_WAIT
-block|,
-literal|"Sleeping"
-block|}
-block|,
-block|{
-name|PS_WAIT_WAIT
-block|,
-literal|"Waiting process"
-block|}
-block|,
-block|{
 name|PS_JOIN
 block|,
 literal|"Waiting to join"
+block|}
+block|,
+block|{
+name|PS_SUSPENDED
+block|,
+literal|"Suspended"
 block|}
 block|,
 block|{
@@ -197,21 +185,19 @@ name|s
 index|[
 literal|512
 index|]
-decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|pthread_t
-name|pthread
-decl_stmt|;
-name|char
+decl_stmt|,
 name|tmpfile
 index|[
 literal|128
 index|]
+decl_stmt|;
+name|pthread_t
+name|pthread
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|,
+name|i
 decl_stmt|;
 for|for
 control|(
@@ -236,7 +222,7 @@ argument_list|(
 name|tmpfile
 argument_list|)
 argument_list|,
-literal|"/tmp/uthread.dump.%u.%i"
+literal|"/tmp/pthread.dump.%u.%i"
 argument_list|,
 name|getpid
 argument_list|()
@@ -295,12 +281,12 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* Output a header for active threads: */
+comment|/* Dump the active threads. */
 name|strcpy
 argument_list|(
 name|s
 argument_list|,
-literal|"\n\n=============\nACTIVE THREADS\n\n"
+literal|"\n\n========\nACTIVE THREADS\n\n"
 argument_list|)
 expr_stmt|;
 name|__sys_write
@@ -325,6 +311,14 @@ argument_list|,
 argument|tle
 argument_list|)
 block|{
+if|if
+condition|(
+name|pthread
+operator|->
+name|state
+operator|!=
+name|PS_DEAD
+condition|)
 name|dump_thread
 argument_list|(
 name|fd
@@ -336,26 +330,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check if there are no dead threads: */
-name|DEAD_LIST_LOCK
-expr_stmt|;
-if|if
-condition|(
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|_dead_list
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* Output a record: */
+comment|/* 		 * Dump the ready threads. 		 * XXX - We can't easily do this because the run queues 		 *       are per-KSEG. 		 */
 name|strcpy
 argument_list|(
 name|s
 argument_list|,
-literal|"\n\nTHERE ARE NO DEAD THREADS\n"
+literal|"\n\n========\nREADY THREADS - unimplemented\n\n"
 argument_list|)
 expr_stmt|;
 name|__sys_write
@@ -370,15 +350,12 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Output a header for dead threads: */
+comment|/* 		 * Dump the waiting threads. 		 * XXX - We can't easily do this because the wait queues 		 *       are per-KSEG. 		 */
 name|strcpy
 argument_list|(
 name|s
 argument_list|,
-literal|"\n\nDEAD THREADS\n\n"
+literal|"\n\n========\nWAITING THREADS - unimplemented\n\n"
 argument_list|)
 expr_stmt|;
 name|__sys_write
@@ -393,31 +370,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Enter a loop to report each thread in the global 			 * dead thread list: 			 */
-name|TAILQ_FOREACH
-argument_list|(
-argument|pthread
-argument_list|,
-argument|&_dead_list
-argument_list|,
-argument|dle
-argument_list|)
-block|{
-name|dump_thread
-argument_list|(
-name|fd
-argument_list|,
-name|pthread
-argument_list|,
-comment|/*long_version*/
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|DEAD_LIST_UNLOCK
-expr_stmt|;
-comment|/* Close the dump file: */
+comment|/* Close the dump file. */
 name|__sys_close
 argument_list|(
 name|fd
@@ -442,6 +395,14 @@ name|int
 name|long_version
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|char
 name|s
 index|[
@@ -494,7 +455,8 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|,
-literal|"--------------------\nThread %p (%s) prio %3d state %s [%s:%d]\n"
+literal|"--------------------\n"
+literal|"Thread %p (%s), scope %s, prio %3d, state %s [%s:%d]\n"
 argument_list|,
 name|pthread
 argument_list|,
@@ -511,6 +473,18 @@ else|:
 name|pthread
 operator|->
 name|name
+argument_list|,
+name|pthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_SCOPE_SYSTEM
+condition|?
+literal|"system"
+else|:
+literal|"process"
 argument_list|,
 name|pthread
 operator|->
@@ -585,7 +559,7 @@ if|if
 condition|(
 name|pthread
 operator|==
-name|_thread_initial
+name|_thr_initial
 condition|)
 block|{
 comment|/* Output a record for the initial thread: */
@@ -619,7 +593,104 @@ condition|)
 block|{
 comment|/* 		 * Trap other states that are not explicitly 		 * coded to dump information: 		 */
 default|default:
-comment|/* Nothing to do here. */
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+literal|"sigmask (hi) "
+argument_list|)
+expr_stmt|;
+name|__sys_write
+argument_list|(
+name|fd
+argument_list|,
+name|s
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|_SIG_WORDS
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+block|{
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+literal|"%08x "
+argument_list|,
+name|pthread
+operator|->
+name|sigmask
+operator|.
+name|__bits
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|__sys_write
+argument_list|(
+name|fd
+argument_list|,
+name|s
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
+argument_list|,
+literal|"(lo)\n"
+argument_list|)
+expr_stmt|;
+name|__sys_write
+argument_list|(
+name|fd
+argument_list|,
+name|s
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -637,7 +708,6 @@ parameter_list|(
 name|pthread_t
 name|thread
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|name
@@ -654,7 +724,7 @@ name|thread
 operator|->
 name|magic
 operator|==
-name|PTHREAD_MAGIC
+name|THR_MAGIC
 condition|)
 block|{
 if|if
