@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/ed.h,v 3.30 2000/11/11 23:03:34 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/ed.h,v 3.31 2001/02/19 23:30:44 kim Exp $ */
 end_comment
 
 begin_comment
@@ -670,28 +670,58 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Char
-name|KillBuf
-index|[
-name|INBUFSIZE
-index|]
+name|CStr
+modifier|*
+name|KillRing
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* kill buffer */
+comment|/* kill ring */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|Char
-modifier|*
-name|LastKill
+name|int
+name|KillRingMax
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* points to end of kill buffer */
+comment|/* max length of kill ring */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|KillRingLen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current length of kill ring */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|KillPos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* points to next kill */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|YankPos
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* points to next yank */
 end_comment
 
 begin_decl_stmt
