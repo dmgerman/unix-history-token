@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	6.1	%G%	*/
+comment|/*	saio.h	6.2	%G%	*/
 end_comment
 
 begin_comment
@@ -181,6 +181,17 @@ end_define
 
 begin_comment
 comment|/* set skip sector inhibit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SEVRE
+value|0x80
+end_define
+
+begin_comment
+comment|/* Severe burnin (no retries, no ECC) */
 end_comment
 
 begin_comment
@@ -678,6 +689,28 @@ end_define
 
 begin_comment
 comment|/* enable/disable debugging */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIOSEVRE
+value|(('d'<<8)|13)
+end_define
+
+begin_comment
+comment|/* severe burnin, no ECC, no retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIONSEVRE
+value|(('d'<<8)|14)
+end_define
+
+begin_comment
+comment|/* clear severe burnin */
 end_comment
 
 begin_comment

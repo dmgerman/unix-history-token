@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys.c	6.1	83/07/29	*/
+comment|/*	sys.c	6.2	83/09/23	*/
 end_comment
 
 begin_include
@@ -3084,6 +3084,27 @@ name|i_flgs
 operator|&=
 operator|~
 name|F_ECCLM
+expr_stmt|;
+break|break;
+case|case
+name|SAIOSEVRE
+case|:
+name|file
+operator|->
+name|i_flgs
+operator||=
+name|F_SEVRE
+expr_stmt|;
+break|break;
+case|case
+name|SAIONSEVRE
+case|:
+name|file
+operator|->
+name|i_flgs
+operator|&=
+operator|~
+name|F_SEVRE
 expr_stmt|;
 break|break;
 default|default:
