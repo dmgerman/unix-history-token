@@ -65,6 +65,7 @@ specifier|static
 name|int
 name|find_pkg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -95,6 +96,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|abspath
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|pkg_perform
@@ -110,6 +124,7 @@ modifier|*
 modifier|*
 name|matched
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tmp
@@ -767,6 +782,8 @@ operator|&
 name|plist
 argument_list|,
 name|PLIST_PKGDEP
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -839,8 +856,9 @@ argument_list|,
 operator|(
 name|plist_t
 operator|)
-operator|-
-literal|1
+literal|0
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -957,6 +975,8 @@ operator|&
 name|plist
 argument_list|,
 name|PLIST_CWD
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1105,6 +1125,7 @@ comment|/*  * Return an absolute path, additionally removing all .'s, ..'s, and 
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|abspath
@@ -1449,6 +1470,7 @@ specifier|static
 name|int
 name|find_pkg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|db_dir
@@ -1483,6 +1505,7 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|msg

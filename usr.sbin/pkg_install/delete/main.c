@@ -158,6 +158,7 @@ name|char
 modifier|*
 name|pkgs_split
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|tmp

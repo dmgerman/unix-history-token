@@ -57,7 +57,7 @@ name|TOOBIG
 parameter_list|(
 name|str
 parameter_list|)
-value|((strlen(str) + FILENAME_MAX + where_count> maxargs) \ 		|| (strlen(str) + FILENAME_MAX + perm_count> maxargs))
+value|(((int)strlen(str) + FILENAME_MAX + where_count> maxargs) \ 		|| ((int)strlen(str) + FILENAME_MAX + perm_count> maxargs))
 end_define
 
 begin_define
@@ -69,7 +69,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar --unlink -xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) { \ 	                cleanup(0); \ 		        errx(2, __FUNCTION__ ": can not invoke %d byte tar pipeline: %s", \ 			     strlen(where_args), where_args); \ 		    } \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
+value|if (where_count> (int)sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar --unlink -xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) { \ 	                cleanup(0); \ 		        errx(2, __FUNCTION__ ": can not invoke %ld byte tar pipeline: %s", \ 			     (long)strlen(where_args), where_args); \ 		    } \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
 end_define
 
 begin_function
@@ -77,10 +77,12 @@ specifier|static
 name|void
 name|rollback
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|home
@@ -105,7 +107,9 @@ name|bup
 index|[
 name|FILENAME_MAX
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|dir
 decl_stmt|;
@@ -252,6 +256,7 @@ begin_function
 name|void
 name|extract_plist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|home
@@ -419,6 +424,11 @@ name|last_file
 operator|=
 name|NULL
 expr_stmt|;
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|Directory
 operator|=
 name|home
@@ -954,6 +964,11 @@ name|name
 expr_stmt|;
 block|}
 else|else
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|Directory
 operator|=
 name|home

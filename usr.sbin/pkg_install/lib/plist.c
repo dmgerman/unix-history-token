@@ -58,6 +58,7 @@ parameter_list|,
 name|plist_t
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -142,6 +143,7 @@ parameter_list|,
 name|plist_t
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|arg
@@ -342,6 +344,7 @@ name|Package
 modifier|*
 name|pkg
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -413,6 +416,7 @@ parameter_list|,
 name|plist_t
 name|type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -652,6 +656,7 @@ begin_function
 name|int
 name|plist_cmd
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -674,7 +679,9 @@ comment|/* 20 == fudge for max cmd len */
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|sp
 decl_stmt|;
@@ -743,6 +750,11 @@ if|if
 condition|(
 name|arg
 condition|)
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 operator|*
 name|arg
 operator|=
@@ -1528,6 +1540,7 @@ block|{
 name|PackingList
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|Where
@@ -2091,6 +2104,7 @@ begin_function
 name|int
 name|delete_hierarchy
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -2113,7 +2127,10 @@ name|cp1
 operator|=
 name|cp2
 operator|=
+name|strdup
+argument_list|(
 name|dir
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2306,7 +2323,10 @@ condition|)
 block|{
 name|cp1
 operator|=
+name|strdup
+argument_list|(
 name|dir
+argument_list|)
 expr_stmt|;
 block|}
 block|}

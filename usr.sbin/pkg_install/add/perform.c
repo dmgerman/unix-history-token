@@ -563,6 +563,10 @@ literal|1
 argument_list|,
 literal|"unable to make playpen for %qd bytes"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
@@ -802,6 +806,10 @@ literal|"projected size of %qd exceeds available free space.\n"
 literal|"Please set your PKG_TMPDIR variable to point to a location with more\n"
 literal|"free space and try again"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
@@ -950,6 +958,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Protect against old packages with bogus @name fields */
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|PkgName
 operator|=
 operator|(
@@ -1801,7 +1814,7 @@ index|]
 decl_stmt|;
 name|FILE
 modifier|*
-name|cfile
+name|contfile
 decl_stmt|;
 if|if
 condition|(
@@ -2041,7 +2054,7 @@ argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
 expr_stmt|;
-name|cfile
+name|contfile
 operator|=
 name|fopen
 argument_list|(
@@ -2053,7 +2066,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cfile
+name|contfile
 condition|)
 block|{
 name|warnx
@@ -2073,12 +2086,12 @@ argument_list|(
 operator|&
 name|Plist
 argument_list|,
-name|cfile
+name|contfile
 argument_list|)
 expr_stmt|;
 name|fclose
 argument_list|(
-name|cfile
+name|contfile
 argument_list|)
 expr_stmt|;
 for|for
@@ -2128,7 +2141,7 @@ literal|"%s/%s/%s"
 argument_list|,
 name|LOG_DIR
 argument_list|,
-name|basename_of
+name|basename
 argument_list|(
 name|p
 operator|->
@@ -2138,7 +2151,7 @@ argument_list|,
 name|REQUIRED_BY_FNAME
 argument_list|)
 expr_stmt|;
-name|cfile
+name|contfile
 operator|=
 name|fopen
 argument_list|(
@@ -2150,7 +2163,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cfile
+name|contfile
 condition|)
 name|warnx
 argument_list|(
@@ -2164,7 +2177,7 @@ else|else
 block|{
 name|fprintf
 argument_list|(
-name|cfile
+name|contfile
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -2175,7 +2188,7 @@ if|if
 condition|(
 name|fclose
 argument_list|(
-name|cfile
+name|contfile
 argument_list|)
 operator|==
 name|EOF

@@ -729,6 +729,11 @@ literal|"-"
 argument_list|)
 condition|)
 comment|/* stdin? */
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|pkgs
 index|[
 name|ch

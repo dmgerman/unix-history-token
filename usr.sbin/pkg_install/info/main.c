@@ -82,6 +82,13 @@ name|char
 modifier|*
 name|InfoPrefix
 init|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
 literal|""
 decl_stmt|;
 end_decl_stmt

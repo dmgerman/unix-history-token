@@ -71,10 +71,12 @@ begin_function
 name|void
 name|show_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|title
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -179,10 +181,12 @@ begin_function
 name|void
 name|show_index
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|title
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -296,13 +300,14 @@ block|}
 end_function
 
 begin_comment
-comment|/* Show a packing list item type.  If type is -1, show all */
+comment|/* Show a packing list item type.  If showall is TRUE, show all */
 end_comment
 
 begin_function
 name|void
 name|show_plist
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|title
@@ -313,6 +318,9 @@ name|plist
 parameter_list|,
 name|plist_t
 name|type
+parameter_list|,
+name|Boolean
+name|showall
 parameter_list|)
 block|{
 name|PackingList
@@ -356,10 +364,9 @@ name|type
 operator|!=
 name|type
 operator|&&
-name|type
+name|showall
 operator|!=
-operator|-
-literal|1
+name|TRUE
 condition|)
 block|{
 name|p
@@ -741,6 +748,7 @@ begin_function
 name|void
 name|show_files
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|title
@@ -758,6 +766,7 @@ name|ign
 init|=
 name|FALSE
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -860,6 +869,7 @@ begin_function
 name|void
 name|show_size
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|title
@@ -877,6 +887,7 @@ name|ign
 init|=
 name|FALSE
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -1094,6 +1105,7 @@ begin_function
 name|void
 name|show_cksum
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|title
@@ -1106,6 +1118,7 @@ block|{
 name|PackingList
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -1307,6 +1320,7 @@ begin_function
 name|void
 name|show_origin
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|title

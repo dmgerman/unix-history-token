@@ -107,7 +107,7 @@ name|char
 modifier|*
 name|pen
 parameter_list|,
-name|size_t
+name|off_t
 name|sz
 parameter_list|)
 block|{
@@ -337,9 +337,12 @@ literal|2
 argument_list|,
 name|__FUNCTION__
 literal|": can't find enough temporary space to extract the files, please set your\n"
-literal|"PKG_TMPDIR environment variable to a location with at least %d bytes\n"
+literal|"PKG_TMPDIR environment variable to a location with at least %ld bytes\n"
 literal|"free"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sz
 argument_list|)
 expr_stmt|;
@@ -386,6 +389,7 @@ specifier|static
 name|void
 name|pushPen
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pen
@@ -481,7 +485,7 @@ name|char
 modifier|*
 name|pen
 parameter_list|,
-name|size_t
+name|off_t
 name|sz
 parameter_list|)
 block|{
@@ -571,6 +575,10 @@ name|int
 operator|)
 name|sz
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|min_free
 argument_list|(
 name|pen
@@ -805,6 +813,7 @@ begin_function
 name|off_t
 name|min_free
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|tmpdir
