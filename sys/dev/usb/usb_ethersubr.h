@@ -244,5 +244,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _USB_ETHERSUBR_H_ */
+end_comment
+
 end_unit
 

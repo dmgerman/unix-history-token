@@ -175,5 +175,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _USB_IF_CDCEREG_H_ */
+end_comment
+
 end_unit
 

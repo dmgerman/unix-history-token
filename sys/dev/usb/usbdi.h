@@ -1549,5 +1549,9 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _USBDI_H_ */
+end_comment
+
 end_unit
 
