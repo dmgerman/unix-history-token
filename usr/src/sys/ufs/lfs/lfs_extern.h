@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -285,6 +285,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|lfs_initseg
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lfs
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|lfs_link
 name|__P
 argument_list|(
@@ -489,6 +503,10 @@ operator|(
 expr|struct
 name|lfs
 operator|*
+operator|,
+name|unsigned
+name|long
+name|flags
 operator|)
 argument_list|)
 decl_stmt|;
@@ -728,6 +746,34 @@ operator|*
 operator|,
 expr|struct
 name|fid
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfs_vref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|lfs_vunref
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
 operator|*
 operator|)
 argument_list|)
