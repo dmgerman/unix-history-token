@@ -450,7 +450,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Policy -- Can ucred cr1 send SIGIO to process cr2?  */
+comment|/*  * Policy -- Can ucred cr1 send SIGIO to process cr2?  * XXX: should use suser(), p_cansignal().  */
 end_comment
 
 begin_define
@@ -463,7 +463,7 @@ parameter_list|,
 name|cr2
 parameter_list|)
 define|\
-value|((cr1)->cr_uid == 0 || \ 	    (cr2)->cr_ruid == (cr2)->cr_ruid || \ 	    (cr2)->cr_uid == (cr2)->cr_ruid || \ 	    (cr2)->cr_ruid == (cr2)->cr_uid || \ 	    (cr2)->cr_uid == (cr2)->cr_uid)
+value|((cr1)->cr_uid == 0 || \ 	    (cr1)->cr_ruid == (cr2)->cr_ruid || \ 	    (cr1)->cr_uid == (cr2)->cr_ruid || \ 	    (cr1)->cr_ruid == (cr2)->cr_uid || \ 	    (cr1)->cr_uid == (cr2)->cr_uid)
 end_define
 
 begin_decl_stmt
