@@ -181,9 +181,6 @@ name|int
 name|if_vec
 decl_stmt|;
 name|int
-name|if_ppl
-decl_stmt|;
-name|int
 name|if_fs
 decl_stmt|;
 name|int
@@ -258,9 +255,6 @@ name|clockframe
 block|{
 name|int
 name|cf_vec
-decl_stmt|;
-name|int
-name|cf_ppl
 decl_stmt|;
 name|int
 name|cf_fs
