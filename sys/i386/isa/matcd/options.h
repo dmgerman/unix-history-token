@@ -156,6 +156,7 @@ name|AUTOHUNT
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|port_hints
 index|[]

@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id:$ */
+comment|/* $Id: matcd.c,v 1.12 1995/12/08 11:16:24 julian Exp $ */
 end_comment
 
 begin_comment
@@ -1143,7 +1143,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|int
 name|matcd_probe
 parameter_list|(
@@ -1156,7 +1156,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|int
 name|matcd_attach
 parameter_list|(
@@ -4911,6 +4911,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|matcd_probe
 parameter_list|(
@@ -5753,6 +5754,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|matcd_attach
 parameter_list|(
@@ -7340,6 +7342,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|matcd_setmode
 parameter_list|(

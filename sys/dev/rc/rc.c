@@ -159,6 +159,7 @@ comment|/* Prototypes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rcprobe
 name|__P
@@ -173,6 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rcattach
 name|__P
@@ -619,6 +621,7 @@ comment|/* for pstat -t */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tty
 name|rc_tty
@@ -631,6 +634,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nrc_tty
 init|=
@@ -1099,6 +1103,7 @@ comment|/* Quick device probing */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|rcprobe
 parameter_list|(
@@ -1382,6 +1387,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rcattach
 parameter_list|(

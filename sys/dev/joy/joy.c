@@ -210,23 +210,29 @@ name|timer0_max_count
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
 name|int
 name|joyprobe
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|isa_device
-operator|*
-argument_list|)
-decl_stmt|,
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|joyattach
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|isa_device
-operator|*
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -328,6 +334,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|int
 name|joyprobe
 parameter_list|(
@@ -380,6 +387,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|joyattach
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.12 1995/12/08 11:13:56 julian Exp $  */
+comment|/*  * CORTEX-I Frame Grabber driver V1.0  *  *	Copyright (C) 1994, Paul S. LaFollette, Jr. This software may be used,  *	modified, copied, distributed, and sold, in both source and binary form  *	provided that the above copyright and these terms are retained. Under  *	no circumstances is the author responsible for the proper functioning  *	of this software, nor does the author assume any responsibility  *	for damages incurred with its use.  *  *	$Id: ctx.c,v 1.13 1995/12/08 23:20:21 phk Exp $  */
 end_comment
 
 begin_comment
@@ -133,6 +133,7 @@ file|<machine/ioctl_ctx.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|int
 name|waitvb
 parameter_list|(
@@ -167,6 +168,7 @@ value|((x)& 0x07)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ctxprobe
 argument_list|()
@@ -301,6 +303,7 @@ comment|/*  *  Per unit shadow registers (because the dumb hardware is RO) */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|ctx_soft_registers
 block|{
@@ -461,6 +464,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ctxprobe
 parameter_list|(
@@ -511,6 +515,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ctxattach
 parameter_list|(
@@ -1906,6 +1911,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|waitvb
 parameter_list|(

@@ -96,6 +96,7 @@ file|<i386/isa/isa.h>
 include|#
 directive|include
 file|<i386/isa/isa_device.h>
+specifier|static
 expr|struct
 name|spigot_softc
 block|{
@@ -161,6 +162,7 @@ value|minor(dev)
 end_define
 
 begin_function_decl
+specifier|static
 name|int
 name|spigot_probe
 parameter_list|(
@@ -173,6 +175,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|spigot_attach
 parameter_list|(
@@ -440,6 +443,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|spigot_probe
 parameter_list|(
@@ -536,6 +540,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|spigot_attach
 parameter_list|(

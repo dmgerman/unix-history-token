@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.24 1995/12/05 02:01:13 davidg Exp $  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.25 1995/12/07 12:46:00 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1126,6 +1126,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|le_softc_t
 name|le_softc
 index|[
@@ -1135,6 +1136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|le_board_t
 name|le_boards
@@ -1197,6 +1199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|le_intrs
 index|[
@@ -4163,6 +4166,7 @@ comment|/*  * Some tuning/monitoring variables.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|lemac_deftxmax
 init|=
@@ -4175,6 +4179,7 @@ comment|/* see lemac_max above */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|lemac_txnospc
 init|=
@@ -4187,6 +4192,7 @@ comment|/* total # of tranmit starvations */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|lemac_tne_intrs
 init|=
@@ -4199,6 +4205,7 @@ comment|/* total # of tranmit done intrs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|lemac_rne_intrs
 init|=
@@ -4211,6 +4218,7 @@ comment|/* total # of receive done intrs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|lemac_txd_intrs
 init|=
@@ -4223,6 +4231,7 @@ comment|/* total # of tranmit error intrs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|lemac_rxd_intrs
 init|=
@@ -5365,8 +5374,6 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 block|}
-name|next
-label|:
 name|LE_OUTB
 argument_list|(
 name|sc
@@ -6437,6 +6444,7 @@ name|LN_DOSTATS
 end_if
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|unsigned

@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.34 1995/11/04 17:07:26 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.35 1995/12/05 02:00:52 davidg Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -374,6 +374,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|epinit
 name|__P
@@ -386,6 +387,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|epread
 name|__P
@@ -412,6 +414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|epstart
 name|__P
@@ -426,6 +429,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|epstop
 name|__P
@@ -438,6 +442,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|epwatchdog
 name|__P
@@ -480,6 +485,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ep_softc
 name|ep_softc
@@ -662,6 +668,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ep_current_tag
 init|=
@@ -672,6 +679,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|int
@@ -2250,6 +2258,7 @@ comment|/*  * The order in here seems important. Otherwise we may not receive  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|epinit
 parameter_list|(
@@ -2911,6 +2920,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|epstart
 parameter_list|(
@@ -4004,6 +4014,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|epread
 parameter_list|(
@@ -6007,6 +6018,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|epwatchdog
 parameter_list|(
@@ -6042,6 +6054,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|epstop
 parameter_list|(

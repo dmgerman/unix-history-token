@@ -304,6 +304,7 @@ comment|/* use the same as the line printer */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|twprobe
 parameter_list|()
@@ -311,6 +312,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|twattach
 parameter_list|()
@@ -485,6 +487,7 @@ comment|/* Enough for about 10 sec. of input */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|tw_sc
 block|{
@@ -714,6 +717,7 @@ comment|/* Works on my 486DX/33 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|twdelaycount
 decl_stmt|;
@@ -854,6 +858,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|twprobe
 parameter_list|(
@@ -1054,6 +1059,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|twattach
 parameter_list|(
@@ -1300,13 +1306,6 @@ index|]
 decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|int
-name|port
-init|=
-name|sc
-operator|->
-name|sc_port
 decl_stmt|;
 name|s
 operator|=
@@ -1866,6 +1865,7 @@ value|4
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|X10_START
 index|[]
@@ -1894,6 +1894,7 @@ value|8
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|X10_HOUSE
 index|[
@@ -2187,6 +2188,7 @@ value|10
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|X10_KEY
 index|[
@@ -2877,6 +2879,7 @@ comment|/*  * Tables for mapping received X-10 code back to house/key number.  *
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|short
 name|X10_HOUSE_INV
 index|[
@@ -2920,6 +2923,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 name|X10_KEY_INV
 index|[
@@ -3911,6 +3915,7 @@ operator|)
 return|;
 block|}
 comment|/*  * Abort reception that has failed to complete in the required time.  */
+specifier|static
 name|void
 name|twabortrcv
 parameter_list|(

@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.9 1995/12/06 23:42:22 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.10 1995/12/08 11:13:47 julian Exp $  */
 end_comment
 
 begin_include
@@ -762,6 +762,7 @@ comment|/***  *** THE PER-DRIVER RECORD FOR ISA.C  ***/
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|ascprobe
 parameter_list|(
@@ -774,6 +775,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ascattach
 parameter_list|(
@@ -888,23 +890,6 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_struct
-struct|struct
-name|asc_softc
-block|{
-name|struct
-name|isa_device
-modifier|*
-name|dev
-decl_stmt|;
-block|}
-name|asc_softc
-index|[
-name|NASC
-index|]
-struct|;
-end_struct
 
 begin_decl_stmt
 specifier|static
@@ -1544,14 +1529,6 @@ modifier|*
 name|scu
 parameter_list|)
 block|{
-name|unsigned
-name|char
-name|al
-init|=
-name|scu
-operator|->
-name|cmd_byte
-decl_stmt|;
 name|isa_dmastart
 argument_list|(
 name|B_READ
@@ -1613,6 +1590,7 @@ comment|/*** asc_reset  ***	resets the scanner and the config bytes...  ***/
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|asc_reset
 parameter_list|(
@@ -1702,6 +1680,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ascprobe
 parameter_list|(
@@ -1898,6 +1877,8 @@ name|lprintf
 argument_list|(
 literal|"asc%d.probe: unsupported DMA %d (only 1 or 3)\n"
 argument_list|,
+name|unit
+argument_list|,
 name|scu
 operator|->
 name|dma_num
@@ -1937,6 +1918,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ascattach
 parameter_list|(
@@ -2622,7 +2604,7 @@ name|unit
 decl_stmt|;
 name|lprintf
 argument_list|(
-literal|"asc%d.open: minor %d icnt %d\n"
+literal|"asc%d.open: minor %d icnt %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2784,6 +2766,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|asc_startread
 parameter_list|(
@@ -4014,7 +3997,7 @@ condition|)
 block|{
 name|lprintf
 argument_list|(
-literal|"asc%d.ioctl: unit was not attached successfully 0x04x\n"
+literal|"asc%d.ioctl: unit was not attached successfully %0x04x\n"
 argument_list|,
 name|unit
 argument_list|,

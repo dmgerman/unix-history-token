@@ -217,6 +217,7 @@ file|<i386/isa/if_lnc.h>
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|lnc_softc
 block|{

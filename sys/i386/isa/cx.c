@@ -412,6 +412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tty
 name|cx_tty
@@ -559,6 +560,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|void
 name|cxoproc
 parameter_list|(
@@ -571,6 +573,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|cxparam
 parameter_list|(
@@ -3123,6 +3126,7 @@ comment|/*  * Fill transmitter buffer with data.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cxout
 parameter_list|(
@@ -3729,40 +3733,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|<
-literal|2
-if|if
-condition|(
-name|tp
-operator|->
-name|t_state
-operator|&
-operator|(
-name|TS_SO_OCOMPLETE
-operator||
-name|TS_SO_OLOWAT
-operator|)
-operator|||
-name|tp
-operator|->
-name|t_wsel
-condition|)
-name|ttwwakeup
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* FreeBSD 2.x and BSDI */
 ifndef|#
 directive|ifndef
 name|TS_ASLEEP
@@ -3824,8 +3794,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -3835,6 +3803,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cxparam
 parameter_list|(

@@ -834,6 +834,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|wds_data
 index|[
@@ -846,6 +847,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|wds_data_in_use
 index|[
@@ -855,6 +857,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|wds
 block|{
@@ -1418,9 +1421,6 @@ name|base
 decl_stmt|;
 name|u_char
 name|c
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|int
 name|i
@@ -2249,12 +2249,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|char
-name|slask
-index|[
-literal|80
-index|]
-decl_stmt|;
 name|r
 operator|=
 operator|(
@@ -2616,9 +2610,6 @@ name|base
 decl_stmt|;
 name|u_char
 name|c
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|int
 name|i
@@ -2895,22 +2886,12 @@ name|int
 name|masunit
 decl_stmt|;
 specifier|static
-name|int
-name|firstswitch
-index|[
-name|NWDS
-index|]
-decl_stmt|;
-specifier|static
 name|u_long
 name|versprobe
 init|=
 literal|0
 decl_stmt|;
 comment|/* max 32 controllers */
-name|int
-name|r
-decl_stmt|;
 name|int
 name|unit
 init|=
@@ -3097,12 +3078,6 @@ name|init
 decl_stmt|;
 name|int
 name|base
-decl_stmt|;
-name|u_char
-modifier|*
-name|p
-decl_stmt|,
-name|c
 decl_stmt|;
 name|int
 name|unit
@@ -3476,9 +3451,6 @@ name|s
 init|=
 name|splbio
 argument_list|()
-decl_stmt|;
-name|u_char
-name|c
 decl_stmt|;
 while|while
 condition|(

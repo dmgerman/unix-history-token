@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.14 1995/11/29 10:26:51 phk Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.15 1995/12/06 23:42:13 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3004,7 +3004,6 @@ name|syncdata
 decl_stmt|;
 comment|/* True negotiated synch parameters */
 block|}
-name|tinfo_t
 struct|;
 end_struct
 
@@ -3055,6 +3054,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_struct
+specifier|static
 struct|struct
 name|aic_data
 block|{

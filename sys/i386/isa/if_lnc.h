@@ -468,50 +468,6 @@ define|\
 value|"\20\6BUFF\5UFLO\4RES\3LCOL\2LCAR\1RTRY"
 end_define
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|nic_ident
-index|[]
-init|=
-block|{
-literal|"Unknown"
-block|,
-literal|"BICC"
-block|,
-literal|"NE2100"
-block|,
-literal|"DEPCA"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|ic_ident
-index|[]
-init|=
-block|{
-literal|"Unknown"
-block|,
-literal|"LANCE, Am7990"
-block|,
-literal|"C-LANCE, Am79C90"
-block|,
-literal|"PCnet-ISA, Am79C960"
-block|,
-literal|"PCnet-ISA+, Am79C961"
-block|,
-literal|"PCnet-32, Am79C965"
-block|,
-literal|"PCnet-PCI, Am79C970"
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|nic_info

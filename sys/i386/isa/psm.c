@@ -369,6 +369,7 @@ endif|min
 end_endif
 
 begin_function_decl
+specifier|static
 name|int
 name|psmprobe
 parameter_list|(
@@ -380,6 +381,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|psmattach
 parameter_list|(
@@ -391,6 +393,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|psm_poll_status
 parameter_list|(
@@ -713,6 +716,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|psmprobe
 parameter_list|(
@@ -827,6 +831,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|psmattach
 parameter_list|(
@@ -1266,6 +1271,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|psm_poll_status
 parameter_list|(

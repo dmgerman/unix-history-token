@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.18 1995/11/04 17:07:24 bde Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.19 1995/12/05 02:00:49 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -24,14 +24,6 @@ include|#
 directive|include
 file|"el.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NEL
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -305,6 +297,7 @@ comment|/* el_softc: per line info and status */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|el_softc
 block|{
@@ -341,6 +334,7 @@ comment|/* Prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|el_attach
 parameter_list|(
@@ -352,6 +346,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|el_init
 parameter_list|(
@@ -361,6 +356,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|el_ioctl
 parameter_list|(
@@ -376,6 +372,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|el_probe
 parameter_list|(
@@ -387,6 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|el_start
 parameter_list|(
@@ -398,6 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|el_reset
 parameter_list|(
@@ -407,6 +406,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|el_watchdog
 parameter_list|(
@@ -638,6 +638,7 @@ comment|/* Probe routine.  See if the card is there and at the right place. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|el_probe
 parameter_list|(
@@ -909,6 +910,7 @@ comment|/* Attach the interface to the kernel data structures.  By the time  * t
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|el_attach
 parameter_list|(
@@ -1246,6 +1248,7 @@ comment|/* This routine resets the interface. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|el_reset
 parameter_list|(
@@ -1426,6 +1429,7 @@ comment|/* Initialize interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|el_init
 parameter_list|(
@@ -1641,6 +1645,7 @@ comment|/* Start output on interface.  Get datagrams from the queue and output  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|el_start
 parameter_list|(
@@ -3447,6 +3452,7 @@ comment|/*  * Process an ioctl request. This code needs some work - it looks  *	
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|el_ioctl
 parameter_list|(
@@ -3951,6 +3957,7 @@ comment|/* Device timeout routine */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|el_watchdog
 parameter_list|(
@@ -3985,11 +3992,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -431,6 +431,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ctlr
 modifier|*
@@ -1112,7 +1113,7 @@ value|((LABPC)->base + 0x13)
 end_define
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|int
 name|labpcattach
 parameter_list|(
@@ -1125,20 +1126,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|int
-name|labpcdetach
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
+specifier|static
 name|int
 name|labpcprobe
 parameter_list|(
@@ -1163,7 +1151,6 @@ block|,
 literal|"labpc"
 block|,
 literal|0
-comment|/* , labpcdetach */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1898,6 +1885,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|labpcprobe
 parameter_list|(
@@ -2167,6 +2155,7 @@ comment|/* attach: Set things in a normal state.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|labpcattach
 parameter_list|(
@@ -2293,54 +2282,6 @@ endif|#
 directive|endif
 return|return
 literal|1
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|labpcdetach
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-name|struct
-name|ctlr
-modifier|*
-name|ctlr
-init|=
-name|labpcs
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-decl_stmt|;
-name|CR_CLR
-argument_list|(
-name|ctlr
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-name|reset
-argument_list|(
-name|ctlr
-argument_list|)
-expr_stmt|;
-name|dev_detach
-argument_list|(
-operator|&
-name|ctlr
-operator|->
-name|kdc
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 end_function
@@ -3889,6 +3830,7 @@ comment|/* da_strategy: Send data to the D-A.  The CHAN field should be  * 0: D-
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|da_strategy
 parameter_list|(

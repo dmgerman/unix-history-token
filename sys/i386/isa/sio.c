@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.125 1995/12/08 11:15:12 julian Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.126 1995/12/08 23:20:44 phk Exp $  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"sio.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NSIO
-operator|>
-literal|0
-end_if
 
 begin_comment
 comment|/*  * Serial driver, based on 386BSD-0.1 com driver.  * Mostly rewritten to use pseudo-DMA.  * Works for National Semiconductor NS8250-NS16550AF UARTs.  * COM driver, based on HP dca driver.  *  * Changes for PC-Card integration:  *	- Added PC-Card driver table and handlers  */
@@ -612,14 +604,6 @@ name|u_char
 name|ftl
 decl_stmt|;
 comment|/* current rx fifo trigger level */
-name|u_char
-name|ftl_init
-decl_stmt|;
-comment|/* ftl_max for next open() */
-name|u_char
-name|ftl_max
-decl_stmt|;
-comment|/* maximum ftl for curent open() */
 name|bool_t
 name|hasfifo
 decl_stmt|;
@@ -1328,13 +1312,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|commajor
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|sio_timeout
 decl_stmt|;
 end_decl_stmt
@@ -1700,6 +1677,7 @@ comment|/* Interrupt handler */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|siounload
 parameter_list|(
@@ -1715,6 +1693,7 @@ comment|/* Disable driver */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|siosuspend
 parameter_list|(
@@ -1780,6 +1759,7 @@ comment|/*  * Called when a power down is wanted. Shuts down the  * device and c
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|siosuspend
 parameter_list|(
@@ -1908,6 +1888,7 @@ comment|/*  *	siounload - unload the driver and clear the table.  *	XXX TODO:  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|siounload
 parameter_list|(
@@ -1921,18 +1902,6 @@ name|struct
 name|com_s
 modifier|*
 name|com
-decl_stmt|;
-name|struct
-name|tty
-modifier|*
-name|tp
-decl_stmt|;
-name|int
-name|s
-decl_stmt|,
-name|unit
-decl_stmt|,
-name|nowhere
 decl_stmt|;
 name|com
 operator|=
@@ -3477,7 +3446,7 @@ name|com_fifo
 argument_list|,
 name|FIFO_ENABLE
 operator||
-name|FIFO_TRIGGER_14
+name|FIFO_RX_HIGH
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -3498,7 +3467,7 @@ name|IIR_FIFO_MASK
 condition|)
 block|{
 case|case
-name|FIFO_TRIGGER_1
+name|FIFO_RX_LOW
 case|:
 name|printf
 argument_list|(
@@ -3516,7 +3485,7 @@ literal|"Serial port: National 16450 or compatible"
 expr_stmt|;
 break|break;
 case|case
-name|FIFO_TRIGGER_4
+name|FIFO_RX_MEDL
 case|:
 name|printf
 argument_list|(
@@ -3534,7 +3503,7 @@ literal|"Serial port: maybe National 16450"
 expr_stmt|;
 break|break;
 case|case
-name|FIFO_TRIGGER_8
+name|FIFO_RX_MEDH
 case|:
 name|printf
 argument_list|(
@@ -3552,13 +3521,8 @@ literal|"Serial port: maybe National 16550"
 expr_stmt|;
 break|break;
 case|case
-name|FIFO_TRIGGER_14
+name|FIFO_RX_HIGH
 case|:
-name|printf
-argument_list|(
-literal|" 16550A"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|COM_NOFIFO
@@ -3592,12 +3556,6 @@ name|TRUE
 expr_stmt|;
 name|com
 operator|->
-name|ftl_init
-operator|=
-name|FIFO_TRIGGER_14
-expr_stmt|;
-name|com
-operator|->
 name|tx_fifo_size
 operator|=
 literal|16
@@ -3610,6 +3568,116 @@ operator|.
 name|kdc_description
 operator|=
 literal|"Serial port: National 16550A or compatible"
+expr_stmt|;
+block|}
+comment|/* 		 * Check for the Startech ST16C650 chip. 		 * it has a shadow register under the com_iir, 		 * which can only be accessed when cfcr == 0xff 		 */
+block|{
+name|u_char
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+name|i
+operator|=
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|com_iir
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_cfcr
+argument_list|,
+literal|0xff
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_iir
+argument_list|,
+literal|0x0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_cfcr
+argument_list|,
+name|CFCR_8BITS
+argument_list|)
+expr_stmt|;
+name|j
+operator|=
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|com_iir
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|iobase
+operator|+
+name|com_iir
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|j
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" 16550A"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|com
+operator|->
+name|tx_fifo_size
+operator|=
+literal|32
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" 16650"
+argument_list|)
+expr_stmt|;
+name|kdc_sio
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_description
+operator|=
+literal|"Serial port: Startech 16C650 or similar"
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|com
+operator|->
+name|tx_fifo_size
+condition|)
+name|printf
+argument_list|(
+literal|" fifo disabled"
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -3723,7 +3791,7 @@ name|kgdb_dev
 operator|==
 name|makedev
 argument_list|(
-name|commajor
+name|CDEV_MAJOR
 argument_list|,
 name|unit
 argument_list|)
@@ -4496,14 +4564,6 @@ argument_list|)
 expr_stmt|;
 name|com
 operator|->
-name|ftl_max
-operator|=
-name|com
-operator|->
-name|ftl_init
-expr_stmt|;
-name|com
-operator|->
 name|poll
 operator|=
 name|com
@@ -4583,8 +4643,6 @@ argument_list|,
 name|FIFO_RCV_RST
 operator||
 name|FIFO_XMT_RST
-operator||
-name|FIFO_ENABLE
 operator||
 name|com
 operator|->
@@ -5203,7 +5261,7 @@ name|kgdb_dev
 operator|!=
 name|makedev
 argument_list|(
-name|commajor
+name|CDEV_MAJOR
 argument_list|,
 name|unit
 argument_list|)
@@ -6129,7 +6187,7 @@ name|kgdb_dev
 operator|==
 name|makedev
 argument_list|(
-name|commajor
+name|CDEV_MAJOR
 argument_list|,
 name|unit
 argument_list|)
@@ -8675,27 +8733,11 @@ name|c_ospeed
 operator|<=
 literal|4800
 condition|?
-name|FIFO_TRIGGER_1
+literal|0
 else|:
-name|FIFO_TRIGGER_14
-expr_stmt|;
-if|if
-condition|(
-name|com
-operator|->
-name|ftl
-operator|>
-name|com
-operator|->
-name|ftl_max
-condition|)
-name|com
-operator|->
-name|ftl
-operator|=
-name|com
-operator|->
-name|ftl_max
+name|FIFO_ENABLE
+operator||
+name|FIFO_RX_HIGH
 expr_stmt|;
 name|outb
 argument_list|(
@@ -8703,8 +8745,6 @@ name|iobase
 operator|+
 name|com_fifo
 argument_list|,
-name|FIFO_ENABLE
-operator||
 name|com
 operator|->
 name|ftl
@@ -10534,18 +10574,6 @@ argument_list|,
 name|total
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 			 * XXX if we resurrect this then we should move 			 * the dropping of the ftl to somewhere with less 			 * latency. 			 */
-block|if (errnum == CE_OVERRUN&& com->hasfifo&& com->ftl> FIFO_TRIGGER_1) { 				static	u_char	ftl_in_bytes[] = 					{ 1, 4, 8, 14, };  				com->ftl_init = FIFO_TRIGGER_8;
-define|#
-directive|define
-name|FIFO_TRIGGER_DELTA
-value|FIFO_TRIGGER_4
-block|com->ftl_max = 				com->ftl -= FIFO_TRIGGER_DELTA; 				outb(com->iobase + com_fifo, 				     FIFO_ENABLE | com->ftl); 				log(LOG_DEBUG, 				    "sio%d: reduced fifo trigger level to %d\n", 				    unit, 				    ftl_in_bytes[com->ftl 						 / FIFO_TRIGGER_DELTA]); 			}
-endif|#
-directive|endif
 block|}
 block|}
 block|}
@@ -11142,33 +11170,6 @@ block|{
 name|int
 name|unit
 decl_stmt|;
-comment|/* locate the major number */
-comment|/* XXX - should be elsewhere since KGDB uses it */
-for|for
-control|(
-name|commajor
-operator|=
-literal|0
-init|;
-name|commajor
-operator|<
-name|nchrdev
-condition|;
-name|commajor
-operator|++
-control|)
-if|if
-condition|(
-name|cdevsw
-index|[
-name|commajor
-index|]
-operator|.
-name|d_open
-operator|==
-name|sioopen
-condition|)
-break|break;
 comment|/* XXX: ick */
 name|unit
 operator|=
@@ -11189,7 +11190,7 @@ name|cn_dev
 operator|=
 name|makedev
 argument_list|(
-name|commajor
+name|CDEV_MAJOR
 argument_list|,
 name|unit
 argument_list|)
@@ -12306,15 +12307,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NSIO> 0 */
-end_comment
 
 end_unit
 

@@ -486,6 +486,7 @@ comment|/*  * fe_softc: per line info and status  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|fe_softc
 block|{
@@ -659,6 +660,7 @@ comment|/* Standard driver entry points.  These can be static.  */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|fe_probe
 parameter_list|(
@@ -670,6 +672,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|fe_attach
 parameter_list|(
@@ -681,6 +684,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fe_init
 parameter_list|(
@@ -690,6 +694,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|fe_ioctl
 parameter_list|(
@@ -705,6 +710,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fe_start
 parameter_list|(
@@ -716,6 +722,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fe_reset
 parameter_list|(
@@ -725,6 +732,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fe_watchdog
 parameter_list|(
@@ -1377,6 +1385,7 @@ comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fe_probe
 parameter_list|(
@@ -3936,6 +3945,7 @@ comment|/*  * Install interface into kernel networking data structures  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fe_attach
 parameter_list|(
@@ -4470,6 +4480,7 @@ comment|/*  * Reset interface.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fe_reset
 parameter_list|(
@@ -4496,6 +4507,7 @@ comment|/*  * Stop everything on the interface.  *  * All buffered packets, both
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fe_stop
 parameter_list|(
@@ -4738,6 +4750,7 @@ comment|/*  * Device timeout/watchdog routine. Entered if the device neglects to
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fe_watchdog
 parameter_list|(
@@ -4862,6 +4875,7 @@ comment|/*  * Initialize device.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fe_init
 parameter_list|(

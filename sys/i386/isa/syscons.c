@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.134 1995/12/07 12:46:08 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.135 1995/12/08 11:15:28 julian Exp $  */
 end_comment
 
 begin_include
@@ -568,19 +568,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-name|scrn_saver
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* screen saver routine */
-end_comment
-
-begin_decl_stmt
-specifier|static
 name|long
 name|scrn_time_stamp
 decl_stmt|;
@@ -713,18 +700,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|none_saver
-parameter_list|(
-name|int
-name|blank
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
+specifier|static
 name|void
 name|none_saver
 parameter_list|(
@@ -753,6 +730,63 @@ operator|=
 name|none_saver
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|scattach
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|scparam
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|scprobe
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|scstart
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* OS specific stuff */
@@ -826,6 +860,7 @@ value|&sccons[MAXCONS]
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tty
 name|sccons
@@ -834,16 +869,6 @@ name|MAXCONS
 operator|+
 literal|1
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nsccons
-init|=
-name|MAXCONS
-operator|+
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,6 +1147,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scprobe
 parameter_list|(
@@ -1537,6 +1563,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|int
 name|scattach
 parameter_list|(
@@ -2978,6 +3005,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|scparam
 parameter_list|(
@@ -6259,6 +6287,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|scstart
 parameter_list|(
