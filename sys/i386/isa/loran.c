@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: loran.c,v 1.6 1998/06/07 20:36:40 phk Exp $  *  * This device-driver helps the userland controlprogram for a LORAN-C  * receiver avoid monopolizing the CPU.  *  * This is clearly a candidate for the "most weird hardware support in  * FreeBSD" prize.  At this time only two copies of the receiver are  * known to exist in the entire world.  *  * Details can be found at:  *     ftp://ftp.eecis.udel.edu/pub/ntp/loran.tar.Z  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: loran.c,v 1.7 1998/08/17 18:47:36 bde Exp $  *  * This device-driver helps the userland controlprogram for a LORAN-C  * receiver avoid monopolizing the CPU.  *  * This is clearly a candidate for the "most weird hardware support in  * FreeBSD" prize.  At this time only two copies of the receiver are  * known to exist in the entire world.  *  * Details can be found at:  *     ftp://ftp.eecis.udel.edu/pub/ntp/loran.tar.Z  *  */
 end_comment
 
 begin_ifdef
@@ -8,18 +8,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"loran.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_devfs.h"
-end_include
 
 begin_include
 include|#
@@ -60,41 +48,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
 
 begin_include
 include|#

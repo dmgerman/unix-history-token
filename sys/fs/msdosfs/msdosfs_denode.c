@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.37 1998/05/17 18:00:45 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.38 1998/05/17 18:09:28 bde Exp $ */
 end_comment
 
 begin_comment
@@ -56,16 +56,6 @@ include|#
 directive|include
 file|<sys/vnode.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_comment
-comment|/* defines "time" */
-end_comment
 
 begin_include
 include|#
