@@ -1593,20 +1593,6 @@ parameter_list|()
 value|spltty()
 end_define
 
-begin_define
-define|#
-directive|define
-name|memset
-parameter_list|(
-name|p
-parameter_list|,
-name|v
-parameter_list|,
-name|s
-parameter_list|)
-value|bzero(p, s)
-end_define
-
 begin_comment
 comment|/*  * Fake out the module macros for versions of FreeBSD where they don't  * exist.  */
 end_comment
