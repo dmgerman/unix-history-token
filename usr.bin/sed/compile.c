@@ -3,32 +3,34 @@ begin_comment
 comment|/*-  * Copyright (c) 1992 Diomidis Spinellis.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Diomidis Spinellis of Imperial College, University of London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)compile.c	8.1 (Berkeley) 6/6/93";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)compile.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,10 +38,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -333,6 +331,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -805,7 +804,6 @@ modifier|*
 name|link
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2551,9 +2549,10 @@ decl_stmt|;
 name|int
 name|asize
 decl_stmt|,
-name|ref
-decl_stmt|,
 name|size
+decl_stmt|;
+name|u_char
+name|ref
 decl_stmt|;
 name|char
 name|c
@@ -3996,11 +3995,11 @@ name|s
 parameter_list|,
 name|ctype
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|s
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ctype
@@ -4279,7 +4278,6 @@ modifier|*
 name|cp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|labhash
 modifier|*
@@ -4289,12 +4287,10 @@ decl_stmt|,
 modifier|*
 name|lh
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|u_int
 name|h
 decl_stmt|,
@@ -4478,18 +4474,15 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|labhash
 modifier|*
 name|lh
 decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|u_int
 name|h
 decl_stmt|,
@@ -4610,7 +4603,6 @@ name|void
 name|uselabel
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|labhash
 modifier|*
@@ -4619,7 +4611,6 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
