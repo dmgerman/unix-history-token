@@ -743,6 +743,8 @@ parameter_list|,
 name|pcbinfo
 parameter_list|,
 name|td
+parameter_list|,
+name|type
 parameter_list|)
 name|struct
 name|socket
@@ -758,6 +760,11 @@ name|struct
 name|thread
 modifier|*
 name|td
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|type
 decl_stmt|;
 block|{
 specifier|register
@@ -972,6 +979,8 @@ argument_list|(
 name|inp
 argument_list|,
 literal|"inp"
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 ifdef|#

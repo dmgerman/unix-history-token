@@ -4703,6 +4703,8 @@ operator|&
 name|udbinfo
 argument_list|,
 name|td
+argument_list|,
+literal|"udpinp"
 argument_list|)
 expr_stmt|;
 name|splx

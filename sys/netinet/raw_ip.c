@@ -2264,6 +2264,8 @@ operator|&
 name|ripcbinfo
 argument_list|,
 name|td
+argument_list|,
+literal|"rawinp"
 argument_list|)
 expr_stmt|;
 if|if

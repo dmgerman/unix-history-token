@@ -2479,6 +2479,8 @@ operator|&
 name|ripcbinfo
 argument_list|,
 name|td
+argument_list|,
+literal|"raw6inp"
 argument_list|)
 expr_stmt|;
 name|splx

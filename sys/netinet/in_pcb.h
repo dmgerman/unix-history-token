@@ -716,9 +716,11 @@ parameter_list|(
 name|inp
 parameter_list|,
 name|d
+parameter_list|,
+name|t
 parameter_list|)
 define|\
-value|mtx_init(&(inp)->inp_mtx, (d), NULL, MTX_DEF | MTX_RECURSE | MTX_DUPOK)
+value|mtx_init(&(inp)->inp_mtx, (d), (t), MTX_DEF | MTX_RECURSE | MTX_DUPOK)
 end_define
 
 begin_define
@@ -1370,6 +1372,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|thread
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
