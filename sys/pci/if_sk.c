@@ -5154,11 +5154,6 @@ operator|*
 operator|)
 name|args
 expr_stmt|;
-name|SK_IF_LOCK
-argument_list|(
-name|sc_if
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc_if
@@ -5168,6 +5163,11 @@ condition|)
 name|panic
 argument_list|(
 literal|"sk_jfree: didn't get softc pointer!"
+argument_list|)
+expr_stmt|;
+name|SK_IF_LOCK
+argument_list|(
+name|sc_if
 argument_list|)
 expr_stmt|;
 comment|/* calculate the slot this buffer belongs to */
