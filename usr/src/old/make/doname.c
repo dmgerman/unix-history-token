@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)doname.c	4.4 (Berkeley) 84/11/28"
+literal|"@(#)doname.c	4.4 (Berkeley) 84/12/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -1552,6 +1552,15 @@ modifier|*
 name|srchdir
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|depname
+operator|==
+name|NULL
+condition|)
+return|return;
 name|s1
 operator|=
 name|q
