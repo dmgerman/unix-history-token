@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: get_myaddress.c,v 1.12 1997/06/20 17:54:11 wpaul Exp $"
+literal|"$Id: get_myaddress.c,v 1.13 1997/09/21 23:04:51 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,8 +345,8 @@ name|AF_INET
 operator|)
 operator|&&
 operator|(
-name|ifr
-operator|->
+name|ifreq
+operator|.
 name|ifr_flags
 operator|&
 name|IFF_UP
@@ -452,7 +452,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|gotit
+condition|?
 literal|0
+else|:
+operator|-
+literal|1
 operator|)
 return|;
 block|}
