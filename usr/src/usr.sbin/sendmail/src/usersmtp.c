@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.25 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.26 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.25 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.26 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2651,11 +2651,20 @@ name|m_eol
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|syserr
+elseif|else
+if|if
+condition|(
+name|tTd
 argument_list|(
-literal|"smtpmessage: NULL mci_out"
+literal|18
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"smtpmessage: NULL mci_out\n"
 argument_list|)
 expr_stmt|;
 block|}
