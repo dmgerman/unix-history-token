@@ -16,7 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/acl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -87,7 +99,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__acl_delete_fd
+name|___acl_delete_fd
 argument_list|(
 name|filedes
 argument_list|,

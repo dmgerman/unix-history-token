@@ -16,7 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -64,7 +76,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|__cap_get_fd
+name|___cap_get_fd
 argument_list|(
 name|fd
 argument_list|,

@@ -16,7 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_function
@@ -32,7 +44,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|__cap_set_fd
+name|___cap_set_fd
 argument_list|(
 name|fd
 argument_list|,

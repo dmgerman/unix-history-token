@@ -16,7 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/acl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -149,7 +161,7 @@ return|;
 block|}
 name|error
 operator|=
-name|__acl_get_fd
+name|___acl_get_fd
 argument_list|(
 name|fd
 argument_list|,
@@ -222,7 +234,7 @@ return|;
 block|}
 name|error
 operator|=
-name|__acl_get_fd
+name|___acl_get_fd
 argument_list|(
 name|fd
 argument_list|,

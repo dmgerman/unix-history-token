@@ -16,7 +16,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/acl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -206,7 +218,7 @@ block|}
 block|}
 return|return
 operator|(
-name|__acl_aclcheck_fd
+name|___acl_aclcheck_fd
 argument_list|(
 name|fd
 argument_list|,
