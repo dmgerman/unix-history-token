@@ -658,6 +658,7 @@ end_if
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|_malloc_options

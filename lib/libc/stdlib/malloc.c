@@ -1116,6 +1116,7 @@ comment|/* compile-time options */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|_malloc_options
