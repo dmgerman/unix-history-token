@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_pcb.c 4.7 81/11/21 */
+comment|/* in_pcb.c 4.8 81/11/21 */
 end_comment
 
 begin_include
@@ -604,25 +604,16 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-if|if
-condition|(
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_USERGONE
-condition|)
-name|sofree
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-else|else
 name|so
 operator|->
 name|so_pcb
 operator|=
 literal|0
+expr_stmt|;
+name|sofree
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 name|remque
 argument_list|(
