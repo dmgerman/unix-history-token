@@ -4,43 +4,6 @@ comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of Cali
 end_comment
 
 begin_comment
-comment|/*  * Types of operations (passed to the errmsg routine).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E_OPEN
-value|01
-end_define
-
-begin_comment
-comment|/* opening a file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E_CREAT
-value|02
-end_define
-
-begin_comment
-comment|/* creating a file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E_EXEC
-value|04
-end_define
-
-begin_comment
-comment|/* executing a program */
-end_comment
-
-begin_comment
 comment|/*  * We enclose jmp_buf in a structure so that we can declare pointers to  * jump locations.  The global variable handler contains the location to  * jump to when an exception occurs, and the global variable exception  * contains a code identifying the exception.  To implement nested  * exception handlers, the user should save the value of handler on entry  * to an inner scope, set handler to point to a jmploc structure for the  * inner scope, and restore handler on exit from the scope.  */
 end_comment
 
@@ -251,18 +214,6 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|errmsg
-parameter_list|(
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * BSD setjmp saves the signal mask, which violates ANSI C and takes time,  * so we use _setjmp instead.  */

@@ -530,11 +530,9 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|errmsg
+name|strerror
 argument_list|(
 name|e
-argument_list|,
-name|E_EXEC
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1894,11 +1892,9 @@ literal|"%s: %s\n"
 argument_list|,
 name|name
 argument_list|,
-name|errmsg
+name|strerror
 argument_list|(
 name|e
-argument_list|,
-name|E_EXEC
 argument_list|)
 argument_list|)
 expr_stmt|;
