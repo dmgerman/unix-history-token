@@ -15029,7 +15029,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|100000
+literal|250000
 argument_list|)
 expr_stmt|;
 block|}
