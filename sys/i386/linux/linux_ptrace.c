@@ -1983,13 +1983,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|td2
-operator|=
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|req
@@ -1998,6 +1991,14 @@ name|PTRACE_GETFPXREGS
 condition|)
 block|{
 name|_PHOLD
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* may block */
+name|td2
+operator|=
+name|FIRST_THREAD_IN_PROC
 argument_list|(
 name|p
 argument_list|)
@@ -2068,6 +2069,14 @@ operator|&=
 literal|0xffbf
 expr_stmt|;
 name|_PHOLD
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* may block */
+name|td2
+operator|=
+name|FIRST_THREAD_IN_PROC
 argument_list|(
 name|p
 argument_list|)
