@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/protosw.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_mroute.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -577,6 +589,38 @@ name|struct
 name|mrtstat
 name|mrtstat
 decl_stmt|;
+name|size_t
+name|len
+init|=
+sizeof|sizeof
+name|mrtstat
+decl_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"net.inet.ip.mrtstat"
+argument_list|,
+operator|&
+name|mrtstat
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"sysctl: net.inet.ip.mrtstat"
+argument_list|)
+expr_stmt|;
+comment|/* Compatability with older kernels - candidate for removal */
 if|if
 condition|(
 name|mstaddr
@@ -608,6 +652,7 @@ name|mrtstat
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"IPv4 multicast forwarding:\n"
