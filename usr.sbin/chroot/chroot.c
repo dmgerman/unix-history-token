@@ -142,6 +142,7 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|shell
