@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.22 1997/10/27 06:15:10 joerg Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.24 1999/07/25 01:20:37 hosokawa Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -126,6 +126,14 @@ name|u_short
 name|prod_id
 decl_stmt|;
 comment|/* product ID */
+name|int
+name|cmd_off
+decl_stmt|;
+comment|/* command offset (bit shift) */
+name|int
+name|mii_trans
+decl_stmt|;
+comment|/* activate MII transiever */
 name|u_short
 name|res_cfg
 decl_stmt|;
@@ -656,6 +664,13 @@ define|#
 directive|define
 name|EP_W3_FREE_RX
 value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|EP_W3_OPTIONS
+value|0x08
 end_define
 
 begin_comment
@@ -1594,6 +1609,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Config flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EP_FLAGS_100TX
+value|0x1
+end_define
 
 end_unit
 
