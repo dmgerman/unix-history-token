@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.7 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,6 +135,20 @@ operator|*
 operator|*
 name|argv
 operator|==
+literal|'b'
+condition|)
+block|{
+name|bflag
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+operator|*
+name|argv
+operator|==
 literal|'c'
 condition|)
 block|{
@@ -152,7 +166,7 @@ operator|==
 literal|'z'
 condition|)
 block|{
-name|zflg
+name|zflag
 operator|++
 expr_stmt|;
 block|}

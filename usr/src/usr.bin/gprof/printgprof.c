@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)printgprof.c	1.4 (Berkeley) %G%"
+literal|"@(#)printgprof.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,29 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"\ngranularity: each sample hit covers %d byte(s)"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|scale
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" for %.2f%% of %.2f seconds\n\n"
+argument_list|,
+literal|100.0
+operator|/
+name|totime
+argument_list|,
+name|totime
+operator|/
+name|HZ
+argument_list|)
+expr_stmt|;
 name|actime
 operator|=
 literal|0.0
@@ -167,26 +190,6 @@ name|actime
 operator|=
 literal|0.0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\ngranularity: each sample hit covers %.1f bytes"
-argument_list|,
-name|scale
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" for %.2f%% of %.2f seconds\n"
-argument_list|,
-literal|100.0
-operator|/
-name|totime
-argument_list|,
-name|totime
-operator|/
-name|HZ
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -285,6 +288,17 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|bflag
+condition|)
+block|{
+name|printblurb
+argument_list|(
+literal|"flat.blurb"
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%5.5s %7.7s %7.7s %7.7s %-8.8s\n"
@@ -319,7 +333,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|zflg
+name|zflag
 operator|==
 literal|0
 operator|&&
@@ -415,6 +429,17 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|bflag
+condition|)
+block|{
+name|printblurb
+argument_list|(
+literal|"callg.blurb"
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"%6.6s %5.5s %7.7s %11.11s %7.7s/%-7.7s     %-8.8s\n"
@@ -828,7 +853,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|zflg
+name|zflag
 operator|==
 literal|0
 operator|&&
@@ -2501,6 +2526,107 @@ block|}
 block|}
 block|}
 end_function
+
+begin_macro
+name|printblurb
+argument_list|(
+argument|blurbname
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|blurbname
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+name|pathname
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|FILE
+modifier|*
+name|blurbfile
+decl_stmt|;
+name|int
+name|input
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BLURBLIB
+define|#
+directive|define
+name|BLURBLIB
+value|"./"
+endif|#
+directive|endif
+endif|not BLURBLIB
+name|sprintf
+argument_list|(
+name|pathname
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|BLURBLIB
+argument_list|,
+name|blurbname
+argument_list|)
+expr_stmt|;
+name|blurbfile
+operator|=
+name|fopen
+argument_list|(
+name|pathname
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|blurbfile
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|pathname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+while|while
+condition|(
+operator|(
+name|input
+operator|=
+name|getc
+argument_list|(
+name|blurbfile
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+block|{
+name|putchar
+argument_list|(
+name|input
+argument_list|)
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|blurbfile
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
