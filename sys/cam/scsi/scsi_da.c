@@ -410,6 +410,9 @@ name|union
 name|ccb
 name|saved_ccb
 decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -3539,6 +3542,21 @@ argument_list|(
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|dev
+condition|)
+block|{
+name|disk_destroy
+argument_list|(
+name|softc
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|softc
@@ -4129,6 +4147,10 @@ name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Register this media as a disk 	 */
+name|softc
+operator|->
+name|dev
+operator|=
 name|disk_create
 argument_list|(
 name|periph
