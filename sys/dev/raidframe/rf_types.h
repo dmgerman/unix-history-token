@@ -61,11 +61,22 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/lock.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * First, define system-dependent types and constants.  *  * If the machine is big-endian, RF_BIG_ENDIAN should be 1.  * Otherwise, it should be 0.  *  * The various integer types should be self-explanatory; we  * use these elsewhere to avoid size confusion.  *  * LONGSHIFT is lg(sizeof(long)) (that is, log base two of sizeof(long)  *  */
