@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pp.c	1.1 (Berkeley) %G%"
+literal|"@(#)pp.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -633,7 +633,7 @@ literal|1
 case|:
 name|printf
 argument_list|(
-literal|"%7.7ld."
+literal|"%7ld."
 argument_list|,
 name|nowcnt
 argument_list|()
