@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.29 (Berkeley) %G%"
+literal|"@(#)main.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1547,9 +1547,6 @@ condition|)
 block|{
 name|mbpr
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_MBSTAT
@@ -1685,9 +1682,6 @@ name|sflag
 condition|)
 name|rt_stats
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_RTSTAT
@@ -1699,9 +1693,6 @@ expr_stmt|;
 else|else
 name|routepr
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_RTREE
@@ -1727,9 +1718,6 @@ name|sflag
 condition|)
 name|mrt_stats
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_MRTPROTO
@@ -1737,9 +1725,6 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_MRTSTAT
@@ -1751,9 +1736,6 @@ expr_stmt|;
 else|else
 name|mroutepr
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_MRTPROTO
@@ -1761,9 +1743,6 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_MRTTABLE
@@ -1771,9 +1750,6 @@ index|]
 operator|.
 name|n_value
 argument_list|,
-operator|(
-name|off_t
-operator|)
 name|nl
 index|[
 name|N_VIFTABLE
@@ -1897,7 +1873,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|off_t
+name|u_long
 name|addr
 decl_stmt|;
 end_decl_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.18 (Berkeley) %G%"
+literal|"@(#)inet.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,7 +269,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -385,7 +385,7 @@ expr_stmt|;
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|next
 argument_list|,
@@ -442,7 +442,7 @@ block|}
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|inpcb
 operator|.
@@ -469,7 +469,7 @@ block|{
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|inpcb
 operator|.
@@ -695,7 +695,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -1046,7 +1046,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -1172,7 +1172,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -1377,7 +1377,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char

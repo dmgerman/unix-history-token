@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.13 (Berkeley) %G%"
+literal|"@(#)unix.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,12 +180,10 @@ begin_function
 name|void
 name|unixpr
 parameter_list|(
-name|unixsw
+name|off
 parameter_list|)
-name|struct
-name|protosw
-modifier|*
-name|unixsw
+name|u_long
+name|off
 decl_stmt|;
 block|{
 specifier|register
@@ -207,6 +205,18 @@ decl_stmt|;
 name|char
 modifier|*
 name|filebuf
+decl_stmt|;
+name|struct
+name|protosw
+modifier|*
+name|unixsw
+init|=
+operator|(
+expr|struct
+name|protosw
+operator|*
+operator|)
+name|off
 decl_stmt|;
 name|filebuf
 operator|=
@@ -296,7 +306,7 @@ condition|(
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|fp
 operator|->
@@ -427,7 +437,7 @@ condition|(
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|so
 operator|->
@@ -464,7 +474,7 @@ condition|(
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|unp
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.12 (Berkeley) %G%"
+literal|"@(#)iso.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,7 +364,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -507,7 +507,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -693,7 +693,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -833,7 +833,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(kread((off_t)(o), (char *)&p, sizeof (p)))
+value|(kread((u_long)(o), (char *)&p, sizeof (p)))
 end_define
 
 begin_decl_stmt
@@ -857,7 +857,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -1029,7 +1029,7 @@ expr_stmt|;
 name|iso_protopr1
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|next
 argument_list|,
@@ -1057,7 +1057,7 @@ name|kern_addr
 parameter_list|,
 name|istp
 parameter_list|)
-name|off_t
+name|u_long
 name|kern_addr
 decl_stmt|;
 name|int
@@ -1388,7 +1388,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -1452,7 +1452,7 @@ return|return;
 name|kread
 argument_list|(
 call|(
-name|off_t
+name|u_long
 call|)
 argument_list|(
 name|tpkerninfo
@@ -1578,7 +1578,7 @@ case|:
 name|tp_inproto
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|tpkerninfo
 operator|.
@@ -1599,7 +1599,7 @@ expr_stmt|;
 name|iso_protopr1
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|tpcb
 operator|.
@@ -1655,7 +1655,7 @@ name|tp_inproto
 parameter_list|(
 name|pcb
 parameter_list|)
-name|off_t
+name|u_long
 name|pcb
 decl_stmt|;
 block|{
@@ -2226,7 +2226,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -2343,7 +2343,7 @@ expr_stmt|;
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|next
 argument_list|,
@@ -2376,7 +2376,7 @@ block|}
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|xpcb
 operator|.

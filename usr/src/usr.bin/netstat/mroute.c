@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)mroute.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)mroute.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -90,7 +90,7 @@ name|mrtaddr
 parameter_list|,
 name|vifaddr
 parameter_list|)
-name|off_t
+name|u_long
 name|mrpaddr
 decl_stmt|,
 name|mrtaddr
@@ -172,9 +172,6 @@ return|return;
 block|}
 name|kread
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|mrpaddr
 argument_list|,
 operator|(
@@ -256,9 +253,6 @@ literal|1
 expr_stmt|;
 name|kread
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|vifaddr
 argument_list|,
 operator|(
@@ -415,7 +409,7 @@ block|}
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|v
 operator|->
@@ -483,9 +477,6 @@ argument_list|)
 expr_stmt|;
 name|kread
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|mrtaddr
 argument_list|,
 operator|(
@@ -560,7 +551,7 @@ block|}
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|mrt
 argument_list|,
@@ -693,7 +684,7 @@ name|mrpaddr
 parameter_list|,
 name|mstaddr
 parameter_list|)
-name|off_t
+name|u_long
 name|mrpaddr
 decl_stmt|,
 name|mstaddr
@@ -722,9 +713,6 @@ return|return;
 block|}
 name|kread
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|mrpaddr
 argument_list|,
 operator|(
@@ -784,9 +772,6 @@ return|return;
 block|}
 name|kread
 argument_list|(
-operator|(
-name|off_t
-operator|)
 name|mstaddr
 argument_list|,
 operator|(

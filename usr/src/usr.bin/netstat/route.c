@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.24 (Berkeley) %G%"
+literal|"@(#)route.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ name|p
 parameter_list|,
 name|d
 parameter_list|)
-value|(kread((off_t)(p), (char *)&(d), sizeof (d)))
+value|(kread((u_long)(p), (char *)&(d), sizeof (d)))
 end_define
 
 begin_comment
@@ -453,7 +453,7 @@ name|routepr
 parameter_list|(
 name|rtree
 parameter_list|)
-name|off_t
+name|u_long
 name|rtree
 decl_stmt|;
 block|{
@@ -809,7 +809,7 @@ condition|)
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|dst
 argument_list|,
@@ -2185,7 +2185,7 @@ expr_stmt|;
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifnet
 operator|.
@@ -2829,7 +2829,7 @@ name|rt_stats
 parameter_list|(
 name|off
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 block|{

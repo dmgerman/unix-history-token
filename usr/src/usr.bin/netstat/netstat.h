@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -187,7 +187,7 @@ name|kread
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 name|addr
 operator|,
 name|char
@@ -233,7 +233,7 @@ name|protopr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -248,7 +248,7 @@ name|tcp_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -263,7 +263,7 @@ name|udp_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -278,7 +278,7 @@ name|ip_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -293,7 +293,7 @@ name|icmp_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -308,7 +308,7 @@ name|protopr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -321,7 +321,7 @@ begin_function_decl
 name|void
 name|mbpr
 parameter_list|(
-name|off_t
+name|u_long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -332,9 +332,9 @@ name|hostpr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -346,9 +346,23 @@ name|impstats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
-name|off_t
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|intpr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -383,7 +397,7 @@ name|rt_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -466,7 +480,7 @@ name|routepr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -478,7 +492,7 @@ name|nsprotopr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -493,7 +507,7 @@ name|spp_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -508,7 +522,7 @@ name|idp_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -523,7 +537,7 @@ name|nserr_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -540,7 +554,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -552,9 +566,7 @@ name|unixpr
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|protosw
-operator|*
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -566,7 +578,7 @@ name|esis_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -581,7 +593,7 @@ name|clnp_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -596,7 +608,7 @@ name|cltp_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -611,7 +623,7 @@ name|iso_protopr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -626,7 +638,7 @@ name|iso_protopr1
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|int
 operator|)
@@ -640,7 +652,7 @@ name|tp_protopr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
 name|char
 operator|*
@@ -655,7 +667,7 @@ name|tp_inproto
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -681,11 +693,11 @@ name|mroutepr
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
-name|off_t
+name|u_long
 operator|,
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -697,9 +709,9 @@ name|mrt_stats
 name|__P
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|,
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;

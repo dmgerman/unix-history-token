@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.15 (Berkeley) %G%"
+literal|"@(#)ns.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,7 +245,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -351,7 +351,7 @@ operator|=
 name|next
 control|)
 block|{
-name|off_t
+name|u_long
 name|ppcb
 decl_stmt|;
 name|next
@@ -363,7 +363,7 @@ expr_stmt|;
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|next
 argument_list|,
@@ -414,7 +414,7 @@ block|}
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|nspcb
 operator|.
@@ -436,7 +436,7 @@ expr_stmt|;
 name|ppcb
 operator|=
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|nspcb
 operator|.
@@ -678,7 +678,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -1376,7 +1376,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char
@@ -1567,7 +1567,7 @@ name|off
 parameter_list|,
 name|name
 parameter_list|)
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 name|char

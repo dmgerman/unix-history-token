@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.17 (Berkeley) %G%"
+literal|"@(#)if.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,7 +153,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|,
-name|off_t
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -186,7 +186,7 @@ parameter_list|)
 name|int
 name|interval
 decl_stmt|;
-name|off_t
+name|u_long
 name|ifnetaddr
 decl_stmt|;
 block|{
@@ -215,7 +215,7 @@ decl_stmt|;
 block|}
 name|ifaddr
 union|;
-name|off_t
+name|u_long
 name|ifaddraddr
 decl_stmt|;
 name|struct
@@ -386,7 +386,7 @@ operator|||
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifnet
 operator|.
@@ -408,7 +408,7 @@ expr_stmt|;
 name|ifnetaddr
 operator|=
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifnet
 operator|.
@@ -483,7 +483,7 @@ expr_stmt|;
 name|ifaddraddr
 operator|=
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifnet
 operator|.
@@ -939,7 +939,7 @@ block|}
 name|ifaddraddr
 operator|=
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifaddr
 operator|.
@@ -1086,7 +1086,7 @@ parameter_list|)
 name|unsigned
 name|interval
 decl_stmt|;
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 block|{
@@ -1094,7 +1094,7 @@ name|struct
 name|ifnet
 name|ifnet
 decl_stmt|;
-name|off_t
+name|u_long
 name|firstifnet
 decl_stmt|;
 specifier|register
@@ -1139,7 +1139,7 @@ name|firstifnet
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|off_t
+name|u_long
 argument_list|)
 argument_list|)
 condition|)
@@ -1216,7 +1216,7 @@ condition|(
 name|kread
 argument_list|(
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifnet
 operator|.
@@ -1307,7 +1307,7 @@ break|break;
 name|off
 operator|=
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifnet
 operator|.
@@ -1762,7 +1762,7 @@ expr_stmt|;
 name|off
 operator|=
 operator|(
-name|off_t
+name|u_long
 operator|)
 name|ifnet
 operator|.

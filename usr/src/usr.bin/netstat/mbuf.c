@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.11 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -242,7 +242,7 @@ name|mbpr
 parameter_list|(
 name|mbaddr
 parameter_list|)
-name|off_t
+name|u_long
 name|mbaddr
 decl_stmt|;
 block|{
