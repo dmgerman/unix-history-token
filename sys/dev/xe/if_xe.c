@@ -1115,6 +1115,8 @@ name|int
 name|success
 decl_stmt|,
 name|rc
+init|=
+literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -1839,6 +1841,17 @@ literal|3
 condition|)
 return|return
 name|ENXIO
+return|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|rc
+operator|)
 return|;
 comment|/* Check for certain strange CE2's that look like CE's */
 if|if
