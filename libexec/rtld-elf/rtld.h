@@ -708,6 +708,7 @@ parameter_list|(
 name|unsigned
 name|long
 parameter_list|,
+specifier|const
 name|Obj_Entry
 modifier|*
 parameter_list|,
