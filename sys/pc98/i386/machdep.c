@@ -1269,7 +1269,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[
 literal|10
@@ -1392,15 +1392,21 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"real memory  = %u (%uK bytes)\n"
+literal|"real memory  = %llu (%lluK bytes)\n"
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|u_int64_t
+operator|)
 name|Maxmem
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|u_int64_t
+operator|)
 name|Maxmem
 argument_list|)
 operator|/
@@ -1441,10 +1447,11 @@ operator|+=
 literal|2
 control|)
 block|{
-name|unsigned
-name|int
+name|vm_paddr_t
 name|size1
-init|=
+decl_stmt|;
+name|size1
+operator|=
 name|phys_avail
 index|[
 name|indx
@@ -1456,16 +1463,22 @@ name|phys_avail
 index|[
 name|indx
 index|]
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%08x - 0x%08x, %u bytes (%u pages)\n"
+literal|"0x%09llx - 0x%09llx, %llu bytes (%llu pages)\n"
 argument_list|,
+operator|(
+name|u_int64_t
+operator|)
 name|phys_avail
 index|[
 name|indx
 index|]
 argument_list|,
+operator|(
+name|u_int64_t
+operator|)
 name|phys_avail
 index|[
 name|indx
@@ -1475,8 +1488,14 @@ index|]
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|u_int64_t
+operator|)
 name|size1
 argument_list|,
+operator|(
+name|u_int64_t
+operator|)
 name|size1
 operator|/
 name|PAGE_SIZE
@@ -2032,6 +2051,10 @@ name|system_map
 operator|=
 literal|1
 expr_stmt|;
+name|mbutltop
+operator|=
+name|mbutl
+expr_stmt|;
 block|}
 comment|/* 	 * Initialize callouts 	 */
 name|SLIST_INIT
@@ -2130,10 +2153,13 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"avail memory = %u (%uK bytes)\n"
+literal|"avail memory = %llu (%lluK bytes)\n"
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|u_int64_t
+operator|)
 name|cnt
 operator|.
 name|v_free_count
@@ -2141,6 +2167,9 @@ argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|u_int64_t
+operator|)
 name|cnt
 operator|.
 name|v_free_count
@@ -6487,7 +6516,7 @@ value|(2 * 8)
 end_define
 
 begin_comment
-comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * If we cannot accurately determine the physical memory map, then use  * value from the 0xE801 call, and failing that, the RTC.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  */
+comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * If we cannot accurately determine the physical memory map, then use  * value from the 0xE801 call, and failing that, the RTC.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
 end_comment
 
 begin_function
@@ -6529,6 +6558,7 @@ name|PHYSMAP_SIZE
 index|]
 decl_stmt|;
 name|pt_entry_t
+modifier|*
 name|pte
 decl_stmt|;
 specifier|const
@@ -6558,7 +6588,7 @@ name|struct
 name|vm86context
 name|vmc
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|,
 name|physmap
@@ -6567,6 +6597,7 @@ name|PHYSMAP_SIZE
 index|]
 decl_stmt|;
 name|pt_entry_t
+modifier|*
 name|pte
 decl_stmt|;
 specifier|const
@@ -6700,9 +6731,6 @@ control|)
 block|{
 name|pte
 operator|=
-operator|(
-name|pt_entry_t
-operator|)
 name|vtopte
 argument_list|(
 name|pa
@@ -6725,6 +6753,7 @@ name|pte
 operator|=
 operator|(
 name|pt_entry_t
+operator|*
 operator|)
 name|vm86paddr
 expr_stmt|;
@@ -6791,9 +6820,6 @@ expr_stmt|;
 comment|/* 	 * map page 1 R/W into the kernel page table so we can use it 	 * as a buffer.  The kernel will unmap this page later. 	 */
 name|pte
 operator|=
-operator|(
-name|pt_entry_t
-operator|)
 name|vtopte
 argument_list|(
 name|KERNBASE
@@ -6939,58 +6965,16 @@ name|RB_VERBOSE
 condition|)
 name|printf
 argument_list|(
-literal|"SMAP type=%02x base=%08x %08x len=%08x %08x\n"
+literal|"SMAP type=%02x base=%016llx len=%016llx\n"
 argument_list|,
 name|smap
 operator|->
 name|type
 argument_list|,
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|smap
-operator|->
-name|base
-operator|+
-literal|4
-operator|)
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
 name|smap
 operator|->
 name|base
 argument_list|,
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|smap
-operator|->
-name|length
-operator|+
-literal|4
-operator|)
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
 name|smap
 operator|->
 name|length
@@ -7018,6 +7002,9 @@ condition|)
 goto|goto
 name|next_run
 goto|;
+ifndef|#
+directive|ifndef
+name|PAE
 if|if
 condition|(
 name|smap
@@ -7047,6 +7034,8 @@ goto|goto
 name|next_run
 goto|;
 block|}
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -7280,9 +7269,6 @@ control|)
 block|{
 name|pte
 operator|=
-operator|(
-name|pt_entry_t
-operator|)
 name|vtopte
 argument_list|(
 name|pa
@@ -7305,6 +7291,7 @@ name|pte
 operator|=
 operator|(
 name|pt_entry_t
+operator|*
 operator|)
 name|vm86paddr
 expr_stmt|;
@@ -7786,15 +7773,10 @@ index|]
 operator|=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
-argument_list|)
-expr_stmt|;
-comment|/* call pmap initialization to make new kernel address space */
-name|pmap_bootstrap
-argument_list|(
-name|first
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Size up each available chunk of physical memory. 	 */
@@ -7831,21 +7813,15 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|pte = (pt_entry_t)vtopte(KERNBASE);
-else|#
-directive|else
 name|pte
 operator|=
-operator|(
-name|pt_entry_t
-operator|)
-name|CMAP1
+name|vtopte
+argument_list|(
+name|KERNBASE
+operator|+
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * physmap is in bytes, so when converting to page boundaries, 	 * round up the start address and round down the end address. 	 */
 for|for
 control|(
@@ -7862,13 +7838,16 @@ operator|+=
 literal|2
 control|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|end
 decl_stmt|;
 name|end
 operator|=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 expr_stmt|;
@@ -7921,12 +7900,7 @@ name|tmp
 decl_stmt|,
 name|page_bad
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|int *ptr = 0;
-else|#
-directive|else
+specifier|volatile
 name|int
 modifier|*
 name|ptr
@@ -7935,10 +7909,12 @@ operator|(
 name|int
 operator|*
 operator|)
-name|CADDR1
+operator|(
+name|KERNBASE
+operator|+
+name|PAGE_SIZE
+operator|)
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * block out kernel memory as not available. 			 */
 if|if
 condition|(
@@ -7991,19 +7967,10 @@ expr_stmt|;
 name|tmp
 operator|=
 operator|*
-operator|(
-name|int
-operator|*
-operator|)
 name|ptr
 expr_stmt|;
 comment|/* 			 * Test for alternating 1's and 0's 			 */
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|=
 literal|0xaaaaaaaa
@@ -8011,11 +7978,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|!=
 literal|0xaaaaaaaa
@@ -8028,11 +7990,6 @@ expr_stmt|;
 block|}
 comment|/* 			 * Test for alternating 0's and 1's 			 */
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|=
 literal|0x55555555
@@ -8040,11 +7997,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|!=
 literal|0x55555555
@@ -8057,11 +8009,6 @@ expr_stmt|;
 block|}
 comment|/* 			 * Test for all 1's 			 */
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|=
 literal|0xffffffff
@@ -8069,11 +8016,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|!=
 literal|0xffffffff
@@ -8086,11 +8028,6 @@ expr_stmt|;
 block|}
 comment|/* 			 * Test for all 0's 			 */
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|=
 literal|0x0
@@ -8098,11 +8035,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-operator|(
-specifier|volatile
-name|int
-operator|*
-operator|)
 name|ptr
 operator|!=
 literal|0x0
@@ -8115,10 +8047,6 @@ expr_stmt|;
 block|}
 comment|/* 			 * Restore original value. 			 */
 operator|*
-operator|(
-name|int
-operator|*
-operator|)
 name|ptr
 operator|=
 name|tmp
@@ -9460,6 +9388,22 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PAE
+name|dblfault_tss
+operator|.
+name|tss_cr3
+operator|=
+operator|(
+name|int
+operator|)
+name|IdlePDPT
+operator|-
+name|KERNBASE
+expr_stmt|;
+else|#
+directive|else
 name|dblfault_tss
 operator|.
 name|tss_cr3
@@ -9469,6 +9413,8 @@ name|int
 operator|)
 name|IdlePTD
 expr_stmt|;
+endif|#
+directive|endif
 name|dblfault_tss
 operator|.
 name|tss_eip
@@ -9542,6 +9488,13 @@ expr_stmt|;
 name|getmemsize
 argument_list|(
 name|first
+argument_list|)
+expr_stmt|;
+name|pmap_bootstrap
+argument_list|(
+name|first
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|init_param2
@@ -9721,6 +9674,26 @@ name|pcb_flags
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PAE
+name|proc0
+operator|.
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_cr3
+operator|=
+operator|(
+name|int
+operator|)
+name|IdlePDPT
+operator|-
+name|KERNBASE
+expr_stmt|;
+else|#
+directive|else
 name|proc0
 operator|.
 name|p_addr
@@ -9734,6 +9707,8 @@ name|int
 operator|)
 name|IdlePTD
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
