@@ -1345,13 +1345,9 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_load_file: trying to load %s as %s\n"
+literal|"linker_load_file: trying to load %s\n"
 operator|,
 name|filename
-operator|,
-name|lc
-operator|->
-name|desc
 operator|)
 argument_list|)
 expr_stmt|;
