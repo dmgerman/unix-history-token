@@ -508,19 +508,6 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-specifier|static
-name|void
-name|print_unrhdr
-parameter_list|(
-name|struct
-name|unrhdr
-modifier|*
-name|uh
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_if
 if|#
 directive|if
@@ -1028,17 +1015,6 @@ argument_list|(
 name|uh
 argument_list|,
 name|__LINE__
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"NEW_UNRHDR %x-%x -> %p\n"
-argument_list|,
-name|low
-argument_list|,
-name|high
-argument_list|,
-name|uh
 argument_list|)
 expr_stmt|;
 return|return
@@ -2395,26 +2371,12 @@ name|up
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Out of units %p\n"
-argument_list|,
-name|uh
-argument_list|)
-expr_stmt|;
-name|print_unrhdr
-argument_list|(
-name|uh
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|KASSERT
 argument_list|(
 name|up
@@ -3247,6 +3209,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_comment
+comment|/* USERLAND test driver */
+end_comment
+
 begin_comment
 comment|/*  * Simple stochastic test driver for the above functions  */
 end_comment
@@ -3489,16 +3461,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_comment
-comment|/* USERLAND test driver */
-end_comment
 
 begin_comment
 comment|/* Number of unrs to test */
