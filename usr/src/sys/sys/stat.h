@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stat.h	4.4	82/04/19	*/
+comment|/*	stat.h	4.5	82/11/13	*/
 end_comment
 
 begin_struct
@@ -112,6 +112,17 @@ end_define
 
 begin_comment
 comment|/* symbolic link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_IFSOCK
+value|0140000
+end_define
+
+begin_comment
+comment|/* socket */
 end_comment
 
 begin_define

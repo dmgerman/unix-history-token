@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	4.8	82/10/31	*/
+comment|/*	types.h	4.9	82/11/13	*/
 end_comment
 
 begin_comment
@@ -166,10 +166,15 @@ name|label_t
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
-name|quad
+name|_quad
 block|{
 name|long
 name|val
@@ -181,11 +186,6 @@ block|}
 name|quad
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef

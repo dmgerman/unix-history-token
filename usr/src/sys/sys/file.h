@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.13	82/10/10	*/
+comment|/*	file.h	4.14	82/11/13	*/
 end_comment
 
 begin_ifdef
@@ -221,23 +221,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FRDLOCK
+name|FSHLOCK
 value|0x008
 end_define
 
 begin_comment
-comment|/* apply read lock */
+comment|/* apply shared lock */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FWRLOCK
+name|FEXLOCK
 value|0x010
 end_define
 
 begin_comment
-comment|/* apply write lock */
+comment|/* apply exclusive lock */
 end_comment
 
 begin_define
@@ -369,7 +369,7 @@ begin_define
 define|#
 directive|define
 name|O_EXCL
-value|FWRLOCK
+value|FEXLOCK
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.21	82/10/05	*/
+comment|/*	socket.h	4.22	82/11/13	*/
 end_comment
 
 begin_comment
@@ -428,7 +428,8 @@ block|{
 name|int
 name|so_optlen
 decl_stmt|;
-name|caddr_t
+name|char
+modifier|*
 name|so_optdata
 decl_stmt|;
 block|}

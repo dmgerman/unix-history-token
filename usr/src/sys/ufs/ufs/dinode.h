@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.19	82/10/31	*/
+comment|/*	dinode.h	4.20	82/11/13	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|NDADDR
-value|8
+value|12
 end_define
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|NIADDR
-value|2
+value|3
 end_define
 
 begin_comment
@@ -54,13 +54,13 @@ name|i_dev
 decl_stmt|;
 comment|/* device where inode resides */
 name|u_short
-name|i_rdlockc
+name|i_shlockc
 decl_stmt|;
-comment|/* count of locked readers on inode */
+comment|/* count of shared locks on inode */
 name|u_short
-name|i_wrlockc
+name|i_exlockc
 decl_stmt|;
-comment|/* count of locked writers on inode */
+comment|/* count of exclusive locks on inode */
 name|ino_t
 name|i_number
 decl_stmt|;
@@ -128,36 +128,56 @@ name|short
 name|ic_gid
 decl_stmt|;
 comment|/*  6: owner's group id */
-name|off_t
+name|quad
 name|ic_size
 decl_stmt|;
 comment|/*  8: number of bytes in file */
+name|time_t
+name|ic_atime
+decl_stmt|;
+comment|/* 16: time last accessed */
+name|long
+name|ic_atspare
+decl_stmt|;
+name|time_t
+name|ic_mtime
+decl_stmt|;
+comment|/* 24: time last modified */
+name|long
+name|ic_mtspare
+decl_stmt|;
+name|time_t
+name|ic_ctime
+decl_stmt|;
+comment|/* 32: time created */
+name|long
+name|ic_ctspare
+decl_stmt|;
 name|daddr_t
 name|ic_db
 index|[
 name|NDADDR
 index|]
 decl_stmt|;
-comment|/* 12: disk block addresses */
+comment|/* 40: disk block addresses */
 name|daddr_t
 name|ic_ib
 index|[
 name|NIADDR
 index|]
 decl_stmt|;
-comment|/* 44: indirect blocks */
-name|time_t
-name|ic_atime
+comment|/* 88: indirect blocks */
+name|long
+name|ic_flags
 decl_stmt|;
-comment|/* 52: time last accessed */
-name|time_t
-name|ic_mtime
+comment|/* 100: status, currently unused */
+name|long
+name|ic_spare
+index|[
+literal|6
+index|]
 decl_stmt|;
-comment|/* 56: time last modified */
-name|time_t
-name|ic_ctime
-decl_stmt|;
-comment|/* 60: time created */
+comment|/* 104: reserved, currently unused */
 block|}
 name|i_ic
 struct|;
@@ -178,7 +198,7 @@ decl_stmt|;
 name|char
 name|di_size
 index|[
-literal|64
+literal|128
 index|]
 decl_stmt|;
 block|}
@@ -220,7 +240,7 @@ begin_define
 define|#
 directive|define
 name|i_size
-value|i_ic.ic_size
+value|i_ic.ic_size.val[0]
 end_define
 
 begin_define
@@ -346,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|di_size
-value|di_ic.ic_size
+value|di_ic.ic_size.val[0]
 end_define
 
 begin_define
@@ -461,6 +481,26 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_function_decl
+name|struct
+name|inode
+modifier|*
+name|ifind
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|struct
 name|inode
@@ -484,6 +524,13 @@ name|struct
 name|inode
 modifier|*
 name|namei
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ino_t
+name|dirpref
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -577,23 +624,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IRDLOCK
+name|ISHLOCK
 value|0x80
 end_define
 
 begin_comment
-comment|/* file is read locked */
+comment|/* file has shared lock */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IWRLOCK
+name|IEXLOCK
 value|0x100
 end_define
 
 begin_comment
-comment|/* file is write locked */
+comment|/* file has exclusive lock */
 end_comment
 
 begin_define

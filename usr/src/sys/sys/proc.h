@@ -1,80 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.17	82/10/31	*/
+comment|/*	proc.h	4.18	82/11/13	*/
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_comment
-comment|/* GROT */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|QUOTA
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|QUOTA
-end_define
-
-begin_comment
-comment|/* GROT */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MUSH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MUSH
-end_define
-
-begin_comment
-comment|/* GROT */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GROT */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"mush.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mu_msg.h"
-end_include
 
 begin_comment
 comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  */
@@ -275,6 +202,10 @@ modifier|*
 name|p_ysptr
 decl_stmt|;
 comment|/* pointer to younger siblings */
+name|struct
+name|itimerval
+name|p_realtimer
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -299,10 +230,6 @@ decl_stmt|;
 comment|/* message flags */
 endif|#
 directive|endif
-name|struct
-name|itimerval
-name|p_realtimer
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.17	82/10/10	*/
+comment|/*	buf.h	4.18	82/11/13	*/
 end_comment
 
 begin_comment
@@ -72,6 +72,10 @@ name|long
 name|b_bcount
 decl_stmt|;
 comment|/* transfer count */
+name|long
+name|b_bufsize
+decl_stmt|;
+comment|/* size of allocated buffer */
 define|#
 directive|define
 name|b_active
@@ -160,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|BQUEUES
-value|3
+value|4
 end_define
 
 begin_comment
@@ -198,6 +202,17 @@ end_define
 
 begin_comment
 comment|/* rubbish */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BQ_EMPTY
+value|3
+end_define
+
+begin_comment
+comment|/* buffer headers with no memory */
 end_comment
 
 begin_ifdef
@@ -382,6 +397,15 @@ name|struct
 name|buf
 modifier|*
 name|geteblk
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|buf
+modifier|*
+name|getnewbuf
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -756,54 +780,6 @@ name|bp
 parameter_list|)
 value|{ \ 	blkclr(bp->b_un.b_addr, bp->b_bcount); \ 	bp->b_resid = 0; \ }
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|buf
-name|bfreelist
-index|[
-name|BQUEUES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* buffer chain headers */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|buf
-name|bswlist
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* free list of swap headers */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|bclnlist
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* header for list of cleaned pages */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.14	82/09/18	*/
+comment|/*	param.c	4.15	82/11/13	*/
 end_comment
 
 begin_include
@@ -236,11 +236,11 @@ name|NMBCLUSTERS
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|QUOTA
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -398,11 +398,11 @@ name|ecmap
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|QUOTA
-end_if
+end_ifdef
 
 begin_decl_stmt
 name|struct

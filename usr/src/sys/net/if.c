@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.23	82/10/31	*/
+comment|/*	if.c	4.24	82/11/13	*/
 end_comment
 
 begin_include
@@ -579,7 +579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Mark an interface down and notify protocols of  * the transition.  */
+comment|/*  * Mark an interface down and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
 end_comment
 
 begin_expr_stmt
@@ -651,44 +651,27 @@ name|ifp
 operator|->
 name|if_next
 control|)
+block|{
 if|if
 condition|(
 name|ifp
 operator|->
 name|if_timer
-operator|&&
+operator|==
+literal|0
+operator|||
 operator|--
 name|ifp
 operator|->
 name|if_timer
-operator|==
-literal|0
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 name|ifp
 operator|->
 name|if_watchdog
-operator|==
-literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s%d: no watchdog routine\n"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 call|(
 modifier|*
 name|ifp

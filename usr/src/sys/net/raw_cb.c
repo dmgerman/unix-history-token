@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.13	82/10/31	*/
+comment|/*	raw_cb.c	4.14	82/11/13	*/
 end_comment
 
 begin_include
@@ -376,6 +376,9 @@ return|;
 block|{
 include|#
 directive|include
+file|"../h/domain.h"
+include|#
+directive|include
 file|"../netinet/in.h"
 include|#
 directive|include
@@ -458,6 +461,9 @@ operator|)
 operator|&
 name|inpup
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 sizeof|sizeof
 argument_list|(
 name|inpup
@@ -529,6 +535,13 @@ return|;
 block|}
 block|}
 comment|/* END DUBIOUS */
+name|rp
+operator|=
+name|sotorawcb
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(

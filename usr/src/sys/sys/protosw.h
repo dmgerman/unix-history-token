@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.13	82/11/03	*/
+comment|/*	protosw.h	4.14	82/11/13	*/
 end_comment
 
 begin_comment
@@ -477,7 +477,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The arguments to the ctlinput routine are  *	(*protosw[].pr_ctlinput)(cmd, arg);  * where cmd is one of the commands below, and arg is  * an optional argument (caddr_t).  *  * N.B. The IMP code, in particular, pressumes the values  *      of some of the commands; change with extreme care.  */
+comment|/*  * The arguments to the ctlinput routine are  *	(*protosw[].pr_ctlinput)(cmd, arg);  * where cmd is one of the commands below, and arg is  * an optional argument (caddr_t).  *  * N.B. The IMP code, in particular, pressumes the values  *      of some of the commands; change with extreme care.  * TODO:  *	spread out codes so new ICMP codes can be  *	accomodated more easily  */
 end_comment
 
 begin_define
@@ -511,6 +511,17 @@ end_define
 
 begin_comment
 comment|/* some said to slow down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_MSGSIZE
+value|5
+end_define
+
+begin_comment
+comment|/* message size forced drop */
 end_comment
 
 begin_define
@@ -582,12 +593,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRC_MSGSIZE
+name|PRC_UNREACH_SRCFAIL
 value|12
 end_define
 
 begin_comment
-comment|/* message size forced drop */
+comment|/* source route failed */
 end_comment
 
 begin_define
@@ -610,6 +621,28 @@ end_define
 
 begin_comment
 comment|/* host routing redirect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_REDIRECT_TOSNET
+value|15
+end_define
+
+begin_comment
+comment|/* redirect for type of service& net */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_REDIRECT_TOSHOST
+value|16
+end_define
+
+begin_comment
+comment|/* redirect for tos& host */
 end_comment
 
 begin_define
@@ -673,9 +706,9 @@ literal|"#2"
 block|,
 literal|"#3"
 block|,
-literal|"QUNECH"
+literal|"QUENCH"
 block|,
-literal|"#5"
+literal|"MSGSIZE"
 block|,
 literal|"HOSTDEAD"
 block|,
@@ -689,11 +722,15 @@ literal|"PROTO-UNREACH"
 block|,
 literal|"PORT-UNREACH"
 block|,
-literal|"MSGSIZE"
+literal|"SRCFAIL-UNREACH"
 block|,
 literal|"NET-REDIRECT"
 block|,
 literal|"HOST-REDIRECT"
+block|,
+literal|"TOSNET-REDIRECT"
+block|,
+literal|"TOSHOST-REDIRECT"
 block|,
 literal|"TX-INTRANS"
 block|,

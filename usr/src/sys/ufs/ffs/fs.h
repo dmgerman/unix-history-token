@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fs.h	4.4	82/10/17	*/
+comment|/*	fs.h	4.5	82/11/13	*/
 end_comment
 
 begin_comment
@@ -324,9 +324,17 @@ name|fs_fshift
 decl_stmt|;
 comment|/* ``numfrags'' calc number of frags */
 name|long
+name|fs_maxcontig
+decl_stmt|;
+comment|/* max number of contiguous blks */
+name|long
+name|fs_maxbpg
+decl_stmt|;
+comment|/* max number of blks per cyl group */
+name|long
 name|fs_sparecon
 index|[
-literal|16
+literal|14
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */

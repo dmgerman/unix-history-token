@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	unpcb.h	5.2	82/08/02	*/
+comment|/*	unpcb.h	5.3	82/11/13	*/
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ modifier|*
 name|unp_nextref
 decl_stmt|;
 comment|/* link in unp_refs list */
+name|struct
+name|mbuf
+modifier|*
+name|unp_remaddr
+decl_stmt|;
+comment|/* address of connected socket */
 block|}
 struct|;
 end_struct
