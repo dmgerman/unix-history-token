@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: jot.c,v 1.7 1997/07/15 09:59:30 charnier Exp $"
+literal|"$Id: jot.c,v 1.8 1997/11/03 07:45:33 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,26 +390,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-operator|-
-literal|1.0
-condition|)
-name|srandomdev
-argument_list|()
-expr_stmt|;
-else|else
-name|srandom
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-name|s
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 operator|*
@@ -437,10 +417,10 @@ operator|=
 operator|(
 name|double
 operator|)
-name|random
+name|arc4random
 argument_list|()
 operator|/
-name|LONG_MAX
+name|ULONG_MAX
 expr_stmt|;
 name|putdata
 argument_list|(
