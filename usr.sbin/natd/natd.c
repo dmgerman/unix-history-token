@@ -538,6 +538,13 @@ name|packetSock
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|dropIgnoredIncoming
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -757,6 +764,20 @@ name|DEFAULT_SERVICE
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+comment|/*  * Check if ignored packets should be dropped.  */
+name|dropIgnoredIncoming
+operator|=
+name|PacketAliasSetMode
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|dropIgnoredIncoming
+operator|&=
+name|PKT_ALIAS_DENY_INCOMING
 expr_stmt|;
 comment|/*  * Create divert sockets. Use only one socket if -p was specified  * on command line. Otherwise, create separate sockets for  * outgoing and incoming connnections.  */
 if|if
@@ -1647,6 +1668,9 @@ name|int
 name|origBytes
 decl_stmt|;
 name|int
+name|status
+decl_stmt|;
+name|int
 name|addrSize
 decl_stmt|;
 name|struct
@@ -1830,6 +1854,8 @@ block|}
 else|else
 block|{
 comment|/*  * Do aliasing.  */
+name|status
+operator|=
 name|PacketAliasIn
 argument_list|(
 name|packetBuf
@@ -1837,6 +1863,22 @@ argument_list|,
 name|IP_MAXPACKET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|PKT_ALIAS_IGNORED
+operator|&&
+name|dropIgnoredIncoming
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" dropped.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 comment|/*  * Length might have changed during aliasing.  */
 name|bytes
