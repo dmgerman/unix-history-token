@@ -1450,8 +1450,6 @@ name|CDEV_MAJOR
 operator|,
 function_decl|.d_flags
 init|=
-name|D_TTY
-operator||
 name|D_TRACKCLOSE
 operator|,
 if|#
