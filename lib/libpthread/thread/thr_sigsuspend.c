@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -63,6 +75,8 @@ literal|1
 decl_stmt|;
 name|sigset_t
 name|oset
+decl_stmt|,
+name|sigset
 decl_stmt|;
 comment|/* Check if a new signal set was provided by the caller: */
 if|if
@@ -87,6 +101,44 @@ operator|=
 operator|*
 name|set
 expr_stmt|;
+comment|/* 		 * Check if there are pending signals for the running 		 * thread or process that aren't blocked: 		 */
+name|sigset
+operator|=
+name|curthread
+operator|->
+name|sigpend
+expr_stmt|;
+name|SIGSETOR
+argument_list|(
+name|sigset
+argument_list|,
+name|_process_sigpending
+argument_list|)
+expr_stmt|;
+name|SIGSETNAND
+argument_list|(
+name|sigset
+argument_list|,
+name|curthread
+operator|->
+name|sigmask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SIGNOTEMPTY
+argument_list|(
+name|sigset
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Call the kernel scheduler which will safely 			 * install a signal frame for the running thread: 			 */
+name|_thread_kern_sched_sig
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* Wait for a signal: */
 name|_thread_kern_sched_state
 argument_list|(
@@ -97,6 +149,7 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Always return an interrupted error: */
 name|errno
 operator|=

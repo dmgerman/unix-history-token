@@ -6,6 +6,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -81,6 +99,14 @@ operator|=
 name|curthread
 operator|->
 name|sigpend
+expr_stmt|;
+name|SIGSETOR
+argument_list|(
+operator|*
+name|set
+argument_list|,
+name|_process_sigpending
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Return the completion status: */
