@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.33 1998/04/30 16:48:20 peter Exp $"
+literal|"$Id: login.c,v 1.34 1998/04/30 16:50:07 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,6 +499,22 @@ operator|(
 expr|struct
 name|utmp
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|trimdomain
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1038,6 +1054,13 @@ operator|*
 name|p
 operator|=
 literal|0
+expr_stmt|;
+name|trimdomain
+argument_list|(
+name|optarg
+argument_list|,
+name|UT_HOSTSIZE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
