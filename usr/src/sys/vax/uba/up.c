@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.64	82/12/17	*/
+comment|/*	up.c	4.65	82/12/17	*/
 end_comment
 
 begin_include
@@ -4062,35 +4062,6 @@ operator|.
 name|b_addr
 operator|&
 name|PGOFSET
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"up%d%c: soft ecc sn%d\n"
-argument_list|,
-name|dkunit
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-literal|'a'
-operator|+
-operator|(
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|&
-literal|07
-operator|)
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-operator|+
-name|npf
-argument_list|)
 expr_stmt|;
 name|mask
 operator|=
