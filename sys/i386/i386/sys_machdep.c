@@ -2129,12 +2129,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2148,11 +2142,6 @@ directive|define
 name|NUM_LDT_WARNINGS
 value|10
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -2466,9 +2455,6 @@ literal|1
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 comment|/* complain a for a while if using old methods */
 if|if
 condition|(
@@ -2495,8 +2481,6 @@ literal|"See the i386_set_ldt man page for more info\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* verify range of descriptors to modify */
 name|largest_ld
 operator|=
