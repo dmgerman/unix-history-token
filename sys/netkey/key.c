@@ -1043,6 +1043,12 @@ literal|256
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_ESP
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1051,6 +1057,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
