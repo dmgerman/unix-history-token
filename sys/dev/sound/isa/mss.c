@@ -6941,6 +6941,13 @@ literal|"OPTi925"
 block|}
 block|,
 comment|/* OPT9250 XXX guess */
+block|{
+literal|0x1022b839
+block|,
+name|NULL
+block|}
+block|,
+comment|/* NMX2210 - non-ac97 neomagic 256av */
 if|#
 directive|if
 literal|0
@@ -7173,6 +7180,22 @@ operator|->
 name|bd_id
 operator|=
 name|MD_OPTI925
+expr_stmt|;
+break|break;
+case|case
+literal|0x1022b839
+case|:
+name|mss
+operator|->
+name|io_rid
+operator|=
+literal|1
+expr_stmt|;
+name|mss
+operator|->
+name|bd_id
+operator|=
+name|MD_CS42XX
 expr_stmt|;
 break|break;
 if|#
