@@ -381,6 +381,8 @@ decl_stmt|;
 name|vm_map_entry_t
 name|save_hint
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
@@ -437,12 +439,6 @@ name|FALSE
 operator|)
 return|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|map
 operator|=
 operator|&
@@ -502,12 +498,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rv
@@ -533,11 +523,7 @@ name|u_int
 name|len
 decl_stmt|;
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|vm_map_pageable
 argument_list|(
@@ -569,12 +555,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -593,11 +573,7 @@ name|u_int
 name|len
 decl_stmt|;
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|vm_map_pageable
 argument_list|(
@@ -629,17 +605,11 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Implement fork's actions on an address space.  * Here we arrange for the address space to be copied or referenced,  * allocate a user struct (pcb and kernel stack), then call the  * machine-dependent layer to fill those in and make the new process  * ready to run.  The new process is set up so that it returns directly  * to user mode to avoid stack copying and relocation problems.  *  * Called without vm_mtx.  */
+comment|/*  * Implement fork's actions on an address space.  * Here we arrange for the address space to be copied or referenced,  * allocate a user struct (pcb and kernel stack), then call the  * machine-dependent layer to fill those in and make the new process  * ready to run.  The new process is set up so that it returns directly  * to user mode to avoid stack copying and relocation problems.  */
 end_comment
 
 begin_function
@@ -677,11 +647,7 @@ name|user
 modifier|*
 name|up
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -731,12 +697,6 @@ argument_list|,
 name|p2
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return;
@@ -973,12 +933,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1110,6 +1064,8 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -1152,21 +1108,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|pmap_swapin_proc
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -1265,14 +1209,9 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
+comment|/* GIANT_REQUIRED */
 name|loop
 label|:
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm_page_count_min
@@ -1281,22 +1220,10 @@ condition|)
 block|{
 name|VM_WAIT
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 goto|goto
 name|loop
 goto|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|pp
 operator|=
 name|NULL
@@ -1578,7 +1505,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and unwire their u-areas.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  *  * Can block  * must be called with vm_mtx  */
+comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and unwire their u-areas.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  */
 end_comment
 
 begin_function
@@ -1615,19 +1542,7 @@ name|didswap
 init|=
 literal|0
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|outp
 operator|=
@@ -1663,12 +1578,6 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1702,12 +1611,6 @@ block|{
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1753,12 +1656,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 switch|switch
@@ -1778,12 +1675,6 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1815,12 +1706,6 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1858,12 +1743,6 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1913,12 +1792,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 name|mtx_unlock_spin
@@ -1962,12 +1835,6 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2025,12 +1892,6 @@ expr_stmt|;
 name|didswap
 operator|++
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 goto|goto
 name|retry
 goto|;
@@ -2045,12 +1906,6 @@ argument_list|(
 name|vm
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|sx_sunlock
@@ -2060,12 +1915,6 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we swapped something out, and another process needed memory, 	 * then wakeup the sched process. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|didswap

@@ -428,7 +428,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_add_new_page:  *  *	Add a new page to the freelist for use by the system.  *	Must be called at splhigh().  *	Must be called with the vm_mtx held.  */
+comment|/*  *	vm_add_new_page:  *  *	Add a new page to the freelist for use by the system.  *	Must be called at splhigh().  */
 end_comment
 
 begin_function
@@ -444,13 +444,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 operator|++
 name|cnt
@@ -1162,13 +1156,7 @@ modifier|*
 modifier|*
 name|bucket
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -1287,13 +1275,7 @@ block|{
 name|vm_object_t
 name|object
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -1442,7 +1424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	NOTE: the code below does not lock.  It will operate properly if  *	an interrupt makes a change, but the generation algorithm will not   *	operate properly in an SMP environment where both cpu's are able to run  *	kernel code simultaneously.  *	NOTE: under the giant vm lock we should be ok, there should be  *	no reason to check vm_page_bucket_generation  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
+comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	NOTE: the code below does not lock.  It will operate properly if  *	an interrupt makes a change, but the generation algorithm will not   *	operate properly in an SMP environment where both cpu's are able to run  *	kernel code simultaneously.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
 end_comment
 
 begin_function
@@ -1746,13 +1728,7 @@ name|vpgqueues
 modifier|*
 name|pq
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -1865,13 +1841,7 @@ name|vpgqueues
 modifier|*
 name|pq
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|pq
 operator|=
@@ -1986,13 +1956,7 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 while|while
 condition|(
@@ -2114,7 +2078,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_alloc:  *  *	Allocate and return a memory cell associated  *	with this VM object/offset pair.  *  *	page_req classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *	VM_ALLOC_ZERO		zero page  *  *	vm_mtx must be locked.  *	This routine may not block.  *  *	Additional special handling is required when called from an  *	interrupt (VM_ALLOC_INTERRUPT).  We are not allowed to mess with  *	the page cache in this case.  */
+comment|/*  *	vm_page_alloc:  *  *	Allocate and return a memory cell associated  *	with this VM object/offset pair.  *  *	page_req classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *	VM_ALLOC_ZERO		zero page  *  *	This routine may not block.  *  *	Additional special handling is required when called from an  *	interrupt (VM_ALLOC_INTERRUPT).  We are not allowed to mess with  *	the page cache in this case.  */
 end_comment
 
 begin_function
@@ -2146,13 +2110,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -2566,13 +2524,10 @@ name|vm_pageout_pages_needed
 operator|=
 literal|1
 expr_stmt|;
-name|msleep
+name|tsleep
 argument_list|(
 operator|&
 name|vm_pageout_pages_needed
-argument_list|,
-operator|&
-name|vm_mtx
 argument_list|,
 name|PSWP
 argument_list|,
@@ -2601,15 +2556,12 @@ name|vm_pages_needed
 argument_list|)
 expr_stmt|;
 block|}
-name|msleep
+name|tsleep
 argument_list|(
 operator|&
 name|cnt
 operator|.
 name|v_free_count
-argument_list|,
-operator|&
-name|vm_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -2727,18 +2679,12 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|s
 operator|=
 name|splvm
 argument_list|()
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2960,18 +2906,12 @@ name|m
 operator|->
 name|object
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|s
 operator|=
 name|splvm
 argument_list|()
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
 expr_stmt|;
 name|cnt
 operator|.
@@ -3652,13 +3592,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 comment|/* 	 * Ignore if already inactive. 	 */
 if|if
@@ -3818,15 +3752,7 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|mtx_assert
-argument_list|(
-name|VM_PAGE_MTX
-argument_list|(
-name|m
-argument_list|)
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -4004,13 +3930,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -4174,13 +4094,7 @@ decl_stmt|;
 name|int
 name|head
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|dnw
 operator|=
@@ -4283,7 +4197,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, allocate it.  *  * This routine may block.  * Requires vm_mtx.  */
+comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, allocate it.  *  * This routine may block.  */
 end_comment
 
 begin_function
@@ -4314,13 +4228,7 @@ name|s
 decl_stmt|,
 name|generation
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|retrylookup
 label|:
@@ -4400,12 +4308,9 @@ operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-name|msleep
+name|tsleep
 argument_list|(
 name|m
-argument_list|,
-operator|&
-name|vm_mtx
 argument_list|,
 name|PVM
 argument_list|,
@@ -4590,7 +4495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_set_validclean:  *  *	Sets portions of a page valid and clean.  The arguments are expected  *	to be DEV_BSIZE aligned but if they aren't the bitmap is inclusive  *	of any partial chunks touched by the range.  The invalid portion of  *	such chunks will be zero'd.  *  *	This routine may not block.  *  *	(base + size) must be less then or equal to PAGE_SIZE.  *  *	vm_mtx needs to be held  */
+comment|/*  *	vm_page_set_validclean:  *  *	Sets portions of a page valid and clean.  The arguments are expected  *	to be DEV_BSIZE aligned but if they aren't the bitmap is inclusive  *	of any partial chunks touched by the range.  The invalid portion of  *	such chunks will be zero'd.  *  *	This routine may not block.  *  *	(base + size) must be less then or equal to PAGE_SIZE.  */
 end_comment
 
 begin_function
@@ -4622,13 +4527,7 @@ decl_stmt|;
 name|int
 name|endoff
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -4838,13 +4737,7 @@ name|int
 name|size
 decl_stmt|;
 block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|m
 operator|->
@@ -4888,13 +4781,7 @@ block|{
 name|int
 name|bits
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|bits
 operator|=
@@ -6266,27 +6153,7 @@ name|void
 modifier|*
 name|ret
 decl_stmt|;
-name|int
-name|hadvmlock
-decl_stmt|;
-name|hadvmlock
-operator|=
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|ret
 operator|=
@@ -6307,17 +6174,6 @@ argument_list|,
 name|boundary
 argument_list|,
 name|kernel_map
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -6352,27 +6208,7 @@ modifier|*
 name|type
 decl_stmt|;
 block|{
-name|int
-name|hadvmlock
-decl_stmt|;
-name|hadvmlock
-operator|=
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|kmem_free
 argument_list|(
@@ -6384,17 +6220,6 @@ operator|)
 name|addr
 argument_list|,
 name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -6428,27 +6253,7 @@ block|{
 name|vm_offset_t
 name|ret
 decl_stmt|;
-name|int
-name|hadvmlock
-decl_stmt|;
-name|hadvmlock
-operator|=
-name|mtx_owned
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|ret
 operator|=
@@ -6475,17 +6280,6 @@ argument_list|,
 name|kernel_map
 argument_list|)
 operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|hadvmlock
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

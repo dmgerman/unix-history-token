@@ -816,6 +816,8 @@ name|filedesc
 modifier|*
 name|fd
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* Can't copy and clear */
 if|if
 condition|(
@@ -859,14 +861,6 @@ argument_list|,
 literal|0
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Close all file descriptors. 		 */
@@ -2237,14 +2231,6 @@ argument_list|,
 name|p2
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 if|if

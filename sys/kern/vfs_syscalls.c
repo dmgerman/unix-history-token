@@ -14295,6 +14295,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -14385,12 +14387,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|vm_object_page_clean
 argument_list|(
 name|obj
@@ -14400,12 +14396,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}

@@ -1297,7 +1297,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vfs_buf_test_cache:  *  *	Called when a buffer is extended.  This function clears the B_CACHE  *	bit if the newly extended portion of the buffer does not contain  *	valid data.  *  *	must be called with vm_mtx held  */
+comment|/*  *	vfs_buf_test_cache:  *  *	Called when a buffer is extended.  This function clears the B_CACHE  *	bit if the newly extended portion of the buffer does not contain  *	valid data.  */
 end_comment
 
 begin_function
@@ -1324,6 +1324,8 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1500,6 +1502,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1780,12 +1784,6 @@ operator|=
 name|nbuf
 expr_stmt|;
 comment|/*  * Maximum number of async ops initiated per buf_daemon loop.  This is  * somewhat of a hack at the moment, we really need to limit ourselves  * based on the number of bytes of I/O in-transit that were initiated  * from buf_daemon.  */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|bogus_offset
 operator|=
 name|kmem_alloc_pageable
@@ -1819,17 +1817,11 @@ operator|.
 name|v_wire_count
 operator|++
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * bfreekva() - free the kva allocation for a buffer.  *  *	Must be called at splbio() or higher as this is the only locking for  *	buffer_map.  *  *	Since this call frees up buffer space, we call bufspacewakeup().  *  *	Must be called without the vm_mtx.  */
+comment|/*  * bfreekva() - free the kva allocation for a buffer.  *  *	Must be called at splbio() or higher as this is the only locking for  *	buffer_map.  *  *	Since this call frees up buffer space, we call bufspacewakeup().  */
 end_comment
 
 begin_function
@@ -1843,13 +1835,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -1866,12 +1852,6 @@ operator|-=
 name|bp
 operator|->
 name|b_kvasize
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 name|vm_map_delete
 argument_list|(
@@ -1894,12 +1874,6 @@ operator|+
 name|bp
 operator|->
 name|b_kvasize
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|bp
@@ -1942,6 +1916,8 @@ name|bp
 operator|->
 name|b_qindex
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -3182,6 +3158,8 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|BUF_REFCNT
@@ -3259,12 +3237,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set the *dirty* buffer range based upon the VM system dirty pages. 	 */
 name|vfs_setdirty
 argument_list|(
@@ -3275,12 +3247,6 @@ comment|/* 	 * We need to do this here to satisfy the vnode_pager and the 	 * pa
 name|vfs_clean_pages
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|bqrelse
@@ -3640,7 +3606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	brelse:  *  *	Release a busy buffer and, if requested, free its resources.  The  *	buffer will be stashed in the appropriate bufqueue[] allowing it  *	to be accessed later as a cache entity or reused for other purposes.  *  *	vm_mtx must be not be held.  */
+comment|/*  *	brelse:  *  *	Release a busy buffer and, if requested, free its resources.  The  *	buffer will be stashed in the appropriate bufqueue[] allowing it  *	to be accessed later as a cache entity or reused for other purposes.  */
 end_comment
 
 begin_function
@@ -3656,13 +3622,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -3997,12 +3957,6 @@ name|bp
 operator|->
 name|b_offset
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -4048,12 +4002,6 @@ operator|==
 name|bogus_page
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|VOP_GETVOBJECT
 argument_list|(
 name|vp
@@ -4074,12 +4022,6 @@ expr_stmt|;
 name|had_bogus
 operator|=
 literal|1
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -4312,12 +4254,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -4342,21 +4278,9 @@ name|B_RELBUF
 operator|)
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|vfs_vmio_release
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -5130,10 +5054,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Must be called with vm_mtx held.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -5153,13 +5073,7 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 for|for
 control|(
@@ -5330,7 +5244,6 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
-comment|/* could drop vm_mtx here */
 if|if
 condition|(
 name|bp
@@ -5922,6 +5835,8 @@ specifier|static
 name|int
 name|flushingbufs
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * We can't afford to block since we might be holding a vnode lock, 	 * which may prevent system daemons from running.  We deal with 	 * low-memory situations by proactively returning memory and running 	 * async I/O rather then sync I/O. 	 */
 operator|++
 name|getnewbufcalls
@@ -6220,21 +6135,9 @@ operator|&=
 operator|~
 name|B_ASYNC
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|vfs_vmio_release
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -6680,12 +6583,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm_map_findspace
@@ -6705,12 +6602,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * Uh oh.  Buffer map is to fragmented.  We 				 * must defragment the map. 				 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 operator|++
 name|bufdefragcnt
 expr_stmt|;
@@ -6784,12 +6675,6 @@ operator|++
 name|bufreusecnt
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 name|bp
 operator|->
@@ -7294,6 +7179,8 @@ decl_stmt|;
 name|vm_ooffset_t
 name|off
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|incore
@@ -7385,12 +7272,6 @@ operator|->
 name|mnt_stat
 operator|.
 name|f_iosize
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -7497,23 +7378,11 @@ goto|goto
 name|notinmem
 goto|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 literal|1
 return|;
 name|notinmem
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -7523,7 +7392,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vfs_setdirty:  *  *	Sets the dirty range for a buffer based on the status of the dirty  *	bits in the pages comprising the buffer.  *  *	The range is limited to the size of the buffer.  *  *	This routine is primarily used by NFS, but is generalized for the  *	B_VMIO case.  *  *	Must be called with vm_mtx  */
+comment|/*  *	vfs_setdirty:  *  *	Sets the dirty range for a buffer based on the status of the dirty  *	bits in the pages comprising the buffer.  *  *	The range is limited to the size of the buffer.  *  *	This routine is primarily used by NFS, but is generalized for the  *	B_VMIO case.  */
 end_comment
 
 begin_function
@@ -7543,13 +7412,7 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 comment|/* 	 * Degenerate case - empty buffer 	 */
 if|if
@@ -8647,6 +8510,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|BUF_REFCNT
@@ -9194,12 +9059,6 @@ name|b_bufsize
 condition|)
 block|{
 comment|/* 			 * DEV_BSIZE aligned new buffer size is less then the 			 * DEV_BSIZE aligned existing buffer size.  Figure out 			 * if we have to remove any pages. 			 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|desiredpages
@@ -9312,12 +9171,6 @@ operator|=
 name|desiredpages
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -9357,12 +9210,6 @@ name|vp
 argument_list|,
 operator|&
 name|obj
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 while|while
@@ -9707,12 +9554,6 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_data
@@ -9957,6 +9798,8 @@ name|buf
 operator|*
 operator|)
 argument_list|)
+expr_stmt|;
+name|GIANT_REQUIRED
 expr_stmt|;
 name|s
 operator|=
@@ -10229,12 +10072,6 @@ literal|"biodone: no object"
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -10688,12 +10525,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* 	 * For asynchronous completions, release the buffer now. The brelse 	 * will do a wakeup there if necessary - so no need to do a wakeup 	 * here in the async case. The sync case always needs to do a wakeup. 	 */
 if|if
@@ -10758,7 +10589,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called in lieu of iodone in the case of  * incomplete I/O.  This keeps the busy status for pages  * consistant.  *  * vm_mtx should not be held  */
+comment|/*  * This routine is called in lieu of iodone in the case of  * incomplete I/O.  This keeps the busy status for pages  * consistant.  */
 end_comment
 
 begin_function
@@ -10774,13 +10605,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|runningbufwakeup
 argument_list|(
@@ -10814,12 +10639,6 @@ name|vp
 argument_list|,
 operator|&
 name|obj
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 for|for
@@ -10941,18 +10760,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * vfs_page_set_valid:  *  *	Set the valid bits in a page based on the supplied offset.   The  *	range is restricted to the buffer's size.  *  *	This routine is typically called after a read completes.  *  *	vm_mtx should be held  */
+comment|/*  * vfs_page_set_valid:  *  *	Set the valid bits in a page based on the supplied offset.   The  *	range is restricted to the buffer's size.  *  *	This routine is typically called after a read completes.  */
 end_comment
 
 begin_function
@@ -10980,13 +10793,7 @@ name|soff
 decl_stmt|,
 name|eoff
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 comment|/* 	 * Start and end offsets in buffer.  eoff - soff may not cross a 	 * page boundry or cross the end of the buffer.  The end of the 	 * buffer, in this case, is our file EOF, not the allocation size 	 * of the buffer. 	 */
 name|soff
@@ -11065,7 +10872,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being PG_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  *  * vm_mtx should not be held  */
+comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being PG_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  *  * Since I/O has not been initiated yet, certain buffer flags  * such as BIO_ERROR or B_INVAL may be in an inconsistant state  * and should be ignored.  */
 end_comment
 
 begin_function
@@ -11086,13 +10893,7 @@ name|i
 decl_stmt|,
 name|bogus
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -11143,12 +10944,6 @@ argument_list|,
 operator|(
 literal|"vfs_busy_pages: no buffer offset"
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|vfs_setdirty
@@ -11358,18 +11153,12 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * Tell the VM system that the pages associated with this buffer  * are clean.  This is used for delayed writes where the data is  * going to go to disk eventually without additional VM intevention.  *  * Note that while we only really need to clean through to b_bcount, we  * just go ahead and clean through to b_bufsize.  *  * should be called with vm_mtx held  */
+comment|/*  * Tell the VM system that the pages associated with this buffer  * are clean.  This is used for delayed writes where the data is  * going to go to disk eventually without additional VM intevention.  *  * Note that while we only really need to clean through to b_bcount, we  * just go ahead and clean through to b_bufsize.  */
 end_comment
 
 begin_function
@@ -11386,13 +11175,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -11641,7 +11424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vfs_bio_clrbuf:  *  *	clear a buffer.  This routine essentially fakes an I/O, so we need  *	to clear BIO_ERROR and B_INVAL.  *  *	Note that while we only theoretically need to clear through b_bcount,  *	we go ahead and clear through b_bufsize.  *  *	We'll get vm_mtx here for safety if processing a VMIO buffer.  *	I don't think vm_mtx is needed, but we're twiddling vm_page flags.  */
+comment|/*  *	vfs_bio_clrbuf:  *  *	clear a buffer.  This routine essentially fakes an I/O, so we need  *	to clear BIO_ERROR and B_INVAL.  *  *	Note that while we only theoretically need to clear through b_bcount,  *	we go ahead and clear through b_bufsize.  */
 end_comment
 
 begin_function
@@ -11666,6 +11449,8 @@ name|sa
 decl_stmt|,
 name|ea
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11683,12 +11468,6 @@ operator|==
 name|B_VMIO
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_flags
@@ -11813,12 +11592,6 @@ operator|->
 name|b_resid
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -12093,12 +11866,6 @@ name|b_resid
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -12112,7 +11879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_hold_load_pages and vm_hold_free_pages get pages into  * a buffers address space.  The pages are anonymous and are  * not associated with a file object.  *  * vm_mtx should not be held  */
+comment|/*  * vm_hold_load_pages and vm_hold_free_pages get pages into  * a buffers address space.  The pages are anonymous and are  * not associated with a file object.  */
 end_comment
 
 begin_function
@@ -12141,13 +11908,7 @@ decl_stmt|;
 name|int
 name|index
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|to
 operator|=
@@ -12180,12 +11941,6 @@ argument_list|)
 operator|)
 operator|>>
 name|PAGE_SHIFT
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -12298,12 +12053,6 @@ name|b_npages
 operator|=
 name|index
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -12334,13 +12083,7 @@ name|index
 decl_stmt|,
 name|newnpages
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_NOTOWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|from
 operator|=
@@ -12375,12 +12118,6 @@ argument_list|)
 operator|)
 operator|>>
 name|PAGE_SHIFT
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -12481,12 +12218,6 @@ operator|->
 name|b_npages
 operator|=
 name|newnpages
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 block|}
 end_function

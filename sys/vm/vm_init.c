@@ -122,13 +122,6 @@ begin_comment
 comment|/*  *	vm_init initializes the virtual memory system.  *	This is done only by the first cpu up.  *  *	The start and end address of physical memory is passed in.  */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|mtx
-name|vm_mtx
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* ARGSUSED*/
 end_comment
@@ -146,22 +139,6 @@ name|dummy
 decl_stmt|;
 block|{
 comment|/* 	 * Initializes resident memory structures. From here on, all physical 	 * memory is accounted for, and we use only virtual addresses. 	 */
-name|mtx_init
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-literal|"vm"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|vm_set_page_size
 argument_list|()
 expr_stmt|;
@@ -202,12 +179,6 @@ argument_list|)
 expr_stmt|;
 name|vm_pager_init
 argument_list|()
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -171,6 +177,8 @@ block|{
 name|vm_object_t
 name|object
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * Offset should be page aligned. 	 */
 if|if
 condition|(
@@ -208,13 +216,10 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|msleep
+name|tsleep
 argument_list|(
 operator|&
 name|phys_pager_alloc_lock
-argument_list|,
-operator|&
-name|vm_mtx
 argument_list|,
 name|PVM
 argument_list|,

@@ -278,6 +278,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * Linux and *BSD binaries look very much alike, 	 * only the machine id is different: 	 * 0x64 for Linux, 0x86 for *BSD, 0x00 for BSDI. 	 * NetBSD is in network byte order.. ugh. 	 */
 if|if
 condition|(
@@ -580,12 +582,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack) 	 */
 name|exec_new_vmspace
 argument_list|(
@@ -619,24 +615,12 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|VOP_GETVOBJECT
 argument_list|(
 name|vp
 argument_list|,
 operator|&
 name|object
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|vm_object_reference
@@ -687,12 +671,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -756,12 +734,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -805,12 +777,6 @@ block|{
 name|vm_map_unlock
 argument_list|(
 name|map
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -878,12 +844,6 @@ operator|+
 name|a_out
 operator|->
 name|a_text
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Fill in image_params */

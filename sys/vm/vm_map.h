@@ -451,7 +451,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curproc); \ 		mtx_lock(&vm_mtx); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		lockmgr(&(map)->lock, LK_DRAIN|LK_INTERLOCK, \&(map)->ref_lock, curproc); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
 begin_comment
@@ -511,7 +511,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: %p\n", map); \ 		mtx_assert(&vm_mtx, MA_OWNED); \ 		if (lockmgr(&(map)->lock, LK_EXCLUSIVE | LK_INTERLOCK, \&vm_mtx, curproc) != 0) \ 			panic("vm_map_lock: failed to get lock"); \ 		mtx_lock(&vm_mtx); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: %p\n", map); \ 		if (lockmgr(&(map)->lock, LK_EXCLUSIVE, \ 		   	NULL, curproc) != 0) \ 			panic("vm_map_lock: failed to get lock"); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
 begin_define
@@ -533,7 +533,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_SHARED: %p\n", map); \ 		mtx_assert(&vm_mtx, MA_OWNED); \ 		lockmgr(&(map)->lock, LK_SHARED | LK_INTERLOCK, \&vm_mtx, curproc); \ 		mtx_lock(&vm_mtx); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_SHARED: %p\n", map); \ 		lockmgr(&(map)->lock, LK_SHARED, \ 		    NULL, curproc); \ 	} while (0)
 end_define
 
 begin_define
@@ -582,19 +582,10 @@ operator|->
 name|lock
 argument_list|,
 name|LK_EXCLUPGRADE
-operator||
-name|LK_INTERLOCK
 argument_list|,
-operator|&
-name|vm_mtx
+name|NULL
 argument_list|,
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 if|if

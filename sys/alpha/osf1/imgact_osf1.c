@@ -302,6 +302,8 @@ name|Osf_Auxargs
 modifier|*
 name|osf_auxargs
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|execp
 operator|=
 operator|(
@@ -701,12 +703,6 @@ goto|goto
 name|bail
 goto|;
 comment|/* 	 * Destroy old process VM and create a new one (with a new stack). 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|exec_new_vmspace
 argument_list|(
 name|imgp
@@ -720,12 +716,6 @@ operator|->
 name|proc
 operator|->
 name|p_vmspace
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 name|imgp
 operator|->
@@ -934,12 +924,6 @@ name|baddr
 operator|=
 name|bss_start
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -978,12 +962,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -1001,12 +979,6 @@ goto|goto
 name|bail
 goto|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 name|raw_dend
 operator|=

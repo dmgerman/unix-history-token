@@ -193,6 +193,8 @@ decl_stmt|;
 name|vm_offset_t
 name|kva
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * if the vmspace is in the midst of being deallocated or the 	 * process is exiting, don't try to grab anything.  The page table 	 * usage in that process can be messed up. 	 */
 name|vm
 operator|=
@@ -213,12 +215,6 @@ condition|)
 return|return
 name|EFAULT
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm
@@ -227,17 +223,9 @@ name|vm_refcnt
 operator|<
 literal|1
 condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 name|EFAULT
 return|;
-block|}
 operator|++
 name|vm
 operator|->
@@ -529,12 +517,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now do the i/o move. 		 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|uiomove
@@ -551,12 +533,6 @@ argument_list|,
 name|len
 argument_list|,
 name|uio
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|pmap_kremove
@@ -616,12 +592,6 @@ expr_stmt|;
 name|vmspace_free
 argument_list|(
 name|vm
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return

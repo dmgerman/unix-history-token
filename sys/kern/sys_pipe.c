@@ -1155,6 +1155,8 @@ name|npages
 decl_stmt|,
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|npages
 operator|=
 name|round_page
@@ -1165,12 +1167,6 @@ operator|/
 name|PAGE_SIZE
 expr_stmt|;
 comment|/* 	 * Create an object, I don't like the idea of paging to/from 	 * kernel_object. 	 * XXX -- minor change needed here for NetBSD/OpenBSD VM systems. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|object
 operator|=
 name|vm_object_allocate
@@ -1231,12 +1227,6 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -1247,12 +1237,6 @@ comment|/* free old resources if we're resizing */
 name|pipe_free_kmem
 argument_list|(
 name|cpipe
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|cpipe
@@ -2406,6 +2390,8 @@ name|endaddr
 decl_stmt|,
 name|paddr
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|size
 operator|=
 operator|(
@@ -2449,12 +2435,6 @@ operator|->
 name|iov_base
 operator|+
 name|size
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|addr
@@ -2546,12 +2526,6 @@ name|j
 index|]
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -2684,12 +2658,6 @@ operator|.
 name|npages
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 comment|/*  * and update the uio data  */
 name|uio
 operator|->
@@ -2762,11 +2730,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -2872,12 +2836,6 @@ name|i
 index|]
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -5132,13 +5090,7 @@ modifier|*
 name|cpipe
 decl_stmt|;
 block|{
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 if|if
 condition|(
@@ -5385,12 +5337,6 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 		 * free resources 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|pipe_free_kmem
 argument_list|(
 name|cpipe
@@ -5402,12 +5348,6 @@ argument_list|(
 name|pipe_zone
 argument_list|,
 name|cpipe
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 block|}

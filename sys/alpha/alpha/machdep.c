@@ -985,12 +985,6 @@ name|vm_offset_t
 name|minaddr
 decl_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|identifycpu
 argument_list|()
 expr_stmt|;
@@ -1468,12 +1462,6 @@ literal|3
 operator|)
 operator|)
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */

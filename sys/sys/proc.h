@@ -817,6 +817,10 @@ modifier|*
 name|p_frame
 decl_stmt|;
 comment|/* (k) */
+name|int
+name|p_giant_optional
+decl_stmt|;
+comment|/* (i) Giant Lock Sanity */
 block|}
 struct|;
 end_struct

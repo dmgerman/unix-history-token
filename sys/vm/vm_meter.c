@@ -621,11 +621,7 @@ name|totalp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Mark all objects as inactive. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
+name|GIANT_REQUIRED
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -640,12 +636,6 @@ argument_list|(
 name|object
 argument_list|,
 name|OBJ_ACTIVE
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate process statistics. 	 */
@@ -840,12 +830,6 @@ name|paging
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|map
@@ -920,12 +904,6 @@ operator|->
 name|paging_in_progress
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|paging
@@ -943,12 +921,6 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate object memory usage statistics. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|object
@@ -1075,12 +1047,6 @@ operator|+
 name|cnt
 operator|.
 name|v_cache_count
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 return|return
 operator|(

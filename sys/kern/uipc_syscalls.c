@@ -7630,17 +7630,13 @@ name|vm_page
 modifier|*
 name|m
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|sf
 operator|=
 name|dtosf
 argument_list|(
 name|addr
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|pmap_qremove
@@ -7684,12 +7680,6 @@ condition|)
 name|vm_page_free
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|sf
@@ -7828,6 +7818,8 @@ literal|0
 decl_stmt|,
 name|s
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|vp
 operator|=
 name|NULL
@@ -8292,12 +8284,6 @@ name|done
 goto|;
 block|}
 comment|/* 		 * Attempt to look up the page.   		 * 		 *	Allocate if not found 		 * 		 *	Wait and loop if busy. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|pg
 operator|=
 name|vm_page_lookup
@@ -8334,12 +8320,6 @@ condition|)
 block|{
 name|VM_WAIT
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 goto|goto
 name|retry_lookup
 goto|;
@@ -8363,12 +8343,6 @@ literal|"sfpbsy"
 argument_list|)
 condition|)
 block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 goto|goto
 name|retry_lookup
 goto|;
@@ -8413,12 +8387,6 @@ comment|/* 			 * Ensure that our page is still around when the I/O  			 * comple
 name|vm_page_io_start
 argument_list|(
 name|pg
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Get the page from backing store. 			 */
@@ -8538,12 +8506,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|pg
@@ -8616,12 +8578,6 @@ name|pg
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|sbunlock
 argument_list|(
 operator|&
@@ -8636,12 +8592,6 @@ goto|;
 block|}
 block|}
 comment|/* 		 * Get a sendfile buf. We usually wait as long as necessary, 		 * but this wait can be interrupted. 		 */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8654,12 +8604,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|pg
@@ -8686,12 +8630,6 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|sbunlock
 argument_list|(
 operator|&
@@ -8709,12 +8647,6 @@ name|done
 goto|;
 block|}
 comment|/* 		 * Allocate a kernel virtual page and insert the physical page 		 * into it. 		 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|sf
 operator|->
 name|m
@@ -8731,12 +8663,6 @@ operator|&
 name|pg
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Get an mbuf header and set it up as having external storage. 		 */

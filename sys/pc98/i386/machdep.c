@@ -1351,12 +1351,6 @@ name|int
 name|physmem_est
 decl_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|earlysetcpuclass
 argument_list|()
 expr_stmt|;
@@ -1927,12 +1921,6 @@ literal|3
 operator|)
 operator|)
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */
@@ -9821,6 +9809,8 @@ operator|!
 name|has_f00f_bug
 condition|)
 return|return;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Intel Pentium detected, installing workaround for F00F bug\n"
@@ -9933,12 +9923,6 @@ name|idt
 operator|=
 name|new_idt
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm_map_protect
@@ -9961,12 +9945,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"vm_map_protect failed"
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return;

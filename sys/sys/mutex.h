@@ -1159,6 +1159,53 @@ define|\
 value|_mtx_assert((m), (what), __FILE__, __LINE__)
 end_define
 
+begin_comment
+comment|/*  *  GIANT_REQUIRED;	- place at the beginning of a procedure   *  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIANT_REQUIRED
+define|\
+value|do {								\ 		KASSERT(curproc->p_giant_optional == 0, ("Giant not optional at %s: %d", __FILE__, __LINE__));						\ 		mtx_assert(&Giant, MA_OWNED);				\ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|START_GIANT_DEPRECIATED
+parameter_list|(
+name|sysctlvar
+parameter_list|)
+define|\
+value|int __gotgiant = (curproc->p_giant_optional == 0&& sysctlvar) ? \ 		(mtx_lock(&Giant), 1) : 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_GIANT_DEPRECIATED
+define|\
+value|if (__gotgiant) mtx_unlock(&Giant)
+end_define
+
+begin_define
+define|#
+directive|define
+name|START_GIANT_OPTIONAL
+define|\
+value|++curproc->p_giant_optional
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_GIANT_OPTIONAL
+define|\
+value|--curproc->p_giant_optional
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1177,6 +1224,39 @@ name|m
 parameter_list|,
 name|what
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIANT_REQUIRED
+end_define
+
+begin_define
+define|#
+directive|define
+name|START_GIANT_DEPRECIATED
+parameter_list|(
+name|sysctl
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_GIANT_DEPRECIATED
+end_define
+
+begin_define
+define|#
+directive|define
+name|START_GIANT_OPTIONAL
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_GIANT_OPTIONAL
 end_define
 
 begin_endif

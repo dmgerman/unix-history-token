@@ -365,6 +365,8 @@ name|exitlist
 modifier|*
 name|ep
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -702,12 +704,6 @@ operator|->
 name|p_vmspace
 expr_stmt|;
 comment|/* 	 * Release user portion of address space. 	 * This releases references to vnodes, 	 * which could cause I/O if the file has been unlinked. 	 * Need to do this early enough that we can still sleep. 	 * Can't free the entire vmspace as the kernel stack 	 * may be mapped within that space also. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vm
@@ -756,12 +752,6 @@ name|VM_MAXUSER_ADDRESS
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p

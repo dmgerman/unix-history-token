@@ -1376,6 +1376,8 @@ name|inc
 decl_stmt|,
 name|j
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|size
@@ -1987,12 +1989,6 @@ operator|.
 name|cluster_entry
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -2101,12 +2097,6 @@ operator|=
 name|bogus_page
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|b_bcount
@@ -2124,12 +2114,6 @@ operator|->
 name|b_bufsize
 expr_stmt|;
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -2229,12 +2213,6 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|bp
@@ -2272,6 +2250,8 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * Must propogate errors to all the components. 	 */
 if|if
 condition|(
@@ -2286,12 +2266,6 @@ operator|=
 name|bp
 operator|->
 name|b_error
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
 expr_stmt|;
 name|pmap_qremove
 argument_list|(
@@ -2308,12 +2282,6 @@ argument_list|,
 name|bp
 operator|->
 name|b_npages
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Move memory from the large cluster buffer into the component 	 * buffers and mark IO as done on these. 	 */
@@ -3217,6 +3185,8 @@ argument_list|(
 name|size
 argument_list|)
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 while|while
 condition|(
 name|len
@@ -3839,12 +3809,6 @@ goto|;
 block|}
 block|}
 block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -3929,12 +3893,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 block|}
 name|bp
 operator|->
@@ -4030,12 +3988,6 @@ expr_stmt|;
 block|}
 name|finishcluster
 label|:
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|pmap_qenter
 argument_list|(
 name|trunc_page
@@ -4059,12 +4011,6 @@ argument_list|,
 name|bp
 operator|->
 name|b_npages
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_mtx
 argument_list|)
 expr_stmt|;
 if|if
