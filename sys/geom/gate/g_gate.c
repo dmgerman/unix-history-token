@@ -3278,9 +3278,6 @@ name|void
 name|g_gate_device
 parameter_list|(
 name|void
-modifier|*
-name|unused
-name|__unused
 parameter_list|)
 block|{
 name|status_dev
@@ -3346,9 +3343,7 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|g_gate_device
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
