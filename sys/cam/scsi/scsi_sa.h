@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Structure and function declartaions for the  * SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.h,v 1.4 1999/02/05 07:19:23 mjacob Exp $  */
+comment|/*  * Structure and function declartaions for the  * SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.h,v 1.3.2.1 1999/02/05 08:38:21 mjacob Exp $  */
 end_comment
 
 begin_ifndef
@@ -407,13 +407,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SA_DATA_COMPRESSION_PAGE
-value|0x0f
-end_define
-
-begin_define
-define|#
-directive|define
 name|SA_DEVICE_CONFIGURATION_PAGE
 value|0x10
 end_define
@@ -446,8 +439,125 @@ name|SA_MEDIUM_PARTITION_PAGE_4
 value|0x14
 end_define
 
+begin_define
+define|#
+directive|define
+name|SA_DATA_COMPRESSION_PAGE
+value|0x0f
+end_define
+
+begin_comment
+comment|/* SCSI-3 */
+end_comment
+
 begin_comment
 comment|/*  * Mode page definitions.  */
+end_comment
+
+begin_comment
+comment|/* See SCSI-II spec 9.3.3.1 */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_dev_conf_page
+block|{
+name|u_int8_t
+name|pagecode
+decl_stmt|;
+comment|/* 0x10 */
+name|u_int8_t
+name|pagelength
+decl_stmt|;
+comment|/* 0x0e */
+name|u_int8_t
+name|byte2
+decl_stmt|;
+name|u_int8_t
+name|active_partition
+decl_stmt|;
+name|u_int8_t
+name|wb_full_ratio
+decl_stmt|;
+name|u_int8_t
+name|rb_empty_ratio
+decl_stmt|;
+name|u_int8_t
+name|wrdelay_time
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int8_t
+name|byte8
+decl_stmt|;
+define|#
+directive|define
+name|SA_DBR
+value|0x80
+comment|/* data buffer recovery */
+define|#
+directive|define
+name|SA_BIS
+value|0x40
+comment|/* block identifiers supported */
+define|#
+directive|define
+name|SA_RSMK
+value|0x20
+comment|/* report setmarks */
+define|#
+directive|define
+name|SA_AVC
+value|0x10
+comment|/* automatic velocity control */
+define|#
+directive|define
+name|SA_SOCF_MASK
+value|0xc0
+comment|/* stop on consecutive formats */
+define|#
+directive|define
+name|SA_RBO
+value|0x20
+comment|/* recover buffer order */
+define|#
+directive|define
+name|SA_REW
+value|0x10
+comment|/* report early warning */
+name|u_int8_t
+name|gap_size
+decl_stmt|;
+name|u_int8_t
+name|byte10
+decl_stmt|;
+name|u_int8_t
+name|ew_bufsize
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int8_t
+name|sel_comp_alg
+decl_stmt|;
+define|#
+directive|define
+name|SA_COMP_NONE
+value|0x00
+define|#
+directive|define
+name|SA_COMP_DEFAULT
+value|0x01
+name|u_int8_t
+name|reserved
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* from SCSI-3: SSC-Rev10 (6/97) */
 end_comment
 
 begin_struct
@@ -457,6 +567,7 @@ block|{
 name|u_int8_t
 name|page_code
 decl_stmt|;
+comment|/* 0x0f */
 name|u_int8_t
 name|page_length
 decl_stmt|;
@@ -523,6 +634,33 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+struct|struct
+block|{
+name|u_int8_t
+name|pagecode
+decl_stmt|,
+name|pagelength
+decl_stmt|;
+block|}
+name|hdr
+struct|;
+name|struct
+name|scsi_dev_conf_page
+name|dconf
+decl_stmt|;
+name|struct
+name|scsi_data_compression_page
+name|dcomp
+decl_stmt|;
+block|}
+name|sa_comp_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -854,6 +992,20 @@ define|#
 directive|define
 name|SCSI_DENSITY_QIC_1320
 value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_QIC_2GB
+value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_QIC_4GB
+value|0x26
 end_define
 
 begin_define
