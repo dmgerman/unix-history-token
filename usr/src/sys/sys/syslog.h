@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -380,6 +380,17 @@ begin_comment
 comment|/* security/authorization messages (private) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOG_FTP
+value|(11<<3)
+end_define
+
+begin_comment
+comment|/* ftp daemon */
+end_comment
+
 begin_comment
 comment|/* other codes through 15 reserved for system use */
 end_comment
@@ -535,6 +546,10 @@ block|,
 literal|"daemon"
 block|,
 name|LOG_DAEMON
+block|,
+literal|"ftp"
+block|,
+name|LOG_FTP
 block|,
 literal|"kern"
 block|,
