@@ -2458,7 +2458,7 @@ if|if
 condition|(
 name|pci_get_powerstate
 argument_list|(
-name|dev
+name|child
 argument_list|)
 operator|==
 name|state

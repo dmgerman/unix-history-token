@@ -872,9 +872,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|state
-operator|>
 name|old_state
+operator|>
+name|state
 condition|)
 return|return
 operator|(
