@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.7 (Berkeley) %G%"
+literal|"@(#)mount.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,54 +52,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fstab.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
 
 begin_include
 include|#
@@ -117,6 +69,48 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -615,27 +609,6 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* `/' is special, it's always mounted */
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|fs
-operator|->
-name|fs_file
-argument_list|,
-literal|"/"
-argument_list|)
-condition|)
-name|flags
-operator|=
-name|MNT_UPDATE
-expr_stmt|;
-else|else
-name|flags
-operator|=
-name|updateflg
-expr_stmt|;
 name|mnttype
 operator|=
 name|getmnttype
@@ -657,7 +630,7 @@ name|fs
 operator|->
 name|fs_file
 argument_list|,
-name|flags
+name|updateflg
 argument_list|,
 name|type
 argument_list|,
@@ -710,19 +683,11 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mount: cannot get mount information\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot get mount information"
 argument_list|)
 expr_stmt|;
 block|}
@@ -792,6 +757,19 @@ name|argc
 operator|==
 literal|1
 operator|&&
+name|vfslist
+condition|)
+block|{
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+operator|&&
 name|updateflg
 condition|)
 block|{
@@ -810,22 +788,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mount: unknown special file or file system %s.\n"
+literal|"unknown special file or file system %s."
 argument_list|,
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -851,22 +821,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mount: can't find fstab entry for %s.\n"
+literal|"can't find fstab entry for %s."
 argument_list|,
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -942,19 +904,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mount: -u malloc failed\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-u malloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1035,22 +989,14 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mount: unknown special file or file system %s.\n"
+literal|"unknown special file or file system %s.\n"
 argument_list|,
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1064,22 +1010,14 @@ name|fs_type
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mount: %s has unknown file system type.\n"
+literal|"%s has unknown file system type.\n"
 argument_list|,
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1147,7 +1085,7 @@ operator|)
 literal|0
 operator|&&
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -1157,7 +1095,7 @@ argument_list|,
 literal|':'
 argument_list|)
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -1387,6 +1325,21 @@ condition|)
 name|flags
 operator||=
 name|MNT_FORCE
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|flags
+operator||=
+name|MNT_UPDATE
 expr_stmt|;
 switch|switch
 condition|(
@@ -1657,9 +1610,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"mount: vfork starting file system"
+literal|"vfork starting file system"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1718,32 +1671,15 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"mount: cannot exec %s for %s: "
+literal|"cannot exec %s for %s"
 argument_list|,
 name|execname
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
