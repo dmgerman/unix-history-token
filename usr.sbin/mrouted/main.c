@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: main.c,v 1.8 1994/08/24 23:53:42 thyagara Exp $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: main.c,v 1.2 1994/09/08 02:51:18 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -27,7 +27,7 @@ name|char
 name|pidfilename
 index|[]
 init|=
-literal|"/etc/mrouted.pid"
+literal|"/var/run/mrouted.pid"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|dumpfilename
 index|[]
 init|=
-literal|"/usr/tmp/mrouted.dump"
+literal|"/var/tmp/mrouted.dump"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ name|char
 name|cachefilename
 index|[]
 init|=
-literal|"/usr/tmp/mrouted.cache"
+literal|"/var/tmp/mrouted.cache"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ name|char
 name|genidfilename
 index|[]
 init|=
-literal|"/usr/tmp/mrouted.genid"
+literal|"/var/tmp/mrouted.genid"
 decl_stmt|;
 end_decl_stmt
 
