@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3280,9 +3280,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 comment|/* 	 * See if address already in list. 	 */
 name|IN_LOOKUP_MULTI
 argument_list|(
@@ -3406,6 +3403,20 @@ name|inm_ia
 operator|=
 name|ia
 expr_stmt|;
+name|inm
+operator|->
+name|inm_next
+operator|=
+name|ia
+operator|->
+name|ia_multiaddrs
+expr_stmt|;
+name|ia
+operator|->
+name|ia_multiaddrs
+operator|=
+name|inm
+expr_stmt|;
 comment|/* 		 * Ask the network driver to update its multicast reception 		 * filter appropriately for the new address. 		 */
 operator|(
 operator|(
@@ -3442,33 +3453,14 @@ name|ap
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|if_ioctl
 operator|==
 name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|inm
-argument_list|,
-name|M_IPMADDR
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
 operator|)
-return|;
-block|}
-name|error
-operator|=
+operator|||
 call|(
 modifier|*
 name|ifp
@@ -3486,14 +3478,18 @@ operator|)
 operator|&
 name|ifr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 operator|!=
 literal|0
 condition|)
 block|{
+name|ia
+operator|->
+name|ia_multiaddrs
+operator|=
+name|inm
+operator|->
+name|inm_next
+expr_stmt|;
 name|free
 argument_list|(
 name|inm
@@ -3512,20 +3508,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|inm
-operator|->
-name|inm_next
-operator|=
-name|ia
-operator|->
-name|ia_multiaddrs
-expr_stmt|;
-name|ia
-operator|->
-name|ia_multiaddrs
-operator|=
-name|inm
-expr_stmt|;
 comment|/* 		 * Let IGMP know that we have joined a new IP multicast group. 		 */
 name|igmp_joingroup
 argument_list|(
