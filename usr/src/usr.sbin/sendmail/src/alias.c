@@ -83,7 +83,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.42 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.43 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -98,7 +98,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.42 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.43 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.42 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.43 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.42 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.43 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,6 +353,8 @@ operator|*
 operator|,
 name|FILE
 operator|*
+operator|,
+name|int
 operator|,
 name|ENVELOPE
 operator|*
@@ -1706,15 +1708,6 @@ operator|->
 name|ad_name
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Can't open %s\n"
-argument_list|,
-name|ad
-operator|->
-name|ad_name
-argument_list|)
-expr_stmt|;
 name|errno
 operator|=
 literal|0
@@ -1811,6 +1804,8 @@ name|ad
 argument_list|,
 name|af
 argument_list|,
+name|automatic
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1861,7 +1856,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		ad -- the alias database descriptor. **		af -- file to read the aliases from. **		e -- the current alias file. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
+comment|/* **  READALIASES -- read and process the alias file. ** **	This routine implements the part of initaliases that occurs **	when we are not going to use the DBM stuff. ** **	Parameters: **		ad -- the alias database descriptor. **		af -- file to read the aliases from. **		automatic -- set if this was an automatic rebuild. **		e -- the current alias file. ** **	Returns: **		none. ** **	Side Effects: **		Reads aliasfile into the symbol table. **		Optionally, builds the .dir& .pag files. */
 end_comment
 
 begin_expr_stmt
@@ -1871,6 +1866,8 @@ argument_list|(
 name|ad
 argument_list|,
 name|af
+argument_list|,
+name|automatic
 argument_list|,
 name|e
 argument_list|)
@@ -1885,6 +1882,12 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|af
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|automatic
 decl_stmt|;
 end_decl_stmt
 
@@ -2648,6 +2651,13 @@ name|FileName
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|Verbose
+operator|||
+operator|!
+name|automatic
+condition|)
 name|message
 argument_list|(
 literal|"%s: %d aliases, longest %d bytes, %d bytes total"
@@ -3105,6 +3115,8 @@ name|ad
 parameter_list|,
 name|fp
 parameter_list|,
+name|automatic
+parameter_list|,
 name|e
 parameter_list|)
 specifier|register
@@ -3115,6 +3127,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|int
+name|automatic
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -3210,6 +3225,8 @@ argument_list|(
 name|ad
 argument_list|,
 name|fp
+argument_list|,
+name|automatic
 argument_list|,
 name|e
 argument_list|)
@@ -3812,6 +3829,8 @@ name|ad
 parameter_list|,
 name|fp
 parameter_list|,
+name|automatic
+parameter_list|,
 name|e
 parameter_list|)
 specifier|register
@@ -3822,6 +3841,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|int
+name|automatic
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -3934,6 +3956,8 @@ argument_list|(
 name|ad
 argument_list|,
 name|fp
+argument_list|,
+name|automatic
 argument_list|,
 name|e
 argument_list|)
@@ -4269,6 +4293,8 @@ name|ad
 argument_list|,
 name|af
 argument_list|,
+name|TRUE
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -4287,6 +4313,8 @@ name|ad
 parameter_list|,
 name|fp
 parameter_list|,
+name|automatic
+parameter_list|,
 name|e
 parameter_list|)
 name|ALIASDB
@@ -4296,6 +4324,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|int
+name|automatic
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -4652,6 +4683,8 @@ name|ad
 parameter_list|,
 name|fp
 parameter_list|,
+name|automatic
+parameter_list|,
 name|e
 parameter_list|)
 name|ALIASDB
@@ -4661,6 +4694,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|int
+name|automatic
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -4960,6 +4996,10 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+name|struct
+name|stat
+name|stb
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -4978,7 +5018,26 @@ operator|->
 name|ad_name
 argument_list|)
 expr_stmt|;
-comment|/* implicit class */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|ad
+operator|->
+name|ad_name
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* no alias file at all */
+return|return
+name|FALSE
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|NEWDB
@@ -5043,7 +5102,11 @@ name|ADF_IMPLNDBM
 expr_stmt|;
 endif|#
 directive|endif
-name|syserr
+if|if
+condition|(
+name|Verbose
+condition|)
+name|message
 argument_list|(
 literal|"WARNING: cannot open alias database %s"
 argument_list|,
@@ -5084,6 +5147,8 @@ name|ad
 parameter_list|,
 name|fp
 parameter_list|,
+name|automatic
+parameter_list|,
 name|e
 parameter_list|)
 name|ALIASDB
@@ -5093,6 +5158,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
+decl_stmt|;
+name|int
+name|automatic
 decl_stmt|;
 name|ENVELOPE
 modifier|*
@@ -5322,6 +5390,8 @@ argument_list|(
 name|ad
 argument_list|,
 name|fp
+argument_list|,
+name|automatic
 argument_list|,
 name|e
 argument_list|)
