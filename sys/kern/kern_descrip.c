@@ -2261,6 +2261,13 @@ argument_list|(
 name|fdp
 argument_list|)
 expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
