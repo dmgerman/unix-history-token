@@ -38,6 +38,11 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+name|archive_read_support_compression_compress
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
 name|archive_read_support_compression_gzip
 argument_list|(
 name|a
