@@ -3558,6 +3558,24 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|"New Zealand"
+block|,
+literal|"ftp.nz.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.nz.freebsd.org"
+argument_list|)
+block|}
+block|,
+block|{
 literal|"Poland"
 block|,
 literal|"ftp.pl.freebsd.org"
