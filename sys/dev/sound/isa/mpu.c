@@ -2388,9 +2388,11 @@ condition|(
 name|dbuf
 operator|->
 name|rl
-operator|>
+operator|==
 literal|0
 condition|)
+break|break;
+else|else
 block|{
 name|mtx_lock
 argument_list|(
@@ -2466,7 +2468,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Reset mpu. */
+comment|/*   * Reset mpu.  * The caller must lock scp->mtx before calling this function if needed.  */
 end_comment
 
 begin_function
@@ -2487,14 +2489,6 @@ comment|/* Reset the mpu. */
 name|resp
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2527,14 +2521,6 @@ literal|0
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|resp
@@ -2560,7 +2546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Switch to uart mode. */
+comment|/*  * Switch to uart mode.  * The caller must lock scp->mtx before calling this function if needed.  */
 end_comment
 
 begin_function
@@ -2581,14 +2567,6 @@ comment|/* Switch to uart mode. */
 name|resp
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2621,14 +2599,6 @@ literal|0
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|resp
@@ -2654,7 +2624,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Wait to see an ACK. */
+comment|/*  * Wait to see an ACK.  * The caller must lock scp->mtx before calling this function if needed.  */
 end_comment
 
 begin_function
@@ -2674,14 +2644,6 @@ decl_stmt|;
 name|resp
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2712,14 +2674,6 @@ literal|0
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|scp
-operator|->
-name|mtx
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|resp
