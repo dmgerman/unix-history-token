@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.76
+literal|3.77
 operator|%
 name|G
 operator|%
@@ -3952,6 +3952,8 @@ argument_list|(
 name|name
 argument_list|,
 name|m
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4319,7 +4321,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		force -- if set, forces rewriting even if the mailer **			does not request it.  Used for rewriting **			sender addresses. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
 end_comment
 
 begin_function
@@ -4330,6 +4332,8 @@ parameter_list|(
 name|name
 parameter_list|,
 name|m
+parameter_list|,
+name|force
 parameter_list|)
 name|char
 modifier|*
@@ -4340,10 +4344,10 @@ name|mailer
 modifier|*
 name|m
 decl_stmt|;
+name|bool
+name|force
+decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|NOTDEF
 specifier|static
 name|char
 name|buf
@@ -4409,6 +4413,23 @@ modifier|*
 name|getxpart
 parameter_list|()
 function_decl|;
+comment|/* 	**  See if this mailer wants the name to be rewritten.  There are 	**  many problems here, owing to the standards for doing replies. 	**  In general, these names should only be rewritten if we are 	**  sending to another host that runs sendmail. 	*/
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|M_RELRCPT
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+operator|&&
+operator|!
+name|force
+condition|)
+return|return;
 comment|/* 	**  Do general rewriting of name. 	**	This will also take care of doing global name translation. 	*/
 name|define
 argument_list|(
@@ -4665,18 +4686,6 @@ operator|(
 name|buf
 operator|)
 return|;
-else|#
-directive|else
-else|NOTDEF
-comment|/* oh bother, this breaks UUCP......   */
-return|return
-operator|(
-name|name
-operator|)
-return|;
-endif|#
-directive|endif
-endif|NOTDEF
 block|}
 end_function
 
