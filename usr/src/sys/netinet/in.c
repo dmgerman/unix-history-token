@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1578,8 +1578,12 @@ name|ia
 operator|->
 name|ia_addr
 argument_list|,
-operator|-
-literal|1
+operator|(
+name|int
+operator|)
+name|SIOCDELRT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1601,8 +1605,12 @@ name|ia
 operator|->
 name|ia_addr
 argument_list|,
-operator|-
-literal|1
+operator|(
+name|int
+operator|)
+name|SIOCDELRT
+argument_list|,
+name|RTF_HOST
 argument_list|)
 expr_stmt|;
 name|ia
@@ -1855,6 +1863,11 @@ name|ia
 operator|->
 name|ia_addr
 argument_list|,
+operator|(
+name|int
+operator|)
+name|SIOCADDRT
+argument_list|,
 name|RTF_UP
 argument_list|)
 expr_stmt|;
@@ -1876,6 +1889,11 @@ operator|&
 name|ia
 operator|->
 name|ia_addr
+argument_list|,
+operator|(
+name|int
+operator|)
+name|SIOCADDRT
 argument_list|,
 name|RTF_HOST
 operator||
