@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	6.5	84/04/13	*/
+comment|/*	if.h	6.6	85/03/19	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Structures defining a network interface, providing a packet  * tra
 end_comment
 
 begin_comment
-comment|/*  * Structure defining a queue for a network interface.  *  * (Would like to call this struct ``if'', but C isn't PL/1.)  *  * EVENTUALLY PURGE if_net AND if_host FROM STRUCTURE  */
+comment|/*  * Structure defining a queue for a network interface.  *  * (Would like to call this struct ``if'', but C isn't PL/1.)  */
 end_comment
 
 begin_struct
@@ -28,10 +28,6 @@ name|short
 name|if_mtu
 decl_stmt|;
 comment|/* maximum transmission unit */
-name|int
-name|if_net
-decl_stmt|;
-comment|/* network number of interface */
 name|short
 name|if_flags
 decl_stmt|;
@@ -40,41 +36,12 @@ name|short
 name|if_timer
 decl_stmt|;
 comment|/* time 'til if_watchdog called */
-name|int
-name|if_host
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* local net host number */
 name|struct
-name|sockaddr
-name|if_addr
+name|ifaddr
+modifier|*
+name|if_addrlist
 decl_stmt|;
-comment|/* address of interface */
-union|union
-block|{
-name|struct
-name|sockaddr
-name|ifu_broadaddr
-decl_stmt|;
-name|struct
-name|sockaddr
-name|ifu_dstaddr
-decl_stmt|;
-block|}
-name|if_ifu
-union|;
-define|#
-directive|define
-name|if_broadaddr
-value|if_ifu.ifu_broadaddr
-comment|/* broadcast address */
-define|#
-directive|define
-name|if_dstaddr
-value|if_ifu.ifu_dstaddr
-comment|/* other end of p-to-p link */
+comment|/* linked list of addresses per if */
 struct|struct
 name|ifqueue
 block|{
@@ -206,15 +173,8 @@ begin_comment
 comment|/* turn on debugging */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IFF_ROUTE
-value|0x8
-end_define
-
 begin_comment
-comment|/* routing entry installed */
+comment|/* was	IFF_ROUTE	0x8		/* routing entry installed */
 end_comment
 
 begin_define
@@ -261,16 +221,16 @@ begin_comment
 comment|/* no address resolution protocol */
 end_comment
 
+begin_comment
+comment|/* flags set internally only: */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IFF_LOCAL
-value|0x100
+name|IFF_CANTCHANGE
+value|(IFF_BROADCAST | IFF_POINTOPOINT | IFF_RUNNING)
 end_define
-
-begin_comment
-comment|/* local network, host part encoded */
-end_comment
 
 begin_comment
 comment|/*  * Output queues (ifp->if_snd) and internetwork datagram level (pup level 1)  * input routines have queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
@@ -349,6 +309,58 @@ end_define
 begin_comment
 comment|/* granularity is 1 second */
 end_comment
+
+begin_comment
+comment|/*  * The ifaddr structure contains information about one address  * of an interface.  They are maintained by the different address families,  * are allocated and attached when an address is set, and are linked  * together so all addresses for an interface can be located.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifaddr
+block|{
+name|struct
+name|sockaddr
+name|ifa_addr
+decl_stmt|;
+comment|/* address of interface */
+union|union
+block|{
+name|struct
+name|sockaddr
+name|ifu_broadaddr
+decl_stmt|;
+name|struct
+name|sockaddr
+name|ifu_dstaddr
+decl_stmt|;
+block|}
+name|ifa_ifu
+union|;
+define|#
+directive|define
+name|ifa_broadaddr
+value|ifa_ifu.ifu_broadaddr
+comment|/* broadcast address */
+define|#
+directive|define
+name|ifa_dstaddr
+value|ifa_ifu.ifu_dstaddr
+comment|/* other end of p-to-p link */
+name|struct
+name|ifnet
+modifier|*
+name|ifa_ifp
+decl_stmt|;
+comment|/* back-pointer to interface */
+name|struct
+name|ifaddr
+modifier|*
+name|ifa_next
+decl_stmt|;
+comment|/* next address for interface */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Interface request structure used for socket  * ioctl's.  All interface ioctl's must have parameter  * definitions which begin with ifr_name.  The  * remainder may be interface specific.  */
@@ -583,37 +595,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ifnet
+name|ifaddr
 modifier|*
-name|if_ifwithaddr
+name|ifa_ifwithaddr
 argument_list|()
 decl_stmt|,
 modifier|*
-name|if_ifwithnet
+name|ifa_ifwithnet
 argument_list|()
 decl_stmt|,
 modifier|*
-name|if_ifwithaf
+name|ifa_ifwithaf
 argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|struct
-name|ifnet
-modifier|*
-name|if_ifonnetof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|in_addr
-name|if_makeaddr
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#
