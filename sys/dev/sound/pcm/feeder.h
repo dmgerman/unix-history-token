@@ -200,7 +200,7 @@ parameter_list|,
 name|pdata
 parameter_list|)
 define|\
-value|static struct feeder_class feeder ## _class = { \ 	name:		#feeder, \ 	methods:	feeder ## _methods, \ 	size:		sizeof(struct pcm_feeder), \ 	align:		palign, \ 	desc:		feeder ## _desc, \ 	data:		pdata, \ }; \ SYSINIT(feeder, SI_SUB_DRIVERS, SI_ORDER_MIDDLE, feeder_register,&feeder ## _class);
+value|static struct feeder_class feeder ## _class = { \ 	.name =		#feeder, \ 	.methods =	feeder ## _methods, \ 	.size =		sizeof(struct pcm_feeder), \ 	.align =	palign, \ 	.desc =		feeder ## _desc, \ 	.data =		pdata, \ }; \ SYSINIT(feeder, SI_SUB_DRIVERS, SI_ORDER_MIDDLE, feeder_register,&feeder ## _class);
 end_define
 
 begin_define
