@@ -428,6 +428,16 @@ name|TD_G
 value|(1L<< 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TT_GET_CTX
+parameter_list|(
+name|tag
+parameter_list|)
+value|(((tag)>> TT_CTX_SHIFT)& TT_CTX_MASK)
+end_define
+
 begin_struct
 struct|struct
 name|tte
@@ -459,33 +469,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_function
-specifier|static
-name|__inline
-name|u_int
-name|tte_get_ctx
-parameter_list|(
-name|struct
-name|tte
-name|tte
-parameter_list|)
-block|{
-return|return
-operator|(
-operator|(
-name|tte
-operator|.
-name|tte_tag
-operator|>>
-name|TT_CTX_SHIFT
-operator|)
-operator|&
-name|TT_CTX_MASK
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
