@@ -250,18 +250,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VADDR_SIGN
-parameter_list|(
-name|l4
-parameter_list|)
-define|\
-value|((l4)>= NPML4EPG/2 ? ((unsigned long)-1<< 47) : 0ul)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VADDR
+name|KVADDR
 parameter_list|(
 name|l4
 parameter_list|,
@@ -271,7 +260,23 @@ name|l2
 parameter_list|,
 name|l1
 parameter_list|)
-value|( \ 	((unsigned long)(l4)<< PML4SHIFT) | VADDR_SIGN(l4) | \ 	((unsigned long)(l3)<< PDPSHIFT) | \ 	((unsigned long)(l2)<< PDRSHIFT) | \ 	((unsigned long)(l1)<< PAGE_SHIFT))
+value|( \ 	((unsigned long)-1<< 47) | \ 	((unsigned long)(l4)<< PML4SHIFT) | \ 	((unsigned long)(l3)<< PDPSHIFT) | \ 	((unsigned long)(l2)<< PDRSHIFT) | \ 	((unsigned long)(l1)<< PAGE_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UVADDR
+parameter_list|(
+name|l4
+parameter_list|,
+name|l3
+parameter_list|,
+name|l2
+parameter_list|,
+name|l1
+parameter_list|)
+value|( \ 	((unsigned long)(l4)<< PML4SHIFT) | \ 	((unsigned long)(l3)<< PDPSHIFT) | \ 	((unsigned long)(l2)<< PDRSHIFT) | \ 	((unsigned long)(l1)<< PAGE_SHIFT))
 end_define
 
 begin_ifndef
@@ -333,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|NUPML4E
-value|1
+value|(NPML4EPG/2)
 end_define
 
 begin_comment
@@ -521,28 +526,28 @@ begin_define
 define|#
 directive|define
 name|addr_PTmap
-value|(VADDR(PML4PML4I, 0, 0, 0))
+value|(KVADDR(PML4PML4I, 0, 0, 0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|addr_PDmap
-value|(VADDR(PML4PML4I, PML4PML4I, 0, 0))
+value|(KVADDR(PML4PML4I, PML4PML4I, 0, 0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|addr_PDPmap
-value|(VADDR(PML4PML4I, PML4PML4I, PML4PML4I, 0))
+value|(KVADDR(PML4PML4I, PML4PML4I, PML4PML4I, 0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|addr_PML4map
-value|(VADDR(PML4PML4I, PML4PML4I, PML4PML4I, PML4PML4I))
+value|(KVADDR(PML4PML4I, PML4PML4I, PML4PML4I, PML4PML4I))
 end_define
 
 begin_define

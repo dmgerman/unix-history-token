@@ -174,56 +174,56 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|VADDR(KPML4I, NPDPEPG-1, NKPDE-1, NPTEPG-1)
+value|KVADDR(KPML4I, NPDPEPG-1, NKPDE-1, NPTEPG-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|VADDR(KPML4I, KPDPI, 0, 0)
+value|KVADDR(KPML4I, KPDPI, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAP_MIN_ADDRESS
-value|VADDR(DMPML4I, 0, 0, 0)
+value|KVADDR(DMPML4I, 0, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAP_MAX_ADDRESS
-value|VADDR(DMPML4I+1, 0, 0, 0)
+value|KVADDR(DMPML4I+1, 0, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|VADDR(KPML4I, KPDPI, 0, 0)
+value|KVADDR(KPML4I, KPDPI, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UPT_MAX_ADDRESS
-value|VADDR(PML4PML4I, PML4PML4I, PML4PML4I, PML4PML4I)
+value|KVADDR(PML4PML4I, PML4PML4I, PML4PML4I, PML4PML4I)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UPT_MIN_ADDRESS
-value|VADDR(PML4PML4I, 0, 0, 0)
+value|KVADDR(PML4PML4I, 0, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|VADDR(NUPML4E, 0, 0, 0)
+value|UVADDR(NUPML4E, 0, 0, 0)
 end_define
 
 begin_define
