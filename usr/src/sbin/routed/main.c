@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.24 (Berkeley) %G%"
+literal|"@(#)main.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,10 @@ block|}
 if|if
 condition|(
 name|debug
+operator|==
+literal|0
+operator|&&
+name|tflags
 operator|==
 literal|0
 condition|)
