@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ftp.c,v 1.7 1998/11/06 22:14:08 des Exp $  */
+comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ftp.c,v 1.8 1998/12/16 10:24:55 des Exp $  */
 end_comment
 
 begin_comment
@@ -28,25 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -100,12 +82,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|FTP_DEFAULT_TO_ANONYMOUS
-end_define
-
-begin_define
-define|#
-directive|define
 name|FTP_ANONYMOUS_USER
 value|"ftp"
 end_define
@@ -136,6 +112,13 @@ define|#
 directive|define
 name|FTP_OK
 value|200
+end_define
+
+begin_define
+define|#
+directive|define
+name|FTP_SERVICE_READY
+value|220
 end_define
 
 begin_define
@@ -216,10 +199,6 @@ parameter_list|(
 name|FILE
 modifier|*
 name|s
-parameter_list|,
-name|int
-modifier|*
-name|e
 parameter_list|)
 block|{
 name|char
@@ -229,18 +208,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
-if|if
-condition|(
-name|e
-condition|)
-operator|*
-name|e
-operator|=
-literal|0
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -368,18 +335,12 @@ literal|' '
 operator|)
 condition|)
 block|{
-name|_ftp_seterr
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
 block|}
-name|err
-operator|=
+return|return
 operator|(
 name|line
 index|[
@@ -410,32 +371,6 @@ index|]
 operator|-
 literal|'0'
 operator|)
-expr_stmt|;
-name|_ftp_seterr
-argument_list|(
-name|err
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|e
-condition|)
-operator|*
-name|e
-operator|=
-name|err
-expr_stmt|;
-return|return
-operator|(
-name|line
-index|[
-literal|0
-index|]
-operator|==
-literal|'2'
-operator|)
-operator|-
-literal|1
 return|;
 block|}
 end_function
@@ -462,9 +397,6 @@ parameter_list|)
 block|{
 name|va_list
 name|ap
-decl_stmt|;
-name|int
-name|e
 decl_stmt|;
 name|va_start
 argument_list|(
@@ -515,16 +447,11 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+return|return
 name|_ftp_chkerr
 argument_list|(
 name|f
-argument_list|,
-operator|&
-name|e
 argument_list|)
-expr_stmt|;
-return|return
-name|e
 return|;
 block|}
 end_function
@@ -1362,19 +1289,27 @@ block|}
 comment|/* expect welcome message */
 if|if
 condition|(
+operator|(
+name|e
+operator|=
 name|_ftp_chkerr
 argument_list|(
 name|f
-argument_list|,
-name|NULL
 argument_list|)
-operator|==
-operator|-
-literal|1
+operator|)
+operator|!=
+name|FTP_SERVICE_READY
 condition|)
+block|{
+name|_ftp_seterr
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fouch
 goto|;
+block|}
 comment|/* send user name and password */
 if|if
 condition|(
@@ -1458,8 +1393,16 @@ name|e
 operator|==
 name|FTP_NEED_ACCOUNT
 condition|)
-comment|/* help! */
-empty_stmt|;
+block|{
+name|_ftp_seterr
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fouch
+goto|;
+block|}
 comment|/* we should be done by now */
 if|if
 condition|(
@@ -1467,9 +1410,16 @@ name|e
 operator|!=
 name|FTP_LOGGED_IN
 condition|)
+block|{
+name|_ftp_seterr
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 goto|goto
 name|fouch
 goto|;
+block|}
 comment|/* might as well select mode and type at once */
 ifdef|#
 directive|ifdef
@@ -1549,6 +1499,9 @@ modifier|*
 name|f
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|_ftp_cmd
 argument_list|(
 name|f
@@ -1677,9 +1630,6 @@ name|cf
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|e
-decl_stmt|;
 comment|/* set default port */
 if|if
 condition|(
@@ -1694,7 +1644,7 @@ name|port
 operator|=
 name|FTP_DEFAULT_PORT
 expr_stmt|;
-comment|/* try to use previously cached connection; there should be a 226 waiting */
+comment|/* try to use previously cached connection */
 if|if
 condition|(
 name|_ftp_isconnected
@@ -1702,18 +1652,15 @@ argument_list|(
 name|url
 argument_list|)
 condition|)
-block|{
-name|_ftp_chkerr
+if|if
+condition|(
+name|_ftp_cmd
 argument_list|(
 name|cached_socket
 argument_list|,
-operator|&
-name|e
+literal|"NOOP"
+name|ENDL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|e
 operator|>
 literal|0
 condition|)
@@ -1721,7 +1668,6 @@ name|cf
 operator|=
 name|cached_socket
 expr_stmt|;
-block|}
 comment|/* connect to server */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: http.c,v 1.7 1998/11/06 22:14:08 des Exp $  */
+comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: http.c,v 1.8 1998/12/16 10:24:55 des Exp $  */
 end_comment
 
 begin_comment
@@ -16,30 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -47,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -102,42 +72,6 @@ include|#
 directive|include
 file|"httperr.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-parameter_list|(
-name|x
-parameter_list|)
-value|do x; while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-parameter_list|(
-name|x
-parameter_list|)
-value|do { } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1287,7 +1221,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|,
-name|err
+name|e
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -1308,6 +1242,9 @@ name|ln
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|px
 decl_stmt|,
 modifier|*
 name|q
@@ -1376,16 +1313,19 @@ comment|/* default HTTP port */
 comment|/* attempt to connect to proxy server */
 if|if
 condition|(
+operator|(
+name|px
+operator|=
 name|getenv
 argument_list|(
 literal|"HTTP_PROXY"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|char
-modifier|*
-name|px
-decl_stmt|,
 name|host
 index|[
 name|MAXHOSTNAMELEN
@@ -1397,17 +1337,7 @@ init|=
 literal|3128
 decl_stmt|;
 comment|/* XXX I think 3128 is default... check? */
-name|size_t
-name|len
-decl_stmt|;
 comment|/* measure length */
-name|px
-operator|=
-name|getenv
-argument_list|(
-literal|"HTTP_PROXY"
-argument_list|)
-expr_stmt|;
 name|len
 operator|=
 name|strcspn
@@ -1776,7 +1706,7 @@ condition|)
 goto|goto
 name|fouch
 goto|;
-name|err
+name|e
 operator|=
 name|atoi
 argument_list|(
@@ -1791,21 +1721,21 @@ name|stderr
 argument_list|,
 literal|"code:     [\033[1m%d\033[m]\n"
 argument_list|,
-name|err
+name|e
 argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* add code to handle redirects later */
 if|if
 condition|(
-name|err
+name|e
 operator|!=
 literal|200
 condition|)
 block|{
 name|_http_seterr
 argument_list|(
-name|err
+name|e
 argument_list|)
 expr_stmt|;
 goto|goto
