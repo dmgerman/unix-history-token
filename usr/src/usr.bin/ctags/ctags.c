@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ctags.c	4.2 (Berkeley) 10/3/80"
+literal|"@(#)ctags.c	4.3 (Berkeley) 11/24/80"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ file|<ctype.h>
 end_include
 
 begin_comment
-comment|/*  * ctags  */
+comment|/*  * ctags: create a tags file  */
 end_comment
 
 begin_define
@@ -356,6 +356,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|vflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -v: create vgrind style index output */
+end_comment
+
+begin_decl_stmt
+name|int
 name|xflag
 decl_stmt|;
 end_decl_stmt
@@ -514,6 +524,16 @@ case|case
 literal|'w'
 case|:
 name|wflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vflag
+operator|++
+expr_stmt|;
+name|xflag
 operator|++
 expr_stmt|;
 break|break;
@@ -2543,6 +2563,36 @@ name|searchar
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|vflag
+condition|)
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%s %s %d\n"
+argument_list|,
+name|node
+operator|->
+name|func
+argument_list|,
+name|node
+operator|->
+name|file
+argument_list|,
+operator|(
+name|node
+operator|->
+name|lno
+operator|+
+literal|63
+operator|)
+operator|/
+literal|64
+argument_list|)
+expr_stmt|;
 else|else
 name|fprintf
 argument_list|(
