@@ -1794,13 +1794,7 @@ name|smbfs_vinvalbuf
 argument_list|(
 name|vp
 argument_list|,
-name|V_SAVE
-argument_list|,
-name|cred
-argument_list|,
 name|td
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
