@@ -5264,7 +5264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Initialize a jumbo receive ring descriptor. This allocates   * a jumbo buffer from the pool managed internally by the driver.   */
+comment|/*  * Initialize a jumbo receive ring descriptor. This allocates  * a jumbo buffer from the pool managed internally by the driver.  */
 end_comment
 
 begin_function
@@ -5996,7 +5996,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 end_function
