@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -115,8 +115,26 @@ value|2
 end_define
 
 begin_comment
-comment|/*  *  Default maximum segment size for TCP.  *  With an IP MSS of 576, this is 536,  *  but 512 is probably more convenient.  */
+comment|/*  * Default maximum segment size for TCP.  * With an IP MSS of 576, this is 536,  * but 512 is probably more convenient.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TCP_MSS
+value|536
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -124,6 +142,11 @@ directive|define
 name|TCP_MSS
 value|MIN(512, IP_MSS - sizeof (struct tcpiphdr))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * User-settable options (used with setsockopt).  */
