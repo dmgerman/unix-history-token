@@ -185,6 +185,37 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((minor(x)>> VINUM_TYPE_SHIFT)& 3)
+comment|/* Create device minor numbers */
+define|#
+directive|define
+name|VINUMDEV
+parameter_list|(
+name|o
+parameter_list|,
+name|t
+parameter_list|)
+value|makedev (VINUM_CDEV_MAJOR, VINUMMINOR (o, t))
+define|#
+directive|define
+name|VINUM_VOL
+parameter_list|(
+name|v
+parameter_list|)
+value|makedev (VINUM_CDEV_MAJOR, \ 					 VINUMMINOR (v, VINUM_VOLUME_TYPE))
+define|#
+directive|define
+name|VINUM_PLEX
+parameter_list|(
+name|p
+parameter_list|)
+value|makedev (VINUM_CDEV_MAJOR, \ 					 VINUMMINOR (p, VINUM_PLEX_TYPE))
+define|#
+directive|define
+name|VINUM_SD
+parameter_list|(
+name|s
+parameter_list|)
+value|makedev (VINUM_CDEV_MAJOR, \ 					 VINUMMINOR (s, VINUM_SD_TYPE))
 comment|/* extract device type */
 define|#
 directive|define
