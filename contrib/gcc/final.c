@@ -1169,6 +1169,13 @@ argument_list|,
 name|align
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|asm_out_file
+argument_list|,
+literal|".stabs \"bbset\", 25, 0, 0, LPBX0\n"
+argument_list|)
+expr_stmt|;
 name|ASM_OUTPUT_INTERNAL_LABEL
 argument_list|(
 name|asm_out_file
@@ -3692,6 +3699,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|profile_block_flag
+condition|)
+name|add_bb
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 comment|/* The Sun386i and perhaps other machines don't work right      if the profiling code comes after the prologue.  */
 ifdef|#
 directive|ifdef
@@ -3863,6 +3879,9 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|NO_PROFILE_DATA
 name|int
 name|align
 init|=
@@ -3873,6 +3892,9 @@ argument_list|,
 name|POINTER_SIZE
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* not NO_PROFILE_DATA */
 name|int
 name|sval
 init|=
@@ -3883,6 +3905,9 @@ name|cxt
 init|=
 name|current_function_needs_context
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_PROFILE_DATA
 name|data_section
 argument_list|()
 expr_stmt|;
@@ -3918,6 +3943,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* not NO_PROFILE_DATA */
 name|text_section
 argument_list|()
 expr_stmt|;
@@ -4143,6 +4171,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|profile_block_flag
+condition|)
+name|add_bb
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SDB_DEBUGGING_INFO
