@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sock.c (C) 1995-1997 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
+comment|/*  * sock.c (C) 1995-1998 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_if
@@ -31,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sock.c,v 2.0.2.9.2.1 1997/11/28 03:36:01 darrenr Exp $"
+literal|"@(#)$Id: sock.c,v 2.1 1999/08/04 17:31:16 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,11 +121,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300000
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/dirent.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
