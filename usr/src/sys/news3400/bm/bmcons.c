@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: cons.c,v 4.300 91/06/09 06:34:41 root Rel41 $ SONY  *  *	@(#)bmcons.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: cons.c,v 4.300 91/06/09 06:34:41 root Rel41 $ SONY  *  *	@(#)bmcons.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -233,6 +233,20 @@ name|cnsint
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|bmattach
+argument_list|(
+argument|i
+argument_list|)
+end_macro
+
+begin_block
+block|{
+comment|/* temporary hack for pseudo-device initialization */
+empty_stmt|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Open console. Turn on console if this is the first use of it.  */
