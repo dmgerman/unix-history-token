@@ -161,12 +161,7 @@ name|long
 name|__x
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|lint
 asm|__asm ("rorl $16, %1" : "=r" (__x) : "0" (__x));
-endif|#
-directive|endif
 return|return
 name|__x
 return|;
@@ -185,9 +180,6 @@ name|long
 name|__x
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|lint
 if|#
 directive|if
 name|defined
@@ -240,11 +232,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_return
 return|return
 name|__x
@@ -263,12 +250,7 @@ name|short
 name|__x
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|lint
 asm|__asm ("xchgb %h1, %b1" : "=q" (__x) : "0" (__x));
-endif|#
-directive|endif
 return|return
 name|__x
 return|;
