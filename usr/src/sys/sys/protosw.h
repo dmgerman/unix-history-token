@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.15	83/05/27	*/
+comment|/*	protosw.h	4.16	83/06/14	*/
 end_comment
 
 begin_comment
@@ -371,6 +371,17 @@ begin_comment
 comment|/* fetch socket's address */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRU_CONNECT2
+value|16
+end_define
+
+begin_comment
+comment|/* connect two sockets */
+end_comment
+
 begin_comment
 comment|/* begin for protocols internal use */
 end_comment
@@ -379,7 +390,7 @@ begin_define
 define|#
 directive|define
 name|PRU_FASTTIMO
-value|16
+value|17
 end_define
 
 begin_comment
@@ -390,7 +401,7 @@ begin_define
 define|#
 directive|define
 name|PRU_SLOWTIMO
-value|17
+value|18
 end_define
 
 begin_comment
@@ -401,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTORCV
-value|18
+value|19
 end_define
 
 begin_comment
@@ -412,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|PRU_PROTOSEND
-value|19
+value|20
 end_define
 
 begin_comment
