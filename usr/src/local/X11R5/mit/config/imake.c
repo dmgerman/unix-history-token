@@ -2723,6 +2723,9 @@ name|infd
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|st
 operator|.
 name|st_size
