@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.31 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2601,6 +2601,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* don't do any more now */
+name|ctladdr
+operator|->
+name|q_flags
+operator||=
+name|QVERIFIED
+expr_stmt|;
 name|xfclose
 argument_list|(
 name|fp
