@@ -3245,6 +3245,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|str_list_format
+argument_list|)
+expr_stmt|;
 comment|/* Construct the final string. */
 name|srepos
 operator|=
