@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.45 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2138,6 +2138,48 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>
+literal|43
+specifier|extern
+name|char
+modifier|*
+name|line
+decl_stmt|;
+if|if
+condition|(
+name|openpty
+argument_list|(
+operator|&
+name|pty
+argument_list|,
+operator|&
+name|t
+argument_list|,
+name|line
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+name|net
+argument_list|,
+literal|"All network ports in use"
+argument_list|)
+expr_stmt|;
+name|init_termbuf
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 comment|/* 	 * Find an available pty to use. 	 */
 name|pty
 operator|=
@@ -2162,6 +2204,8 @@ operator|=
 name|getptyslave
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* get name of connected client */
 name|hp
 operator|=
