@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.6 1993/11/15 20:58:05 paul Exp $  */
+comment|/*  *	$Id: ld.c,v 1.7 1993/11/16 00:42:57 paul Exp $  */
 end_comment
 
 begin_comment
@@ -467,10 +467,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|magic
-operator|=
-name|DEFAULT_MAGIC
-expr_stmt|;
-name|oldmagic
 operator|=
 name|DEFAULT_MAGIC
 expr_stmt|;
