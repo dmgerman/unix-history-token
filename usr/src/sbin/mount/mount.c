@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.16 (Berkeley) %G%"
+literal|"@(#)mount.c	8.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1505,6 +1505,33 @@ case|case
 literal|0
 case|:
 comment|/* Child. */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|vfstype
+argument_list|,
+literal|"ufs"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|exit
+argument_list|(
+name|mount_ufs
+argument_list|(
+name|argc
+argument_list|,
+operator|(
+name|char
+operator|*
+specifier|const
+operator|*
+operator|)
+name|argv
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Go find an executable. */
 name|edir
 operator|=
