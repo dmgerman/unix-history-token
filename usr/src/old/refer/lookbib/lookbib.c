@@ -99,13 +99,6 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\tdatabase must have indexes built by indxbib\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
 literal|"\tfinds citations specified on standard input\n"
 argument_list|,
 name|stderr
@@ -185,6 +178,31 @@ operator|-
 literal|1
 condition|)
 block|{
+name|sprintf
+argument_list|(
+name|s
+argument_list|,
+literal|"%s"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|s
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 name|perror
 argument_list|(
 name|s
@@ -192,7 +210,18 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\trun indxbib to make inverted indexes\n"
+literal|"\tNeither index file %s.ia "
+argument_list|,
+name|s
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"nor reference file %s found\n"
+argument_list|,
+name|s
 argument_list|,
 name|stderr
 argument_list|)
@@ -202,6 +231,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|sprintf
 argument_list|(
