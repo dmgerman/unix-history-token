@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	8.1 (Berkeley) %G%"
+literal|"@(#)misc.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,25 +37,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -79,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
 end_include
 
@@ -95,29 +101,6 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|tname
@@ -130,12 +113,10 @@ begin_comment
 comment|/* temporary file "name" */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tmp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|char
@@ -200,16 +181,11 @@ name|_NAME_ARTMP
 argument_list|)
 expr_stmt|;
 else|else
-name|bcopy
+name|strcpy
 argument_list|(
-name|_PATH_ARTMP
-argument_list|,
 name|path
 argument_list|,
-sizeof|sizeof
-argument_list|(
 name|_PATH_ARTMP
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sigfillset
@@ -278,7 +254,7 @@ name|fd
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * files --  *	See if the current file matches any file in the argument list; if it  * 	does, remove it from the argument list.  */
@@ -297,13 +273,11 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
 name|list
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
@@ -349,7 +323,7 @@ condition|;
 operator|++
 name|list
 control|)
-empty_stmt|;
+continue|continue;
 return|return
 operator|(
 name|p
@@ -385,14 +359,9 @@ condition|;
 operator|++
 name|argv
 control|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: not found in archive.\n"
+literal|"%s: not found in archive"
 argument_list|,
 operator|*
 name|argv
@@ -413,7 +382,6 @@ modifier|*
 name|path
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|ind
@@ -423,7 +391,7 @@ operator|(
 operator|(
 name|ind
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|path
 argument_list|,
@@ -441,21 +409,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|compare
-argument_list|(
-argument|dest
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dest
+parameter_list|)
 name|char
 modifier|*
 name|dest
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -498,20 +461,25 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|badfmt
 parameter_list|()
 block|{
-name|errno
-operator|=
-name|EFTYPE
-expr_stmt|;
-name|error
+name|errx
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s: %s"
+argument_list|,
 name|archive
+argument_list|,
+name|strerror
+argument_list|(
+name|EFTYPE
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -528,26 +496,13 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: %s\n"
-argument_list|,
-name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}

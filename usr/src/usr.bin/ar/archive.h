@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)archive.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)archive.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -268,8 +268,13 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
-name|__BEGIN_DECLS
 name|void
 name|close_archive
 name|__P
@@ -283,18 +288,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|skip_arobj
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|copy_ar
 name|__P
 argument_list|(
@@ -332,14 +325,8 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|stat
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
-name|int
+name|void
 name|put_arobj
 name|__P
 argument_list|(
@@ -355,9 +342,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_decl_stmt
+name|void
+name|skip_arobj
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

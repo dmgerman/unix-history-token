@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)append.c	8.1 (Berkeley) %G%"
+literal|"@(#)append.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -88,59 +88,39 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
 begin_comment
 comment|/*  * append --  *	Append files to the archive - modifies original archive or creates  *	a new archive if named archive does not exist.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|append
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|int
+name|afd
+decl_stmt|,
 name|fd
 decl_stmt|,
-name|afd
+name|eval
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|file
 decl_stmt|;
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|CF
 name|cf
 decl_stmt|;
-name|int
-name|eval
+name|struct
+name|stat
+name|sb
 decl_stmt|;
 name|afd
 operator|=
@@ -220,21 +200,11 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: %s.\n"
+literal|"%s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -300,7 +270,7 @@ name|eval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

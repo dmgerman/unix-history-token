@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	8.1 (Berkeley) %G%"
+literal|"@(#)ls.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,12 +522,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|getenv
 argument_list|(
 literal|"COLUMNS"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|termwidth
 operator|=
@@ -1043,12 +1047,10 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|FTS
 modifier|*
 name|ftsp
 decl_stmt|;
-specifier|register
 name|FTSENT
 modifier|*
 name|p
@@ -1120,12 +1122,16 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|fts_read
 argument_list|(
 name|ftsp
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 switch|switch
 condition|(
@@ -1298,21 +1304,17 @@ name|p
 parameter_list|,
 name|list
 parameter_list|)
-specifier|register
 name|FTSENT
 modifier|*
 name|p
-decl_stmt|;
-name|FTSENT
-modifier|*
+decl_stmt|,
+decl|*
 name|list
 decl_stmt|;
+end_function
+
+begin_block
 block|{
-specifier|register
-name|FTSENT
-modifier|*
-name|cur
-decl_stmt|;
 name|struct
 name|stat
 modifier|*
@@ -1321,9 +1323,16 @@ decl_stmt|;
 name|DISPLAY
 name|d
 decl_stmt|;
+name|FTSENT
+modifier|*
+name|cur
+decl_stmt|;
 name|NAMES
 modifier|*
 name|np
+decl_stmt|;
+name|u_quad_t
+name|maxsize
 decl_stmt|;
 name|u_long
 name|btotal
@@ -1335,9 +1344,6 @@ decl_stmt|,
 name|maxlen
 decl_stmt|,
 name|maxnlink
-decl_stmt|;
-name|u_quad_t
-name|maxsize
 decl_stmt|;
 name|int
 name|bcfile
@@ -2090,7 +2096,7 @@ name|fts_pointer
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Ordering for mastercmp:  * If ordering the argv (fts_level = FTS_ROOTLEVEL) return non-directories  * as larger than directories.  Within either group, use the sort function.  * All other levels use the sort function.  Error entries remain unsorted.  */
@@ -2119,7 +2125,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|a_info
 decl_stmt|,

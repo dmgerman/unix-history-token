@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	8.1 (Berkeley) %G%"
+literal|"@(#)replace.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -55,19 +55,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ar.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -85,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
 end_include
 
@@ -94,85 +94,42 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temporary file "name" */
-end_comment
-
 begin_comment
 comment|/*  * replace --  *	Replace or add named members to archive.  Entries already in the  *	archive are swapped in place.  Others are added before or after   *	the key entry, based on the a, b and i options.  If the u option  *	is specified, modification dates select for replacement.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|replace
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|extern
-name|char
-modifier|*
-name|posarg
-decl_stmt|,
-modifier|*
-name|posname
-decl_stmt|;
-comment|/* positioning file name */
-specifier|register
 name|char
 modifier|*
 name|file
 decl_stmt|;
-specifier|register
 name|int
 name|afd
 decl_stmt|,
 name|curfd
 decl_stmt|,
+name|errflg
+decl_stmt|,
+name|exists
+decl_stmt|,
 name|mods
 decl_stmt|,
 name|sfd
+decl_stmt|,
+name|tfd1
+decl_stmt|,
+name|tfd2
 decl_stmt|;
 name|struct
 name|stat
@@ -186,21 +143,7 @@ name|size
 decl_stmt|,
 name|tsize
 decl_stmt|;
-name|int
-name|err
-decl_stmt|,
-name|exists
-decl_stmt|,
-name|tfd1
-decl_stmt|,
-name|tfd2
-decl_stmt|;
-name|char
-modifier|*
-name|rname
-parameter_list|()
-function_decl|;
-name|err
+name|errflg
 operator|=
 literal|0
 expr_stmt|;
@@ -314,25 +257,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|errflg
 operator|=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: %s.\n"
+literal|"%s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -525,14 +458,9 @@ condition|(
 name|mods
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: archive member not found.\n"
+literal|"%s: archive member not found"
 argument_list|,
 name|posarg
 argument_list|)
@@ -592,25 +520,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|errflg
 operator|=
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: %s.\n"
+literal|"%s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -813,11 +731,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|err
+name|errflg
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c	8.1 (Berkeley) %G%"
+literal|"@(#)operators.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,7 @@ file|"operators.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 specifier|const
@@ -94,6 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 specifier|const

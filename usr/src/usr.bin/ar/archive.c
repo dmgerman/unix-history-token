@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)archive.c	8.1 (Berkeley) %G%"
+literal|"@(#)archive.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,19 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -67,7 +55,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ar.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
 end_include
 
@@ -99,29 +105,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -150,20 +133,15 @@ begin_comment
 comment|/* real header */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|open_archive
-argument_list|(
-argument|mode
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mode
+parameter_list|)
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|created
@@ -221,14 +199,9 @@ operator|&
 name|AR_C
 operator|)
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: creating archive %s.\n"
+literal|"creating archive %s"
 argument_list|,
 name|archive
 argument_list|)
@@ -402,7 +375,7 @@ name|fd
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -443,45 +416,37 @@ name|len
 parameter_list|,
 name|base
 parameter_list|)
-value|{ \ 	bcopy(from, buf, len); \ 	buf[len] = '\0'; \ 	to = strtol(buf, (char **)NULL, base); \ }
+value|{ \ 	memmove(buf, from, len); \ 	buf[len] = '\0'; \ 	to = strtol(buf, (char **)NULL, base); \ }
 end_define
 
 begin_comment
 comment|/*  * get_arobj --  *	read the archive header for this member  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|get_arobj
-argument_list|(
-argument|fd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ar_hdr
 modifier|*
 name|hdr
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|,
 name|nr
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 name|buf
 index|[
 literal|20
@@ -803,15 +768,15 @@ name|lname
 operator|=
 literal|0
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|hdr
-operator|->
-name|ar_name
-argument_list|,
 name|chdr
 operator|.
 name|name
+argument_list|,
+name|hdr
+operator|->
+name|ar_name
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -861,7 +826,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -874,37 +839,27 @@ begin_comment
 comment|/*  * put_arobj --  *	Write an archive member to a file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|put_arobj
-argument_list|(
-argument|cfp
-argument_list|,
-argument|sb
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cfp
+parameter_list|,
+name|sb
+parameter_list|)
 name|CF
 modifier|*
 name|cfp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|stat
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
 name|int
 name|lname
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|name
@@ -974,14 +929,9 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: warning: %s truncated to %.*s\n"
+literal|"warning: %s truncated to %.*s\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1052,7 +1002,7 @@ operator|->
 name|ar_name
 argument_list|)
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -1242,35 +1192,27 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * copy_ar --  *	Copy size bytes from one file to another - taking care to handle the  *	extra byte (for odd size files) when reading archives and writing an  *	extra byte if necessary when adding files to archive.  The length of  *	the object is the long name plus the object itself; the variable  *	already_written gets set if a long name was written.  *  *	The padding is really unnecessary, and is almost certainly a remnant  *	of early archive formats where the header included binary data which  *	a PDP-11 required to start on an even byte boundary.  (Or, perhaps,  *	because 16-bit word addressed copies were faster?)  Anyhow, it should  *	have been ripped out long ago.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|copy_ar
-argument_list|(
-argument|cfp
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cfp
+parameter_list|,
+name|size
+parameter_list|)
 name|CF
 modifier|*
 name|cfp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|off_t
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|char
@@ -1278,11 +1220,9 @@ name|pad
 init|=
 literal|'\n'
 decl_stmt|;
-specifier|register
 name|off_t
 name|sz
 decl_stmt|;
-specifier|register
 name|int
 name|from
 decl_stmt|,
@@ -1508,7 +1448,7 @@ name|wname
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * skip_arobj -  *	Skip over an object -- taking care to skip the pad bytes.  */

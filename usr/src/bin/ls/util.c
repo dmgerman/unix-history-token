@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.1 (Berkeley) %G%"
+literal|"@(#)util.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +92,6 @@ name|dest
 parameter_list|,
 name|len
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|src
@@ -103,7 +102,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -111,7 +109,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|ch
 decl_stmt|;

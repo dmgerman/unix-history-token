@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	8.1 (Berkeley) %G%"
+literal|"@(#)test.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,7 @@ operator|(
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 specifier|const
@@ -2178,6 +2179,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 specifier|const
@@ -2185,16 +2187,15 @@ modifier|*
 name|table
 decl_stmt|;
 block|{
-specifier|register
+specifier|const
 name|char
 modifier|*
 specifier|const
 modifier|*
 name|tp
 decl_stmt|;
-specifier|register
-name|char
 specifier|const
+name|char
 modifier|*
 name|p
 decl_stmt|;

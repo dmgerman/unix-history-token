@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gfmt.c	8.4 (Berkeley) %G%"
+literal|"@(#)gfmt.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,19 +64,41 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|gerr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
+name|s
+parameter_list|)
 name|char
-operator|*
-operator|)
-argument_list|)
+modifier|*
+name|s
 decl_stmt|;
-end_decl_stmt
+block|{
+if|if
+condition|(
+name|s
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"illegal gfmt1 option -- %s"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"illegal gfmt1 option"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -102,7 +124,6 @@ name|int
 name|ldisc
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|cchar
 modifier|*
@@ -195,7 +216,6 @@ name|tp
 parameter_list|,
 name|s
 parameter_list|)
-specifier|register
 name|struct
 name|termios
 modifier|*
@@ -206,19 +226,17 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|cchar
+modifier|*
+name|cp
+decl_stmt|;
 name|char
 modifier|*
 name|ep
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|;
-specifier|register
-name|struct
-name|cchar
-modifier|*
-name|cp
 decl_stmt|;
 name|long
 name|tmp
@@ -520,42 +538,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|gerr
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|s
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"illegal gfmt1 option -- %s"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-else|else
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"illegal gfmt1 option"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

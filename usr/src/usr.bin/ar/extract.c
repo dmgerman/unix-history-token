@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)extract.c	8.1 (Berkeley) %G%"
+literal|"@(#)extract.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,25 +49,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -85,6 +79,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
 end_include
 
@@ -94,55 +94,32 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
 begin_comment
 comment|/*  * extract --  *	Extract files from the named archive - if member names given only  *	extract those members otherwise extract all members.  If 'o' option  *	selected modify date of newly created file to be same as archive  *	members date otherwise date is time of extraction.  Does not modify  *	archive.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|extract
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
+name|char
+modifier|*
+name|file
+decl_stmt|;
 name|int
 name|afd
 decl_stmt|,
 name|all
+decl_stmt|,
+name|eval
 decl_stmt|,
 name|tfd
 decl_stmt|;
@@ -159,13 +136,6 @@ name|sb
 decl_stmt|;
 name|CF
 name|cf
-decl_stmt|;
-name|int
-name|eval
-decl_stmt|;
-name|char
-modifier|*
-name|file
 decl_stmt|;
 name|eval
 operator|=
@@ -300,21 +270,11 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: %s.\n"
+literal|"%s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|skip_arobj
@@ -381,21 +341,11 @@ name|mode
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: chmod: %s\n"
+literal|"chmod: %s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -438,21 +388,11 @@ name|tv
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: utimes: %s\n"
+literal|"utimes: %s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -508,7 +448,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

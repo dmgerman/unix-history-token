@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.1 (Berkeley) %G%"
+literal|"@(#)print.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,7 +203,6 @@ modifier|*
 name|dp
 decl_stmt|;
 block|{
-specifier|register
 name|FTSENT
 modifier|*
 name|p
@@ -272,16 +271,14 @@ modifier|*
 name|dp
 decl_stmt|;
 block|{
-specifier|register
-name|FTSENT
-modifier|*
-name|p
-decl_stmt|;
-specifier|register
 name|struct
 name|stat
 modifier|*
 name|sp
+decl_stmt|;
+name|FTSENT
+modifier|*
+name|p
 decl_stmt|;
 name|NAMES
 modifier|*
@@ -678,12 +675,10 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-specifier|register
 name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|base
 decl_stmt|,
@@ -1051,7 +1046,6 @@ name|inodefield
 parameter_list|,
 name|sizefield
 parameter_list|)
-specifier|register
 name|FTSENT
 modifier|*
 name|p

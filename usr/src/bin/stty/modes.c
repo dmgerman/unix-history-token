@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)modes.c	8.1 (Berkeley) %G%"
+literal|"@(#)modes.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1174,13 +1174,11 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|modes
 modifier|*
 name|mp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|name

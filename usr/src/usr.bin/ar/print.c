@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.1 (Berkeley) %G%"
+literal|"@(#)print.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,25 +37,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -70,54 +70,25 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
 begin_comment
 comment|/*  * print --  *	Prints archive members on stdout - if member names given only  *	print those members, otherwise print all members.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|print
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|CF
 name|cf
 decl_stmt|;
-specifier|register
 name|int
 name|afd
 decl_stmt|,
@@ -269,7 +240,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

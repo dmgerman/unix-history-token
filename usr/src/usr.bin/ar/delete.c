@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delete.c	8.1 (Berkeley) %G%"
+literal|"@(#)delete.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -55,7 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -67,7 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ar.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -88,59 +88,21 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temporary file "name" */
-end_comment
-
 begin_comment
 comment|/*-  * delete --  *	Deletes named members from the archive.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|delete
-argument_list|(
+parameter_list|(
 name|argv
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|argv
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|CF
 name|cf
@@ -358,7 +320,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

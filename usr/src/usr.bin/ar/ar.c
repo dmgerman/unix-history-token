@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	8.1 (Berkeley) %G%"
+literal|"@(#)ar.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -74,19 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -98,7 +98,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -145,10 +151,26 @@ begin_decl_stmt
 specifier|static
 name|void
 name|badoptions
-argument_list|()
-decl_stmt|,
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|usage
-argument_list|()
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +179,7 @@ comment|/*  * main --  *	main basically uses getopt to parse options and calls t
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -172,10 +195,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|c
 decl_stmt|;
@@ -185,32 +204,17 @@ name|p
 decl_stmt|;
 name|int
 argument_list|(
-operator|*
-name|fcall
+argument|*fcall
 argument_list|)
-argument_list|()
-decl_stmt|,
-name|append
-argument_list|()
-decl_stmt|,
-name|contents
-argument_list|()
-decl_stmt|,
-name|delete
-argument_list|()
-decl_stmt|,
-name|extract
-argument_list|()
-decl_stmt|,
-name|move
-argument_list|()
-decl_stmt|,
-name|print
-argument_list|()
-decl_stmt|,
-name|replace
-argument_list|()
-decl_stmt|;
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -257,28 +261,13 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|p
 operator|=
@@ -521,14 +510,9 @@ operator|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: one of options -dmpqrtx is required.\n"
+literal|"one of options -dmpqrtx is required"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -547,14 +531,9 @@ operator|&
 name|AR_B
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: only one of -a and -[bi] options allowed.\n"
+literal|"only one of -a and -[bi] options allowed"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -585,14 +564,9 @@ operator|++
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: no position operand specified.\n"
+literal|"no position operand specified"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -798,14 +772,9 @@ operator|++
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: no archive specified.\n"
+literal|"no archive specified"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -832,14 +801,9 @@ operator|*
 name|argv
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: no archive members specified.\n"
+literal|"no archive members specified"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -872,14 +836,9 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: illegal option combination for %s.\n"
+literal|"illegal option combination for %s"
 argument_list|,
 name|arg
 argument_list|)

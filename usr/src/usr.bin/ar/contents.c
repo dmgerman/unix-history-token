@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)contents.c	8.1 (Berkeley) %G%"
+literal|"@(#)contents.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,19 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -73,7 +61,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ar.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -91,6 +79,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive.h"
 end_include
 
@@ -100,49 +100,22 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
 begin_comment
 comment|/*  * contents --  *	Handles t[v] option - opens the archive and then reads headers,  *	skipping member contents.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|contents
-argument_list|(
+parameter_list|(
 name|argv
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|argv
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
-specifier|register
 name|int
 name|afd
 decl_stmt|,
@@ -350,7 +323,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	8.1 (Berkeley) %G%"
+literal|"@(#)move.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<ar.h>
 end_include
 
 begin_include
@@ -55,7 +55,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -67,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ar.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -88,71 +94,22 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|CHDR
-name|chdr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* converted header */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|archive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* archive name */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temporary file "name" */
-end_comment
-
 begin_comment
 comment|/*  * move --  *	Change location of named members in archive - if 'b' or 'i' option  *	selected then named members are placed before 'posname'.  If 'a'  *	option selected members go after 'posname'.  If no options, members  *	are moved to end of archive.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|move
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|extern
-name|char
-modifier|*
-name|posarg
-decl_stmt|,
-modifier|*
-name|posname
-decl_stmt|;
-comment|/* positioning file names */
 name|CF
 name|cf
 decl_stmt|;
@@ -377,14 +334,9 @@ condition|(
 name|mods
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ar: %s: archive member not found.\n"
+literal|"%s: archive member not found"
 argument_list|,
 name|posarg
 argument_list|)
@@ -597,7 +549,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	8.2 (Berkeley) %G%"
+literal|"@(#)rm.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -216,10 +216,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -378,17 +374,14 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|FTS
 modifier|*
 name|fts
 decl_stmt|;
-specifier|register
 name|FTSENT
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|int
 name|needstat
 decl_stmt|;
@@ -726,11 +719,9 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|df
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|f
@@ -908,11 +899,10 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
-name|first
-decl_stmt|,
 name|ch
+decl_stmt|,
+name|first
 decl_stmt|;
 name|char
 name|modep
@@ -1082,18 +1072,17 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 modifier|*
-name|t
+name|save
 decl_stmt|,
 modifier|*
 modifier|*
-name|save
+name|t
 decl_stmt|;
 name|int
 name|complained

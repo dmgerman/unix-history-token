@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	8.3 (Berkeley) %G%"
+literal|"@(#)print.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,26 +140,21 @@ name|FMT
 name|fmt
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|cchar
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|long
 name|tmp
 decl_stmt|;
-specifier|register
-name|int
-name|cnt
-decl_stmt|;
-specifier|register
 name|u_char
 modifier|*
 name|cc
 decl_stmt|;
 name|int
+name|cnt
+decl_stmt|,
 name|ispeed
 decl_stmt|,
 name|ospeed

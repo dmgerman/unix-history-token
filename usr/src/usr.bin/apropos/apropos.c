@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apropos.c	8.5 (Berkeley) %G%"
+literal|"@(#)apropos.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -107,17 +113,6 @@ directive|include
 file|"../man/pathnames.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MAXLINELEN
-value|1024
-end_define
-
-begin_comment
-comment|/* max line handled */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -125,6 +120,69 @@ modifier|*
 name|found
 decl_stmt|,
 name|foundman
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|apropos
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|lowstr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|match
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -145,15 +203,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|ENTRY
 modifier|*
 name|ep
@@ -425,25 +474,15 @@ condition|(
 operator|!
 name|foundman
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"apropos: no %s file found.\n"
+literal|"no %s file found"
 argument_list|,
 name|_PATH_WHATIS
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|rv
 operator|=
 literal|1
@@ -493,27 +532,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|apropos
-argument_list|(
-argument|argv
-argument_list|,
-argument|path
-argument_list|,
-argument|buildpath
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|,
+name|path
+parameter_list|,
+name|buildpath
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|,
-modifier|*
+decl|*
 name|path
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -523,7 +560,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|end
@@ -538,14 +574,14 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAXLINELEN
+name|LINE_MAX
 operator|+
 literal|1
 index|]
 decl_stmt|,
 name|wbuf
 index|[
-name|MAXLINELEN
+name|LINE_MAX
 operator|+
 literal|1
 index|]
@@ -568,7 +604,7 @@ if|if
 condition|(
 name|end
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -649,7 +685,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -657,14 +693,9 @@ literal|'\n'
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"apropos: %s line too long.\n"
+literal|"%s: line too long"
 argument_list|,
 name|name
 argument_list|)
@@ -757,30 +788,28 @@ begin_comment
 comment|/*  * match --  *	match anywhere the string appears  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|match
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|,
+parameter_list|,
 name|str
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|bp
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|str
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 name|test
 decl_stmt|;
@@ -861,26 +890,25 @@ begin_comment
 comment|/*  * lowstr --  *	convert a string to lower case  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|lowstr
-argument_list|(
+parameter_list|(
 name|from
-argument_list|,
+parameter_list|,
 name|to
-argument_list|)
-specifier|register
+parameter_list|)
 name|char
-operator|*
+modifier|*
 name|from
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|to
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
-specifier|register
 name|char
 name|ch
 decl_stmt|;
@@ -926,12 +954,10 @@ begin_comment
 comment|/*  * usage --  *	print usage message and die  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -949,7 +975,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
