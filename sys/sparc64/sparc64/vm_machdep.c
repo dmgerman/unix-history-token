@@ -1598,6 +1598,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|wait
+operator|&
+name|M_ZERO
+operator|)
+operator|&&
+operator|(
 name|m
 operator|->
 name|flags
