@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ide_pci.c,v 1.28 1999/01/17 05:46:25 bde Exp $  */
+comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
 end_comment
 
 begin_include
@@ -1681,9 +1681,6 @@ modifier|*
 name|wdinfo
 parameter_list|)
 block|{
-name|int
-name|r
-decl_stmt|;
 name|u_long
 name|pci_revision
 decl_stmt|;
@@ -1802,19 +1799,15 @@ argument_list|(
 literal|"via_571_dmainit: setting ultra DMA mode 2\n"
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
+if|if
+condition|(
+operator|!
 name|wdcmd
 argument_list|(
 name|WDDMA_UDMA2
 argument_list|,
 name|wdinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
 condition|)
 block|{
 name|printf
@@ -1871,19 +1864,15 @@ argument_list|(
 literal|"via_571_dmainit: setting multiword DMA mode 2\n"
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
+if|if
+condition|(
+operator|!
 name|wdcmd
 argument_list|(
 name|WDDMA_MDMA2
 argument_list|,
 name|wdinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
 condition|)
 block|{
 name|printf
@@ -2246,49 +2235,6 @@ literal|2
 operator|+
 name|unit
 expr_stmt|;
-comment|/* set some values the BIOS should have set */
-name|printf
-argument_list|(
-literal|"Using 0x%x\n"
-argument_list|,
-name|cookie
-operator|->
-name|iobase_bm
-argument_list|)
-expr_stmt|;
-name|outl
-argument_list|(
-name|iobase_bm
-operator|+
-operator|(
-name|unit
-operator|*
-literal|0x10
-operator|)
-operator|+
-literal|0x20
-argument_list|,
-literal|0x00040010
-argument_list|)
-expr_stmt|;
-name|outl
-argument_list|(
-name|iobase_bm
-operator|+
-operator|(
-name|unit
-operator|*
-literal|0x10
-operator|)
-operator|+
-literal|0x24
-argument_list|,
-literal|0x00911030
-argument_list|)
-expr_stmt|;
-comment|/* if ((ctlr == 0)&& (unit == 0)) */
-comment|/* XXX */
-comment|/* outb(iobase_bm + (unit * 0x10) + BMISTA_PORT, 0xe6);*/
 name|PIO_config
 operator|=
 name|inl
@@ -2392,9 +2338,6 @@ modifier|*
 name|wdinfo
 parameter_list|)
 block|{
-name|int
-name|r
-decl_stmt|;
 name|u_long
 name|pci_revision
 decl_stmt|;
@@ -2406,6 +2349,15 @@ name|iobase_bm
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+name|int
+name|drivemode
+decl_stmt|;
+name|int
+name|mode
+decl_stmt|;
+name|int
+name|regval
 decl_stmt|;
 comment|/*cookie->unit = 0; */
 comment|/* XXX */
@@ -2483,36 +2435,6 @@ argument_list|,
 literal|0xe6
 argument_list|)
 expr_stmt|;
-name|outl
-argument_list|(
-name|iobase_bm
-operator|+
-operator|(
-name|unit
-operator|*
-literal|0x10
-operator|)
-operator|+
-literal|0x20
-argument_list|,
-literal|0x00040010
-argument_list|)
-expr_stmt|;
-name|outl
-argument_list|(
-name|iobase_bm
-operator|+
-operator|(
-name|unit
-operator|*
-literal|0x10
-operator|)
-operator|+
-literal|0x24
-argument_list|,
-literal|0x00911030
-argument_list|)
-expr_stmt|;
 comment|/* If it's a UDMA drive on a '5530, set it up */
 comment|/*  	 * depending on what the drive can do, 	 * set the correct modes, 	 */
 name|printf
@@ -2547,10 +2469,75 @@ argument_list|(
 name|wp
 argument_list|)
 operator|>=
-literal|2
+literal|0
 condition|)
 block|{
-comment|/*outl(iobase_bm + 0x20 + (cookie->unit * 16), 0x00100010);*/
+switch|switch
+condition|(
+name|udma_mode
+argument_list|(
+name|wp
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|mode
+operator|=
+literal|0
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_UDMA0
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00921250
+expr_stmt|;
+break|break;
+default|default:
+comment|/* newer modes not supported */
+case|case
+literal|2
+case|:
+if|#
+directive|if
+literal|0
+comment|/*  * XXX The 5530 can do mode 2 but if you do use it, it will block all   * access to the PCI bus (and thus the ISA bus, PICs, PIT, etc. etc.) until the  * transfer is complete. Mode 2 swamps the 5530 so much it can't really cope  * with any other operations. Therefore, use mode 1 for drives that can  * do mode 2 (or more). (FALL THROUGH)  */
+block|mode = 2; 			drivemode = WDDMA_UDMA2; 			regval = 0x00911030; 			break;
+endif|#
+directive|endif
+case|case
+literal|1
+case|:
+name|mode
+operator|=
+literal|1
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_UDMA1
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00911140
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * With the Cx5530, drive configuration 		 * should come *after* the controller configuration, 		 * to make sure the controller sees  		 * the command and does the right thing. 		 */
+comment|/* Set UDMA mode on drive */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"cyrix_5530_dmainit: set UDMA mode %d\n"
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 name|outl
 argument_list|(
 name|iobase_bm
@@ -2558,40 +2545,23 @@ operator|+
 literal|0x24
 operator|+
 operator|(
-name|cookie
-operator|->
 name|unit
 operator|*
 literal|16
 operator|)
 argument_list|,
-literal|0x00911030
-argument_list|)
-expr_stmt|;
-comment|/* 		 * With the Cx5530, drive configuration should come *after* the 		 * controller configuration, to make sure the controller sees  		 * the command and does the right thing. 		 */
-comment|/* Set UDMA mode 2 on drive */
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"cyrix_5530_dmainit: setting ultra DMA mode 2\n"
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-name|wdcmd
-argument_list|(
-name|WDDMA_UDMA2
-argument_list|,
-name|wdinfo
+name|regval
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|r
+name|wdcmd
+argument_list|(
+name|drivemode
+argument_list|,
+name|wdinfo
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -2625,7 +2595,7 @@ argument_list|(
 name|wp
 argument_list|)
 operator|>=
-literal|2
+literal|0
 operator|&&
 name|pio_mode
 argument_list|(
@@ -2635,6 +2605,65 @@ operator|>=
 literal|4
 condition|)
 block|{
+switch|switch
+condition|(
+name|mwdma_mode
+argument_list|(
+name|wp
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|mode
+operator|=
+literal|0
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA0
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00017771
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|mode
+operator|=
+literal|1
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA1
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00012121
+expr_stmt|;
+break|break;
+default|default:
+comment|/* newer modes not supported */
+case|case
+literal|2
+case|:
+name|mode
+operator|=
+literal|2
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA2
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00002020
+expr_stmt|;
+break|break;
+block|}
 comment|/* Set multiword DMA mode 2 on drive */
 if|if
 condition|(
@@ -2642,22 +2671,20 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"cyrix_5530_dmainit: setting multiword DMA mode 2\n"
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-name|wdcmd
-argument_list|(
-name|WDDMA_MDMA2
+literal|"cyrix_5530_dmainit: multiword DMA mode %d\n"
 argument_list|,
-name|wdinfo
+name|mode
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|r
+name|wdcmd
+argument_list|(
+name|drivemode
+argument_list|,
+name|wdinfo
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -2669,8 +2696,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Configure the controller appropriately for MWDMA mode 2 */
-comment|/*outl(iobase_bm + 0x20 + (cookie->unit * 16), 0x00100010);*/
+comment|/* Configure the controller appropriately for MWDMA mode */
 name|outl
 argument_list|(
 name|iobase_bm
@@ -2678,14 +2704,12 @@ operator|+
 literal|0x24
 operator|+
 operator|(
-name|cookie
-operator|->
 name|unit
 operator|*
 literal|16
 operator|)
 argument_list|,
-literal|0x00002020
+name|regval
 argument_list|)
 expr_stmt|;
 if|if
@@ -2701,6 +2725,120 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* 	 * Always set the PIO mode values. 	 */
+switch|switch
+condition|(
+name|pio_mode
+argument_list|(
+name|wp
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|mode
+operator|=
+literal|0
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA0
+expr_stmt|;
+name|regval
+operator|=
+literal|0x0000E132
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|mode
+operator|=
+literal|1
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA1
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00001812
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|mode
+operator|=
+literal|2
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA1
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00024020
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|mode
+operator|=
+literal|3
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA1
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00032010
+expr_stmt|;
+break|break;
+default|default:
+comment|/* newer modes not supported */
+case|case
+literal|4
+case|:
+name|mode
+operator|=
+literal|4
+expr_stmt|;
+name|drivemode
+operator|=
+name|WDDMA_MDMA2
+expr_stmt|;
+name|regval
+operator|=
+literal|0x00040010
+expr_stmt|;
+break|break;
+block|}
+name|outl
+argument_list|(
+name|iobase_bm
+operator|+
+literal|0x20
+operator|+
+operator|(
+name|unit
+operator|*
+literal|16
+operator|)
+argument_list|,
+name|regval
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"cyrix_5530_dmainit: setting PIO mode %d\n"
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3624,9 +3762,6 @@ modifier|*
 name|wdinfo
 parameter_list|)
 block|{
-name|int
-name|r
-decl_stmt|;
 comment|/* If it's a UDMA drive and a PIIX4, set it up */
 if|if
 condition|(
@@ -3661,19 +3796,15 @@ argument_list|(
 literal|"intel_piix_dmainit: setting ultra DMA mode 2\n"
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
+if|if
+condition|(
+operator|!
 name|wdcmd
 argument_list|(
 name|WDDMA_UDMA2
 argument_list|,
 name|wdinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
 condition|)
 block|{
 name|printf
@@ -3876,19 +4007,15 @@ argument_list|(
 literal|"intel_piix_dmainit: setting multiword DMA mode 2\n"
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
+if|if
+condition|(
+operator|!
 name|wdcmd
 argument_list|(
 name|WDDMA_MDMA2
 argument_list|,
 name|wdinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
 condition|)
 block|{
 name|printf
@@ -4107,19 +4234,15 @@ argument_list|(
 literal|"intel_piix_dmainit: setting multiword DMA mode 2\n"
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
+if|if
+condition|(
+operator|!
 name|wdcmd
 argument_list|(
 name|WDDMA_MDMA2
 argument_list|,
 name|wdinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|r
 condition|)
 block|{
 name|printf
@@ -6541,7 +6664,7 @@ name|count
 operator|-=
 name|prd_count
 expr_stmt|;
-comment|/* Step through virtual pages, coalescing as needed. */
+comment|/* 	 * Step through virtual pages. 	 * Note that it is not worth trying to coalesce pages that are  	 * next to each other physically, and some DMA engines (e.g. 	 * Cyrix Cx5530) actually blow up if you do. 	 */
 while|while
 condition|(
 name|count
@@ -6569,15 +6692,6 @@ name|nbase
 operator|+
 name|ncount
 expr_stmt|;
-comment|/*  		 * Coalesce if physically contiguous and not crossing 		 * 64k boundary.  		 */
-if|#
-directive|if
-literal|0
-comment|/* 	 * Aggregation is NOT an optimisation worth doing, 	 * and the Cyrix UDMA controller screws itself  	 * in some aggregated situations. 	 * We might as well just assign each 4K page a DMA entry 	 * as this doesn't really gain us anything to aggregate them. 	 * This was basically copied from my agregation code in the aha 	 * driver, but I doubt it helped much there either. [JRE] 	 */
-block|if ((prd_base + prd_count == nbase)&&  		    ((((nend - 1) ^ prd_base)& ~0xffff) == 0)) { 			prd_count += ncount; 		} else
-endif|#
-directive|endif
-block|{
 name|prd
 index|[
 name|i
@@ -6627,7 +6741,6 @@ name|prd_count
 operator|=
 name|ncount
 expr_stmt|;
-block|}
 name|vaddr
 operator|+=
 name|ncount
