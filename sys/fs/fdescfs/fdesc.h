@@ -109,13 +109,6 @@ name|fdesc_init
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|vfs_root_t
-name|fdesc_root
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|int

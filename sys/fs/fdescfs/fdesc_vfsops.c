@@ -113,6 +113,13 @@ name|fdesc_statfs
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|vfs_root_t
+name|fdesc_root
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Mount the per-process file descriptors (/dev/fd)  */
 end_comment
@@ -354,6 +361,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fdesc_root
 parameter_list|(
