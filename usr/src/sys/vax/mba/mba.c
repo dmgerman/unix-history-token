@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dk.h"
+file|"dkstat.h"
 end_include
 
 begin_include
@@ -225,7 +225,7 @@ name|bp
 operator|->
 name|av_forw
 expr_stmt|;
-name|iodone
+name|biodone
 argument_list|(
 name|bp
 argument_list|)
@@ -408,6 +408,10 @@ specifier|register
 name|int
 name|com
 decl_stmt|;
+specifier|extern
+name|int
+name|cold
+decl_stmt|;
 name|loop
 label|:
 comment|/* 	 * Look for an operation at the front of the queue. 	 */
@@ -453,7 +457,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-comment|/* 	 * If this device isn't present and on-line, then 	 * we screwed up, and can't really do the operation. 	 * Only check for non-tapes because tape drivers check 	 * ONLINE themselves and because TU78 registers are 	 * different. 	 */
+comment|/* 	 * If this device isn't present and on-line, then 	 * we screwed up, and can't really do the operation. 	 * Only check for non-tapes because tape drivers check 	 * ONLINE themselves and because TU78 registers are 	 * different. 	 * No complaints during autoconfiguration, 	 * when we try to read disk labels from anything on line. 	 */
 if|if
 condition|(
 operator|(
@@ -485,6 +489,12 @@ name|MBDS_DREADY
 operator|)
 operator|!=
 name|MBDS_DREADY
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|cold
 condition|)
 block|{
 if|if
@@ -542,6 +552,7 @@ name|b_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|mi
 operator|->
 name|mi_tab
@@ -574,7 +585,7 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
-name|iodone
+name|biodone
 argument_list|(
 name|bp
 argument_list|)
@@ -1030,7 +1041,7 @@ name|bp
 operator|->
 name|av_forw
 expr_stmt|;
-name|iodone
+name|biodone
 argument_list|(
 name|bp
 argument_list|)
@@ -1318,7 +1329,7 @@ name|bp
 operator|->
 name|av_forw
 expr_stmt|;
-name|iodone
+name|biodone
 argument_list|(
 name|bp
 argument_list|)
