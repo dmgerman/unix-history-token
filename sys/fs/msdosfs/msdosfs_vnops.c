@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.68 1998/05/07 04:58:42 msmith Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.69 1998/05/17 21:03:35 dt Exp $ */
 end_comment
 
 begin_comment
@@ -2081,7 +2081,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * We are very inconsistent about handling unsupported 		 * attributes.  We ignored the the access time and the 		 * read and execute bits.  We were strict for the other 		 * attributes. 		 * 		 * Here we are strict, stricter than ufs in not allowing 		 * users to attempt to set SF_SETTABLE bits or anyone to 		 * set unsupported bits.  However, we ignore attempts to 		 * set ATTR_ARCHIVE for directories `cp -pr' from a more 		 * sensible file system attempts it a lot. 		 */
+comment|/* 		 * We are very inconsistent about handling unsupported 		 * attributes.  We ignored the access time and the 		 * read and execute bits.  We were strict for the other 		 * attributes. 		 * 		 * Here we are strict, stricter than ufs in not allowing 		 * users to attempt to set SF_SETTABLE bits or anyone to 		 * set unsupported bits.  However, we ignore attempts to 		 * set ATTR_ARCHIVE for directories `cp -pr' from a more 		 * sensible file system attempts it a lot. 		 */
 if|if
 condition|(
 name|cred
