@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 42 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 43 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -635,7 +635,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AcpiNsDeleteChildren: Object %p, Remaining %d\n"
+literal|"AcpiNsDeleteChildren: Object %p, Remaining %X\n"
 operator|,
 name|ChildNode
 operator|,

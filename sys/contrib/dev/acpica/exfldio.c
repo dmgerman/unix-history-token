@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amfldio - Aml Field I/O  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amfldio - Aml Field I/O  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -193,23 +193,21 @@ operator|)
 operator|+
 name|FieldByteOffset
 expr_stmt|;
-if|if
-condition|(
-name|RgnDesc
-operator|->
-name|Region
-operator|.
-name|SpaceId
-operator|>=
-name|NUM_REGION_TYPES
-condition|)
-block|{
 name|DEBUG_PRINT
 argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"AmlReadFieldData: **** Unknown OpRegion SpaceID %d at %08lx width %d\n"
+literal|"AmlReadFieldData: Region %s(%X) at %08lx width %X\n"
+operator|,
+name|AcpiCmGetRegionName
+argument_list|(
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+argument_list|)
 operator|,
 name|RgnDesc
 operator|->
@@ -223,32 +221,6 @@ name|FieldBitWidth
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|DEBUG_PRINT
-argument_list|(
-name|TRACE_OPREGION
-argument_list|,
-operator|(
-literal|"AmlReadFieldData: OpRegion %s at %08lx width %d\n"
-operator|,
-name|AcpiGbl_RegionTypes
-index|[
-name|RgnDesc
-operator|->
-name|Region
-operator|.
-name|SpaceId
-index|]
-operator|,
-name|Address
-operator|,
-name|FieldBitWidth
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Invoke the appropriate AddressSpace/OpRegion handler */
 name|Status
 operator|=
@@ -277,16 +249,22 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlReadFieldData: **** OpRegion type %s not implemented\n"
+literal|"AmlReadFieldData: **** Region %s(%X) not implemented\n"
 operator|,
-name|AcpiGbl_RegionTypes
-index|[
+name|AcpiCmGetRegionName
+argument_list|(
 name|RgnDesc
 operator|->
 name|Region
 operator|.
 name|SpaceId
-index|]
+argument_list|)
+operator|,
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
 operator|)
 argument_list|)
 expr_stmt|;
@@ -304,7 +282,16 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlReadFieldData: **** Unknown OpRegion SpaceID %d\n"
+literal|"AmlReadFieldData: **** Region %s(%X) has no handler\n"
+operator|,
+name|AcpiCmGetRegionName
+argument_list|(
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+argument_list|)
 operator|,
 name|RgnDesc
 operator|->
@@ -968,25 +955,23 @@ operator|)
 operator|+
 name|FieldByteOffset
 expr_stmt|;
-if|if
-condition|(
-name|RgnDesc
-operator|->
-name|Region
-operator|.
-name|SpaceId
-operator|>=
-name|NUM_REGION_TYPES
-condition|)
-block|{
 name|DEBUG_PRINT
 argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"AmlWriteField: **** Store %lx in unknown OpRegion SpaceID %d at %p width %d ** \n"
+literal|"AmlWriteField: Store %lx in Region %s(%X) at %p width %X\n"
 operator|,
 name|Value
+operator|,
+name|AcpiCmGetRegionName
+argument_list|(
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+argument_list|)
 operator|,
 name|RgnDesc
 operator|->
@@ -1000,34 +985,6 @@ name|FieldBitWidth
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|DEBUG_PRINT
-argument_list|(
-name|TRACE_OPREGION
-argument_list|,
-operator|(
-literal|"AmlWriteField: Store %lx in OpRegion %s at %p width %d\n"
-operator|,
-name|Value
-operator|,
-name|AcpiGbl_RegionTypes
-index|[
-name|RgnDesc
-operator|->
-name|Region
-operator|.
-name|SpaceId
-index|]
-operator|,
-name|Address
-operator|,
-name|FieldBitWidth
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Invoke the appropriate AddressSpace/OpRegion handler */
 name|Status
 operator|=
@@ -1057,16 +1014,22 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlWriteField: **** OpRegion type %s not implemented\n"
+literal|"AmlWriteField: **** Region type %s(%X) not implemented\n"
 operator|,
-name|AcpiGbl_RegionTypes
-index|[
+name|AcpiCmGetRegionName
+argument_list|(
 name|RgnDesc
 operator|->
 name|Region
 operator|.
 name|SpaceId
-index|]
+argument_list|)
+operator|,
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1084,7 +1047,16 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlWriteField: **** Unknown OpRegion SpaceID %x\n"
+literal|"AmlWriteField: **** Region type %s(%X) does not have a handler\n"
+operator|,
+name|AcpiCmGetRegionName
+argument_list|(
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+argument_list|)
 operator|,
 name|RgnDesc
 operator|->

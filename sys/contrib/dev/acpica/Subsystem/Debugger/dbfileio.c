@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 33 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 34 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -524,7 +524,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Could not allocate memory for the table (size=0x%X)\n"
+literal|"Could not allocate memory for the table (size=%X)\n"
 argument_list|,
 name|TableHeader
 operator|.
@@ -615,7 +615,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Warning - reading table, asked for %d got %d\n"
+literal|"Warning - reading table, asked for %X got %X\n"
 argument_list|,
 name|AmlLength
 argument_list|,

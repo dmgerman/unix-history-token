@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 81 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 84 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1005,7 +1005,7 @@ argument_list|(
 name|TRACE_IO
 argument_list|,
 operator|(
-literal|"PM1 control: Read 0x%X\n"
+literal|"PM1 control: Read %X\n"
 operator|,
 name|RegisterValue
 operator|)
@@ -1038,12 +1038,12 @@ name|RegisterValue
 operator||=
 name|Value
 expr_stmt|;
-comment|/*              * SLP_TYPE_x Registers are written differently              * than any other control Registers with              * respect to A and B Registers.  The value              * for A may be different than the value for B              */
+comment|/*              * SLP_TYPE_x Registers are written differently              * than any other control Registers with              * respect to A and B Registers.  The value              * for A may be different than the value for B              *              * Therefore, pass the RegisterId, not just generic PM1_CONTROL,              * because we need to do different things. Yuck.              */
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|,
-name|PM1_CONTROL
+name|RegisterId
 argument_list|,
 operator|(
 name|UINT16
@@ -1090,7 +1090,7 @@ argument_list|(
 name|TRACE_IO
 argument_list|,
 operator|(
-literal|"PM2 control: Read 0x%X from 0x%X\n"
+literal|"PM2 control: Read %X from %p\n"
 operator|,
 name|RegisterValue
 operator|,
@@ -1134,7 +1134,7 @@ argument_list|(
 name|TRACE_IO
 argument_list|,
 operator|(
-literal|"About to write %04X to %04X\n"
+literal|"About to write %04X to %p\n"
 operator|,
 name|RegisterValue
 operator|,
@@ -1183,7 +1183,7 @@ argument_list|(
 name|TRACE_IO
 argument_list|,
 operator|(
-literal|"PM_TIMER: Read 0x%X from 0x%X\n"
+literal|"PM_TIMER: Read %X from %p\n"
 operator|,
 name|RegisterValue
 operator|,
@@ -1256,7 +1256,7 @@ argument_list|(
 name|TRACE_IO
 argument_list|,
 operator|(
-literal|"GPE Enable bits: Read 0x%X from 0x%X\n"
+literal|"GPE Enable bits: Read %X from %X\n"
 operator|,
 name|RegisterValue
 operator|,
@@ -1372,7 +1372,7 @@ argument_list|(
 name|TRACE_IO
 argument_list|,
 operator|(
-literal|"Register I/O: returning 0x%X\n"
+literal|"Register I/O: returning %X\n"
 operator|,
 name|RegisterValue
 operator|)
@@ -1405,14 +1405,6 @@ name|UINT32
 name|Value
 init|=
 literal|0
-decl_stmt|;
-name|UINT32
-name|Offset
-init|=
-name|REGISTER_OFFSET
-argument_list|(
-name|RegisterId
-argument_list|)
 decl_stmt|;
 name|UINT32
 name|BankOffset
@@ -1458,7 +1450,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1aEvtBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 name|Value
@@ -1472,7 +1464,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1bEvtBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1501,8 +1493,6 @@ operator|->
 name|XPm1aEvtBlk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 name|Value
@@ -1517,8 +1507,6 @@ operator|->
 name|XPm1bEvtBlk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1586,7 +1574,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm2CntBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1605,7 +1593,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPmTmrBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1624,7 +1612,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe0Blk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1653,8 +1641,6 @@ operator|->
 name|XGpe0Blk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1673,7 +1659,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe1Blk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1702,8 +1688,6 @@ operator|->
 name|XGpe1Blk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1771,14 +1755,6 @@ name|Value
 parameter_list|)
 block|{
 name|UINT32
-name|Offset
-init|=
-name|REGISTER_OFFSET
-argument_list|(
-name|RegisterId
-argument_list|)
-decl_stmt|;
-name|UINT32
 name|BankOffset
 decl_stmt|;
 name|FUNCTION_TRACE
@@ -1822,7 +1798,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1aEvtBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiHwLowLevelWrite
@@ -1836,7 +1812,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1bEvtBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1865,8 +1841,6 @@ operator|->
 name|XPm1aEvtBlk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 name|AcpiHwLowLevelWrite
@@ -1881,8 +1855,6 @@ operator|->
 name|XPm1bEvtBlk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1909,7 +1881,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1aCntBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1932,7 +1904,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1bCntBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1961,7 +1933,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1aCntBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiHwLowLevelWrite
@@ -1975,7 +1947,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm1bCntBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2006,7 +1978,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPm2CntBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2025,7 +1997,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XPmTmrBlk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2044,7 +2016,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe0Blk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2073,8 +2045,6 @@ operator|->
 name|XGpe0Blk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2093,7 +2063,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe1Blk
 argument_list|,
-name|Offset
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2122,8 +2092,6 @@ operator|->
 name|XGpe1Blk
 argument_list|,
 name|BankOffset
-operator|+
-name|Offset
 argument_list|)
 expr_stmt|;
 break|break;

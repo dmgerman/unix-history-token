@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmalloc - local memory allocation routines  *              $Revision: 78 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmalloc - local memory allocation routines  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -755,7 +755,7 @@ argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmDelete: Freeing size 0x%X (ACPI_OPERAND_OBJECT)\n"
+literal|"CmDelete: Freeing size %X (ACPI_OPERAND_OBJECT)\n"
 operator|,
 name|Size
 operator|)
@@ -769,7 +769,7 @@ argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmDelete: Freeing size 0x%X\n"
+literal|"CmDelete: Freeing size %X\n"
 operator|,
 name|Size
 operator|)
@@ -1330,7 +1330,9 @@ operator||
 name|TRACE_TABLES
 argument_list|,
 operator|(
-literal|"Total number of unfreed allocations = %d\n"
+literal|"Total number of unfreed allocations = %d(%X)\n"
+operator|,
+name|i
 operator|,
 name|i
 operator|)
@@ -1438,7 +1440,7 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmAllocate: Could not allocate size 0x%x\n"
+literal|"CmAllocate: Could not allocate size %X\n"
 operator|,
 name|Size
 operator|)
@@ -1494,7 +1496,7 @@ argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmAllocate: %p Size 0x%x\n"
+literal|"CmAllocate: %p Size %X\n"
 operator|,
 name|Address
 operator|,
@@ -1601,7 +1603,7 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"CmCallocate: Could not allocate size 0x%x\n"
+literal|"CmCallocate: Could not allocate size %X\n"
 operator|,
 name|Size
 operator|)
@@ -1659,7 +1661,7 @@ argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"CmCallocate: %p Size 0x%x\n"
+literal|"CmCallocate: %p Size %X\n"
 operator|,
 name|Address
 operator|,

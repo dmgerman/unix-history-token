@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 59 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -115,7 +115,7 @@ argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsSearchNode: For %4.4s (type 0x%X)\n"
+literal|"NsSearchNode: For %4.4s (type %X)\n"
 operator|,
 operator|&
 name|TargetName
@@ -214,7 +214,7 @@ argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsSearchNode: Name %4.4s (actual type 0x%X) found at %p\n"
+literal|"NsSearchNode: Name %4.4s (actual type %X) found at %p\n"
 operator|,
 operator|&
 name|TargetName
@@ -265,7 +265,7 @@ argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsSearchNode: Name %4.4s (type 0x%X) not found at %p\n"
+literal|"NsSearchNode: Name %4.4s (type %X) not found at %p\n"
 operator|,
 operator|&
 name|TargetName
@@ -376,7 +376,7 @@ argument_list|(
 name|TRACE_NAMES
 argument_list|,
 operator|(
-literal|"NsSearchParentTree: [%4.4s] (type 0x%X) is local (no search)\n"
+literal|"NsSearchParentTree: [%4.4s] (type %X) is local (no search)\n"
 operator|,
 operator|&
 name|TargetName

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 19 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 20 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Dispatching Notify(%d) on device %p\n"
+literal|"Dispatching Notify(%X) on device %p\n"
 operator|,
 name|NotifyValue
 operator|,

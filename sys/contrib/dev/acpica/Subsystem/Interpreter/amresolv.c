@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amresolv - AML Interpreter object resolution  *              $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amresolv - AML Interpreter object resolution  *              $Revision: 78 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -772,7 +772,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: [Local%d] value is [0x%X] \n"
+literal|"AmlResolveObjectToValue: [Local%d] value=%X \n"
 operator|,
 name|Index
 operator|,
@@ -867,7 +867,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: [Arg%d] value is [0x%X] \n"
+literal|"AmlResolveObjectToValue: [Arg%d] value=%X\n"
 operator|,
 name|Index
 operator|,
@@ -1037,7 +1037,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: Unknown TargetType %d in Index/Reference obj %p\n"
+literal|"AmlResolveObjectToValue: Unknown TargetType %X in Index/Reference obj %p\n"
 operator|,
 name|StackDesc
 operator|->
@@ -1067,7 +1067,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveObjectToValue: Unknown Reference object subtype %02x in %p\n"
+literal|"AmlResolveObjectToValue: Unknown Reference object subtype %02X in %p\n"
 operator|,
 name|Opcode
 operator|,

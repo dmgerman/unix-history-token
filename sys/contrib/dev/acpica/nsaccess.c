@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 113 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 115 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -643,6 +643,17 @@ name|Node
 operator|)
 condition|)
 block|{
+name|DEBUG_PRINT
+argument_list|(
+name|TRACE_NAMES
+argument_list|,
+operator|(
+literal|"NsLookup: Null scope prefix, using root node (%p)\n"
+operator|,
+name|AcpiGbl_RootNode
+operator|)
+argument_list|)
+expr_stmt|;
 name|PrefixNode
 operator|=
 name|AcpiGbl_RootNode
@@ -1013,7 +1024,7 @@ operator|=
 name|Type
 expr_stmt|;
 block|}
-comment|/* Pluck and ACPI name from the front of the pathname */
+comment|/* Pluck one ACPI name from the front of the pathname */
 name|MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
@@ -1140,7 +1151,7 @@ comment|/* Complain about a type mismatch */
 name|REPORT_WARNING
 argument_list|(
 operator|(
-literal|"NsLookup: %4.4s, type 0x%X, checking for type 0x%X\n"
+literal|"NsLookup: %4.4s, type %X, checking for type %X\n"
 operator|,
 operator|&
 name|SimpleName
@@ -1203,7 +1214,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLookup: Load mode=%d  ThisNode=%x\n"
+literal|"NsLookup: Load mode=%X  ThisNode=%X\n"
 operator|,
 name|InterpreterMode
 operator|,

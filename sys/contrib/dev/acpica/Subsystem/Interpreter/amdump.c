@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amdump - Interpreter debug output routines  *              $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amdump - Interpreter debug output routines  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -762,19 +762,13 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Buffer[%d] seq %lx @ %p \n"
+literal|"Buffer len %X @ %p \n"
 operator|,
 name|EntryDesc
 operator|->
 name|Buffer
 operator|.
 name|Length
-operator|,
-name|EntryDesc
-operator|->
-name|Buffer
-operator|.
-name|Sequence
 operator|,
 name|EntryDesc
 operator|->
@@ -876,7 +870,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Number 0x%lx\n"
+literal|"Number %lX\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -895,7 +889,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"If [Number] 0x%lx\n"
+literal|"If [Number] %lX\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -914,7 +908,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"While [Number] 0x%lx\n"
+literal|"While [Number] %lX\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -933,7 +927,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Package[%d] @ %p\n"
+literal|"Package count %X @ %p\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1028,23 +1022,21 @@ break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-if|if
-condition|(
-name|EntryDesc
-operator|->
-name|Region
-operator|.
-name|SpaceId
-operator|>=
-name|NUM_REGION_TYPES
-condition|)
-block|{
 name|DEBUG_PRINT_RAW
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Region **** Unknown ID=0x%X"
+literal|"Region %s (%X)"
+operator|,
+name|AcpiCmGetRegionName
+argument_list|(
+name|EntryDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+argument_list|)
 operator|,
 name|EntryDesc
 operator|->
@@ -1054,28 +1046,6 @@ name|SpaceId
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|DEBUG_PRINT_RAW
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"Region %s"
-operator|,
-name|AcpiGbl_RegionTypes
-index|[
-name|EntryDesc
-operator|->
-name|Region
-operator|.
-name|SpaceId
-index|]
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*          * If the address and length have not been evaluated,          * don't print them.          */
 if|if
 condition|(
@@ -1108,7 +1078,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|" base %p Length 0x%X\n"
+literal|" base %p Length %X\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1134,7 +1104,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"String[%d] @ %p\n\n"
+literal|"String length %X @ %p\n\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1218,7 +1188,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"DefField: bits=%d  acc=%d lock=%d update=%d at byte=%lx bit=%d of below:\n"
+literal|"DefField: bits=%X  acc=%X lock=%X update=%X at byte=%lX bit=%X of below:\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1289,7 +1259,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"FieldUnit: %d bits acc %d lock %d update %d at byte %lx bit %d of \n"
+literal|"FieldUnit: %X bits acc %X lock %X update %X at byte %lX bit %X of \n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1409,7 +1379,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Method(%d) @ %p:%lx\n"
+literal|"Method(%X) @ %p:%lX\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1504,7 +1474,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Unknown Type 0x%X\n"
+literal|"Unknown Type %X\n"
 operator|,
 name|EntryDesc
 operator|->
@@ -1781,7 +1751,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Flags"
 argument_list|,
@@ -1792,7 +1762,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Owner Id"
 argument_list|,
@@ -1803,7 +1773,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Reference Count"
 argument_list|,
@@ -1814,7 +1784,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Attached Object"
 argument_list|,
@@ -1825,7 +1795,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"ChildList"
 argument_list|,
@@ -1836,7 +1806,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"NextPeer"
 argument_list|,
@@ -1847,7 +1817,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Parent"
 argument_list|,
@@ -1923,7 +1893,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"0x%p is not a valid ACPI object\n"
+literal|"%p is not a valid ACPI object\n"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1933,7 +1903,7 @@ block|}
 comment|/* Common Fields */
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Reference Count"
 argument_list|,
@@ -1946,7 +1916,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Flags"
 argument_list|,
@@ -1981,7 +1951,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Value"
 argument_list|,
@@ -2007,7 +1977,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -2020,7 +1990,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Pointer"
 argument_list|,
@@ -2046,7 +2016,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -2059,7 +2029,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Sequence"
 argument_list|,
@@ -2072,7 +2042,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Pointer"
 argument_list|,
@@ -2098,7 +2068,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Count"
 argument_list|,
@@ -2111,7 +2081,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Elements"
 argument_list|,
@@ -2124,7 +2094,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"NextElement"
 argument_list|,
@@ -2150,7 +2120,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Access"
 argument_list|,
@@ -2163,7 +2133,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"LockRule"
 argument_list|,
@@ -2176,7 +2146,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"UpdateRule"
 argument_list|,
@@ -2189,7 +2159,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -2202,7 +2172,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"BitOffset"
 argument_list|,
@@ -2215,7 +2185,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Offset"
 argument_list|,
@@ -2228,7 +2198,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Container"
 argument_list|,
@@ -2254,7 +2224,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"AddrHandler"
 argument_list|,
@@ -2267,7 +2237,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"SysHandler"
 argument_list|,
@@ -2280,7 +2250,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"DrvHandler"
 argument_list|,
@@ -2306,7 +2276,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Semaphore"
 argument_list|,
@@ -2332,7 +2302,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"ParamCount"
 argument_list|,
@@ -2345,7 +2315,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Concurrency"
 argument_list|,
@@ -2358,7 +2328,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Semaphore"
 argument_list|,
@@ -2371,7 +2341,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"PcodeLength"
 argument_list|,
@@ -2384,7 +2354,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Pcode"
 argument_list|,
@@ -2410,7 +2380,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"SyncLevel"
 argument_list|,
@@ -2423,7 +2393,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Semaphore"
 argument_list|,
@@ -2449,7 +2419,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"SpaceId"
 argument_list|,
@@ -2462,7 +2432,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Flags"
 argument_list|,
@@ -2475,7 +2445,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Address"
 argument_list|,
@@ -2488,7 +2458,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -2501,7 +2471,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"AddrHandler"
 argument_list|,
@@ -2514,7 +2484,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Next"
 argument_list|,
@@ -2540,7 +2510,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"SystemLevel"
 argument_list|,
@@ -2553,7 +2523,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"ResourceOrder"
 argument_list|,
@@ -2566,7 +2536,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"SysHandler"
 argument_list|,
@@ -2579,7 +2549,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"DrvHandler"
 argument_list|,
@@ -2605,7 +2575,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Processor ID"
 argument_list|,
@@ -2618,7 +2588,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -2631,7 +2601,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Address"
 argument_list|,
@@ -2644,7 +2614,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"SysHandler"
 argument_list|,
@@ -2657,7 +2627,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"DrvHandler"
 argument_list|,
@@ -2670,7 +2640,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"AddrHandler"
 argument_list|,
@@ -2696,7 +2666,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"SysHandler"
 argument_list|,
@@ -2709,7 +2679,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"DrvHandler"
 argument_list|,
@@ -2722,7 +2692,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"AddrHandler"
 argument_list|,
@@ -2748,7 +2718,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Access"
 argument_list|,
@@ -2761,7 +2731,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"LockRule"
 argument_list|,
@@ -2774,7 +2744,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"UpdateRule"
 argument_list|,
@@ -2787,7 +2757,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -2800,7 +2770,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"BitOffset"
 argument_list|,
@@ -2813,7 +2783,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Offset"
 argument_list|,
@@ -2826,7 +2796,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Value"
 argument_list|,
@@ -2839,7 +2809,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Container"
 argument_list|,
@@ -2852,7 +2822,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"BankSelect"
 argument_list|,
@@ -2878,7 +2848,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Access"
 argument_list|,
@@ -2891,7 +2861,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"LockRule"
 argument_list|,
@@ -2904,7 +2874,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"UpdateRule"
 argument_list|,
@@ -2917,7 +2887,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -2930,7 +2900,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"BitOffset"
 argument_list|,
@@ -2943,7 +2913,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Value"
 argument_list|,
@@ -2956,7 +2926,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Index"
 argument_list|,
@@ -2969,7 +2939,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Data"
 argument_list|,
@@ -2995,7 +2965,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"TargetType"
 argument_list|,
@@ -3008,7 +2978,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"OpCode"
 argument_list|,
@@ -3021,7 +2991,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"Offset"
 argument_list|,
@@ -3034,7 +3004,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"ObjDesc"
 argument_list|,
@@ -3047,7 +3017,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Node"
 argument_list|,
@@ -3060,7 +3030,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Where"
 argument_list|,
@@ -3086,7 +3056,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%X\n"
+literal|"%20s : %X\n"
 argument_list|,
 literal|"SpaceId"
 argument_list|,
@@ -3099,7 +3069,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Next"
 argument_list|,
@@ -3112,7 +3082,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"RegionList"
 argument_list|,
@@ -3125,7 +3095,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Node"
 argument_list|,
@@ -3138,7 +3108,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Handler"
 argument_list|,
@@ -3151,7 +3121,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Context"
 argument_list|,
@@ -3177,7 +3147,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Node"
 argument_list|,
@@ -3190,7 +3160,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Handler"
 argument_list|,
@@ -3203,7 +3173,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Context"
 argument_list|,
@@ -3220,7 +3190,7 @@ name|INTERNAL_TYPE_DEF_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Granularity"
 argument_list|,
@@ -3233,7 +3203,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Length"
 argument_list|,
@@ -3246,7 +3216,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Offset"
 argument_list|,
@@ -3259,7 +3229,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"BitOffset"
 argument_list|,
@@ -3272,7 +3242,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : 0x%p\n"
+literal|"%20s : %p\n"
 argument_list|,
 literal|"Container"
 argument_list|,
@@ -3313,7 +3283,7 @@ name|INTERNAL_TYPE_DEF_ANY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"*** Structure display not implemented for type 0x%X! ***\n"
+literal|"*** Structure display not implemented for type %X! ***\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -3326,7 +3296,7 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"*** Cannot display unknown type 0x%X! ***\n"
+literal|"*** Cannot display unknown type %X! ***\n"
 argument_list|,
 name|ObjDesc
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -531,6 +531,8 @@ operator|->
 name|Value
 operator|.
 name|Arg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ArgDesc
@@ -1167,7 +1169,7 @@ block|{
 name|REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Reference %s AML 0x%X not found\n"
+literal|"Reference %s AML %X not found\n"
 operator|,
 name|Name
 operator|,
@@ -1188,7 +1190,7 @@ block|{
 name|REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Reference %s AML 0x%X not found\n"
+literal|"Reference %s AML %X not found\n"
 operator|,
 name|Op
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -137,7 +137,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"TableId=0x%X does not exist\n"
+literal|"TableId=%X does not exist\n"
 operator|,
 name|TableId
 operator|)
@@ -660,7 +660,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Mapped memory for ACPI table, length=%d(0x%X) at %p\n"
+literal|"Mapped memory for ACPI table, length=%d(%X) at %p\n"
 operator|,
 name|TableSize
 operator|,

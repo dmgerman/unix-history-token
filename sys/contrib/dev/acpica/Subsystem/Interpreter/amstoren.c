@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstoren - AML Interpreter object store support,  *                         Store to Node (namespace object)  *              $Revision: 23 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amstoren - AML Interpreter object store support,  *                         Store to Node (namespace object)  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -511,7 +511,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNte: Internal error - no destination object for %4.4s type %d\n"
+literal|"AmlStoreObjectToNte: Internal error - no destination object for %4.4s type %X\n"
 operator|,
 operator|&
 name|Node
@@ -550,7 +550,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNte: Internal error - Name %4.4s type %d does not match value-type %d at %p\n"
+literal|"AmlStoreObjectToNte: Internal error - Name %4.4s type %X does not match value-type %X at %p\n"
 operator|,
 operator|&
 name|Node
@@ -1169,7 +1169,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNte: Truncating src buffer from %d to %d\n"
+literal|"AmlStoreObjectToNte: Truncating src buffer from %X to %X\n"
 operator|,
 name|Length
 operator|,
@@ -1407,7 +1407,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|" Type %d"
+literal|" Type %X"
 operator|,
 name|DestDesc
 operator|->
@@ -1539,7 +1539,7 @@ argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"** Store %lx in buffer %p byte %ld bit %d width %d addr %p mask %08lx\n"
+literal|"** Store %lx in buffer %p byte %ld bit %X width %d addr %p mask %08lx\n"
 operator|,
 name|ValDesc
 operator|->

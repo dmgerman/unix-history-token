@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -402,7 +402,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPrepDefFieldValue: Needed Region, found %d %s\n"
+literal|"AmlPrepDefFieldValue: Needed Region, found type %X %s\n"
 operator|,
 name|Type
 operator|,
@@ -755,7 +755,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlPrepBankFieldValue: Needed Region, found %d %s\n"
+literal|"AmlPrepBankFieldValue: Needed Region, found type %X %s\n"
 operator|,
 name|Type
 operator|,

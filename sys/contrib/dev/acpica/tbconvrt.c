@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 14 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 15 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1324,7 +1324,7 @@ argument_list|(
 name|TRACE_TABLES
 argument_list|,
 operator|(
-literal|"Hex dump of FADT (After header), size %d (0x%x)\n"
+literal|"Hex dump of FADT (After header), size %d (%X)\n"
 operator|,
 name|AcpiGbl_FADT
 operator|->

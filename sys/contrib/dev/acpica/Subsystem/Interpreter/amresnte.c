@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amresnte - AML Interpreter object resolution  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amresnte - AML Interpreter object resolution  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -246,13 +246,17 @@ name|EntryType
 operator|==
 name|ACPI_TYPE_DEVICE
 operator|||
-name|EntryType
-operator|==
-name|INTERNAL_TYPE_METHOD_ARGUMENT
-operator|||
-name|EntryType
-operator|==
-name|INTERNAL_TYPE_METHOD_LOCAL_VAR
+operator|(
+name|Node
+operator|->
+name|Flags
+operator|&
+operator|(
+name|ANOBJ_METHOD_ARG
+operator||
+name|ANOBJ_METHOD_LOCAL
+operator|)
+operator|)
 condition|)
 block|{
 name|return_ACPI_STATUS

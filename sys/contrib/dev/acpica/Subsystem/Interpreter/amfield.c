@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -697,7 +697,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlAccessNamedField: Byte length %d too large, truncated to %x\n"
+literal|"AmlAccessNamedField: Byte length %X truncated to %X\n"
 operator|,
 name|ActualByteLength
 operator|,
@@ -726,7 +726,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlAccessNamedField: Bit granularity %d too large, truncated to %x\n"
+literal|"AmlAccessNamedField: Bit granularity %X truncated to %X\n"
 operator|,
 name|BitGranularity
 operator|,
@@ -757,7 +757,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlAccessNamedField: Byte granularity %d too large, truncated to %x\n"
+literal|"AmlAccessNamedField: Byte granularity %X truncated to %X\n"
 operator|,
 name|ByteGranularity
 operator|,

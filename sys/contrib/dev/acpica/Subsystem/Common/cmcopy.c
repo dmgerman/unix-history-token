@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmcopy - Internal to external object translation utilities  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmcopy - Internal to external object translation utilities  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -806,7 +806,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmBuildPackageObject: Pkg nested too deep (max %d)\n"
+literal|"CmBuildPackageObject: Pkg nested too deep (max %X)\n"
 operator|,
 name|MAX_PACKAGE_DEPTH
 operator|)
@@ -1417,7 +1417,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmBuildPackageObject: Pkg nested too deep (max %d)\n"
+literal|"CmBuildPackageObject: Pkg nested too deep (max %X)\n"
 operator|,
 name|MAX_PACKAGE_DEPTH
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: accommon.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: accommon.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -129,6 +129,12 @@ begin_comment
 comment|/*  * CmGlobal - Global data structures and procedures  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
@@ -150,6 +156,22 @@ name|Type
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|NATIVE_CHAR
+modifier|*
+name|AcpiCmGetRegionName
+parameter_list|(
+name|UINT8
+name|SpaceId
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|BOOLEAN

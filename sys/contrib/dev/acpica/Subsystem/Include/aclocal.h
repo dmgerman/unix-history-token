@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 93 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -449,26 +449,40 @@ begin_define
 define|#
 directive|define
 name|ANOBJ_AML_ATTACHMENT
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ANOBJ_END_OF_PEER_LIST
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|ANOBJ_DATA_WIDTH_32
-value|0x4
+value|0x04
 end_define
 
 begin_comment
 comment|/* Parent table is 64-bits */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ANOBJ_METHOD_ARG
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANOBJ_METHOD_LOCAL
+value|0x80
+end_define
 
 begin_comment
 comment|/*  * ACPI Table Descriptor.  One per ACPI table  */
@@ -1006,6 +1020,39 @@ name|ACPI_PSCOPE_STATE
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * Result values - used to accumulate the results of nested  * AML arguments  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_result_values
+block|{
+name|ACPI_STATE_COMMON
+name|union
+name|acpi_operand_obj
+modifier|*
+name|ObjDesc
+index|[
+name|OBJ_NUM_OPERANDS
+index|]
+decl_stmt|;
+name|UINT8
+name|NumResults
+decl_stmt|;
+name|UINT8
+name|LastInsert
+decl_stmt|;
+block|}
+name|ACPI_RESULT_VALUES
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Generic state is union of structs above */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -1025,6 +1072,9 @@ name|Scope
 decl_stmt|;
 name|ACPI_PSCOPE_STATE
 name|ParseScope
+decl_stmt|;
+name|ACPI_RESULT_VALUES
+name|Results
 decl_stmt|;
 block|}
 name|ACPI_GENERIC_STATE
@@ -1438,10 +1488,6 @@ name|NumOperands
 decl_stmt|;
 comment|/* Stack pointer for Operands[] array */
 name|UINT8
-name|NumResults
-decl_stmt|;
-comment|/* Stack pointer for Results[] array */
-name|UINT8
 name|CurrentResult
 decl_stmt|;
 comment|/* */
@@ -1467,6 +1513,11 @@ modifier|*
 name|NextOp
 decl_stmt|;
 comment|/* next op to be processed */
+name|ACPI_GENERIC_STATE
+modifier|*
+name|Results
+decl_stmt|;
+comment|/* Stack of accumulated results */
 name|ACPI_GENERIC_STATE
 modifier|*
 name|ControlState
@@ -1530,15 +1581,6 @@ name|OBJ_NUM_OPERANDS
 index|]
 decl_stmt|;
 comment|/* Operands passed to the interpreter */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|Results
-index|[
-name|OBJ_NUM_OPERANDS
-index|]
-decl_stmt|;
-comment|/* Accumulated results */
 name|struct
 name|acpi_node
 name|Arguments
@@ -1650,12 +1692,6 @@ name|Num_STA
 decl_stmt|;
 name|UINT16
 name|Num_INI
-decl_stmt|;
-name|UINT16
-name|Num_HID
-decl_stmt|;
-name|UINT16
-name|Num_PCI
 decl_stmt|;
 name|ACPI_TABLE_DESC
 modifier|*

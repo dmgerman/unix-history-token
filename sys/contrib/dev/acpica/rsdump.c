@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions do dump out the resource structures.  *              $Revision: 12 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions do dump out the resource structures.  *              $Revision: 13 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -119,7 +119,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\t%d Interrupts ( "
+literal|"\t\t%X Interrupts ( "
 argument_list|,
 name|IrqData
 operator|->
@@ -144,7 +144,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d "
+literal|"%X "
 argument_list|,
 name|IrqData
 operator|->
@@ -307,7 +307,7 @@ break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tNumber of Channels: %d ( "
+literal|"\t\tNumber of Channels: %X ( "
 argument_list|,
 name|DmaData
 operator|->
@@ -332,7 +332,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d "
+literal|"%X "
 argument_list|,
 name|DmaData
 operator|->
@@ -514,7 +514,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange minimum base: 0x%08x\n"
+literal|"\t\tRange minimum base: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -523,7 +523,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange maximum base: 0x%08x\n"
+literal|"\t\tRange maximum base: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -532,7 +532,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAlignment: 0x%08x\n"
+literal|"\t\tAlignment: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -541,7 +541,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange Length: 0x%08x\n"
+literal|"\t\tRange Length: %08X\n"
 argument_list|,
 name|IoData
 operator|->
@@ -582,7 +582,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange base address: 0x%08x"
+literal|"\t\tRange base address: %08X"
 argument_list|,
 name|FixedIoData
 operator|->
@@ -591,7 +591,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: 0x%08x"
+literal|"\t\tRange length: %08X"
 argument_list|,
 name|FixedIoData
 operator|->
@@ -637,7 +637,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tLength: 0x%08x\n"
+literal|"\t\tLength: %08X\n"
 argument_list|,
 name|VendorData
 operator|->
@@ -662,7 +662,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tByte %d: 0x%08x\n"
+literal|"\t\tByte %X: %08X\n"
 argument_list|,
 name|Index
 argument_list|,
@@ -724,7 +724,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange minimum base: 0x%08x\n"
+literal|"\t\tRange minimum base: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -733,7 +733,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange maximum base: 0x%08x\n"
+literal|"\t\tRange maximum base: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -742,7 +742,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAlignment: 0x%08x\n"
+literal|"\t\tAlignment: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -751,7 +751,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: 0x%08x\n"
+literal|"\t\tRange length: %08X\n"
 argument_list|,
 name|Memory24Data
 operator|->
@@ -807,7 +807,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange minimum base: 0x%08x\n"
+literal|"\t\tRange minimum base: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -816,7 +816,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange maximum base: 0x%08x\n"
+literal|"\t\tRange maximum base: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -825,7 +825,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAlignment: 0x%08x\n"
+literal|"\t\tAlignment: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -834,7 +834,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: 0x%08x\n"
+literal|"\t\tRange length: %08X\n"
 argument_list|,
 name|Memory32Data
 operator|->
@@ -890,7 +890,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange base address: 0x%08x\n"
+literal|"\t\tRange base address: %08X\n"
 argument_list|,
 name|FixedMemory32Data
 operator|->
@@ -899,7 +899,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tRange length: 0x%08x\n"
+literal|"\t\tRange length: %08X\n"
 argument_list|,
 name|FixedMemory32Data
 operator|->
@@ -1176,7 +1176,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tGranularity: 0x%08x\n"
+literal|"\t\tGranularity: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1185,7 +1185,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range min: 0x%08x\n"
+literal|"\t\tAddress range min: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1194,7 +1194,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range max: 0x%08x\n"
+literal|"\t\tAddress range max: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1203,7 +1203,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress translation offset: 0x%08x\n"
+literal|"\t\tAddress translation offset: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1212,7 +1212,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress Length: 0x%08x\n"
+literal|"\t\tAddress Length: %08X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1230,7 +1230,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source Index: %d\n"
+literal|"\t\tResource Source Index: %X\n"
 argument_list|,
 name|Address16Data
 operator|->
@@ -1512,7 +1512,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tGranularity: 0x%08x\n"
+literal|"\t\tGranularity: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1521,7 +1521,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range min: 0x%08x\n"
+literal|"\t\tAddress range min: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1530,7 +1530,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress range max: 0x%08x\n"
+literal|"\t\tAddress range max: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1539,7 +1539,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress translation offset: 0x%08x\n"
+literal|"\t\tAddress translation offset: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1548,7 +1548,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress Length: 0x%08x\n"
+literal|"\t\tAddress Length: %08X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1566,7 +1566,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source Index: %d\n"
+literal|"\t\tResource Source Index: %X\n"
 argument_list|,
 name|Address32Data
 operator|->
@@ -1682,7 +1682,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tInterrupts : %d ( "
+literal|"\t\tInterrupts : %X ( "
 argument_list|,
 name|ExtIrqData
 operator|->
@@ -1707,7 +1707,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d "
+literal|"%X "
 argument_list|,
 name|ExtIrqData
 operator|->
@@ -1734,7 +1734,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tResource Source Index: %d"
+literal|"\t\tResource Source Index: %X"
 argument_list|,
 name|ExtIrqData
 operator|->
@@ -2072,7 +2072,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\tPCI IRQ Routing Table structure %x.\n"
+literal|"\tPCI IRQ Routing Table structure %X.\n"
 argument_list|,
 name|Count
 operator|++
@@ -2080,7 +2080,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tAddress: 0x%x\n"
+literal|"\t\tAddress: %X\n"
 argument_list|,
 name|PrtElement
 operator|->
@@ -2091,7 +2091,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tPin: 0x%x\n"
+literal|"\t\tPin: %X\n"
 argument_list|,
 name|PrtElement
 operator|->
@@ -2113,7 +2113,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"\t\tSourceIndex: 0x%x\n"
+literal|"\t\tSourceIndex: %X\n"
 argument_list|,
 name|PrtElement
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amdyadic - ACPI AML (p-code) execution for dyadic operators  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amdyadic - ACPI AML (p-code) execution for dyadic operators  *              $Revision: 68 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic1/%s: bad operand(s) (0x%X)\n"
+literal|"ExecDyadic1/%s: bad operand(s) (Status=%X)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -258,7 +258,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecDyadic1/NotifyOp: unexpected notify object type %d\n"
+literal|"AmlExecDyadic1/NotifyOp: unexpected notify object type %X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -483,7 +483,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic2R/%s: bad operand(s) (0x%X)\n"
+literal|"ExecDyadic2R/%s: bad operand(s) (Status=%X)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -921,7 +921,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecDyadic2R/ConcatOp: operand type mismatch %d %d\n"
+literal|"AmlExecDyadic2R/ConcatOp: operand type mismatch %X != %X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -1449,7 +1449,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic2S/%s: bad operand(s) (0x%X)\n"
+literal|"ExecDyadic2S/%s: bad operand(s) (Status=%X)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -1730,7 +1730,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecDyadic2/%s: bad operand(s) (0x%X)\n"
+literal|"ExecDyadic2/%s: bad operand(s) (Status=%X)\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 26 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 30 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -660,7 +660,7 @@ expr_stmt|;
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"EvGpeDispatch: No installed handler for fixed event [0x%08X]\n"
+literal|"EvGpeDispatch: No installed handler for fixed event [%08X]\n"
 operator|,
 name|Event
 operator|)
@@ -1159,7 +1159,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"GPE registers: %d@%p (Blk0) %d@%p (Blk1)\n"
+literal|"GPE registers: %X@%p (Blk0) %X@%p (Blk1)\n"
 operator|,
 name|Gpe0RegisterCount
 operator|,
@@ -1391,7 +1391,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"EvSaveMethodInfo: Registered GPE method %s as GPE number %d\n"
+literal|"EvSaveMethodInfo: Registered GPE method %s as GPE number %X\n"
 operator|,
 name|Name
 operator|,
@@ -1704,7 +1704,7 @@ argument_list|(
 literal|"EvAsynchExecuteGpeMethod"
 argument_list|)
 expr_stmt|;
-comment|/* Take a snapshot of the GPE info for this level */
+comment|/*       * Take a snapshot of the GPE info for this level       */
 name|AcpiCmAcquireMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
@@ -1722,7 +1722,7 @@ argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
 expr_stmt|;
-comment|/*      * Method Handler (_Lxx, _Exx):      * ----------------------------      * AcpiEvaluate the _Lxx/_Exx control method that corresponds to this GPE.      */
+comment|/*      * Method Handler (_Lxx, _Exx):      * ----------------------------      * Evaluate the _Lxx/_Exx control method that corresponds to this GPE.      */
 if|if
 condition|(
 name|GpeInfo
@@ -1742,7 +1742,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Level-Triggered?      * ----------------      * If level-triggered, clear the GPE status bit after execution.  Note      * that edge-triggered events are cleared prior to calling (via DPC)      * this function.      */
+comment|/*      * Level-Triggered?      * ----------------      * If level-triggered we clear the GPE status bit after handling the event.      */
 if|if
 condition|(
 name|GpeInfo
@@ -1781,24 +1781,16 @@ name|UINT32
 name|GpeNumber
 parameter_list|)
 block|{
+name|ACPI_GPE_LEVEL_INFO
+name|GpeInfo
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"EvGpeDispatch"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"GPE [%d] event occurred.\n"
-operator|,
-name|GpeNumber
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/*DEBUG_INCREMENT_EVENT_COUNT (EVENT_GENERAL);*/
-comment|/* Ensure that we have a valid GPE number */
+comment|/*       * Valid GPE number?      */
 if|if
 condition|(
 name|AcpiGbl_GpeValid
@@ -1814,7 +1806,7 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Invalid GPE [%d].\n"
+literal|"Invalid GPE bit [%X].\n"
 operator|,
 name|GpeNumber
 operator|)
@@ -1832,13 +1824,17 @@ argument_list|(
 name|GpeNumber
 argument_list|)
 expr_stmt|;
-comment|/*      * Edge-Triggered?      * ---------------      * If edge-triggered, clear the GPE status bit now.  Note that      * level-triggered events are cleared after the GPE is serviced      * (see AcpiEvAsynchExecuteGpeMethod).      */
-if|if
-condition|(
+name|GpeInfo
+operator|=
 name|AcpiGbl_GpeInfo
 index|[
 name|GpeNumber
 index|]
+expr_stmt|;
+comment|/*          * Edge-Triggered?          * ---------------          * If edge-triggered, clear the GPE status bit now.  Note that          * level-triggered events are cleared after the GPE is serviced.          */
+if|if
+condition|(
+name|GpeInfo
 operator|.
 name|Type
 operator|&
@@ -1851,13 +1847,52 @@ name|GpeNumber
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Queue-up the Handler:      * ---------------------      * Queue the handler, which is either an installable function handler      * (e.g. EC) or a control method (e.g. _Lxx/_Exx) for later execution.      */
+comment|/*          * Function Handler (e.g. EC)?          */
 if|if
 condition|(
-name|AcpiGbl_GpeInfo
-index|[
+name|GpeInfo
+operator|.
+name|Handler
+condition|)
+block|{
+comment|/* Invoke function handler (at interrupt level). */
+name|GpeInfo
+operator|.
+name|Handler
+argument_list|(
+name|GpeInfo
+operator|.
+name|Context
+argument_list|)
+expr_stmt|;
+comment|/* Level-Triggered? */
+if|if
+condition|(
+name|GpeInfo
+operator|.
+name|Type
+operator|&
+name|ACPI_EVENT_LEVEL_TRIGGERED
+condition|)
+block|{
+name|AcpiHwClearGpe
+argument_list|(
 name|GpeNumber
-index|]
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Enable GPE */
+name|AcpiHwEnableGpe
+argument_list|(
+name|GpeNumber
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*          * Method Handler (e.g. _Exx/_Lxx)?          */
+elseif|else
+if|if
+condition|(
+name|GpeInfo
 operator|.
 name|MethodHandle
 condition|)
@@ -1884,11 +1919,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/*              * Shoudn't occur, but if it does report an error. Note that              * the GPE will remain disabled until the ACPI Core Subsystem              * is restarted, or the handler is removed/reinstalled.              */
+comment|/*                          * Shoudn't occur, but if it does report an error. Note that                          * the GPE will remain disabled until the ACPI Core Subsystem                          * is restarted, or the handler is removed/reinstalled.                          */
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"EvGpeDispatch: Unable to queue the handler for GPE [0x%08X]\n"
+literal|"AcpiEvGpeDispatch: Unable to queue handler for GPE bit [%X]\n"
 operator|,
 name|GpeNumber
 operator|)
@@ -1896,68 +1931,34 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|AcpiGbl_GpeInfo
-index|[
-name|GpeNumber
-index|]
-operator|.
-name|Handler
-condition|)
-block|{
-name|ACPI_GPE_LEVEL_INFO
-name|GpeInfo
-decl_stmt|;
-comment|/*          * Function Handler (e.g. EC):          * ---------------------------          * Execute the installed function handler to handle this event.          * Without queueing.          */
-name|AcpiCmAcquireMutex
-argument_list|(
-name|ACPI_MTX_EVENTS
-argument_list|)
-expr_stmt|;
-name|GpeInfo
-operator|=
-name|AcpiGbl_GpeInfo
-index|[
-name|GpeNumber
-index|]
-expr_stmt|;
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_EVENTS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|GpeInfo
-operator|.
-name|Handler
-condition|)
-block|{
-name|GpeInfo
-operator|.
-name|Handler
-argument_list|(
-name|GpeInfo
-operator|.
-name|Context
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/*      * Non Handled GPEs:      * -----------------      * GPEs without handlers are disabled and kept that way until a handler      * is registered for them.      */
+comment|/*          * No Handler? Report an error and leave the GPE disabled.          */
 else|else
 block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"EvGpeDispatch: No installed handler for GPE [0x%08X]\n"
+literal|"AcpiEvGpeDispatch: No installed handler for GPE [%X]\n"
 operator|,
 name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Level-Triggered? */
+if|if
+condition|(
+name|GpeInfo
+operator|.
+name|Type
+operator|&
+name|ACPI_EVENT_LEVEL_TRIGGERED
+condition|)
+block|{
+name|AcpiHwClearGpe
+argument_list|(
+name|GpeNumber
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|return_VALUE
 argument_list|(

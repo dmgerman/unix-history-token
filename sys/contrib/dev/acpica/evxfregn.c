@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -365,7 +365,7 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Creating object on Device 0x%X while installing handler\n"
+literal|"Creating object on Device %p while installing handler\n"
 operator|,
 name|Node
 operator|)
@@ -466,12 +466,14 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Installing address handler for %s on Device 0x%p (0x%p)\n"
+literal|"Installing address handler for region %s(%X) on Device %p(%p)\n"
 operator|,
-name|AcpiGbl_RegionTypes
-index|[
+name|AcpiCmGetRegionName
+argument_list|(
 name|SpaceId
-index|]
+argument_list|)
+operator|,
+name|SpaceId
 operator|,
 name|Node
 operator|,
@@ -818,16 +820,16 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Removing address handler 0x%p (0x%p) for %s on Device 0x%p (0x%p)\n"
+literal|"Removing address handler %p(%p) for region %s on Device %p(%p)\n"
 operator|,
 name|HandlerObj
 operator|,
 name|Handler
 operator|,
-name|AcpiGbl_RegionTypes
-index|[
+name|AcpiCmGetRegionName
+argument_list|(
 name|SpaceId
-index|]
+argument_list|)
 operator|,
 name|Node
 operator|,
@@ -915,14 +917,16 @@ argument_list|(
 name|TRACE_OPREGION
 argument_list|,
 operator|(
-literal|"Unable to remove address handler 0x%p for %s, DeviceNode 0x%p, obj 0x%p\n"
+literal|"Unable to remove address handler %p for %s(%X), DevNode %p, obj %p\n"
 operator|,
 name|Handler
 operator|,
-name|AcpiGbl_RegionTypes
-index|[
+name|AcpiCmGetRegionName
+argument_list|(
 name|SpaceId
-index|]
+argument_list|)
+operator|,
+name|SpaceId
 operator|,
 name|Node
 operator|,

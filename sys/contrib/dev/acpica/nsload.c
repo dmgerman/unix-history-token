@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ argument_list|(
 name|ACPI_OK
 argument_list|,
 operator|(
-literal|"ACPI Namespace successfully loaded at root 0x%p\n"
+literal|"ACPI Namespace successfully loaded at root %p\n"
 operator|,
 name|AcpiGbl_RootNode
 operator|)

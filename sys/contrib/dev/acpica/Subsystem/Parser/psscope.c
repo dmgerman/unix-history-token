@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 21 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 22 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -472,7 +472,7 @@ argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsPopScope:  Popped Op %p Args %d\n"
+literal|"PsPopScope:  Popped Op %p Args %X\n"
 operator|,
 operator|*
 name|Op

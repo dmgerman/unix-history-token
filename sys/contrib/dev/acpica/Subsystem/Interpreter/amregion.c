@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amregion - ACPI default OpRegion (address space) handlers  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amregion - ACPI default OpRegion (address space) handlers  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -307,7 +307,7 @@ name|VERBOSE_INFO
 operator|)
 argument_list|,
 operator|(
-literal|"Read (%d width) Address:0x%X\n"
+literal|"Read (%d width) Address=%p\n"
 operator|,
 name|BitWidth
 operator|,
@@ -373,7 +373,7 @@ name|VERBOSE_INFO
 operator|)
 argument_list|,
 operator|(
-literal|"Write (%d width) Address:0x%p Value 0x%X\n"
+literal|"Write (%d width) Address=%p Value %X\n"
 operator|,
 name|BitWidth
 operator|,
@@ -503,7 +503,7 @@ name|VERBOSE_INFO
 operator|)
 argument_list|,
 operator|(
-literal|"Read(%d width) Address:0x%08x\n"
+literal|"Read(%d width) Address=%p\n"
 operator|,
 name|BitWidth
 operator|,
@@ -598,7 +598,7 @@ name|VERBOSE_INFO
 operator|)
 argument_list|,
 operator|(
-literal|"Write(%d width) Address:0x%08x Value 0x%08x\n"
+literal|"Write(%d width) Address=%p Value %X\n"
 operator|,
 name|BitWidth
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1496,18 +1496,10 @@ name|NULL
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"NsGetNte"
+literal|"NsGetNode"
 argument_list|,
 name|Pathname
 argument_list|)
-expr_stmt|;
-name|ScopeInfo
-operator|.
-name|Scope
-operator|.
-name|Node
-operator|=
-name|StartNode
 expr_stmt|;
 comment|/* Ensure that the namespace has been initialized */
 if|if
@@ -1564,29 +1556,7 @@ argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
-comment|/* NS_ALL means start from the root */
-if|if
-condition|(
-name|NS_ALL
-operator|==
-name|ScopeInfo
-operator|.
-name|Scope
-operator|.
-name|Node
-condition|)
-block|{
-name|ScopeInfo
-operator|.
-name|Scope
-operator|.
-name|Node
-operator|=
-name|AcpiGbl_RootNode
-expr_stmt|;
-block|}
-else|else
-block|{
+comment|/* Setup lookup scope (search starting point) */
 name|ScopeInfo
 operator|.
 name|Scope
@@ -1595,25 +1565,6 @@ name|Node
 operator|=
 name|StartNode
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ScopeInfo
-operator|.
-name|Scope
-operator|.
-name|Node
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_BAD_PARAMETER
-expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-block|}
 comment|/* Lookup the name in the namespace */
 name|Status
 operator|=
@@ -1650,7 +1601,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsGetNte: %s, %s\n"
+literal|"NsGetNode: %s, %s\n"
 operator|,
 name|InternalPath
 operator|,
@@ -1662,8 +1613,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|UnlockAndExit
-label|:
 name|AcpiCmReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -1862,6 +1811,18 @@ modifier|*
 name|Node
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|Node
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/*      * Walk to the end of this peer list.      * The last entry is marked with a flag and the peer      * pointer is really a pointer back to the parent.      * This saves putting a parent back pointer in each and      * every named object!      */
 while|while
 condition|(

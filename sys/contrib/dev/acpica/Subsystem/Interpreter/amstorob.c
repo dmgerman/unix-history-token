@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstorob - AML Interpreter object store support, store to object  *              $Revision: 17 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amstorob - AML Interpreter object store support, store to object  *              $Revision: 18 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -831,7 +831,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToObject: Truncating src buffer from %d to %d\n"
+literal|"AmlStoreObjectToObject: Truncating src buffer from %X to %X\n"
 operator|,
 name|Length
 operator|,
