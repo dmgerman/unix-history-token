@@ -82,7 +82,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* can hold a uid_t or pid_t */
+comment|/* can hold a gid_t, pid_t, or uid_t */
 end_comment
 
 begin_typedef
