@@ -589,9 +589,7 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* store our softc */
-name|atp
-operator|->
-name|controller
+name|scp
 operator|->
 name|dev_softc
 index|[
