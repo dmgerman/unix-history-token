@@ -243,13 +243,12 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* We can never run in background */
+comment|/* 			 * We can never run in the background.  We must exit 			 * silently with a nonzero exit code so that fsck(8) 			 * can probe our support for -F.  The exit code 			 * doesn't really matter, but we use an unusual one 			 * in case someone tries -F directly.  The -F flag 			 * is intentionally left out of the usage message. 			 */
 name|exit
 argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 literal|'n'
 case|:
