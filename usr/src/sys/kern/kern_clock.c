@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.35	82/07/22	*/
+comment|/*	kern_clock.c	4.36	82/08/22	*/
 end_comment
 
 begin_include
@@ -2061,6 +2061,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * untimeout is called to remove a function timeout call  * from the callout structure.  */
 end_comment
@@ -2191,6 +2197,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
