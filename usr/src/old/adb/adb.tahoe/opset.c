@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opset.c	1.2 (Berkeley) %G%"
+literal|"@(#)opset.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,7 +191,7 @@ name|void
 operator|)
 name|adbread
 argument_list|(
-name|SP_INSTR
+name|space
 argument_list|,
 name|dot
 argument_list|,
