@@ -197,7 +197,8 @@ name|int
 name|ref_count
 decl_stmt|;
 comment|/* Reference count */
-name|simple_lock_data_t
+name|struct
+name|simplelock
 name|ref_lock
 decl_stmt|;
 comment|/* Lock for ref_count field */
@@ -329,16 +330,6 @@ end_typedef
 
 begin_comment
 comment|/*  *	Macros:		vm_map_lock, etc.  *	Function:  *		Perform locking on the data portion of a map.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_comment
-comment|/* XXX for curproc and p_pid */
 end_comment
 
 begin_define
