@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.11	82/08/22	*/
+comment|/*	sys_generic.c	5.12	82/09/04	*/
 end_comment
 
 begin_include
@@ -123,12 +123,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"../h/vlimit.h"
-end_include
 
 begin_include
 include|#
@@ -1393,10 +1387,12 @@ name|uio_resid
 operator|>
 name|u
 operator|.
-name|u_limit
+name|u_rlimit
 index|[
-name|LIM_FSIZE
+name|RLIMIT_FSIZE
 index|]
+operator|.
+name|rlim_cur
 condition|)
 block|{
 name|psignal
