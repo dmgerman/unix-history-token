@@ -3373,15 +3373,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 			 * next object 			 */
-name|tobject
-operator|=
-name|tobject
-operator|->
-name|backing_object
-expr_stmt|;
 if|if
 condition|(
 name|tobject
+operator|->
+name|backing_object
 operator|==
 name|NULL
 condition|)
@@ -3394,6 +3390,12 @@ name|tobject
 operator|->
 name|backing_object_offset
 argument_list|)
+expr_stmt|;
+name|tobject
+operator|=
+name|tobject
+operator|->
+name|backing_object
 expr_stmt|;
 goto|goto
 name|shadowlookup
