@@ -371,7 +371,7 @@ parameter_list|(
 name|mr
 parameter_list|)
 define|\
-value|(CARDBUS_MAPREG_MEM_ADDR(mr)& -CARDBUS_MAPREG_MEM_ADDR(mr))
+value|(CARDBUS_MAPREG_MEM_ADDR(mr)& (~CARDBUS_MAPREG_MEM_ADDR(mr) + 1))
 end_define
 
 end_unit
