@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@kmd-ac.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!kmd-ac!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	$Id$  */
+comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	from:@(#)console.h	1.1 940105  *	$Id: console.h,v 1.5 1993/10/28 06:11:38 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
