@@ -2053,6 +2053,9 @@ argument_list|,
 operator|&
 name|sizeleft
 argument_list|,
+operator|(
+name|long
+operator|)
 name|hstat
 operator|.
 name|st_size
@@ -2176,6 +2179,9 @@ name|msg_perror
 argument_list|(
 literal|"read error at byte %ld, reading\  %d bytes, in file %s"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|hstat
 operator|.
 name|st_size
