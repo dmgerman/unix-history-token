@@ -134,14 +134,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|TZ_NOTIFY_DEVICES
+name|TZ_NOTIFY_LEVELS
 value|0x81
 end_define
 
 begin_define
 define|#
 directive|define
-name|TZ_NOTIFY_LEVELS
+name|TZ_NOTIFY_DEVICES
 value|0x82
 end_define
 
