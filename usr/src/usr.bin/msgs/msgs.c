@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.14 (Berkeley) %G%"
+literal|"@(#)msgs.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/*  * msgs - a user bulletin board program  *  * usage:  *	msgs [fhlopq] [[-]number]	to read messages  *	msgs -s				to place messages  *	msgs -c [-days]			to clean up the bulletin board  *  * prompt commands are:  *	y	print message  *	n	flush message, go to next message  *	q	flush message, quit  *	p	print message, turn on 'pipe thru more' mode  *	P	print message, turn off 'pipe thru more' mode  *	-	reprint last message  *	s[-][<num>] [<filename>]	save message  *	m[-][<num>]	mail with message in temp mbox  *	x	exit without flushing this message  */
+comment|/*  * msgs - a user bulletin board program  *  * usage:  *	msgs [fhlopq] [[-]number]	to read messages  *	msgs -s				to place messages  *	msgs -c [-days]			to clean up the bulletin board  *  * prompt commands are:  *	y	print message  *	n	flush message, go to next message  *	q	flush message, quit  *	p	print message, turn on 'pipe thru more' mode  *	P	print message, turn off 'pipe thru more' mode  *	-	reprint last message  *	s[-][<num>] [<filename>]	save message  *	m[-][<num>]	mail with message in temp mbox  *	x	exit without flushing this message  *<num>	print message number<num>  */
 end_comment
 
 begin_define
@@ -1744,6 +1744,40 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|nextmsg
+operator|>
+name|lastmsg
+operator|+
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: bounds have been reset (%d, %d)\n"
+argument_list|,
+name|firstmsg
+argument_list|,
+name|lastmsg
+argument_list|)
+expr_stmt|;
+name|ftruncate
+argument_list|(
+name|fileno
+argument_list|(
+name|msgsrc
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|newrc
+operator|=
+name|YES
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|!
 name|rcfirst
 condition|)
@@ -1755,16 +1789,10 @@ name|rcback
 expr_stmt|;
 block|}
 else|else
-block|{
 name|newrc
 operator|=
 name|YES
 expr_stmt|;
-name|nextmsg
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|msgsrc
 operator|=
 name|fopen
@@ -1795,7 +1823,31 @@ block|}
 if|if
 condition|(
 name|rcfirst
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|rcfirst
+operator|>
+name|lastmsg
+operator|+
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: the last message is number %d.\n"
+argument_list|,
+name|lastmsg
+argument_list|)
+expr_stmt|;
+name|rcfirst
+operator|=
+name|nextmsg
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|rcfirst
 operator|>
 name|firstmsg
@@ -1805,6 +1857,7 @@ operator|=
 name|rcfirst
 expr_stmt|;
 comment|/* don't set below first msg */
+block|}
 if|if
 condition|(
 name|newrc
