@@ -126,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
+file|<sys/reg.h>
 end_include
 
 begin_decl_stmt

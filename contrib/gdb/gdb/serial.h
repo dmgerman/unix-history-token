@@ -171,6 +171,7 @@ name|len
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Discard pending output */
 name|int
 argument_list|(
 argument|*flush_output
@@ -182,6 +183,7 @@ name|serial_t
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Discard pending input */
 name|int
 argument_list|(
 argument|*flush_input
@@ -295,6 +297,18 @@ name|num
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Wait for output to drain */
+name|int
+argument_list|(
+argument|*drain_output
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|serial_t
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -380,7 +394,22 @@ value|serial_fdopen(FD)
 end_define
 
 begin_comment
-comment|/* Flush pending output.  Might also flush input (if this system can't flush    only output).  */
+comment|/* Allow pending output to drain. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SERIAL_DRAIN_OUTPUT
+parameter_list|(
+name|SERIAL_T
+parameter_list|)
+define|\
+value|((SERIAL_T)->ops->drain_output((SERIAL_T)))
+end_define
+
+begin_comment
+comment|/* Flush (discard) pending output.  Might also flush input (if this system can't flush    only output).  */
 end_comment
 
 begin_define
@@ -413,6 +442,20 @@ begin_comment
 comment|/* Send a break between 0.25 and 0.5 seconds long.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|serial_send_break
+name|PARAMS
+argument_list|(
+operator|(
+name|serial_t
+name|scb
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -420,8 +463,7 @@ name|SERIAL_SEND_BREAK
 parameter_list|(
 name|SERIAL_T
 parameter_list|)
-define|\
-value|((*(SERIAL_T)->ops->send_break) (SERIAL_T))
+value|serial_send_break (SERIAL_T)
 end_define
 
 begin_comment
@@ -736,17 +778,16 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|serial_log_command
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
 name|char
-modifier|*
-name|serial_logfile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|serial_logfp
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

@@ -305,9 +305,11 @@ name|PARAMS
 argument_list|(
 operator|(
 name|int
+name|ch
 operator|,
 name|GDB_FILE
 operator|*
+name|stream
 operator|)
 argument_list|)
 expr_stmt|;
@@ -320,14 +322,40 @@ argument_list|(
 operator|(
 name|GDB_FILE
 operator|*
+name|stream
 operator|,
 name|char
 operator|*
+name|string
 operator|,
 name|unsigned
 name|int
+name|length
 operator|,
 name|int
+name|width
+operator|,
+name|int
+name|force_ellipses
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*la_emitchar
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|ch
+operator|,
+name|GDB_FILE
+operator|*
+name|stream
+operator|,
+name|int
+name|quoter
 operator|)
 argument_list|)
 expr_stmt|;
@@ -387,6 +415,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|,
 name|CORE_ADDR
 operator|,
@@ -588,7 +618,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|enum
+name|language
 name|set_language
 name|PARAMS
 argument_list|(
@@ -648,6 +679,8 @@ name|type
 parameter_list|,
 name|valaddr
 parameter_list|,
+name|offset
+parameter_list|,
 name|addr
 parameter_list|,
 name|stream
@@ -661,7 +694,7 @@ parameter_list|,
 name|pretty
 parameter_list|)
 define|\
-value|(current_language->la_val_print(type,valaddr,addr,stream,fmt,deref, \ 				  recurse,pretty))
+value|(current_language->la_val_print(type,valaddr,offset,addr,stream,fmt,deref, \ 				  recurse,pretty))
 end_define
 
 begin_define
@@ -853,10 +886,27 @@ name|string
 parameter_list|,
 name|length
 parameter_list|,
+name|width
+parameter_list|,
 name|force_ellipses
 parameter_list|)
 define|\
-value|(current_language->la_printstr(stream, string, length, force_ellipses))
+value|(current_language->la_printstr(stream, string, length, width, force_ellipses))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_EMIT_CHAR
+parameter_list|(
+name|ch
+parameter_list|,
+name|stream
+parameter_list|,
+name|quoter
+parameter_list|)
+define|\
+value|(current_language->la_emitchar(ch, stream, quoter))
 end_define
 
 begin_comment
@@ -871,7 +921,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|((c)>=0x20&& ((c)<0x7F || (c)>=0xA0)&& (!sevenbit_strings || (c)<0x80))
+value|((c)>= 0x20				\&& ((c)< 0x7F || (c)>= 0xA0)	\&& (!sevenbit_strings || (c)< 0x80))
 end_define
 
 begin_comment

@@ -3,6 +3,18 @@ begin_comment
 comment|/* Annotation routines for GDB.    Copyright 1986, 1989, 1990, 1991, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"symtab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdbtypes.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -20,6 +32,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|annotate_breakpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|annotate_catchpoint
 name|PARAMS
 argument_list|(
 operator|(
@@ -838,6 +863,66 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_extern
+extern|extern void (*annotate_starting_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern void (*annotate_stopped_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern void (*annotate_signalled_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern void (*annotate_exited_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

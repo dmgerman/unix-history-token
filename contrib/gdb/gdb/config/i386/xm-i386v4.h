@@ -23,31 +23,5 @@ directive|include
 file|"xm-sysv4.h"
 end_include
 
-begin_comment
-comment|/* If you expect to use the mmalloc package to obtain mapped symbol files,    for now you have to specify some parameters that determine how gdb places    the mappings in it's address space.  See the comments in map_to_address()    for details.  This is expected to only be a short term solution.  Yes it    is a kludge.    FIXME:  Make this more automatic. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MMAP_BASE_ADDRESS
-value|0x81000000
-end_define
-
-begin_comment
-comment|/* First mapping here */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MMAP_INCREMENT
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* Increment to next mapping */
-end_comment
-
 end_unit
 

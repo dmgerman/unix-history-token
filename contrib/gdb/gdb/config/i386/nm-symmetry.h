@@ -118,12 +118,6 @@ begin_comment
 comment|/* dynix */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NO_PTRACE_H
-end_define
-
 begin_endif
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Serial interface for raw TCP connections on Un*x like systems    Copyright 1992, 1993 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Serial interface for raw TCP connections on Un*x like systems    Copyright 1992, 1993, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -51,11 +51,22 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__CYGWIN32__
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/tcp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -247,6 +258,63 @@ name|scb
 operator|,
 name|serial_ttystate
 name|state
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tcp_return_0
+name|PARAMS
+argument_list|(
+operator|(
+name|serial_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tcp_noflush_set_tty_state
+name|PARAMS
+argument_list|(
+operator|(
+name|serial_t
+operator|,
+name|serial_ttystate
+operator|,
+name|serial_ttystate
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|tcp_print_tty_state
+name|PARAMS
+argument_list|(
+operator|(
+name|serial_t
+operator|,
+name|serial_ttystate
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_initialize_ser_tcp
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -897,6 +965,7 @@ name|numfds
 operator|<=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|numfds
@@ -919,6 +988,7 @@ return|return
 name|SERIAL_ERROR
 return|;
 comment|/* Got an error from select or poll */
+block|}
 return|return
 literal|0
 return|;
@@ -1028,6 +1098,7 @@ name|bufcnt
 operator|<=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|scb
@@ -1039,12 +1110,13 @@ condition|)
 return|return
 name|SERIAL_TIMEOUT
 return|;
-comment|/* 0 chars means timeout [may need to 				   distinguish between EOF& timeouts 				   someday] */
+comment|/* 0 chars means timeout [may need to 				     distinguish between EOF& timeouts 				     someday] */
 else|else
 return|return
 name|SERIAL_ERROR
 return|;
 comment|/* Got an error from read */
+block|}
 name|scb
 operator|->
 name|bufcnt
@@ -1310,7 +1382,11 @@ block|,
 name|tcp_setbaudrate
 block|,
 name|tcp_setstopbits
-block|, }
+block|,
+name|tcp_return_0
+block|,
+comment|/* wait for output to drain */
+block|}
 decl_stmt|;
 end_decl_stmt
 

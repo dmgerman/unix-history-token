@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Variables that describe the inferior process running under GDB:    Where it is, why it stopped, and how to step it.    Copyright 1986, 1989, 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Variables that describe the inferior process running under GDB:    Where it is, why it stopped, and how to step it.    Copyright 1986, 1989, 1992, 1996, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -94,9 +94,6 @@ decl_stmt|;
 name|CORE_ADDR
 name|selected_frame_address
 decl_stmt|;
-name|int
-name|selected_level
-decl_stmt|;
 name|char
 name|stop_registers
 index|[
@@ -109,6 +106,9 @@ name|registers
 index|[
 name|REGISTER_BYTES
 index|]
+decl_stmt|;
+name|int
+name|selected_level
 decl_stmt|;
 name|int
 name|breakpoint_proceeded
@@ -253,6 +253,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This is only valid when inferior_pid is non-zero.     If this is 0, then exec events should be noticed and responded to    by the debugger (i.e., be reported to the user).     If this is> 0, then that many subsequent exec events should be    ignored (i.e., not be reported to the user).    */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inferior_ignoring_startup_exec_events
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This is only valid when inferior_ignoring_startup_exec_events is    zero.     Some targets (stupidly) report more than one exec event per actual    call to an event() system call.  If only the last such exec event    need actually be noticed and responded to by the debugger (i.e.,    be reported to the user), then this is the number of "leading"    exec events which should be ignored.    */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inferior_ignoring_leading_exec_events
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Inferior environment. */
 end_comment
 
@@ -278,11 +300,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Array of validity bits (one per register).  Nonzero at position XXX_REGNUM    means that `registers' contains a valid copy of inferior register XXX.  */
+comment|/* Array of validity bits (one per register).  Nonzero at position XXX_REGNUM    means that `registers' contains a valid copy of inferior register XXX.    -1 if register value is not available. */
 end_comment
 
 begin_decl_stmt
 specifier|extern
+name|SIGNED
 name|char
 name|register_valid
 index|[
@@ -413,6 +436,21 @@ name|PARAMS
 argument_list|(
 operator|(
 name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|write_pc_pid
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -656,8 +694,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|terminal_init_inferior_with_pgrp
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|pgrp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* From infptrace.c */
+comment|/* From infptrace.c or infttrace.c */
 end_comment
 
 begin_decl_stmt
@@ -673,13 +725,78 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|REQUIRE_ATTACH
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|REQUIRE_ATTACH
+value|attach
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|REQUIRE_DETACH
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|REQUIRE_DETACH
+parameter_list|(
+name|pid
+parameter_list|,
+name|siggnal
+parameter_list|)
+value|detach (siggnal)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
+specifier|extern
 name|void
 name|detach
 name|PARAMS
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ptrace_wait
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -744,6 +861,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|pre_fork_inferior
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* From procfs.c */
 end_comment
@@ -764,6 +894,32 @@ name|int
 argument_list|,
 name|CORE_ADDR
 argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|procfs_first_available
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|procfs_get_pid_fd
+name|PARAMS
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -806,7 +962,31 @@ argument_list|(
 name|int
 argument_list|)
 operator|,
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+argument_list|)
+operator|,
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clone_and_follow_inferior
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -1193,7 +1373,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|((pc)>= SIGTRAMP_START   \&& (pc)< SIGTRAMP_END \         )
+value|((pc)>= SIGTRAMP_START(pc)   \&& (pc)< SIGTRAMP_END(pc) \         )
 end_define
 
 begin_else
@@ -1401,7 +1581,7 @@ parameter_list|,
 name|frame_address
 parameter_list|)
 define|\
-value|((sp) INNER_THAN (pc)&& (frame_address != 0)&& (pc) INNER_THAN (frame_address))
+value|(INNER_THAN ((sp), (pc))&& (frame_address != 0)&& INNER_THAN ((pc), (frame_address)))
 end_define
 
 begin_endif
@@ -1453,6 +1633,73 @@ end_endif
 begin_comment
 comment|/* No PC_IN_CALL_DUMMY.  */
 end_comment
+
+begin_comment
+comment|/* It's often not enough for our clients to know whether the PC is merely    somewhere within the call dummy.  They may need to know whether the    call dummy has actually completed.  (For example, wait_for_inferior    wants to know when it should truly stop because the call dummy has    completed.  If we're single-stepping because of slow watchpoints,    then we may find ourselves stopped at the entry of the call dummy,    and want to continue stepping until we reach the end.)     Note that this macro is intended for targets (like HP-UX) which    require more than a single breakpoint in their call dummies, and    therefore cannot use the CALL_DUMMY_BREAKPOINT_OFFSET mechanism.     If a target does define CALL_DUMMY_BREAKPOINT_OFFSET, then this    default implementation of CALL_DUMMY_HAS_COMPLETED is sufficient.    Else, a target may wish to supply an implementation that works in    the presense of multiple breakpoints in its call dummy.    */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CALL_DUMMY_HAS_COMPLETED
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|CALL_DUMMY_HAS_COMPLETED
+parameter_list|(
+name|pc
+parameter_list|,
+name|sp
+parameter_list|,
+name|frame_address
+parameter_list|)
+define|\
+value|PC_IN_CALL_DUMMY((pc), (sp), (frame_address))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If STARTUP_WITH_SHELL is set, GDB's "run"    will attempts to start up the debugee under a shell.    This is in order for argument-expansion to occur. E.g.,    (gdb) run *    The "*" gets expanded by the shell into a list of files.    While this is a nice feature, it turns out to interact badly    with some of the catch-fork/catch-exec features we have added.    In particular, if the shell does any fork/exec's before    the exec of the target program, that can confuse GDB.    To disable this feature, set STARTUP_WITH_SHELL to 0.    To enable this feature, set STARTUP_WITH_SHELL to 1.    The catch-exec traps expected during start-up will    be 1 if target is not started up with a shell, 2 if it is.    - RT    If you disable this, you need to decrement    START_INFERIOR_TRAPS_EXPECTED in tm.h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STARTUP_WITH_SHELL
+value|1
+end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|START_INFERIOR_TRAPS_EXPECTED
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|START_INFERIOR_TRAPS_EXPECTED
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

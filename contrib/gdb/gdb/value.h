@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for values of C expressions, for GDB.    Copyright 1986, 1987, 1989, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for values of C expressions, for GDB.    Copyright 1986, 1987, 1989, 1992, 1993, 1994, 1995, 1996    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -82,7 +82,7 @@ decl_stmt|;
 block|}
 name|location
 union|;
-comment|/* Describes offset of a value within lval a structure in bytes.  */
+comment|/* Describes offset of a value within lval of a structure in bytes.        This is used in retrieving contents from target memory. [Note also        the member embedded_offset below.] */
 name|int
 name|offset
 decl_stmt|;
@@ -103,6 +103,12 @@ name|struct
 name|type
 modifier|*
 name|type
+decl_stmt|;
+comment|/* Type of the enclosing object if this is an embedded subobject.        The member embedded_offset gives the real position of the subobject        if type is not the same as enclosing_type.         If the type field is a pointer type, then enclosing_type is         a pointer type pointing to the real (enclosing) type of the target        object. */
+name|struct
+name|type
+modifier|*
+name|enclosing_type
 decl_stmt|;
 comment|/* Values are stored in a chain, so that they can be deleted        easily over calls to the inferior.  Values assigned to internal        variables or put into the value history are taken off this        list.  */
 name|struct
@@ -135,7 +141,20 @@ comment|/* If nonzero, this is the value of a variable which does not        act
 name|char
 name|optimized_out
 decl_stmt|;
-comment|/* Actual contents of the value.  For use of this value; setting        it uses the stuff above.  Not valid if lazy is nonzero.        Target byte-order.  We force it to be aligned properly for any        possible value.  */
+comment|/* If this value represents an object that is embedded inside a        larger object (e.g., a base subobject in C++), this gives the        offset (in bytes) from the start of the contents buffer where        the embedded object begins. This is required because some C++        runtime implementations lay out objects (especially virtual bases        with possibly negative offsets to ancestors).        Note: This may be positive or negative! Also note that this offset        is not used when retrieving contents from target memory; the entire        enclosing object has to be retrieved always, and the offset for        that is given by the member offset above. */
+name|int
+name|embedded_offset
+decl_stmt|;
+comment|/* If this value represents a pointer to an object that is embedded        in another object, this gives the embedded_offset of the object        that is pointed to. */
+name|int
+name|pointed_to_offset
+decl_stmt|;
+comment|/* The BFD section associated with this value.  */
+name|asection
+modifier|*
+name|bfd_section
+decl_stmt|;
+comment|/* Actual contents of the value.  For use of this value; setting        it uses the stuff above.  Not valid if lazy is nonzero.        Target byte-order.  We force it to be aligned properly for any        possible value.  Note that a value therefore extends beyond        what is declared here.  */
 union|union
 block|{
 name|long
@@ -157,6 +176,7 @@ decl_stmt|;
 block|}
 name|aligner
 union|;
+comment|/* Do not add any new members here -- contents above will trash them */
 block|}
 struct|;
 end_struct
@@ -183,6 +203,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|VALUE_ENCLOSING_TYPE
+parameter_list|(
+name|val
+parameter_list|)
+value|(val)->enclosing_type
+end_define
+
+begin_define
+define|#
+directive|define
 name|VALUE_LAZY
 parameter_list|(
 name|val
@@ -191,7 +221,7 @@ value|(val)->lazy
 end_define
 
 begin_comment
-comment|/* VALUE_CONTENTS and VALUE_CONTENTS_RAW both return the address of    the gdb buffer used to hold a copy of the contents of the lval.      VALUE_CONTENTS is used when the contents of the buffer are needed --    it uses value_fetch_lazy() to load the buffer from the process being     debugged if it hasn't already been loaded.  VALUE_CONTENTS_RAW is     used when data is being stored into the buffer, or when it is     certain that the contents of the buffer are valid.  */
+comment|/* VALUE_CONTENTS and VALUE_CONTENTS_RAW both return the address of    the gdb buffer used to hold a copy of the contents of the lval.      VALUE_CONTENTS is used when the contents of the buffer are needed --    it uses value_fetch_lazy() to load the buffer from the process being     debugged if it hasn't already been loaded.  VALUE_CONTENTS_RAW is     used when data is being stored into the buffer, or when it is     certain that the contents of the buffer are valid.    Note: The contents pointer is adjusted by the offset required to    get to the real subobject, if the value happens to represent    something embedded in a larger run-time object. */
 end_comment
 
 begin_define
@@ -201,7 +231,7 @@ name|VALUE_CONTENTS_RAW
 parameter_list|(
 name|val
 parameter_list|)
-value|((char *) (val)->aligner.contents)
+value|((char *) (val)->aligner.contents + (val)->embedded_offset)
 end_define
 
 begin_define
@@ -212,6 +242,30 @@ parameter_list|(
 name|val
 parameter_list|)
 value|((void)(VALUE_LAZY(val)&& value_fetch_lazy(val)),\ 			     VALUE_CONTENTS_RAW(val))
+end_define
+
+begin_comment
+comment|/* The ALL variants of the above two macros do not adjust the returned    pointer by the embedded_offset value. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VALUE_CONTENTS_ALL_RAW
+parameter_list|(
+name|val
+parameter_list|)
+value|((char *) (val)->aligner.contents)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_CONTENTS_ALL
+parameter_list|(
+name|val
+parameter_list|)
+value|((void) (VALUE_LAZY(val)&& value_fetch_lazy(val)),\                                  VALUE_CONTENTS_ALL_RAW(val))
 end_define
 
 begin_decl_stmt
@@ -338,6 +392,36 @@ parameter_list|)
 value|((val)->optimized_out)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VALUE_EMBEDDED_OFFSET
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)->embedded_offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_POINTED_TO_OFFSET
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)->pointed_to_offset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALUE_BFD_SECTION
+parameter_list|(
+name|val
+parameter_list|)
+value|((val)->bfd_section)
+end_define
+
 begin_comment
 comment|/* Convert a REF to the object referenced. */
 end_comment
@@ -350,7 +434,7 @@ parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|{ if (TYPE_CODE (VALUE_TYPE (arg)) == TYPE_CODE_REF)			\     arg = value_at_lazy (TYPE_TARGET_TYPE (VALUE_TYPE (arg)),		\ 			 unpack_long (VALUE_TYPE (arg),			\ 				      VALUE_CONTENTS (arg)));}
+value|do { struct type *value_type_arg_tmp = check_typedef (VALUE_TYPE (arg));\      if (TYPE_CODE (value_type_arg_tmp) == TYPE_CODE_REF)		\ 	 arg = value_at_lazy (TYPE_TARGET_TYPE (value_type_arg_tmp),	\ 			      unpack_long (VALUE_TYPE (arg),		\ 					   VALUE_CONTENTS (arg)),       \ 			      VALUE_BFD_SECTION (arg));			\     } while (0)
 end_define
 
 begin_comment
@@ -403,7 +487,7 @@ name|COERCE_ENUM
 parameter_list|(
 name|arg
 parameter_list|)
-value|{ \   if (TYPE_CODE (VALUE_TYPE (arg)) == TYPE_CODE_ENUM)			\     arg = value_cast (builtin_type_unsigned_int, arg);			\ }
+value|{ \   if (TYPE_CODE (check_typedef (VALUE_TYPE (arg))) == TYPE_CODE_ENUM)	\     arg = value_cast (builtin_type_unsigned_int, arg);			\ }
 end_define
 
 begin_comment
@@ -707,6 +791,10 @@ name|type
 operator|,
 name|CORE_ADDR
 name|addr
+operator|,
+name|asection
+operator|*
+name|sect
 operator|)
 argument_list|)
 decl_stmt|;
@@ -726,6 +814,10 @@ name|type
 operator|,
 name|CORE_ADDR
 name|addr
+operator|,
+name|asection
+operator|*
+name|sect
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1206,6 +1298,60 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|value_ptr
+name|value_static_field
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|type
+operator|*
+name|type
+operator|,
+name|int
+name|fieldno
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fn_field
+modifier|*
+name|value_find_oload_method_list
+name|PARAMS
+argument_list|(
+operator|(
+name|value_ptr
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+expr|struct
+name|type
+operator|*
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|value_ptr
 name|value_field
 name|PARAMS
 argument_list|(
@@ -1240,6 +1386,77 @@ expr|struct
 name|type
 operator|*
 name|arg_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|value_rtti_type
+name|PARAMS
+argument_list|(
+operator|(
+name|value_ptr
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|type
+modifier|*
+name|value_rtti_target_type
+name|PARAMS
+argument_list|(
+operator|(
+name|value_ptr
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|value_ptr
+name|value_full_object
+name|PARAMS
+argument_list|(
+operator|(
+name|value_ptr
+operator|,
+expr|struct
+name|type
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1756,6 +1973,10 @@ operator|,
 expr|enum
 name|exp_opcode
 name|otherop
+operator|,
+expr|enum
+name|noside
+name|noside
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1774,6 +1995,10 @@ operator|,
 expr|enum
 name|exp_opcode
 name|op
+operator|,
+expr|enum
+name|noside
+name|noside
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2042,6 +2267,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|CORE_ADDR
+name|read_register_pid
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|regno
+operator|,
+name|int
+name|pid
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|write_register
 name|PARAMS
@@ -2052,6 +2294,26 @@ name|regno
 operator|,
 name|LONGEST
 name|val
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|write_register_pid
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|regno
+operator|,
+name|CORE_ADDR
+name|val
+operator|,
+name|int
+name|pid
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2322,6 +2584,9 @@ name|char
 operator|*
 name|valaddr
 operator|,
+name|int
+name|embedded_offset
+operator|,
 name|CORE_ADDR
 name|address
 operator|,
@@ -2356,9 +2621,11 @@ operator|(
 name|CORE_ADDR
 name|addr
 operator|,
-name|unsigned
 name|int
 name|len
+operator|,
+name|int
+name|width
 operator|,
 name|GDB_FILE
 operator|*
@@ -2583,6 +2850,63 @@ operator|,
 expr|struct
 name|type
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|find_rt_vbase_offset
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|type
+operator|*
+operator|,
+expr|struct
+name|type
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|value_ptr
+name|find_function_in_inferior
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|value_ptr
+name|value_allocate_space_in_inferior
+name|PARAMS
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

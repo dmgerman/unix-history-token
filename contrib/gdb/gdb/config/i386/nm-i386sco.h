@@ -60,16 +60,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * SysV doesn't always have a<ptrace.h> or<sys/ptrace.h> file  * (why, I don't know), and we don't need it.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_PTRACE_H
-end_define
-
-begin_comment
 comment|/* When calling functions on SCO, sometimes we get an error writing some    of the segment registers.  This would appear to be a kernel    bug/non-feature.  */
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic support for remote debugging interfaces.     Copyright 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic support for remote debugging interfaces.     Copyright 1993, 1994, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -70,6 +70,18 @@ file|"remote-utils.h"
 end_include
 
 begin_decl_stmt
+name|void
+name|_initialize_sr_support
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|_sr_settings
 name|sr_settings
@@ -98,6 +110,39 @@ modifier|*
 name|gr_settings
 init|=
 name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|sr_com
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -703,6 +748,7 @@ argument_list|()
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|buf
@@ -720,6 +766,7 @@ argument_list|(
 literal|"<empty character poll>"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|buf
 operator|&
@@ -1164,6 +1211,7 @@ comment|/* Put a command string, in args, out to the remote.  The remote is assu
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sr_com
 parameter_list|(
@@ -1461,7 +1509,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"No exec file specified"
+literal|"No executable file specified"
 argument_list|)
 expr_stmt|;
 name|entry_pt

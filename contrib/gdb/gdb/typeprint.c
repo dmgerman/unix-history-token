@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Language independent support for printing types for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1992, 1993 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Language independent support for printing types for GDB, the GNU debugger.    Copyright 1986, 88, 89, 91, 92, 93, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -96,6 +96,21 @@ include|#
 directive|include
 file|<errno.h>
 end_include
+
+begin_comment
+comment|/* For real-type printing in whatis_exp() */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|objectprint
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Controls looking up an object's derived type 				   using what we find in its vtables.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -249,6 +264,29 @@ name|old_chain
 init|=
 name|NULL
 decl_stmt|;
+name|struct
+name|type
+modifier|*
+name|real_type
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|full
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|top
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
+name|using_enc
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|exp
@@ -265,6 +303,9 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|free_current_contents
 argument_list|,
 operator|&
@@ -287,11 +328,50 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|real_type
+operator|=
+name|value_rtti_type
+argument_list|(
+name|val
+argument_list|,
+operator|&
+name|full
+argument_list|,
+operator|&
+name|top
+argument_list|,
+operator|&
+name|using_enc
+argument_list|)
+expr_stmt|;
 name|printf_filtered
 argument_list|(
 literal|"type = "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|real_type
+operator|&&
+name|objectprint
+condition|)
+name|printf_filtered
+argument_list|(
+literal|"/* real type = %s%s */\n"
+argument_list|,
+name|TYPE_NAME
+argument_list|(
+name|real_type
+argument_list|)
+argument_list|,
+name|full
+condition|?
+literal|""
+else|:
+literal|" (incomplete object)"
+argument_list|)
+expr_stmt|;
+comment|/* FIXME: maybe better to use type_print (real_type, "", gdb_stdout, -1); */
 name|type_print
 argument_list|(
 name|VALUE_TYPE
@@ -484,6 +564,9 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|free_current_contents
 argument_list|,
 operator|&
@@ -869,6 +952,9 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|free_current_contents
 argument_list|,
 operator|&

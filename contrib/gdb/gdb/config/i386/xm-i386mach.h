@@ -11,23 +11,6 @@ value|LITTLE_ENDIAN
 end_define
 
 begin_comment
-comment|/* Avoid "INT_MIN redefined" warnings -- by defining it here, exactly    the same as in the system<machine/machtypes.h> file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|INT_MIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|INT_MIN
-value|0x80000000
-end_define
-
-begin_comment
 comment|/* This is the amount to subtract from u.u_ar0    to get the offset in the core file of the register values.  */
 end_comment
 

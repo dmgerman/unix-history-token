@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Data structures for RS/6000 shared libraries, for GDB.    Copyright 1991, 1992, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Data structures for RS/6000 shared libraries, for GDB.    Copyright 1991, 1992, 1994, 1997 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -41,9 +41,13 @@ name|tend
 decl_stmt|;
 comment|/* virtual upper bound of member	*/
 name|CORE_ADDR
-name|tadj
+name|tvma
 decl_stmt|;
-comment|/* heuristically derived adjustment	*/
+comment|/* virtual addr of text section in object file */
+name|CORE_ADDR
+name|toffs
+decl_stmt|;
+comment|/* offset of text section in object file */
 name|CORE_ADDR
 name|dstart
 decl_stmt|;
@@ -51,7 +55,11 @@ comment|/* virtual address of data start	*/
 name|CORE_ADDR
 name|dend
 decl_stmt|;
-comment|/* vitrual address of data end		*/
+comment|/* virtual address of data end		*/
+name|CORE_ADDR
+name|dvma
+decl_stmt|;
+comment|/* virtual addr of data section in object file */
 comment|/* This is NULL for the exec-file.  */
 name|struct
 name|objfile
@@ -99,21 +107,25 @@ name|vmap
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|add_text_to_loadinfo
+begin_comment
+comment|/* Hook for symbol table relocation at runtime. */
+end_comment
+
+begin_extern
+extern|extern void (*xcoff_relocate_symtab_hook
+end_extern
+
+begin_expr_stmt
+unit|)
 name|PARAMS
 argument_list|(
 operator|(
-name|CORE_ADDR
-name|textaddr
-operator|,
-name|CORE_ADDR
-name|dataaddr
+name|unsigned
+name|int
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

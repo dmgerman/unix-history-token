@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994, 1995    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Core dump and executable file functions below target vector, for GDB.    Copyright 1986, 87, 89, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -82,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"thread.h"
+file|"gdbthread.h"
 end_include
 
 begin_comment
@@ -128,8 +134,7 @@ name|solib_add_stub
 name|PARAMS
 argument_list|(
 operator|(
-name|char
-operator|*
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -198,6 +203,102 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|add_to_thread_list
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ignore
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|core_file_to_sym_file
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|core_file_thread_alive
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|tid
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|init_core_ops
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_initialize_corelow
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|target_ops
+name|core_ops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Link a new core_fns into the global core_file_fns list.  Called on gdb    startup by the _initialize routine in each core file register reader, to    register information about each format the the reader is prepared to    handle. */
 end_comment
@@ -250,16 +351,16 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|inferior_pid
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Avoid confusion from thread stuff */
 if|if
 condition|(
 name|core_bfd
 condition|)
 block|{
+name|inferior_pid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Avoid confusion from thread stuff */
 name|name
 operator|=
 name|bfd_get_filename
@@ -356,8 +457,7 @@ name|solib_add_stub
 parameter_list|(
 name|from_ttyp
 parameter_list|)
-name|char
-modifier|*
+name|PTR
 name|from_ttyp
 decl_stmt|;
 block|{
@@ -475,6 +575,10 @@ expr_stmt|;
 comment|/* Warning, Will Robinson, looking at BFD private data! */
 if|if
 condition|(
+name|reg_sect
+operator|!=
+name|NULL
+operator|&&
 name|asect
 operator|->
 name|filepos
@@ -673,6 +777,9 @@ comment|/* Do it after the err msg */
 comment|/* FIXME: should be checking for errors from bfd_close (for one thing, 	 on error it does not free all the storage associated with the 	 bfd).  */
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|bfd_close
 argument_list|,
 name|temp_bfd
@@ -713,6 +820,9 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|core_close
 argument_list|,
 name|core_bfd
@@ -982,7 +1092,7 @@ decl_stmt|;
 name|char
 name|secname
 index|[
-literal|10
+literal|30
 index|]
 decl_stmt|;
 name|enum
@@ -998,6 +1108,8 @@ name|struct
 name|core_fns
 modifier|*
 name|cf
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -1293,6 +1405,253 @@ end_function
 
 begin_function
 specifier|static
+name|char
+modifier|*
+name|core_file_to_sym_file
+parameter_list|(
+name|core
+parameter_list|)
+name|char
+modifier|*
+name|core
+decl_stmt|;
+block|{
+name|CONST
+name|char
+modifier|*
+name|failing_command
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|char
+modifier|*
+name|temp
+decl_stmt|;
+name|bfd
+modifier|*
+name|temp_bfd
+decl_stmt|;
+name|int
+name|scratch_chan
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|core
+condition|)
+name|error
+argument_list|(
+literal|"No core file specified."
+argument_list|)
+expr_stmt|;
+name|core
+operator|=
+name|tilde_expand
+argument_list|(
+name|core
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|core
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+block|{
+name|temp
+operator|=
+name|concat
+argument_list|(
+name|current_directory
+argument_list|,
+literal|"/"
+argument_list|,
+name|core
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|core
+operator|=
+name|temp
+expr_stmt|;
+block|}
+name|scratch_chan
+operator|=
+name|open
+argument_list|(
+name|core
+argument_list|,
+name|write_files
+condition|?
+name|O_RDWR
+else|:
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|scratch_chan
+operator|<
+literal|0
+condition|)
+name|perror_with_name
+argument_list|(
+name|core
+argument_list|)
+expr_stmt|;
+name|temp_bfd
+operator|=
+name|bfd_fdopenr
+argument_list|(
+name|core
+argument_list|,
+name|gnutarget
+argument_list|,
+name|scratch_chan
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp_bfd
+operator|==
+name|NULL
+condition|)
+name|perror_with_name
+argument_list|(
+name|core
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bfd_check_format
+argument_list|(
+name|temp_bfd
+argument_list|,
+name|bfd_core
+argument_list|)
+condition|)
+block|{
+comment|/* Do it after the err msg */
+comment|/* FIXME: should be checking for errors from bfd_close (for one thing, 	 on error it does not free all the storage associated with the 	 bfd).  */
+name|make_cleanup
+argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
+name|bfd_close
+argument_list|,
+name|temp_bfd
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"\"%s\" is not a core dump: %s"
+argument_list|,
+name|core
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Find the data section */
+if|if
+condition|(
+name|build_section_table
+argument_list|(
+name|temp_bfd
+argument_list|,
+operator|&
+name|core_ops
+operator|.
+name|to_sections
+argument_list|,
+operator|&
+name|core_ops
+operator|.
+name|to_sections_end
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"\"%s\": Can't find sections: %s"
+argument_list|,
+name|bfd_get_filename
+argument_list|(
+name|temp_bfd
+argument_list|)
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|failing_command
+operator|=
+name|bfd_core_file_failing_command
+argument_list|(
+name|temp_bfd
+argument_list|)
+expr_stmt|;
+name|bfd_close
+argument_list|(
+name|temp_bfd
+argument_list|)
+expr_stmt|;
+comment|/* If we found a filename, remember that it is probably saved      relative to the executable that created it.  If working directory      isn't there now, we may not be able to find the executable.  Rather      than trying to be sauve about finding it, just check if the file      exists where we are now.  If not, then punt and tell our client      we couldn't find the sym file.      */
+name|p
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|failing_command
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|!=
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|access
+argument_list|(
+name|p
+argument_list|,
+name|F_OK
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|p
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|core_files_info
 parameter_list|(
@@ -1344,133 +1703,185 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|struct
-name|target_ops
-name|core_ops
-init|=
+begin_comment
+comment|/* Okay, let's be honest: threads gleaned from a core file aren't    exactly lively, are they?  On the other hand, if we don't claim    that each& every one is alive, then we don't get any of them    to appear in an "info thread" command, which is quite a useful    behaviour.    */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|core_file_thread_alive
+parameter_list|(
+name|tid
+parameter_list|)
+name|int
+name|tid
+decl_stmt|;
 block|{
-literal|"core"
-block|,
-comment|/* to_shortname */
-literal|"Local core dump file"
-block|,
-comment|/* to_longname */
-literal|"Use a core file as a target.  Specify the filename of the core file."
-block|,
-comment|/* to_doc */
-name|core_open
-block|,
-comment|/* to_open */
-name|core_close
-block|,
-comment|/* to_close */
-name|find_default_attach
-block|,
-comment|/* to_attach */
-name|core_detach
-block|,
-comment|/* to_detach */
-literal|0
-block|,
-comment|/* to_resume */
-literal|0
-block|,
-comment|/* to_wait */
-name|get_core_registers
-block|,
-comment|/* to_fetch_registers */
-literal|0
-block|,
-comment|/* to_store_registers */
-literal|0
-block|,
-comment|/* to_prepare_to_store */
-name|xfer_memory
-block|,
-comment|/* to_xfer_memory */
-name|core_files_info
-block|,
-comment|/* to_files_info */
-name|ignore
-block|,
-comment|/* to_insert_breakpoint */
-name|ignore
-block|,
-comment|/* to_remove_breakpoint */
-literal|0
-block|,
-comment|/* to_terminal_init */
-literal|0
-block|,
-comment|/* to_terminal_inferior */
-literal|0
-block|,
-comment|/* to_terminal_ours_for_output */
-literal|0
-block|,
-comment|/* to_terminal_ours */
-literal|0
-block|,
-comment|/* to_terminal_info */
-literal|0
-block|,
-comment|/* to_kill */
-literal|0
-block|,
-comment|/* to_load */
-literal|0
-block|,
-comment|/* to_lookup_symbol */
-name|find_default_create_inferior
-block|,
-comment|/* to_create_inferior */
-literal|0
-block|,
-comment|/* to_mourn_inferior */
-literal|0
-block|,
-comment|/* to_can_run */
-literal|0
-block|,
-comment|/* to_notice_signals */
-literal|0
-block|,
-comment|/* to_thread_alive */
-literal|0
-block|,
-comment|/* to_stop */
-name|core_stratum
-block|,
-comment|/* to_stratum */
-literal|0
-block|,
-comment|/* to_next */
-literal|0
-block|,
-comment|/* to_has_all_memory */
+return|return
 literal|1
-block|,
-comment|/* to_has_memory */
-literal|1
-block|,
-comment|/* to_has_stack */
-literal|1
-block|,
-comment|/* to_has_registers */
-literal|0
-block|,
-comment|/* to_has_execution */
-literal|0
-block|,
-comment|/* to_sections */
-literal|0
-block|,
-comment|/* to_sections_end */
-name|OPS_MAGIC
-block|,
-comment|/* to_magic */
+return|;
 block|}
+end_function
+
+begin_comment
+comment|/* Fill in core_ops with its defined operations and properties.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|init_core_ops
+parameter_list|()
+block|{
+name|core_ops
+operator|.
+name|to_shortname
+operator|=
+literal|"core"
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_longname
+operator|=
+literal|"Local core dump file"
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_doc
+operator|=
+literal|"Use a core file as a target.  Specify the filename of the core file."
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_open
+operator|=
+name|core_open
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_close
+operator|=
+name|core_close
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_attach
+operator|=
+name|find_default_attach
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_require_attach
+operator|=
+name|find_default_require_attach
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_detach
+operator|=
+name|core_detach
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_require_detach
+operator|=
+name|find_default_require_detach
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_fetch_registers
+operator|=
+name|get_core_registers
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_xfer_memory
+operator|=
+name|xfer_memory
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_files_info
+operator|=
+name|core_files_info
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_insert_breakpoint
+operator|=
+name|ignore
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_remove_breakpoint
+operator|=
+name|ignore
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_create_inferior
+operator|=
+name|find_default_create_inferior
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_clone_and_follow_inferior
+operator|=
+name|find_default_clone_and_follow_inferior
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_thread_alive
+operator|=
+name|core_file_thread_alive
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_core_file_to_sym_file
+operator|=
+name|core_file_to_sym_file
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_stratum
+operator|=
+name|core_stratum
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_has_memory
+operator|=
+literal|1
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_has_stack
+operator|=
+literal|1
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_has_registers
+operator|=
+literal|1
+expr_stmt|;
+name|core_ops
+operator|.
+name|to_magic
+operator|=
+name|OPS_MAGIC
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* non-zero if we should not do the add_target call in    _initialize_corelow; not initialized (i.e., bss) so that    the target can initialize it (i.e., data) if appropriate.    This needs to be set at compile time because we don't know    for sure whether the target's initialize routine is called    before us or after us. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|coreops_suppress_target
 decl_stmt|;
 end_decl_stmt
 
@@ -1479,6 +1890,14 @@ name|void
 name|_initialize_corelow
 parameter_list|()
 block|{
+name|init_core_ops
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|coreops_suppress_target
+condition|)
 name|add_target
 argument_list|(
 operator|&

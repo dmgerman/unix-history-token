@@ -54,6 +54,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|_initialize_copying
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|immediate_quit
@@ -102,7 +114,7 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"                          675 Mass Ave, Cambridge, MA 02139, USA\n"
+literal|"                       59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\n"
 argument_list|)
 expr_stmt|;
 name|printf_filtered

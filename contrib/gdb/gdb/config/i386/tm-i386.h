@@ -137,7 +137,12 @@ begin_define
 define|#
 directive|define
 name|INNER_THAN
-value|<
+parameter_list|(
+name|lhs
+parameter_list|,
+name|rhs
+parameter_list|)
+value|((lhs)< (rhs))
 end_define
 
 begin_comment
@@ -160,20 +165,6 @@ define|#
 directive|define
 name|DECR_PC_AFTER_BREAK
 value|1
-end_define
-
-begin_comment
-comment|/* Nonzero if instruction at PC is a return instruction.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ABOUT_TO_RETURN
-parameter_list|(
-name|pc
-parameter_list|)
-value|(read_memory_integer ((pc), 1) == 0xc3)
 end_define
 
 begin_comment
@@ -403,7 +394,7 @@ parameter_list|,
 name|SP
 parameter_list|)
 define|\
-value|{ (SP) -= sizeof (ADDR);		\     write_memory ((SP), (char *)&(ADDR), sizeof (ADDR)); }
+value|{ char buf[REGISTER_SIZE];	\     (SP) -= sizeof (ADDR);	\     store_address (buf, sizeof (ADDR), ADDR);	\     write_memory ((SP), buf, sizeof (ADDR)); }
 end_define
 
 begin_comment

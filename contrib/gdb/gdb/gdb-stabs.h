@@ -140,6 +140,31 @@ modifier|*
 name|stab_section_info
 decl_stmt|;
 comment|/* section starting points 				   of the original .o files before linking. */
+comment|/* See stabsread.h for the use of the following. */
+name|struct
+name|header_file
+modifier|*
+name|header_files
+decl_stmt|;
+name|int
+name|n_header_files
+decl_stmt|;
+name|int
+name|n_allocated_header_files
+decl_stmt|;
+comment|/* Pointers to BFD sections.  These are used to speed up the building of      minimal symbols.  */
+name|asection
+modifier|*
+name|text_section
+decl_stmt|;
+name|asection
+modifier|*
+name|data_section
+decl_stmt|;
+name|asection
+modifier|*
+name|bss_section
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -151,7 +176,7 @@ name|DBX_SYMFILE_INFO
 parameter_list|(
 name|o
 parameter_list|)
-value|((struct dbx_symfile_info *)((o)->sym_stab_info))
+value|((o)->sym_stab_info)
 end_define
 
 begin_define
@@ -222,6 +247,36 @@ parameter_list|(
 name|o
 parameter_list|)
 value|(DBX_SYMFILE_INFO(o)->symbol_size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBX_TEXT_SECTION
+parameter_list|(
+name|o
+parameter_list|)
+value|(DBX_SYMFILE_INFO(o)->text_section)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBX_DATA_SECTION
+parameter_list|(
+name|o
+parameter_list|)
+value|(DBX_SYMFILE_INFO(o)->data_section)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBX_BSS_SECTION
+parameter_list|(
+name|o
+parameter_list|)
+value|(DBX_SYMFILE_INFO(o)->bss_section)
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implement a cached obstack.    Written by Fred Fish (fnf@cygnus.com)    Copyright 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Implement a cached obstack.    Written by Fred Fish (fnf@cygnus.com)    Copyright 1995, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -30,6 +30,50 @@ end_include
 begin_comment
 comment|/* For memcpy declaration */
 end_comment
+
+begin_comment
+comment|/* Prototypes for local functions. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|hash
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|lookup_cache
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+expr|struct
+name|bcache
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* FIXME:  Incredibly simplistic hash generator.  Probably way too expensive  (consider long strings) and unlikely to have good distribution across hash  values for typical input. */
@@ -759,7 +803,25 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"    Cache hit ratio: %d%%\n"
+literal|"    Cache hit ratio: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bcachep
+operator|->
+name|cache_hits
+operator|+
+name|bcachep
+operator|->
+name|cache_misses
+operator|>
+literal|0
+condition|)
+block|{
+name|printf_filtered
+argument_list|(
+literal|"%d%%\n"
 argument_list|,
 operator|(
 operator|(
@@ -782,6 +844,15 @@ name|cache_misses
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf_filtered
+argument_list|(
+literal|"(not applicable)\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|printf_filtered
 argument_list|(
 literal|"    Space used for caching: %d\n"
@@ -832,7 +903,19 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"    Average hash table population: %d%%\n"
+literal|"    Average hash table population: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tcount
+operator|>
+literal|0
+condition|)
+block|{
+name|printf_filtered
+argument_list|(
+literal|"%d%%\n"
 argument_list|,
 operator|(
 name|hcount
@@ -847,15 +930,45 @@ name|BCACHE_HASHSIZE
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|printf_filtered
 argument_list|(
-literal|"    Average chain length %d\n"
+literal|"(not applicable)\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf_filtered
+argument_list|(
+literal|"    Average chain length "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hcount
+operator|>
+literal|0
+condition|)
+block|{
+name|printf_filtered
+argument_list|(
+literal|"%d\n"
 argument_list|,
 name|lcount
 operator|/
 name|hcount
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf_filtered
+argument_list|(
+literal|"(not applicable)\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|printf_filtered
 argument_list|(
 literal|"    Maximum chain length %d at %d:%d\n"
