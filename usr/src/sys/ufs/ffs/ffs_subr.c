@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_subr.c	4.4	82/12/17	*/
+comment|/*	ffs_subr.c	4.5	83/03/21	*/
 end_comment
 
 begin_ifdef
@@ -482,6 +482,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|ip
+operator|->
+name|i_flag
+operator||=
+name|ICHG
+expr_stmt|;
+name|iupdat
+argument_list|(
+name|ip
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
