@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	6.2	83/11/04	*/
+comment|/*	tcp_input.c	6.3	84/03/22	*/
 end_comment
 
 begin_include
@@ -1484,6 +1484,39 @@ goto|goto
 name|step6
 goto|;
 block|}
+comment|/* 	 * If data is received on a connection after the 	 * user processes are gone, then RST the other end. 	 */
+if|if
+condition|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_NOFDREF
+operator|)
+operator|&&
+name|tp
+operator|->
+name|t_state
+operator|>
+name|TCPS_CLOSE_WAIT
+operator|&&
+name|ti
+operator|->
+name|ti_len
+condition|)
+block|{
+name|tp
+operator|=
+name|tcp_close
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|dropwithreset
+goto|;
+block|}
 comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check that at least some bytes of segment are within  	 * receive window. 	 */
 if|if
 condition|(
@@ -1759,39 +1792,6 @@ name|TH_FIN
 operator|)
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * If data is received on a connection after the 	 * user processes are gone, then RST the other end. 	 */
-if|if
-condition|(
-operator|(
-name|so
-operator|->
-name|so_state
-operator|&
-name|SS_NOFDREF
-operator|)
-operator|&&
-name|tp
-operator|->
-name|t_state
-operator|>
-name|TCPS_CLOSE_WAIT
-operator|&&
-name|ti
-operator|->
-name|ti_len
-condition|)
-block|{
-name|tp
-operator|=
-name|tcp_close
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-goto|goto
-name|dropwithreset
-goto|;
 block|}
 comment|/* 	 * If the RST bit is set examine the state: 	 *    SYN_RECEIVED STATE: 	 *	If passive open, return to LISTEN state. 	 *	If active open, inform user that connection was refused. 	 *    ESTABLISHED, FIN_WAIT_1, FIN_WAIT2, CLOSE_WAIT STATES: 	 *	Inform user that connection was reset, and close tcb. 	 *    CLOSING, LAST_ACK, TIME_WAIT STATES 	 *	Close the tcb. 	 */
 if|if
