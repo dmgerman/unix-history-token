@@ -128,12 +128,8 @@ name|caddr_t
 operator|)
 name|PS_STRINGS
 operator|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ps_strings
-argument_list|)
+operator|-
+name|SPARE_USRSPACE
 argument_list|)
 argument_list|)
 return|;
