@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992, 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	7.4 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992, 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	7.5 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -274,19 +274,27 @@ if|if
 condition|(
 operator|*
 name|nvpp
+operator|&&
+name|vget
+argument_list|(
+operator|*
+name|nvpp
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
+name|VOP_UNLOCK
+argument_list|(
+operator|*
+name|nvpp
+argument_list|)
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
 operator|*
 name|nvpp
-expr_stmt|;
-name|VREF
-argument_list|(
-operator|*
-name|nvpp
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
