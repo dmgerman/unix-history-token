@@ -527,7 +527,7 @@ comment|/* Linux Classical-IP over ATM */
 end_comment
 
 begin_comment
-comment|/*  * This value is defined by NetBSD; other platforms should refrain from  * using it for other purposes, so that NetBSD savefiles with a link  * type of 50 can be read as this type on all platforms.  */
+comment|/*  * These values are defined by NetBSD; other platforms should refrain from  * using them for other purposes, so that NetBSD savefiles with link  * types of 50 or 51 can be read as this type on all platforms.  */
 end_comment
 
 begin_define
@@ -539,6 +539,17 @@ end_define
 
 begin_comment
 comment|/* PPP over serial with HDLC encapsulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PPP_ETHER
+value|51
+end_define
+
+begin_comment
+comment|/* PPP over Ethernet */
 end_comment
 
 begin_comment
@@ -563,10 +574,6 @@ name|DLT_CHDLC
 value|DLT_C_HDLC
 end_define
 
-begin_comment
-comment|/*  * Reserved for future use.  * Do not pick other numerical value for these unless you have also  * picked up the tcpdump.org top-of-CVS-tree version of "savefile.c",  * which will arrange that capture files for these DLT_ types have  * the same "network" value on all platforms, regardless of what  * value is chosen for their DLT_ type (thus allowing captures made  * on one platform to be read on other platforms, even if the two  * platforms don't use the same numerical values for all DLT_ types).  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -583,7 +590,7 @@ comment|/*  * Values between 106 and 107 are used in capture file headers as  * 
 end_comment
 
 begin_comment
-comment|/*  * OpenBSD DLT_LOOP, for loopback devices; it's like DLT_NULL, except  * that the AF_ type in the link-layer header is in network byte order.  *  * OpenBSD defines it as 12, but that collides with DLT_RAW, so we  * define it as 108 here.  If OpenBSD picks up this file, it should  * define DLT_LOOP as 12 in its version, as per the comment above -  * and should not use 108 for any purpose.  */
+comment|/*  * OpenBSD DLT_LOOP, for loopback devices; it's like DLT_NULL, except  * that the AF_ type in the link-layer header is in network byte order.  *  * OpenBSD defines it as 12, but that collides with DLT_RAW, so we  * define it as 108 here.  If OpenBSD picks up this file, it should  * define DLT_LOOP as 12 in its version, as per the comment above -  * and should not use 108 as a DLT_ value.  */
 end_comment
 
 begin_define
@@ -606,6 +613,83 @@ define|#
 directive|define
 name|DLT_LINUX_SLL
 value|113
+end_define
+
+begin_comment
+comment|/*  * Apple LocalTalk hardware.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LTALK
+value|114
+end_define
+
+begin_comment
+comment|/*  * Acorn Econet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_ECONET
+value|115
+end_define
+
+begin_comment
+comment|/*  * Reserved for use with OpenBSD ipfilter.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPFILTER
+value|116
+end_define
+
+begin_comment
+comment|/*  * Reserved for use in capture-file headers as a link-layer type  * corresponding to OpenBSD DLT_PFLOG; DLT_PFLOG is 17 in OpenBSD,  * but that's DLT_LANE8023 in SuSE 6.3, so we can't use 17 for it  * in capture-file headers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PFLOG
+value|117
+end_define
+
+begin_comment
+comment|/*  * Registered for Cisco-internal use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_CISCO_IOS
+value|118
+end_define
+
+begin_comment
+comment|/*  * Reserved for 802.11 cards using the Prism II chips, with a link-layer  * header including Prism monitor mode information plus an 802.11  * header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PRISM_HEADER
+value|119
+end_define
+
+begin_comment
+comment|/*  * Reserved for Aironet 802.11 cards, with an Aironet link-layer header  * (see Doug Ambrisko's FreeBSD patches).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_AIRONET_HEADER
+value|120
 end_define
 
 begin_comment

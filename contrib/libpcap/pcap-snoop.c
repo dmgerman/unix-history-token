@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-snoop.c,v 1.30 2000/10/28 00:01:30 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-snoop.c,v 1.33 2001/12/10 07:14:21 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,7 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/* 	 * "ifdrops" are those dropped by the network interface 	 * due to resource shortages or hardware errors. 	 * 	 * "sbdrops" are those dropped due to socket buffer limits. 	 * 	 * As filter is done in userland, "sbdrops" counts packets 	 * regardless of whether they would've passed the filter. 	 * 	 * XXX - does this count *all* Snoop or Drain sockets, 	 * rather than just this socket?  If not, why does it have 	 * both Snoop and Drain statistics? 	 */
 name|p
 operator|->
 name|md
@@ -570,6 +571,7 @@ name|rs_drain
 operator|.
 name|ds_sbdrops
 expr_stmt|;
+comment|/* 	 * "ps_recv" counts only packets that passed the filter. 	 * As filtering is done in userland, this does not include 	 * packets dropped because we ran out of buffer space. 	 */
 operator|*
 name|ps
 operator|=
@@ -993,6 +995,17 @@ operator|||
 name|strncmp
 argument_list|(
 literal|"qaa"
+argument_list|,
+name|device
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+literal|"cip"
 argument_list|,
 name|device
 argument_list|,

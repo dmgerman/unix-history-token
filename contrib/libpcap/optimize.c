@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/optimize.c,v 1.67 2000/11/19 13:37:20 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/optimize.c,v 1.69 2001/11/12 21:57:06 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4503,15 +4503,12 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* don't optimize away "sub #0" 				 * as it may be needed later to 				 * fixup the generated math code */
 if|if
 condition|(
 name|op
 operator|==
 name|BPF_ADD
-operator|||
-name|op
-operator|==
-name|BPF_SUB
 operator|||
 name|op
 operator|==
@@ -7621,11 +7618,20 @@ name|dflag
 operator|>
 literal|1
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"opt_loop(root, %d) begin\n"
+argument_list|,
+name|do_stmts
+argument_list|)
+expr_stmt|;
 name|opt_dump
 argument_list|(
 name|root
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 do|do
@@ -7675,11 +7681,22 @@ name|dflag
 operator|>
 literal|1
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"opt_loop(root, %d) bottom, done=%d\n"
+argument_list|,
+name|do_stmts
+argument_list|,
+name|done
+argument_list|)
+expr_stmt|;
 name|opt_dump
 argument_list|(
 name|root
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -7743,11 +7760,57 @@ argument_list|(
 name|root
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BDEBUG
+if|if
+condition|(
+name|dflag
+operator|>
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"after intern_blocks()\n"
+argument_list|)
+expr_stmt|;
+name|opt_dump
+argument_list|(
+name|root
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|opt_root
 argument_list|(
 name|rootp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BDEBUG
+if|if
+condition|(
+name|dflag
+operator|>
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"after opt_root()\n"
+argument_list|)
+expr_stmt|;
+name|opt_dump
+argument_list|(
+name|root
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|opt_cleanup
 argument_list|()
 expr_stmt|;
@@ -9918,7 +9981,7 @@ name|bpf_insn
 modifier|*
 name|fp
 decl_stmt|;
-comment|/* 	 * Loop doing convert_codr_r() until no branches remain 	 * with too-large offsets. 	 */
+comment|/* 	 * Loop doing convert_code_r() until no branches remain 	 * with too-large offsets. 	 */
 while|while
 condition|(
 literal|1

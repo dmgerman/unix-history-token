@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.57.2.1 2001/01/17 18:21:56 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.60 2001/07/28 22:56:35 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1285,6 +1285,10 @@ if|if
 condition|(
 name|isxdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s
 argument_list|)
@@ -1729,6 +1733,11 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 block|}

@@ -32,6 +32,14 @@ comment|/* #undef inline */
 end_comment
 
 begin_comment
+comment|/* Long story short: aclocal.m4 depends on autoconf 2.13  * implementation details wrt "const"; newer versions  * have different implementation details so for now we  * put "const" here.  This may cause duplicate definitions  * in config.h but that should be OK since they're the same.  */
+end_comment
+
+begin_comment
+comment|/* #undef const */
+end_comment
+
+begin_comment
 comment|/* Define if you have the ether_hostton function.  */
 end_comment
 
@@ -39,17 +47,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_ETHER_HOSTTON
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the freeifaddrs function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FREEIFADDRS
 value|1
 end_define
 
@@ -87,6 +84,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<limits.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<netinet/if_ether.h> header file.  */
 end_comment
 
@@ -96,14 +104,6 @@ directive|define
 name|HAVE_NETINET_IF_ETHER_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define if you have the<netpacket/packet.h> header file.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_NETPACKET_PACKET_H */
-end_comment
 
 begin_comment
 comment|/* Define if you have the<sys/bufmod.h> header file.  */
@@ -207,6 +207,22 @@ comment|/* #define INET6 1 */
 end_comment
 
 begin_comment
+comment|/* Enable optimizer debugging */
+end_comment
+
+begin_comment
+comment|/* #undef BDEBUG */
+end_comment
+
+begin_comment
+comment|/* Enable parser debugging */
+end_comment
+
+begin_comment
+comment|/* #undef YYDEBUG */
+end_comment
+
+begin_comment
 comment|/* define if you have a /dev/dlpi */
 end_comment
 
@@ -220,6 +236,22 @@ end_comment
 
 begin_comment
 comment|/* #undef PCAP_DEV_PREFIX */
+end_comment
+
+begin_comment
+comment|/* if if_packet.h has tpacket_stats defined */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TPACKET_STATS */
+end_comment
+
+begin_comment
+comment|/* define if you have a /proc/net/dev */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_PROC_NET_DEV */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf.h,v 1.44 2000/12/21 10:29:24 guy Exp $ (LBL)  */
+comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h       7.1 (Berkeley) 5/7/91  *  * @(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf.h,v 1.51 2001/11/28 05:50:05 guy Exp $ (LBL)  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -650,7 +650,7 @@ comment|/* Linux Classical-IP over ATM */
 end_comment
 
 begin_comment
-comment|/*  * This value is defined by NetBSD; other platforms should refrain from  * using it for other purposes, so that NetBSD savefiles with a link  * type of 50 can be read as this type on all platforms.  */
+comment|/*  * These values are defined by NetBSD; other platforms should refrain from  * using them for other purposes, so that NetBSD savefiles with link  * types of 50 or 51 can be read as this type on all platforms.  */
 end_comment
 
 begin_define
@@ -662,6 +662,21 @@ end_define
 
 begin_comment
 comment|/* PPP over serial with HDLC encapsulation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PPP_ETHER
+value|51
+end_define
+
+begin_comment
+comment|/* PPP over Ethernet */
+end_comment
+
+begin_comment
+comment|/*  * Values between 100 and 103 are used in capture file headers as  * link-layer types corresponding to DLT_ types that differ  * between platforms; don't use those values for new DLT_ new types.  */
 end_comment
 
 begin_comment
@@ -686,10 +701,6 @@ name|DLT_CHDLC
 value|DLT_C_HDLC
 end_define
 
-begin_comment
-comment|/*  * Reserved for future use.  * Do not pick other numerical value for these unless you have also  * picked up the tcpdump.org top-of-CVS-tree version of "savefile.c",  * which will arrange that capture files for these DLT_ types have  * the same "network" value on all platforms, regardless of what  * value is chosen for their DLT_ type (thus allowing captures made  * on one platform to be read on other platforms, even if the two  * platforms don't use the same numerical values for all DLT_ types).  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -706,7 +717,7 @@ comment|/*  * Values between 106 and 107 are used in capture file headers as  * 
 end_comment
 
 begin_comment
-comment|/*  * OpenBSD DLT_LOOP, for loopback devices; it's like DLT_NULL, except  * that the AF_ type in the link-layer header is in network byte order.  *  * OpenBSD defines it as 12, but that collides with DLT_RAW, so we  * define it as 108 here.  If OpenBSD picks up this file, it should  * define DLT_LOOP as 12 in its version, as per the comment above -  * and should not use 108 for any purpose.  */
+comment|/*  * OpenBSD DLT_LOOP, for loopback devices; it's like DLT_NULL, except  * that the AF_ type in the link-layer header is in network byte order.  *  * OpenBSD defines it as 12, but that collides with DLT_RAW, so we  * define it as 108 here.  If OpenBSD picks up this file, it should  * define DLT_LOOP as 12 in its version, as per the comment above -  * and should not use 108 as a DLT_ value.  */
 end_comment
 
 begin_define
@@ -717,7 +728,7 @@ value|108
 end_define
 
 begin_comment
-comment|/*  * Values between 109 and 112 are used in capture file headers as  * link-layer types corresponding to DLT_ types that might differ  * between platforms; don't use those values for new DLT_ new types.  */
+comment|/*  * Values between 109 and 112 are used in capture file headers as  * link-layer types corresponding to DLT_ types that might differ  * between platforms; don't use those values for new DLT_ types  * other than the corresponding DLT_ types.  */
 end_comment
 
 begin_comment
@@ -729,6 +740,83 @@ define|#
 directive|define
 name|DLT_LINUX_SLL
 value|113
+end_define
+
+begin_comment
+comment|/*  * Apple LocalTalk hardware.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LTALK
+value|114
+end_define
+
+begin_comment
+comment|/*  * Acorn Econet.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_ECONET
+value|115
+end_define
+
+begin_comment
+comment|/*  * Reserved for use with OpenBSD ipfilter.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPFILTER
+value|116
+end_define
+
+begin_comment
+comment|/*  * Reserved for use in capture-file headers as a link-layer type  * corresponding to OpenBSD DLT_PFLOG; DLT_PFLOG is 17 in OpenBSD,  * but that's DLT_LANE8023 in SuSE 6.3, so we can't use 17 for it  * in capture-file headers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PFLOG
+value|117
+end_define
+
+begin_comment
+comment|/*  * Registered for Cisco-internal use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_CISCO_IOS
+value|118
+end_define
+
+begin_comment
+comment|/*  * Reserved for 802.11 cards using the Prism II chips, with a link-layer  * header including Prism monitor mode information plus an 802.11  * header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PRISM_HEADER
+value|119
+end_define
+
+begin_comment
+comment|/*  * Reserved for Aironet 802.11 cards, with an Aironet link-layer header  * (see Doug Ambrisko's FreeBSD patches).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_AIRONET_HEADER
+value|120
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/gencode.h,v 1.47 2000/11/04 10:09:55 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /tcpdump/master/libpcap/gencode.h,v 1.53 2001/05/10 14:48:02 fenner Exp $ (LBL)  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -84,148 +84,183 @@ end_define
 begin_define
 define|#
 directive|define
-name|Q_TCP
+name|Q_SCTP
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_UDP
+name|Q_TCP
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ICMP
+name|Q_UDP
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_IGMP
+name|Q_ICMP
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_IGRP
+name|Q_IGMP
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ATALK
+name|Q_IGRP
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_DECNET
+name|Q_ATALK
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_LAT
+name|Q_DECNET
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_SCA
+name|Q_LAT
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_MOPRC
+name|Q_SCA
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_MOPDL
+name|Q_MOPRC
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_IPV6
+name|Q_MOPDL
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ICMPV6
+name|Q_IPV6
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_AH
+name|Q_ICMPV6
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ESP
+name|Q_AH
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_PIM
+name|Q_ESP
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_AARP
+name|Q_PIM
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ISO
+name|Q_VRRP
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ESIS
+name|Q_AARP
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ISIS
+name|Q_ISO
 value|24
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_CLNP
+name|Q_ESIS
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ISIS
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_CLNP
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_STP
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_IPX
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_NETBEUI
+value|30
 end_define
 
 begin_comment
@@ -685,6 +720,22 @@ name|struct
 name|block
 modifier|*
 name|gen_ecode
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+parameter_list|,
+name|struct
+name|qual
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|block
+modifier|*
+name|gen_acode
 parameter_list|(
 specifier|const
 name|u_char
