@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.22
+literal|3.23
 operator|%
 name|G
 operator|%
@@ -359,8 +359,15 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* wait for a connection */
-if|if
-condition|(
+do|do
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|accept
 argument_list|(
 name|s
@@ -368,18 +375,26 @@ argument_list|,
 operator|&
 name|otherend
 argument_list|)
-operator|>=
-literal|0
-condition|)
-break|break;
-comment|/* probably innocuous -- retry */
-if|if
+expr_stmt|;
+block|}
+do|while
 condition|(
 name|errno
 operator|==
 name|ETIMEDOUT
+operator|||
+name|errno
+operator|==
+name|EINTR
 condition|)
-continue|continue;
+do|;
+if|if
+condition|(
+name|errno
+operator|==
+literal|0
+condition|)
+break|break;
 name|syserr
 argument_list|(
 literal|"getconnection: accept"
