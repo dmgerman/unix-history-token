@@ -876,6 +876,17 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* Nikon */
+block|{
+block|{
+name|USB_VENDOR_NIKON
+block|,
+name|USB_PRODUCT_NIKON_LS40
+block|}
+block|,
+literal|0
+block|}
+block|,
 comment|/* Primax */
 block|{
 block|{
