@@ -11204,7 +11204,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|name
 argument_list|,
@@ -11476,7 +11476,7 @@ name|st
 decl_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|name
 argument_list|,
