@@ -2934,6 +2934,10 @@ parameter_list|(
 name|buffer
 parameter_list|,
 name|count
+parameter_list|,
+name|kind
+parameter_list|,
+name|control
 parameter_list|)
 name|unsigned
 name|char
@@ -2943,6 +2947,14 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
+name|int
+name|kind
+decl_stmt|;
+comment|/* 0 or 5 */
+name|int
+name|control
+decl_stmt|;
+comment|/* To see if we are done */
 block|{
 if|#
 directive|if
@@ -3278,6 +3290,33 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|control
+operator|&&
+operator|(
+name|kind
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* Send in AID byte */
+name|SendToIBM
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|TransInput
+argument_list|(
+literal|1
+argument_list|,
+name|kind
+argument_list|)
+expr_stmt|;
+comment|/* Go get some data */
+block|}
 block|}
 end_function
 

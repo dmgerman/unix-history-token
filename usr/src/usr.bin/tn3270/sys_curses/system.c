@@ -5,11 +5,53 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/inode.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !defined(sun) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IREAD
+value|00400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IWRITE
+value|00200
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(sun) */
+end_comment
 
 begin_include
 include|#
