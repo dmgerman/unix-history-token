@@ -23,10 +23,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_comment
-comment|/* XXX trim includes */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -37,24 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -72,24 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/pci/pcivar.h>
 end_include
 
@@ -102,19 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/isavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pci_cfgreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pcib_if.h"
 end_include
 
 begin_decl_stmt
@@ -395,50 +343,6 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Route a PCI interrupt  */
-end_comment
-
-begin_function
-name|int
-name|pci_cfgintr
-parameter_list|(
-name|int
-name|bus
-parameter_list|,
-name|int
-name|device
-parameter_list|,
-name|int
-name|pin
-parameter_list|,
-name|int
-name|oldirq
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"pci_cfgintr: can't route an interrupt to %d:%d INT%c without ACPI\n"
-argument_list|,
-name|bus
-argument_list|,
-name|device
-argument_list|,
-literal|'A'
-operator|+
-name|pin
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|PCI_INVALID_IRQ
-operator|)
-return|;
 block|}
 end_function
 
