@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.24 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5613,6 +5613,14 @@ name|wbuf
 argument_list|,
 literal|"%s... end of deliver(%s)"
 argument_list|,
+name|e
+operator|->
+name|e_to
+operator|==
+name|NULL
+condition|?
+literal|"NO-TO-LIST"
+else|:
 name|e
 operator|->
 name|e_to
