@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -672,43 +672,38 @@ value|0x002
 comment|/* Fflush(stdout) after refresh. */
 define|#
 directive|define
-name|__FULLLINE
-value|0x004
-comment|/* Line width = terminal width. */
-define|#
-directive|define
 name|__FULLWIN
-value|0x008
+value|0x004
 comment|/* Window is a screen. */
 define|#
 directive|define
 name|__IDLINE
-value|0x010
+value|0x008
 comment|/* Insert/delete sequences. */
 define|#
 directive|define
 name|__SCROLLWIN
-value|0x020
+value|0x010
 comment|/* Last char will scroll window. */
 define|#
 directive|define
 name|__SCROLLOK
-value|0x040
+value|0x020
 comment|/* Scrolling ok. */
 define|#
 directive|define
 name|__CLEAROK
-value|0x080
+value|0x040
 comment|/* Clear on next refresh. */
 define|#
 directive|define
 name|__WSTANDOUT
-value|0x100
+value|0x080
 comment|/* Standout window */
 define|#
 directive|define
 name|__LEAVEOK
-value|0x200
+value|0x100
 comment|/* If curser left */
 name|u_int
 name|flags
@@ -2539,6 +2534,8 @@ operator|(
 specifier|const
 name|char
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)
