@@ -694,22 +694,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|const
-name|wchar_t
-modifier|*
-name|__archive_entry_acl_text_w
-parameter_list|(
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

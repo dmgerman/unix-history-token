@@ -849,6 +849,40 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include access entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include default entries.  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  (As used by 'star'.)  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT
+value|2048
+end_define
+
+begin_function_decl
+specifier|const
+name|wchar_t
+modifier|*
+name|archive_entry_acl_text_w
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Return a count of entries matching 'want_type' */
 end_comment
 

@@ -901,6 +901,16 @@ if|if
 condition|(
 name|wc
 operator|<=
+literal|0
+condition|)
+block|{
+comment|/* Ignore negative values. */
+block|}
+elseif|else
+if|if
+condition|(
+name|wc
+operator|<=
 literal|0x7f
 condition|)
 name|utf8len
@@ -989,6 +999,16 @@ operator|*
 name|wp
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|wc
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* Ignore negative values. */
+block|}
+elseif|else
 if|if
 condition|(
 name|wc
@@ -2352,6 +2372,10 @@ block|}
 comment|/* 	 * Technically, the mtime field in the ustar header can 	 * support 33 bits, but many platforms use signed 32-bit time 	 * values.  The cutoff of 0x7fffffff here is a compromise. 	 * Yes, this check is duplicated just below; this helps to 	 * avoid writing an mtime attribute just to handle a 	 * high-resolution timestamp in "restricted pax" mode. 	 */
 if|if
 condition|(
+operator|!
+name|need_extension
+operator|&&
+operator|(
 operator|(
 name|st_main
 operator|->
@@ -2367,6 +2391,7 @@ name|st_mtime
 operator|>=
 literal|0x7fffffff
 operator|)
+operator|)
 condition|)
 name|need_extension
 operator|=
@@ -2375,6 +2400,9 @@ expr_stmt|;
 comment|/* If there are non-trivial ACL entries, we need an extension. */
 if|if
 condition|(
+operator|!
+name|need_extension
+operator|&&
 name|archive_entry_acl_count
 argument_list|(
 name|entry_original
@@ -2391,6 +2419,9 @@ expr_stmt|;
 comment|/* If there are non-trivial ACL entries, we need an extension. */
 if|if
 condition|(
+operator|!
+name|need_extension
+operator|&&
 name|archive_entry_acl_count
 argument_list|(
 name|entry_original
@@ -2572,11 +2603,13 @@ expr_stmt|;
 comment|/* I use star-compatible ACL attributes. */
 name|wp
 operator|=
-name|__archive_entry_acl_text_w
+name|archive_entry_acl_text_w
 argument_list|(
 name|entry_original
 argument_list|,
 name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
+operator||
+name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
 argument_list|)
 expr_stmt|;
 if|if
@@ -2607,11 +2640,13 @@ argument_list|)
 expr_stmt|;
 name|wp
 operator|=
-name|__archive_entry_acl_text_w
+name|archive_entry_acl_text_w
 argument_list|(
 name|entry_original
 argument_list|,
 name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
+operator||
+name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
 argument_list|)
 expr_stmt|;
 if|if

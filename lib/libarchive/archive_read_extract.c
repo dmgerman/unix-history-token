@@ -460,6 +460,11 @@ name|acl_type_t
 parameter_list|,
 name|int
 name|archive_entry_acl_type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|tn
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3797,6 +3802,8 @@ argument_list|,
 name|ACL_TYPE_ACCESS
 argument_list|,
 name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
+argument_list|,
+literal|"access"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3821,6 +3828,8 @@ argument_list|,
 name|ACL_TYPE_DEFAULT
 argument_list|,
 name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
+argument_list|,
+literal|"default"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3848,6 +3857,11 @@ name|acl_type
 parameter_list|,
 name|int
 name|ae_requested_type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|typename
 parameter_list|)
 block|{
 name|acl_t
@@ -4162,7 +4176,9 @@ name|a
 argument_list|,
 name|errno
 argument_list|,
-literal|"Failed to set acl"
+literal|"Failed to set %s acl"
+argument_list|,
+name|typename
 argument_list|)
 expr_stmt|;
 name|ret
