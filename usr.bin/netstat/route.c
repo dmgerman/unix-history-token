@@ -9,13 +9,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* From: static char sccsid[] = "@(#)route.c	5.20 (Berkeley) 11/29/90"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|route_c_rcsid
 index|[]
 init|=
-literal|"@(#)route.c	5.20 (Berkeley) 11/29/90"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

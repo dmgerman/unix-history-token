@@ -9,13 +9,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* From: static char sccsid[] = "@(#)iso.c	5.6 (Berkeley) 4/27/91"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|iso_c_rcsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.6 (Berkeley) 4/27/91"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,10 +31,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * $Header: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v 1.2 1993/09/05 23:41:49 rgrimes Exp $  * $Source: /a/cvs/386BSD/src/usr.bin/netstat/iso.c,v $  */
 end_comment
 
 begin_comment
