@@ -276,6 +276,7 @@ name|strfmon
 parameter_list|(
 name|char
 modifier|*
+name|__restrict
 name|s
 parameter_list|,
 name|size_t
@@ -284,6 +285,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|format
 parameter_list|,
 modifier|...
