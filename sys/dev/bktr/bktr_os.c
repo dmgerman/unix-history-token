@@ -843,11 +843,10 @@ end_include
 begin_if
 if|#
 directive|if
-operator|(
-name|NSMBUS
-operator|>
-literal|0
-operator|)
+name|defined
+argument_list|(
+name|BKTR_USE_FREEBSD_SMBUS
+argument_list|)
 end_if
 
 begin_include
@@ -1696,11 +1695,10 @@ expr_stmt|;
 comment|/* XXX call bt848_i2c dependent attach() routine */
 if|#
 directive|if
-operator|(
-name|NSMBUS
-operator|>
-literal|0
-operator|)
+name|defined
+argument_list|(
+name|BKTR_USE_FREEBSD_SMBUS
+argument_list|)
 if|if
 condition|(
 name|bt848_i2c_attach
@@ -4048,11 +4046,10 @@ expr_stmt|;
 comment|/* XXX call bt848_i2c dependent attach() routine */
 if|#
 directive|if
-operator|(
-name|NSMBUS
-operator|>
-literal|0
-operator|)
+name|defined
+argument_list|(
+name|BKTR_USE_FREEBSD_SMBUS
+argument_list|)
 if|if
 condition|(
 name|bt848_i2c_attach

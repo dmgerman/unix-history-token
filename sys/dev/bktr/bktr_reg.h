@@ -22,12 +22,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"smbus.h"
 end_include
 
@@ -52,21 +46,26 @@ endif|#
 directive|endif
 end_endif
 
-begin_else
-else|#
-directive|else
-end_else
+begin_if
+if|#
+directive|if
+operator|(
+name|NSMBUS
+operator|>
+literal|0
+operator|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|NSMBUS
-value|0
+name|BKTR_USE_FREEBSD_SMBUS
 end_define
 
-begin_comment
-comment|/* Non FreeBSD systems do not have SMBUS */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1958,20 +1957,10 @@ end_struct
 begin_if
 if|#
 directive|if
-operator|(
-operator|(
 name|defined
 argument_list|(
-name|__FreeBSD__
+name|BKTR_USE_FREEBSD_SMBUS
 argument_list|)
-operator|)
-operator|&&
-operator|(
-name|NSMBUS
-operator|>
-literal|0
-operator|)
-operator|)
 end_if
 
 begin_struct
