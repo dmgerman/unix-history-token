@@ -650,13 +650,12 @@ name|position
 argument_list|)
 expr_stmt|;
 block|}
-name|devstat_add_entry
-argument_list|(
-operator|&
 name|stp
 operator|->
 name|stats
-argument_list|,
+operator|=
+name|devstat_new_entry
+argument_list|(
 literal|"ast"
 argument_list|,
 name|stp
@@ -876,7 +875,6 @@ argument_list|)
 expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
-operator|&
 name|stp
 operator|->
 name|stats
@@ -2714,7 +2712,6 @@ name|blkcount
 expr_stmt|;
 name|devstat_start_transaction
 argument_list|(
-operator|&
 name|stp
 operator|->
 name|stats
@@ -2861,7 +2858,6 @@ name|biofinish
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|stp
 operator|->
 name|stats

@@ -526,6 +526,7 @@ decl_stmt|;
 comment|/* capabilities page info */
 name|struct
 name|devstat
+modifier|*
 name|stats
 decl_stmt|;
 comment|/* devstat entry */
