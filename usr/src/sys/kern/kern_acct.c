@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.26 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_acct.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -117,7 +117,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|chk
+name|acctchkfreq
 init|=
 literal|15
 decl_stmt|;
@@ -513,9 +513,10 @@ argument_list|,
 literal|"Accounting resumed\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|acctp
@@ -574,13 +575,14 @@ literal|"Accounting suspended\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|timeout
 argument_list|(
 name|acctwatch
 argument_list|,
 name|NULL
 argument_list|,
-name|chk
+name|acctchkfreq
 operator|*
 name|hz
 argument_list|)
