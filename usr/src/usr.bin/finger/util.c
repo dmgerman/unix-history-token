@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.13 (Berkeley) %G%"
+literal|"@(#)util.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,11 +153,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 name|w
 operator|->
