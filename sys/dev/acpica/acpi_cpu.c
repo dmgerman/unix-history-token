@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pcpu.h>
 end_include
 
@@ -609,10 +615,8 @@ specifier|static
 name|struct
 name|acpi_cpu_softc
 modifier|*
+modifier|*
 name|cpu_softc
-index|[
-name|MAXCPU
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -989,6 +993,37 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"CPU"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpu_softc
+operator|==
+name|NULL
+condition|)
+name|cpu_softc
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|acpi_cpu_softc
+operator|*
+argument_list|)
+operator|*
+operator|(
+name|mp_maxid
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|M_TEMP
+comment|/* XXX */
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 return|return
@@ -1464,8 +1499,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|MAXCPU
+operator|<=
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -1588,9 +1623,6 @@ name|cpu_cx_count
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 comment|/* Wait for all processors to exit acpi_cpu_idle(). */
 name|smp_rendezvous
 argument_list|(
@@ -1603,8 +1635,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|cpu_idle_busy
@@ -4314,7 +4344,7 @@ block|{
 comment|/*      * C3 is not supported on multiple CPUs since this would require      * flushing all caches which is currently too expensive.      */
 if|if
 condition|(
-name|cpu_ndevices
+name|mp_ncpus
 operator|>
 literal|1
 condition|)
