@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.27 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1756,6 +1756,21 @@ operator|.
 name|va_mode
 operator|=
 literal|0777
+expr_stmt|;
+name|LEASE_CHECK
+argument_list|(
+name|ndp
+operator|->
+name|ni_dvp
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|LEASE_WRITE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
