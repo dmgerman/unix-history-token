@@ -5586,11 +5586,13 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please select the XFree86 configuration tool you want to use."
 block|,
-literal|"The first tool, xf86cfg, is fully graphical\n"
-literal|"The second tool, xf86config, is\n"
+literal|"The first option, xf86cfg, is fully graphical.\n"
+literal|"The second option provides a menu-based interface similar to\n"
+literal|"what you are currently using. "
+literal|"The third option, xf86config, is\n"
 literal|"a more simplistic shell-script based tool and less friendly to\n"
-literal|"new users, but it may work in situations where the fancier one\n"
-literal|"does not."
+literal|"new users, but it may work in situations where the other options\n"
+literal|"do not."
 block|,
 name|NULL
 block|,
@@ -5623,7 +5625,22 @@ literal|"=xf86cfg"
 block|}
 block|,
 block|{
-literal|"3 xf86config"
+literal|"3 xf86cfg -textmode"
+block|,
+literal|"ncurses-based XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=xf86cfg -textmode"
+block|}
+block|,
+block|{
+literal|"4 xf86config"
 block|,
 literal|"Shell-script based XFree86 configuration tool."
 block|,
