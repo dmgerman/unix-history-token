@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -1457,6 +1463,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+continue|continue;
 name|syslog
 argument_list|(
 name|LOG_ERR

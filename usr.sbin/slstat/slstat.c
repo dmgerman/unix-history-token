@@ -586,6 +586,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+continue|continue;
 name|err
 argument_list|(
 literal|1
@@ -593,6 +601,7 @@ argument_list|,
 literal|"sysctl"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strncmp

@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -415,6 +421,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+continue|continue;
 name|err
 argument_list|(
 name|EX_OSERR
@@ -424,6 +438,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

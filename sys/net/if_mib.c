@@ -164,6 +164,16 @@ literal|0
 index|]
 operator|>
 name|if_index
+operator|||
+name|ifaddr_byindex
+argument_list|(
+name|name
+index|[
+literal|0
+index|]
+argument_list|)
+operator|==
+name|NULL
 condition|)
 return|return
 name|ENOENT
