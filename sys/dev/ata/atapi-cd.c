@@ -6450,10 +6450,16 @@ operator|*
 operator|)
 name|addr
 operator|=
+operator|(
+name|off_t
+operator|)
 name|cdp
 operator|->
 name|disk_size
 operator|*
+operator|(
+name|off_t
+operator|)
 name|cdp
 operator|->
 name|block_size
