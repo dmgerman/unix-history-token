@@ -426,7 +426,7 @@ name|PDQ_OS_MEMALLOC_CONTIG
 parameter_list|(
 name|n
 parameter_list|)
-value|vm_page_alloc_contig(n, 0, 0xffffffff, PAGE_SIZE)
+value|contigmalloc(n, M_DEVBUF, M_NOWAIT, 0, 0xffffffff, PAGE_SIZE, 0)
 end_define
 
 begin_define
@@ -438,7 +438,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
-value|kmem_free(kernel_map, (vaddr_t) p, n)
+value|contigfree((void *) p, n, M_DEVBUF)
 end_define
 
 begin_else
