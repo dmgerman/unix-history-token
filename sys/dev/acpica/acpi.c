@@ -4572,10 +4572,6 @@ name|first_time
 init|=
 literal|1
 decl_stmt|;
-define|#
-directive|define
-name|MSGFORMAT
-value|"%s button is handled as a fixed feature programming model.\n"
 name|ACPI_ASSERTLOCK
 expr_stmt|;
 comment|/* Enable and clear fixed events and install handlers. */
@@ -4623,9 +4619,7 @@ name|sc
 operator|->
 name|acpi_dev
 argument_list|,
-name|MSGFORMAT
-argument_list|,
-literal|"power"
+literal|"Power Button (fixed)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4673,9 +4667,7 @@ name|sc
 operator|->
 name|acpi_dev
 argument_list|,
-name|MSGFORMAT
-argument_list|,
-literal|"sleep"
+literal|"Sleep Button (fixed)"
 argument_list|)
 expr_stmt|;
 block|}
