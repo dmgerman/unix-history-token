@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	opl3.h	- Definitions of the OPL-3 registers  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: opl3.c,v 1.7 1994/10/01 02:16:50 swallace Exp  */
+comment|/*  *	opl3.h	- Definitions of the OPL-3 registers  *  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/*  *	The OPL-3 mode is switched on by writing 0x01, to the offset 5  *	of the right side.  *  *	Another special register at the right side is at offset 4. It contains  *	a bit mask defining which voices are used as 4 OP voices.  *  *	The percussive mode is implemented in the left side only.  *  *	With the above exceptions the both sides can be operated independently.  *  *	A 4 OP voice can be created by setting the corresponding  *	bit at offset 4 of the right side.  *  *	For example setting the rightmost bit (0x01) changes the  *	first voice on the right side to the 4 OP mode. The fourth  *	voice is made inaccessible.  *  *	If a voice is set to the 2 OP mode, it works like 2 OP modes  *	of the original YM3812 (AdLib). In addition the voice can  *	be connected the left, right or both stereo channels. It can  *	even be left unconnected. This works with 4 OP voices also.  *  *	The stereo connection bits are located in the FEEDBACK_CONNECTION  *	register of the voice (0xC0-0xC8). In 4 OP voices these bits are  *	in the second half of the voice.  */
+comment|/*  *	The OPL-3 mode is switched on by writing 0x01, to the offset 5  *	of the right side.  *  *	Another special register at the right side is at offset 4. It contains  *	a bit mask defining which voices are used as 4 OP voices.  *  *	The percussive mode is implemented in the left side only.  *  *	With the above exeptions the both sides can be operated independently.  *	  *	A 4 OP voice can be created by setting the corresponding  *	bit at offset 4 of the right side.  *  *	For example setting the rightmost bit (0x01) changes the  *	first voice on the right side to the 4 OP mode. The fourth  *	voice is made inaccessible.  *  *	If a voice is set to the 2 OP mode, it works like 2 OP modes  *	of the original YM3812 (AdLib). In addition the voice can   *	be connected the left, right or both stereo channels. It can  *	even be left unconnected. This works with 4 OP voices also.  *  *	The stereo connection bits are located in the FEEDBACK_CONNECTION  *	register of the voice (0xC0-0xC8). In 4 OP voices these bits are  *	in the second half of the voice.  */
 end_comment
 
 begin_comment
@@ -154,6 +154,13 @@ define|#
 directive|define
 name|OPL3_ENABLE
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPL4_ENABLE
+value|0x02
 end_define
 
 begin_define
@@ -473,7 +480,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  *	In the 4 OP mode there is four possible configurations how the  *	operators can be connected together (in 2 OP modes there is just  *	AM or FM). The 4 OP connection mode is defined by the rightmost  *	bit of the FEEDBACK_CONNECTION (0xC0-0xC8) on the both halfs.  *  *	First half	Second half	Mode  *  *					 +---+  *					 v   |  *	0		0>+-1-+--2--3--4-->  *  *  *  *					 +---+  *					 |   |  *	0		1>+-1-+--2-+  *						  |->  *>--3----4-+  *  *					 +---+  *					 |   |  *	1		0>+-1-+-----+  *						   |->  *>--2--3--4-+  *  *					 +---+  *					 |   |  *	1		1>+-1-+--+  *						|  *>--2--3-+->  *						|  *>--4----+  */
+comment|/*  *	In the 4 OP mode there is four possible configurations how the  *	operators can be connected together (in 2 OP modes there is just  *	AM or FM). The 4 OP connection mode is defined by the rightmost  *	bit of the FEEDBACK_CONNECTION (0xC0-0xC8) on the both halfs.  *  *	First half	Second half	Mode  *  *					 +---+  *					 v   |  *	0		0>+-1-+--2--3--4-->  *  *  *					  *					 +---+  *					 |   |  *	0		1>+-1-+--2-+  *						  |->  *>--3----4-+  *					  *					 +---+  *					 |   |  *	1		0>+-1-+-----+  *						   |->  *>--2--3--4-+  *  *					 +---+  *					 |   |  *	1		1>+-1-+--+  *						|  *>--2--3-+->  *						|  *>--4----+  */
 end_comment
 
 begin_define

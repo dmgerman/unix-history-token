@@ -12,7 +12,7 @@ name|_OS_H_
 end_define
 
 begin_comment
-comment|/*  * OS specific settings for FreeBSD  *  * Copyright by UWM - comments to soft-eng@cs.uwm.edu  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This chould be used as an example when porting the driver to a new  * operating systems.  *  * What you should do is to rewrite the soundcard.c and os.h (this file).  * You should create a new subdirectory and put these two files there.  * In addition you have to do a makefile.<OS>.  *  * If you have to make changes to other than these two files, please contact me  * before making the changes. It's possible that I have already made the  * change.  *  * os.h,v 1.13 1994/10/01 02:16:53 swallace Exp  */
+comment|/*  * OS specific settings for FreeBSD  *  * This chould be used as an example when porting the driver to a new  * operating systems.  *  * What you should do is to rewrite the soundcard.c and os.h (this file).  * You should create a new subdirectory and put these two files there.  * In addition you have to do a makefile.<OS>.  *  * If you have to make changes to other than these two files, please contact me  * before making the changes. It's possible that I have already made the  * change.   */
 end_comment
 
 begin_comment
@@ -104,6 +104,40 @@ file|<machine/cpufunc.h>
 end_include
 
 begin_comment
+comment|/* These few lines are used by 386BSD (only??). */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NSND
+operator|>
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|CONFIGURE_SOUNDCARD
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|CONFIGURED_SOUNDCARD
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Rest of the file is compiled only if the driver is really required.  */
 end_comment
 
@@ -114,14 +148,12 @@ name|CONFIGURE_SOUNDCARD
 end_ifdef
 
 begin_comment
-comment|/*  * select() is currently implemented in Linux specific way. Don't enable.  * I don't remember what the SHORT_BANNERS means so forget it.  */
+comment|/*   * select() is currently implemented in Linux specific way. Don't enable.  * I don't remember what the SHORT_BANNERS means so forget it.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|ALLOW_SELECT
-end_undef
+begin_comment
+comment|/*#undef ALLOW_SELECT*/
+end_comment
 
 begin_define
 define|#
@@ -140,7 +172,7 @@ file|<machine/soundcard.h>
 end_include
 
 begin_comment
-comment|/*  * Here is the first portability problem. Every OS has it's own way to  * pass a pointer to the buffer in read() and write() calls. In Linux it's  * just a char*. In BSD it's struct uio. This parameter is passed to  * all functions called from read() or write(). Since nothing can be  * assumed about this structure, the driver uses set of macros for  * accessing the user buffer.  *  * The driver reads/writes bytes in the user buffer sequentially which  * means that calls like uiomove() can be used.  *  * snd_rw_buf is the type which is passed to the device file specific  * read() and write() calls.  *  * The following macros are used to move date to and from the  * user buffer. These macros should be used only when the  * target or source parameter has snd_rw_buf type.  * The offs parameter is a offset relative to the beginning of  * the user buffer. In Linux the offset is required but for example  * BSD passes the offset info in the uio structure. It could be usefull  * if these macros verify that the offs parameter and the value in  * the snd_rw_buf structure are equal.  */
+comment|/*  * Here is the first portability problem. Every OS has it's own way to  * pass a pointer to the buffer in read() and write() calls. In Linux it's  * just a char*. In BSD it's struct uio. This parameter is passed to  * all functions called from read() or write(). Since nothing can be   * assumed about this structure, the driver uses set of macros for  * accessing the user buffer.   *  * The driver reads/writes bytes in the user buffer sequentially which  * means that calls like uiomove() can be used.  *  * snd_rw_buf is the type which is passed to the device file specific  * read() and write() calls.  *   * The following macros are used to move date to and from the  * user buffer. These macros should be used only when the   * target or source parameter has snd_rw_buf type.  * The offs parameter is a offset relative to the beginning of  * the user buffer. In Linux the offset is required but for example  * BSD passes the offset info in the uio structure. It could be usefull  * if these macros verify that the offs parameter and the value in  * the snd_rw_buf structure are equal.  */
 end_comment
 
 begin_typedef
@@ -169,7 +201,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|do { if (uiomove(target, count, (struct uio *)source)) { \ 		printf ("sb: Bad copyin()!\n"); \ 	} } while(0)
+value|do { if (uiomove((caddr_t ) target, count, (struct uio *)source)) { \ 		printf ("sb: Bad copyin()!\n"); \ 	} } while(0)
 end_define
 
 begin_comment
@@ -194,7 +226,7 @@ value|do { if (uiomove(source, count, (struct uio *)target)) { \ 		printf ("sb: 
 end_define
 
 begin_comment
-comment|/*  * The following macros are like COPY_*_USER but work just with one byte (8bit),  * short (16 bit) or long (32 bit) at a time.  * The same restrictions apply than for COPY_*_USER  */
+comment|/*   * The following macros are like COPY_*_USER but work just with one byte (8bit),  * short (16 bit) or long (32 bit) at a time.  * The same restrictions apply than for COPY_*_USER  */
 end_comment
 
 begin_define
@@ -251,6 +283,13 @@ parameter_list|,
 name|data
 parameter_list|)
 value|{uiomove((char*)&(data), 4, (struct uio *)addr);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|EREMOTEIO
+value|-1
 end_define
 
 begin_comment
@@ -433,7 +472,7 @@ value|(f.mode& WK_SLEEP)
 end_define
 
 begin_comment
-comment|/*  * This driver handles interrupts little bit nonstandard way. The following  * macro is used to test if the current process has received a signal which  * is aborts the process. This macro is called from close() to see if the  * buffers should be discarded. If this kind info is not available, a constant  * 1 or 0 could be returned (1 should be better than 0).  * I'm not sure if the following is correct for FreeBSD.  */
+comment|/*  * This driver handles interrupts little bit nonstandard way. The following  * macro is used to test if the current process has received a signal which  * is aborts the process. This macro is called from close() to see if the  * buffers should be discarded. If this kind info is not available, a constant  * 1 or 0 could be returned (1 should be better than 0).  * I'm not sure if the following is correct for 386BSD.  */
 end_comment
 
 begin_define
@@ -449,7 +488,7 @@ value|(f.aborting | curproc->p_siglist)
 end_define
 
 begin_comment
-comment|/*  * The following macro calls sleep. It should be implemented such that  * the process is resumed if it receives a signal. The following is propably  * not the way how it should be done on 386bsd.  * The on_what parameter is a wait_queue defined with DEFINE_WAIT_QUEUE(),  * and the second is a workarea parameter. The third is a timeout  * in ticks. Zero means no timeout.  */
+comment|/*  * The following macro calls sleep. It should be implemented such that  * the process is resumed if it receives a signal. The following is propably  * not the way how it should be done on 386bsd.  * The on_what parameter is a wait_queue defined with DEFINE_WAIT_QUEUE(),  * and the second is a workarea parameter. The third is a timeout   * in ticks. Zero means no timeout.  */
 end_comment
 
 begin_define
@@ -464,7 +503,7 @@ parameter_list|,
 name|time_limit
 parameter_list|)
 define|\
-value|{ \ 	  int flag, chn; \ 	  f.mode = WK_SLEEP; \ 	  q =&chn; \ 	  flag=tsleep((caddr_t)&(chn), (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  if(flag == ERESTART) f.aborting = 1;\ 	  else f.aborting = 0;\ 	  f.mode&= ~WK_SLEEP; \ 	}
+value|{ \ 	  int flag, chn; \ 	  f.mode = WK_SLEEP; \ 	  q =&chn; \ 	  flag=tsleep((caddr_t)&chn, (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  if(flag == ERESTART) f.aborting = 1;\ 	  else f.aborting = 0;\ 	  f.mode&= ~WK_SLEEP; \ 	}
 end_define
 
 begin_comment
@@ -480,7 +519,7 @@ name|q
 parameter_list|,
 name|f
 parameter_list|)
-value|{f.mode = WK_WAKEUP;wakeup((caddr_t)q);}
+value|{f.mode = WK_WAKEUP;wakeup((caddr_t) q);}
 end_define
 
 begin_comment
@@ -506,7 +545,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * GET_TIME() returns current value of the counter incremented at timer  * ticks.  This can overflow, so the timeout might be real big...  *  */
+comment|/*   * GET_TIME() returns current value of the counter incremented at timer  * ticks.  This can overflow, so the timeout might be real big...  *   */
 end_comment
 
 begin_function_decl
@@ -571,8 +610,21 @@ name|INB
 value|inb
 end_define
 
+begin_define
+define|#
+directive|define
+name|INW
+value|inb
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
-comment|/*  * The outb(0, 0x80) is just for slowdown. It's bit unsafe since  * this address could be used for something usefull.  */
+comment|/*    * The outb(0, 0x80) is just for slowdown. It's bit unsafe since  * this address could be used for something usefull.  */
 end_comment
 
 begin_define
@@ -586,6 +638,52 @@ name|data
 parameter_list|)
 value|{outb(data, addr);outb(0, 0x80);}
 end_define
+
+begin_define
+define|#
+directive|define
+name|OUTW
+parameter_list|(
+name|addr
+parameter_list|,
+name|data
+parameter_list|)
+value|{outw(data, addr);outb(0, 0x80);}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OUTB
+parameter_list|(
+name|addr
+parameter_list|,
+name|data
+parameter_list|)
+value|outb(data, addr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OUTW
+parameter_list|(
+name|addr
+parameter_list|,
+name|data
+parameter_list|)
+value|outw(data, addr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* memcpy() was not defined og 386bsd. Lets define it here */
@@ -620,7 +718,7 @@ value|-(err)
 end_define
 
 begin_comment
-comment|/*    KERNEL_MALLOC() allocates requested number of memory  and    KERNEL_FREE is used to free it.    These macros are never called from interrupt, in addition the    nbytes will never be more than 4096 bytes. Generally the driver    will allocate memory in blocks of 4k. If the kernel has just a    page level memory allocation, 4K can be safely used as the size    (the nbytes parameter can be ignored). */
+comment|/*     KERNEL_MALLOC() allocates requested number of memory  and     KERNEL_FREE is used to free it.     These macros are never called from interrupt, in addition the    nbytes will never be more than 4096 bytes. Generally the driver    will allocate memory in blocks of 4k. If the kernel has just a    page level memory allocation, 4K can be safely used as the size    (the nbytes parameter can be ignored). */
 end_comment
 
 begin_define
@@ -661,7 +759,7 @@ parameter_list|,
 name|linux_ptr
 parameter_list|)
 define|\
-value|{(mem_ptr) = (typecast)malloc((size), M_DEVBUF, M_NOWAIT); \    if (!(mem_ptr))panic("SOUND: Cannot allocate memory");}
+value|{mem_ptr = (typecast)malloc(size, M_DEVBUF, M_NOWAIT); \    if (!mem_ptr)panic("SOUND: Cannot allocate memory\n");}
 end_define
 
 begin_comment
@@ -708,8 +806,10 @@ directive|define
 name|ALLOC_DMA_CHN
 parameter_list|(
 name|chn
+parameter_list|,
+name|deviceID
 parameter_list|)
-value|({ 0; })
+value|({0; } )
 end_define
 
 begin_define
@@ -744,6 +844,141 @@ parameter_list|(
 name|irq_no
 parameter_list|)
 end_define
+
+begin_comment
+comment|/*  * The macro DECLARE_FILE() adds an entry to struct fileinfo referencing the  * connected filestructure.  * This entry must be initialized in sound_open() in soundcard.c  *  * ISSET_FILE_FLAG() allows checking of flags like O_NONBLOCK on files  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECLARE_FILE
+parameter_list|()
+value|struct file *filp
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISSET_FILE_FLAG
+parameter_list|(
+name|fileinfo
+parameter_list|,
+name|flag
+parameter_list|)
+value|(fileinfo->filp->f_flag& (flag) ? \ 					  1 : 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISSET_FILE_FLAG
+parameter_list|(
+name|fileinfo
+parameter_list|,
+name|flag
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|INT_HANDLER_PROTO
+parameter_list|()
+value|void(*hndlr)(int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT_HANDLER_PARMS
+parameter_list|(
+name|irq
+parameter_list|,
+name|parms
+parameter_list|)
+value|int irq
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT_HANDLER_CALL
+parameter_list|(
+name|irq
+parameter_list|)
+value|irq
+end_define
+
+begin_comment
+comment|/*  * For select call...  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_SELECT
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|proc
+name|select_table
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SEL_IN
+value|FREAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEL_OUT
+value|FWRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEL_EX
+value|0
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|selinfo
+name|selinfo
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
