@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.45 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.46 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.45 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.46 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,6 +355,21 @@ name|trycanon
 init|=
 name|FALSE
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|resfunc
+function_decl|)
+parameter_list|()
+function_decl|;
+specifier|extern
+name|int
+name|res_query
+argument_list|()
+decl_stmt|,
+name|res_search
+argument_list|()
+decl_stmt|;
 name|u_short
 name|prefer
 index|[
@@ -482,13 +497,33 @@ condition|)
 goto|goto
 name|punt
 goto|;
+if|if
+condition|(
+name|HasWildcardMX
+operator|&&
+name|ConfigLevel
+operator|>=
+literal|6
+condition|)
+name|resfunc
+operator|=
+name|res_query
+expr_stmt|;
+else|else
+name|resfunc
+operator|=
+name|res_search
+expr_stmt|;
 name|errno
 operator|=
 literal|0
 expr_stmt|;
 name|n
 operator|=
-name|res_search
+call|(
+modifier|*
+name|resfunc
+call|)
 argument_list|(
 name|host
 argument_list|,
