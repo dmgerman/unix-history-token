@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)common.c	4.8 (Berkeley) %G%"
+literal|"@(#)common.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -318,6 +318,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* short banner instead of normal header */
+end_comment
+
+begin_decl_stmt
+name|short
+name|HL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print header last */
 end_comment
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.h	4.8	85/02/07	*/
+comment|/*	lp.h	4.9	85/02/27	*/
 end_comment
 
 begin_comment
@@ -424,6 +424,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* short banner instead of normal header */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|short
+name|HL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print header last */
 end_comment
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.23 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1692,6 +1692,9 @@ if|if
 condition|(
 operator|!
 name|SH
+operator|&&
+operator|!
+name|HL
 condition|)
 name|banner
 argument_list|(
@@ -1902,6 +1905,27 @@ literal|0
 index|]
 condition|)
 block|{
+case|case
+literal|'L'
+case|:
+comment|/* identification line */
+if|if
+condition|(
+operator|!
+name|SH
+operator|&&
+name|HL
+condition|)
+name|banner
+argument_list|(
+name|line
+operator|+
+literal|1
+argument_list|,
+name|jobname
+argument_list|)
+expr_stmt|;
+continue|continue;
 case|case
 literal|'M'
 case|:
@@ -5890,6 +5914,13 @@ operator|=
 name|pgetflag
 argument_list|(
 literal|"sb"
+argument_list|)
+expr_stmt|;
+name|HL
+operator|=
+name|pgetflag
+argument_list|(
+literal|"hl"
 argument_list|)
 expr_stmt|;
 name|RW
