@@ -942,6 +942,9 @@ argument_list|,
 name|FORCECLOSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CODA_VERBOSE
 name|printf
 argument_list|(
 literal|"coda_unmount: active = %d, vflush active %d\n"
@@ -951,6 +954,8 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 literal|0
