@@ -997,43 +997,64 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MAXUCODESIZE
+value|192
+end_define
+
+begin_struct
+struct|struct
+name|fxp_cb_ucode
+block|{
+name|void
+modifier|*
+name|fill
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|u_int16_t
+name|cb_status
+decl_stmt|;
+name|u_int16_t
+name|cb_command
+decl_stmt|;
+name|u_int32_t
+name|link_addr
+decl_stmt|;
+name|u_int32_t
+name|ucode
+index|[
+name|MAXUCODESIZE
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
-comment|/*  * Number of DMA segments in a TxCB. Note that this is carefully  * chosen to make the total struct size an even power of two. It's  * critical that no TxCB be split across a page boundry since  * no attempt is made to allocate physically contiguous memory.  *   */
+comment|/*  * Number of DMA segments in a TxCB. Note that this is carefully  * chosen to make the total struct size an even power of two. It's  * critical that no TxCB be split across a page boundry since  * no attempt is made to allocate physically contiguous memory.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
+begin_define
+define|#
+directive|define
+name|FXP_TXCB_FIXED
+value|16
+end_define
 
 begin_comment
-comment|/* XXX - should be conditional on pointer size */
+comment|/* cb_status .. tbd_number */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FXP_NTXSEG
-value|28
+value|((256 - (sizeof(void *) * 2) - FXP_TXCB_FIXED) / 8)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|FXP_NTXSEG
-value|29
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -1170,7 +1191,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FXP_CB_COMMAND_RESRV
+name|FXP_CB_COMMAND_UCODE
 value|0x5
 end_define
 
@@ -1715,6 +1736,83 @@ directive|define
 name|FXP_PHY_82555B
 value|11
 end_define
+
+begin_comment
+comment|/*  * Chip revision values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82557
+value|1
+end_define
+
+begin_comment
+comment|/* catchall 82557 chip type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82558_A4
+value|4
+end_define
+
+begin_comment
+comment|/* 82558 A4 stepping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82558_B0
+value|5
+end_define
+
+begin_comment
+comment|/* 82558 B0 stepping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82559_A0
+value|8
+end_define
+
+begin_comment
+comment|/* 82559 A0 stepping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82559S_A
+value|9
+end_define
+
+begin_comment
+comment|/* 82559S A stepping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82550
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|FXP_REV_82550_C
+value|13
+end_define
+
+begin_comment
+comment|/* 82550 C stepping */
+end_comment
 
 end_unit
 
