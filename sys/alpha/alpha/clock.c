@@ -750,6 +750,12 @@ name|void
 name|cpu_initclocks
 parameter_list|()
 block|{
+specifier|static
+name|int
+name|once
+init|=
+literal|1
+decl_stmt|;
 name|u_int32_t
 name|freq
 decl_stmt|;
@@ -873,11 +879,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ncpus
-operator|==
-literal|1
+name|once
 condition|)
 block|{
+name|once
+operator|=
+literal|0
+expr_stmt|;
 name|alpha_timecounter
 operator|.
 name|tc_frequency
@@ -1050,7 +1058,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"No i8254- using firmware default of %u Hz\n"
+literal|"Using firmware default frequency of %u Hz\n"
 argument_list|,
 name|firmware_freq
 argument_list|)
