@@ -2813,17 +2813,23 @@ argument_list|)
 block|}
 block|,
 block|{
-literal|" Periodic SNAPs at ftp.freebsd.org, "
-name|ftp
-operator|.
-name|freebsd
-operator|.
-name|org
-literal|", NULL, dmenuSetVariable, NULL, 	VAR_FTP_PATH _AS("
-operator|=
-name|ftp
-operator|:
-comment|//ftp.freebsd.org/pub/FreeBSD/snapshots/") },
+literal|" Periodic SNAPs at ftp.freebsd.org"
+block|,
+literal|"ftp.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+name|_AS
+argument_list|(
+literal|"=ftp://ftp.freebsd.org/pub/FreeBSD/snapshots/"
+argument_list|)
+block|}
+block|,
 block|{
 literal|"Argentina"
 block|,
@@ -4323,10 +4329,13 @@ name|NULL
 block|}
 block|}
 block|}
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuMediaTape
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4351,10 +4360,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuNetworkDevice
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4381,11 +4393,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The media selection menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuMedia
-operator|=
+init|=
 block|{
 name|DMENU_NORMAL_TYPE
 operator||
@@ -4509,11 +4527,17 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The distributions menu */
+end_comment
+
+begin_decl_stmt
 name|DMenu
 name|MenuDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -4690,10 +4714,13 @@ name|NULL
 block|}
 block|}
 block|, }
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|DMenu
 name|MenuSubDistributions
-operator|=
+init|=
 block|{
 name|DMENU_CHECKLIST_TYPE
 operator||
@@ -5185,11 +5212,11 @@ block|{
 name|NULL
 block|}
 block|}
-block|, }
-decl_stmt|;
+decl_stmt|,
 end_decl_stmt
 
 begin_decl_stmt
+unit|};
 name|DMenu
 name|MenuCRYPTODistributions
 init|=
