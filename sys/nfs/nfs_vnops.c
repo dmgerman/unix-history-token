@@ -9910,6 +9910,11 @@ argument_list|,
 name|cnp
 argument_list|)
 expr_stmt|;
+name|vput
+argument_list|(
+name|tdvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EXDEV
