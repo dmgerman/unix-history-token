@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.9 (Berkeley) %G%"
+literal|"@(#)slave.c	2.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2636,24 +2636,6 @@ operator|<=
 literal|0
 condition|)
 break|break;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|loopname
-argument_list|,
-name|msg
-operator|->
-name|tsp_name
-argument_list|)
-expr_stmt|;
-name|rloopseq
-operator|=
-name|msg
-operator|->
-name|tsp_seq
-expr_stmt|;
 name|bytenetorder
 argument_list|(
 name|msg
