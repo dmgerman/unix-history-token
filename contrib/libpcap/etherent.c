@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/etherent.c,v 1.21 2000/07/11 00:37:04 assar Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/etherent.c,v 1.21.6.1 2003/11/15 23:26:38 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

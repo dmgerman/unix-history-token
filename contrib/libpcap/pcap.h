@@ -4,7 +4,7 @@ comment|/* -*- Mode: c; tab-width: 8; indent-tabs-mode: 1; c-basic-offset: 8; -*
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap.h,v 1.34 2001/12/09 05:10:03 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap.h,v 1.45.2.4 2004/01/27 22:56:20 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,27 @@ directive|define
 name|lib_pcap_h
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pcap-stdinc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* WIN32 */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -31,11 +52,31 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIN32 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PCAP_DONT_INCLUDE_PCAP_BPF_H
+end_ifndef
+
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
+file|<pcap-bpf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -171,6 +212,16 @@ name|u_int
 name|ps_ifdrop
 decl_stmt|;
 comment|/* drops by interface XXX not yet supported */
+ifdef|#
+directive|ifdef
+name|WIN32
+name|u_int
+name|bs_capt
+decl_stmt|;
+comment|/* number of packets that reach the application */
+endif|#
+directive|endif
+comment|/* WIN32 */
 block|}
 struct|;
 comment|/*  * Item in a list of interfaces.  */
@@ -197,7 +248,7 @@ name|pcap_addr
 modifier|*
 name|addresses
 decl_stmt|;
-name|u_int
+name|bpf_u_int32
 name|flags
 decl_stmt|;
 comment|/* PCAP_IF_ interface flags */
@@ -274,6 +325,7 @@ function_decl|;
 name|int
 name|pcap_lookupnet
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -291,6 +343,7 @@ name|pcap_t
 modifier|*
 name|pcap_open_live
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -370,6 +423,30 @@ modifier|*
 parameter_list|,
 name|struct
 name|pcap_pkthdr
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_next_ex
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|struct
+name|pcap_pkthdr
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|pcap_breakloop
+parameter_list|(
+name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -515,6 +592,30 @@ name|int
 parameter_list|)
 function_decl|;
 name|int
+name|pcap_datalink_name_to_val
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|pcap_datalink_val_to_name
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|pcap_datalink_val_to_description
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+name|int
 name|pcap_snapshot
 parameter_list|(
 name|pcap_t
@@ -570,6 +671,13 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|int
+name|pcap_dump_flush
+parameter_list|(
+name|pcap_dumper_t
+modifier|*
+parameter_list|)
+function_decl|;
 name|void
 name|pcap_dump_close
 parameter_list|(
@@ -593,6 +701,14 @@ name|u_char
 modifier|*
 parameter_list|)
 function_decl|;
+name|FILE
+modifier|*
+name|pcap_dump_file
+parameter_list|(
+name|pcap_dumper_t
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|pcap_findalldevs
 parameter_list|(
@@ -609,6 +725,14 @@ name|pcap_freealldevs
 parameter_list|(
 name|pcap_if_t
 modifier|*
+parameter_list|)
+function_decl|;
+specifier|const
+name|char
+modifier|*
+name|pcap_lib_version
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 comment|/* XXX this guy lives in the bpf tree */
@@ -660,6 +784,92 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|WIN32
+comment|/*  * Win32 definitions  */
+name|int
+name|pcap_setbuff
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|dim
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_setmode
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_sendpacket
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|u_char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+name|int
+name|pcap_setmintocopy
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
+ifdef|#
+directive|ifdef
+name|WPCAP
+comment|/* Include file with the wpcap-specific extensions */
+include|#
+directive|include
+file|<Win32-Extensions.h>
+endif|#
+directive|endif
+define|#
+directive|define
+name|MODE_CAPT
+value|0
+define|#
+directive|define
+name|MODE_STAT
+value|1
+define|#
+directive|define
+name|MODE_MON
+value|2
+else|#
+directive|else
+comment|/*  * UN*X definitions  */
+name|int
+name|pcap_get_selectable_fd
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* WIN32 */
 ifdef|#
 directive|ifdef
 name|__cplusplus
