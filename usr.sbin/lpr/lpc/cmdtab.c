@@ -9,13 +9,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)cmdtab.c	8.1 (Berkeley) 6/6/93"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,9 +184,11 @@ literal|"abort"
 block|,
 name|aborthelp
 block|,
-name|doabort
+literal|0
 block|,
 literal|1
+block|,
+name|doabort
 block|}
 block|,
 block|{
@@ -189,9 +196,11 @@ literal|"clean"
 block|,
 name|cleanhelp
 block|,
-name|clean
+literal|0
 block|,
 literal|1
+block|,
+name|clean
 block|}
 block|,
 block|{
@@ -199,9 +208,11 @@ literal|"enable"
 block|,
 name|enablehelp
 block|,
-name|enable
+literal|0
 block|,
 literal|1
+block|,
+name|enable
 block|}
 block|,
 block|{
@@ -219,9 +230,11 @@ literal|"disable"
 block|,
 name|disablehelp
 block|,
-name|disable
+literal|0
 block|,
 literal|1
+block|,
+name|disable
 block|}
 block|,
 block|{
@@ -259,9 +272,11 @@ literal|"restart"
 block|,
 name|restarthelp
 block|,
-name|restart
+literal|0
 block|,
 literal|0
+block|,
+name|restart
 block|}
 block|,
 block|{
@@ -269,9 +284,11 @@ literal|"start"
 block|,
 name|starthelp
 block|,
-name|startcmd
+literal|0
 block|,
 literal|1
+block|,
+name|startcmd
 block|}
 block|,
 block|{
@@ -279,9 +296,11 @@ literal|"status"
 block|,
 name|statushelp
 block|,
-name|status
+literal|0
 block|,
 literal|0
+block|,
+name|status
 block|}
 block|,
 block|{
@@ -289,9 +308,11 @@ literal|"stop"
 block|,
 name|stophelp
 block|,
-name|stop
+literal|0
 block|,
 literal|1
+block|,
+name|stop
 block|}
 block|,
 block|{
@@ -309,9 +330,11 @@ literal|"up"
 block|,
 name|uphelp
 block|,
-name|up
+literal|0
 block|,
 literal|1
+block|,
+name|up
 block|}
 block|,
 block|{

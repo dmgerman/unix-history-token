@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * Line printer control program.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|printer
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|cmd
@@ -41,6 +47,20 @@ name|int
 name|c_priv
 decl_stmt|;
 comment|/* privileged command */
+name|void
+argument_list|(
+argument|*c_generic
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|printer
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* generic command */
 block|}
 struct|;
 end_struct

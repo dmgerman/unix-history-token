@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lpc.c,v 1.5 1997/09/24 06:47:46 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -131,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -458,6 +458,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+operator|->
+name|c_generic
+operator|!=
+literal|0
+condition|)
+name|generic
+argument_list|(
+name|c
+operator|->
+name|c_generic
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+else|else
 call|(
 modifier|*
 name|c
@@ -717,6 +737,26 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|c
+operator|->
+name|c_generic
+operator|!=
+literal|0
+condition|)
+name|generic
+argument_list|(
+name|c
+operator|->
+name|c_generic
+argument_list|,
+name|margc
+argument_list|,
+name|margv
+argument_list|)
+expr_stmt|;
+else|else
 call|(
 modifier|*
 name|c

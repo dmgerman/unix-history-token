@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lprm.c,v 1.3 1997/09/24 06:48:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,16 +255,29 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|arg
+decl_stmt|,
+modifier|*
+name|printer
 decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|p
 decl_stmt|;
+specifier|static
+name|char
+name|root
+index|[]
+init|=
+literal|"root"
+decl_stmt|;
+name|printer
+operator|=
+name|NULL
+expr_stmt|;
 name|uid
 operator|=
 name|getuid
@@ -307,6 +320,33 @@ argument_list|,
 name|LOG_LPR
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Bogus code later checks for string equality between  	 * `person' and "root", so if we are root, better make sure 	 * that code will succeed. 	 */
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|person
+operator|=
+name|root
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|person
+operator|=
+name|getlogin
+argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -323,6 +363,8 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
+literal|0
+argument_list|,
 literal|"Who are you?"
 argument_list|)
 expr_stmt|;
@@ -342,6 +384,8 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
+literal|0
+argument_list|,
 literal|"Your name is too long"
 argument_list|)
 expr_stmt|;
@@ -358,6 +402,7 @@ name|person
 operator|=
 name|luser
 expr_stmt|;
+block|}
 while|while
 condition|(
 operator|--
@@ -475,6 +520,8 @@ name|MAXREQUESTS
 condition|)
 name|fatal
 argument_list|(
+literal|0
+argument_list|,
 literal|"Too many requests"
 argument_list|)
 expr_stmt|;
@@ -500,6 +547,8 @@ name|MAXUSERS
 condition|)
 name|fatal
 argument_list|(
+literal|0
+argument_list|,
 literal|"Too many users"
 argument_list|)
 expr_stmt|;
@@ -536,7 +585,9 @@ operator|=
 name|DEFLP
 expr_stmt|;
 name|rmjob
-argument_list|()
+argument_list|(
+name|printer
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(

@@ -100,5 +100,12 @@ name|_PATH_VFONTS
 value|"/usr/libdata/vfont/S"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_CHKPRINTCAP
+value|"/usr/sbin/chkprintcap"
+end_define
+
 end_unit
 
