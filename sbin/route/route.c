@@ -4087,6 +4087,12 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
+block|{
 name|oerrno
 operator|=
 name|errno
@@ -4180,11 +4186,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -4246,12 +4247,15 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|exit
 argument_list|(
-literal|1
+name|ret
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
