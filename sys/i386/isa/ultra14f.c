@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.43 1995/12/15 00:11:27 bde Exp $  */
+comment|/*  * Ported for use with the UltraStor 14f by Gary Close (gclose@wvnvms.wvnet.edu)  * Slight fixes to timeouts to run with the 34F  * Thanks to Julian Elischer for advice and help with this port.  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  * slight mod to make work with 34F as well: Wed Jun  2 18:05:48 WST 1993  *  * today: Fri Jun  2 17:21:03 EST 1994  * added 24F support  ++sg  *  *      $Id: ultra14f.c,v 1.44 1996/01/07 19:22:39 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -259,7 +259,6 @@ comment|/************************** board definitions **************************
 end_comment
 
 begin_struct
-specifier|static
 struct|struct
 name|uha_reg
 block|{
@@ -312,16 +311,10 @@ name|icmptr
 decl_stmt|;
 comment|/* incoming mail ptr		*/
 block|}
-modifier|*
-name|uhareg
-index|[
-name|NUHA
-index|]
 struct|;
 end_struct
 
 begin_struct
-specifier|static
 struct|struct
 name|uha_bits
 block|{
@@ -374,11 +367,6 @@ name|char
 name|icm_ack
 decl_stmt|;
 block|}
-modifier|*
-name|uhabits
-index|[
-name|NUHA
-index|]
 struct|;
 end_struct
 
@@ -1871,13 +1859,6 @@ name|mscp
 parameter_list|)
 block|{
 name|int
-name|port
-init|=
-name|uha
-operator|->
-name|baseport
-decl_stmt|;
-name|int
 name|spincount
 init|=
 literal|100000
@@ -2026,13 +2007,6 @@ modifier|*
 name|mscp
 parameter_list|)
 block|{
-name|int
-name|port
-init|=
-name|uha
-operator|->
-name|baseport
-decl_stmt|;
 name|int
 name|spincount
 init|=
@@ -2292,13 +2266,6 @@ name|int
 name|wait
 parameter_list|)
 block|{
-name|int
-name|port
-init|=
-name|uha
-operator|->
-name|baseport
-decl_stmt|;
 name|struct
 name|uha_reg
 modifier|*
@@ -2324,8 +2291,6 @@ name|ur
 operator|->
 name|sint
 decl_stmt|;
-name|retry
-label|:
 while|while
 condition|(
 operator|--
@@ -3378,8 +3343,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|done
-label|:
 name|xs
 operator|->
 name|flags
@@ -3850,13 +3813,6 @@ modifier|*
 name|uha
 decl_stmt|;
 block|{
-name|unsigned
-name|char
-name|ad
-index|[
-literal|4
-index|]
-decl_stmt|;
 specifier|volatile
 name|unsigned
 name|char
@@ -3893,9 +3849,6 @@ init|=
 name|uha
 operator|->
 name|baseport
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|int
 name|resetcount
@@ -4462,8 +4415,6 @@ init|=
 literal|0
 decl_stmt|,
 name|irq
-decl_stmt|,
-name|i
 decl_stmt|;
 name|int
 name|resetcount
@@ -4827,8 +4778,8 @@ index|[
 literal|3
 index|]
 operator|=
-literal|"0123456789abcdef"
-index|[
+name|hex2ascii
+argument_list|(
 operator|(
 name|p2
 operator|>>
@@ -4836,27 +4787,27 @@ literal|4
 operator|)
 operator|&
 literal|0x0f
-index|]
+argument_list|)
 expr_stmt|;
 name|id
 index|[
 literal|4
 index|]
 operator|=
-literal|"0123456789abcdef"
-index|[
+name|hex2ascii
+argument_list|(
 name|p2
 operator|&
 literal|0x0f
-index|]
+argument_list|)
 expr_stmt|;
 name|id
 index|[
 literal|5
 index|]
 operator|=
-literal|"0123456789abcdef"
-index|[
+name|hex2ascii
+argument_list|(
 operator|(
 name|p3
 operator|>>
@@ -4864,7 +4815,7 @@ literal|4
 operator|)
 operator|&
 literal|0x0f
-index|]
+argument_list|)
 expr_stmt|;
 name|id
 index|[
@@ -5205,14 +5156,6 @@ name|xs
 decl_stmt|;
 block|{
 name|struct
-name|scsi_sense_data
-modifier|*
-name|s1
-decl_stmt|,
-modifier|*
-name|s2
-decl_stmt|;
-name|struct
 name|mscp
 modifier|*
 name|mscp
@@ -5226,16 +5169,6 @@ name|int
 name|seg
 decl_stmt|;
 comment|/* scatter gather seg being worked on */
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|rc
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|thiskv
 decl_stmt|;
@@ -5256,28 +5189,12 @@ decl_stmt|,
 name|flags
 decl_stmt|;
 name|struct
-name|iovec
-modifier|*
-name|iovp
-decl_stmt|;
-name|struct
 name|uha_data
 modifier|*
 name|uha
 decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|unsigned
-name|int
-name|stat
-decl_stmt|;
-name|int
-name|port
-init|=
-name|uha
-operator|->
-name|baseport
 decl_stmt|;
 name|unsigned
 name|long
