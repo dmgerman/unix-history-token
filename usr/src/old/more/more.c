@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.19 (Berkeley) %G%"
+literal|"@(#)more.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|HELPFILE
-value|"/usr/lib/more.help"
+value|"/usr/lib/omore.help"
 end_define
 
 begin_define
