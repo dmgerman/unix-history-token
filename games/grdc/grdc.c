@@ -77,7 +77,7 @@ comment|/* it won't be */
 end_comment
 
 begin_decl_stmt
-name|long
+name|time_t
 name|now
 decl_stmt|;
 end_decl_stmt
