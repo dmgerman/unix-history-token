@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.56	82/12/28	*/
+comment|/*	kern_proc.c	4.57	83/01/17	*/
 end_comment
 
 begin_include
@@ -1851,19 +1851,6 @@ operator|(
 name|caddr_t
 operator|)
 name|ap
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|suword
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ucp
 argument_list|,
 literal|0
 argument_list|)
