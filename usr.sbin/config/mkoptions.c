@@ -459,13 +459,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:%d: unknown option \"%s\"\n"
+literal|"%s: unknown option \"%s\"\n"
 argument_list|,
 name|PREFIX
-argument_list|,
-name|op
-operator|->
-name|op_line
 argument_list|,
 name|op
 operator|->
@@ -623,13 +619,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s:%d: option \"%s\" redefined from %s to %s\n"
+literal|"%s: option \"%s\" redefined from %s to %s\n"
 argument_list|,
 name|PREFIX
-argument_list|,
-name|op
-operator|->
-name|op_line
 argument_list|,
 name|op
 operator|->

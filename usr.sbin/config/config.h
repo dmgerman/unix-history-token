@@ -274,10 +274,6 @@ modifier|*
 name|op_value
 decl_stmt|;
 name|int
-name|op_line
-decl_stmt|;
-comment|/* line number for error-reporting */
-name|int
 name|op_ownfile
 decl_stmt|;
 comment|/* true = own file, false = makefile */
