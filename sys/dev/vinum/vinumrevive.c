@@ -2390,32 +2390,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|plex
-operator|->
-name|stripesize
-operator|!=
-literal|0
-condition|)
-comment|/* we're striped, don't init more than */
-name|sd
-operator|->
-name|init_blocksize
-operator|=
-name|min
-argument_list|(
-name|DEFAULT_REVIVE_BLOCKSIZE
-argument_list|,
-comment|/* one block at a time */
-name|plex
-operator|->
-name|stripesize
-operator|<<
-name|DEV_BSHIFT
-argument_list|)
-expr_stmt|;
-else|else
 name|sd
 operator|->
 name|init_blocksize
