@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.23	82/11/26	*/
+comment|/*	ut.c	4.24	82/12/05	*/
 end_comment
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_include
@@ -769,10 +775,6 @@ operator|&
 name|UTDS_PIP
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* this needs to be fixed */
 name|sleep
 argument_list|(
 operator|(
@@ -786,8 +788,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|get
 goto|;
