@@ -1808,7 +1808,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MOUNT_NAME
-value|10
+value|9
 end_define
 
 begin_define
@@ -1843,7 +1843,7 @@ begin_define
 define|#
 directive|define
 name|PART_OFF
-value|39
+value|38
 end_define
 
 begin_define
@@ -2678,8 +2678,10 @@ argument_list|,
 literal|"UFS"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|strcat
+argument_list|(
+name|newfs
+argument_list|,
 operator|(
 operator|(
 name|PartInfo
@@ -2696,12 +2698,10 @@ name|private_data
 operator|)
 operator|->
 name|soft
-condition|)
-name|strcat
-argument_list|(
-name|newfs
-argument_list|,
+condition|?
 literal|"+S"
+else|:
+literal|"  "
 argument_list|)
 expr_stmt|;
 name|strcat
