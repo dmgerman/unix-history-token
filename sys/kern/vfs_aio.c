@@ -4304,12 +4304,17 @@ name|userp
 operator|->
 name|p_vmspace
 expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
 name|mycp
 operator|->
 name|p_vmspace
 operator|->
 name|vm_refcnt
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* Activate the new mapping. */
 name|pmap_activate

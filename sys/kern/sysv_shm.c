@@ -4282,8 +4282,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4302,6 +4300,12 @@ operator|->
 name|vm_shm
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -4343,6 +4347,12 @@ name|shm
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|base
