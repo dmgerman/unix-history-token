@@ -6,16 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"streams.h"
-end_include
-
-begin_comment
-comment|/* generated file.. defines NSTREAMS */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
