@@ -3169,9 +3169,6 @@ name|fp
 argument_list|,
 name|FIONBIO
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|tmp
 argument_list|,
@@ -3227,9 +3224,6 @@ name|fp
 argument_list|,
 name|FIOASYNC
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|tmp
 argument_list|,
