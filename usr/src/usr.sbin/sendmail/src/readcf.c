@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.35 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4588,6 +4588,20 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|==
+name|val
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"readcf: null option name"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|*
 name|p
 operator|==
@@ -4704,8 +4718,21 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
+name|isascii
+argument_list|(
+name|opt
+argument_list|)
+operator|&&
+name|isprint
+argument_list|(
+name|opt
+argument_list|)
+condition|?
+literal|"setoption %s (%c)=%s"
+else|:
 literal|"setoption %s (0x%x)=%s"
 argument_list|,
 name|o
@@ -4725,6 +4752,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	**  See if this option is preset for us. 	*/
 if|if
 condition|(
