@@ -708,7 +708,7 @@ argument_list|(
 name|fstype
 argument_list|)
 operator|>=
-name|MNAMELEN
+name|MFSNAMELEN
 operator|-
 literal|1
 operator|)
@@ -719,7 +719,7 @@ argument_list|(
 name|fspath
 argument_list|)
 operator|>=
-name|MFSNAMELEN
+name|MNAMELEN
 operator|-
 literal|1
 operator|)
