@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.161 1998/04/15 17:46:30 bde Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.162 1998/04/17 22:36:51 des Exp $  */
 end_comment
 
 begin_comment
@@ -9937,7 +9937,7 @@ operator|)
 expr_stmt|;
 name|soff
 operator|=
-name|max
+name|qmax
 argument_list|(
 name|sv
 argument_list|,
@@ -9946,7 +9946,7 @@ argument_list|)
 expr_stmt|;
 name|eoff
 operator|=
-name|min
+name|qmin
 argument_list|(
 name|ev
 argument_list|,
