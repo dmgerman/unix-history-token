@@ -8252,16 +8252,7 @@ name|r_gdt
 argument_list|)
 expr_stmt|;
 comment|/* make ldt memory segments */
-comment|/* 	 * The data segment limit must not cover the user area because we 	 * don't want the user area to be writable in copyout() etc. (page 	 * level protection is lost in kernel mode on 386's).  Also, we 	 * don't want the user area to be writable directly (page level 	 * protection of the user area is not available on 486's with 	 * CR0_WP set, because there is no user-read/kernel-write mode). 	 * 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
-define|#
-directive|define
-name|VM_END_USER_RW_ADDRESS
-value|VM_MAXUSER_ADDRESS
-comment|/* 	 * The code segment limit has to cover the user area until we move 	 * the signal trampoline out of the user area.  This is safe because 	 * the code segment cannot be written to directly. 	 */
-define|#
-directive|define
-name|VM_END_USER_R_ADDRESS
-value|(VM_END_USER_RW_ADDRESS + UPAGES * PAGE_SIZE)
+comment|/* 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
 name|ldt_segs
 index|[
 name|LUCODE_SEL
@@ -8271,7 +8262,7 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-name|VM_END_USER_R_ADDRESS
+name|VM_MAXUSER_ADDRESS
 operator|-
 literal|1
 argument_list|)
@@ -8285,7 +8276,7 @@ name|ssd_limit
 operator|=
 name|atop
 argument_list|(
-name|VM_END_USER_RW_ADDRESS
+name|VM_MAXUSER_ADDRESS
 operator|-
 literal|1
 argument_list|)
