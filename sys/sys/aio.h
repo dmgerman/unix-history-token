@@ -515,6 +515,22 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Forward declarations for prototypes below. */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|socket
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockbuf
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|aio_proc_rundown
