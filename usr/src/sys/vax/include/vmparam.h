@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vmparam.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vmparam.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -70,19 +70,30 @@ value|UPAGES
 end_define
 
 begin_comment
-comment|/*  * Virtual memory related constants, all in clicks  */
+comment|/*  * Virtual memory related constants, all in bytes  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXTSIZ
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|MAXTSIZ
-value|(6*CLSIZE*1024)
+value|(6*1024*1024)
 end_define
 
 begin_comment
 comment|/* max text size */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -94,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|DFLDSIZ
-value|(6*1024*1024/NBPG)
+value|(6*1024*1024)
 end_define
 
 begin_comment
@@ -116,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|MAXDSIZ
-value|(16*1024*1024/NBPG)
+value|(16*1024*1024)
 end_define
 
 begin_comment
@@ -138,7 +149,7 @@ begin_define
 define|#
 directive|define
 name|DFLSSIZ
-value|(512*1024/NBPG)
+value|(512*1024)
 end_define
 
 begin_comment
