@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * Copyright (c) 2002,2003 Hewlett-Packard Company  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice shall be included  * in all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL  * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -53,6 +49,14 @@ name|uint64_t
 modifier|*
 name|context
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|prime_registers
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -138,10 +142,7 @@ operator|)
 name|uenv
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|f1
+name|prime_registers
 argument_list|()
 expr_stmt|;
 name|uwx_free
@@ -157,7 +158,7 @@ end_function
 
 begin_function
 name|int
-name|f1
+name|func1
 parameter_list|(
 name|void
 parameter_list|)
@@ -169,7 +170,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"In f1():\n"
+literal|"In func1():\n"
 argument_list|)
 expr_stmt|;
 name|dump_context
@@ -182,7 +183,7 @@ name|uenv
 argument_list|)
 expr_stmt|;
 return|return
-name|f2
+name|func2
 argument_list|()
 return|;
 block|}
@@ -190,7 +191,7 @@ end_function
 
 begin_function
 name|int
-name|f2
+name|func2
 parameter_list|(
 name|void
 parameter_list|)
@@ -202,7 +203,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"In f2():\n"
+literal|"In func2():\n"
 argument_list|)
 expr_stmt|;
 name|dump_context
@@ -215,7 +216,7 @@ name|uenv
 argument_list|)
 expr_stmt|;
 return|return
-name|f3
+name|func3
 argument_list|()
 return|;
 block|}
@@ -223,7 +224,7 @@ end_function
 
 begin_function
 name|int
-name|f3
+name|func3
 parameter_list|(
 name|void
 parameter_list|)
@@ -235,7 +236,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"In f3():\n"
+literal|"In func3():\n"
 argument_list|)
 expr_stmt|;
 name|dump_context
@@ -248,7 +249,7 @@ name|uenv
 argument_list|)
 expr_stmt|;
 return|return
-name|f4
+name|func4
 argument_list|()
 return|;
 block|}
@@ -256,7 +257,7 @@ end_function
 
 begin_function
 name|int
-name|f4
+name|func4
 parameter_list|(
 name|void
 parameter_list|)
@@ -270,7 +271,17 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-name|f5
+name|uint64_t
+modifier|*
+name|p
+decl_stmt|;
+name|uint64_t
+name|disp
+decl_stmt|;
+name|uint64_t
+name|val
+decl_stmt|;
+name|func5
 argument_list|(
 name|foo
 argument_list|)
@@ -280,9 +291,14 @@ argument_list|(
 name|uenv
 argument_list|)
 expr_stmt|;
+name|uwx_init_history
+argument_list|(
+name|uenv
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"In f4():\n"
+literal|"In func4():\n"
 argument_list|)
 expr_stmt|;
 name|dump_context
@@ -307,11 +323,32 @@ argument_list|(
 name|uenv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|UWX_OK
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"uwx_step returned %d\n"
 argument_list|,
 name|status
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|status
+operator|=
+name|uwx_get_reg
+argument_list|(
+name|uenv
+argument_list|,
+name|UWX_REG_PFS
+argument_list|,
+operator|&
+name|val
 argument_list|)
 expr_stmt|;
 if|if
@@ -320,7 +357,16 @@ name|status
 operator|!=
 name|UWX_OK
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uwx_get_reg returned %d\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|printf
 argument_list|(
 literal|"After step:\n"
@@ -335,6 +381,134 @@ operator|)
 name|uenv
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|uwx_get_spill_loc
+argument_list|(
+name|uenv
+argument_list|,
+name|UWX_REG_IP
+argument_list|,
+operator|&
+name|disp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|UWX_OK
+condition|)
+block|{
+name|p
+operator|=
+operator|(
+name|uint64_t
+operator|*
+operator|)
+operator|(
+name|disp
+operator|&
+operator|~
+literal|0x7LL
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|disp
+operator|&
+literal|0x7
+operator|)
+operator|==
+name|UWX_DISP_RSTK
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"IP spilled to backing store %08x = %08x\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|p
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|*
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|disp
+operator|&
+literal|0x7
+operator|)
+operator|==
+name|UWX_DISP_MSTK
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"IP spilled to mem stack %08x = %08x\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|p
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|*
+name|p
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|disp
+operator|&
+literal|0x7
+operator|)
+operator|==
+name|UWX_DISP_REG
+argument_list|(
+literal|0
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"IP found in register %08x\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|disp
+operator|>>
+literal|4
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"IP history not available\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 literal|0
@@ -344,7 +518,7 @@ end_function
 
 begin_function
 name|int
-name|f5
+name|func5
 parameter_list|(
 name|int
 modifier|*
