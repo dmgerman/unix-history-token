@@ -5123,11 +5123,6 @@ operator|&
 name|_thread_list_lock
 argument_list|)
 expr_stmt|;
-name|THR_GCLIST_ADD
-argument_list|(
-name|thread
-argument_list|)
-expr_stmt|;
 comment|/* Use thread_list_lock */
 name|active_threads
 operator|--
@@ -5161,12 +5156,35 @@ operator|&
 name|_thread_list_lock
 argument_list|)
 expr_stmt|;
+comment|/* Possible use a signalcontext wrapper to call exit ? */
+name|curkse
+operator|->
+name|k_curthread
+operator|=
+name|thread
+expr_stmt|;
+name|_tcb_set
+argument_list|(
+name|curkse
+operator|->
+name|k_kcb
+argument_list|,
+name|thread
+operator|->
+name|tcb
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|THR_GCLIST_ADD
+argument_list|(
+name|thread
+argument_list|)
+expr_stmt|;
 name|KSE_LOCK_RELEASE
 argument_list|(
 name|curkse
