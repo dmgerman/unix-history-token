@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)init_main.c	8.9 (Berkeley) 1/21/94  * $Id: init_main.c,v 1.118 1999/05/05 12:20:23 jb Exp $  */
+comment|/*  * Copyright (c) 1995 Terrence R. Lambert  * All rights reserved.  *  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)init_main.c	8.9 (Berkeley) 1/21/94  * $Id: init_main.c,v 1.119 1999/05/07 17:37:08 des Exp $  */
 end_comment
 
 begin_include
@@ -186,20 +186,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|void
-name|__main
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-decl|main
+name|mi_startup
 name|__P
 argument_list|(
 operator|(
@@ -352,7 +339,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Promiscuous argument pass for start_init()  *  * This is a kludge because we use a return from main() rather than a call  * to a new routine in locore.s to kick the kernel alive from locore.s.  */
+comment|/*  * Promiscuous argument pass for start_init()  *  * This is a kludge because we use a return from mi_startup() rather than a call  * to a new routine in locore.s to kick the kernel alive from locore.s.  */
 end_comment
 
 begin_decl_stmt
@@ -362,26 +349,6 @@ modifier|*
 name|init_framep
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>=
-literal|2
-end_if
-
-begin_function
-name|void
-name|__main
-parameter_list|()
-block|{}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * This ensures that there is at least one entry so that the sysinit_set  * symbol is not undefined.  A sybsystem ID of SI_SUB_DUMMY is never  * executed.  */
@@ -651,7 +618,7 @@ end_comment
 
 begin_function
 name|void
-name|main
+name|mi_startup
 parameter_list|(
 name|framep
 parameter_list|)
@@ -1027,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Start a kernel process.  This is called after a fork() call in  * main() in the file kern/init_main.c.  *  * This function is used to start "internal" daemons.  */
+comment|/*  * Start a kernel process.  This is called after a fork() call in  * mi_startup() in the file kern/init_main.c.  *  * This function is used to start "internal" daemons.  */
 end_comment
 
 begin_comment
@@ -2779,7 +2746,7 @@ name|envv
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Now try to exec the program.  If can't for any reason 		 * other than it doesn't exist, complain. 		 * 		 * Otherwise return to main() which returns to btext 		 * which completes the system startup. 		 */
+comment|/* 		 * Now try to exec the program.  If can't for any reason 		 * other than it doesn't exist, complain. 		 * 		 * Otherwise return to mi_startup() which returns to btext 		 * which completes the system startup. 		 */
 if|if
 condition|(
 operator|(
