@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	4.3 (Berkeley, Melbourne) %G%"
+literal|"@(#)quotacheck.c	4.4 (Berkeley, Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1152,22 +1152,6 @@ name|fu_usage
 operator|.
 name|du_curblocks
 expr_stmt|;
-name|fup
-operator|->
-name|fu_usage
-operator|.
-name|du_curinodes
-operator|=
-literal|0
-expr_stmt|;
-name|fup
-operator|->
-name|fu_usage
-operator|.
-name|du_curblocks
-operator|=
-literal|0
-expr_stmt|;
 name|fseek
 argument_list|(
 name|qf
@@ -1212,6 +1196,22 @@ name|fup
 operator|->
 name|fu_usage
 argument_list|)
+expr_stmt|;
+name|fup
+operator|->
+name|fu_usage
+operator|.
+name|du_curinodes
+operator|=
+literal|0
+expr_stmt|;
+name|fup
+operator|->
+name|fu_usage
+operator|.
+name|du_curblocks
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return
