@@ -689,7 +689,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"alpha-obrien-freebsd5.0"
+value|"alpha-obrien-freebsd5"
 end_define
 
 begin_comment
@@ -700,7 +700,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CANONICAL
-value|"alpha-obrien-freebsd5.0"
+value|"alpha-obrien-freebsd5"
 end_define
 
 begin_comment
@@ -733,7 +733,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_OS
-value|"freebsd5.0"
+value|"freebsd5"
 end_define
 
 begin_comment
