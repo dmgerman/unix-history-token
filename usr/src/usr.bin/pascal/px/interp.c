@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.26 %G%"
+literal|"@(#)interp.c 1.27 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1905,7 +1905,7 @@ operator|=
 operator|*
 name|pc
 operator|.
-name|usp
+name|lp
 operator|++
 expr_stmt|;
 name|tl
