@@ -239,108 +239,21 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ARM_PTE_TO_PFN
-parameter_list|(
-name|pte
-parameter_list|)
-value|((pt_entry_t)(pte)>> PAGE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM_PDE_TO_PFN
-parameter_list|(
-name|pde
-parameter_list|)
-value|((pd_entry_t)(pde)>> 10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM_PHYS_TO_KSPACE
-parameter_list|(
-name|x
-parameter_list|)
-value|((vm_offset_t) (x) | (UPTPTDI<< PDR_SHIFT))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARM_KSPACE_TO_PHYS
-parameter_list|(
-name|x
-parameter_list|)
-value|((vm_offset_t) (x)& ~(UPTPTDI<< PDR_SHIFT))
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-name|PTmap
-index|[]
-decl_stmt|,
-name|APTmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pd_entry_t
-name|PTD
-index|[]
-decl_stmt|,
-name|APTD
-decl_stmt|,
-name|PTDpde
-decl_stmt|,
-name|APTDpde
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|pd_entry_t
-name|IdlePTD
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* physical address of "Idle" state directory */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static __inline vm_offset_t pmap_akextract(vm_offset_t va) { 	vm_offset_t pa; 	pa = *(vm_offset_t *)avtopte(va); 	pa = (pa& PG_FRAME) | (va& PAGE_MASK); 	return pa; }
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
 name|vtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|pmap_kextract(((vm_offset_t) (va)))
+value|pmap_extract(pmap_kernel(), (vm_offset_t)(va))
 end_define
 
 begin_define
 define|#
 directive|define
-name|avtophys
+name|pmap_kextract
 parameter_list|(
 name|va
 parameter_list|)
-value|pmap_akextract(((vm_offset_t) (va)))
+value|pmap_extract(pmap_kernel(), (vm_offset_t)(va))
 end_define
 
 begin_endif
@@ -472,107 +385,6 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Track cache/tlb occupancy using the following structure  */
-end_comment
-
-begin_union
-union|union
-name|pmap_cache_state
-block|{
-struct|struct
-block|{
-union|union
-block|{
-name|u_int8_t
-name|csu_cache_b
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_int16_t
-name|csu_cache
-decl_stmt|;
-block|}
-name|cs_cache_u
-union|;
-union|union
-block|{
-name|u_int8_t
-name|csu_tlb_b
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_int16_t
-name|csu_tlb
-decl_stmt|;
-block|}
-name|cs_tlb_u
-union|;
-block|}
-name|cs_s
-struct|;
-name|u_int32_t
-name|cs_all
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_define
-define|#
-directive|define
-name|cs_cache_id
-value|cs_s.cs_cache_u.csu_cache_b[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|cs_cache_d
-value|cs_s.cs_cache_u.csu_cache_b[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|cs_cache
-value|cs_s.cs_cache_u.csu_cache
-end_define
-
-begin_define
-define|#
-directive|define
-name|cs_tlb_id
-value|cs_s.cs_tlb_u.csu_tlb_b[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|cs_tlb_d
-value|cs_s.cs_tlb_u.csu_tlb_b[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|cs_tlb
-value|cs_s.cs_tlb_u.csu_tlb
-end_define
-
-begin_comment
-comment|/*  * Assigned to cs_all to force cacheops to work for a particular pmap  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PMAP_CACHE_STATE_ALL
-value|0xffffffffu
-end_define
-
-begin_comment
 comment|/*  * The number of L2 descriptor tables which can be tracked by an l2_dtable.  * A bucket size of 16 provides for 16MB of contiguous virtual address  * space per l2_dtable. Most processes will, therefore, require only two or  * three of these to map their whole working set.  */
 end_comment
 
@@ -633,19 +445,6 @@ modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pv_entry
-argument_list|)
-name|pm_pvlist
-expr_stmt|;
-comment|/* list of mappings in pmap */
-name|struct
-name|pv_addr
-name|pm_ptpt
-decl_stmt|;
-comment|/* pagetable of pagetables */
 name|int
 name|pm_count
 decl_stmt|;
@@ -659,16 +458,6 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statictics */
-name|struct
-name|vm_page
-modifier|*
-name|pm_ptphint
-decl_stmt|;
-comment|/* pmap ptp hint */
-name|union
-name|pmap_cache_state
-name|pm_cstate
-decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|pmap
@@ -737,12 +526,6 @@ argument_list|(
 argument|pv_entry
 argument_list|)
 name|pv_list
-expr_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|pv_entry
-argument_list|)
-name|pv_plist
 expr_stmt|;
 name|vm_page_t
 name|pv_ptem
@@ -835,6 +618,17 @@ end_function_decl
 begin_comment
 comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
 end_comment
+
+begin_comment
+comment|/*  * The current top of kernel VM.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|pmap_curmaxkvaddr
+decl_stmt|;
+end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
@@ -2100,21 +1894,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|PMAP_UAREA
-parameter_list|(
-name|va
-parameter_list|)
-value|pmap_uarea(va)
-end_define
-
 begin_function_decl
 name|void
-name|pmap_uarea
+name|pmap_use_minicache
 parameter_list|(
 name|vm_offset_t
+parameter_list|,
+name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2402,24 +2188,97 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pmap_update
+parameter_list|(
+name|pmap_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  *      Routine:        pmap_kextract  *      Function:  *              Extract the physical page address associated  *              kernel virtual address.  */
+comment|/*  * This structure is used by machine-dependent code to describe  * static mappings of devices, created at bootstrap time.  */
 end_comment
 
-begin_function_decl
+begin_struct
+struct|struct
+name|pmap_devmap
+block|{
+name|vm_offset_t
+name|pd_va
+decl_stmt|;
+comment|/* virtual address */
 name|vm_paddr_t
-name|pmap_kextract
+name|pd_pa
+decl_stmt|;
+comment|/* physical address */
+name|vm_size_t
+name|pd_size
+decl_stmt|;
+comment|/* size of region */
+name|vm_prot_t
+name|pd_prot
+decl_stmt|;
+comment|/* protection code */
+name|int
+name|pd_cache
+decl_stmt|;
+comment|/* cache attributes */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|const
+name|struct
+name|pmap_devmap
+modifier|*
+name|pmap_devmap_find_pa
+parameter_list|(
+name|vm_paddr_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|struct
+name|pmap_devmap
+modifier|*
+name|pmap_devmap_find_va
 parameter_list|(
 name|vm_offset_t
+parameter_list|,
+name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_update
+name|pmap_devmap_bootstrap
 parameter_list|(
-name|pmap_t
+name|vm_offset_t
+parameter_list|,
+specifier|const
+name|struct
+name|pmap_devmap
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_devmap_register
+parameter_list|(
+specifier|const
+name|struct
+name|pmap_devmap
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
