@@ -2018,6 +2018,10 @@ name|C_IN
 argument_list|,
 name|qtype
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|answer
 argument_list|,

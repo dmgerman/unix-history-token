@@ -655,18 +655,14 @@ begin_function
 name|bool
 name|host_map_init
 parameter_list|(
-name|map
-parameter_list|,
-name|args
-parameter_list|)
 name|MAP
 modifier|*
 name|map
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -3178,7 +3174,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: getloadavg.c,v 1.16 1991/06/21 12:51:15 paul Exp $"
+literal|"@(#)$Id: conf.c,v 1.4 1994/08/05 09:14:29 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
