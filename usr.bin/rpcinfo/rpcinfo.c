@@ -4517,7 +4517,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 for|for
 control|(
