@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.10	81/12/02	*/
+comment|/*	socket.h	4.11	81/12/21	*/
 end_comment
 
 begin_comment
@@ -101,6 +101,17 @@ end_define
 
 begin_comment
 comment|/* interrupt when data available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_LETDATADRAIN
+value|0x10
+end_define
+
+begin_comment
+comment|/* let data drain on close */
 end_comment
 
 begin_comment
