@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.6 (Berkeley) %G%"
+literal|"@(#)w.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
 end_include
 
 begin_include
@@ -234,12 +228,12 @@ directive|define
 name|X_AVENRUN
 value|5
 block|{
-literal|"_bootime"
+literal|"_boottime"
 block|}
 block|,
 define|#
 directive|define
-name|X_BOOTIME
+name|X_BOOTTIME
 value|6
 block|{
 literal|"_nproc"
@@ -550,9 +544,14 @@ comment|/* current time as time struct */
 end_comment
 
 begin_decl_stmt
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|time_t
-name|bootime
-decl_stmt|,
 name|uptime
 decl_stmt|;
 end_decl_stmt
@@ -984,7 +983,7 @@ argument_list|(
 name|nowt
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Print how long system has been up. 		 * (Found by looking for "bootime" in kernel) 		 */
+comment|/* 		 * Print how long system has been up. 		 * (Found by looking for "boottime" in kernel) 		 */
 name|lseek
 argument_list|(
 name|kmem
@@ -994,7 +993,7 @@ name|long
 operator|)
 name|nl
 index|[
-name|X_BOOTIME
+name|X_BOOTTIME
 index|]
 operator|.
 name|n_value
@@ -1007,11 +1006,11 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|&
-name|bootime
+name|boottime
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|bootime
+name|boottime
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1019,7 +1018,9 @@ name|uptime
 operator|=
 name|now
 operator|-
-name|bootime
+name|boottime
+operator|.
+name|tv_sec
 expr_stmt|;
 name|uptime
 operator|+=
@@ -2998,15 +2999,19 @@ name|w_time
 operator|=
 name|up
 operator|.
-name|u_vm
+name|u_ru
 operator|.
-name|vm_utime
+name|ru_utime
+operator|.
+name|tv_sec
 operator|+
 name|up
 operator|.
-name|u_vm
+name|u_ru
 operator|.
-name|vm_stime
+name|ru_stime
+operator|.
+name|tv_sec
 expr_stmt|;
 name|pr
 index|[
@@ -3017,15 +3022,19 @@ name|w_ctime
 operator|=
 name|up
 operator|.
-name|u_cvm
+name|u_cru
 operator|.
-name|vm_utime
+name|ru_utime
+operator|.
+name|tv_sec
 operator|+
 name|up
 operator|.
-name|u_cvm
+name|u_cru
 operator|.
-name|vm_stime
+name|ru_stime
+operator|.
+name|tv_sec
 expr_stmt|;
 name|pr
 index|[

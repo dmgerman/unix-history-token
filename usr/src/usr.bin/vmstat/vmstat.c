@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vmstat.c	4.7 (Berkeley) %G%"
+literal|"@(#)vmstat.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ubavar.h>
+file|<vaxuba/ubavar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mbavar.h>
+file|<vaxmba/mbavar.h>
 end_include
 
 begin_decl_stmt
@@ -130,10 +130,10 @@ block|}
 block|,
 define|#
 directive|define
-name|X_BOOTIME
+name|X_BOOTTIME
 value|8
 block|{
-literal|"_bootime"
+literal|"_boottime"
 block|}
 block|,
 define|#
@@ -370,7 +370,7 @@ decl_stmt|,
 name|nintv
 decl_stmt|;
 name|time_t
-name|bootime
+name|boottime
 decl_stmt|;
 name|double
 name|f1
@@ -682,7 +682,7 @@ name|long
 operator|)
 name|nl
 index|[
-name|X_BOOTIME
+name|X_BOOTTIME
 index|]
 operator|.
 name|n_value
@@ -695,10 +695,10 @@ argument_list|(
 name|mf
 argument_list|,
 operator|&
-name|bootime
+name|boottime
 argument_list|,
 sizeof|sizeof
-name|bootime
+name|boottime
 argument_list|)
 expr_stmt|;
 name|lseek
@@ -774,7 +774,7 @@ name|nintv
 operator|=
 name|now
 operator|-
-name|bootime
+name|boottime
 expr_stmt|;
 if|if
 condition|(
