@@ -102,8 +102,9 @@ argument_list|(
 name|curthread
 argument_list|,
 name|ret
-operator|!=
-literal|0
+operator|==
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
