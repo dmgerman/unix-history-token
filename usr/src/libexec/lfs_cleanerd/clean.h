@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clean.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clean.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -479,7 +479,7 @@ name|PRINT_INODE
 parameter_list|(
 name|b
 parameter_list|,
-name|iip
+name|bip
 parameter_list|)
 value|{ \ 	(void) printf("\t%s inode: %d daddr: 0x%lx create: %s\n", \ 	    b ? "KEEPING" : "TOSSING", (bip)->bi_inode, (bip)->bi_daddr, \ 	    ctime((time_t *)&(bip)->bi_segcreate)); \ 	fflush(stdout); \ }
 end_define
@@ -586,7 +586,7 @@ name|PRINT_INODE
 parameter_list|(
 name|b
 parameter_list|,
-name|iip
+name|bip
 parameter_list|)
 end_define
 
