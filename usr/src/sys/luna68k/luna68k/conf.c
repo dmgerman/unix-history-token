@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.13 (Berkeley) 7/9/92  *  *	@(#)conf.c	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.13 (Berkeley) 7/9/92  *  *	@(#)conf.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -749,6 +749,30 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
+name|fb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* open, close, ioctl, mmap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cdev_fb_init
+parameter_list|(
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), (dev_type_read((*))) nullop, \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	dev_init(c,n,select), dev_init(c,n,map), 0 }
+end_define
+
 begin_include
 include|#
 directive|include
@@ -941,11 +965,15 @@ comment|/* 8: scsi disk */
 name|cdev_notdef
 argument_list|()
 block|,
-comment|/* 9: ram disk */
-name|cdev_notdef
-argument_list|()
+comment|/* 9 */
+name|cdev_fb_init
+argument_list|(
+literal|1
+argument_list|,
+name|fb
+argument_list|)
 block|,
-comment|/* 10 */
+comment|/* 10: frame buffer */
 name|cdev_notdef
 argument_list|()
 block|,
