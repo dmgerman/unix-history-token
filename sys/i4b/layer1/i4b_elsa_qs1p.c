@@ -199,14 +199,14 @@ begin_define
 define|#
 directive|define
 name|ELSA_PORT0_MAPOFF
-value|(PCI_MAP_REG_START+PORT0_MAPOFF)
+value|(PCIR_MAPS+PORT0_MAPOFF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ELSA_PORT1_MAPOFF
-value|(PCI_MAP_REG_START+PORT1_MAPOFF)
+value|(PCIR_MAPS+PORT1_MAPOFF)
 end_define
 
 begin_define
