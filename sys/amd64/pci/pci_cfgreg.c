@@ -681,8 +681,6 @@ name|int
 name|pin
 decl_stmt|,
 name|line
-decl_stmt|,
-name|airq
 decl_stmt|;
 name|pin
 operator|=
