@@ -135,6 +135,10 @@ name|MOPT_SYNC
 block|,
 name|MOPT_UPDATE
 block|,
+name|MOPT_UQUOTA
+block|,
+name|MOPT_GQUOTA
+block|,
 block|{
 name|NULL
 block|}

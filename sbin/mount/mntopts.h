@@ -79,6 +79,24 @@ value|{ "union",	0, MNT_UNION }
 end_define
 
 begin_comment
+comment|/* Skip	this options without any action	(needed	for checkquota/quotaon)	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOPT_UQUOTA
+value|{ "userquota",	0, 0 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOPT_GQUOTA
+value|{ "groupquota",	0, 0 }
+end_define
+
+begin_comment
 comment|/* Control flags. */
 end_comment
 
