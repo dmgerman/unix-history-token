@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser1.c	3.8 84/01/11"
+literal|"@(#)parser1.c	3.9 84/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,16 +92,6 @@ directive|define
 name|p_abort
 parameter_list|()
 value|(cx.x_abort)
-end_define
-
-begin_define
-define|#
-directive|define
-name|p_valfree
-parameter_list|(
-name|v
-parameter_list|)
-value|if ((v).v_type == V_STR) str_free((v).v_str)
 end_define
 
 begin_macro
@@ -676,7 +666,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|p_valfree
+name|val_free
 argument_list|(
 name|t
 argument_list|)
@@ -841,7 +831,7 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 name|t
 argument_list|)
@@ -1128,7 +1118,7 @@ operator|->
 name|lc_name
 argument_list|)
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 name|t
 argument_list|)
@@ -1312,7 +1302,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 name|t
 argument_list|)
@@ -1372,7 +1362,7 @@ operator|->
 name|arg_name
 argument_list|)
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 name|t
 argument_list|)
@@ -1443,7 +1433,7 @@ operator|->
 name|arg_name
 argument_list|)
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 name|t
 argument_list|)
@@ -1545,7 +1535,7 @@ condition|;
 name|ap
 operator|++
 control|)
-name|p_valfree
+name|val_free
 argument_list|(
 name|ap
 operator|->
@@ -1580,7 +1570,7 @@ condition|;
 name|ap
 operator|++
 control|)
-name|p_valfree
+name|val_free
 argument_list|(
 name|ap
 operator|->
@@ -1684,7 +1674,7 @@ block|{
 name|p_memerror
 argument_list|()
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 operator|*
 name|v
@@ -2017,7 +2007,7 @@ operator|!=
 name|T_COLON
 condition|)
 block|{
-name|p_valfree
+name|val_free
 argument_list|(
 operator|*
 name|v
@@ -2737,7 +2727,7 @@ block|{
 name|p_synerror
 argument_list|()
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 operator|*
 name|v
@@ -2771,7 +2761,7 @@ block|{
 name|p_synerror
 argument_list|()
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 operator|*
 name|v
@@ -2929,13 +2919,13 @@ operator|!
 name|flag
 condition|)
 block|{
-name|p_valfree
+name|val_free
 argument_list|(
 operator|*
 name|v
 argument_list|)
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 name|t
 argument_list|)
@@ -3751,7 +3741,7 @@ block|{
 name|p_synerror
 argument_list|()
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 operator|*
 name|v
@@ -3913,7 +3903,7 @@ block|{
 name|p_synerror
 argument_list|()
 expr_stmt|;
-name|p_valfree
+name|val_free
 argument_list|(
 operator|*
 name|v
