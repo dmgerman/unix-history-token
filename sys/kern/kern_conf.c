@@ -1324,17 +1324,6 @@ name|d_name
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Allocating major#%d to \"%s\"\n"
-argument_list|,
-name|i
-argument_list|,
-name|devsw
-operator|->
-name|d_name
-argument_list|)
-expr_stmt|;
 name|devsw
 operator|->
 name|d_maj
