@@ -1142,12 +1142,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|m
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 name|tmp_addr
 operator|+=
 name|PAGE_SIZE
