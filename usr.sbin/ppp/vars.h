@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.37 1997/12/03 23:28:02 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vars.h,v 1.38 1997/12/21 03:16:19 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_struct
@@ -812,13 +812,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipIdleSecs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|reconnectState
 decl_stmt|;
 end_decl_stmt
@@ -866,7 +859,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do                                          \     if (reconnectState == RECON_UNKNOWN) { \       reconnectState = x;                  \       if (x == RECON_FALSE)                   \         reconnectCount = 0;                   \     }                                         \   while(0)
+value|do                                          \     if (reconnectState == RECON_UNKNOWN) {    \       reconnectState = x;                     \       if (x == RECON_FALSE)                   \         reconnectCount = 0;                   \     }                                         \   while(0)
 end_define
 
 begin_comment
