@@ -1044,6 +1044,7 @@ name|type
 operator|!=
 name|T_TRCTRAP
 condition|)
+block|{
 comment|/* 			 * XXX not quite right, since this may be for a 			 * multiple fault in user mode. 			 */
 name|printf
 argument_list|(
@@ -1052,10 +1053,11 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We should walk p_heldmtx here and see if any are 		 * spin mutexes, and not do this if so. 		 */
+comment|/* 			 * We should walk p_heldmtx here and see if any are 			 * spin mutexes, and not do this if so. 			 */
 name|enable_intr
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|eva
 operator|=
