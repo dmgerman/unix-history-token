@@ -509,7 +509,7 @@ block|{
 name|int
 name|base64
 decl_stmt|;
-name|int
+name|size_t
 name|n
 decl_stmt|;
 name|char
@@ -1199,8 +1199,9 @@ argument_list|)
 operator|)
 condition|)
 name|OUT_OF_RANGE
+expr_stmt|;
 name|ch
-init|=
+operator|=
 name|DEC
 argument_list|(
 name|p
@@ -1220,7 +1221,7 @@ index|]
 argument_list|)
 operator|>>
 literal|4
-decl_stmt|;
+expr_stmt|;
 name|putchar
 argument_list|(
 name|ch
@@ -1310,8 +1311,9 @@ argument_list|)
 operator|)
 condition|)
 name|OUT_OF_RANGE
+expr_stmt|;
 name|ch
-init|=
+operator|=
 name|DEC
 argument_list|(
 name|p
@@ -1331,7 +1333,7 @@ index|]
 argument_list|)
 operator|>>
 literal|4
-decl_stmt|;
+expr_stmt|;
 name|putchar
 argument_list|(
 name|ch
@@ -1371,8 +1373,9 @@ argument_list|)
 operator|)
 condition|)
 name|OUT_OF_RANGE
+expr_stmt|;
 name|ch
-init|=
+operator|=
 name|DEC
 argument_list|(
 name|p
@@ -1392,7 +1395,7 @@ index|]
 argument_list|)
 operator|>>
 literal|2
-decl_stmt|;
+expr_stmt|;
 name|putchar
 argument_list|(
 name|ch
@@ -1432,8 +1435,9 @@ argument_list|)
 operator|)
 condition|)
 name|OUT_OF_RANGE
+expr_stmt|;
 name|ch
-init|=
+operator|=
 name|DEC
 argument_list|(
 name|p
@@ -1451,7 +1455,7 @@ index|[
 literal|3
 index|]
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|putchar
 argument_list|(
 name|ch
