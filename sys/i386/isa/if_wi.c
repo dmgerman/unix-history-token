@@ -4871,6 +4871,21 @@ condition|(
 name|error
 condition|)
 break|break;
+comment|/* Don't show WEP keys to non-root users. */
+if|if
+condition|(
+name|wreq
+operator|.
+name|wi_type
+operator|==
+name|WI_RID_DEFLT_CRYPT_KEYS
+operator|&&
+name|suser
+argument_list|(
+name|p
+argument_list|)
+condition|)
+break|break;
 if|if
 condition|(
 name|wreq
