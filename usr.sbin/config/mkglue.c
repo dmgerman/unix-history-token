@@ -1912,9 +1912,37 @@ argument_list|,
 literal|"rtc0 irqnn\\0\\\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pci irqnn\\0\\\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pci irqnn\\0\\\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pci irqnn\\0\\\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pci irqnn\\0\\\n"
+argument_list|)
+expr_stmt|;
 name|dev_id
 operator|=
-literal|2
+literal|6
 expr_stmt|;
 name|vector_devtab
 argument_list|(

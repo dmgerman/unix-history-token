@@ -3915,8 +3915,9 @@ expr_stmt|;
 block|}
 name|dev_id
 operator|=
-literal|2
+literal|6
 expr_stmt|;
+comment|/* XXX must match mkglue.c */
 name|isa_devtab
 argument_list|(
 name|fp
