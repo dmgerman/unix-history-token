@@ -1147,7 +1147,7 @@ literal|"vnlock"
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1346,7 +1346,7 @@ literal|"vnlock"
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
