@@ -1309,6 +1309,24 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Please enter this command from a tty device\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|printf
 argument_list|(
 literal|" WARNING!  This command will completely wipe out your vinum configuration.\n"
@@ -2671,6 +2689,19 @@ name|DEVSTAT_TYPE_STORARRAY
 operator|)
 operator|)
 comment|/* storage array */
+operator|&&
+operator|(
+operator|(
+name|stat
+operator|->
+name|device_type
+operator|&
+name|DEVSTAT_TYPE_IF_MASK
+operator|)
+operator|!=
+name|DEVSTAT_TYPE_IF_OTHER
+operator|)
+comment|/* and not md */
 operator|&&
 operator|(
 operator|(
