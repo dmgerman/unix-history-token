@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	4.1 (Berkeley) %G%"
+literal|"@(#)ndbm.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,6 +843,8 @@ argument_list|,
 name|key
 argument_list|,
 name|dat
+argument_list|,
+name|replace
 argument_list|)
 specifier|register
 name|DBM
@@ -856,6 +858,12 @@ name|datum
 name|key
 decl_stmt|,
 name|dat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|replace
 decl_stmt|;
 end_decl_stmt
 
@@ -948,12 +956,35 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|replace
+condition|)
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
-comment|/* 			delitem(db->db_pagbuf, i); 			delitem(db->db_pagbuf, i); 			break; */
+name|delitem
+argument_list|(
+name|db
+operator|->
+name|db_pagbuf
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|delitem
+argument_list|(
+name|db
+operator|->
+name|db_pagbuf
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|i
