@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops.c	7.3	%G%"
+literal|"@(#)ex_vops.c	7.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2886,6 +2886,20 @@ condition|(
 name|dot
 operator|>
 name|wdot
+operator|||
+operator|(
+name|dot
+operator|==
+name|wdot
+operator|&&
+name|wcursor
+operator|!=
+literal|0
+operator|&&
+name|cursor
+operator|>
+name|wcursor
+operator|)
 condition|)
 block|{
 specifier|register
