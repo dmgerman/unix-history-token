@@ -2522,7 +2522,8 @@ comment|/* Self snoop */
 literal|"\035<b28>"
 literal|"\036ACC"
 comment|/* Auto Clock Correction (TCC/ACPI) */
-literal|"\037<b30>"
+literal|"\037IA64"
+comment|/* CPU can execute IA64 instructions */
 literal|"\040<b31>"
 argument_list|)
 expr_stmt|;
