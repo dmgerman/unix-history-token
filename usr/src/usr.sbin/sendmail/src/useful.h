@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_comment
 comment|/* support for ANSI prototypes (or not, as the case may be) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__P
+end_ifndef
+
 begin_if
 if|#
 directive|if
@@ -24,12 +30,6 @@ operator|&&
 name|defined
 argument_list|(
 name|_FORGIVING_CC_
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__P
 argument_list|)
 end_if
 
@@ -57,6 +57,11 @@ name|protos
 parameter_list|)
 value|()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
