@@ -1930,6 +1930,8 @@ operator|->
 name|ke_runq
 argument_list|,
 name|ke
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4113,6 +4115,8 @@ operator|->
 name|ke_runq
 argument_list|,
 name|ke
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5459,6 +5463,8 @@ operator|->
 name|ke_runq
 argument_list|,
 name|ke
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5667,9 +5673,10 @@ condition|)
 name|kdb_backtrace
 argument_list|()
 expr_stmt|;
-comment|/* 				 * We will not be on the run queue. 				 * So we must be sleeping or similar. 				 */
+comment|/* 				 * We will not be on the run queue. 				 * So we must be sleeping or similar. 				 * Don't use the slot if we will need it  				 * for newtd. 				 */
 if|if
 condition|(
+operator|(
 name|td
 operator|->
 name|td_proc
@@ -5677,6 +5684,21 @@ operator|->
 name|p_flag
 operator|&
 name|P_HADTHREADS
+operator|)
+operator|&&
+operator|(
+name|newtd
+operator|==
+name|NULL
+operator|||
+name|newtd
+operator|->
+name|td_ksegrp
+operator|!=
+name|td
+operator|->
+name|td_ksegrp
+operator|)
 condition|)
 name|slot_fill
 argument_list|(
@@ -5695,6 +5717,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * If we bring in a thread,  		 * then account for it as if it had been added to the 		 * run queue and then chosen. 		 */
 name|newtd
 operator|->
 name|td_kse
@@ -5703,16 +5726,16 @@ name|ke_flags
 operator||=
 name|KEF_DIDRUN
 expr_stmt|;
-name|TD_SET_RUNNING
-argument_list|(
-name|newtd
-argument_list|)
-expr_stmt|;
 name|SLOT_USE
 argument_list|(
 name|newtd
 operator|->
 name|td_ksegrp
+argument_list|)
+expr_stmt|;
+name|TD_SET_RUNNING
+argument_list|(
+name|newtd
 argument_list|)
 expr_stmt|;
 name|kseq_load_add

@@ -2779,6 +2779,17 @@ begin_comment
 comment|/* Involuntary switch. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SW_PREEMPT
+value|0x0004
+end_define
+
+begin_comment
+comment|/* The invol switch is a preemption */
+end_comment
+
 begin_comment
 comment|/* Flags for setrunqueue().  Why are we setting this thread on the run queue? */
 end_comment
@@ -2825,6 +2836,17 @@ end_define
 
 begin_comment
 comment|/* It is probably urgent. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SRQ_PREEMPTED
+value|0x0008
+end_define
+
+begin_comment
+comment|/* has been preempted.. be kind */
 end_comment
 
 begin_comment
