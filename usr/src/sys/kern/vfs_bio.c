@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_bio.c	4.42	83/04/04	*/
+comment|/*	vfs_bio.c	4.43	83/05/01	*/
 end_comment
 
 begin_include
@@ -2864,6 +2864,11 @@ argument_list|,
 name|PRIBIO
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 goto|goto
