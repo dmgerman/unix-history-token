@@ -7064,13 +7064,9 @@ argument_list|)
 expr_stmt|;
 name|ver
 operator|=
-name|pci_read_config
+name|pci_get_revid
 argument_list|(
 name|self
-argument_list|,
-name|PCI_CLASS_REG
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 name|sc
@@ -7142,8 +7138,6 @@ expr_stmt|;
 switch|switch
 condition|(
 name|ver
-operator|&
-literal|0xff
 condition|)
 block|{
 case|case
@@ -7161,8 +7155,6 @@ argument_list|(
 literal|" Rev 0x%x\n"
 argument_list|,
 name|ver
-operator|&
-literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
