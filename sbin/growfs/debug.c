@@ -456,8 +456,12 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"time          time_t            %10lu\n"
+literal|"time          time_t            %10u\n"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|sb
 operator|->
 name|fs_time
@@ -1344,8 +1348,12 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"time          time_t     %10lu\n"
+literal|"time          time_t     %10u\n"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|cgr
 operator|->
 name|cg_time
@@ -2536,9 +2544,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
-name|long
+name|int
 modifier|*
-name|lp
+name|ip
 decl_stmt|;
 if|if
 condition|(
@@ -2575,10 +2583,10 @@ expr_stmt|;
 name|indent
 operator|++
 expr_stmt|;
-name|lp
+name|ip
 operator|=
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 name|cg_clustersum
@@ -2606,12 +2614,12 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"%02d: %8ld\n"
+literal|"%02d: %8d\n"
 argument_list|,
 name|j
 argument_list|,
 operator|*
-name|lp
+name|ip
 operator|++
 argument_list|)
 expr_stmt|;
@@ -2663,9 +2671,9 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|long
+name|int
 modifier|*
-name|lp
+name|ip
 decl_stmt|;
 if|if
 condition|(
@@ -2702,10 +2710,10 @@ expr_stmt|;
 name|indent
 operator|++
 expr_stmt|;
-name|lp
+name|ip
 operator|=
 operator|(
-name|long
+name|int
 operator|*
 operator|)
 name|cg_blktot
@@ -2733,12 +2741,12 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"%2d: %5ld = "
+literal|"%2d: %5d = "
 argument_list|,
 name|j
 argument_list|,
 operator|*
-name|lp
+name|ip
 operator|++
 argument_list|)
 expr_stmt|;
