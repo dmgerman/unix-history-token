@@ -45,7 +45,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)get.c	4.11	%G%"
+literal|"@(#)get.c	4.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3666,42 +3666,31 @@ if|if
 condition|(
 operator|*
 name|p
-operator|!=
+operator|==
 literal|'%'
 condition|)
-operator|*
-name|tp
-operator|++
-operator|=
-literal|'%'
-expr_stmt|;
-else|else
 block|{
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-name|tp
-operator|=
 name|readcopy
 argument_list|(
 name|lp
 operator|+
 literal|14
 argument_list|,
-name|tp
+name|tline
 argument_list|)
 expr_stmt|;
-name|lp
-operator|=
-name|p
-operator|+
-literal|1
-expr_stmt|;
+return|return
+operator|(
+name|tline
+operator|)
+return|;
 block|}
 block|}
-else|else
 operator|*
 name|tp
 operator|++
@@ -3771,7 +3760,7 @@ name|readcopy
 argument_list|(
 name|name
 argument_list|,
-name|tp
+name|p
 argument_list|)
 specifier|register
 name|char
@@ -3784,7 +3773,7 @@ begin_decl_stmt
 specifier|register
 name|char
 modifier|*
-name|tp
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -3866,7 +3855,7 @@ operator|!=
 name|EOF
 condition|)
 operator|*
-name|tp
+name|p
 operator|++
 operator|=
 name|ch
@@ -3879,11 +3868,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|tp
-operator|)
-return|;
 block|}
 end_block
 
