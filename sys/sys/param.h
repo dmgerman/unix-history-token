@@ -549,7 +549,7 @@ name|btoc
 parameter_list|(
 name|x
 parameter_list|)
-value|(((unsigned)(x)+PAGE_MASK)>>PAGE_SHIFT)
+value|(((vm_offset_t)(x)+PAGE_MASK)>>PAGE_SHIFT)
 end_define
 
 begin_endif
