@@ -1401,7 +1401,7 @@ name|sa_flags
 operator|=
 name|SA_SIGINFO
 operator||
-name|SA_ONSTACK
+name|SA_RESTART
 expr_stmt|;
 comment|/* Clear pending signals for the process: */
 name|sigemptyset

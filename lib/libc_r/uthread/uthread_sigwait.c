@@ -109,9 +109,9 @@ name|act
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
-operator||
 name|SA_SIGINFO
+operator||
+name|SA_RESTART
 expr_stmt|;
 comment|/* Ensure the signal handler cannot be interrupted by other signals: */
 name|sigfillset

@@ -232,7 +232,7 @@ name|sa_flags
 operator|=
 name|SA_SIGINFO
 operator||
-name|SA_ONSTACK
+name|SA_RESTART
 expr_stmt|;
 comment|/* 			 * Check if the signal handler is being set to 			 * the default or ignore handlers: 			 */
 if|if
