@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id: wdreg.h,v 1.6 1994/01/04 20:05:26 nate Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wdreg.h	7.1 (Berkeley) 5/9/91  *	$Id: wdreg.h,v 1.7 1995/02/26 01:15:29 bde Exp $  */
 end_comment
 
 begin_comment
@@ -38,6 +38,17 @@ end_define
 
 begin_comment
 comment|/* write precompensation (W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|wd_features
+value|wd_error
+end_define
+
+begin_comment
+comment|/* features register (W) */
 end_comment
 
 begin_define
@@ -285,6 +296,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WDERR_ABORT
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|WDERR_BITS
 value|"\020\010badblk\007uncorr\006id_crc\005no_id\003abort\002tr000\001no_dam"
 end_define
@@ -384,6 +402,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WDCC_READ_MULTI
+value|0xC4
+end_define
+
+begin_comment
+comment|/* read multiple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDCC_WRITE_MULTI
+value|0xC5
+end_define
+
+begin_comment
+comment|/* write multiple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDCC_SET_MULTI
+value|0xC6
+end_define
+
+begin_comment
+comment|/* set multiple count */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WDCC_EXTDCMD
 value|0xE0
 end_define
@@ -406,12 +457,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WDCC_CACHEC
+name|WDCC_FEATURES
 value|0xEF
 end_define
 
 begin_comment
-comment|/* cache control */
+comment|/* features control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDFEA_RCACHE
+value|0xAA
+end_define
+
+begin_comment
+comment|/* read cache enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WDFEA_WCACHE
+value|0x02
+end_define
+
+begin_comment
+comment|/* write cache enable */
 end_comment
 
 begin_define
