@@ -9794,14 +9794,12 @@ name|tree
 name|decl
 decl_stmt|;
 block|{
-comment|/* This is not necessary on targets that support weak symbols, because      the implicit instantiations will defer to the explicit one.  */
+comment|/* We used to say that this was not necessary on targets that support weak      symbols, because the implicit instantiations will defer to the explicit      one.  However, that's not actually the case in SVR4; a strong definition      after a weak one is an error.  Also, not making explicit      instantiations one_only means that we can end up with two copies of      some template instantiations. */
 if|if
 condition|(
 operator|!
 name|supports_one_only
 argument_list|()
-operator|||
-name|SUPPORTS_WEAK
 condition|)
 return|return;
 comment|/* We can't set DECL_COMDAT on functions, or finish_file will think      we can get away with not emitting them if they aren't used.  We need      to for variables so that cp_finish_decl will update their linkage,      because their DECL_INITIAL may not have been set properly yet.  */

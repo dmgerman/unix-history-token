@@ -748,7 +748,7 @@ literal|2
 operator|&&
 name|__GNUC_MINOR__
 operator|>
-literal|6
+literal|8
 operator|)
 operator|)
 end_if

@@ -4,7 +4,7 @@ comment|// Main templates for the -*- C++ -*- string classes.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1994, 1995 Free Software Foundation
+comment|// Copyright (C) 1994, 1995, 1999 Free Software Foundation
 end_comment
 
 begin_comment
@@ -1010,17 +1010,17 @@ name|InputIterator
 operator|>
 name|basic_string
 argument_list|(
-argument|InputIterator begin
+argument|InputIterator __begin
 argument_list|,
-argument|InputIterator end
+argument|InputIterator __end
 argument_list|)
 else|#
 directive|else
 name|basic_string
 argument_list|(
-argument|const_iterator begin
+argument|const_iterator __begin
 argument_list|,
-argument|const_iterator end
+argument|const_iterator __end
 argument_list|)
 endif|#
 directive|endif
@@ -1032,9 +1032,9 @@ argument_list|)
 block|{
 name|assign
 argument_list|(
-name|begin
+name|__begin
 argument_list|,
-name|end
+name|__end
 argument_list|)
 block|; }
 operator|~

@@ -9759,7 +9759,7 @@ name|arg1
 argument_list|)
 operator|&&
 operator|!
-name|strncmp
+name|memcmp
 argument_list|(
 name|TREE_STRING_POINTER
 argument_list|(

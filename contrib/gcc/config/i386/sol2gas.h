@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|GAS_DOES_NOT_SUPPORT_MINUS_S
+name|GAS_REJECTS_MINUS_S
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|GAS_DOES_NOT_SUPPORT_MINUS_S
+name|GAS_REJECTS_MINUS_S
 value|1
 end_define
 
@@ -20,12 +20,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"i386/sol2.h"
-end_include
 
 end_unit
 
