@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	prf.c	1.3	88/03/02	*/
+comment|/*	prf.c	1.4	88/03/03	*/
 end_comment
 
 begin_comment
@@ -704,6 +704,64 @@ operator|(
 name|c
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|trap
+argument_list|(
+argument|ps
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|ps
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"Trap %o\n"
+argument_list|,
+name|ps
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+empty_stmt|;
+block|}
+end_block
+
+begin_macro
+name|uncache
+argument_list|(
+argument|addr
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* Return *(addr-0x4000); DIRTY assumes this address is valid */
+name|mtpr
+argument_list|(
+name|PDCS
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
