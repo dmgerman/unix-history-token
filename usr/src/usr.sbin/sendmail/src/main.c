@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.76
+literal|3.77
 operator|%
 name|G
 operator|%
@@ -194,12 +194,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|bool
-name|verifyonly
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* only verify names */
 name|bool
 name|safecf
 init|=
@@ -359,6 +353,13 @@ name|umask
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|Mode
+operator|=
+name|MD_DEFAULT
 expr_stmt|;
 end_expr_stmt
 
@@ -1047,15 +1048,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'V'
-case|:
-comment|/* verify only */
-name|verifyonly
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 literal|'a'
 case|:
 comment|/* arpanet format */
@@ -1135,16 +1127,28 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
-literal|'D'
+literal|'b'
+case|:
+comment|/* operations mode */
+name|Mode
+operator|=
+name|p
+index|[
+literal|2
+index|]
+expr_stmt|;
+switch|switch
+condition|(
+name|Mode
+condition|)
+block|{
+case|case
+name|MD_DAEMON
 case|:
 comment|/* run as a daemon */
 ifdef|#
 directive|ifdef
 name|DAEMON
-name|Daemon
-operator|=
-name|TRUE
-expr_stmt|;
 name|ArpaMode
 operator|=
 name|Smtp
@@ -1162,6 +1166,47 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DAEMON
+break|break;
+case|case
+literal|'\0'
+case|:
+comment|/* default: do full delivery */
+name|Mode
+operator|=
+name|MD_DEFAULT
+expr_stmt|;
+comment|/* fall through....... */
+case|case
+name|MD_DELIVER
+case|:
+comment|/* do everything (default) */
+case|case
+name|MD_FORK
+case|:
+comment|/* fork after verification */
+case|case
+name|MD_QUEUE
+case|:
+comment|/* queue only */
+case|case
+name|MD_VERIFY
+case|:
+comment|/* verify only */
+break|break;
+default|default:
+name|syserr
+argument_list|(
+literal|"Unknown operation mode -b%c"
+argument_list|,
+name|Mode
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'q'
@@ -1196,15 +1241,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|QUEUE
-break|break;
-case|case
-literal|'p'
-case|:
-comment|/* fork politely after initial verification */
-name|ForkOff
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 case|case
 literal|'o'
@@ -1484,7 +1520,9 @@ end_comment
 begin_if
 if|if
 condition|(
-name|Daemon
+name|Mode
+operator|==
+name|MD_DAEMON
 condition|)
 block|{
 ifdef|#
@@ -1529,8 +1567,9 @@ if|if
 condition|(
 name|queuemode
 operator|&&
-operator|!
-name|Daemon
+name|Mode
+operator|!=
+name|MD_DAEMON
 condition|)
 block|{
 name|runqueue
@@ -1565,8 +1604,9 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-operator|!
-name|Daemon
+name|Mode
+operator|!=
+name|MD_DAEMON
 operator|&&
 name|argc
 operator|<=
@@ -1682,8 +1722,9 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-operator|!
-name|verifyonly
+name|Mode
+operator|!=
+name|MD_VERIFY
 operator|||
 name|GrabTo
 condition|)
@@ -1708,7 +1749,9 @@ end_comment
 begin_if
 if|if
 condition|(
-name|ForkOff
+name|Mode
+operator|==
+name|MD_FORK
 condition|)
 block|{
 if|if
@@ -1726,6 +1769,27 @@ name|ExitStat
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|Mode
+operator|==
+name|MD_QUEUE
+condition|)
+block|{
+name|queueup
+argument_list|(
+name|CurEnv
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|ExitStat
+argument_list|)
+expr_stmt|;
 block|}
 end_if
 
@@ -1861,7 +1925,9 @@ end_comment
 begin_expr_stmt
 name|sendall
 argument_list|(
-name|verifyonly
+name|Mode
+operator|==
+name|MD_VERIFY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1882,8 +1948,9 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-operator|!
-name|verifyonly
+name|Mode
+operator|!=
+name|MD_VERIFY
 condition|)
 name|poststats
 argument_list|(
@@ -2376,6 +2443,8 @@ name|QUEUE
 name|queueup
 argument_list|(
 name|CurEnv
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 else|#

@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -766,7 +766,9 @@ begin_block
 block|{
 if|if
 condition|(
-name|Daemon
+name|Mode
+operator|==
+name|MD_DAEMON
 condition|)
 return|return
 operator|(
@@ -796,7 +798,9 @@ begin_block
 block|{
 if|if
 condition|(
-name|Daemon
+name|Mode
+operator|==
+name|MD_DAEMON
 condition|)
 return|return
 operator|(

@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.70		%G%"
+literal|"@(#)sendmail.h	3.71		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1487,6 +1487,90 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  Operation modes **	The default operation mode can be safely changed (except **	that the default cannot be MD_DAEMON). */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+name|Mode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* operation mode, see below */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_DELIVER
+value|'a'
+end_define
+
+begin_comment
+comment|/* collect and deliver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_FORK
+value|'f'
+end_define
+
+begin_comment
+comment|/* verify& fork before delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_QUEUE
+value|'q'
+end_define
+
+begin_comment
+comment|/* collect& queue, don't deliver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_DAEMON
+value|'d'
+end_define
+
+begin_comment
+comment|/* run as a daemon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_VERIFY
+value|'v'
+end_define
+
+begin_comment
+comment|/* verify: don't collect or deliver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_DEFAULT
+value|MD_DELIVER
+end_define
+
+begin_comment
+comment|/* default operation mode */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  Global variables. */
 end_comment
 
@@ -1636,17 +1720,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|Daemon
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* running as a daemon */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|Smtp
 decl_stmt|;
 end_decl_stmt
@@ -1697,17 +1770,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* set if running arpanet protocol */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|ForkOff
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* fork after initial verification */
 end_comment
 
 begin_decl_stmt

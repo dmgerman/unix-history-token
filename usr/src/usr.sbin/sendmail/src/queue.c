@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.14
+literal|3.15
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.14
+literal|3.15
 operator|%
 name|G
 operator|%
@@ -82,13 +82,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	The queued message should already be in the correct place. **	This routine just outputs the control file as appropriate. ** **	Parameters: **		e -- the envelope to queue up. ** **	Returns: **		none. ** **	Side Effects: **		The current request (only unsatisfied addresses) **			are saved in a control file. */
+comment|/* **  QUEUEUP -- queue a message up for future transmission. ** **	The queued message should already be in the correct place. **	This routine just outputs the control file as appropriate. ** **	Parameters: **		e -- the envelope to queue up. **		queueall -- if TRUE, queue all addresses, rather than **			just those with the QQUEUEUP flag set. ** **	Returns: **		none. ** **	Side Effects: **		The current request (only unsatisfied addresses) **			are saved in a control file. */
 end_comment
 
 begin_expr_stmt
 name|queueup
 argument_list|(
 name|e
+argument_list|,
+name|queueall
 argument_list|)
 specifier|register
 name|ENVELOPE
@@ -96,6 +98,12 @@ operator|*
 name|e
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|bool
+name|queueall
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -460,6 +468,8 @@ directive|endif
 endif|DEBUG
 if|if
 condition|(
+name|queueall
+operator|||
 name|bitset
 argument_list|(
 name|QQUEUEUP
