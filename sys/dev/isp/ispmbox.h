@@ -1591,6 +1591,11 @@ decl_stmt|;
 name|u_int16_t
 name|req_time
 decl_stmt|;
+define|#
+directive|define
+name|req_response_len
+value|req_time
+comment|/* FC only */
 name|u_int16_t
 name|req_sense_len
 decl_stmt|;
