@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id$  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.26 1996/11/15 05:30:52 nate Exp $  */
 end_comment
 
 begin_comment
@@ -90,10 +90,6 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
-begin_comment
-comment|/* #include<machine/mouse.h> #include<machine/clock.h> */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -142,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|PSM_DEBUG
-value|2
+value|0
 end_define
 
 begin_comment
@@ -153,20 +149,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* version dependency */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSM_CURRENT
-end_define
-
-begin_comment
-comment|/* compiles for FreeBSD-current, if defined. 				   otherwise, compiles for FreeBSD 2.1.x. */
-end_comment
 
 begin_comment
 comment|/* features */
@@ -231,24 +213,6 @@ end_define
 begin_comment
 comment|/* report rate: 100 Hz */
 end_comment
-
-begin_comment
-comment|/* misc */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|(-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
 
 begin_comment
 comment|/* some macros */
@@ -655,12 +619,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -696,15 +654,6 @@ name|psmselect
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PSM_CURRENT */
-end_comment
-
 begin_comment
 comment|/* device driver declarateion */
 end_comment
@@ -725,12 +674,6 @@ name|FALSE
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
 
 begin_define
 define|#
@@ -779,28 +722,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PSM_CURRENT */
-end_comment
-
 begin_comment
 comment|/* debug message level */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bootverbose
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* `-v' option at `boot:' prompt */
 end_comment
 
 begin_decl_stmt
@@ -2387,16 +2310,8 @@ comment|/* return (0); XXX eh? usually 1 indicates success */
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
-
 begin_function
 specifier|static
-endif|#
-directive|endif
 name|int
 name|psmopen
 parameter_list|(
@@ -2696,16 +2611,8 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
-
 begin_function
 specifier|static
-endif|#
-directive|endif
 name|int
 name|psmclose
 parameter_list|(
@@ -3281,7 +3188,8 @@ parameter_list|,
 name|int
 name|maxlen
 parameter_list|,
-specifier|register
+name|r
+name|egister
 name|mousestatus_t
 modifier|*
 name|status
@@ -3476,16 +3384,8 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
-
 begin_function
 specifier|static
-endif|#
-directive|endif
 name|int
 name|psmread
 parameter_list|(
@@ -3833,16 +3733,8 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
-
 begin_function
 specifier|static
-endif|#
-directive|endif
 name|int
 name|psmioctl
 parameter_list|(
@@ -5027,16 +4919,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
-
 begin_function
 specifier|static
-endif|#
-directive|endif
 name|int
 name|psmselect
 parameter_list|(
@@ -5145,12 +5029,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PSM_CURRENT
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -5221,15 +5099,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PSM_CURRENT */
-end_comment
 
 begin_endif
 endif|#
