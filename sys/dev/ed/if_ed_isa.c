@@ -533,11 +533,9 @@ specifier|static
 name|int
 name|ed_isa_attach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ed_softc
