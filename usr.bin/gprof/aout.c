@@ -330,7 +330,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 operator|*
 name|defaultEs
 operator|=
@@ -743,7 +743,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 continue|continue;
 block|}
 name|npe
@@ -794,7 +794,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|npe
 operator|++
 expr_stmt|;

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)dfn.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)dfn.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +174,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 comment|/* 	 *	if we're already numbered, no need to look any furthur. 	 */
 if|if
 condition|(
@@ -337,7 +350,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 end_block
 
@@ -545,7 +558,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 if|if
 condition|(
 name|cycletop
@@ -609,7 +622,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 comment|/* 	     *	if what we think is the top of the cycle 	     *	has a cyclehead field, then it's not really the 	     *	head of the cycle, which is really what we want 	     */
 if|if
@@ -655,7 +668,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 for|for
 control|(
@@ -743,7 +756,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 for|for
 control|(
 name|tailp
@@ -809,7 +822,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 block|}
 elseif|else
@@ -885,7 +898,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 end_block
 
@@ -943,7 +956,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 comment|/* 	 *	number functions and things in their cycles 	 *	unless the function is itself part of a cycle 	 */
 if|if
 condition|(
@@ -1009,7 +1022,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 block|}
 else|else
@@ -1032,7 +1045,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 name|dfn_depth
 operator|-=

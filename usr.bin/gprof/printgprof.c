@@ -1851,7 +1851,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 if|if
 condition|(
@@ -2828,7 +2828,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 if|if
 condition|(
 name|thisparentp

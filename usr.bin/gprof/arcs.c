@@ -86,8 +86,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|DEBUG
 end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 begin_comment
 comment|/*      *	add (or just increment) an arc      */
@@ -158,7 +161,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|arcp
 operator|=
 name|arclookup
@@ -200,7 +203,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|arcp
 operator|->
 name|arc_count
@@ -583,7 +586,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 if|if
 condition|(
 name|pass
@@ -826,7 +829,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 comment|/* 	 *	starting from the topological top, 	 *	propagate print flags to children. 	 *	also, calculate propagation fractions. 	 *	this happens before time propagation 	 *	since time propagation uses the fractions. 	 */
 name|doflags
 argument_list|()
@@ -1405,7 +1408,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 block|}
 end_block
@@ -1725,7 +1728,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 comment|/* 	     *	link members to cycle header 	     */
 for|for
 control|(
@@ -2073,7 +2076,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 for|for
 control|(
 name|nlp
@@ -2243,7 +2246,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 return|return
 operator|(
 name|done
@@ -2320,7 +2323,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 if|if
 condition|(
 name|arcp
@@ -2360,7 +2363,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 operator|*
 name|stkp
 operator|=
@@ -2650,7 +2653,7 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 return|return
 operator|(
 name|TRUE
@@ -2843,7 +2846,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|cyclecnt
 operator|++
 expr_stmt|;
@@ -2931,7 +2934,7 @@ name|type
 decl_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|maxexitcnt
 operator|=
 literal|0
@@ -3166,7 +3169,7 @@ literal|"exit"
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 elseif|else
 if|if
@@ -3190,7 +3193,7 @@ literal|"internal"
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 else|else
 block|{
@@ -3208,7 +3211,7 @@ literal|"orphan"
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 name|maxarcp
 operator|->
@@ -3276,7 +3279,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|printf
 argument_list|(
 literal|"\t%s to %s with %ld calls\n"
@@ -3531,8 +3534,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|DEBUG
 end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 begin_macro
 name|cycletime
@@ -3737,7 +3743,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 if|if
 condition|(
 operator|!
@@ -3964,7 +3970,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 block|}
 end_block

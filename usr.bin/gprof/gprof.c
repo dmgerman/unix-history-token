@@ -301,7 +301,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|not DEBUG
+comment|/* not DEBUG */
 name|printf
 argument_list|(
 literal|"gprof: -d ignored\n"
@@ -309,7 +309,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 break|break;
 case|case
 literal|'E'
@@ -875,7 +875,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 comment|/* 	     *	add this arc 	     */
 name|tally
 argument_list|(
@@ -1268,7 +1268,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 return|return
 operator|(
 name|pfile
@@ -1394,7 +1394,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|addarc
 argument_list|(
 name|parentp
@@ -1643,7 +1643,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 block|}
 name|fclose
@@ -2160,7 +2160,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|totime
 operator|+=
 name|time
@@ -2286,7 +2286,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|nl
 index|[
 name|j
@@ -2323,7 +2323,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 block|}
 end_block
 
@@ -2511,7 +2511,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|DEBUG
+comment|/* DEBUG */
 name|nlp
 operator|->
 name|svalue
