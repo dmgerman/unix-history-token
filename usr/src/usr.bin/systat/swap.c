@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)swap.c	5.3 (Berkeley) %G%"
+literal|"@(#)swap.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1178,6 +1178,16 @@ index|]
 operator|.
 name|n_value
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nswdev
+operator|>
+name|MAXSWAPDEV
+condition|)
+name|nswdev
+operator|=
+name|MAXSWAPDEV
 expr_stmt|;
 name|swdevt
 operator|=
