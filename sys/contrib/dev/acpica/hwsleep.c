@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 11 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 12 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -352,6 +352,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|disable
+argument_list|()
+expr_stmt|;
 name|PM1AControl
 operator|=
 operator|(
@@ -364,22 +367,21 @@ argument_list|,
 name|PM1_CONTROL
 argument_list|)
 expr_stmt|;
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_OK
+argument_list|,
+operator|(
+literal|"Entering S%d\n"
+operator|,
+name|SleepState
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* mask off SLP_EN and SLP_TYP fields */
 name|PM1AControl
 operator|&=
 literal|0xC3FF
-expr_stmt|;
-comment|/* mask in SLP_EN */
-name|PM1AControl
-operator||=
-operator|(
-literal|1
-operator|<<
-name|AcpiHwGetBitShift
-argument_list|(
-name|SLP_EN_MASK
-argument_list|)
-operator|)
 expr_stmt|;
 name|PM1BControl
 operator|=
@@ -408,20 +410,7 @@ name|SLP_TYPE_X_MASK
 argument_list|)
 operator|)
 expr_stmt|;
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_OK
-argument_list|,
-operator|(
-literal|"Entering S%d\n"
-operator|,
-name|SleepState
-operator|)
-argument_list|)
-expr_stmt|;
-name|disable
-argument_list|()
-expr_stmt|;
+comment|/* write #1: fill in SLP_TYPE data */
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
@@ -440,8 +429,48 @@ argument_list|,
 name|PM1BControl
 argument_list|)
 expr_stmt|;
-comment|/* one system won't work with this, one won't work without */
-comment|/*AcpiHwRegisterWrite(ACPI_MTX_LOCK, PM1_CONTROL,         (1<< AcpiHwGetBitShift (SLP_EN_MASK)));*/
+comment|/* mask in SLP_EN */
+name|PM1AControl
+operator||=
+operator|(
+literal|1
+operator|<<
+name|AcpiHwGetBitShift
+argument_list|(
+name|SLP_EN_MASK
+argument_list|)
+operator|)
+expr_stmt|;
+name|PM1BControl
+operator||=
+operator|(
+literal|1
+operator|<<
+name|AcpiHwGetBitShift
+argument_list|(
+name|SLP_EN_MASK
+argument_list|)
+operator|)
+expr_stmt|;
+comment|/* write #2: the whole tamale */
+name|AcpiHwRegisterWrite
+argument_list|(
+name|ACPI_MTX_LOCK
+argument_list|,
+name|PM1A_CONTROL
+argument_list|,
+name|PM1AControl
+argument_list|)
+expr_stmt|;
+name|AcpiHwRegisterWrite
+argument_list|(
+name|ACPI_MTX_LOCK
+argument_list|,
+name|PM1B_CONTROL
+argument_list|,
+name|PM1BControl
+argument_list|)
+expr_stmt|;
 name|enable
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -522,7 +522,7 @@ name|UINT32
 modifier|*
 name|Size
 parameter_list|,
-name|void
+name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
 name|LogicalAddress

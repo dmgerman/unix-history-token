@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 29 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -84,6 +84,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|UINT32
+name|AcpiTbGetTableCount
+parameter_list|(
+name|RSDP_DESCRIPTOR
+modifier|*
+name|RSDP
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+name|RSDT
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * tbget - Table "get" routines  */
 end_comment
@@ -145,6 +160,48 @@ parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_PHYSICAL_ADDRESS
+name|AcpiTbGetRsdtAddress
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiTbValidateRsdt
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|TablePtr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiTbGetTablePointer
+parameter_list|(
+name|ACPI_PHYSICAL_ADDRESS
+name|PhysicalAddress
+parameter_list|,
+name|UINT32
+name|Flags
+parameter_list|,
+name|UINT32
+modifier|*
+name|Size
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+modifier|*
+name|TablePtr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -309,6 +366,9 @@ parameter_list|(
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableInfo
+parameter_list|,
+name|UINT32
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -339,7 +399,7 @@ name|UINT32
 modifier|*
 name|Size
 parameter_list|,
-name|void
+name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
 name|LogicalAddress

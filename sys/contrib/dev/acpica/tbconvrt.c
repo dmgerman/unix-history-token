@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 23 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,41 +52,31 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertToXsdt  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableCount  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|ACPI_STATUS
-name|AcpiTbConvertToXsdt
-parameter_list|(
-name|ACPI_TABLE_DESC
-modifier|*
-name|TableInfo
-parameter_list|,
 name|UINT32
+name|AcpiTbGetTableCount
+parameter_list|(
+name|RSDP_DESCRIPTOR
 modifier|*
-name|NumberOfTables
+name|RSDP
+parameter_list|,
+name|ACPI_TABLE_HEADER
+modifier|*
+name|RSDT
 parameter_list|)
 block|{
 name|UINT32
-name|TableSize
-decl_stmt|;
-name|UINT32
 name|PointerSize
-decl_stmt|;
-name|UINT32
-name|i
-decl_stmt|;
-name|XSDT_DESCRIPTOR
-modifier|*
-name|NewTable
 decl_stmt|;
 ifndef|#
 directive|ifndef
 name|_IA64
 if|if
 condition|(
-name|AcpiGbl_RSDP
+name|RSDP
 operator|->
 name|Revision
 operator|<
@@ -114,19 +104,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Determine the number of tables pointed to by the RSDT/XSDT.      * This is defined by the ACPI Specification to be the number of      * pointers contained within the RSDT/XSDT.  The size of the pointers      * is architecture-dependent.      */
-name|TableSize
-operator|=
-name|TableInfo
-operator|->
-name|Pointer
+return|return
+operator|(
+operator|(
+name|RSDT
 operator|->
 name|Length
-expr_stmt|;
-operator|*
-name|NumberOfTables
-operator|=
-operator|(
-name|TableSize
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -135,6 +118,49 @@ argument_list|)
 operator|)
 operator|/
 name|PointerSize
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertToXsdt  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiTbConvertToXsdt
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|,
+name|UINT32
+modifier|*
+name|NumberOfTables
+parameter_list|)
+block|{
+name|UINT32
+name|TableSize
+decl_stmt|;
+name|UINT32
+name|i
+decl_stmt|;
+name|XSDT_DESCRIPTOR
+modifier|*
+name|NewTable
+decl_stmt|;
+operator|*
+name|NumberOfTables
+operator|=
+name|AcpiTbGetTableCount
+argument_list|(
+name|AcpiGbl_RSDP
+argument_list|,
+name|TableInfo
+operator|->
+name|Pointer
+argument_list|)
 expr_stmt|;
 comment|/* Compute size of the converted XSDT */
 name|TableSize

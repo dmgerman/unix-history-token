@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 178 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 180 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -785,8 +785,15 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*  * System states  */
+comment|/*  * Power state values  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_STATE_UNKNOWN
+value|(UINT8) 0xFF
+end_define
 
 begin_define
 define|#
@@ -855,10 +862,6 @@ name|ACPI_S_STATE_COUNT
 value|6
 end_define
 
-begin_comment
-comment|/*  * Device power states  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -901,11 +904,64 @@ name|ACPI_D_STATE_COUNT
 value|4
 end_define
 
+begin_comment
+comment|/*  * Standard notify values  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ACPI_STATE_UNKNOWN
-value|(UINT8) 0xFF
+name|ACPI_NOTIFY_BUS_CHECK
+value|(UINT8) 0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_DEVICE_CHECK
+value|(UINT8) 1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_DEVICE_WAKE
+value|(UINT8) 2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_EJECT_REQUEST
+value|(UINT8) 3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_DEVICE_CHECK_LIGHT
+value|(UINT8) 4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_FREQUENCY_MISMATCH
+value|(UINT8) 5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_BUS_MODE_MISMATCH
+value|(UINT8) 6
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOTIFY_POWER_FAULT
+value|(UINT8) 7
 end_define
 
 begin_comment
@@ -1296,8 +1352,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INTERNAL_TYPE_RESOURCE_FIELD
+value|25
+end_define
+
+begin_comment
+comment|/* 0x19  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INTERNAL_TYPE_NODE_MAX
-value|24
+value|25
 end_define
 
 begin_comment
@@ -1308,50 +1375,39 @@ begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_FIELD_DEFN
-value|25
+value|26
 end_define
 
 begin_comment
-comment|/* 0x19  Name, ByteConst, multiple FieldElement */
+comment|/* 0x1A  Name, ByteConst, multiple FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_BANK_FIELD_DEFN
-value|26
+value|27
 end_define
 
 begin_comment
-comment|/* 0x1A  2 Name,DWordConst,ByteConst,multi FieldElement */
+comment|/* 0x1B  2 Name,DWordConst,ByteConst,multi FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INDEX_FIELD_DEFN
-value|27
+value|28
 end_define
 
 begin_comment
-comment|/* 0x1B  2 Name, ByteConst, multiple FieldElement */
+comment|/* 0x1C  2 Name, ByteConst, multiple FieldElement */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_IF
-value|28
-end_define
-
-begin_comment
-comment|/* 0x1C  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTERNAL_TYPE_ELSE
 value|29
 end_define
 
@@ -1362,7 +1418,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_WHILE
+name|INTERNAL_TYPE_ELSE
 value|30
 end_define
 
@@ -1373,48 +1429,59 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTERNAL_TYPE_SCOPE
+name|INTERNAL_TYPE_WHILE
 value|31
 end_define
 
 begin_comment
-comment|/* 0x1F  Name, multiple Node */
+comment|/* 0x1F  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INTERNAL_TYPE_SCOPE
+value|32
+end_define
+
+begin_comment
+comment|/* 0x20  Name, multiple Node */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_DEF_ANY
-value|32
+value|33
 end_define
 
 begin_comment
-comment|/* 0x20  type is Any, suppress search of enclosing scopes */
+comment|/* 0x21  type is Any, suppress search of enclosing scopes */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_EXTRA
-value|33
+value|34
 end_define
 
 begin_comment
-comment|/* 0x21  */
+comment|/* 0x22  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_MAX
-value|33
+value|34
 end_define
 
 begin_define
 define|#
 directive|define
 name|INTERNAL_TYPE_INVALID
-value|34
+value|35
 end_define
 
 begin_define

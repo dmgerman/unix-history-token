@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acoutput.h -- debug output  *       $Revision: 78 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -93,42 +93,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_DEVICES
+name|ACPI_DEBUGGER
 value|0x00000200
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_POWER
+name|ACPI_OS_SERVICES
 value|0x00000400
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_BUS_MANAGER
+name|ACPI_BUS
 value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_POWER_CONTROL
+name|ACPI_SYSTEM
 value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_EMBEDDED_CONTROLLER
+name|ACPI_POWER
 value|0x00004000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_PROCESSOR_CONTROL
+name|ACPI_EC
 value|0x00008000
 end_define
 
@@ -156,36 +156,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_SYSTEM
+name|ACPI_PROCESSOR
 value|0x00080000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_THERMAL_ZONE
+name|ACPI_THERMAL
 value|0x00100000
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUGGER
-value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_OS_SERVICES
-value|0x02000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_ALL_COMPONENTS
-value|0x01FFFFFF
+value|0x00FFFFFF
 end_define
 
 begin_define

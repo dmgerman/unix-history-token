@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 25 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 26 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -86,40 +86,6 @@ argument_list|(
 literal|"dbexec"
 argument_list|)
 end_macro
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|dbmethodinfo
-block|{
-name|ACPI_HANDLE
-name|ThreadGate
-decl_stmt|;
-name|NATIVE_CHAR
-modifier|*
-name|Name
-decl_stmt|;
-name|NATIVE_CHAR
-modifier|*
-modifier|*
-name|Args
-decl_stmt|;
-name|UINT32
-name|Flags
-decl_stmt|;
-name|UINT32
-name|NumLoops
-decl_stmt|;
-name|NATIVE_CHAR
-name|Pathname
-index|[
-literal|128
-index|]
-decl_stmt|;
-block|}
-name|DB_METHOD_INFO
-typedef|;
-end_typedef
 
 begin_decl_stmt
 name|DB_METHOD_INFO

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -262,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiLoadTable  *  * PARAMETERS:  TablePtr        - pointer to a buffer containing the entire  *                                table to be loaded  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to load a table from the caller's  *              buffer.  The buffer must contain an entire ACPI Table including  *              a valid header.  The header fields will be verified, and if it  *              is determined that the table is invalid, the call will fail.  *  *              If the call fails an appropriate status will be returned.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiLoadTable  *  * PARAMETERS:  TablePtr        - pointer to a buffer containing the entire  *                                table to be loaded  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to load a table from the caller's  *              buffer.  The buffer must contain an entire ACPI Table including  *              a valid header.  The header fields will be verified, and if it  *              is determined that the table is invalid, the call will fail.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -521,7 +521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTableHeader  *  * PARAMETERS:  TableType       - one of the defined table types  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *                                see AcpiGbl_AcpiTableFlag  *              OutTableHeader  - pointer to the ACPI_TABLE_HEADER if successful  *  * DESCRIPTION: This function is called to get an ACPI table header.  The caller  *              supplies an pointer to a data area sufficient to contain an ACPI  *              ACPI_TABLE_HEADER structure.  *  *              The header contains a length field that can be used to determine  *              the size of the buffer needed to contain the entire table.  This  *              function is not valid for the RSD PTR table since it does not  *              have a standard header and is fixed length.  *  *              If the operation fails for any reason an appropriate status will  *              be returned and the contents of OutTableHeader are undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTableHeader  *  * PARAMETERS:  TableType       - one of the defined table types  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *                                see AcpiGbl_AcpiTableFlag  *              OutTableHeader  - pointer to the ACPI_TABLE_HEADER if successful  *  * DESCRIPTION: This function is called to get an ACPI table header.  The caller  *              supplies an pointer to a data area sufficient to contain an ACPI  *              ACPI_TABLE_HEADER structure.  *  *              The header contains a length field that can be used to determine  *              the size of the buffer needed to contain the entire table.  This  *              function is not valid for the RSD PTR table since it does not  *              have a standard header and is fixed length.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -700,7 +700,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  TableType       - one of the defined table types  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *                                see AcpiGbl_AcpiTableFlag  *              RetBuffer       - pointer to a structure containing a buffer to  *                                receive the table  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get an ACPI table.  The caller  *              supplies an OutBuffer large enough to contain the entire ACPI  *              table.  The caller should call the AcpiGetTableHeader function  *              first to determine the buffer size needed.  Upon completion  *              the OutBuffer->Length field will indicate the number of bytes  *              copied into the OutBuffer->BufPtr buffer.  This table will be  *              a complete table including the header.  *  *              If the operation fails an appropriate status will be returned  *              and the contents of OutBuffer are undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetTable  *  * PARAMETERS:  TableType       - one of the defined table types  *              Instance        - the non zero instance of the table, allows  *                                support for multiple tables of the same type  *                                see AcpiGbl_AcpiTableFlag  *              RetBuffer       - pointer to a structure containing a buffer to  *                                receive the table  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get an ACPI table.  The caller  *              supplies an OutBuffer large enough to contain the entire ACPI  *              table.  The caller should call the AcpiGetTableHeader function  *              first to determine the buffer size needed.  Upon completion  *              the OutBuffer->Length field will indicate the number of bytes  *              copied into the OutBuffer->BufPtr buffer.  This table will be  *              a complete table including the header.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -848,7 +848,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * AcpiTbGetTablePtr will return a NULL pointer if the      *  table is not loaded.      */
+comment|/*      * AcpiTbGetTablePtr will return a NULL pointer if the      * table is not loaded.      */
 if|if
 condition|(
 name|TblPtr
