@@ -823,6 +823,11 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Get process accounting information. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* (1) The name of the command that ran */
 name|bcopy
 argument_list|(
@@ -1051,11 +1056,6 @@ operator|->
 name|cr_rgid
 expr_stmt|;
 comment|/* (7) The terminal from which the process was started */
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|SESS_LOCK
 argument_list|(
 name|p
@@ -1112,11 +1112,6 @@ operator|->
 name|p_session
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* (8) The boolean flags that tell how the process terminated, etc. */
 name|acct
 operator|.
@@ -1125,6 +1120,11 @@ operator|=
 name|p
 operator|->
 name|p_acflag
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Write the accounting information to the file. 	 */
 name|uc
