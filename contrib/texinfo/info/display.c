@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* display.c -- How to display Info windows.    $Id: display.c,v 1.6 1997/07/24 21:13:27 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
+comment|/* display.c -- How to display Info windows.    $Id: display.c,v 1.7 2002/03/08 21:41:44 karl Exp $     Copyright (C) 1993, 97 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by Brian Fox (bfox@ai.mit.edu). */
 end_comment
 
 begin_include
@@ -351,6 +351,15 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Number of lines done so far. */
+name|int
+name|pl_ignore
+init|=
+literal|0
+decl_stmt|;
+comment|/* How many chars use zero width on screen. */
+name|int
+name|allocated_win_width
+decl_stmt|;
 name|DISPLAY_LINE
 modifier|*
 modifier|*
@@ -401,6 +410,14 @@ operator|)
 condition|)
 return|return;
 comment|/* Print each line in the window into our local buffer, and then      check the contents of that buffer against the display.  If they      differ, update the display. */
+name|allocated_win_width
+operator|=
+name|win
+operator|->
+name|width
+operator|+
+literal|1
+expr_stmt|;
 name|printed_line
 operator|=
 operator|(
@@ -409,11 +426,7 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
-literal|1
-operator|+
-name|win
-operator|->
-name|width
+name|allocated_win_width
 argument_list|)
 expr_stmt|;
 if|if
@@ -537,6 +550,8 @@ operator|->
 name|width
 operator|-
 name|pl_index
+operator|+
+name|pl_ignore
 expr_stmt|;
 block|}
 else|else
@@ -560,6 +575,97 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Support ANSI escape sequences under -R.  */
+if|if
+condition|(
+name|raw_escapes_p
+operator|&&
+operator|*
+name|nodetext
+operator|==
+literal|'\033'
+operator|&&
+name|nodetext
+index|[
+literal|1
+index|]
+operator|==
+literal|'['
+operator|&&
+name|isdigit
+argument_list|(
+name|nodetext
+index|[
+literal|2
+index|]
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|nodetext
+index|[
+literal|3
+index|]
+operator|==
+literal|'m'
+condition|)
+name|pl_ignore
+operator|+=
+literal|4
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|isdigit
+argument_list|(
+name|nodetext
+index|[
+literal|3
+index|]
+argument_list|)
+operator|&&
+name|nodetext
+index|[
+literal|4
+index|]
+operator|==
+literal|'m'
+condition|)
+name|pl_ignore
+operator|+=
+literal|5
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|pl_index
+operator|+
+literal|2
+operator|>=
+name|allocated_win_width
+operator|-
+literal|1
+condition|)
+block|{
+name|allocated_win_width
+operator|*=
+literal|2
+expr_stmt|;
+name|printed_line
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|xrealloc
+argument_list|(
+name|printed_line
+argument_list|,
+name|allocated_win_width
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If this character can be printed without passing the width of          the line, then stuff it into the line. */
 if|if
 condition|(
@@ -570,6 +676,8 @@ operator|<
 name|win
 operator|->
 name|width
+operator|+
+name|pl_ignore
 condition|)
 block|{
 comment|/* Optimize if possible. */
@@ -674,6 +782,8 @@ operator|(
 name|win
 operator|->
 name|width
+operator|+
+name|pl_ignore
 operator|-
 literal|1
 operator|)
@@ -765,6 +875,22 @@ condition|(
 name|entry
 operator|->
 name|inverse
+comment|/* Need to erase the line if it has escape sequences.  */
+operator|||
+operator|(
+name|raw_escapes_p
+operator|&&
+name|strchr
+argument_list|(
+name|entry
+operator|->
+name|text
+argument_list|,
+literal|'\033'
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|terminal_goto_xy
@@ -885,6 +1011,8 @@ operator|<
 name|win
 operator|->
 name|width
+operator|+
+name|pl_ignore
 operator|&&
 name|pl_index
 operator|<
@@ -908,6 +1036,34 @@ name|stdout
 argument_list|)
 expr_stmt|;
 comment|/* Update the display text buffer. */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|printed_line
+argument_list|)
+operator|>
+name|screenwidth
+condition|)
+comment|/* printed_line[] can include more than screenwidth 		   characters if we are under -R and there are escape 		   sequences in it.  However, entry->text was 		   allocated (in display_initialize_display) for 		   screenwidth characters only.  */
+name|entry
+operator|->
+name|text
+operator|=
+name|xrealloc
+argument_list|(
+name|entry
+operator|->
+name|text
+argument_list|,
+name|strlen
+argument_list|(
+name|printed_line
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|entry
@@ -969,6 +1125,11 @@ name|pl_index
 operator|=
 literal|0
 expr_stmt|;
+name|pl_ignore
+operator|=
+literal|0
+expr_stmt|;
+comment|/* this is computed per line */
 comment|/* If there are characters from REP left to print, stuff them              into the buffer now. */
 if|if
 condition|(
