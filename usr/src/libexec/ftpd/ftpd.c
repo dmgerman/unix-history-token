@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.28	(Berkeley) %G%"
+literal|"@(#)ftpd.c	5.29	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1106,8 +1106,7 @@ argument_list|,
 literal|"signal: %m"
 argument_list|)
 expr_stmt|;
-comment|/* handle urgent data inline */
-comment|/* Sequent defines this, but it doesn't work */
+comment|/* Try to handle urgent data inline */
 ifdef|#
 directive|ifdef
 name|SO_OOBINLINE
@@ -1884,8 +1883,15 @@ operator|*
 operator|)
 name|NULL
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return;
-block|}
 block|}
 block|}
 operator|(
@@ -1896,6 +1902,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|reply
 argument_list|(
@@ -3866,6 +3873,10 @@ name|c
 decl_stmt|;
 name|int
 name|cnt
+decl_stmt|,
+name|bare_lfs
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|buf
@@ -4010,6 +4021,15 @@ block|{
 name|byte_count
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|bare_lfs
+operator|++
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -4109,6 +4129,26 @@ name|transflag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|bare_lfs
+condition|)
+block|{
+name|lreply
+argument_list|(
+literal|230
+argument_list|,
+literal|"WARNING! %d bare linefeeds received in ASCII mode"
+argument_list|,
+name|bare_lfs
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   File may not have transferred correctly.\r\n"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -4397,6 +4437,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|isdigit
 argument_list|(
 name|remotehost
