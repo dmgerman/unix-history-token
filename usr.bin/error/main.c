@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.3 1997/11/03 07:44:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,10 +259,12 @@ name|errorsort
 name|__P
 argument_list|(
 operator|(
-name|Eptr
+specifier|const
+name|void
 operator|*
 operator|,
-name|Eptr
+specifier|const
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -1075,21 +1077,34 @@ begin_function
 name|int
 name|errorsort
 parameter_list|(
-name|epp1
+name|vepp1
 parameter_list|,
-name|epp2
+name|vepp2
 parameter_list|)
-name|Eptr
+specifier|const
+name|void
 modifier|*
-name|epp1
+name|vepp1
 decl_stmt|,
 decl|*
-name|epp2
+name|vepp2
 decl_stmt|;
 end_function
 
 begin_block
 block|{
+specifier|const
+name|Eptr
+modifier|*
+name|epp1
+init|=
+name|vepp1
+decl_stmt|,
+modifier|*
+name|epp2
+init|=
+name|vepp2
+decl_stmt|;
 name|reg
 name|Eptr
 name|ep1
