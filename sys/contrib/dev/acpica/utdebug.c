@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -149,6 +149,7 @@ end_comment
 
 begin_function
 name|void
+name|ACPI_INTERNAL_VAR_XFACE
 name|AcpiUtDebugPrint
 parameter_list|(
 name|UINT32
@@ -298,6 +299,7 @@ end_comment
 
 begin_function
 name|void
+name|ACPI_INTERNAL_VAR_XFACE
 name|AcpiUtDebugPrintRaw
 parameter_list|(
 name|UINT32

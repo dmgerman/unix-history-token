@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 82 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 83 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -52,6 +52,7 @@ end_comment
 begin_function
 specifier|static
 name|UINT32
+name|ACPI_SYSTEM_XFACE
 name|AcpiEvSciHandler
 parameter_list|(
 name|void

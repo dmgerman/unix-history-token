@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 223 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 224 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2696,6 +2696,12 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|UINT32
+name|Length
+decl_stmt|;
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
+decl_stmt|;
 name|ACPI_PHYSICAL_ADDRESS
 name|MappedPhysicalAddress
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 49 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveNodeToValue  *  * PARAMETERS:  ObjectPtr       - Pointer to a location that contains  *                                a pointer to a NS node, and will recieve a  *                                pointer to the resolved object.  *              WalkState       - Current state.  Valid only if executing AML  *                                code.  NULL if simply resolving an object  *  * RETURN:      Status  *  * DESCRIPTION: Resolve a Namespace node to a valued object  *  * Note: for some of the data types, the pointer attached to the Node  * can be either a pointer to an actual internal object or a pointer into the  * AML stream itself.  These types are currently:  *  *      ACPI_TYPE_INTEGER  *      ACPI_TYPE_STRING  *      ACPI_TYPE_BUFFER  *      ACPI_TYPE_MUTEX  *      ACPI_TYPE_PACKAGE  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveNodeToValue  *  * PARAMETERS:  ObjectPtr       - Pointer to a location that contains  *                                a pointer to a NS node, and will receive a  *                                pointer to the resolved object.  *              WalkState       - Current state.  Valid only if executing AML  *                                code.  NULL if simply resolving an object  *  * RETURN:      Status  *  * DESCRIPTION: Resolve a Namespace node to a valued object  *  * Note: for some of the data types, the pointer attached to the Node  * can be either a pointer to an actual internal object or a pointer into the  * AML stream itself.  These types are currently:  *  *      ACPI_TYPE_INTEGER  *      ACPI_TYPE_STRING  *      ACPI_TYPE_BUFFER  *      ACPI_TYPE_MUTEX  *      ACPI_TYPE_PACKAGE  *  ******************************************************************************/
 end_comment
 
 begin_function

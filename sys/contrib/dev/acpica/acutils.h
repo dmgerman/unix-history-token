@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 129 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 130 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -932,6 +932,7 @@ end_function_decl
 
 begin_decl_stmt
 name|void
+name|ACPI_INTERNAL_VAR_XFACE
 name|AcpiUtDebugPrint
 argument_list|(
 name|UINT32
@@ -956,6 +957,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|ACPI_INTERNAL_VAR_XFACE
 name|AcpiUtDebugPrintRaw
 argument_list|(
 name|UINT32

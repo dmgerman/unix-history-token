@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 80 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 81 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2137,6 +2137,7 @@ end_comment
 
 begin_function
 name|void
+name|ACPI_SYSTEM_XFACE
 name|AcpiDbExecuteThread
 parameter_list|(
 name|void

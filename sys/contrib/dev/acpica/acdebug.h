@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -699,6 +699,7 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ACPI_SYSTEM_XFACE
 name|AcpiDbExecuteThread
 parameter_list|(
 name|void
