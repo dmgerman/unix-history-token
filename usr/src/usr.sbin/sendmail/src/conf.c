@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.128 (Berkeley) %G%"
+literal|"@(#)conf.c	8.129 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4794,6 +4794,11 @@ name|bool
 name|refuseconnections
 parameter_list|()
 block|{
+specifier|extern
+name|bool
+name|enoughspace
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|XLA
@@ -4810,11 +4815,17 @@ endif|#
 directive|endif
 comment|/* this is probably too simplistic */
 return|return
-operator|(
 name|CurrentLA
 operator|>=
 name|RefuseLA
-operator|)
+operator|||
+operator|!
+name|enoughspace
+argument_list|(
+name|MinBlocksFree
+operator|+
+literal|1
+argument_list|)
 return|;
 block|}
 end_function
@@ -8015,9 +8026,23 @@ argument_list|,
 name|CurEnv
 operator|->
 name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"[NOQUEUE]"
+else|:
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 name|bfree
 argument_list|,
+name|CurHostName
+operator|==
+name|NULL
+condition|?
+literal|"SMTP-DAEMON"
+else|:
 name|CurHostName
 argument_list|,
 name|msize
