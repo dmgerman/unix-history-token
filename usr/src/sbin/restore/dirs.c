@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.9 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/dir.h>
 end_include
 
 begin_include
@@ -157,6 +163,65 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Definitions for library routines operating on directories.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIRBLKSIZ
+value|DEV_BSIZE
+end_define
+
+begin_struct
+struct|struct
+name|dirdesc
+block|{
+name|int
+name|dd_fd
+decl_stmt|;
+name|long
+name|dd_loc
+decl_stmt|;
+name|long
+name|dd_size
+decl_stmt|;
+name|char
+name|dd_buf
+index|[
+name|DIRBLKSIZ
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|DIR
+modifier|*
+name|opendirfile
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|long
+name|rst_telldir
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|rst_seekdir
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Global variables for this file.  */
