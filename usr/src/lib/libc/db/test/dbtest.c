@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	8.5 (Berkeley) %G%"
+literal|"@(#)dbtest.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1481,6 +1481,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|STATISTICS
+if|if
+condition|(
+name|type
+operator|==
+name|DB_BTREE
+condition|)
+name|__bt_stat
+argument_list|(
+name|dbp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dbp
