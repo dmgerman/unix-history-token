@@ -301,6 +301,11 @@ name|getpeername
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|hisctladdr
 argument_list|,
@@ -935,7 +940,7 @@ directive|ifdef
 name|BSD4_2
 name|execl
 argument_list|(
-name|UUCICO
+name|_PATH_UUCICO
 argument_list|,
 literal|"uucico"
 argument_list|,
