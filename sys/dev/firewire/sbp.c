@@ -592,7 +592,7 @@ name|ex_login
 argument_list|,
 literal|0
 argument_list|,
-literal|"SBP transfer max speed"
+literal|"SBP enable exclusive login"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
