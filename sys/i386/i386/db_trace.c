@@ -1225,9 +1225,9 @@ name|strncmp
 argument_list|(
 name|name
 argument_list|,
-literal|"Xintr"
+literal|"Xatpic_intr"
 argument_list|,
-literal|5
+literal|11
 argument_list|)
 operator|==
 literal|0
@@ -1236,7 +1236,7 @@ name|strncmp
 argument_list|(
 name|name
 argument_list|,
-literal|"Xfastintr"
+literal|"Xapic_isr"
 argument_list|,
 literal|9
 argument_list|)
