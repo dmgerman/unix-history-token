@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	1.4 %G%"
+literal|"@(#)collect.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,17 +553,9 @@ index|]
 operator|!=
 name|escape
 operator|||
-operator|(
-operator|!
-name|intty
-operator|&&
-name|value
-argument_list|(
-literal|"henry"
-argument_list|)
-operator|==
+name|rflag
+operator|!=
 name|NOSTR
-operator|)
 condition|)
 block|{
 if|if
