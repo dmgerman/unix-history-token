@@ -136,6 +136,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -284,7 +290,7 @@ begin_decl_stmt
 name|int
 name|ohcidebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2287,7 +2293,7 @@ name|err
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|s
@@ -2583,10 +2589,6 @@ else|:
 name|OHCI_TD_OUT
 operator|)
 operator||
-name|OHCI_TD_NOCC
-operator||
-name|OHCI_TD_TOGGLE_CARRY
-operator||
 operator|(
 name|flags
 operator|&
@@ -2596,6 +2598,10 @@ name|OHCI_TD_R
 else|:
 literal|0
 operator|)
+operator||
+name|OHCI_TD_NOCC
+operator||
+name|OHCI_TD_TOGGLE_CARRY
 expr_stmt|;
 for|for
 control|(
@@ -2614,7 +2620,7 @@ if|if
 condition|(
 name|next
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|nomem
@@ -2922,7 +2928,7 @@ if|if
 condition|(
 name|next
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|nomem
@@ -4081,7 +4087,7 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/* Don't bother trying to reuse the BIOS init, we'll reset it anyway.  */
+comment|/* Don't bother trying to reuse the BIOS init, we'll reset it anyway. */
 block|} else if ((ctl& OHCI_HCFS_MASK) != OHCI_HCFS_RESET) {
 comment|/* BIOS started controller. */
 block|DPRINTF(("ohci_init: BIOS active\n")); 		if ((ctl& OHCI_HCFS_MASK) != OHCI_HCFS_OPERATIONAL) { 			OWRITE4(sc, OHCI_CONTROL, OHCI_HCFS_OPERATIONAL); 			usb_delay_ms(&sc->sc_bus, USB_RESUME_DELAY); 		}
@@ -4539,7 +4545,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__OPENBSD__
+name|__OpenBSD__
 argument_list|)
 name|sc
 operator|->
@@ -5875,8 +5881,6 @@ operator|&=
 operator|~
 name|OHCI_MIE
 expr_stmt|;
-comment|/* mask out Master Interrupt Enable */
-comment|/* Acknowledge any interrupts that have happened */
 name|OWRITE4
 argument_list|(
 name|sc
@@ -5886,7 +5890,7 @@ argument_list|,
 name|intrs
 argument_list|)
 expr_stmt|;
-comment|/* Any interrupts we had enabled? */
+comment|/* Acknowledge */
 name|eintrs
 operator|=
 name|intrs
@@ -6111,11 +6115,6 @@ name|sc
 operator|->
 name|sc_intrxfer
 argument_list|)
-expr_stmt|;
-name|intrs
-operator|&=
-operator|~
-name|OHCI_RHSC
 expr_stmt|;
 comment|/* 		 * Disable RHSC interrupt for now, because it will be 		 * on until the port has been reset. 		 */
 name|ohci_rhsc_able
@@ -6697,21 +6696,7 @@ literal|"ohci_process_done: TD done:\n"
 operator|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|std
-operator|=
-name|sdone
-init|;
-name|std
-condition|;
-name|std
-operator|=
-name|std
-operator|->
-name|dnext
-control|)
-name|ohci_dump_td
+name|ohci_dump_tds
 argument_list|(
 name|sdone
 argument_list|)
@@ -7016,7 +7001,7 @@ operator||=
 name|OHCI_TD_HANDLED
 expr_stmt|;
 block|}
-comment|/* remove TDs for the current xfer from the ED */
+comment|/* remove TDs */
 for|for
 control|(
 name|p
@@ -7048,6 +7033,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* clear halt */
 name|opipe
 operator|->
 name|sed
@@ -7063,7 +7049,6 @@ operator|->
 name|physaddr
 argument_list|)
 expr_stmt|;
-comment|/* XXX why is this being done? Why not OHCI_BLF too */
 name|OWRITE4
 argument_list|(
 name|sc
@@ -7615,7 +7600,7 @@ name|td_be
 operator|=
 name|htole32
 argument_list|(
-name|htole32
+name|le32toh
 argument_list|(
 name|data
 operator|->
@@ -8092,16 +8077,6 @@ literal|"ohci_waitintr: timeout\n"
 operator|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OHCI_DEBUG
-name|ohci_dumpregs
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|xfer
 operator|->
 name|status
@@ -8434,6 +8409,7 @@ name|len
 expr_stmt|;
 comment|/* Update device address and length since they may have changed. */
 comment|/* XXX This only needs to be done once, but it's too early in open. */
+comment|/* XXXX Should not touch ED here! */
 name|sed
 operator|->
 name|ed
@@ -8764,7 +8740,6 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX The number of byte we count */
 name|setup
 operator|->
 name|xfer
@@ -10361,8 +10336,6 @@ decl_stmt|;
 name|ohci_soft_td_t
 modifier|*
 name|std
-init|=
-name|NULL
 decl_stmt|;
 name|ohci_soft_itd_t
 modifier|*
@@ -11341,7 +11314,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*  	 * Step 2: Wait until we know hardware has finished any possible 	 * use of the xfer.  Also make sure the soft interrupt routine 	 * has run. 	 */
+comment|/* 	 * Step 2: Wait until we know hardware has finished any possible 	 * use of the xfer.  Also make sure the soft interrupt routine 	 * has run. 	 */
 name|usb_delay_ms
 argument_list|(
 name|opipe
@@ -11394,7 +11367,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Step 3: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * beyond the xfer we're trying to abort.  So as we're scanning 	 * the TDs of this xfer we check if the hardware points to 	 * any of them. 	 */
+comment|/* 	 * Step 3: Remove any vestiges of the xfer from the hardware. 	 * The complication here is that the hardware may have executed 	 * beyond the xfer we're trying to abort.  So as we're scanning 	 * the TDs of this xfer we check if the hardware points to 	 * any of them. 	 */
 name|s
 operator|=
 name|splusb
@@ -14500,7 +14473,7 @@ if|if
 condition|(
 name|ohcidebug
 operator|>
-literal|4
+literal|5
 condition|)
 block|{
 name|ohci_dump_ed
