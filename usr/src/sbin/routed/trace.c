@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.2 (Berkeley) %G%"
+literal|"@(#)trace.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_define
@@ -278,11 +284,38 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
 if|if
 condition|(
 name|ftrace
 operator|!=
 name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|stbuf
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|!=
+name|S_IFREG
 condition|)
 return|return;
 name|ftrace
@@ -688,6 +721,24 @@ block|{
 name|RTS_CHANGED
 block|,
 literal|"CHANGED"
+block|}
+block|,
+block|{
+name|RTS_INTERNAL
+block|,
+literal|"INTERNAL"
+block|}
+block|,
+block|{
+name|RTS_EXTERNAL
+block|,
+literal|"EXTERNAL"
+block|}
+block|,
+block|{
+name|RTS_SUBNET
+block|,
+literal|"SUBNET"
 block|}
 block|,
 block|{

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.4 (Berkeley) %G%"
+literal|"@(#)startup.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,6 +1104,8 @@ name|IFF_REMOTE
 operator|)
 operator||
 name|RTS_INTERNAL
+operator||
+name|RTS_SUBNET
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1157,6 +1159,8 @@ name|ifp
 decl_stmt|;
 name|int
 name|metric
+decl_stmt|,
+name|n
 decl_stmt|;
 name|struct
 name|rt_entry
@@ -1282,10 +1286,14 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
+name|n
+operator|=
 name|readentry
 argument_list|(
 name|fp
 argument_list|)
+operator|)
 operator|==
 name|EOF
 condition|)
@@ -1437,6 +1445,7 @@ operator||
 name|RTS_PASSIVE
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
 comment|/* assume no duplicate entries */
 name|externalinterfaces

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.2 (Berkeley) %G%"
+literal|"@(#)output.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -472,10 +472,7 @@ modifier|*
 name|sendsubnet
 call|)
 argument_list|(
-operator|&
 name|rt
-operator|->
-name|rt_dst
 argument_list|,
 name|dst
 argument_list|)
