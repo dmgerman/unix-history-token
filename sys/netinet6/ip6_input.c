@@ -4335,19 +4335,6 @@ name|y
 parameter_list|)
 value|((in6p->in6p_flags& IN6P_RFC2292) ? (x) : (y))
 name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
-name|int
-name|privileged
-init|=
-literal|0
-decl_stmt|;
-name|struct
 name|ip6_hdr
 modifier|*
 name|ip6
@@ -4361,19 +4348,6 @@ name|ip6_hdr
 operator|*
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|td
-operator|&&
-operator|!
-name|suser
-argument_list|(
-name|td
-argument_list|)
-condition|)
-name|privileged
-operator|++
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SO_TIMESTAMP
@@ -4711,7 +4685,7 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
-comment|/* 	 * IPV6_HOPOPTS socket option. We require super-user privilege 	 * for the option, but it might be too strict, since there might 	 * be some hop-by-hop options which can be returned to normal user. 	 * See RFC 2292 section 6. 	 */
+comment|/* 	 * IPV6_HOPOPTS socket option.  Recall that we required super-user 	 * privilege for the option (see ip6_ctloutput), but it might be too 	 * strict, since there might be some hop-by-hop options which can be 	 * returned to normal user. 	 * See also RFC 2292 section 6 (or RFC 3542 section 8). 	 */
 if|if
 condition|(
 operator|(
@@ -4725,21 +4699,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-operator|!
-name|privileged
-condition|)
-name|panic
-argument_list|(
-literal|"IN6P_HOPOPTS is set for unprivileged socket"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Check if a hop-by-hop options header is contatined in the 		 * received packet, and if so, store the options as ancillary 		 * data. Note that a hop-by-hop options header must be 		 * just after the IPv6 header, which is assured through the 		 * IPv6 input processing. 		 */
 if|if
 condition|(
@@ -5205,13 +5164,6 @@ name|in6p_flags
 operator|&
 name|IN6P_DSTOPTS
 operator|)
-condition|)
-break|break;
-comment|/* 				 * We also require super-user privilege for 				 * the option.  See comments on IN6_HOPOPTS. 				 */
-if|if
-condition|(
-operator|!
-name|privileged
 condition|)
 break|break;
 operator|*
