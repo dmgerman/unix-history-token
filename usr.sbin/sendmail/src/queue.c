@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.98 (Berkeley) 11/11/95 (with queueing)"
+literal|"@(#)queue.c	8.98.1.1 (Berkeley) 2/18/96 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.98 (Berkeley) 11/11/95 (without queueing)"
+literal|"@(#)queue.c	8.98.1.1 (Berkeley) 2/18/96 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -973,9 +973,16 @@ name|tfp
 argument_list|,
 literal|"B%s\n"
 argument_list|,
+name|denlstring
+argument_list|(
 name|e
 operator|->
 name|e_bodytype
+argument_list|,
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* message from envelope, if it exists */
@@ -1808,7 +1815,14 @@ name|h
 operator|->
 name|h_field
 argument_list|,
+name|denlstring
+argument_list|(
 name|buf
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1886,6 +1900,7 @@ name|savetrace
 expr_stmt|;
 block|}
 else|else
+block|{
 name|fprintf
 argument_list|(
 name|tfp
@@ -1896,11 +1911,19 @@ name|h
 operator|->
 name|h_field
 argument_list|,
+name|denlstring
+argument_list|(
 name|h
 operator|->
 name|h_value
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	**  Clean up. 	** 	**	Write a terminator record -- this is to prevent 	**	scurrilous crackers from appending any data. 	*/
 name|fprintf
