@@ -633,10 +633,10 @@ name|__strong_reference
 parameter_list|(
 name|sym
 parameter_list|,
-name|alias
+name|aliassym
 parameter_list|)
 define|\
-value|extern __typeof (sym) alias __attribute__ ((alias (#sym)));
+value|extern __typeof (sym) aliassym __attribute__ ((alias (#sym)));
 end_define
 
 begin_ifdef
