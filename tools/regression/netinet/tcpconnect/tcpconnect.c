@@ -56,7 +56,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|volid
+name|void
 parameter_list|)
 block|{
 name|fprintf
