@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -283,6 +283,26 @@ name|panic
 argument_list|(
 literal|"ffs_inactive: locked inode"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|curproc
+condition|)
+name|ip
+operator|->
+name|i_lockholder
+operator|=
+name|curproc
+operator|->
+name|p_pid
+expr_stmt|;
+else|else
+name|ip
+operator|->
+name|i_lockholder
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 endif|#
 directive|endif
