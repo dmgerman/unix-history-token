@@ -126,7 +126,7 @@ begin_define
 define|#
 directive|define
 name|SMALL_PIPE_SIZE
-value|4096
+value|PAGE_SIZE
 end_define
 
 begin_endif
