@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwalld.c,v 1.2 1994/11/18 22:50:22 ats Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +32,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -49,7 +44,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -61,25 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
+file|<syslog.h>
 end_include
 
 begin_include
@@ -91,7 +80,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/pmap_clnt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpcsvc/rwall.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_ifdef
@@ -146,6 +165,19 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|nodaemon
 init|=
@@ -162,6 +194,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -230,23 +263,9 @@ operator|&&
 operator|!
 name|nodaemon
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"usage: %s [-n]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|geteuid
@@ -367,18 +386,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|(
@@ -412,18 +426,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"bind"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|salen
 operator|=
 sizeof|sizeof
@@ -447,18 +456,13 @@ operator|&
 name|salen
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"getsockname"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|pmap_set
 argument_list|(
 name|WALLPROG
@@ -486,18 +490,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"dup2"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -519,6 +518,17 @@ argument_list|,
 name|killkids
 argument_list|)
 expr_stmt|;
+name|openlog
+argument_list|(
+literal|"rpc.rwalld"
+argument_list|,
+name|LOG_CONS
+operator||
+name|LOG_PID
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 name|transp
 operator|=
 name|svcudp_create
@@ -533,14 +543,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"cannot create udp service.\n"
+literal|"cannot create udp service"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -566,14 +573,17 @@ name|proto
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"unable to register (WALLPROG, WALLVERS, udp).\n"
+literal|"unable to register (WALLPROG, WALLVERS, %s)"
+argument_list|,
+name|proto
+condition|?
+literal|"udp"
+else|:
+literal|"(inetd)"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -585,14 +595,32 @@ block|}
 name|svc_run
 argument_list|()
 expr_stmt|;
-operator|(
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"svc_run returned"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
-operator|)
+name|usage
+parameter_list|()
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"svc_run returned\n"
+literal|"usage: rpc.rwalld [-n]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -707,6 +735,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -913,14 +946,11 @@ name|argument
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"unable to free arguments\n"
+literal|"unable to free arguments"
 argument_list|)
 expr_stmt|;
 name|exit
