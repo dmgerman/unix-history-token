@@ -1298,10 +1298,6 @@ operator|++
 name|F
 operator|->
 name|setcnt
-operator|,
-name|lastlp
-operator|=
-name|lp
 control|)
 block|{
 comment|/* 		 * If we're out of space to hold line structures, allocate 		 * more.  Initialize the structure so that we know that this 		 * is new space. 		 */
@@ -1380,7 +1376,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Get any pushed back line, else get the next line.  Allocate 		 * space as necessary.  If taking the line from the stack swap 		 * the two structures so that we don't lose space allocated to 		 * either structure.  This could be avoided by doing another 		 * level of indirection, but it's probably okay as is. 		 * but it's probably okay as is. 		 */
+comment|/* 		 * Get any pushed back line, else get the next line.  Allocate 		 * space as necessary.  If taking the line from the stack swap 		 * the two structures so that we don't lose space allocated to 		 * either structure.  This could be avoided by doing another 		 * level of indirection, but it's probably okay as is. 		 */
 name|lp
 operator|=
 operator|&
@@ -1391,6 +1387,26 @@ index|[
 name|F
 operator|->
 name|setcnt
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|F
+operator|->
+name|setcnt
+condition|)
+name|lastlp
+operator|=
+operator|&
+name|F
+operator|->
+name|set
+index|[
+name|F
+operator|->
+name|setcnt
+operator|-
+literal|1
 index|]
 expr_stmt|;
 if|if
