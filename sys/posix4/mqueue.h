@@ -22,7 +22,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|POSIX4_INCLUDE_MAYBES
+name|_POSIX4_INCLUDE_MAYBES
 end_ifdef
 
 begin_include
@@ -113,6 +113,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|mqd_t
 name|mq_open
 name|__P
@@ -252,6 +253,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

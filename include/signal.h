@@ -33,6 +33,12 @@ directive|include
 file|<machine/ansi.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_posix.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -294,10 +300,111 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|POSIX4_VISIBLE
+name|_POSIX4_VISIBLE_HISTORICALLY
 end_ifdef
 
+begin_comment
+comment|/* Async event notification */
+end_comment
+
+begin_union
+union|union
+name|sigval
+block|{
+name|int
+name|sival_int
+decl_stmt|;
+name|void
+modifier|*
+name|sival_ptr
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_struct
+struct|struct
+name|sigevent
+block|{
+name|int
+name|sigev_notify
+decl_stmt|;
+comment|/* Notification type */
+name|int
+name|sigev_signo
+decl_stmt|;
+comment|/* Signal number */
+name|union
+name|sigval
+name|sigev_value
+decl_stmt|;
+comment|/* Signal value */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIGEV_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* No async notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGEV_SIGNAL
+value|1
+end_define
+
+begin_comment
+comment|/* Queue signal with value */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _POSIX4_VISIBLE_HISTORICALLY */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX4_VISIBLE
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|siginfo
+block|{
+name|int
+name|si_signo
+decl_stmt|;
+comment|/* Signal number */
+name|int
+name|si_code
+decl_stmt|;
+comment|/* Cause of the signal */
+name|union
+name|sigval
+name|si_value
+decl_stmt|;
+comment|/* Signal value */
+block|}
+name|siginfo_t
+typedef|;
+end_typedef
+
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|int
 name|sigqueue
 name|__P
@@ -322,7 +429,7 @@ name|__P
 argument_list|(
 operator|(
 specifier|const
-name|sig_set_t
+name|sigset_t
 operator|*
 operator|,
 name|siginfo_t
@@ -339,7 +446,7 @@ name|__P
 argument_list|(
 operator|(
 specifier|const
-name|sig_set_t
+name|sigset_t
 operator|*
 operator|,
 name|siginfo_t
@@ -349,18 +456,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
+begin_decl_stmt
+name|__END_DECLS
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_POSIX_SOURCE
-end_ifndef
-
-begin_decl_stmt
 name|int
 name|killpg
 name|__P

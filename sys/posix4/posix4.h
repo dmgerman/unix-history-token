@@ -15,18 +15,17 @@ begin_comment
 comment|/*-  * Copyright (c) 1996, 1997, 1998  *	HD Associates, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by HD Associates, Inc  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_POSIX_VERSION
-argument_list|)
-operator|&&
-name|_POSIX_VERSION
-operator|>=
-literal|199309L
-end_if
+begin_include
+include|#
+directive|include
+file|<sys/_posix.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX4_VISIBLE
+end_ifdef
 
 begin_include
 include|#
@@ -45,41 +44,6 @@ include|#
 directive|include
 file|<sched.h>
 end_include
-
-begin_comment
-comment|/*  * This defines POSIX4_VISIBLE to indicate posix4 extensions should show up.  * You should test this when you add a posix4 extension to a header  * that exists in POSIX.1.  Try "man 9 posix4".  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_C_SOURCE
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|_POSIX_C_SOURCE
-argument_list|)
-operator|&&
-name|_POSIX_C_SOURCE
-operator|>=
-literal|199309L
-end_if
-
-begin_define
-define|#
-directive|define
-name|POSIX4_VISIBLE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*   *  * March 1, 1998: Details from here on change and this header file  * is volatile.  *  * Locally I've got PRIORITY SCHEDULING  * set as a system call available only to root   * and I'm still using a pseudo device to gate everything else.  *  * This interface vectors us into the kernel through a  * POSIX4 pseudo device with some user privilege authorization along  * the way.  *  * XXX I'm going with option 3.  *  * This has drawbacks from the point of view of ktrace.  There  * are (at least) three ways to do this:  *  * 1. As it is being done, which is bad for ktrace and is hokey  *    but is easy to extend during development;  * 2. Add a system call for every POSIX4 entry point, which  *    will result in many more system calls (on the order of 64)  * 3. Add a system call for each POSIX4 option, which is a bit more  *    useful for ktrace and will add only about 14 new system calls.  *   */
@@ -1089,7 +1053,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _POSIX_VERSION>= 199309L */
+comment|/* _POSIX4_VISIBLE */
 end_comment
 
 begin_endif

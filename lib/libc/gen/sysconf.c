@@ -624,9 +624,11 @@ expr_stmt|;
 goto|goto
 name|yesno
 goto|;
-ifdef|#
-directive|ifdef
-name|POSIX4
+if|#
+directive|if
+name|_POSIX_VERSION
+operator|>=
+literal|199309L
 comment|/* POSIX.4 */
 case|case
 name|_SC_ASYNCHRONOUS_IO
@@ -1130,7 +1132,7 @@ name|yesno
 goto|;
 endif|#
 directive|endif
-comment|/* POSIX4 */
+comment|/* _POSIX_VERSION>= 199309L */
 name|yesno
 label|:
 if|if
