@@ -1254,11 +1254,6 @@ name|extra
 operator|=
 name|prevextra
 expr_stmt|;
-name|msg
-argument_list|(
-name|extra
-argument_list|)
-expr_stmt|;
 block|}
 else|#
 directive|else
