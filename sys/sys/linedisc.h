@@ -479,17 +479,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|d_psize_t
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
 name|d_read_t
 parameter_list|(
 name|dev_t
@@ -959,9 +948,9 @@ name|dumper_t
 modifier|*
 name|d_dump
 decl_stmt|;
-name|d_psize_t
+name|void
 modifier|*
-name|d_psize
+name|__d_unused_was_psize
 decl_stmt|;
 name|u_int
 name|d_flags
@@ -1174,7 +1163,7 @@ begin_define
 define|#
 directive|define
 name|nopsize
-value|((d_psize_t *)NULL)
+value|(NULL)
 end_define
 
 begin_decl_stmt
