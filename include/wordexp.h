@@ -107,7 +107,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 value|0x2
 end_define
 

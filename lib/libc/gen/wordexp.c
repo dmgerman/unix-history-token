@@ -695,14 +695,14 @@ operator|(
 name|flags
 operator|&
 operator|(
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 operator||
 name|WRDE_APPEND
 operator|)
 operator|)
 operator|==
 operator|(
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 operator||
 name|WRDE_APPEND
 operator|)
@@ -746,7 +746,7 @@ operator|+
 operator|(
 name|flags
 operator|&
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 condition|?
 name|we
 operator|->
@@ -1000,7 +1000,7 @@ literal|0
 operator|&&
 name|flags
 operator|&
-name|WRDE_DOOFS
+name|WRDE_DOOFFS
 condition|)
 while|while
 condition|(
