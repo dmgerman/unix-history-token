@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	1.1	86/01/12	*/
+comment|/*	saio.h	1.2	86/12/18	*/
 end_comment
 
 begin_comment
@@ -297,6 +297,13 @@ name|dv_close
 function_decl|)
 parameter_list|()
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|dv_ioctl
+function_decl|)
+parameter_list|()
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -306,6 +313,12 @@ name|struct
 name|devsw
 name|devsw
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ndevs
 decl_stmt|;
 end_decl_stmt
 
