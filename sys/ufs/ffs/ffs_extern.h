@@ -966,6 +966,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|softdep_request_cleanup
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|softdep_setup_freeblocks
 name|__P
