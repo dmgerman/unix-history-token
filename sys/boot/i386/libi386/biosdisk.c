@@ -4136,7 +4136,7 @@ name|u_int32_t
 operator|)
 name|VTOP
 argument_list|(
-name|dest
+name|bbuf
 operator|+
 name|x
 operator|*
