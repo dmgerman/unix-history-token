@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bzero.c	5.2 (Berkeley) %G%"
+literal|"@(#)bzero.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,28 +64,17 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
+while|while
 condition|(
 name|length
+operator|--
 condition|)
-do|do
 operator|*
 name|b
 operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-do|while
-condition|(
-operator|--
-name|length
-condition|)
-do|;
-return|return
-operator|(
-name|length
-operator|)
-return|;
 block|}
 end_block
 
