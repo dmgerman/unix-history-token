@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -126,6 +126,28 @@ define|#
 directive|define
 name|PK_FACILITIES
 value|2
+end_define
+
+begin_comment
+comment|/* use level = CCITTPROTO_X25 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PK_RTATTACH
+value|3
+end_define
+
+begin_comment
+comment|/* use level = CCITTPROTO_X25 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PK_PRLISTEN
+value|4
 end_define
 
 begin_comment
