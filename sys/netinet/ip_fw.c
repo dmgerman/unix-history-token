@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.40 1996/06/17 00:00:35 alex Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.41 1996/06/23 14:28:02 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2129,16 +2129,19 @@ goto|goto
 name|got_match
 goto|;
 block|}
-comment|/* Fragments can't match past this point */
+comment|/* Check TCP flags and TCP/UDP ports only if packet is not fragment */
 if|if
 condition|(
+operator|!
+operator|(
 name|ip
 operator|->
 name|ip_off
 operator|&
 name|IP_OFFMASK
+operator|)
 condition|)
-continue|continue;
+block|{
 comment|/* TCP, a little more checking */
 if|if
 condition|(
@@ -2223,6 +2226,7 @@ name|IP_FW_F_DRNG
 argument_list|)
 condition|)
 continue|continue;
+block|}
 name|got_match
 label|:
 name|f
@@ -3272,6 +3276,57 @@ operator|,
 name|frwl
 operator|->
 name|fw_ndp
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/* 	 *	Rather than modify the entry to make such entries work,  	 *	we reject this rule and require user level utilities 	 *	to enforce whatever policy they deem appropriate. 	 */
+if|if
+condition|(
+operator|(
+name|frwl
+operator|->
+name|fw_src
+operator|.
+name|s_addr
+operator|&
+operator|(
+operator|~
+name|frwl
+operator|->
+name|fw_smsk
+operator|.
+name|s_addr
+operator|)
+operator|)
+operator|||
+operator|(
+name|frwl
+operator|->
+name|fw_dst
+operator|.
+name|s_addr
+operator|&
+operator|(
+operator|~
+name|frwl
+operator|->
+name|fw_dmsk
+operator|.
+name|s_addr
+operator|)
+operator|)
+condition|)
+block|{
+name|dprintf
+argument_list|(
+operator|(
+literal|"ip_fw_ctl: rule never matches\n"
 operator|)
 argument_list|)
 expr_stmt|;
