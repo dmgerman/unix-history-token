@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.11 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.12 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.11 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.12 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +179,11 @@ name|struct
 name|servent
 modifier|*
 name|sp
+decl_stmt|;
+name|int
+name|on
+init|=
+literal|1
 decl_stmt|;
 extern|extern reapchild(
 block|)
@@ -363,12 +368,6 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-block|{
-name|int
-name|on
-init|=
-literal|1
-decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -391,7 +390,6 @@ sizeof|sizeof
 name|on
 argument_list|)
 expr_stmt|;
-block|}
 end_if
 
 begin_endif
@@ -399,6 +397,56 @@ endif|#
 directive|endif
 endif|DEBUG
 end_endif
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|setsockopt
+argument_list|(
+name|DaemonSocket
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_REUSEADDR
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+name|on
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|setsockopt
+argument_list|(
+name|DaemonSocket
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_KEEPALIVE
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+name|on
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|if

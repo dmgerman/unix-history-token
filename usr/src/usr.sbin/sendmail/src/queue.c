@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.14 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.15 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.14 (Berkeley) %G%"
+literal|"@(#)queue.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1663,6 +1663,25 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+comment|/* make sure jobs in creation don't clog queue */
+name|wlist
+index|[
+name|wn
+index|]
+operator|.
+name|w_pri
+operator|=
+literal|0x7fffffff
+expr_stmt|;
+name|wlist
+index|[
+name|wn
+index|]
+operator|.
+name|w_ctime
+operator|=
+literal|0
+expr_stmt|;
 comment|/* extract useful information */
 while|while
 condition|(
@@ -3068,7 +3087,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%8ld %10ld %.16s %.37s"
+literal|"%8ld %10ld %.12s %.38s"
 argument_list|,
 name|dfsize
 argument_list|,
@@ -3081,6 +3100,8 @@ argument_list|(
 operator|&
 name|submittime
 argument_list|)
+operator|+
+literal|4
 argument_list|,
 operator|&
 name|buf
@@ -3120,7 +3141,7 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t (%.62s)"
+literal|"\n\t\t (%.60s)"
 argument_list|,
 name|message
 argument_list|)
@@ -3136,7 +3157,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t\t     %.37s"
+literal|"\n\t\t\t\t\t %.38s"
 argument_list|,
 operator|&
 name|buf
