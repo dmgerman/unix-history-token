@@ -19497,6 +19497,11 @@ condition|(
 name|processing_template_decl
 condition|)
 return|return;
+if|if
+condition|(
+operator|!
+name|skip_evaluation
+condition|)
 name|assemble_external
 argument_list|(
 name|decl

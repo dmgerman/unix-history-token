@@ -522,29 +522,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* The backend should not be interested in the size of an expression 	 of a type with both of these set; all copies of such types must go 	 through a constructor or assignment op.  */
-if|if
-condition|(
-name|TYPE_HAS_COMPLEX_INIT_REF
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|exp
-argument_list|)
-argument_list|)
-operator|&&
-name|TYPE_HAS_COMPLEX_ASSIGN_REF
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|exp
-argument_list|)
-argument_list|)
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* This would be wrong for a type with virtual bases, but they are 	 caught by the abort above.  */
+comment|/* This would be wrong for a type with virtual bases, but they should 	 not get here.  */
 return|return
 name|CLASSTYPE_SIZE_UNIT
 argument_list|(

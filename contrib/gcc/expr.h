@@ -2871,6 +2871,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Set the size for MEM to SIZE.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_mem_size
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Return a memory reference like MEMREF, but with its mode changed    to MODE and its address changed to ADDR.    (VOIDmode means don't change the mode.    NULL for ADDR means don't change the address.)  */
 end_comment
 

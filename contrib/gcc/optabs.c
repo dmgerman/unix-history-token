@@ -3532,7 +3532,7 @@ name|tmp
 expr_stmt|;
 block|}
 block|}
-comment|/* In case the insn wants input operands in modes different from 	 the result, convert the operands.  It would seem that we 	 don't need to convert CONST_INTs, but we do, so that they're 	 a properly sign-extended for their modes; we choose the 	 widest mode between mode and mode[01], so that, in a widening 	 operation, we call convert_modes with different FROM and TO 	 modes, which ensures the value is sign-extended.  Shift 	 operations are an exception, because the second operand needs 	 not be extended to the mode of the result.  */
+comment|/* In case the insn wants input operands in modes different from 	 those of the actual operands, convert the operands.  It would 	 seem that we don't need to convert CONST_INTs, but we do, so 	 that they're properly zero-extended or sign-extended for their 	 modes; shift operations are an exception, because the second 	 operand needs not be extended to the mode of the result.  */
 if|if
 condition|(
 name|GET_MODE
@@ -3564,19 +3564,7 @@ argument_list|(
 name|op0
 argument_list|)
 else|:
-name|GET_MODE_SIZE
-argument_list|(
 name|mode
-argument_list|)
-operator|>
-name|GET_MODE_SIZE
-argument_list|(
-name|mode0
-argument_list|)
-condition|?
-name|mode
-else|:
-name|mode0
 argument_list|,
 name|xop0
 argument_list|,
@@ -3614,20 +3602,8 @@ argument_list|(
 name|op1
 argument_list|)
 else|:
-operator|(
-name|GET_MODE_SIZE
-argument_list|(
-name|mode
-argument_list|)
-operator|>
-name|GET_MODE_SIZE
-argument_list|(
-name|mode1
-argument_list|)
-operator|&&
 operator|!
 name|shift_op
-operator|)
 condition|?
 name|mode
 else|:

@@ -1295,6 +1295,40 @@ value|do {									\   ASM_GLOBALIZE_LABEL (FILE, NAME);					\   ASM_OUTPUT_ALIG
 end_define
 
 begin_comment
+comment|/* This is how to output code to push a register on the stack.    It need not be very fast code.     On the rs6000, we must keep the backchain up to date.  In order    to simplify things, always allocate 16 bytes for a push (System V    wants to keep stack aligned to a 16 byte boundary).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_REG_PUSH
+parameter_list|(
+name|FILE
+parameter_list|,
+name|REGNO
+parameter_list|)
+define|\
+value|do {									\   if (DEFAULT_ABI == ABI_V4)						\     asm_fprintf (FILE,							\ 		 (TARGET_32BIT						\ 		  ? "\t{stu|stwu} %s,-16(%s)\n\t{st|stw} %s,12(%s)\n"	\ 		  : "\tstdu %s,-32(%s)\n\tstd %s,24(%s)\n"),		\ 		 reg_names[1], reg_names[1], reg_names[REGNO],		\ 		 reg_names[1]);						\ } while (0)
+end_define
+
+begin_comment
+comment|/* This is how to output an insn to pop a register from the stack.    It need not be very fast code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_REG_POP
+parameter_list|(
+name|FILE
+parameter_list|,
+name|REGNO
+parameter_list|)
+define|\
+value|do {									\   if (DEFAULT_ABI == ABI_V4)						\     asm_fprintf (FILE,							\ 		 (TARGET_32BIT						\ 		  ? "\t{l|lwz} %s,12(%s)\n\t{ai|addic} %s,%s,16\n"	\ 		  : "\tld %s,24(%s)\n\t{ai|addic} %s,%s,32\n"),		\ 		 reg_names[REGNO], reg_names[1], reg_names[1],		\ 		 reg_names[1]);						\ } while (0)
+end_define
+
+begin_comment
 comment|/* Switch  Recognition by gcc.c.  Add -G xx support.  */
 end_comment
 

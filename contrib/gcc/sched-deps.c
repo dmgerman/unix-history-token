@@ -4664,7 +4664,7 @@ literal|0
 argument_list|,
 argument|i
 argument_list|,
-argument|{ 	      struct deps_reg *reg_last =&deps->reg_last[i]; 	      add_dependence_list (insn, reg_last->sets, REG_DEP_OUTPUT); 	      add_dependence_list (insn, reg_last->uses, REG_DEP_ANTI); 	      if (reg_last->uses_length> MAX_PENDING_LIST_LENGTH 		  || reg_last->clobbers_length> MAX_PENDING_LIST_LENGTH) 		{ 		  add_dependence_list_and_free (insn,&reg_last->sets, 					        REG_DEP_OUTPUT); 		  add_dependence_list_and_free (insn,&reg_last->uses, 						REG_DEP_ANTI); 		  add_dependence_list_and_free (insn,&reg_last->clobbers, 						REG_DEP_OUTPUT); 		  reg_last->clobbers_length =
+argument|{ 	      struct deps_reg *reg_last =&deps->reg_last[i]; 	      if (reg_last->uses_length> MAX_PENDING_LIST_LENGTH 		  || reg_last->clobbers_length> MAX_PENDING_LIST_LENGTH) 		{ 		  add_dependence_list_and_free (insn,&reg_last->sets, 					        REG_DEP_OUTPUT); 		  add_dependence_list_and_free (insn,&reg_last->uses, 						REG_DEP_ANTI); 		  add_dependence_list_and_free (insn,&reg_last->clobbers, 						REG_DEP_OUTPUT); 		  reg_last->sets = alloc_INSN_LIST (insn, reg_last->sets); 		  reg_last->clobbers_length =
 literal|0
 argument|; 		  reg_last->uses_length =
 literal|0
