@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)date.c	4.3 (Berkeley) %G%"
+literal|"@(#)date.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,11 +150,15 @@ literal|"|"
 block|,
 literal|""
 block|,
+literal|""
+block|,
 literal|0
 block|}
 block|,
 block|{
 literal|"{"
+block|,
+literal|""
 block|,
 literal|""
 block|,
