@@ -666,12 +666,6 @@ operator|&
 name|image_params
 expr_stmt|;
 comment|/* 	 * Lock the process and set the P_INEXEC flag to indicate that 	 * it should be left alone until we're done here.  This is 	 * necessary to avoid race conditions - e.g. in ptrace() - 	 * that might allow a local user to illicitly obtain elevated 	 * privileges. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -715,12 +709,6 @@ block|{
 name|PROC_UNLOCK
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -872,6 +860,12 @@ name|error
 operator|=
 name|ENOMEM
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 goto|goto
 name|exec_fail
 goto|;
@@ -925,6 +919,12 @@ operator|->
 name|fname
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|interpret
