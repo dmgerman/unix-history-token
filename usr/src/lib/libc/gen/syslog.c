@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.7 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -677,14 +677,6 @@ name|LogStat
 operator|&
 name|LOG_CONS
 operator|)
-operator|&&
-operator|(
-name|pri
-operator|&
-name|LOG_PRIMASK
-operator|)
-operator|<=
-name|LOG_ERR
 condition|)
 return|return;
 comment|/* output the message to the console */
@@ -770,7 +762,7 @@ name|write
 argument_list|(
 name|LogFile
 argument_list|,
-name|outline
+name|o
 argument_list|,
 name|c
 operator|+
@@ -794,6 +786,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|LogStat
+operator|&
+name|LOG_NOWAIT
+operator|)
+condition|)
 while|while
 condition|(
 operator|(
