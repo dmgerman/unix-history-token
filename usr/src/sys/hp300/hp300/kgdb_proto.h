@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_proto.h	1.3 (Berkeley) %G%  *  * $Header: kgdb_proto.h,v 1.3 91/03/12 22:06:43 mccanne Exp $ (LBL)  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Steven McCanne of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_proto.h	7.1 (Berkeley) %G%  *  * $Header: kgdb_proto.h,v 1.3 91/03/12 22:06:43 mccanne Exp $ (LBL)  */
 end_comment
 
 begin_comment
