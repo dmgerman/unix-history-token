@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer7.c	4.1 (Berkeley) %G%"
+literal|"@(#)refer7.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,7 +201,7 @@ name|sprintf
 argument_list|(
 name|comm
 argument_list|,
-literal|"sort %s -o %s"
+literal|"sort -f %s -o %s"
 argument_list|,
 name|tfile
 argument_list|,
