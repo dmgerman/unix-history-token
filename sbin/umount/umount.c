@@ -958,7 +958,7 @@ name|FSTAB_RQ
 argument_list|)
 condition|)
 continue|continue;
-comment|/* If an unknown file system type, complain. */
+comment|/* Ignore unknown file system types. */
 if|if
 condition|(
 name|getvfsbyname
