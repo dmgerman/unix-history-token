@@ -634,6 +634,21 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|acpi_probe_order
+parameter_list|(
+name|ACPI_HANDLE
+name|handle
+parameter_list|,
+name|int
+modifier|*
+name|order
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|ACPI_STATUS
 name|acpi_probe_child
 parameter_list|(
@@ -5378,6 +5393,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Determine the probe order for a given device and return non-zero if it  * should be attached immediately.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -5387,9 +5406,6 @@ name|ACPI_HANDLE
 name|handle
 parameter_list|,
 name|int
-name|level
-parameter_list|,
-name|int
 modifier|*
 name|order
 parameter_list|)
@@ -5397,11 +5413,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+comment|/*      * 1. I/O port and memory system resource holders      * 2. Embedded controllers (to handle early accesses)      */
 name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/* IO port and memory system resource holders are first. */
 if|if
 condition|(
 name|acpi_MatchHid
@@ -5429,7 +5445,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* The embedded controller is needed to handle accesses early. */
+elseif|else
 if|if
 condition|(
 name|acpi_MatchHid
@@ -5450,16 +5466,13 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-operator|*
-name|order
+comment|/* Always probe/attach immediately if we're debugging. */
+name|ACPI_DEBUG_EXEC
+argument_list|(
+name|ret
 operator|=
-operator|(
-name|level
-operator|+
 literal|1
-operator|)
-operator|*
-literal|10
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5578,7 +5591,7 @@ literal|"children"
 argument_list|)
 condition|)
 break|break;
-comment|/*  	     * Create a placeholder device for this node.  Sort the placeholder 	     * so that the probe/attach passes will run breadth-first. 	     */
+comment|/*  	     * Create a placeholder device for this node.  Sort the placeholder 	     * so that the probe/attach passes will run breadth-first.  Orders 	     * less than 10 are reserved for special objects (i.e., system 	     * resources).  Larger values are used for all other devices. 	     */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -5593,13 +5606,21 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|order
+operator|=
+operator|(
+name|level
+operator|+
+literal|1
+operator|)
+operator|*
+literal|10
+expr_stmt|;
 name|probe_now
 operator|=
 name|acpi_probe_order
 argument_list|(
 name|handle
-argument_list|,
-name|level
 argument_list|,
 operator|&
 name|order
