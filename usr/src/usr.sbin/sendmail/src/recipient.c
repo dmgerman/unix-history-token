@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.48 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.49 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3416,16 +3416,32 @@ name|uid
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
+block|{
+if|if
+condition|(
 name|setreuid
 argument_list|(
 literal|0
 argument_list|,
 name|uid
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"setreuid(0, %d) failure (real=%d, eff=%d)"
+argument_list|,
+name|uid
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -3626,6 +3642,7 @@ name|uid
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|setreuid
@@ -3637,7 +3654,20 @@ literal|0
 argument_list|)
 operator|<
 literal|0
-operator|||
+condition|)
+name|syserr
+argument_list|(
+literal|"setreuid(-1, 0) failure (real=%d, eff=%d)"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|setreuid
 argument_list|(
 name|RealUid
@@ -3660,6 +3690,7 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+block|}
 name|setgid
 argument_list|(
 name|savedgid
