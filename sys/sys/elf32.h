@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996-1997 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id$  */
+comment|/*-  * Copyright (c) 1996-1997 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: elf32.h,v 1.1 1997/05/21 23:07:30 jdp Exp $  */
 end_comment
 
 begin_ifndef
@@ -367,6 +367,20 @@ comment|/* 2's complement big-endian. */
 end_comment
 
 begin_comment
+comment|/* e_ident */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_ELF
+parameter_list|(
+name|ehdr
+parameter_list|)
+value|((ehdr).e_ident[EI_MAG0] == ELFMAG0&& \ 			 (ehdr).e_ident[EI_MAG1] == ELFMAG1&& \ 			 (ehdr).e_ident[EI_MAG2] == ELFMAG2&& \ 			 (ehdr).e_ident[EI_MAG3] == ELFMAG3)
+end_define
+
+begin_comment
 comment|/* Values for e_type. */
 end_comment
 
@@ -517,6 +531,65 @@ begin_comment
 comment|/* Intel i860. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_MIPS
+value|8
+end_define
+
+begin_comment
+comment|/* MIPS R3000 Big-Endian only */
+end_comment
+
+begin_comment
+comment|/* Extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_MIPS_RS4_BE
+value|10
+end_define
+
+begin_comment
+comment|/* MIPS R4000 Big-Endian */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_SPARC64
+value|11
+end_define
+
+begin_comment
+comment|/* SPARC v9 64-bit unoffical */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PARISC
+value|15
+end_define
+
+begin_comment
+comment|/* HPPA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_PPC
+value|20
+end_define
+
+begin_comment
+comment|/* PowerPC */
+end_comment
+
 begin_comment
 comment|/*  * Section header.  */
 end_comment
@@ -649,6 +722,186 @@ end_define
 
 begin_comment
 comment|/* Last of reserved range. */
+end_comment
+
+begin_comment
+comment|/* sh_type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_NULL
+value|0
+end_define
+
+begin_comment
+comment|/* inactive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_PROGBITS
+value|1
+end_define
+
+begin_comment
+comment|/* program defined information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_SYMTAB
+value|2
+end_define
+
+begin_comment
+comment|/* symbol table section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_STRTAB
+value|3
+end_define
+
+begin_comment
+comment|/* string table section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_RELA
+value|4
+end_define
+
+begin_comment
+comment|/* relocation section with addends*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_HASH
+value|5
+end_define
+
+begin_comment
+comment|/* symbol hash table section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_DYNAMIC
+value|6
+end_define
+
+begin_comment
+comment|/* dynamic section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_NOTE
+value|7
+end_define
+
+begin_comment
+comment|/* note section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_NOBITS
+value|8
+end_define
+
+begin_comment
+comment|/* no space section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_REL
+value|9
+end_define
+
+begin_comment
+comment|/* relation section without addends */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_SHLIB
+value|10
+end_define
+
+begin_comment
+comment|/* reserved - purpose unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_DYNSYM
+value|11
+end_define
+
+begin_comment
+comment|/* dynamic symbol table section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_LOPROC
+value|0x70000000
+end_define
+
+begin_comment
+comment|/* reserved range for processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_HIPROC
+value|0x7fffffff
+end_define
+
+begin_comment
+comment|/* specific section header types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_LOUSER
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* reserved range for application */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_HIUSER
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* specific indexes */
 end_comment
 
 begin_comment
@@ -1304,7 +1557,66 @@ value|(((bind)<< 4) + ((type)& 0xf))
 end_define
 
 begin_comment
-comment|/* Symbol types. */
+comment|/* Symbol Binding - ELF32_ST_BIND - st_info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_LOCAL
+value|0
+end_define
+
+begin_comment
+comment|/* Local symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_GLOBAL
+value|1
+end_define
+
+begin_comment
+comment|/* Global symbol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_WEAK
+value|2
+end_define
+
+begin_comment
+comment|/* like global - lower precedence */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_LOPROC
+value|13
+end_define
+
+begin_comment
+comment|/* reserved range for processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STB_HIPROC
+value|15
+end_define
+
+begin_comment
+comment|/*  specific symbol bindings */
+end_comment
+
+begin_comment
+comment|/* Symbol type - ELF32_ST_TYPE - st_info */
 end_comment
 
 begin_define
@@ -1360,6 +1672,28 @@ end_define
 
 begin_comment
 comment|/* Source file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_LOPROC
+value|13
+end_define
+
+begin_comment
+comment|/* reserved range for processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_HIPROC
+value|15
+end_define
+
+begin_comment
+comment|/*  specific symbol types */
 end_comment
 
 begin_comment
