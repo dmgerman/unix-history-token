@@ -356,6 +356,8 @@ end_comment
 begin_decl_stmt
 name|int
 name|kernel_debugging
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
