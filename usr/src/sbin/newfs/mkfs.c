@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.8 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2920,11 +2920,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\n%s\n%s\n"
-argument_list|,
-literal|"WRITE THESE NUMBERS DOWN!!!"
-argument_list|,
-literal|"fsck depends on them to recover this file system."
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now construct the initial file system, 	 * then write out the super-block. 	 */
