@@ -1667,9 +1667,17 @@ argument_list|(
 name|ad1816
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|return format;
+else|#
+directive|else
 return|return
-name|format
+literal|0
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
