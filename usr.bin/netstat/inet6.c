@@ -3611,7 +3611,7 @@ name|line
 argument_list|,
 literal|"%.*s."
 argument_list|,
-name|lflag
+name|Wflag
 condition|?
 literal|39
 else|:
@@ -3698,7 +3698,7 @@ argument_list|)
 expr_stmt|;
 name|width
 operator|=
-name|lflag
+name|Wflag
 condition|?
 literal|45
 else|:

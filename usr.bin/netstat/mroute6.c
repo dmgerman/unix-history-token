@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|WID_ORG
-value|(lflag ? 39 : (numeric_addr ? 29 : 18))
+value|(Wflag ? 39 : (numeric_addr ? 29 : 18))
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|WID_GRP
-value|(lflag ? 18 : (numeric_addr ? 16 : 18))
+value|(Wflag ? 18 : (numeric_addr ? 16 : 18))
 end_define
 
 begin_comment

@@ -939,7 +939,7 @@ parameter_list|(
 name|af
 parameter_list|)
 define|\
-value|((af) == AF_INET6 ? (lflag ? 39 : (numeric_addr ? 33: 18)) : 18)
+value|((af) == AF_INET6 ? (Wflag ? 39 : (numeric_addr ? 33: 18)) : 18)
 end_define
 
 begin_define
@@ -950,7 +950,7 @@ parameter_list|(
 name|af
 parameter_list|)
 define|\
-value|((af) == AF_INET6 ? (lflag ? 31 : (numeric_addr ? 29 : 18)) : 18)
+value|((af) == AF_INET6 ? (Wflag ? 31 : (numeric_addr ? 29 : 18)) : 18)
 end_define
 
 begin_define
@@ -1001,11 +1001,11 @@ name|af
 operator|==
 name|AF_INET
 operator|||
-name|lflag
+name|Wflag
 condition|)
 if|if
 condition|(
-name|lflag
+name|Wflag
 condition|)
 name|printf
 argument_list|(
@@ -3097,7 +3097,7 @@ name|sa_family
 operator|==
 name|AF_INET
 operator|||
-name|lflag
+name|Wflag
 condition|)
 block|{
 name|printf
@@ -3115,7 +3115,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lflag
+name|Wflag
 condition|)
 block|{
 if|if
