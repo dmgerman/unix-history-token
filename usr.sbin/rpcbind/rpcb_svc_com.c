@@ -371,7 +371,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|int
 name|forward_register
 name|__P
 argument_list|(
@@ -390,6 +390,9 @@ operator|,
 name|rpcproc_t
 operator|,
 name|rpcvers_t
+operator|,
+name|u_int32_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3952,10 +3955,8 @@ argument_list|(
 name|transp
 argument_list|)
 expr_stmt|;
-name|call_msg
-operator|.
-name|rm_xid
-operator|=
+switch|switch
+condition|(
 name|forward_register
 argument_list|(
 operator|*
@@ -3970,17 +3971,26 @@ argument_list|,
 name|reply_type
 argument_list|,
 name|versnum
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+operator|&
 name|call_msg
 operator|.
 name|rm_xid
-operator|==
-literal|0
+argument_list|)
 condition|)
 block|{
+case|case
+literal|1
+case|:
+comment|/* Success; forward_register() will free m_uaddr for us. */
+name|m_uaddr
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+case|case
+literal|0
+case|:
 comment|/* 		 * A duplicate request for the slow server.  Let's not 		 * beat on it any more. 		 */
 if|if
 condition|(
@@ -4005,18 +4015,10 @@ expr_stmt|;
 goto|goto
 name|error
 goto|;
-block|}
-elseif|else
-if|if
-condition|(
-name|call_msg
-operator|.
-name|rm_xid
-operator|==
+case|case
 operator|-
 literal|1
-condition|)
-block|{
+case|:
 comment|/*  forward_register failed.  Perhaps no memory. */
 if|if
 condition|(
@@ -4698,12 +4700,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Makes an entry into the FIFO for the given request.  * If duplicate request, returns a 0, else returns the xid of its call.  */
+comment|/*  * Makes an entry into the FIFO for the given request.  * Returns 1 on success, 0 if this is a duplicate request, or -1 on error.  * *callxidp is set to the xid of the call.  */
 end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|int
 name|forward_register
 parameter_list|(
 name|u_int32_t
@@ -4726,6 +4728,10 @@ name|reply_type
 parameter_list|,
 name|rpcvers_t
 name|versnum
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|callxidp
 parameter_list|)
 block|{
 name|int
@@ -5096,6 +5102,24 @@ name|lastxid
 operator|+
 name|NFORWARD
 expr_stmt|;
+comment|/* Don't allow a zero xid below. */
+if|if
+condition|(
+call|(
+name|u_int32_t
+call|)
+argument_list|(
+name|lastxid
+operator|+
+name|NFORWARD
+argument_list|)
+operator|<=
+name|NFORWARD
+condition|)
+name|lastxid
+operator|=
+name|NFORWARD
+expr_stmt|;
 name|FINFO
 index|[
 name|j
@@ -5108,17 +5132,22 @@ operator|+
 name|j
 expr_stmt|;
 comment|/* encode slot */
-return|return
-operator|(
+operator|*
+name|callxidp
+operator|=
 name|FINFO
 index|[
 name|j
 index|]
 operator|.
 name|forward_xid
+expr_stmt|;
+comment|/* forward on this xid */
+return|return
+operator|(
+literal|1
 operator|)
 return|;
-comment|/* forward on this xid */
 block|}
 end_function
 
@@ -5140,16 +5169,9 @@ name|i
 operator|=
 name|reply_xid
 operator|%
-name|NFORWARD
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-name|i
-operator|+=
+operator|(
+name|u_int32_t
+operator|)
 name|NFORWARD
 expr_stmt|;
 if|if
@@ -5211,16 +5233,9 @@ name|entry
 operator|=
 name|xid
 operator|%
-name|NFORWARD
-expr_stmt|;
-if|if
-condition|(
-name|entry
-operator|<
-literal|0
-condition|)
-name|entry
-operator|+=
+operator|(
+name|u_int32_t
+operator|)
 name|NFORWARD
 expr_stmt|;
 return|return
