@@ -2255,7 +2255,7 @@ name|state
 operator|=
 name|TS_INIT
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|token_buffer
 argument_list|,
@@ -2265,7 +2265,7 @@ name|token_buffer
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|yylval
@@ -2417,7 +2417,7 @@ case|case
 literal|4
 case|:
 comment|/* 			 * Clear the token buffer 			 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|token_buffer
 argument_list|,

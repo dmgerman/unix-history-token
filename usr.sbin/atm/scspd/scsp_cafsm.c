@@ -2758,7 +2758,7 @@ argument_list|,
 name|sr_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|rxp
 argument_list|)
@@ -2922,12 +2922,10 @@ condition|)
 block|{
 name|csep
 operator|=
-operator|(
-name|Scsp_cse
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_cse
@@ -2936,22 +2934,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csep
+operator|==
+name|NULL
 condition|)
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_ca_act_11: sizeof(Scsp_cse)"
-argument_list|)
-expr_stmt|;
-name|UM_ZERO
-argument_list|(
-name|csep
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_cse
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|csep
@@ -3008,7 +2997,7 @@ argument_list|,
 name|csep
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -3155,7 +3144,7 @@ argument_list|,
 name|sr_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|rxp
 argument_list|)
@@ -3307,12 +3296,10 @@ block|{
 comment|/* 		 * Get memory for a new entry 		 */
 name|csep
 operator|=
-operator|(
-name|Scsp_cse
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_cse
@@ -3321,24 +3308,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csep
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_ca_act_14: sizeof(Scsp_cse)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|csep
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_cse
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Fill out the new cache entry 		 */
@@ -3455,7 +3431,7 @@ argument_list|,
 name|csep
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -3478,7 +3454,7 @@ argument_list|,
 name|sc_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep1
 argument_list|)
@@ -4081,12 +4057,10 @@ block|}
 comment|/* 	 * Create a CSAS from the client's update 	 */
 name|csap
 operator|=
-operator|(
-name|Scsp_csa
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_csa
@@ -4095,24 +4069,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csap
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_ca_act_19: sizeof(Scsp_csa)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|csap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_csa
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|csap

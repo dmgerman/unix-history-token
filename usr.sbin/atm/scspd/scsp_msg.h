@@ -1023,7 +1023,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|{								\ 	if ((c)->atmarp_data) {					\ 		UM_FREE((c)->atmarp_data);			\ 	}							\ 	UM_FREE((c));						\ }
+value|{								\ 	if ((c)->atmarp_data)					\ 		free((c)->atmarp_data);				\ 	free((c));						\ }
 end_define
 
 begin_comment

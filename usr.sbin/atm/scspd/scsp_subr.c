@@ -550,7 +550,7 @@ operator|==
 name|T_ATM_ABSENT
 operator|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|asrv_info
 argument_list|)
@@ -586,11 +586,7 @@ decl_stmt|;
 comment|/* 	 * Allocate memory for the duplicate 	 */
 name|dupp
 operator|=
-operator|(
-name|Scsp_cse
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -600,18 +596,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|dupp
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_dup_cse: sizeof(Scsp_cse)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Copy data to the duplicate 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|csep
 argument_list|,
@@ -668,11 +663,7 @@ decl_stmt|;
 comment|/* 	 * Allocate memory for the duplicate 	 */
 name|dupp
 operator|=
-operator|(
-name|Scsp_csa
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -682,18 +673,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|dupp
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_dup_csa: sizeof(Scsp_csa)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Copy data to the duplicate 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|csap
 argument_list|,
@@ -725,11 +715,7 @@ condition|)
 block|{
 name|adp
 operator|=
-operator|(
-name|Scsp_atmarp_csa
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -739,17 +725,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|adp
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_dup_csa: sizeof(Scsp_atmarp_csa)"
 argument_list|)
 expr_stmt|;
-block|}
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|csap
 operator|->
@@ -801,12 +786,10 @@ decl_stmt|;
 comment|/* 	 * Allocate memory for the duplicate 	 */
 name|csap
 operator|=
-operator|(
-name|Scsp_csa
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_csa
@@ -815,24 +798,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csap
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_cse2csas: sizeof(Scsp_csa)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|csap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_csa
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy data to the CSAS entry 	 */
@@ -891,12 +863,10 @@ decl_stmt|;
 comment|/* 	 * Allocate memory for the duplicate 	 */
 name|csep
 operator|=
-operator|(
-name|Scsp_cse
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_cse
@@ -905,24 +875,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csep
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_atmarp2cse: sizeof(Scsp_cse)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|csep
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_cse
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy data to the CSE entry 	 */
@@ -1029,7 +988,7 @@ argument_list|,
 name|sc_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -1214,7 +1173,7 @@ argument_list|,
 name|sr_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|rxp
 argument_list|)
@@ -1376,7 +1335,7 @@ name|csep
 operator|->
 name|sc_next
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -1486,14 +1445,14 @@ name|rxp
 operator|->
 name|sr_next
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|rxp
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Free the DCS block 	 */
-name|UM_FREE
+name|free
 argument_list|(
 name|dcsp
 argument_list|)
@@ -1756,7 +1715,7 @@ argument_list|,
 name|sc_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -1877,7 +1836,7 @@ name|csep
 operator|->
 name|sc_next
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -1885,14 +1844,14 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Free the server block 	 */
-name|UM_FREE
+name|free
 argument_list|(
 name|ssp
 operator|->
 name|ss_name
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|ssp
 argument_list|)
@@ -1996,7 +1955,7 @@ name|server_info_done
 goto|;
 block|}
 comment|/* 	 * Get the IP address and physical interface name 	 * associated with the network interface 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -2128,7 +2087,7 @@ name|server_info_done
 goto|;
 block|}
 comment|/* 	 * Get the ATM address associated with the 	 * physical interface 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -2340,7 +2299,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get configuration information associated with the 	 * physical interface 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|air
@@ -2410,7 +2369,7 @@ operator|.
 name|air_buf_addr
 expr_stmt|;
 comment|/* 	 * Update the server entry 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ip_addr
@@ -2562,7 +2521,7 @@ if|if
 condition|(
 name|netif_rsp
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|netif_rsp
 argument_list|)
@@ -2571,7 +2530,7 @@ if|if
 condition|(
 name|intf_rsp
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|intf_rsp
 argument_list|)
@@ -2580,7 +2539,7 @@ if|if
 condition|(
 name|cfg_rsp
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|cfg_rsp
 argument_list|)
@@ -2825,7 +2784,7 @@ argument_list|,
 name|csep
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -3056,12 +3015,10 @@ block|{
 comment|/* 		 * Get memory for a new entry 		 */
 name|csep
 operator|=
-operator|(
-name|Scsp_cse
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_cse
@@ -3070,24 +3027,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csep
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_update_cache: sizeof(Scsp_cse)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|csep
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_cse
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Fill out the new cache summary entry 		 */
@@ -3149,7 +3095,7 @@ argument_list|,
 name|csep
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)

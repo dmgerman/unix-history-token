@@ -369,12 +369,10 @@ block|}
 comment|/* 	 * Allocate a DCS block 	 */
 name|dcsp
 operator|=
-operator|(
-name|Scsp_dcs
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_dcs
@@ -383,24 +381,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|dcsp
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"start_dcs: sizeof(Scsp_dcs)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|dcsp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_dcs
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill out DCS links and default values 	 */
@@ -683,7 +670,7 @@ operator|=
 name|current_dcs
 expr_stmt|;
 comment|/* 	 * Initialize 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|addr
@@ -700,7 +687,7 @@ name|address_format
 operator|=
 name|T_ATM_ABSENT
 expr_stmt|;
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|subaddr
@@ -1799,7 +1786,7 @@ name|ssp
 operator|->
 name|ss_id_len
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ip_addr
@@ -2284,7 +2271,7 @@ argument_list|,
 name|sc_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|csep
 argument_list|)
@@ -2325,12 +2312,10 @@ block|{
 comment|/* 		 * Get a new server entry 		 */
 name|ssp
 operator|=
-operator|(
-name|Scsp_server
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_server
@@ -2339,8 +2324,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ssp
+operator|==
+name|NULL
 condition|)
 block|{
 name|scsp_log
@@ -2356,16 +2342,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|UM_ZERO
-argument_list|(
-name|ssp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_server
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ssp
 operator|->
 name|ss_sock

@@ -4346,7 +4346,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Build a file name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|fname
 argument_list|,

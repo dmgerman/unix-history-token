@@ -354,7 +354,7 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* 	 * Build a file name 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|fname
 argument_list|,
@@ -517,7 +517,7 @@ name|in_addr
 name|addr
 decl_stmt|;
 comment|/* 	 * Copy the remote IP address into a struct in_addr 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|dcsp
 operator|->

@@ -1076,12 +1076,10 @@ decl_stmt|;
 comment|/* 	 * Allocate memory for a CSA record 	 */
 name|csap
 operator|=
-operator|(
-name|Scsp_csa
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_csa
@@ -1090,24 +1088,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csap
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_client_act_07: sizeof(Scsp_csa)"
 argument_list|)
 expr_stmt|;
-block|}
 name|acp
 operator|=
-operator|(
-name|Scsp_atmarp_csa
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_atmarp_csa
@@ -1116,34 +1111,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|acp
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_client_act_07: sizeof(Scsp_atmarp_csa)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|csap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_csa
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|UM_ZERO
-argument_list|(
-name|acp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_atmarp_csa
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Build a CSA record from the server's message 	 */
@@ -1407,12 +1381,10 @@ decl_stmt|;
 comment|/* 	 * Get memory for a Solicit Ind 	 */
 name|csip
 operator|=
-operator|(
-name|Scsp_if_msg
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_if_msg
@@ -1421,16 +1393,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|csip
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_client_act_09: sizeof(Scsp_if_msg)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Loop through list of CSAs 	 */
 for|for
 control|(
@@ -1452,7 +1423,7 @@ name|next
 control|)
 block|{
 comment|/* 		 * Fill out the Solicit Indication 		 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|csip
 argument_list|,
@@ -1576,7 +1547,7 @@ name|rc
 expr_stmt|;
 block|}
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|csip
 argument_list|)
@@ -1638,11 +1609,7 @@ decl_stmt|;
 comment|/* 	 * Get memory for a Cache Update Ind 	 */
 name|cuip
 operator|=
-operator|(
-name|Scsp_if_msg
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1652,16 +1619,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|cuip
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_client_act_10: sizeof(Scsp_if_msg)"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Loop through CSAs in message 	 */
 for|for
 control|(
@@ -1695,7 +1661,7 @@ name|acp
 condition|)
 continue|continue;
 comment|/* 		 * Fill out the Cache Update Ind 		 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 name|cuip
 argument_list|,
@@ -1858,7 +1824,7 @@ name|rc
 expr_stmt|;
 block|}
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|cuip
 argument_list|)

@@ -553,7 +553,7 @@ name|sd
 expr_stmt|;
 block|}
 comment|/* 	 * Set up connection parameters for SCSP connection 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|DCS_addr
@@ -643,7 +643,7 @@ name|sd_addr
 operator|.
 name|address_length
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|dcsp
 operator|->
@@ -1273,7 +1273,7 @@ name|sd
 expr_stmt|;
 block|}
 comment|/* 	 * Set up our address 	 */
-name|UM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|ls_addr
@@ -1363,7 +1363,7 @@ name|ss_addr
 operator|.
 name|address_length
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|ssp
 operator|->
@@ -2063,7 +2063,7 @@ name|dcs_addr
 operator|->
 name|address_length
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|dcs_addr
 operator|->
@@ -2338,27 +2338,24 @@ name|ss_mtu
 expr_stmt|;
 name|buff
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|buff
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_dcs_read: ssp->ss_mtu"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Read the message 	 */
 name|len
 operator|=
@@ -2526,7 +2523,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|buff
 argument_list|)
@@ -2596,7 +2593,7 @@ if|if
 condition|(
 name|buff
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|buff
 argument_list|)
@@ -2988,12 +2985,10 @@ block|}
 comment|/* 	 * Put the new socket on the 'pending' queue 	 */
 name|psp
 operator|=
-operator|(
-name|Scsp_pending
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_pending
@@ -3005,13 +3000,11 @@ condition|(
 operator|!
 name|psp
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_server_accept: sizeof(Scsp_pending)"
 argument_list|)
 expr_stmt|;
-block|}
 name|psp
 operator|->
 name|sp_sock
@@ -3119,11 +3112,7 @@ block|}
 comment|/* 	 * Get a buffer and read the rest of the message into it 	 */
 name|buff
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|UM_ALLOC
+name|malloc
 argument_list|(
 name|msg_hdr
 operator|.
@@ -3132,16 +3121,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|buff
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_if_sock_read: msg_hdr.sh_len"
 argument_list|)
 expr_stmt|;
-block|}
 name|msg
 operator|=
 operator|(
@@ -3248,7 +3236,7 @@ if|if
 condition|(
 name|buff
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|buff
 argument_list|)
@@ -3654,7 +3642,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|msg
 argument_list|)
@@ -3692,12 +3680,10 @@ decl_stmt|;
 comment|/* 	 * Get storage for a server interface message 	 */
 name|msg
 operator|=
-operator|(
-name|Scsp_if_msg
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|Scsp_if_msg
@@ -3706,24 +3692,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|msg
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_send_cache_ind: sizeof(Scsp_if_msg)"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|msg
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Scsp_if_msg
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill out the message 	 */
@@ -3732,12 +3707,6 @@ operator|->
 name|si_type
 operator|=
 name|SCSP_CACHE_IND
-expr_stmt|;
-name|msg
-operator|->
-name|si_rc
-operator|=
-literal|0
 expr_stmt|;
 name|msg
 operator|->
@@ -3777,7 +3746,7 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|msg
 argument_list|)
@@ -3974,7 +3943,7 @@ argument_list|,
 name|sp_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|psp
 argument_list|)
@@ -4062,7 +4031,7 @@ goto|goto
 name|config_error
 goto|;
 block|}
-name|UM_FREE
+name|free
 argument_list|(
 name|msg
 argument_list|)
@@ -4172,7 +4141,7 @@ name|ss_state
 operator|=
 name|SCSP_SS_NULL
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|msg
 argument_list|)
@@ -4206,7 +4175,7 @@ argument_list|,
 name|sp_next
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|psp
 argument_list|)
@@ -4215,7 +4184,7 @@ if|if
 condition|(
 name|msg
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|msg
 argument_list|)

@@ -196,7 +196,7 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|nl
@@ -235,7 +235,7 @@ name|buff
 decl_stmt|;
 block|{
 comment|/* 	 * Copy the ID 	 */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|idp
 operator|->
@@ -573,7 +573,7 @@ expr|struct
 name|scsp_next
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -872,7 +872,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* sa_sha */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|acsp
 operator|->
@@ -912,7 +912,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* sa_sha */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|acsp
 operator|->
@@ -961,7 +961,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* sa_ssa */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|acsp
 operator|->
@@ -1038,7 +1038,7 @@ expr|struct
 name|in_addr
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|acsp
@@ -1097,7 +1097,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* sa_tha */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|acsp
 operator|->
@@ -1137,7 +1137,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* sa_tha */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|acsp
 operator|->
@@ -1186,7 +1186,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* sa_tsa */
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|acsp
 operator|->
@@ -1248,7 +1248,7 @@ expr|struct
 name|in_addr
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|acsp
@@ -1386,7 +1386,7 @@ expr|struct
 name|scsp_ncsa
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|csap
 operator|->
@@ -2202,32 +2202,22 @@ name|ss_mtu
 expr_stmt|;
 name|buff
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|buff_len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|buff
+operator|==
+name|NULL
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_format_msg: dcsp->sd_server->ss_mtu"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|buff
-argument_list|,
-name|buff_len
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2292,32 +2282,20 @@ literal|1024
 expr_stmt|;
 name|e_buff
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|UM_ALLOC
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 name|e_buff_len
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|buff
 condition|)
-block|{
 name|scsp_mem_err
 argument_list|(
 literal|"scsp_format_msg: e_buff_len"
-argument_list|)
-expr_stmt|;
-block|}
-name|UM_ZERO
-argument_list|(
-name|e_buff
-argument_list|,
-name|e_buff_len
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Encode the extensions 		 */
@@ -2378,7 +2356,7 @@ operator|!
 name|e_len
 condition|)
 block|{
-name|UM_FREE
+name|free
 argument_list|(
 name|e_buff
 argument_list|)
@@ -2503,7 +2481,7 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
-name|UM_COPY
+name|bcopy
 argument_list|(
 name|e_buff
 argument_list|,
@@ -2514,7 +2492,7 @@ argument_list|,
 name|e_len
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|e_buff
 argument_list|)
@@ -2557,7 +2535,7 @@ if|if
 condition|(
 name|buff
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|buff
 argument_list|)
@@ -2566,7 +2544,7 @@ if|if
 condition|(
 name|e_buff
 condition|)
-name|UM_FREE
+name|free
 argument_list|(
 name|e_buff
 argument_list|)
@@ -2731,7 +2709,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|UM_FREE
+name|free
 argument_list|(
 name|buff
 argument_list|)
