@@ -26,18 +26,6 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|MIN
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x)< (y))? (x) : (y))
-end_define
-
-begin_define
-define|#
-directive|define
 name|SNDBUF_NAMELEN
 value|48
 end_define

@@ -51,18 +51,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MIN
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x)< (y))? (x) : (y))
-end_define
-
-begin_define
-define|#
-directive|define
 name|CANCHANGE
 parameter_list|(
 name|c
