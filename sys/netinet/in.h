@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.18 1996/07/10 19:44:20 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in.h	8.3 (Berkeley) 1/3/94  * $Id: in.h,v 1.19 1996/08/12 14:05:53 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -819,6 +819,72 @@ begin_comment
 comment|/* int; range to choose for unspec port */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IP_FW_ADD
+value|50
+end_define
+
+begin_comment
+comment|/* add a firewall rule to chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_DEL
+value|51
+end_define
+
+begin_comment
+comment|/* delete a firewall rule from chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_FLUSH
+value|52
+end_define
+
+begin_comment
+comment|/* flush firewall rule chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_ZERO
+value|53
+end_define
+
+begin_comment
+comment|/* clear all firewall counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_GET
+value|54
+end_define
+
+begin_comment
+comment|/* get entire firewall rule chain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_NAT
+value|55
+end_define
+
+begin_comment
+comment|/* set/get NAT opts */
+end_comment
+
 begin_comment
 comment|/*  * Defaults and limits for options  */
 end_comment
@@ -1248,6 +1314,72 @@ modifier|*
 name|ip_fw_ctl_ptr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* ip NAT hooks */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|ip_nat_t
+name|__P
+typedef|((struct
+name|ip
+modifier|*
+modifier|*
+typedef|, struct
+name|mbuf
+modifier|*
+modifier|*
+typedef|,
+name|int
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|ip_nat_ctl_t
+name|__P
+typedef|((
+name|int
+typedef|, struct
+name|mbuf
+modifier|*
+modifier|*
+typedef|));
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|ip_nat_t
+modifier|*
+name|ip_nat_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ip_nat_ctl_t
+modifier|*
+name|ip_nat_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IP_NAT_IN
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_NAT_OUT
+value|0x00000002
+end_define
 
 begin_endif
 endif|#

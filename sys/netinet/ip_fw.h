@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.21 1996/07/10 19:44:24 julian Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.22 1996/08/13 19:43:41 pst Exp $  */
 end_comment
 
 begin_comment
@@ -434,52 +434,6 @@ define|#
 directive|define
 name|IP_FW_TCPF_ESTAB
 value|0x40
-end_define
-
-begin_comment
-comment|/*  * New IP firewall options for [gs]etsockopt at the RAW IP level.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_BASE_CTL
-value|50
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_ADD
-value|(IP_FW_BASE_CTL+0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_DEL
-value|(IP_FW_BASE_CTL+1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_FLUSH
-value|(IP_FW_BASE_CTL+2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_ZERO
-value|(IP_FW_BASE_CTL+3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_GET
-value|(IP_FW_BASE_CTL+4)
 end_define
 
 begin_comment

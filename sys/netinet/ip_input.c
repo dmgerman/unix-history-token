@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.44 1996/06/12 19:34:33 gpalmer Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.45 1996/07/10 19:44:25 julian Exp $  */
 end_comment
 
 begin_include
@@ -502,6 +502,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* IP Network Address Translation (NAT) hooks */
+end_comment
+
+begin_decl_stmt
+name|ip_nat_t
+modifier|*
+name|ip_nat_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ip_nat_ctl_t
+modifier|*
+name|ip_nat_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
 end_comment
 
@@ -865,6 +883,14 @@ ifdef|#
 directive|ifdef
 name|IPFIREWALL
 name|ip_fw_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|IPNAT
+name|ip_nat_init
 argument_list|()
 expr_stmt|;
 endif|#
@@ -1257,7 +1283,7 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * IpHack's section. 	 * Right now when no processing on packet has done 	 * and it is still fresh out of network we do our black 	 * deals with it. 	 * - Firewall: deny/allow/divert 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.>  	 */
+comment|/* 	 * IpHack's section. 	 * Right now when no processing on packet has done 	 * and it is still fresh out of network we do our black 	 * deals with it. 	 * - Firewall: deny/allow/divert 	 * - Xlate: translate packet's addr/port (NAT). 	 * - Wrap: fake packet's addr/port<unimpl.> 	 * - Encapsulate: put it in another IP and send out.<unimp.>  	 */
 if|if
 condition|(
 name|ip_fw_chk_ptr
@@ -1356,6 +1382,26 @@ endif|#
 directive|endif
 block|}
 block|}
+if|if
+condition|(
+name|ip_nat_ptr
+operator|&&
+operator|!
+call|(
+modifier|*
+name|ip_nat_ptr
+call|)
+argument_list|(
+operator|&
+name|ip
+argument_list|,
+operator|&
+name|m
+argument_list|,
+name|IP_NAT_IN
+argument_list|)
+condition|)
+return|return;
 comment|/* 	 * Process options and, if not destined for us, 	 * ship it on.  ip_dooptions returns 1 when an 	 * error was detected (causing an icmp message 	 * to be sent and the original packet to be freed). 	 */
 name|ip_nhops
 operator|=
