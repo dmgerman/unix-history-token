@@ -352,6 +352,27 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|vnode
+modifier|*
+name|union_dircache
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|,
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|union_copyup
 name|__P
