@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Andrew J. Korty  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 1999, 2000 Andrew J. Korty  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -328,6 +334,7 @@ name|ENV
 modifier|*
 name|self
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -406,6 +413,7 @@ specifier|static
 name|void
 name|env_swap
 parameter_list|(
+specifier|const
 name|ENV
 modifier|*
 name|self
@@ -608,14 +616,20 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|SLIST_FOREACH
+while|while
+condition|(
+operator|(
+name|p
+operator|=
+name|SLIST_FIRST
 argument_list|(
-argument|p
-argument_list|,
-argument|&self->e_head
-argument_list|,
-argument|ee_entries
+operator|&
+name|self
+operator|->
+name|e_head
 argument_list|)
+operator|)
+condition|)
 block|{
 name|free
 argument_list|(
@@ -627,6 +641,16 @@ expr_stmt|;
 name|free
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|SLIST_REMOVE_HEAD
+argument_list|(
+operator|&
+name|self
+operator|->
+name|e_head
+argument_list|,
+name|ee_entries
 argument_list|)
 expr_stmt|;
 block|}
@@ -1527,6 +1551,9 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|env_fp
 operator|=
 name|fopen
@@ -1534,6 +1561,17 @@ argument_list|(
 name|env_file
 argument_list|,
 literal|"w"
+argument_list|)
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|env_file
+argument_list|,
+name|S_IRUSR
 argument_list|)
 expr_stmt|;
 name|pipe
