@@ -608,7 +608,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* is busmastering supported and configured ? */
+comment|/* if busmastering configured get the I/O resource */
 if|if
 condition|(
 operator|(
@@ -625,18 +625,6 @@ name|rid
 init|=
 name|ATA_BMADDR_RID
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|ctlr
-operator|->
-name|r_io2
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
 name|ctlr
 operator|->
 name|r_io1
@@ -659,25 +647,8 @@ literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
-operator|)
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Busmastering DMA not configured\n"
-argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Busmastering DMA not supported\n"
-argument_list|)
-expr_stmt|;
 name|ctlr
 operator|->
 name|chipinit
