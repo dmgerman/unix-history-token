@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_forward.c,v 1.39 2000/07/03 13:23:28 itojun Exp $	*/
+comment|/*	$KAME: ip6_forward.c,v 1.43 2000/07/16 07:50:49 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -146,7 +146,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|IPSEC_IPV6FWD
+name|IPSEC
 end_ifdef
 
 begin_include
@@ -173,7 +173,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IPSEC_IPV6FWD */
+comment|/* IPSEC */
 end_comment
 
 begin_ifdef
@@ -279,7 +279,7 @@ decl_stmt|;
 comment|/* maybe unnecessary */
 ifdef|#
 directive|ifdef
-name|IPSEC_IPV6FWD
+name|IPSEC
 name|struct
 name|secpolicy
 modifier|*
@@ -291,7 +291,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IPSEC_IPV6FWD
+name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 comment|/* 	 * Don't increment ip6s_cantforward because this is the check 	 * before forwarding packet actually. 	 */
 if|if
@@ -318,7 +318,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC_IPV6FWD*/
+comment|/*IPSEC*/
 if|if
 condition|(
 operator|(
@@ -460,7 +460,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC_IPV6FWD
+name|IPSEC
 comment|/* get a security policy for this packet */
 name|sp
 operator|=
@@ -814,7 +814,7 @@ name|skip_ipsec
 label|:
 endif|#
 directive|endif
-comment|/* IPSEC_IPV6FWD */
+comment|/* IPSEC */
 name|dst
 operator|=
 operator|&
@@ -1232,7 +1232,7 @@ name|mtu
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC_IPV6FWD
+name|IPSEC
 name|struct
 name|secpolicy
 modifier|*
@@ -1256,7 +1256,7 @@ name|if_mtu
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IPSEC_IPV6FWD
+name|IPSEC
 comment|/* 			 * When we do IPsec tunnel ingress, we need to play 			 * with if_mtu value (decrement IPsec header size 			 * from mtu value).  The code is much simpler than v4 			 * case, as we have the outgoing interface for 			 * encapsulated packet as "rt->rt_ifp". 			 */
 name|sp
 operator|=
