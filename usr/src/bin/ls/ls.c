@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.4 82/03/27"
+literal|"@(#)ls.c	4.5 82/03/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,13 +178,13 @@ name|qflg
 decl_stmt|,
 name|Aflg
 decl_stmt|,
-name|Fflg
-decl_stmt|,
-name|Rflg
-decl_stmt|,
 name|Cflg
 decl_stmt|,
-name|hflg
+name|Fflg
+decl_stmt|,
+name|Lflg
+decl_stmt|,
+name|Rflg
 decl_stmt|;
 end_decl_stmt
 
@@ -572,9 +572,9 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'h'
+literal|'L'
 case|:
-name|hflg
+name|Lflg
 operator|++
 expr_stmt|;
 break|break;
@@ -1588,11 +1588,11 @@ name|statf
 function_decl|)
 parameter_list|()
 init|=
-name|hflg
+name|Lflg
 condition|?
-name|lstat
-operator|:
 name|stat
+operator|:
+name|lstat
 function_decl|;
 name|char
 name|buf
