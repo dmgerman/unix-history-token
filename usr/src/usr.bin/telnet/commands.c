@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.14 (Berkeley) %G%"
+literal|"@(#)commands.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4937,6 +4937,10 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|!=
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|-
 literal|1
 condition|)
