@@ -1417,6 +1417,150 @@ begin_asm
 asm|__asm __volatile("mov psr.l=%0;; srlz.i;;" :: "r" (psr));
 end_asm
 
+begin_macro
+unit|}  void
+name|map_port_space
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|struct
+name|ia64_pte
+name|pte
+decl_stmt|;
+name|u_int64_t
+name|psr
+decl_stmt|;
+comment|/* XXX we should fail hard if there's no I/O port space. */
+if|if
+condition|(
+name|ia64_port_base
+operator|==
+literal|0
+condition|)
+return|return;
+name|bzero
+argument_list|(
+operator|&
+name|pte
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pte
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pte
+operator|.
+name|pte_p
+operator|=
+literal|1
+expr_stmt|;
+name|pte
+operator|.
+name|pte_ma
+operator|=
+name|PTE_MA_UC
+expr_stmt|;
+name|pte
+operator|.
+name|pte_a
+operator|=
+literal|1
+expr_stmt|;
+name|pte
+operator|.
+name|pte_d
+operator|=
+literal|1
+expr_stmt|;
+name|pte
+operator|.
+name|pte_pl
+operator|=
+name|PTE_PL_KERN
+expr_stmt|;
+name|pte
+operator|.
+name|pte_ar
+operator|=
+name|PTE_AR_RWX
+expr_stmt|;
+name|pte
+operator|.
+name|pte_ppn
+operator|=
+name|ia64_port_base
+operator|>>
+literal|12
+expr_stmt|;
+asm|__asm __volatile("mov %0=psr;;" : "=r" (psr));
+asm|__asm __volatile("rsm psr.ic|psr.i;; srlz.i;;");
+asm|__asm __volatile("mov cr.ifa=%0" ::
+literal|"r"
+operator|(
+name|IA64_PHYS_TO_RR6
+argument_list|(
+name|ia64_port_base
+argument_list|)
+operator|)
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* XXX We should use the size from the memory descriptor. */
+end_comment
+
+begin_asm
+asm|__asm __volatile("mov cr.itir=%0" :: "r"(24<< 2));
+end_asm
+
+begin_asm
+asm|__asm __volatile("srlz.i;;");
+end_asm
+
+begin_asm
+asm|__asm __volatile("itr.i itr[%0]=%1;;" ::
+end_asm
+
+begin_expr_stmt
+literal|"r"
+operator|(
+literal|1
+operator|)
+operator|,
+literal|"r"
+operator|(
+operator|*
+operator|(
+name|u_int64_t
+operator|*
+operator|)
+operator|&
+name|pte
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_asm
+asm|__asm __volatile("srlz.i;;");
+end_asm
+
+begin_asm
+asm|__asm __volatile("mov psr.l=%0;; srlz.i;;" :: "r" (psr));
+end_asm
+
 begin_function
 unit|}  static
 name|void
@@ -2043,6 +2187,23 @@ operator|->
 name|PhysicalStart
 expr_stmt|;
 block|}
+comment|/* Map the memory mapped I/O Port space */
+name|KASSERT
+argument_list|(
+name|ia64_port_base
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: no I/O port memory region"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|map_port_space
+argument_list|()
+expr_stmt|;
 name|metadata_missing
 operator|=
 literal|0
@@ -2086,19 +2247,6 @@ operator|)
 name|bootinfo
 operator|.
 name|bi_envp
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|ia64_port_base
-operator|!=
-literal|0
-argument_list|,
-operator|(
-literal|"%s: no I/O memory region"
-operator|,
-name|__func__
-operator|)
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 name|boothowto
