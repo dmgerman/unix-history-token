@@ -4915,6 +4915,9 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|mstart
 expr_stmt|;
 name|sc
@@ -4924,6 +4927,9 @@ operator|=
 call|(
 name|caddr_t
 call|)
+argument_list|(
+name|uintptr_t
+argument_list|)
 argument_list|(
 name|msize
 operator|+
@@ -8342,7 +8348,7 @@ argument_list|,
 name|m
 argument_list|,
 operator|(
-name|long
+name|uintptr_t
 operator|)
 name|buffer
 argument_list|)
@@ -8568,7 +8574,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|long
+name|uintptr_t
 operator|)
 name|packet_ptr
 argument_list|,
@@ -10028,7 +10034,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|long
+name|uintptr_t
 operator|)
 name|src
 argument_list|,
@@ -10073,7 +10079,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|long
+name|uintptr_t
 operator|)
 name|src
 argument_list|,
