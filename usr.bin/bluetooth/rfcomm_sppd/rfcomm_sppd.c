@@ -288,6 +288,8 @@ decl_stmt|,
 name|amaster
 decl_stmt|,
 name|aslave
+decl_stmt|,
+name|fd
 decl_stmt|;
 name|fd_set
 name|rfd
@@ -479,10 +481,6 @@ block|}
 comment|/* Check if we have everything we need */
 if|if
 condition|(
-name|tty
-operator|==
-name|NULL
-operator|||
 name|memcmp
 argument_list|(
 operator|&
@@ -676,6 +674,31 @@ expr_stmt|;
 comment|/* Open TTYs */
 if|if
 condition|(
+name|tty
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|background
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|amaster
+operator|=
+name|STDIN_FILENO
+expr_stmt|;
+name|fd
+operator|=
+name|STDOUT_FILENO
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|sppd_ttys_open
 argument_list|(
 name|tty
@@ -694,6 +717,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|fd
+operator|=
+name|amaster
+expr_stmt|;
+block|}
 comment|/* Open RFCOMM connection */
 name|memset
 argument_list|(
@@ -903,7 +931,15 @@ name|LOG_INFO
 argument_list|,
 literal|"Starting on %s..."
 argument_list|,
+operator|(
 name|tty
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|tty
+else|:
+literal|"stdin/stdout"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1167,7 +1203,7 @@ if|if
 condition|(
 name|sppd_write
 argument_list|(
-name|amaster
+name|fd
 argument_list|,
 name|buf
 argument_list|,
@@ -1185,7 +1221,7 @@ literal|"Could not write to master "
 expr|\
 literal|"pty, fd=%d, size=%d. %s"
 argument_list|,
-name|amaster
+name|fd
 argument_list|,
 name|n
 argument_list|,
@@ -1209,7 +1245,15 @@ name|LOG_INFO
 argument_list|,
 literal|"Completed on %s"
 argument_list|,
+operator|(
 name|tty
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|tty
+else|:
+literal|"stdin/stdout"
 argument_list|)
 expr_stmt|;
 name|closelog
@@ -1220,6 +1264,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tty
+operator|!=
+name|NULL
+condition|)
+block|{
 name|close
 argument_list|(
 name|aslave
@@ -1230,6 +1281,7 @@ argument_list|(
 name|amaster
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1843,7 +1895,7 @@ literal|"\t-b         Run in background\n"
 expr|\
 literal|"\t-c channel RFCOMM channel to connect to\n"
 expr|\
-literal|"\t-t tty     TTY name\n"
+literal|"\t-t tty     TTY name (required in background mode)\n"
 expr|\
 literal|"\t-h         Display this message\n"
 argument_list|,
