@@ -839,7 +839,7 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
-literal|"ds"
+literal|"disc"
 block|,
 literal|"Software discard network interface"
 block|}
