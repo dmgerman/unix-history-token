@@ -315,22 +315,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|J_SIG0
+name|J_SIGMASK
 value|0x1d8
 end_define
 
 begin_define
 define|#
 directive|define
-name|J_SIG1
+name|J_SIGSET
 value|0x1e0
-end_define
-
-begin_define
-define|#
-directive|define
-name|J_SIGMASK
-value|0x1e8
 end_define
 
 begin_endif
