@@ -316,6 +316,14 @@ literal|"VIA 8380 host to PCI bridge"
 operator|)
 return|;
 case|case
+literal|0x02821106
+case|:
+return|return
+operator|(
+literal|"VIA K8T800Pro host to PCI bridge"
+operator|)
+return|;
+case|case
 literal|0x31881106
 case|:
 return|return
