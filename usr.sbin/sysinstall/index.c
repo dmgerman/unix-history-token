@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.58 1998/12/13 23:37:33 steve Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: index.c,v 1.59 1998/12/22 12:31:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -138,6 +138,10 @@ literal|"All"
 block|,
 literal|"All available packages in all categories."
 block|,
+literal|"afterstep"
+block|,
+literal|"Ports to support the AfterStep window manager."
+block|,
 literal|"applications"
 block|,
 literal|"User application software."
@@ -159,10 +163,6 @@ block|,
 literal|"Software related to biology."
 block|,
 literal|"benchmarks"
-block|,
-literal|"Utilities for measuring system performance."
-block|,
-literal|"benchmarking"
 block|,
 literal|"Utilities for measuring system performance."
 block|,
@@ -190,10 +190,6 @@ literal|"devel"
 block|,
 literal|"Software development utilities and libraries."
 block|,
-literal|"development"
-block|,
-literal|"Software development utilities and libraries."
-block|,
 literal|"deskutils"
 block|,
 literal|"Various Desktop utilities."
@@ -210,9 +206,9 @@ literal|"elisp"
 block|,
 literal|"Things related to Emacs Lisp."
 block|,
-literal|"emulation"
+literal|"elisp"
 block|,
-literal|"Utilities for emulating other OS types."
+literal|"Emacs lisp ports."
 block|,
 literal|"emulators"
 block|,
@@ -274,10 +270,6 @@ literal|"net"
 block|,
 literal|"Networking utilities."
 block|,
-literal|"networking"
-block|,
-literal|"Networking utilities."
-block|,
 literal|"news"
 block|,
 literal|"USENET News support software."
@@ -294,13 +286,13 @@ literal|"orphans"
 block|,
 literal|"Packages without a home elsewhere."
 block|,
+literal|"palm"
+block|,
+literal|"Software support for the 3Com Palm(tm) series."
+block|,
 literal|"perl5"
 block|,
 literal|"Utilities/modules for the PERL5 language."
-block|,
-literal|"pilot"
-block|,
-literal|"Software support for the 3COM/USR Palm Pilot(tm)."
 block|,
 literal|"plan9"
 block|,
@@ -378,17 +370,13 @@ literal|"troff"
 block|,
 literal|"TROFF text formatting utilities."
 block|,
-literal|"utils"
-block|,
-literal|"Various user utilities."
-block|,
-literal|"utilities"
-block|,
-literal|"Various user utilities."
-block|,
 literal|"vietnamese"
 block|,
 literal|"Ported software for the Vietnamese market."
+block|,
+literal|"windowmaker"
+block|,
+literal|"Ports to support the WindowMaker window manager."
 block|,
 literal|"www"
 block|,
@@ -408,7 +396,7 @@ literal|"X Window System based file managers."
 block|,
 literal|"x11-fonts"
 block|,
-literal|"X Window System fonts."
+literal|"X Window System fonts and font utilities."
 block|,
 literal|"x11-toolkits"
 block|,
