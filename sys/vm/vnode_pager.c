@@ -1893,6 +1893,9 @@ argument_list|(
 name|kva
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
 name|m
@@ -1904,6 +1907,9 @@ name|m
 argument_list|,
 name|PG_ZERO
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2179,6 +2185,9 @@ name|kva
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
 name|m
@@ -2206,6 +2215,9 @@ operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 return|return
 name|error
