@@ -297,7 +297,9 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|long
 name|limit
 decl_stmt|;
 name|limit
@@ -305,6 +307,8 @@ operator|=
 name|GET_TIME
 argument_list|()
 operator|+
+name|HZ
+operator|/
 literal|10
 expr_stmt|;
 comment|/* The timeout is 0.1 secods */

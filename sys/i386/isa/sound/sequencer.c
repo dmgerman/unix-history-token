@@ -97,6 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|long
 name|seq_time
 init|=
