@@ -1948,6 +1948,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INADDR_ALLMDNS_GROUP
+value|(u_int32_t)0xe00000fb
+end_define
+
+begin_comment
+comment|/* 224.0.0.251 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INADDR_MAX_LOCAL_GROUP
 value|(u_int32_t)0xe00000ff
 end_define
