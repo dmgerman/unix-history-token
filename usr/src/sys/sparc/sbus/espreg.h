@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)espreg.h	8.1 (Berkeley) %G%  *  * from: $Header: espreg.h,v 1.7 92/11/26 02:28:10 torek Exp $ (LBL)  *  * Derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  */
+comment|/*  * Copyright (c) 1988, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)espreg.h	8.2 (Berkeley) %G%  *  * from: $Header: espreg.h,v 1.7 92/11/26 02:28:10 torek Exp $ (LBL)  *  * Derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  */
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ decl_stmt|;
 name|u_char
 name|esp_conf2
 decl_stmt|;
-comment|/* configuration #2 (rw) */
+comment|/* configuration #2 (rw, ESP100A/2xx) */
 name|u_char
 name|esp_xxxB
 index|[
@@ -226,6 +226,10 @@ end_define
 
 begin_comment
 comment|/* reset SCSI bus */
+end_comment
+
+begin_comment
+comment|/* NB: fifo flush takes time, may need delay or NOP to allow completion */
 end_comment
 
 begin_comment
@@ -919,7 +923,7 @@ comment|/* command went out */
 end_comment
 
 begin_comment
-comment|/*  * Synchronous transfer period (esp_syncper, 5 bits).  * The minimum clocks-per-period is 5 and the max is 35;  * the default on reset is 5.  Note that a period value of 4  * actually gives 5 clocks.  */
+comment|/*  * Synchronous transfer period (esp_syncperiod, 5 bits).  * The minimum clocks-per-period is 5 and the max is 35;  * the default on reset is 5.  Note that a period value of 4  * actually gives 5 clocks.  */
 end_comment
 
 begin_define
@@ -933,7 +937,7 @@ value|((nclocks)& 31)
 end_define
 
 begin_comment
-comment|/*  * Bits in fifo flags (esp_fflags) register.  The FIFO itself  * is only 16 bytes, so the byte count fits in 5 bits.  Normally  * a copy of the sequence step register appears in the top 3 bits,  * but in test mode the chip re-uses one of those for a synchronous  * offset bit.  */
+comment|/*  * Bits in fifo flags (esp_fflags) register.  The FIFO itself  * is only 16 bytes, so the byte count fits in 5 bits.  Normally  * a copy of the sequence step register appears in the top 3 bits,  * but in test mode the chip re-uses one of those for a synchronous  * offset bit; in any case, they are pretty much worthless.  *  * Note that the fifo flags register must not be read while the  * fifo is changing.  */
 end_comment
 
 begin_define
@@ -941,19 +945,9 @@ define|#
 directive|define
 name|ESP_NFIFO
 parameter_list|(
-name|esp
+name|fflags
 parameter_list|)
-value|((esp)->esp_fflags& 0x1f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ESP_FFSTEP
-parameter_list|(
-name|esp
-parameter_list|)
-value|(((esp)->esp_fflags>> 5)& 3)
+value|((fflags)& 0x1f)
 end_define
 
 begin_define
