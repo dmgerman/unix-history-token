@@ -4,7 +4,7 @@ comment|/*#define SPLIT_DEVS 1*/
 end_comment
 
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.46 1997/10/16 06:29:27 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.47 1997/10/16 07:28:49 julian Exp $  */
 end_comment
 
 begin_include
@@ -3058,19 +3058,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-case|case
-name|VNON
-case|:
-name|printf
-argument_list|(
-literal|"bad-type2 (VNON)"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|case VNON: 		printf("bad-type2 (VNON)"); 		return(EINVAL);
+endif|#
+directive|endif
 block|}
 operator|*
 name|dn_pp
