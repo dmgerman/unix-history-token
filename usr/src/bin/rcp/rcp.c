@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.28 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1449,7 +1449,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"Notice: set type-of-service failed: %m"
+literal|"rcp: setsockopt TOS (ignored)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1905,7 +1905,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"Notice: set type-of-service failed: %m"
+literal|"rcp: setsockopt TOS (ignored)"
 argument_list|)
 expr_stmt|;
 name|sink
