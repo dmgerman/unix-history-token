@@ -3386,7 +3386,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"#include<memory.h>\n"
+literal|"#include<string.h>\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3670,7 +3670,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"#include<memory.h> /* for memset */\n"
+literal|"#include<string.h> /* for memset */\n"
 argument_list|)
 expr_stmt|;
 if|if
