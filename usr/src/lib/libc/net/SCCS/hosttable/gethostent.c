@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostent.c	4.7	83/12/21	*/
+comment|/*	gethostent.c	4.8	84/05/17	*/
 end_comment
 
 begin_include
@@ -60,8 +60,8 @@ end_define
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|HOSTDB
-index|[]
 init|=
 literal|"/etc/hosts"
 decl_stmt|;
@@ -517,6 +517,29 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|sethostfile
+argument_list|(
+argument|file
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|HOSTDB
+operator|=
+name|file
+expr_stmt|;
+block|}
+end_block
 
 begin_function
 specifier|static
