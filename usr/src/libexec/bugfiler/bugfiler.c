@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.3 (Berkeley) 85/11/04"
+literal|"@(#)bugfiler.c	5.4 (Berkeley) 86/03/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|BUGS_HOME
-value|"@ucbarpa.BERKELEY.EDU"
+value|"@ucbvax.BERKELEY.EDU"
 end_define
 
 begin_endif
@@ -135,14 +135,23 @@ name|MAILCMD
 value|"/usr/lib/sendmail -i -t"
 end_define
 
-begin_decl_stmt
-name|char
-name|unixtomh
-index|[]
-init|=
-literal|"/ra/bugs/bin/unixtomh"
-decl_stmt|;
-end_decl_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UNIXTOMH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|UNIXTOMH
+value|"/usr/lib/unixtomh"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
@@ -633,7 +642,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-name|unixtomh
+name|UNIXTOMH
 argument_list|,
 literal|"unixtomh"
 argument_list|,
