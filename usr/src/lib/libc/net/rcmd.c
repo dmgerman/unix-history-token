@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.1 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,7 +743,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-literal|0
+name|INADDR_ANY
 expr_stmt|;
 name|s
 operator|=
@@ -752,8 +752,6 @@ argument_list|(
 name|AF_INET
 argument_list|,
 name|SOCK_STREAM
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -819,12 +817,20 @@ return|;
 if|if
 condition|(
 name|errno
-operator|!=
-name|EADDRINUSE
-operator|&&
+operator|==
+name|EADDRNOTAVAIL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
 name|errno
 operator|!=
-name|EADDRNOTAVAIL
+name|EADDRINUSE
 condition|)
 block|{
 name|perror
