@@ -128,8 +128,15 @@ name|rcsid
 index|[]
 init|=
 literal|"@(#) $FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_decl_stmt
 specifier|static
 name|void
 name|wi_getval
@@ -138,7 +145,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
-expr|, struct
+operator|,
+expr|struct
 name|wi_req
 operator|*
 operator|)
