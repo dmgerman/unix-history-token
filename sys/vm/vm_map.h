@@ -573,7 +573,7 @@ modifier|*
 name|vm_shm
 decl_stmt|;
 comment|/* SYS5 shared memory private data XXX */
-comment|/* we copy from vm_startcopy to the end of the structure on fork */
+comment|/* we copy between vm_startcopy and vm_endcopy on fork */
 define|#
 directive|define
 name|vm_startcopy
