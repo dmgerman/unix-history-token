@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.6 1996/03/01 19:29:35 phk Exp $"
+literal|"$Id: auth.c,v 1.7 1996/10/01 03:41:28 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,18 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_ifdef
@@ -380,7 +392,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|login
+name|ppplogin
 name|__P
 argument_list|(
 operator|(
@@ -404,7 +416,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|logout
+name|ppplogout
 name|__P
 argument_list|(
 operator|(
@@ -557,7 +569,7 @@ if|if
 condition|(
 name|logged_in
 condition|)
-name|logout
+name|ppplogout
 argument_list|()
 expr_stmt|;
 name|phase
@@ -1575,7 +1587,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|login
+name|ppplogin
 argument_list|(
 name|user
 argument_list|,
@@ -1736,13 +1748,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * login - Check the user name and password against the system  * password database, and login the user if OK.  *  * returns:  *	UPAP_AUTHNAK: Login failed.  *	UPAP_AUTHACK: Login succeeded.  * In either case, msg points to an appropriate message.  */
+comment|/*  * ppplogin - Check the user name and password against the system  * password database, and login the user if OK.  *  * returns:  *	UPAP_AUTHNAK: Login failed.  *	UPAP_AUTHACK: Login succeeded.  * In either case, msg points to an appropriate message.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|login
+name|ppplogin
 parameter_list|(
 name|user
 parameter_list|,
@@ -1771,9 +1783,17 @@ name|msglen
 decl_stmt|;
 block|{
 name|struct
+name|utmp
+name|utmp
+decl_stmt|;
+name|struct
 name|passwd
 modifier|*
 name|pw
+decl_stmt|;
+name|struct
+name|timeval
+name|tp
 decl_stmt|;
 name|char
 modifier|*
@@ -1957,6 +1977,56 @@ return|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|pw
+operator|->
+name|pw_expire
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|gettimeofday
+argument_list|(
+operator|&
+name|tp
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|.
+name|tv_sec
+operator|>=
+name|pw
+operator|->
+name|pw_expire
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"user %s account expired"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|UPAP_AUTHNAK
+operator|)
+return|;
+block|}
+block|}
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -1994,13 +2064,105 @@ name|tty
 argument_list|,
 name|user
 argument_list|,
-literal|""
+literal|":PPP"
 argument_list|)
 expr_stmt|;
 comment|/* Add wtmp login entry */
 name|logged_in
 operator|=
 name|TRUE
+expr_stmt|;
+comment|/* Log in utmp too */
+name|memset
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|utmp
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|utmp
+operator|.
+name|ut_time
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+name|utmp
+operator|.
+name|ut_name
+argument_list|,
+name|user
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+name|utmp
+operator|.
+name|ut_host
+argument_list|,
+literal|":PPP"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_host
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+name|utmp
+operator|.
+name|ut_line
+argument_list|,
+name|tty
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_line
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|login
+argument_list|(
+operator|&
+name|utmp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -2011,13 +2173,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * logout - Logout the user.  */
+comment|/*  * ppplogout - Logout the user.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|logout
+name|ppplogout
 parameter_list|()
 block|{
 name|char
@@ -2059,6 +2221,12 @@ name|logged_in
 operator|=
 name|FALSE
 expr_stmt|;
+name|logout
+argument_list|(
+name|tty
+argument_list|)
+expr_stmt|;
+comment|/* Wipe out utmp */
 block|}
 end_function
 
