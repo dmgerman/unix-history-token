@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: init.c,v 1.30 1998/07/06 06:56:08 charnier Exp $"
+literal|"$Id: init.c,v 1.31 1998/07/22 05:45:11 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -623,6 +623,14 @@ name|int
 name|Reboot
 init|=
 name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|howto
+init|=
+name|RB_AUTOBOOT
 decl_stmt|;
 end_decl_stmt
 
@@ -1249,6 +1257,10 @@ name|SIGTERM
 argument_list|,
 name|SIGTSTP
 argument_list|,
+name|SIGUSR1
+argument_list|,
+name|SIGUSR2
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1297,6 +1309,10 @@ argument_list|,
 name|SIGTSTP
 argument_list|,
 name|SIGALRM
+argument_list|,
+name|SIGUSR1
+argument_list|,
+name|SIGUSR2
 argument_list|,
 literal|0
 argument_list|)
@@ -2439,7 +2455,7 @@ condition|(
 name|Reboot
 condition|)
 block|{
-comment|/* Instead of going single user, let's halt the machine */
+comment|/* Instead of going single user, let's reboot the machine */
 name|sync
 argument_list|()
 expr_stmt|;
@@ -2453,7 +2469,7 @@ argument_list|()
 expr_stmt|;
 name|reboot
 argument_list|(
-name|RB_AUTOBOOT
+name|howto
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -5393,6 +5409,20 @@ operator|=
 name|clean_ttys
 expr_stmt|;
 break|break;
+case|case
+name|SIGUSR2
+case|:
+name|howto
+operator|=
+name|RB_POWEROFF
+expr_stmt|;
+case|case
+name|SIGUSR1
+case|:
+name|howto
+operator||=
+name|RB_HALT
+expr_stmt|;
 case|case
 name|SIGINT
 case|:
