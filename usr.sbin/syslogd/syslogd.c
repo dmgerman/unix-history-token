@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: syslogd.c,v 1.12.2.9 1997/11/07 07:30:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8829,10 +8829,10 @@ argument_list|(
 name|SIG_BLOCK
 argument_list|,
 operator|&
-name|omask
+name|mask
 argument_list|,
 operator|&
-name|mask
+name|omask
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8854,10 +8854,10 @@ name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|omask
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|close
@@ -8931,10 +8931,10 @@ name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|omask
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|signal
@@ -9031,10 +9031,10 @@ name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|omask
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|close
