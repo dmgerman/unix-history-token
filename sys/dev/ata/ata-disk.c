@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -300,6 +306,53 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ata_dma
+decl_stmt|,
+name|ata_wc
+decl_stmt|,
+name|ata_tags
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"hw.ata.ata_dma"
+argument_list|,
+literal|1
+argument_list|,
+name|ata_dma
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"hw.ata.wc"
+argument_list|,
+literal|0
+argument_list|,
+name|ata_wc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"hw.ata.tags"
+argument_list|,
+literal|0
+argument_list|,
+name|ata_tags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* defines */
 end_comment
@@ -351,6 +404,12 @@ name|dev
 decl_stmt|;
 name|int
 name|secsperint
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|16
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -435,6 +494,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"ad%d"
+argument_list|,
+name|adp
+operator|->
+name|lun
+argument_list|)
+expr_stmt|;
+name|ata_set_name
+argument_list|(
+name|scp
+argument_list|,
+name|device
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|adp
 operator|->
 name|heads
@@ -598,7 +677,7 @@ operator|*=
 name|secsperint
 expr_stmt|;
 block|}
-comment|/* enable read/write cacheing if not default on device */
+comment|/* enable read cacheing if not default on device */
 if|if
 condition|(
 name|ata_command
@@ -626,26 +705,23 @@ argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: enabling readahead cache failed\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"enabling readahead cache failed\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ATA_ENABLE_WC
-argument_list|)
+comment|/* enable write cacheing if allowed and not default on device */
+if|if
+condition|(
+name|ata_wc
 operator|||
-name|defined
-argument_list|(
-name|ATA_ENABLE_TAGS
-argument_list|)
+name|ata_tags
+condition|)
+block|{
 if|if
 condition|(
 name|ata_command
@@ -673,17 +749,18 @@ argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: enabling write cache failed\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"enabling write cache failed\n"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|ata_command
@@ -711,18 +788,21 @@ argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: disabling write cache failed\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"disabling write cache failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* use DMA if drive& controller supports it */
+block|}
+comment|/* use DMA if allowed and if drive/controller supports it */
+if|if
+condition|(
+name|ata_dma
+condition|)
 name|ata_dmainit
 argument_list|(
 name|adp
@@ -749,9 +829,34 @@ name|AD_PARAM
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* use tagged queueing if supported */
+else|else
+name|ata_dmainit
+argument_list|(
+name|adp
+operator|->
+name|controller
+argument_list|,
+name|adp
+operator|->
+name|unit
+argument_list|,
+name|ata_pmode
+argument_list|(
+name|AD_PARAM
+argument_list|)
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* use tagged queueing if allowed and supported */
 if|if
 condition|(
+name|ata_tags
+operator|&&
 name|ad_tagsupported
 argument_list|(
 name|adp
@@ -807,13 +912,13 @@ argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: disabling release interrupt failed\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"disabling release interrupt failed\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -843,13 +948,13 @@ argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: disabling service interrupt failed\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"disabling service interrupt failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -932,13 +1037,13 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d:<%.40s/%.8s> ATA-%d disk at ata%d-%s\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"<%.40s/%.8s> ATA-%d disk at ata%d-%s\n"
 argument_list|,
 name|AD_PARAM
 operator|->
@@ -975,13 +1080,13 @@ else|:
 literal|"slave"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: %luMB (%u sectors), %u cyls, %u heads, %u S/T, %u B/S\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"%luMB (%u sectors), %u C, %u H, %u S, %u B\n"
 argument_list|,
 name|adp
 operator|->
@@ -1026,13 +1131,13 @@ argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: %d secs/int, %d depth queue, %s%s\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"%d secs/int, %d depth queue, %s%s\n"
 argument_list|,
 name|adp
 operator|->
@@ -1076,13 +1181,13 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: piomode=%d dmamode=%d udmamode=%d cblid=%d\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"piomode=%d dmamode=%d udmamode=%d cblid=%d\n"
 argument_list|,
 name|ata_pmode
 argument_list|(
@@ -1113,13 +1218,13 @@ argument_list|(
 name|adp
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s %s%s\n"
+name|scp
 argument_list|,
-name|adp
-operator|->
-name|lun
+name|device
+argument_list|,
+literal|"%luMB<%.40s> [%d/%d/%d] at ata%d-%s %s%s\n"
 argument_list|,
 name|adp
 operator|->
@@ -1255,13 +1360,17 @@ name|flags
 operator||=
 name|AD_F_DETACHING
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"\nad%d: being removed from configuration"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"removed from configuration\n"
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -1413,13 +1522,17 @@ argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: flushing cache on detach failed\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"flushing cache on detach failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2069,13 +2182,17 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: timeout waiting for final ready\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"timeout waiting for final ready\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2211,13 +2328,17 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: out of memory in start\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"out of memory in start\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2492,13 +2613,17 @@ name|count
 operator|=
 literal|256
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: count %d size transfers not supported\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"count %d size transfers not supported\n"
 argument_list|,
 name|count
 argument_list|)
@@ -2736,13 +2861,17 @@ name|ATA_IMMEDIATE
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: error executing command"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"error executing command"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2765,13 +2894,17 @@ name|ATA_S_READY
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: timeout waiting for READY\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"timeout waiting for READY\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2860,13 +2993,17 @@ name|ATA_IMMEDIATE
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: error executing command"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"error executing command"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2877,7 +3014,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * wait for data transfer phase 		 * 		 * well this should be here acording to specs, but 		 * promise controllers doesn't like it, they lockup! 		 * thats probably why tags doesn't work on the promise 		 * as this is needed there... 		 */
-block|if (ata_wait(adp->controller, adp->unit,  		    	     ATA_S_READY | ATA_S_DRQ)) { 		    printf("ad%d: timeout waiting for data phase\n", adp->lun); 		    goto transfer_failed; 		}
+block|if (ata_wait(adp->controller, adp->unit,  		    	     ATA_S_READY | ATA_S_DRQ)) { 		    ata_printf(adp->controller, adp->unit, 			       "timeout waiting for data phase\n"); 		    goto transfer_failed; 		}
 endif|#
 directive|endif
 block|}
@@ -2970,13 +3107,17 @@ name|ATA_IMMEDIATE
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: error executing command"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"error executing command"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3037,13 +3178,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: timeout waiting for DRQ"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"timeout waiting for DRQ"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3647,13 +3792,17 @@ name|flags
 operator|&
 name|ADR_F_FORCE_PIO
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: DMA problem fallback to PIO mode\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"DMA problem fallback to PIO mode\n"
 argument_list|)
 expr_stmt|;
 comment|/* if this was a PIO read operation, get the data */
@@ -3710,13 +3859,17 @@ operator||
 name|ATA_S_DRQ
 operator|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: read interrupt arrived early"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"read interrupt arrived early"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3743,13 +3896,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: read error detected (too) late"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"read error detected (too) late"
 argument_list|)
 expr_stmt|;
 name|request
@@ -3986,13 +4143,17 @@ argument_list|,
 name|ATA_IMMEDIATE
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: flushing cache failed\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"flushing cache failed\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -4301,13 +4462,17 @@ operator|&
 name|ATA_S_ERROR
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: Oops! controller says s=0x%02x e=0x%02x\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"Oops! controller says s=0x%02x e=0x%02x\n"
 argument_list|,
 name|adp
 operator|->
@@ -4362,13 +4527,17 @@ name|ATA_IMMEDIATE
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: problem executing SERVICE cmd\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"problem executing SERVICE cmd\n"
 argument_list|)
 expr_stmt|;
 name|ad_invalidatequeue
@@ -4399,13 +4568,17 @@ name|ATA_S_READY
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: problem issueing SERVICE tag=%d s=0x%02x e=0x%02x\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"problem issueing SERVICE tag=%d s=0x%02x e=0x%02x\n"
 argument_list|,
 name|ATA_INB
 argument_list|(
@@ -4474,13 +4647,17 @@ index|]
 operator|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: no request for this tag=%d??\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"no request for tag=%d\n"
 argument_list|,
 name|tag
 argument_list|)
@@ -4536,13 +4713,17 @@ name|ATA_S_DRQ
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: timeout waiting for data phase s=%02x e=%02x\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"timeout waiting for data phase s=%02x e=%02x\n"
 argument_list|,
 name|adp
 operator|->
@@ -4693,13 +4874,17 @@ decl_stmt|;
 name|int
 name|tag
 decl_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: invalidating queued requests\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"invalidating queued requests\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4804,13 +4989,17 @@ argument_list|,
 name|ATA_WAIT_READY
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: flushing queue failed\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"flush queue failed\n"
 argument_list|)
 expr_stmt|;
 name|adp
@@ -4834,9 +5023,6 @@ modifier|*
 name|adp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATA_ENABLE_TAGS
 specifier|const
 name|char
 modifier|*
@@ -4874,9 +5060,25 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* check that drive has tags enabled, and is one we know works */
+comment|/* check that drive does DMA, has tags enabled, and is one we know works */
 if|if
 condition|(
+name|adp
+operator|->
+name|controller
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|adp
+operator|->
+name|unit
+argument_list|)
+index|]
+operator|>=
+name|ATA_DMA
+operator|&&
 name|AD_PARAM
 operator|->
 name|supqueued
@@ -4927,8 +5129,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -4969,13 +5169,17 @@ name|running
 operator|=
 name|NULL
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: %s command timeout tag=%d serv=%d - resetting\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"%s command timeout tag=%d serv=%d - resetting\n"
 argument_list|,
 operator|(
 name|request
@@ -5052,13 +5256,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ad%d: trying fallback to PIO mode\n"
+name|adp
+operator|->
+name|controller
 argument_list|,
 name|adp
 operator|->
-name|lun
+name|unit
+argument_list|,
+literal|"trying fallback to PIO mode\n"
 argument_list|)
 expr_stmt|;
 name|request

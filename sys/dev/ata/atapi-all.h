@@ -1012,11 +1012,6 @@ modifier|*
 name|driver
 decl_stmt|;
 comment|/* ptr to subdriver softc */
-name|char
-modifier|*
-name|devname
-decl_stmt|;
-comment|/* this devices name */
 name|u_int8_t
 name|cmd
 decl_stmt|;

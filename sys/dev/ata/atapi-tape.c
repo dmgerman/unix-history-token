@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -418,6 +424,12 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+name|char
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|;
 specifier|static
 name|int
 name|ast_cdev_done
@@ -464,9 +476,17 @@ operator|!
 name|stp
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast: out of memory\n"
+name|atp
+operator|->
+name|controller
+argument_list|,
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -789,38 +809,28 @@ name|driver
 operator|=
 name|stp
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|stp
-operator|->
-name|atp
-operator|->
-name|devname
-operator|=
-name|malloc
-argument_list|(
-literal|8
-argument_list|,
-name|M_AST
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-operator|)
-condition|)
 name|sprintf
 argument_list|(
-name|stp
-operator|->
-name|atp
-operator|->
-name|devname
+name|name
 argument_list|,
 literal|"ast%d"
 argument_list|,
 name|stp
 operator|->
 name|lun
+argument_list|)
+expr_stmt|;
+name|ata_set_name
+argument_list|(
+name|atp
+operator|->
+name|controller
+argument_list|,
+name|atp
+operator|->
+name|unit
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 name|ast_describe
@@ -913,15 +923,15 @@ operator|->
 name|stats
 argument_list|)
 expr_stmt|;
-name|free
+name|ata_free_name
 argument_list|(
-name|stp
-operator|->
 name|atp
 operator|->
-name|devname
+name|controller
 argument_list|,
-name|M_AST
+name|atp
+operator|->
+name|unit
 argument_list|)
 expr_stmt|;
 name|ata_free_lun
@@ -1156,13 +1166,21 @@ condition|(
 name|bootverbose
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d:<%.40s/%.8s> tape drive at ata%d as %s\n"
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"<%.40s/%.8s> tape drive at ata%d as %s\n"
 argument_list|,
 name|ATA_PARAM
 argument_list|(
@@ -1224,17 +1242,20 @@ else|:
 literal|"slave"
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d: "
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+name|atp
+operator|->
+name|unit
+argument_list|,
 literal|"%dKB/s, "
 argument_list|,
 name|stp
@@ -1312,13 +1333,21 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d: "
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1569,13 +1598,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d: TAPE<%.40s> at ata%d-%s %s\n"
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"TAPE<%.40s> at ata%d-%s %s\n"
 argument_list|,
 name|ATA_PARAM
 argument_list|(
@@ -1723,13 +1760,21 @@ argument_list|(
 name|stp
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d: sense media type failed\n"
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"sense media type failed\n"
 argument_list|)
 expr_stmt|;
 name|stp
@@ -1897,13 +1942,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AST_DEBUG
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d: %llu total bytes transferred\n"
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"%llu total bytes transferred\n"
 argument_list|,
 name|ast_total
 argument_list|)
@@ -2562,13 +2615,21 @@ operator|->
 name|blksize
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d: bad request, must be multiple of %d\n"
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"bad request, must be multiple of %d\n"
 argument_list|,
 name|stp
 operator|->
@@ -2625,13 +2686,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast%d: WARNING: CTL exceeded %ld>%d\n"
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|stp
 operator|->
-name|lun
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"WARNING: CTL exceeded %ld>%d\n"
 argument_list|,
 name|bp
 operator|->
@@ -3158,16 +3227,28 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|AST_DEBUG
-name|printf
+name|ata_printf
 argument_list|(
-literal|"ast: modeselect pagesize=%d\n"
+name|stp
+operator|->
+name|atp
+operator|->
+name|controller
+argument_list|,
+name|stp
+operator|->
+name|atp
+operator|->
+name|unit
+argument_list|,
+literal|"modeselect pagesize=%d\n"
 argument_list|,
 name|pagesize
 argument_list|)
 expr_stmt|;
 name|atapi_dump
 argument_list|(
-literal|"ast: mode select "
+literal|"mode select "
 argument_list|,
 name|pagebuf
 argument_list|,

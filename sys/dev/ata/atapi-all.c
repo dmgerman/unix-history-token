@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -170,6 +176,25 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|atapi_dma
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT_DECL
+argument_list|(
+literal|"hw.ata.atapi_dma"
+argument_list|,
+literal|0
+argument_list|,
+name|atapi_dma
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* defines */
 end_comment
@@ -284,11 +309,10 @@ operator|->
 name|dmaflag
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ATA_ENABLE_ATAPI_DMA
 if|if
 condition|(
+name|atapi_dma
+operator|&&
 operator|!
 operator|(
 name|ATP_PARAM
@@ -365,9 +389,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
-comment|/* set PIO mode */
 name|ata_dmainit
 argument_list|(
 name|atp
@@ -539,13 +560,17 @@ name|flags
 operator||=
 name|ATAPI_F_DETACHING
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"\n%s: being removed from configuration"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"removed from configuration\n"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -950,15 +975,17 @@ comment|/* append onto controller queue and try to start controller */
 ifdef|#
 directive|ifdef
 name|ATAPI_DEBUG
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: queueing %s "
+name|atp
+operator|->
+name|controller
 argument_list|,
-name|request
+name|atp
 operator|->
-name|device
-operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"queueing %s "
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -1072,15 +1099,17 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ATAPI_DEBUG
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: finished %s\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
-name|request
+name|atp
 operator|->
-name|device
-operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"finished %s\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -1216,15 +1245,17 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ATAPI_DEBUG
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: starting %s "
+name|atp
+operator|->
+name|controller
 argument_list|,
-name|request
+name|atp
 operator|->
-name|device
-operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"starting %s "
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -1587,13 +1618,17 @@ argument_list|,
 name|ATA_IMMEDIATE
 argument_list|)
 condition|)
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: failure to send ATAPI packet command\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"failure to send ATAPI packet command\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1736,13 +1771,17 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: failure to execute ATAPI packet command\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"failure to execute ATAPI packet command\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1878,13 +1917,17 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: command interrupt without DRQ\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"command interrupt without DRQ\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2063,13 +2106,17 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: %s trying to write on read buffer\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"%s trying to write on read buffer\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2121,13 +2168,17 @@ argument_list|,
 name|ATA_ERROR
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: %s trying to read on write buffer\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"%s trying to read on write buffer\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2152,13 +2203,17 @@ return|;
 case|case
 name|ATAPI_P_DONEDRQ
 case|:
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: %s DONEDRQ\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"%s DONEDRQ\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2247,13 +2302,17 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: unknown transfer phase %d\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"unknown transfer phase %d\n"
 argument_list|,
 name|reason
 argument_list|)
@@ -2387,13 +2446,17 @@ block|{
 case|case
 name|ATAPI_SK_RESERVED
 case|:
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: %s - timeout error = %02x\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"%s - timeout error=0x%02x\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2429,13 +2492,17 @@ break|break;
 case|case
 name|ATAPI_SK_RECOVERED_ERROR
 case|:
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: %s - recovered error\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"%s - recovered error\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2479,13 +2546,17 @@ name|EIO
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: %s - %s asc=%02x ascq=%02x "
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"%s - %s asc=0x%02x ascq=0x%02x "
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2526,7 +2597,7 @@ name|sksv
 condition|)
 name|printf
 argument_list|(
-literal|"sks=%02x %02x %02x "
+literal|"sks=0x%02x 0x%02x 0x%02x "
 argument_list|,
 name|request
 operator|->
@@ -2549,7 +2620,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"error=%02x\n"
+literal|"error=0x%02x\n"
 argument_list|,
 name|request
 operator|->
@@ -2583,15 +2654,17 @@ block|{
 ifdef|#
 directive|ifdef
 name|ATAPI_DEBUG
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: finished %s (callback)\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
-name|request
+name|atp
 operator|->
-name|device
-operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"finished %s (callback)\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -3089,6 +3162,17 @@ argument_list|,
 name|length
 argument_list|)
 decl_stmt|;
+name|struct
+name|ata_softc
+modifier|*
+name|scp
+init|=
+name|request
+operator|->
+name|device
+operator|->
+name|controller
+decl_stmt|;
 name|int
 name|resid
 decl_stmt|;
@@ -3114,11 +3198,7 @@ name|sense
 expr_stmt|;
 if|if
 condition|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|flags
 operator|&
@@ -3135,11 +3215,7 @@ operator|)
 condition|)
 name|ATA_INSW
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|r_io
 argument_list|,
@@ -3168,11 +3244,7 @@ expr_stmt|;
 else|else
 name|ATA_INSL
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|r_io
 argument_list|,
@@ -3207,15 +3279,17 @@ operator|<
 name|length
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: read data overrun %d/%d\n"
+name|scp
 argument_list|,
 name|request
 operator|->
 name|device
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"read data overrun %d/%d\n"
 argument_list|,
 name|length
 argument_list|,
@@ -3245,11 +3319,7 @@ argument_list|)
 control|)
 name|ATA_INW
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|r_io
 argument_list|,
@@ -3318,6 +3388,17 @@ argument_list|,
 name|length
 argument_list|)
 decl_stmt|;
+name|struct
+name|ata_softc
+modifier|*
+name|scp
+init|=
+name|request
+operator|->
+name|device
+operator|->
+name|controller
+decl_stmt|;
 name|int
 name|resid
 decl_stmt|;
@@ -3343,11 +3424,7 @@ name|sense
 expr_stmt|;
 if|if
 condition|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|flags
 operator|&
@@ -3364,11 +3441,7 @@ operator|)
 condition|)
 name|ATA_OUTSW
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|r_io
 argument_list|,
@@ -3397,11 +3470,7 @@ expr_stmt|;
 else|else
 name|ATA_OUTSL
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|r_io
 argument_list|,
@@ -3436,15 +3505,17 @@ operator|<
 name|length
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: write data underrun %d/%d\n"
+name|scp
 argument_list|,
 name|request
 operator|->
 name|device
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"write data underrun %d/%d\n"
 argument_list|,
 name|length
 argument_list|,
@@ -3474,11 +3545,7 @@ argument_list|)
 control|)
 name|ATA_OUTW
 argument_list|(
-name|request
-operator|->
-name|device
-operator|->
-name|controller
+name|scp
 operator|->
 name|r_io
 argument_list|,
@@ -3542,13 +3609,17 @@ name|running
 operator|=
 name|NULL
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: %s command timeout - resetting\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"%s command timeout - resetting\n"
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -3619,13 +3690,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|ata_printf
 argument_list|(
-literal|"%s: trying fallback to PIO mode\n"
+name|atp
+operator|->
+name|controller
 argument_list|,
 name|atp
 operator|->
-name|devname
+name|unit
+argument_list|,
+literal|"trying fallback to PIO mode\n"
 argument_list|)
 expr_stmt|;
 name|request
