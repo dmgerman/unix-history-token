@@ -6,12 +6,6 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|0
-end_if
-
-begin_if
-if|#
-directive|if
 name|defined
 argument_list|(
 name|LIBC_SCCS
@@ -24,8 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ns_ntoa.c	8.1 (Berkeley) 6/4/93"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
-unit|static char sccsid[] = "@(#)ns_ntoa.c	8.1 (Berkeley) 6/4/93";
 endif|#
 directive|endif
 end_endif
@@ -33,11 +36,6 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

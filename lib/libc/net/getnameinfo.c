@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	$KAME: getnameinfo.c,v 1.45 2000/09/25 22:43:56 itojun Exp $	*/
 end_comment
 
@@ -14,6 +10,20 @@ end_comment
 begin_comment
 comment|/*  * Issues to be discussed:  * - Thread safe-ness must be checked  * - RFC2553 says that we should raise error on short buffer.  X/Open says  *   we need to truncate the result.  We obey RFC2553 (and X/Open should be  *   modified).  ipngwg rough consensus seems to follow RFC2553.  * - What is "local" in NI_FQDN?  * - NI_NAMEREQD and NI_NUMERICHOST conflict with each other.  * - (KAME extension) NI_WITHSCOPEID when called with global address,  *   and sin6_scope_id filled  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

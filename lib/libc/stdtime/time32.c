@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 FreeBSD Inc.  * All rights reserved.  *  * These routines are for converting time_t to fixed-bit representations  * for use in protocols or storage.  When converting time to a larger  * representation of time_t these routines are expected to assume temporal  * locality and use the 50-year rule to properly set the msb bits.  XXX  *  * Redistribution and use under the terms of the COPYRIGHT file at the  * base of the source tree.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 FreeBSD Inc.  * All rights reserved.  *  * These routines are for converting time_t to fixed-bit representations  * for use in protocols or storage.  When converting time to a larger  * representation of time_t these routines are expected to assume temporal  * locality and use the 50-year rule to properly set the msb bits.  XXX  *  * Redistribution and use under the terms of the COPYRIGHT file at the  * base of the source tree.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

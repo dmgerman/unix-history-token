@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$        */
-end_comment
-
-begin_comment
 comment|/*	$KAME: getaddrinfo.c,v 1.15 2000/07/09 04:37:24 itojun Exp $	*/
 end_comment
 
@@ -18,6 +14,20 @@ end_comment
 begin_comment
 comment|/*  * diffs with other KAME platforms:  * - other KAME platforms already nuked FAITH ($GAI), but as FreeBSD  *   4.0-RELEASE supplies it, we still have the code here.  * - AI_ADDRCONFIG support is supplied  * - some of FreeBSD style (#define tabify and others)  * - classful IPv4 numeric (127.1) is allowed.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

@@ -12,6 +12,12 @@ end_include
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|LIBC_SCCS
@@ -24,15 +30,8 @@ name|lint
 argument_list|)
 end_if
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: wcscat.c,v 1.1 2000/12/23 23:14:36 itojun Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID("$NetBSD: wcscat.c,v 1.1 2000/12/23 23:14:36 itojun Exp $");
 endif|#
 directive|endif
 end_endif
@@ -40,6 +39,11 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|__FBSDID

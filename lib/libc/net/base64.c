@@ -7,40 +7,19 @@ begin_comment
 comment|/*  * Portions Copyright (c) 1995 by International Business Machines, Inc.  *  * International Business Machines, Inc. (hereinafter called IBM) grants  * permission under its copyrights to use, copy, modify, and distribute this  * Software with or without fee, provided that the above copyright notice and  * all paragraphs of this notice appear in all copies, and that the name of IBM  * not be used in connection with the marketing of any product incorporating  * the Software or modifications thereof, without specific, written prior  * permission.  *  * To the extent it has a right to do so, IBM grants an immunity from suit  * under its patents, if any, for the use, sale or manufacture of products to  * the extent that such products are used for performing Domain Name System  * dynamic updates in TCP/IP networks by means of the Software.  No immunity is  * granted for any product per se or for any other function of any product.  *  * THE SOFTWARE IS PROVIDED "AS IS", AND IBM DISCLAIMS ALL WARRANTIES,  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE.  IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL,  * DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER ARISING  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE, EVEN  * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|LINT
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|CODECENTER
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

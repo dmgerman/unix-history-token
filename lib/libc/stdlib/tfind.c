@@ -4,10 +4,6 @@ comment|/*	$NetBSD: tfind.c,v 1.2 1999/09/16 11:45:37 lukem Exp $	*/
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * Tree search generalized from Knuth (6.2.2) Algorithm T just like  * the AT&T man page says.  *  * The node_t structure is for internal use only, lint doesn't grok it.  *  * Written by reading the System V Interface Definition, not the code.  *  * Totally public domain.  */
 end_comment
 
@@ -16,6 +12,12 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_if
 if|#
@@ -32,15 +34,8 @@ name|lint
 argument_list|)
 end_if
 
-begin_expr_stmt
-name|__RCSID
-argument_list|(
-literal|"$NetBSD: tfind.c,v 1.2 1999/09/16 11:45:37 lukem Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
+unit|__RCSID("$NetBSD: tfind.c,v 1.2 1999/09/16 11:45:37 lukem Exp $");
 endif|#
 directive|endif
 end_endif
@@ -48,6 +43,19 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

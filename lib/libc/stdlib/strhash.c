@@ -1,26 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|rcsid
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  *  *                      Copyright 1990  *               Terry Jones& Jordan Hubbard  *  *		  PCS Computer Systeme, GmbH.  *	             Munich, West Germany  *  *  *  All rights reserved.  *  *  This is unsupported software and is subject to change without notice.  *  the author makes no representations about the suitability of this software  *  for any purpose. It is supplied "as is" without express or implied  *  warranty.  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both that  *  copyright notice and this permission notice appear in supporting  *  documentation, and that the name of the author not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission.  *  */
 end_comment
@@ -32,6 +10,20 @@ end_comment
 begin_comment
 comment|/*  * $Log: strhash.c,v $  * Revision 2.0  90/03/26  01:44:26  jkh  * pre-beta check-in  *  * Revision 1.8  90/03/09  19:22:35  jkh  * Fixed bogus comment.  *  * Revision 1.7  90/03/09  19:01:08  jkh  * Added comments, GPL.  *  * Revision 1.6  90/03/08  17:55:58  terry  * Rearranged hash_purge to be a tiny bit more efficient.  * Added verbose option to hash_stats.  *  * Revision 1.5  90/03/08  17:19:54  terry  * Added hash_purge. Added arg to hash_traverse. Changed all  * void * to Generic.  *  * Revision 1.4  90/03/08  12:02:35  terry  * Fixed problems with allocation that I screwed up last night.  * Changed bucket lists to be singly linked. Thanks to JKH, my hero.  *  * Revision 1.3  90/03/07  21:33:33  terry  * Cleaned up a few decls to keep gcc -Wall quiet.  *  * Revision 1.2  90/03/07  21:14:53  terry  * Comments. Added HASH_STATS define. Removed hash_find()  * and new_node().  *  * Revision 1.1  90/03/07  20:49:45  terry  * Initial revision  *  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

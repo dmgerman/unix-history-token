@@ -28,21 +28,23 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)xdr_rec.c 1.21 87/08/11 Copyr 1984 Sun Micro";*/
-end_comment
-
-begin_comment
-comment|/*static char *sccsid = "from: @(#)xdr_rec.c	2.2 88/08/01 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)xdr_rec.c 1.21 87/08/11 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|rcsid
+name|sccsid
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)xdr_rec.c	2.2 88/08/01 4.0 RPCSRC"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +52,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * xdr_rec.c, Implements TCP/IP based XDR streams with a "record marking"  * layer above tcp (for rpc's use).  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * These routines interface XDRSTREAMS to a tcp/ip connection.  * There is a record marking layer between the xdr stream  * and the tcp transport level.  A record is composed on one or more  * record fragments.  A record fragment is a thirty-two bit header followed  * by n bytes of data, where n is contained in the header.  The header  * is represented as a htonl(u_long).  Thegh order bit encodes  * whether or not the fragment is the last fragment of the record  * (1 => fragment is last, 0 => more fragments to follow.   * The other 31 bits encode the byte length of the fragment.  */

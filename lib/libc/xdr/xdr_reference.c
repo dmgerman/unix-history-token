@@ -28,13 +28,25 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)xdr_reference.c 1.11 87/08/11 SMI";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)xdr_reference.c 1.11 87/08/11 SMI"
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)xdr_reference.c	2.1 88/07/29 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)xdr_reference.c	2.1 88/07/29 4.0 RPCSRC"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -50,6 +62,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * xdr_reference.c, Generic XDR routines impelmentation.  *  * Copyright (C) 1987, Sun Microsystems, Inc.  *  * These are the "non-trivial" xdr primitives used to serialize and de-serialize  * "pointers".  See xdr.h for more info on the interface to xdr.  */
