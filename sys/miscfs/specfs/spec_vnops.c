@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.57 1998/03/04 06:44:59 dyson Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.58 1998/03/07 21:35:52 dyson Exp $  */
 end_comment
 
 begin_include
@@ -3433,6 +3433,9 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|vm_page_t
+name|m
+decl_stmt|;
 name|vm_ooffset_t
 name|offset
 decl_stmt|;
@@ -3723,6 +3726,12 @@ name|b_bufsize
 operator|=
 name|size
 expr_stmt|;
+name|bp
+operator|->
+name|b_resid
+operator|=
+literal|0
+expr_stmt|;
 name|cnt
 operator|.
 name|v_vnodein
@@ -3846,12 +3855,6 @@ argument_list|,
 name|pcount
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Free the buffer header back to the swap buffer pool. 	 */
-name|relpbuf
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|gotreqpage
 operator|=
 literal|0
@@ -3878,9 +3881,6 @@ operator|=
 name|nextoff
 control|)
 block|{
-name|vm_page_t
-name|m
-decl_stmt|;
 name|nextoff
 operator|=
 name|toff
@@ -4076,17 +4076,81 @@ operator|!
 name|gotreqpage
 condition|)
 block|{
+name|m
+operator|=
+name|ap
+operator|->
+name|a_m
+index|[
+name|ap
+operator|->
+name|a_reqpage
+index|]
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MAX_PERF
 name|printf
 argument_list|(
-literal|"spec_getpages: I/O read failure: (code=%d)\n"
+literal|"spec_getpages: I/O read failure: (error code=%d)\n"
 argument_list|,
 name|error
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"               size: %d, resid: %d, a_count: %d, valid: 0x%x\n"
+argument_list|,
+name|size
+argument_list|,
+name|bp
+operator|->
+name|b_resid
+argument_list|,
+name|ap
+operator|->
+name|a_count
+argument_list|,
+name|m
+operator|->
+name|valid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"               nread: %d, reqpage: %d, pindex: %d, pcount: %d\n"
+argument_list|,
+name|nread
+argument_list|,
+name|ap
+operator|->
+name|a_reqpage
+argument_list|,
+name|m
+operator|->
+name|pindex
+argument_list|,
+name|pcount
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 		 * Free the buffer header back to the swap buffer pool. 		 */
+name|relpbuf
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 return|return
 name|VM_PAGER_ERROR
 return|;
 block|}
+comment|/* 	 * Free the buffer header back to the swap buffer pool. 	 */
+name|relpbuf
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 return|return
 name|VM_PAGER_OK
 return|;
