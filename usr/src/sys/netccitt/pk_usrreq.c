@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_usrreq.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1001,25 +1001,17 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|pk_send
-parameter_list|()
-function_decl|;
-name|lcp
-operator|->
-name|lcd_send
-operator|=
-name|pk_send
-expr_stmt|;
-return|return
-operator|(
 name|pk_output
 argument_list|(
 name|lcp
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
+comment|/* XXX pk_output should return a value */
 block|}
 end_block
 
@@ -2610,6 +2602,12 @@ name|x25_packet
 modifier|*
 name|xp
 decl_stmt|;
+specifier|register
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
 if|if
 condition|(
 name|m
@@ -2663,12 +2661,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|lcp
-operator|->
-name|lcd_template
-operator|=
-name|m
-expr_stmt|;
 operator|*
 operator|(
 name|mtod
@@ -2714,14 +2706,32 @@ operator|->
 name|lcd_lcn
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|pk_output
+name|sbinsertoob
 argument_list|(
+operator|(
+name|so
+operator|=
 name|lcp
-argument_list|)
+operator|->
+name|lcd_so
 operator|)
-return|;
+condition|?
+operator|&
+name|so
+operator|->
+name|so_snd
+else|:
+operator|&
+name|lcp
+operator|->
+name|lcd_sb
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+goto|goto
+name|send
+goto|;
 block|}
 comment|/* 	 * Application has elected (at call setup time) to prepend 	 * a control byte to each packet written indicating m-bit 	 * and q-bit status.  Examine and then discard this byte. 	 */
 if|if
@@ -2784,9 +2794,6 @@ name|len
 operator|--
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
 name|error
 operator|=
 name|pk_fragment
@@ -2805,17 +2812,29 @@ literal|0x40
 argument_list|,
 literal|1
 argument_list|)
-operator|)
+expr_stmt|;
+name|send
+label|:
+if|if
+condition|(
+name|error
 operator|==
 literal|0
+operator|&&
+name|lcp
+operator|->
+name|lcd_state
+operator|==
+name|DATA_TRANSFER
 condition|)
-name|error
-operator|=
-name|pk_output
+name|lcp
+operator|->
+name|lcd_send
 argument_list|(
 name|lcp
 argument_list|)
 expr_stmt|;
+comment|/* XXXXXXXXX fix pk_output!!! */
 return|return
 operator|(
 name|error
