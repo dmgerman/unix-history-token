@@ -1,10 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: fetch.c,v 1.136 2002/06/05 10:20:48 lukem Exp $	*/
+comment|/*	$NetBSD: fetch.c,v 1.141 2003/05/14 14:31:00 wiz Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997-2002 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Scott Aaron Bamford.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997-2003 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Luke Mewburn.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Scott Aaron Bamford.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: fetch.c,v 1.141 2003/05/14 14:31:00 wiz Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_comment
@@ -14,7 +43,115 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lukemftp.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/ftp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -769,6 +906,10 @@ name|clear
 argument_list|,
 name|clen
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|*
 name|response
 operator|+
@@ -1159,7 +1300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse URL of form:  *<type>://[<user>[:<password>@]]<host>[:<port>][/<path>]  * Returns -1 if a parse error occurred, otherwise 0.  * It's the caller's responsibility to url_decode() the returned  * user, pass and path.  *  * Sets type to url_t, each of the given char ** pointers to a  * malloc(3)ed strings of the relevant section, and port to  * the number given, or ftpport if ftp://, or httpport if http://.  *  * If<host> is surrounded by `[' and ']', it's parsed as an  * IPv6 address (as per RFC 2732).  *  * XXX: this is not totally RFC 1738 compliant;<path> will have the  * leading `/' unless it's an ftp:// URL, as this makes things easier  * for file:// and http:// URLs. ftp:// URLs have the `/' between the  * host and the url-path removed, but any additional leading slashes  * in the url-path are retained (because they imply that we should  * later do "CWD" with a null argument).  *  * Examples:  *	 input url			 output path  *	 ---------			 -----------  *	"ftp://host"			NULL  *	"http://host/"			NULL  *	"file://host/dir/file"		"dir/file"  *	"ftp://host/"			""  *	"ftp://host//"			NULL  *	"ftp://host//dir/file"		"/dir/file"  */
+comment|/*  * Parse URL of form:  *<type>://[<user>[:<password>@]]<host>[:<port>][/<path>]  * Returns -1 if a parse error occurred, otherwise 0.  * It's the caller's responsibility to url_decode() the returned  * user, pass and path.  *  * Sets type to url_t, each of the given char ** pointers to a  * malloc(3)ed strings of the relevant section, and port to  * the number given, or ftpport if ftp://, or httpport if http://.  *  * If<host> is surrounded by `[' and ']', it's parsed as an  * IPv6 address (as per RFC 2732).  *  * XXX: this is not totally RFC 1738 compliant;<path> will have the  * leading `/' unless it's an ftp:// URL, as this makes things easier  * for file:// and http:// URLs. ftp:// URLs have the `/' between the  * host and the URL-path removed, but any additional leading slashes  * in the URL-path are retained (because they imply that we should  * later do "CWD" with a null argument).  *  * Examples:  *	 input URL			 output path  *	 ---------			 -----------  *	"ftp://host"			NULL  *	"http://host/"			NULL  *	"file://host/dir/file"		"dir/file"  *	"ftp://host/"			""  *	"ftp://host//"			NULL  *	"ftp://host//dir/file"		"/dir/file"  */
 end_comment
 
 begin_function
@@ -2500,7 +2641,8 @@ goto|;
 block|}
 name|warnx
 argument_list|(
-literal|"Invalid URL (no file after directory) `%s'"
+literal|"no file after directory (you must specify an "
+literal|"output file) `%s'"
 argument_list|,
 name|url
 argument_list|)
@@ -8270,7 +8412,7 @@ name|fprintf
 argument_list|(
 name|ttyout
 argument_list|,
-literal|"auto_put: url `%s' argv[2] `%s'\n"
+literal|"auto_put: URL `%s' argv[2] `%s'\n"
 argument_list|,
 name|path
 argument_list|,

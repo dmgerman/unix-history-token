@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.82 2002/06/05 13:51:54 lukem Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.84 2003/05/14 14:31:00 wiz Exp $	*/
 end_comment
 
 begin_comment
@@ -15,6 +15,75 @@ begin_comment
 comment|/*  * Copyright (C) 1997 and 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__COPYRIGHT
+argument_list|(
+literal|"@(#) Copyright (c) 1985, 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)main.c	8.6 (Berkeley) 10/9/94";
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: main.c,v 1.84 2003/05/14 14:31:00 wiz Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * FTP User Program -- Command Interface.  */
 end_comment
@@ -22,7 +91,73 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"lukemftp.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_define
@@ -152,13 +287,13 @@ name|len
 decl_stmt|,
 name|isupload
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX */
-block|setlocale(LC_ALL, "");
-endif|#
-directive|endif
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|setprogname
 argument_list|(
 name|argv
@@ -829,7 +964,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46AadefginN:o:pP:r:RtT:u:vV"
+literal|"46AadefginN:o:pP:q:r:RtT:u:vV"
 argument_list|)
 operator|)
 operator|!=
@@ -1024,6 +1159,42 @@ case|:
 name|ftpport
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|quit_time
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|quit_time
+operator|<
+literal|1
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"bad quit value: %s"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4009,7 +4180,7 @@ literal|"usage: %s [-46AadefginpRtvV] [-N netrc] [-o outfile] [-P port] [-r retr
 literal|"           [-T dir,max[,inc][[user@]host [port]]] [host:path[/]]\n"
 literal|"           [file:///file] [ftp://[user[:pass]@]host[:port]/path[/]]\n"
 literal|"           [http://[user[:pass]@]host[:port]/path] [...]\n"
-literal|"       %s -u url file [...]\n"
+literal|"       %s -u URL file [...]\n"
 argument_list|,
 name|progname
 argument_list|,
