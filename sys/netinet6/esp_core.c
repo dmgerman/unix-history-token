@@ -2407,7 +2407,7 @@ modifier|*
 name|d
 decl_stmt|;
 block|{
-comment|/* HOLY COW!  BF_encrypt() takes values in host byteorder */
+comment|/* HOLY COW!  BF_decrypt() takes values in host byteorder */
 name|BF_LONG
 name|t
 index|[
@@ -2452,7 +2452,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|BF_encrypt
+name|BF_decrypt
 argument_list|(
 name|t
 argument_list|,
