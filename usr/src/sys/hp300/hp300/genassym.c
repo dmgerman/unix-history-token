@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -778,16 +778,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tIOMAPSIZE %d\n"
+literal|"#define\tIIOMAPSIZE %d\n"
 argument_list|,
-name|IOMAPSIZE
+name|IIOMAPSIZE
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tIOBASE %d\n"
+literal|"#define\tEIOMAPSIZE %d\n"
 argument_list|,
-name|IOBASE
+name|EIOMAPSIZE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tINTIOBASE %d\n"
+argument_list|,
+name|INTIOBASE
 argument_list|)
 expr_stmt|;
 name|printf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.17 89/11/30$  *  *	@(#)clock.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"clockreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm.h"
 end_include
 
 begin_include
@@ -179,7 +173,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|IOV
+name|IIOV
 argument_list|(
 literal|0x5F8000
 argument_list|)
@@ -416,6 +410,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sys/resourcevar.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sys/ioctl.h"
 end_include
 
@@ -428,25 +428,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vm/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clockioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_pager.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_prot.h"
 end_include
 
 begin_include
@@ -792,7 +780,7 @@ operator|(
 name|off
 operator|+
 operator|(
-name|IOBASE
+name|INTIOBASE
 operator|+
 name|CLKBASE
 operator|+
@@ -1229,12 +1217,6 @@ name|PRF_KERNEL
 value|0x80
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notcalled
-end_ifdef
-
 begin_macro
 name|initprofclock
 argument_list|()
@@ -1320,11 +1302,6 @@ name|profint
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|startprofclock
