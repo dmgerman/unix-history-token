@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.10 1996/04/02 06:17:14 scrappy Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.11 1996/04/02 19:07:38 scrappy Exp $  */
 end_comment
 
 begin_ifndef
@@ -101,7 +101,12 @@ name|void
 modifier|*
 name|original
 parameter_list|,
-comment|/* the result of a previous dev_link 		 char *fmt,			or dev_add operation */
+comment|/* the result of a previous dev_link */
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+comment|/*		or dev_add operation */
 modifier|...
 parameter_list|)
 function_decl|;
