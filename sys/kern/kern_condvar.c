@@ -1873,7 +1873,7 @@ name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"cv_signal: thread %p (pid %d, %s)"
+literal|"cv_wakeup: thread %p (pid %d, %s)"
 argument_list|,
 name|td
 argument_list|,
