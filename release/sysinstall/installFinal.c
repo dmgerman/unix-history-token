@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installFinal.c,v 1.3 1995/10/20 14:24:49 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard& Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the authors listed above  *	for the FreeBSD Project.  * 4. The names of the authors or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR THEIR PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installFinal.c,v 1.5 1995/10/20 21:57:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard& Coranth Gryphon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the authors listed above  *	for the FreeBSD Project.  * 4. The names of the authors or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR THEIR PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -74,6 +74,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"UNDER CONSTRUCTION\n\n"
@@ -336,6 +339,9 @@ name|FTP_COMMENT
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to create FTP user!  Anonymous FTP setup failed."
@@ -379,6 +385,9 @@ block|}
 block|}
 else|else
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Invalid Directory. Anonymous FTP will not be set up."
@@ -856,6 +865,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Invalid Share Name."
@@ -865,6 +877,9 @@ block|}
 block|}
 else|else
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Directory does not exist."
@@ -892,6 +907,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to open temporary smb.conf file.\nSamba must be configured by hand."
@@ -926,6 +944,9 @@ literal|"/etc/exports"
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"You have chosen to be an NFS server but have not yet configured\n"

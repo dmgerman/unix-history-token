@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.9 1995/10/22 01:32:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.11 1995/10/22 12:04:11 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -151,9 +151,16 @@ argument_list|,
 name|name
 argument_list|)
 condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"package %s marked as already installed - return SUCCESS.\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|RET_SUCCESS
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -165,9 +172,12 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Unable to initialize media type for package add."
+literal|"Unable to initialize media type for package extract."
 argument_list|)
 expr_stmt|;
 return|return
@@ -198,11 +208,15 @@ else|:
 literal|".tgz"
 argument_list|)
 expr_stmt|;
-name|msgDebug
+name|msgNotify
 argument_list|(
-literal|"pkg_extract: Attempting to fetch %s\n"
+literal|"pkg_extract: Attempting to fetch %s from %s"
 argument_list|,
 name|path
+argument_list|,
+name|dev
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|fd
@@ -228,17 +242,6 @@ block|{
 name|pid_t
 name|tpid
 decl_stmt|;
-name|msgNotify
-argument_list|(
-literal|"Fetching %s from %s"
-argument_list|,
-name|path
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|pen
 index|[
 literal|0
@@ -294,11 +297,30 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+name|DebugFD
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"tar %s-xzf -"
+literal|"tar %s-xpzf -"
 argument_list|,
 operator|!
 name|strcmp
@@ -318,14 +340,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|isDebug
-argument_list|()
+name|i
 condition|)
 name|msgDebug
 argument_list|(
-literal|"tar command returns %d status\n"
+literal|"tar command returns %d status (errno: %d)\n"
 argument_list|,
 name|i
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 name|exit
@@ -373,6 +396,10 @@ else|:
 literal|""
 argument_list|)
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"An error occurred while trying to pkg_add %s.\n"
@@ -381,6 +408,7 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|ret
 operator|=
@@ -430,6 +458,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to find a temporary location to unpack this stuff in.\n"
@@ -437,6 +469,11 @@ literal|"You must simply not have enough space or you've configured your\n"
 literal|"system oddly.  Sorry!"
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|RET_FAIL
+expr_stmt|;
+block|}
 name|dev
 operator|->
 name|close
@@ -461,6 +498,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|msgDebug
 argument_list|(
 literal|"pkg_extract: get operation returned %d\n"
@@ -468,6 +506,32 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_NO_CONFIRM
+argument_list|)
+condition|)
+name|msgNotify
+argument_list|(
+literal|"Unable to fetch package %s from selected media.\n"
+literal|"No package add will be done."
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Unable to fetch package %s from selected media.\n"
+literal|"No package add will be done."
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 name|ret
 return|;
@@ -670,6 +734,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Can't find enough temporary space to extract the files, please try\n"
@@ -735,6 +802,9 @@ name|pen
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Can't mktemp '%s'."
@@ -758,6 +828,9 @@ operator|==
 name|RET_FAIL
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Can't mkdir '%s'."
@@ -812,6 +885,9 @@ argument_list|(
 name|pen
 argument_list|)
 expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Not enough free space to create: `%s'\n"
@@ -835,6 +911,9 @@ name|FILENAME_MAX
 argument_list|)
 condition|)
 block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"getcwd"
@@ -853,6 +932,10 @@ argument_list|)
 operator|==
 name|RET_FAIL
 condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Can't chdir to '%s'."
@@ -860,6 +943,7 @@ argument_list|,
 name|pen
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|Previous
 return|;
