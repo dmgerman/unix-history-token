@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.64 1998/12/27 11:23:05 luigi Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.65 1999/01/22 01:46:32 archie Exp $  *  */
 end_comment
 
 begin_include
@@ -3194,16 +3194,18 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: ipfw [options]\n"
-literal|"    flush\n"
+literal|"    [pipe] flush\n"
 literal|"    add [number] rule\n"
-literal|"    delete number ...\n"
-literal|"    list [number ...]\n"
-literal|"    show [number ...]\n"
+literal|"    [pipe] delete number ...\n"
+literal|"    [pipe] list [number ...]\n"
+literal|"    [pipe] show [number ...]\n"
 literal|"    zero [number ...]\n"
+literal|"    pipe number config [pipeconfig\n"
 literal|"  rule:  action proto src dst extras...\n"
 literal|"    action:\n"
 literal|"      {allow|permit|accept|pass|deny|drop|reject|unreach code|\n"
-literal|"       reset|count|skipto num|divert port|tee port|fwd ip} [log]\n"
+literal|"       reset|count|skipto num|divert port|tee port|fwd ip|\n"
+literal|"       pipe num} [log]\n"
 literal|"    proto: {ip|tcp|udp|icmp|<number>}\n"
 literal|"    src: from [not] {any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
 literal|"    dst: to [not] {any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
@@ -3216,6 +3218,11 @@ literal|"    {established|setup}\n"
 literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg},...\n"
 literal|"    ipoptions [!]{ssrr|lsrr|rr|ts},...\n"
 literal|"    icmptypes {type[,type]}...\n"
+literal|"  pipecfg:\n"
+literal|"    {bw|bandwidth}<number>{bit/s|Kbit/s|Mbit/s|Bytes/s|KBytes/s|MBytes/s}\n"
+literal|"    delay<milliseconds>\n"
+literal|"    queue<size>{packets|Bytes|KBytes}\n"
+literal|"    plr<fraction>\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5346,6 +5353,11 @@ operator|*
 name|end
 operator|==
 literal|'K'
+operator|||
+operator|*
+name|end
+operator|==
+literal|'k'
 condition|)
 name|end
 operator|++
@@ -5379,6 +5391,16 @@ operator|*
 name|end
 operator|==
 literal|'B'
+operator|||
+operator|!
+name|strncmp
+argument_list|(
+name|end
+argument_list|,
+literal|"by"
+argument_list|,
+literal|2
+argument_list|)
 condition|)
 name|pipe
 operator|.
@@ -5471,6 +5493,27 @@ argument_list|,
 name|NULL
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|d
+operator|>
+literal|1
+condition|)
+name|d
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|d
+operator|<
+literal|0
+condition|)
+name|d
+operator|=
+literal|0
+expr_stmt|;
 name|pipe
 operator|.
 name|plr
@@ -5539,6 +5582,11 @@ operator|*
 name|end
 operator|==
 literal|'K'
+operator|||
+operator|*
+name|end
+operator|==
+literal|'k'
 condition|)
 block|{
 name|pipe
@@ -5565,6 +5613,16 @@ operator|*
 name|end
 operator|==
 literal|'B'
+operator|||
+operator|!
+name|strncmp
+argument_list|(
+name|end
+argument_list|,
+literal|"by"
+argument_list|,
+literal|2
+argument_list|)
 condition|)
 block|{
 name|pipe
@@ -8700,6 +8758,10 @@ name|s
 argument_list|,
 name|IPPROTO_IP
 argument_list|,
+name|do_pipe
+condition|?
+name|IP_DUMMYNET_FLUSH
+else|:
 name|IP_FW_FLUSH
 argument_list|,
 name|NULL
@@ -8713,9 +8775,13 @@ name|err
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
-literal|"setsockopt(%s)"
+literal|"setsockopt(IP_%s_FLUSH)"
 argument_list|,
-literal|"IP_FW_FLUSH"
+name|do_pipe
+condition|?
+literal|"DUMMYNET"
+else|:
+literal|"FW"
 argument_list|)
 expr_stmt|;
 if|if
