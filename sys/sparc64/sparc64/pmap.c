@@ -773,6 +773,8 @@ name|TLB_DTLB
 argument_list|,
 name|va
 argument_list|,
+name|TLB_CTX_KERNEL
+argument_list|,
 name|tte
 argument_list|,
 name|TLB_SLOT_TSB_KERNEL_MIN
@@ -974,6 +976,11 @@ argument_list|,
 name|TLB_CTX_KERNEL
 argument_list|)
 expr_stmt|;
+name|membar
+argument_list|(
+name|Sync
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1012,6 +1019,8 @@ init|;
 name|phys_avail
 index|[
 name|i
+operator|+
+literal|1
 index|]
 operator|!=
 literal|0
@@ -2063,6 +2072,8 @@ name|TLB_DTLB
 argument_list|,
 name|va
 argument_list|,
+name|TLB_CTX_KERNEL
+argument_list|,
 name|tte
 argument_list|)
 expr_stmt|;
@@ -2503,7 +2514,97 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|TODO
+name|struct
+name|tte
+name|tte
+decl_stmt|;
+name|vm_offset_t
+name|va
+decl_stmt|;
+name|KASSERT
+argument_list|(
+name|off
+operator|+
+name|size
+operator|<=
+name|PAGE_SIZE
+argument_list|,
+operator|(
+literal|"pmap_zero_page_area: bad off/size"
+operator|)
+argument_list|)
+expr_stmt|;
+name|va
+operator|=
+name|CADDR2
+expr_stmt|;
+name|tte
+operator|.
+name|tte_tag
+operator|=
+name|TT_CTX
+argument_list|(
+name|TLB_CTX_KERNEL
+argument_list|)
+operator||
+name|TT_VA
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|tte
+operator|.
+name|tte_data
+operator|=
+name|TD_V
+operator||
+name|TD_8K
+operator||
+name|TD_PA
+argument_list|(
+name|pa
+argument_list|)
+operator||
+name|TD_L
+operator||
+name|TD_CP
+operator||
+name|TD_P
+operator||
+name|TD_W
+expr_stmt|;
+name|tlb_store
+argument_list|(
+name|TLB_DTLB
+argument_list|,
+name|va
+argument_list|,
+name|TLB_CTX_KERNEL
+argument_list|,
+name|tte
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|va
+operator|+
+name|off
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+name|tlb_page_demap
+argument_list|(
+name|TLB_DTLB
+argument_list|,
+name|TLB_CTX_KERNEL
+argument_list|,
+name|va
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -2640,8 +2741,7 @@ name|int
 name|limit
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 
@@ -2701,8 +2801,7 @@ name|vm_prot_t
 name|prot
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 
@@ -2773,8 +2872,7 @@ name|vm_offset_t
 name|eva
 parameter_list|)
 block|{
-name|TODO
-expr_stmt|;
+comment|/* XXX */
 block|}
 end_function
 
