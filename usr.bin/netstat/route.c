@@ -1088,7 +1088,7 @@ name|lflag
 condition|)
 name|printf
 argument_list|(
-literal|"%-*.*s %-*.*s %-6.6s  %6.6s%8.8s %5.5s %*.*s %6s\n"
+literal|"%-*.*s %-*.*s %-6.6s %6.6s %8.8s %6.6s %*.*s %6s\n"
 argument_list|,
 name|WID_DST
 argument_list|(
@@ -1140,7 +1140,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%-*.*s %-*.*s %-6.6s  %6.6s%8.8s  %8.8s %6s\n"
+literal|"%-*.*s %-*.*s %-6.6s %6.6s %8.8s %*.*s %6s\n"
 argument_list|,
 name|WID_DST
 argument_list|(
@@ -1171,6 +1171,16 @@ argument_list|,
 literal|"Refs"
 argument_list|,
 literal|"Use"
+argument_list|,
+name|WID_IF
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+name|WID_IF
+argument_list|(
+name|af
+argument_list|)
 argument_list|,
 literal|"Netif"
 argument_list|,
@@ -3171,7 +3181,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%6ld %8ld"
+literal|"%6ld %8ld "
 argument_list|,
 name|rt
 operator|->
@@ -3282,7 +3292,25 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%8.8s"
+literal|"%*.*s"
+argument_list|,
+name|WID_IF
+argument_list|(
+name|addr
+operator|.
+name|u_sa
+operator|.
+name|sa_family
+argument_list|)
+argument_list|,
+name|WID_IF
+argument_list|(
+name|addr
+operator|.
+name|u_sa
+operator|.
+name|sa_family
+argument_list|)
 argument_list|,
 name|prettyname
 argument_list|)
