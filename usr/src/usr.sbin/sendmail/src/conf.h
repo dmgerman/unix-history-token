@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.164 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.165 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -6220,6 +6220,28 @@ begin_comment
 comment|/* use<sys/statvfs.h> statvfs() impl */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SPT_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_SYSMIPS
+end_define
+
+begin_comment
+comment|/* use sysmips() (OS 6.0.2 or later) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -6351,6 +6373,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDPUTENV
+value|1
+end_define
+
+begin_comment
+comment|/* need putenv(3) call */
+end_comment
 
 begin_define
 define|#
