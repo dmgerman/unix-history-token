@@ -1228,6 +1228,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|error
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 if|if
@@ -4142,7 +4146,14 @@ directive|ifndef
 name|MAX_PERF
 name|printf
 argument_list|(
-literal|"spec_getpages: I/O read failure: (error code=%d) bp %p vp %p\n"
+literal|"spec_getpages:(%s) I/O read failure: (error=%d) bp %p vp %p\n"
+argument_list|,
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|error
 argument_list|,
