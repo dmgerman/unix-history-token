@@ -1094,6 +1094,9 @@ name|resource
 modifier|*
 name|ioportres
 decl_stmt|;
+name|int
+name|ioportrid
+decl_stmt|;
 name|void
 modifier|*
 name|cookie
@@ -4023,7 +4026,9 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-literal|0
+name|com
+operator|->
+name|ioportrid
 argument_list|,
 name|com
 operator|->
@@ -7190,6 +7195,12 @@ operator|->
 name|ioportres
 operator|=
 name|port
+expr_stmt|;
+name|com
+operator|->
+name|ioportrid
+operator|=
+name|rid
 expr_stmt|;
 name|com
 operator|->
