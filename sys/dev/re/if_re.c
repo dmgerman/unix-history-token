@@ -22,7 +22,7 @@ comment|/*  * RealTek 8139C+/8169/8169S/8110S PCI NIC driver  *  * Written by Bi
 end_comment
 
 begin_comment
-comment|/*  * This driver is designed to support RealTek's next generation of  * 10/100 and 10/100/1000 PCI ethernet controllers. There are currently  * four devices in this family: the RTL8139C+, the RTL8169, the RTL8169S  * and the RTL8110S.  *  * The 8139C+ is a 10/100 ethernet chip. It is backwards compatible  * with the older 8139 family, however it also supports a special  * C+ mode of operation that provides several new performance enhancing  * features. These include:  *  *	o Descriptor based DMA mechanism. Each descriptor represents  *	  a single packet fragment. Data buffers may be aligned on  *	  any byte boundary.  *  *	o 64-bit DMA  *  *	o TCP/IP checksum offload for both RX and TX  *  *	o High and normal priority transmit DMA rings  *  *	o VLAN tag insertion and extraction  *  *	o TCP large send (segmentation offload)  *  * Like the 8139, the 8139C+ also has a built-in 10/100 PHY. The C+  * programming API is fairly straightforward. The RX filtering, EEPROM  * access and PHY access is the same as it is on the older 8139 series  * chips.  *  * The 8169 is a 64-bit 10/100/1000 gigabit ethernet MAC. It has almost the  * same programming API and feature set as the 8139C+ with the following  * differences and additions:  *  *	o 1000Mbps mode  *  *	o Jumbo frames  *  * 	o GMII and TBI ports/registers for interfacing with copper  *	  or fiber PHYs  *  *      o RX and TX DMA rings can have up to 1024 descriptors  *        (the 8139C+ allows a maximum of 64)  *  *	o Slight differences in register layout from the 8139C+  *  * The TX start and timer interrupt registers are at different locations  * on the 8169 than they are on the 8139C+. Also, the status word in the  * RX descriptor has a slightly different bit layout. The 8169 does not  * have a built-in PHY. Most reference boards use a Marvell 88E1000 'Alaska'  * copper gigE PHY.  *  * The 8169S/8110S 10/100/1000 devices have built-in copper gigE PHYs  * (the 'S' stands for 'single-chip'). These devices have the same  * programming API as the older 8169, but also have some vendor-specific  * registers for the on-board PHY. The 8110S is a LAN-on-motherboard  * part designed to be pin-compatible with the RealTek 8100 10/100 chip.  *   * This driver takes advantage of the RX and TX checksum offload and  * VLAN tag insertion/extraction features. It also implements TX  * interrupt moderation using the timer interrupt registers, which  * significantly reduces TX interrupt load. There is also support  * for jumbo frames, however the 8169/8169S/8110S can not transmit  * jumbo frames larger than 7.5K, so the max MTU possible with this  * driver is 7500 bytes.  */
+comment|/*  * This driver is designed to support RealTek's next generation of  * 10/100 and 10/100/1000 PCI ethernet controllers. There are currently  * four devices in this family: the RTL8139C+, the RTL8169, the RTL8169S  * and the RTL8110S.  *  * The 8139C+ is a 10/100 ethernet chip. It is backwards compatible  * with the older 8139 family, however it also supports a special  * C+ mode of operation that provides several new performance enhancing  * features. These include:  *  *	o Descriptor based DMA mechanism. Each descriptor represents  *	  a single packet fragment. Data buffers may be aligned on  *	  any byte boundary.  *  *	o 64-bit DMA  *  *	o TCP/IP checksum offload for both RX and TX  *  *	o High and normal priority transmit DMA rings  *  *	o VLAN tag insertion and extraction  *  *	o TCP large send (segmentation offload)  *  * Like the 8139, the 8139C+ also has a built-in 10/100 PHY. The C+  * programming API is fairly straightforward. The RX filtering, EEPROM  * access and PHY access is the same as it is on the older 8139 series  * chips.  *  * The 8169 is a 64-bit 10/100/1000 gigabit ethernet MAC. It has almost the  * same programming API and feature set as the 8139C+ with the following  * differences and additions:  *  *	o 1000Mbps mode  *  *	o Jumbo frames  *  *	o GMII and TBI ports/registers for interfacing with copper  *	  or fiber PHYs  *  *	o RX and TX DMA rings can have up to 1024 descriptors  *	  (the 8139C+ allows a maximum of 64)  *  *	o Slight differences in register layout from the 8139C+  *  * The TX start and timer interrupt registers are at different locations  * on the 8169 than they are on the 8139C+. Also, the status word in the  * RX descriptor has a slightly different bit layout. The 8169 does not  * have a built-in PHY. Most reference boards use a Marvell 88E1000 'Alaska'  * copper gigE PHY.  *  * The 8169S/8110S 10/100/1000 devices have built-in copper gigE PHYs  * (the 'S' stands for 'single-chip'). These devices have the same  * programming API as the older 8169, but also have some vendor-specific  * registers for the on-board PHY. The 8110S is a LAN-on-motherboard  * part designed to be pin-compatible with the RealTek 8100 10/100 chip.  *  * This driver takes advantage of the RX and TX checksum offload and  * VLAN tag insertion/extraction features. It also implements TX  * interrupt moderation using the timer interrupt registers, which  * significantly reduces TX interrupt load. There is also support  * for jumbo frames, however the 8169/8169S/8110S can not transmit  * jumbo frames larger than 7.5K, so the max MTU possible with this  * driver is 7500 bytes.  */
 end_comment
 
 begin_include
@@ -3576,10 +3576,11 @@ name|ctx
 operator|->
 name|rl_idx
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|u_int32_t
 name|cmdstat
@@ -6520,7 +6521,7 @@ operator|-
 name|ETHER_ALIGN
 operator|)
 expr_stmt|;
-comment|/*  			 * Special case: if there's 4 bytes or less 			 * in this buffer, the mbuf can be discarded: 			 * the last 4 bytes is the CRC, which we don't 			 * care about anyway. 			 */
+comment|/* 			 * Special case: if there's 4 bytes or less 			 * in this buffer, the mbuf can be discarded: 			 * the last 4 bytes is the CRC, which we don't 			 * care about anyway. 			 */
 if|if
 condition|(
 name|m
