@@ -863,7 +863,7 @@ name|disablexworkaround
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if

@@ -1075,13 +1075,11 @@ operator|.
 name|kg_nice
 comment|/* XXXKSE */
 operator|&&
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|curp
 operator|->
 name|p_ucred
-argument_list|,
-name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -1367,15 +1365,9 @@ break|break;
 comment|/* disallow setting rtprio in most cases if not superuser */
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
-name|curp
-operator|->
-name|p_ucred
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -2289,11 +2281,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
-literal|0
-argument_list|,
-name|p
+name|td
+operator|->
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)

@@ -9117,11 +9117,9 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|cred
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -10310,11 +10308,9 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|cred
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)

@@ -4673,6 +4673,11 @@ modifier|*
 name|ifr
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p
@@ -4706,9 +4711,15 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
 name|p
 operator|=
-name|curproc
+name|td
+operator|->
+name|td_proc
 expr_stmt|;
 name|error
 operator|=
@@ -4962,7 +4973,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 if|if
@@ -5111,7 +5122,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)

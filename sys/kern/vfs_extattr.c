@@ -1854,7 +1854,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -1877,7 +1877,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -1893,18 +1893,10 @@ block|}
 comment|/* 	 * Silently enforce MNT_NOSUID and MNT_NODEV for non-root users. 	 */
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
-operator|!=
-literal|0
 condition|)
 name|fsflags
 operator||=
@@ -2067,7 +2059,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -2264,7 +2256,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -2378,7 +2370,7 @@ block|{
 comment|/* Only load modules for root (very important!). */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -3584,7 +3576,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -3609,7 +3601,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -3627,18 +3619,10 @@ block|}
 comment|/* 	 * Silently enforce MNT_NOSUID and MNT_NODEV for non-root users. 	 */
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
-operator|!=
-literal|0
 condition|)
 name|fsflags
 operator||=
@@ -3799,7 +3783,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -3990,7 +3974,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -4106,7 +4090,7 @@ block|{
 comment|/* Only load modules for root (very important!). */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -5312,7 +5296,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -6692,15 +6676,9 @@ name|MNT_VISFLAGMASK
 expr_stmt|;
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 block|{
@@ -6962,15 +6940,9 @@ name|MNT_VISFLAGMASK
 expr_stmt|;
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 block|{
@@ -8115,13 +8087,11 @@ name|vp
 decl_stmt|;
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
-literal|0
-argument_list|,
 name|td
 operator|->
-name|td_proc
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -9509,7 +9479,7 @@ name|S_IFBLK
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -9518,13 +9488,11 @@ break|break;
 default|default:
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
-literal|0
-argument_list|,
 name|td
 operator|->
-name|td_proc
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -14667,15 +14635,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|td
 operator|->
 name|td_ucred
-argument_list|,
-name|td
-operator|->
-name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -21382,13 +21346,11 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
-literal|0
-argument_list|,
 name|td
 operator|->
-name|td_proc
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -21672,7 +21634,7 @@ decl_stmt|;
 comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -21937,7 +21899,7 @@ decl_stmt|;
 comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -22781,7 +22743,7 @@ decl_stmt|;
 comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -23004,7 +22966,7 @@ decl_stmt|;
 comment|/* 	 * Must be super user 	 */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -23146,15 +23108,9 @@ name|MNT_VISFLAGMASK
 expr_stmt|;
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 block|{

@@ -269,11 +269,9 @@ directive|ifndef
 name|CAPABILITIES
 if|if
 condition|(
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|cred
-argument_list|,
-name|NULL
 argument_list|,
 name|PRISON_ROOT
 argument_list|)

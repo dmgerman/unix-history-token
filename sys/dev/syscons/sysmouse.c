@@ -401,7 +401,7 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

@@ -438,13 +438,11 @@ expr_stmt|;
 comment|/* Implicitly fail if already in jail.  */
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|p
 operator|->
 name|p_ucred
-argument_list|,
-name|NULL
 argument_list|,
 literal|0
 argument_list|)

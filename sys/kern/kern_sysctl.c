@@ -1789,8 +1789,6 @@ argument_list|(
 name|req
 operator|->
 name|td
-operator|->
-name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
@@ -4885,15 +4883,13 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
-name|NULL
-argument_list|,
 name|req
 operator|->
 name|td
 operator|->
-name|td_proc
+name|td_ucred
 argument_list|,
 name|flags
 argument_list|)

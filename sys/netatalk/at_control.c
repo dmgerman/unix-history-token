@@ -462,7 +462,7 @@ case|:
 comment|/*  	 * If we are not superuser, then we don't get to do these ops. 	 */
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

@@ -3015,15 +3015,9 @@ name|va_flags
 expr_stmt|;
 if|if
 condition|(
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 name|sb

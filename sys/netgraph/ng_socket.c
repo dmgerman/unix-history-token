@@ -541,7 +541,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

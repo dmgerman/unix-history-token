@@ -5465,7 +5465,7 @@ name|SIOCSIFFLAGS
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -5630,7 +5630,7 @@ name|SIOCSIFCAP
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -5683,7 +5683,7 @@ name|SIOCSIFMETRIC
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -5719,7 +5719,7 @@ name|SIOCSIFPHYS
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -5789,7 +5789,7 @@ name|if_mtu
 decl_stmt|;
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -5903,7 +5903,7 @@ name|SIOCDELMULTI
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -6034,7 +6034,7 @@ name|SIOCSIFGENERIC
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -6163,7 +6163,7 @@ name|SIOCSIFLLADDR
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -6308,7 +6308,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

@@ -723,8 +723,6 @@ operator|&&
 name|suser
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|)
 condition|)
 block|{

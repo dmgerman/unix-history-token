@@ -5762,7 +5762,7 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -8356,7 +8356,7 @@ name|TIOCSETA
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -9715,7 +9715,7 @@ case|:
 comment|/* must be root since the wait applies to following logins */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

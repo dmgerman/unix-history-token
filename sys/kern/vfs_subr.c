@@ -13435,11 +13435,9 @@ label|:
 if|if
 condition|(
 operator|!
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|cred
-argument_list|,
-name|NULL
 argument_list|,
 name|PRISON_ROOT
 argument_list|)

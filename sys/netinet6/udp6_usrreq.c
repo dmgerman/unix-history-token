@@ -1775,8 +1775,6 @@ argument_list|(
 name|req
 operator|->
 name|td
-operator|->
-name|td_proc
 argument_list|)
 expr_stmt|;
 if|if

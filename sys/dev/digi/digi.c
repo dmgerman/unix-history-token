@@ -4830,8 +4830,6 @@ operator|&&
 name|suser
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|)
 operator|!=
 literal|0
@@ -6944,7 +6942,7 @@ name|TIOCSETA
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -7966,7 +7964,7 @@ name|TIOCMSDTRWAIT
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

@@ -5530,7 +5530,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -5651,7 +5651,7 @@ name|SCO_AD_GETCMAJ
 value|1
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

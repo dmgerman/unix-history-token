@@ -294,13 +294,11 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_xxx
+name|suser_cred
 argument_list|(
-literal|0
-argument_list|,
 name|td
 operator|->
-name|td_proc
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -499,7 +497,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -1264,7 +1262,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

@@ -12131,7 +12131,7 @@ block|{
 comment|/* 			 * Set density definition permanently.  Only 			 * allow for superuser. 			 */
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -12284,7 +12284,7 @@ name|FD_CLRERR
 case|:
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -12707,7 +12707,7 @@ comment|/* set drive type */
 comment|/* this is considered harmful; only allow for superuser */
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -12828,7 +12828,7 @@ name|FD_CLRERR
 case|:
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

@@ -1610,7 +1610,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|curproc
+name|curthread
 argument_list|)
 operator|)
 operator|!=

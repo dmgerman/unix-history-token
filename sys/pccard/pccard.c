@@ -105,29 +105,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_define
-define|#
-directive|define
-name|suser_td
-parameter_list|(
-name|a
-parameter_list|)
-value|suser(a)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2427,7 +2404,7 @@ name|PIOCSMEM
 case|:
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -2611,7 +2588,7 @@ name|PIOCSIO
 case|:
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -2737,7 +2714,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -2892,7 +2869,7 @@ name|PIOCSDRV
 case|:
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

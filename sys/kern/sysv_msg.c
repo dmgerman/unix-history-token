@@ -1907,7 +1907,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

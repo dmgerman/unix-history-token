@@ -232,7 +232,7 @@ name|IPC_M
 condition|)
 return|return
 operator|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -300,7 +300,7 @@ operator|)
 operator|==
 name|mode
 operator|||
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

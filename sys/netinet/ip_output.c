@@ -5529,7 +5529,7 @@ name|sopt_td
 operator|!=
 name|NULL
 operator|&&
-name|suser_td
+name|suser
 argument_list|(
 name|sopt
 operator|->

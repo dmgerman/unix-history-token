@@ -34,7 +34,7 @@ file|<sys/_mutex.h>
 end_include
 
 begin_comment
-comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser()/suser_xxx() function should be used for this.  */
+comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser() or suser_cred() function should be used for this.  */
 end_comment
 
 begin_struct

@@ -2881,7 +2881,7 @@ argument_list|,
 name|TS_XCLUDE
 argument_list|)
 operator|&&
-name|suser_td
+name|suser
 argument_list|(
 name|p
 argument_list|)

@@ -5153,7 +5153,7 @@ name|td
 operator|==
 literal|0
 operator|||
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -6775,7 +6775,7 @@ condition|(
 name|td
 operator|&&
 operator|!
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -7987,7 +7987,7 @@ block|{
 comment|/* 			 * We use the unspecified address to specify to accept 			 * all multicast addresses. Only super user is allowed 			 * to do this. 			 */
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -8422,7 +8422,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

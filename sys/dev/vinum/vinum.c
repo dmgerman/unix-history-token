@@ -1559,7 +1559,7 @@ name|VINUM_SUPERDEV_TYPE
 case|:
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

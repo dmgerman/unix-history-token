@@ -795,7 +795,7 @@ block|{
 comment|/* 			 * If upgrade to read-write by non-root, then verify 			 * that user has necessary permissions on the device. 			 */
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -1203,7 +1203,7 @@ block|}
 comment|/* 	 * If mount by non-root, then verify that user has necessary 	 * permissions on the device. 	 */
 if|if
 condition|(
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

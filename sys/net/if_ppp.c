@@ -1541,7 +1541,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1623,7 +1623,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1688,7 +1688,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1740,7 +1740,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -1769,7 +1769,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2206,7 +2206,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -2587,11 +2587,11 @@ name|data
 decl_stmt|;
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 comment|/* XXX */
 specifier|register
@@ -2776,7 +2776,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=

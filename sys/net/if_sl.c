@@ -1246,7 +1246,7 @@ name|error
 decl_stmt|;
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|curthread
 argument_list|)

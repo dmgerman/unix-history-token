@@ -531,7 +531,7 @@ argument_list|)
 comment|/* 	 * Don't allow open() unless the process has sufficient privileges, 	 * since mapping the i/o page and granting i/o privilege would 	 * require sufficient privilege soon and nothing much can be done 	 * without them. 	 */
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -811,7 +811,7 @@ name|SPIGOT_UNSECURE
 argument_list|)
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

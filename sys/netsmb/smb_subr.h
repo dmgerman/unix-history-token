@@ -220,7 +220,7 @@ name|smb_suser
 parameter_list|(
 name|cred
 parameter_list|)
-value|suser_xxx(cred, NULL, 0)
+value|suser_cred(cred, 0)
 end_define
 
 begin_comment

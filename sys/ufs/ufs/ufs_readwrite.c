@@ -2117,13 +2117,11 @@ name|ap
 operator|->
 name|a_cred
 operator|&&
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|NULL
 argument_list|,
 name|PRISON_ROOT
 argument_list|)

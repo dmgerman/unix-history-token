@@ -3085,15 +3085,6 @@ modifier|*
 name|args
 decl_stmt|;
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
 name|int
 name|error
 init|=
@@ -3338,7 +3329,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)

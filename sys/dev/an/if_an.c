@@ -6080,11 +6080,11 @@ modifier|*
 name|ifr
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 init|=
-name|curproc
+name|curthread
 decl_stmt|;
 name|struct
 name|ieee80211req
@@ -6635,7 +6635,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -6692,7 +6692,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -6824,7 +6824,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)
@@ -7966,7 +7966,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 condition|)

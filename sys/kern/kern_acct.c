@@ -330,17 +330,9 @@ comment|/* XXXKSE DIAGNOSTIC */
 comment|/* Make sure that the caller is root. */
 name|error
 operator|=
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_proc
-operator|->
-name|p_ucred
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 if|if

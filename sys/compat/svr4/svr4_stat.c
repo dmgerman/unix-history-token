@@ -2993,7 +2993,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=
@@ -3040,7 +3040,7 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|)
 operator|!=

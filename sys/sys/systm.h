@@ -52,7 +52,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* suser_xxx() is permitted to return 0 */
+comment|/* suser() is permitted to return 0 */
 end_comment
 
 begin_decl_stmt
@@ -1466,7 +1466,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* flags for suser_xxx() */
+comment|/* flags for suser() and suser_cred() */
 end_comment
 
 begin_define
@@ -1481,56 +1481,21 @@ name|int
 name|suser
 parameter_list|(
 name|struct
-name|proc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|suser_td
-parameter_list|(
-name|struct
 name|thread
 modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|suser_xxx
+name|suser_cred
 parameter_list|(
 name|struct
 name|ucred
 modifier|*
 name|cred
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|proc
-parameter_list|,
-name|int
-name|flag
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|suser_xxx_td
-parameter_list|(
-name|struct
-name|ucred
-modifier|*
-name|cred
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|thread
 parameter_list|,
 name|int
 name|flag

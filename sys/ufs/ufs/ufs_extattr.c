@@ -3019,17 +3019,9 @@ condition|(
 operator|(
 name|error
 operator|=
-name|suser_xxx
+name|suser
 argument_list|(
 name|td
-operator|->
-name|td_ucred
-argument_list|,
-name|td
-operator|->
-name|td_proc
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 condition|)
@@ -3368,13 +3360,9 @@ case|:
 comment|/* Potentially should be: return (EPERM); */
 return|return
 operator|(
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|cred
-argument_list|,
-name|td
-operator|->
-name|td_proc
 argument_list|,
 literal|0
 argument_list|)

@@ -1091,7 +1091,7 @@ expr_stmt|;
 else|else
 name|disablexworkaround
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -3691,7 +3691,7 @@ else|#
 directive|else
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)
@@ -3982,7 +3982,7 @@ directive|ifndef
 name|pmap_wired_count
 name|error
 operator|=
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

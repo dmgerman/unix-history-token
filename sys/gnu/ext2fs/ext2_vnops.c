@@ -5067,13 +5067,11 @@ operator|->
 name|cn_cred
 argument_list|)
 operator|&&
-name|suser_xxx
+name|suser_cred
 argument_list|(
 name|cnp
 operator|->
 name|cn_cred
-argument_list|,
-literal|0
 argument_list|,
 name|PRISON_ROOT
 argument_list|)

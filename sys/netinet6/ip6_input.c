@@ -4256,14 +4256,31 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|__FreeBSD__
+operator|>=
+literal|5
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+comment|/* XXX */
+else|#
+directive|else
 name|struct
 name|proc
 modifier|*
-name|p
+name|td
 init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
 name|int
 name|privileged
 init|=
@@ -4276,12 +4293,12 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|p
+name|td
 operator|&&
 operator|!
 name|suser
 argument_list|(
-name|p
+name|td
 argument_list|)
 condition|)
 name|privileged

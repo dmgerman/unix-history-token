@@ -980,7 +980,7 @@ operator|&
 name|TS_XCLUDE
 operator|)
 operator|&&
-name|suser_td
+name|suser
 argument_list|(
 name|td
 argument_list|)

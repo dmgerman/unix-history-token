@@ -602,13 +602,11 @@ name|IPV6PORT_RESERVED
 operator|&&
 name|td
 operator|&&
-name|suser_xxx
+name|suser_cred
 argument_list|(
-literal|0
-argument_list|,
 name|td
 operator|->
-name|td_proc
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)

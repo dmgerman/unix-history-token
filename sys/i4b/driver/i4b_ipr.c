@@ -1868,9 +1868,9 @@ comment|/* need to add an ioctl:	set VJ max slot ID 			 * #define IPRIOCSMAXCID	
 ifdef|#
 directive|ifdef
 name|IPR_VJ
-block|case IPRIOCSMAXCID: 			{ 			struct proc *p = curproc;
+block|case IPRIOCSMAXCID: 			{ 			struct thread *td = curthread;
 comment|/* XXX */
-block|if((error = suser(p)) != 0) 				return (error); 		        sl_compress_setup(sc->sc_compr, *(int *)data); 			} 			break;
+block|if((error = suser(td))) 				return (error); 		        sl_compress_setup(sc->sc_compr, *(int *)data); 			} 			break;
 endif|#
 directive|endif
 endif|#
