@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsearch.c	5.4 (Berkeley) %G%"
+literal|"@(#)bsearch.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,10 +42,6 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
-
-begin_comment
-comment|/* size_t */
-end_comment
 
 begin_include
 include|#
