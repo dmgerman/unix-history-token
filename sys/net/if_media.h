@@ -1536,7 +1536,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ATM_DESCRIPTIONS
-value|{					\ 	{ IFM_ATM_UNKNOWN,	"Unknown" },				\ 	{ IFM_ATM_UTP_25,	"UTP/25.6MBit" },			\ 	{ IFM_ATM_TAXI_100,	"Taxi/100MBit" },			\ 	{ IFM_ATM_TAXI_140,	"Taxi/140MBit" },			\ 	{ IFM_ATM_MM_155,	"Multi-mode/155MBit" },			\ 	{ IFM_ATM_SM_155,	"Single-mode/155MBit" },		\ 	{ IFM_ATM_UTP_155,	"UTP/155MBit" },			\ 	{ IFM_ATM_MM_622,	"Mult-imode/622MBit" },			\ 	{ IFM_ATM_SM_622,	"Single-mode/622MBit" },		\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_ATM_UNKNOWN,	"Unknown" },				\ 	{ IFM_ATM_UTP_25,	"UTP/25.6MBit" },			\ 	{ IFM_ATM_TAXI_100,	"Taxi/100MBit" },			\ 	{ IFM_ATM_TAXI_140,	"Taxi/140MBit" },			\ 	{ IFM_ATM_MM_155,	"Multi-mode/155MBit" },			\ 	{ IFM_ATM_SM_155,	"Single-mode/155MBit" },		\ 	{ IFM_ATM_UTP_155,	"UTP/155MBit" },			\ 	{ IFM_ATM_MM_622,	"Multi-mode/622MBit" },			\ 	{ IFM_ATM_SM_622,	"Single-mode/622MBit" },		\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
