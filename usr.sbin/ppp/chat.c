@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: chat.c,v 1.52 1998/10/27 22:53:25 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: chat.c,v 1.53 1999/01/28 01:56:31 brian Exp $  */
 end_comment
 
 begin_include
@@ -223,6 +223,12 @@ begin_include
 include|#
 directive|include
 file|"cbcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"command.h"
 end_include
 
 begin_include
@@ -3966,6 +3972,12 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
+name|argv
+index|[
+name|MAXARGS
+index|]
+decl_stmt|,
+modifier|*
 name|vector
 index|[
 name|MAXARGS
@@ -3981,6 +3993,8 @@ name|int
 name|stat
 decl_stmt|,
 name|nb
+decl_stmt|,
+name|argc
 decl_stmt|;
 name|log_Printf
 argument_list|(
@@ -3991,6 +4005,8 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+name|argc
+operator|=
 name|MakeArgs
 argument_list|(
 name|command
@@ -4001,6 +4017,30 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|command_Expand
+argument_list|(
+name|argv
+argument_list|,
+name|argc
+argument_list|,
+operator|(
+name|char
+specifier|const
+operator|*
+specifier|const
+operator|*
+operator|)
+name|vector
+argument_list|,
+name|physical
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4144,21 +4184,21 @@ argument_list|)
 expr_stmt|;
 name|execvp
 argument_list|(
-name|vector
+name|argv
 index|[
 literal|0
 index|]
 argument_list|,
-name|vector
+name|argv
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"execvp failed: %s: %s\n"
+literal|"execvp: %s: %s\n"
 argument_list|,
-name|vector
+name|argv
 index|[
 literal|0
 index|]
