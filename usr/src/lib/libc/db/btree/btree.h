@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * %sccs.include.redist.c%  *  *	@(#)btree.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -635,9 +635,9 @@ name|m_flags
 decl_stmt|;
 comment|/* bt_flags& SAVEMETA */
 name|u_long
-name|m_lorder
+name|m_unused
 decl_stmt|;
-comment|/* byte order */
+comment|/* unused */
 block|}
 name|BTMETA
 typedef|;
@@ -839,6 +839,7 @@ name|u_char
 name|bt_bval
 decl_stmt|;
 comment|/* R: delimiting byte/pad character */
+comment|/*  * NB:  * BTF_NODUPS and BTF_RECNO are stored on disk, and may not be changed.  */
 define|#
 directive|define
 name|BTF_CLOSEFP
@@ -866,43 +867,48 @@ value|0x0010
 comment|/* B: in-memory tree */
 define|#
 directive|define
-name|BTF_MEMMAPPED
+name|BTF_NODUPS
 value|0x0020
+comment|/* B: no duplicate keys permitted */
+define|#
+directive|define
+name|BTF_MEMMAPPED
+value|0x0040
 comment|/* R: memory mapped file. */
 define|#
 directive|define
+name|BTF_RECNO
+value|0x0080
+comment|/* R: record oriented tree */
+define|#
+directive|define
 name|BTF_METADIRTY
-value|0x0040
+value|0x0100
 comment|/* B: need to write metadata */
 define|#
 directive|define
 name|BTF_MODIFIED
-value|0x0080
+value|0x0200
 comment|/* tree modified */
 define|#
 directive|define
-name|BTF_NODUPS
-value|0x0100
-comment|/* B: no duplicate keys permitted */
+name|BTF_NEEDSWAP
+value|0x0400
+comment|/* if byte order requires swapping */
 define|#
 directive|define
 name|BTF_RDONLY
-value|0x0200
+value|0x0800
 comment|/* read-only tree */
 define|#
 directive|define
-name|BTF_RECNO
-value|0x0400
-comment|/* R: record oriented tree */
-define|#
-directive|define
 name|BTF_RINMEM
-value|0x0800
+value|0x1000
 comment|/* R: in-memory tree */
 define|#
 directive|define
 name|BTF_SEQINIT
-value|0x1000
+value|0x2000
 comment|/* sequential scan initialized */
 name|u_long
 name|bt_flags
