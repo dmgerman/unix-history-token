@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.18 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,7 +241,9 @@ name|btopeninfo
 operator|.
 name|psize
 operator|=
-literal|0
+name|openinfo
+operator|->
+name|psize
 expr_stmt|;
 name|btopeninfo
 operator|.
