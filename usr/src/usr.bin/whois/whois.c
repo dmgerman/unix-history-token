@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)whois.c	5.2 (Berkeley) %G%"
+literal|"@(#)whois.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,6 +261,20 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|sin
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_family
