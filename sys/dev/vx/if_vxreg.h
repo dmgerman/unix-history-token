@@ -19,15 +19,15 @@ begin_struct
 struct|struct
 name|vx_softc
 block|{
-name|int
-name|unit
-decl_stmt|;
-comment|/* unit number */
 name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
 comment|/* Ethernet common part		*/
+name|int
+name|unit
+decl_stmt|;
+comment|/* unit number */
 name|u_int
 name|vx_io_addr
 decl_stmt|;
