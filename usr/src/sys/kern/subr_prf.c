@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|"msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -317,25 +311,17 @@ begin_comment
 comment|/*  * Scaled down version of C Library printf.  * Used to print diagnostic information directly on console tty.  * Since it is not interrupt driven, all system activities are  * suspended.  Printf should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Usage is:  *	printf("reg=%b\n", regval, "<base><arg>*");  * Where<base> is the output base expressed as a control character,  * e.g. \10 gives octal; \20 gives hex.  Each arg is a sequence of  * characters, the first of which gives the bit number to be inspected  * (origin 1), and the next characters (up to a control character, i.e.  * a character<= 32), give the name of the register.  Thus  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  * would produce output:  *	reg=3<BITTWO,BITONE>  *  * Another additional format: %r is used to pass an additional format string  * and argument list recursively.  Usage is typically:  *  * fn(otherstuff, fmt [, arg1, ... ] )  *	char *fmt;  *	u_int arg1, ...;  *  *	printf("prefix: %r, other stuff\n", fmt,&arg1);  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|consintr
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* ok to handle console interrupts? */
+end_comment
 
 begin_comment
 comment|/*VARARGS1*/
@@ -365,12 +351,6 @@ end_decl_stmt
 
 begin_block
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
 specifier|register
 name|int
 name|savintr
@@ -384,8 +364,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* disable interrupts */
-endif|#
-directive|endif
 name|prf
 argument_list|(
 name|fmt
@@ -413,19 +391,11 @@ condition|)
 name|logwakeup
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
 name|consintr
 operator|=
 name|savintr
 expr_stmt|;
 comment|/* reenable interrupts */
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -505,16 +475,16 @@ end_block
 begin_function
 name|tpr_t
 name|tprintf_open
-parameter_list|()
-block|{
+parameter_list|(
+name|p
+parameter_list|)
 specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
+block|{
 if|if
 condition|(
 name|p
@@ -560,20 +530,15 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|tprintf_close
-argument_list|(
-argument|sess
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sess
+parameter_list|)
 name|tpr_t
 name|sess
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -581,11 +546,16 @@ name|sess
 condition|)
 name|SESSRELE
 argument_list|(
+operator|(
+expr|struct
+name|session
+operator|*
+operator|)
 name|sess
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * tprintf prints on the controlling terminal associated  * with the given session.    */
@@ -595,20 +565,22 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|tprintf
 argument_list|(
-name|sess
+argument|tpr
 argument_list|,
-name|fmt
+argument|fmt
 argument_list|,
-name|args
+argument|args
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|tpr_t
-name|sess
-expr_stmt|;
-end_expr_stmt
+name|tpr
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -625,6 +597,26 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|session
+modifier|*
+name|sess
+init|=
+operator|(
+expr|struct
+name|session
+operator|*
+operator|)
+name|tpr
+decl_stmt|;
+name|struct
+name|tty
+modifier|*
+name|tp
+init|=
+name|NULL
+decl_stmt|;
 name|int
 name|flags
 init|=
@@ -652,10 +644,18 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+block|{
 name|flags
 operator||=
 name|TOTTY
 expr_stmt|;
+name|tp
+operator|=
+name|sess
+operator|->
+name|s_ttyp
+expr_stmt|;
+block|}
 name|prf
 argument_list|(
 name|fmt
@@ -665,9 +665,7 @@ name|args
 argument_list|,
 name|flags
 argument_list|,
-name|sess
-operator|->
-name|s_ttyp
+name|tp
 argument_list|)
 expr_stmt|;
 name|logwakeup
@@ -675,6 +673,13 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|log_open
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Log writes to the log buffer,  * and guarantees not to sleep (so can be called by interrupt routines).  * If there is no process reading the log yet, it writes to the console also.  */
@@ -716,10 +721,6 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-specifier|extern
-name|int
-name|log_open
-decl_stmt|;
 name|logpri
 argument_list|(
 name|level
