@@ -650,7 +650,7 @@ argument_list|(
 operator|(
 name|single
 operator|->
-name|mm_flag
+name|mm_flags
 operator|&
 name|MAC_MLS_FLAG_SINGLE
 operator|)
@@ -667,7 +667,7 @@ argument_list|(
 operator|(
 name|range
 operator|->
-name|mm_flag
+name|mm_flags
 operator|&
 name|MAC_MLS_FLAG_RANGE
 operator|)

@@ -736,7 +736,7 @@ argument_list|(
 operator|(
 name|single
 operator|->
-name|mb_flag
+name|mb_flags
 operator|&
 name|MAC_BIBA_FLAG_SINGLE
 operator|)
@@ -753,7 +753,7 @@ argument_list|(
 operator|(
 name|range
 operator|->
-name|mb_flag
+name|mb_flags
 operator|&
 name|MAC_BIBA_FLAG_RANGE
 operator|)
