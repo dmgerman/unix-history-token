@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	5.6 (Berkeley) %G%"
+literal|"@(#)passwd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -192,11 +198,39 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|uname
 operator|=
 name|getlogin
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"passwd: getlogin: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|argc
