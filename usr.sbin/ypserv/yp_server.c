@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_server.c,v 1.1 1997/11/09 20:54:38 wpaul Exp wpaul $"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,10 +553,7 @@ name|argp
 operator|->
 name|domain
 argument_list|,
-operator|&
-name|argp
-operator|->
-name|key
+name|NULL
 argument_list|,
 literal|1
 argument_list|)
@@ -911,10 +908,7 @@ name|argp
 operator|->
 name|domain
 argument_list|,
-operator|&
-name|result
-operator|.
-name|key
+name|NULL
 argument_list|,
 literal|0
 argument_list|)

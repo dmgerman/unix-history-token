@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_main.c,v 1.1 1997/11/09 20:54:38 wpaul Exp wpaul $"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,13 +327,9 @@ name|_PATH_YP
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*int debug = 0;*/
+end_comment
 
 begin_decl_stmt
 name|int

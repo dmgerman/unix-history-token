@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_dblookup.c,v 1.1 1997/11/09 20:54:38 wpaul Exp wpaul $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1922,9 +1922,7 @@ name|dbptr
 operator|->
 name|key
 operator|=
-name|key
-operator|->
-name|data
+literal|""
 expr_stmt|;
 name|qhead
 operator|.
@@ -1934,9 +1932,7 @@ name|dbptr
 operator|->
 name|size
 operator|=
-name|key
-operator|->
-name|size
+literal|0
 expr_stmt|;
 block|}
 else|#
@@ -2892,6 +2888,26 @@ name|int
 name|allow
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|key
+operator|==
+name|NULL
+condition|)
+name|yp_currmap_db
+operator|=
+name|yp_open_db_cache
+argument_list|(
+name|domain
+argument_list|,
+name|map
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|yp_currmap_db
 operator|=
 name|yp_open_db_cache
