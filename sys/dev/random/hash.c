@@ -95,7 +95,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Conclude by returning the hash in the supplied /buf/ which must be  * KEYSIZE bytes long. Trailing data (less than KEYSIZE bytes) are  * not forgotten.  */
+comment|/* Conclude by returning the hash in the supplied /buf/ which must be  * KEYSIZE bytes long.  */
 end_comment
 
 begin_function
@@ -126,7 +126,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialise the encryption routine by setting up the key schedule  * from the supplied /key/ which must be KEYSIZE bytes of binary  * data.  */
+comment|/* Initialise the encryption routine by setting up the key schedule  * from the supplied /data/ which must be KEYSIZE bytes of binary  * data.  */
 end_comment
 
 begin_function
