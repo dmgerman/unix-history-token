@@ -155,8 +155,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_CARD
+name|CARD_PINNACLE_PCTV_RAVE
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_CARD
+value|20
 end_define
 
 begin_define

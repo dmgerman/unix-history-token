@@ -1270,6 +1270,49 @@ literal|0x18e0
 block|}
 block|,
 comment|/* GPIO mask */
+block|{
+name|CARD_PINNACLE_PCTV_RAVE
+block|,
+comment|/* the card id */
+literal|"Pinnacle PCTV Rave"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx unknown */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* EEProm unknown */
+literal|0
+block|,
+comment|/* size unknown */
+block|{
+literal|0x02
+block|,
+literal|0x01
+block|,
+literal|0x00
+block|,
+literal|0x0a
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0x03000F
+block|}
+block|,
+comment|/* GPIO mask */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1979,6 +2022,13 @@ define|#
 directive|define
 name|PCI_VENDOR_IODATA
 value|0x10fc
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDOR_PINNACLE_NEW
+value|0x11BD
 end_define
 
 begin_define
@@ -2842,6 +2892,87 @@ argument_list|)
 expr_stmt|;
 goto|goto
 name|checkTuner
+goto|;
+block|}
+if|if
+condition|(
+name|subsystem_vendor_id
+operator|==
+name|PCI_VENDOR_PINNACLE_NEW
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|=
+name|cards
+index|[
+operator|(
+name|card
+operator|=
+name|CARD_PINNACLE_PCTV_RAVE
+operator|)
+index|]
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromAddr
+operator|=
+name|eeprom_i2c_address
+expr_stmt|;
+name|bktr
+operator|->
+name|card
+operator|.
+name|eepromSize
+operator|=
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+expr_stmt|;
+name|TDA9887_init
+argument_list|(
+name|bktr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* look for a tuner */
+name|tuner_i2c_address
+operator|=
+name|locate_tuner_address
+argument_list|(
+name|bktr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: tuner @ %#x\n"
+argument_list|,
+name|bktr_name
+argument_list|(
+name|bktr
+argument_list|)
+argument_list|,
+name|tuner_i2c_address
+argument_list|)
+expr_stmt|;
+name|select_tuner
+argument_list|(
+name|bktr
+argument_list|,
+name|TUNER_MT2032
+argument_list|)
+expr_stmt|;
+goto|goto
+name|checkDBX
 goto|;
 block|}
 comment|/* Vendor is unknown. We will use the standard probe code */

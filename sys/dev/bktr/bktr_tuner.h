@@ -128,8 +128,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|Bt848_MAX_TUNER
+name|TUNER_MT2032
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|Bt848_MAX_TUNER
+value|15
 end_define
 
 begin_comment
@@ -265,6 +272,19 @@ end_endif
 begin_comment
 comment|/* TUNER_AFC */
 end_comment
+
+begin_function_decl
+name|int
+name|TDA9887_init
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|,
+name|int
+name|output2_enable
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*   * This is for start-up convenience only, NOT mandatory.  */
