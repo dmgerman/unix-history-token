@@ -1441,15 +1441,6 @@ comment|/* 	 * Initialize the console before printing anything. 	 */
 name|cninit
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Initialize tunables. 	 */
-name|init_param1
-argument_list|()
-expr_stmt|;
-name|init_param2
-argument_list|(
-name|physmem
-argument_list|)
-expr_stmt|;
 comment|/* 	 * XXX: Initialize the interrupt tables. 	 */
 name|bcopy
 argument_list|(
@@ -1633,6 +1624,15 @@ argument_list|(
 name|startkernel
 argument_list|,
 name|endkernel
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize tunables. 	 */
+name|init_param1
+argument_list|()
+expr_stmt|;
+name|init_param2
+argument_list|(
+name|physmem
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish setting up thread0. 	 */
