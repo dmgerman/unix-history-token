@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.17 1997/10/08 07:46:23 charnier Exp $"
+literal|"$Id: main.c,v 1.18 1998/12/16 13:59:30 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNOhvf:p:P:c:d:i:I:k:K:r:t:X:D:m:s:"
+literal|"YNOhv?f:p:P:c:d:i:I:k:K:r:t:X:D:m:s:"
 decl_stmt|;
 end_decl_stmt
 

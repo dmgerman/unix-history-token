@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.23 1999/01/28 20:17:32 billf Exp $"
+literal|"$Id: main.c,v 1.24 1999/06/14 21:58:59 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRfnrp:SMt:"
+literal|"hvIRfnr?p:SMt:"
 decl_stmt|;
 end_decl_stmt
 
