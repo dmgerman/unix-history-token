@@ -73,6 +73,283 @@ parameter_list|)
 value|if (bootverbose) device_printf x
 end_define
 
+begin_struct
+struct|struct
+name|pcic_pci_table
+block|{
+name|u_int32_t
+name|devid
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|descr
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
+name|int
+name|revision
+decl_stmt|;
+block|}
+name|pcic_pci_devs
+index|[]
+init|=
+block|{
+block|{
+name|PCI_DEVICE_ID_PCIC_CLPD6729
+block|,
+literal|"Cirrus Logic PD6729/6730 PC-Card Controller"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_CLPD6832
+block|,
+literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_CLPD6833
+block|,
+literal|"Cirrus Logic PD6833 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6729
+block|,
+literal|"O2micro OZ6729 PC-Card Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6730
+block|,
+literal|"O2micro OZ6730 PC-Card Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6832
+block|,
+literal|"O2micro 6832/6833 PCI-Cardbus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6860
+block|,
+literal|"O2micro 6860/6836 PCI-Cardbus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6872
+block|,
+literal|"O2micro 6812/6872 PCI-Cardbus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_RICOH_RL5C465
+block|,
+literal|"Ricoh RL5C465 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_RICOH_RL5C475
+block|,
+literal|"Ricoh RL5C475 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_RICOH_RL5C476
+block|,
+literal|"Ricoh RL5C476 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_RICOH_RL5C477
+block|,
+literal|"Ricoh RL5C477 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_RICOH_RL5C478
+block|,
+literal|"Ricoh RL5C478 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1031
+block|,
+literal|"TI PCI-1031 PCI-PCMCIA Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1130
+block|,
+literal|"TI PCI-1130 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1131
+block|,
+literal|"TI PCI-1131 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1211
+block|,
+literal|"TI PCI-1211 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1220
+block|,
+literal|"TI PCI-1220 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1221
+block|,
+literal|"TI PCI-1221 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1225
+block|,
+literal|"TI PCI-1225 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1250
+block|,
+literal|"TI PCI-1250 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1251
+block|,
+literal|"TI PCI-1251 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1251B
+block|,
+literal|"TI PCI-1251B PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1410
+block|,
+literal|"TI PCI-1410 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1420
+block|,
+literal|"TI PCI-1420 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1450
+block|,
+literal|"TI PCI-1450 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI1451
+block|,
+literal|"TI PCI-1451 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_PCIC_TI4451
+block|,
+literal|"TI PCI-4451 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
+block|,
+literal|"Toshiba ToPIC95 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
+block|,
+literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
+block|,
+literal|"Toshiba ToPIC100 PCI-CardBus Bridge"
+block|}
+block|,
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * lookup inside the table  */
+end_comment
+
+begin_function
+specifier|static
+name|struct
+name|pcic_pci_table
+modifier|*
+name|pcic_pci_lookup
+parameter_list|(
+name|u_int32_t
+name|devid
+parameter_list|,
+name|struct
+name|pcic_pci_table
+modifier|*
+name|tbl
+parameter_list|)
+block|{
+while|while
+condition|(
+name|tbl
+operator|->
+name|devid
+condition|)
+block|{
+if|if
+condition|(
+name|tbl
+operator|->
+name|devid
+operator|==
+name|devid
+condition|)
+return|return
+operator|(
+name|tbl
+operator|)
+return|;
+name|tbl
+operator|++
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Set up the CL-PD6832 to look like a ISA based PCMCIA chip (a  * PD672X).  This routine is called once per PCMCIA socket.  */
 end_comment
@@ -718,6 +995,12 @@ decl_stmt|;
 name|u_int8_t
 name|progif
 decl_stmt|;
+name|struct
+name|pcic_pci_table
+modifier|*
+name|itm
+decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|desc
@@ -733,221 +1016,38 @@ name|desc
 operator|=
 name|NULL
 expr_stmt|;
-switch|switch
-condition|(
+name|itm
+operator|=
+name|pcic_pci_lookup
+argument_list|(
 name|device_id
+argument_list|,
+operator|&
+name|pcic_pci_devs
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|itm
+operator|!=
+name|NULL
+condition|)
+name|desc
+operator|=
+name|itm
+operator|->
+name|descr
+expr_stmt|;
+if|if
+condition|(
+name|desc
+operator|==
+name|NULL
 condition|)
 block|{
-case|case
-name|PCI_DEVICE_ID_PCIC_CLPD6832
-case|:
-name|desc
-operator|=
-literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1130
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1130 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1131
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1131 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1211
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1211 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1220
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1220 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1221
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1221 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1225
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1225 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1250
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1250 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1251
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1251 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1251B
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1251B PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1410
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1410 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1420
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1420 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1450
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1450 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1451
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1451 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
-case|:
-name|desc
-operator|=
-literal|"Toshiba ToPIC95 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
-case|:
-name|desc
-operator|=
-literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
-case|:
-name|desc
-operator|=
-literal|"Toshiba ToPIC100 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_RICOH_RL5C465
-case|:
-name|desc
-operator|=
-literal|"Ricoh RL5C465 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_RICOH_RL5C475
-case|:
-name|desc
-operator|=
-literal|"Ricoh RL5C475 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_RICOH_RL5C476
-case|:
-name|desc
-operator|=
-literal|"Ricoh RL5C476 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_RICOH_RL5C478
-case|:
-name|desc
-operator|=
-literal|"Ricoh RL5C478 PCI-CardBus Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_OZ6832
-case|:
-name|desc
-operator|=
-literal|"O2micro 6832 PCI-Cardbus Bridge"
-expr_stmt|;
-break|break;
-comment|/* 16bit PC-card bridges */
-case|case
-name|PCI_DEVICE_ID_PCIC_CLPD6729
-case|:
-name|desc
-operator|=
-literal|"Cirrus Logic PD6729/6730 PC-Card Controller"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_OZ6729
-case|:
-name|desc
-operator|=
-literal|"O2micro OZ6729 PC-Card Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_OZ6730
-case|:
-name|desc
-operator|=
-literal|"O2micro OZ6730 PC-Card Bridge"
-expr_stmt|;
-break|break;
-case|case
-name|PCI_DEVICE_ID_PCIC_TI1031
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1031 PCI-PCMCIA Bridge"
-expr_stmt|;
-break|break;
-default|default:
 if|if
 condition|(
 name|pci_get_class
@@ -1001,7 +1101,6 @@ operator|=
 literal|"YENTA PCI-CARDBUS Bridge"
 expr_stmt|;
 block|}
-break|break;
 block|}
 if|if
 condition|(
@@ -1026,7 +1125,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* exact match */
 block|}
 end_function
 
