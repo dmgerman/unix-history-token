@@ -1192,6 +1192,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDP_UNUSED10
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* -- available-- */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDP_CAN_UNBIND
 value|0x00000800
 end_define
