@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.11 1995/05/02 19:52:27 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.12 1995/05/02 20:16:16 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -292,10 +292,56 @@ return|return
 literal|0
 return|;
 block|}
-if|#
-directive|if
+ifdef|#
+directive|ifdef
+name|DEBUG
+for|for
+control|(
+name|i
+operator|=
 literal|0
-block|for(i=0;i<ds.dss_nslices;i++) 		if(ds.dss_slices[i].ds_openmask) 			printf("  open(%d)=0x%2x", 				i,ds.dss_slices[i].ds_openmask); 	printf("\n");
+init|;
+name|i
+operator|<
+name|ds
+operator|.
+name|dss_nslices
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|ds
+operator|.
+name|dss_slices
+index|[
+name|i
+index|]
+operator|.
+name|ds_openmask
+condition|)
+name|printf
+argument_list|(
+literal|"  open(%d)=0x%2x"
+argument_list|,
+name|i
+argument_list|,
+name|ds
+operator|.
+name|dss_slices
+index|[
+name|i
+index|]
+operator|.
+name|ds_openmask
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -898,6 +944,12 @@ index|]
 operator|.
 name|p_fstype
 argument_list|,
+name|j
+operator|==
+literal|0
+condition|?
+name|CHUNK_IS_ROOT
+else|:
 literal|0
 argument_list|)
 operator|&&
@@ -938,6 +990,11 @@ block|}
 name|close
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+name|Fixup_Names
+argument_list|(
+name|d
 argument_list|)
 expr_stmt|;
 return|return

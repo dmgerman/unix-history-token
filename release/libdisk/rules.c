@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: rules.c,v 1.3 1995/04/29 07:21:12 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: rules.c,v 1.4 1995/04/30 06:09:27 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -821,6 +821,16 @@ parameter_list|)
 block|{
 name|int
 name|i
+init|=
+literal|0
+decl_stmt|,
+name|j
+init|=
+literal|0
+decl_stmt|,
+name|k
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|chunk
@@ -838,10 +848,6 @@ condition|)
 return|return;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-operator|,
 name|c1
 operator|=
 name|c
@@ -866,6 +872,28 @@ operator|!=
 name|part
 condition|)
 continue|continue;
+if|if
+condition|(
+name|c1
+operator|->
+name|subtype
+operator|==
+name|FS_SWAP
+condition|)
+name|j
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|c1
+operator|->
+name|flags
+operator|&
+name|CHUNK_IS_ROOT
+condition|)
+name|k
+operator|++
+expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
@@ -886,7 +914,47 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Max seven 'part' allowed as child of 'freebsd'\n"
+literal|"Max seven 'part' per 'freebsd' chunk\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|j
+operator|>
+literal|1
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|msg
+operator|+
+name|strlen
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
+literal|"Max one subtype=FS_SWAP child per 'freebsd' chunk\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|k
+operator|>
+literal|1
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|msg
+operator|+
+name|strlen
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
+literal|"Max one CHUNK_IS_ROOT child per 'freebsd' chunk\n"
 argument_list|)
 expr_stmt|;
 block|}
