@@ -1595,7 +1595,7 @@ name|error
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
+name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
