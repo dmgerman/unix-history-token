@@ -193,7 +193,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|size_t
 name|headerlen
 decl_stmt|;
 end_decl_stmt
