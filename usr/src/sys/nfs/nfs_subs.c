@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5131,13 +5131,20 @@ condition|(
 name|nvp
 condition|)
 block|{
-comment|/* 				 * Discard unneeded vnode, but save its nfsnode. 				 */
-name|LIST_REMOVE
-argument_list|(
-name|np
-argument_list|,
-name|n_hash
-argument_list|)
+comment|/* 				 * Discard unneeded vnode, but save its nfsnode. 				 * Since the nfsnode does not have a lock, its 				 * vnode lock has to be carried over. 				 */
+name|nvp
+operator|->
+name|v_vnlock
+operator|=
+name|vp
+operator|->
+name|v_vnlock
+expr_stmt|;
+name|vp
+operator|->
+name|v_vnlock
+operator|=
+name|NULL
 expr_stmt|;
 name|nvp
 operator|->
@@ -5175,31 +5182,6 @@ operator|->
 name|n_vnode
 operator|=
 name|nvp
-expr_stmt|;
-name|nhpp
-operator|=
-name|NFSNOHASH
-argument_list|(
-name|nfs_hash
-argument_list|(
-name|np
-operator|->
-name|n_fhp
-argument_list|,
-name|np
-operator|->
-name|n_fhsize
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|LIST_INSERT_HEAD
-argument_list|(
-name|nhpp
-argument_list|,
-name|np
-argument_list|,
-name|n_hash
-argument_list|)
 expr_stmt|;
 operator|*
 name|vpp
