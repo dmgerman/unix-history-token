@@ -5270,13 +5270,13 @@ name|m
 operator|->
 name|pindex
 expr_stmt|;
+name|retry_alloc
+label|:
 name|vm_page_busy
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|retry_alloc
-label|:
 name|vm_page_remove
 argument_list|(
 name|m
@@ -5341,11 +5341,6 @@ literal|0
 condition|)
 block|{
 comment|/*  		 * check to see if we raced with an xmit complete when  		 * waiting to allocate a page.  If so, put things back  		 * the way they were  		 */
-name|vm_page_busy
-argument_list|(
-name|mnew
-argument_list|)
-expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|mnew
