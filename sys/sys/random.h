@@ -33,6 +33,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Note: if you add or remove members of esource, remember to also update the  * KASSERT regarding what valid members are in random_harvest_internal().  */
+end_comment
+
 begin_enum
 enum|enum
 name|esource
