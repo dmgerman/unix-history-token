@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.28 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -825,11 +825,11 @@ define|#
 directive|define
 name|addbytes
 parameter_list|(
-name|da
+name|s
 parameter_list|,
-name|co
+name|n
 parameter_list|)
-value|waddbytes(stdscr, da, co)
+value|__waddbytes(stdscr, s, n, 0)
 end_define
 
 begin_define
@@ -845,11 +845,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|addnstr
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|waddnstr(stdscr, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
 name|addstr
 parameter_list|(
-name|str
+name|s
 parameter_list|)
-value|waddbytes(stdscr, str, strlen(str))
+value|__waddbytes(stdscr, s, strlen(s), 0)
 end_define
 
 begin_define
@@ -913,9 +925,9 @@ define|#
 directive|define
 name|getstr
 parameter_list|(
-name|str
+name|s
 parameter_list|)
-value|wgetstr(stdscr, str)
+value|wgetstr(stdscr, s)
 end_define
 
 begin_define
@@ -980,6 +992,32 @@ parameter_list|()
 value|wstandout(stdscr)
 end_define
 
+begin_define
+define|#
+directive|define
+name|waddbytes
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|__waddbytes(w, s, n, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|waddstr
+parameter_list|(
+name|w
+parameter_list|,
+name|s
+parameter_list|)
+value|__waddbytes(w, s, strlen(s), 0)
+end_define
+
 begin_comment
 comment|/* Standard screen plus movement pseudo functions. */
 end_comment
@@ -993,11 +1031,11 @@ name|y
 parameter_list|,
 name|x
 parameter_list|,
-name|da
+name|s
 parameter_list|,
-name|co
+name|n
 parameter_list|)
-value|mvwaddbytes(stdscr, y, x, da, co)
+value|mvwaddbytes(stdscr, y, x, s, n)
 end_define
 
 begin_define
@@ -1017,15 +1055,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|mvaddnstr
+parameter_list|(
+name|y
+parameter_list|,
+name|x
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+value|mvwaddnstr(stdscr, y, x, s, n)
+end_define
+
+begin_define
+define|#
+directive|define
 name|mvaddstr
 parameter_list|(
 name|y
 parameter_list|,
 name|x
 parameter_list|,
-name|str
+name|s
 parameter_list|)
-value|mvwaddstr(stdscr, y, x, str)
+value|mvwaddstr(stdscr, y, x, s)
 end_define
 
 begin_define
@@ -1061,9 +1115,9 @@ name|y
 parameter_list|,
 name|x
 parameter_list|,
-name|str
+name|s
 parameter_list|)
-value|mvwgetstr(stdscr, y, x, str)
+value|mvwgetstr(stdscr, y, x, s)
 end_define
 
 begin_define
@@ -1097,18 +1151,18 @@ define|#
 directive|define
 name|mvwaddbytes
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|,
-name|da
+name|s
 parameter_list|,
-name|co
+name|n
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : waddbytes(win, da, co))
+value|(wmove(w, y, x) == ERR ? ERR : __waddbytes(w, s, n, 0))
 end_define
 
 begin_define
@@ -1116,7 +1170,7 @@ define|#
 directive|define
 name|mvwaddch
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
@@ -1125,7 +1179,26 @@ parameter_list|,
 name|ch
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : waddch(win, ch))
+value|(wmove(w, y, x) == ERR ? ERR : waddch(w, ch))
+end_define
+
+begin_define
+define|#
+directive|define
+name|mvwaddnstr
+parameter_list|(
+name|w
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|,
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|(wmove(w, y, x) == ERR ? ERR : waddnstr(w, s, n))
 end_define
 
 begin_define
@@ -1133,16 +1206,16 @@ define|#
 directive|define
 name|mvwaddstr
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|,
-name|str
+name|s
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : waddbytes(win, str, strlen(str)))
+value|(wmove(w, y, x) == ERR ? ERR : __waddbytes(w, s, strlen(s), 0))
 end_define
 
 begin_define
@@ -1150,14 +1223,14 @@ define|#
 directive|define
 name|mvwdelch
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : wdelch(win))
+value|(wmove(w, y, x) == ERR ? ERR : wdelch(w))
 end_define
 
 begin_define
@@ -1165,14 +1238,14 @@ define|#
 directive|define
 name|mvwgetch
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : wgetch(win))
+value|(wmove(w, y, x) == ERR ? ERR : wgetch(w))
 end_define
 
 begin_define
@@ -1180,16 +1253,16 @@ define|#
 directive|define
 name|mvwgetstr
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|,
-name|str
+name|s
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : wgetstr(win, str))
+value|(wmove(w, y, x) == ERR ? ERR : wgetstr(w, s))
 end_define
 
 begin_define
@@ -1197,14 +1270,14 @@ define|#
 directive|define
 name|mvwinch
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : winch(win))
+value|(wmove(w, y, x) == ERR ? ERR : winch(w))
 end_define
 
 begin_define
@@ -1212,7 +1285,7 @@ define|#
 directive|define
 name|mvwinsch
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
@@ -1221,7 +1294,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|(wmove(win, y, x) == ERR ? ERR : winsch(win, c))
+value|(wmove(w, y, x) == ERR ? ERR : winsch(w, c))
 end_define
 
 begin_comment
@@ -1233,12 +1306,12 @@ define|#
 directive|define
 name|clearok
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|bf
 parameter_list|)
 define|\
-value|((bf) ? (win->flags |= __CLEAROK) : (win->flags&= ~__CLEAROK))
+value|((bf) ? ((w)->flags |= __CLEAROK) : ((w)->flags&= ~__CLEAROK))
 end_define
 
 begin_define
@@ -1246,12 +1319,12 @@ define|#
 directive|define
 name|flushok
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|bf
 parameter_list|)
 define|\
-value|((bf) ? (win->flags |= __FLUSH) : (win->flags&= ~__FLUSH))
+value|((bf) ? ((w)->flags |= __FLUSH) : ((w)->flags&= ~__FLUSH))
 end_define
 
 begin_define
@@ -1259,14 +1332,14 @@ define|#
 directive|define
 name|getyx
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|y
 parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(y) = win->cury, (x) = win->curx
+value|(y) = (w)->cury, (x) = (w)->curx
 end_define
 
 begin_define
@@ -1274,12 +1347,12 @@ define|#
 directive|define
 name|leaveok
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|bf
 parameter_list|)
 define|\
-value|((bf) ? (win->flags |= __LEAVEOK) : (win->flags&= ~__LEAVEOK))
+value|((bf) ? ((w)->flags |= __LEAVEOK) : ((w)->flags&= ~__LEAVEOK))
 end_define
 
 begin_define
@@ -1287,12 +1360,12 @@ define|#
 directive|define
 name|scrollok
 parameter_list|(
-name|win
+name|w
 parameter_list|,
 name|bf
 parameter_list|)
 define|\
-value|((bf) ? (win->flags |= __SCROLLOK) : (win->flags&= ~__SCROLLOK))
+value|((bf) ? ((w)->flags |= __SCROLLOK) : ((w)->flags&= ~__SCROLLOK))
 end_define
 
 begin_define
@@ -1300,10 +1373,10 @@ define|#
 directive|define
 name|winch
 parameter_list|(
-name|win
+name|w
 parameter_list|)
 define|\
-value|(win->lines[win->cury]->line[win->curx].ch& 0177)
+value|((w)->lines[(w)->cury]->line[(w)->curx].ch& 0177)
 end_define
 
 begin_comment
@@ -1931,25 +2004,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|waddbytes
-name|__P
-argument_list|(
-operator|(
-name|WINDOW
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|waddch
 name|__P
 argument_list|(
@@ -1965,7 +2019,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|waddstr
+name|waddnstr
 name|__P
 argument_list|(
 operator|(
@@ -1975,6 +2029,8 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

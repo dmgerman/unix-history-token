@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.19 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,43 +53,6 @@ directive|define
 name|SYNCH_OUT
 value|{win->cury = y; win->curx = x;}
 end_define
-
-begin_function
-name|int
-name|waddbytes
-parameter_list|(
-name|win
-parameter_list|,
-name|bytes
-parameter_list|,
-name|count
-parameter_list|)
-name|WINDOW
-modifier|*
-name|win
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|bytes
-decl_stmt|;
-name|int
-name|count
-decl_stmt|;
-block|{
-name|__waddbytes
-argument_list|(
-name|win
-argument_list|,
-name|bytes
-argument_list|,
-name|count
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * waddbytes --  *	Add the character to the current position in the given window.  */
