@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.17 1996/03/28 14:28:35 scrappy Exp $  */
+comment|/*  * $Id: asc.c,v 1.18 1996/04/08 19:40:54 smpatel Exp $  */
 end_comment
 
 begin_include
@@ -694,12 +694,19 @@ decl_stmt|;
 endif|#
 directive|endif
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|asc_unit
 name|unittab
 index|[
 name|NASC
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*** I could not find a reasonable buffer size limit other than by  *** experiments. MAXPHYS is obviously too much, while DEV_BSIZE and  *** PAGE_SIZE are really too small. There must be something wrong  *** with isa_dmastart/isa_dmarangecheck HELP!!!  ***/
