@@ -2790,7 +2790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  */
+comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  *  * MPSAFE  */
 end_comment
 
 begin_function
@@ -3238,6 +3238,36 @@ name|scp
 operator|->
 name|sc_isp
 expr_stmt|;
+name|regs
+operator|->
+name|tf_ebp
+operator|=
+name|scp
+operator|->
+name|sc_fp
+expr_stmt|;
+name|regs
+operator|->
+name|tf_esp
+operator|=
+name|scp
+operator|->
+name|sc_sp
+expr_stmt|;
+name|regs
+operator|->
+name|tf_eip
+operator|=
+name|scp
+operator|->
+name|sc_pc
+expr_stmt|;
+name|regs
+operator|->
+name|tf_eflags
+operator|=
+name|eflags
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3310,36 +3340,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|regs
-operator|->
-name|tf_ebp
-operator|=
-name|scp
-operator|->
-name|sc_fp
-expr_stmt|;
-name|regs
-operator|->
-name|tf_esp
-operator|=
-name|scp
-operator|->
-name|sc_sp
-expr_stmt|;
-name|regs
-operator|->
-name|tf_eip
-operator|=
-name|scp
-operator|->
-name|sc_pc
-expr_stmt|;
-name|regs
-operator|->
-name|tf_eflags
-operator|=
-name|eflags
-expr_stmt|;
 return|return
 operator|(
 name|EJUSTRETURN
@@ -3358,6 +3358,10 @@ directive|endif
 comment|/* COMPAT_43 */
 block|}
 end_function
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
