@@ -869,7 +869,8 @@ comment|/* maximum delay time */
 end_comment
 
 begin_decl_stmt
-name|time_t
+specifier|static
+name|int
 name|syncdelay
 init|=
 literal|30
@@ -881,7 +882,8 @@ comment|/* max time to delay syncing data */
 end_comment
 
 begin_decl_stmt
-name|time_t
+specifier|static
+name|int
 name|filedelay
 init|=
 literal|30
@@ -914,7 +916,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|time_t
+specifier|static
+name|int
 name|dirdelay
 init|=
 literal|29
@@ -947,7 +950,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|time_t
+specifier|static
+name|int
 name|metadelay
 init|=
 literal|28

@@ -1282,50 +1282,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|time_t
-name|syncdelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max time to delay syncing data */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|time_t
-name|filedelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time to delay syncing files */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|time_t
-name|dirdelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time to delay syncing directories */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|time_t
-name|metadelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* time to delay syncing metadata */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|vm_zone
 modifier|*
