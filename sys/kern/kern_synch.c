@@ -1549,7 +1549,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"tsleep: proc %p (pid %d, %s), schedlock %x"
+literal|"tsleep: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -1561,6 +1561,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -1611,7 +1615,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"tsleep caught: proc %p (pid %d, %s), schedlock %x"
+literal|"tsleep caught: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -1623,6 +1627,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -1712,7 +1720,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"tsleep resume: proc %p (pid %d, %s), schedlock %x"
+literal|"tsleep resume: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -1724,6 +1732,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -2575,7 +2587,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"endtsleep: proc %p (pid %d, %s), schedlock %x"
+literal|"endtsleep: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -2587,6 +2599,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -2839,7 +2855,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"wakeup: proc %p (pid %d, %s), schedlock %x"
+literal|"wakeup: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -2851,6 +2867,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -3044,7 +3064,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"wakeup1: proc %p (pid %d, %s), schedlock %x"
+literal|"wakeup1: proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -3056,6 +3076,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -3194,7 +3218,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: old proc %p (pid %d, %s), schedlock %x"
+literal|"mi_switch: old proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -3206,6 +3230,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -3455,7 +3483,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: old proc %p (pid %d, %s), schedlock %x"
+literal|"mi_switch: old proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -3467,6 +3495,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
@@ -3479,7 +3511,7 @@ name|CTR4
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"mi_switch: new proc %p (pid %d, %s), schedlock %x"
+literal|"mi_switch: new proc %p (pid %d, %s), schedlock %p"
 argument_list|,
 name|p
 argument_list|,
@@ -3491,6 +3523,10 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|sched_lock
 operator|.
 name|mtx_lock
