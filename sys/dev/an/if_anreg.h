@@ -2199,7 +2199,7 @@ comment|/* 0x7E */
 name|u_int16_t
 name|an_spare
 index|[
-literal|3
+literal|5
 index|]
 decl_stmt|;
 block|}
