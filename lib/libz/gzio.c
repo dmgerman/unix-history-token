@@ -1172,9 +1172,14 @@ name|gzFile
 operator|)
 name|Z_NULL
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|,
 literal|"<fd:%d>"
 argument_list|,
