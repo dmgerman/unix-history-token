@@ -938,7 +938,7 @@ name|sbunlock
 parameter_list|(
 name|sb
 parameter_list|)
-value|{ \ 	(sb)->sb_flags&= ~SB_LOCK; \ 	if ((sb)->sb_flags& SB_WANT) { \ 		(sb)->sb_flags&= ~SB_WANT; \ 		wakeup(&(sb)->sb_flags); \ 	} \ }
+value|do { \ 	SOCKBUF_LOCK_ASSERT(sb); \ 	(sb)->sb_flags&= ~SB_LOCK; \ 	if ((sb)->sb_flags& SB_WANT) { \ 		(sb)->sb_flags&= ~SB_WANT; \ 		wakeup(&(sb)->sb_flags); \ 	} \ } while (0)
 end_define
 
 begin_comment
@@ -975,6 +975,20 @@ parameter_list|)
 value|do {						\ 	SOCK_LOCK_ASSERT(so);						\ 	if ((so)->so_count == 0)					\ 		sofree(so);						\ 	else								\ 		SOCK_UNLOCK(so);					\ } while(0)
 end_define
 
+begin_comment
+comment|/*  * In sorwakeup() and sowwakeup(), acquire the socket buffer lock to  * avoid a non-atomic test-and-wakeup.  However, sowakeup is  * responsible for releasing the lock if it is called.  We unlock only  * if we don't call into sowakeup.  If any code is introduced that  * directly invokes the underlying sowakeup() primitives, it must  * maintain the same semantics.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sorwakeup_locked
+parameter_list|(
+name|so
+parameter_list|)
+value|do {					\ 	SOCKBUF_LOCK_ASSERT(&(so)->so_rcv);				\ 	if (sb_notify(&(so)->so_rcv))					\ 		sowakeup((so),&(so)->so_rcv);	 			\ 	else								\ 		SOCKBUF_UNLOCK(&(so)->so_rcv);				\ } while (0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -982,7 +996,17 @@ name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 	if (sb_notify(&(so)->so_rcv))					\ 		sowakeup((so),&(so)->so_rcv); 				\ } while (0)
+value|do {						\ 	SOCKBUF_LOCK(&(so)->so_rcv);					\ 	sorwakeup_locked(so);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sowwakeup_locked
+parameter_list|(
+name|so
+parameter_list|)
+value|do {					\ 	if (sb_notify(&(so)->so_snd))					\ 		sowakeup((so),&(so)->so_snd); 				\ 	else								\ 		SOCKBUF_UNLOCK(&(so)->so_snd);				\ } while (0)
 end_define
 
 begin_define
@@ -992,7 +1016,7 @@ name|sowwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|do {						\ 	if (sb_notify(&(so)->so_snd))					\ 		sowakeup((so),&(so)->so_snd); 				\ } while (0)
+value|do {						\ 	SOCKBUF_LOCK(&(so)->so_snd);					\ 	sowwakeup_locked(so);						\ } while (0)
 end_define
 
 begin_comment
@@ -1267,7 +1291,41 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sbappend_locked
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sbappendstream
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbappendstream_locked
 parameter_list|(
 name|struct
 name|sockbuf
@@ -1285,6 +1343,34 @@ end_function_decl
 begin_function_decl
 name|int
 name|sbappendaddr
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+name|asa
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|control
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sbappendaddr_locked
 parameter_list|(
 name|struct
 name|sockbuf
@@ -1333,8 +1419,47 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|sbappendcontrol_locked
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|control
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|sbappendrecord
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbappendrecord_locked
 parameter_list|(
 name|struct
 name|sockbuf
@@ -1421,6 +1546,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sbdrop_locked
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sbdroprecord
 parameter_list|(
 name|struct
@@ -1433,7 +1573,31 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sbdroprecord_locked
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sbflush
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbflush_locked
 parameter_list|(
 name|struct
 name|sockbuf
@@ -1462,7 +1626,41 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sbinsertoob_locked
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sbrelease
+parameter_list|(
+name|struct
+name|sockbuf
+modifier|*
+name|sb
+parameter_list|,
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbrelease_locked
 parameter_list|(
 name|struct
 name|sockbuf
@@ -1636,7 +1834,31 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|socantrcvmore_locked
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|socantsendmore
+parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|socantsendmore_locked
 parameter_list|(
 name|struct
 name|socket
