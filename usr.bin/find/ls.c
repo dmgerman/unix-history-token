@@ -130,12 +130,6 @@ directive|include
 file|"find.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"extern.h"
-end_include
-
 begin_comment
 comment|/* Derived from the print routines in the ls(1) source code. */
 end_comment
