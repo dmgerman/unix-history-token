@@ -3008,10 +3008,10 @@ name|base
 operator|=
 literal|16
 expr_stmt|;
-if|if
-condition|(
 name|sign
-condition|)
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|handle_sign
 goto|;
