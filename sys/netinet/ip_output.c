@@ -2646,7 +2646,13 @@ argument_list|,
 operator|&
 name|sp
 operator|->
-name|spidx
+name|req
+operator|->
+name|sav
+operator|->
+name|sah
+operator|->
+name|saidx
 operator|.
 name|dst
 argument_list|,
