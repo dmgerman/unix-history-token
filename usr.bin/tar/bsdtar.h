@@ -142,7 +142,7 @@ name|archive_dir
 decl_stmt|;
 comment|/* for write.c */
 name|struct
-name|gname_cache
+name|name_cache
 modifier|*
 name|gname_cache
 decl_stmt|;
@@ -166,7 +166,7 @@ name|security
 decl_stmt|;
 comment|/* for read.c */
 name|struct
-name|uname_cache
+name|name_cache
 modifier|*
 name|uname_cache
 decl_stmt|;
