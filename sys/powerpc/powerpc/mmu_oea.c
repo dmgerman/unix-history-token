@@ -6896,13 +6896,11 @@ decl_stmt|;
 name|vm_object_t
 name|upobj
 decl_stmt|;
+name|vm_offset_t
+name|up
+decl_stmt|;
 name|vm_page_t
 name|m
-decl_stmt|;
-name|struct
-name|user
-modifier|*
-name|up
 decl_stmt|;
 name|pte_t
 name|pte
@@ -6913,16 +6911,19 @@ decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
+name|vm_offset_t
+name|va
+decl_stmt|;
 comment|/* 	 * allocate object for the upages 	 */
-if|if
-condition|(
-operator|(
 name|upobj
 operator|=
 name|p
 operator|->
 name|p_upages_obj
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|upobj
 operator|==
 name|NULL
 condition|)
@@ -6944,26 +6945,21 @@ name|upobj
 expr_stmt|;
 block|}
 comment|/* get a kernel virtual address for the UPAGES for this proc */
-if|if
-condition|(
-operator|(
 name|up
 operator|=
 name|p
 operator|->
 name|p_addr
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|up
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|up
 operator|=
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
 name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
@@ -6977,17 +6973,22 @@ if|if
 condition|(
 name|up
 operator|==
-name|NULL
+literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_new_proc: u_map allocation failed"
+literal|"pmap_new_proc: upage allocation failed"
 argument_list|)
 expr_stmt|;
 name|p
 operator|->
 name|p_addr
 operator|=
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
 name|up
 expr_stmt|;
 block|}
@@ -7005,9 +7006,6 @@ name|i
 operator|++
 control|)
 block|{
-name|vm_offset_t
-name|va
-decl_stmt|;
 comment|/* 		 * Get a kernel stack page 		 */
 name|m
 operator|=
@@ -7036,16 +7034,11 @@ expr_stmt|;
 comment|/* 		 * Enter the page into the kernel address space. 		 */
 name|va
 operator|=
-call|(
-name|vm_offset_t
-call|)
-argument_list|(
 name|up
 operator|+
 name|i
 operator|*
 name|PAGE_SIZE
-argument_list|)
 expr_stmt|;
 name|idx
 operator|=
