@@ -1,4 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Adams.  *  * originally by RJKing WECo-MG6565 May 83  *   * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1988 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusnap.c	5.9	(Berkeley) %G%"
+literal|"@(#)uusnap.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,11 +49,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This file contains no ATT code and is not subject to the ATT  * license provisions regarding redistribution.  * 	Rick Adams 2/23/88  */
-end_comment
-
-begin_comment
-comment|/*  *	Uusnap - displays a snapshot of the uucp system.  *	originally by	RJKing WECo-MG6565 May 83  */
+comment|/* not lint */
 end_comment
 
 begin_include
