@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.14 (Berkeley) %G%"
+literal|"@(#)map.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,6 +1050,16 @@ name|void
 name|map_init
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|XDEBUG
+name|checkfd012
+argument_list|(
+literal|"entering initmaps"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|CurEnv
 operator|=
 name|e
@@ -1061,6 +1071,16 @@ argument_list|,
 name|rebuild
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XDEBUG
+name|checkfd012
+argument_list|(
+literal|"exiting initmaps"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
