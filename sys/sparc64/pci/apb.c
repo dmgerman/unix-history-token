@@ -891,7 +891,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX If the subordinate bus number is less than the secondary bus 	 * number, we should pick a better value.  One sensible alternative 	 * would be to pick 255; the only tradeoff here is that configuration 	 * transactions would be more widely routed than absolutely necessary. 	 */
+comment|/* 	 * If we don't hardwire the bus down, pciconf gets confused. 	 */
 if|if
 condition|(
 name|sc
@@ -909,8 +909,9 @@ name|dev
 argument_list|,
 literal|"pci"
 argument_list|,
-operator|-
-literal|1
+name|sc
+operator|->
+name|secbus
 argument_list|)
 expr_stmt|;
 if|if
