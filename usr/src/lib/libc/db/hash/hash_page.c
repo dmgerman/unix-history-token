@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.17 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2763,6 +2763,9 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|is_bitmap
+operator|&&
 operator|!
 name|bp
 index|[
