@@ -1,26 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tdef.h	4.1 %G%  */
+comment|/*  *	@(#)tdef.h	4.2 %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<pagsiz.h>
+file|<sys/param.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|BUFSIZ
-value|BSIZE
+value|MAXBSIZE
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|BMASK
-end_undef
 
 begin_define
 define|#
@@ -653,6 +647,12 @@ end_define
 begin_comment
 comment|/*macro mask indicator*/
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|CMASK
+end_undef
 
 begin_define
 define|#

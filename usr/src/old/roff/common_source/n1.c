@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.1 %G%"
+literal|"@(#)n1.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,19 +24,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"tdef.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tdef.h"
 end_include
 
 begin_decl_stmt
