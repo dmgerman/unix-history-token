@@ -349,15 +349,6 @@ name|bounce_zone_list
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|bus_addr_t
-name|bounce_lowaddr
-init|=
-name|BUS_SPACE_MAXADDR
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -1283,21 +1274,6 @@ name|bounce_zone
 expr_stmt|;
 if|if
 condition|(
-name|lowaddr
-operator|>
-name|bounce_lowaddr
-condition|)
-block|{
-comment|/* 			 * Go through the pool and kill any pages 			 * that don't reside below lowaddr. 			 */
-name|panic
-argument_list|(
-literal|"bus_dma_tag_create: page reallocation "
-literal|"not implemented"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|ptoa
 argument_list|(
 name|bz
@@ -1638,6 +1614,11 @@ name|BUS_DMA_COULD_BOUNCE
 condition|)
 block|{
 comment|/* Must bounce */
+name|struct
+name|bounce_zone
+modifier|*
+name|bz
+decl_stmt|;
 name|int
 name|maxpages
 decl_stmt|;
@@ -1669,6 +1650,12 @@ name|error
 operator|)
 return|;
 block|}
+name|bz
+operator|=
+name|dmat
+operator|->
+name|bounce_zone
+expr_stmt|;
 operator|*
 name|mapp
 operator|=
@@ -1731,6 +1718,19 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Attempt to add pages to our pool on a per-instance 		 * basis up to a sane limit. 		 */
+if|if
+condition|(
+name|dmat
+operator|->
+name|alignment
+operator|>
+literal|1
+condition|)
+name|maxpages
+operator|=
+name|MAX_BPAGES
+expr_stmt|;
+else|else
 name|maxpages
 operator|=
 name|MIN
@@ -1766,6 +1766,8 @@ name|map_count
 operator|>
 literal|0
 operator|&&
+name|bz
+operator|->
 name|total_bpages
 operator|<
 name|maxpages
@@ -1775,23 +1777,6 @@ block|{
 name|int
 name|pages
 decl_stmt|;
-if|if
-condition|(
-name|dmat
-operator|->
-name|lowaddr
-operator|>
-name|bounce_lowaddr
-condition|)
-block|{
-comment|/* 				 * Go through the pool and kill any pages 				 * that don't reside below lowaddr. 				 */
-name|panic
-argument_list|(
-literal|"bus_dmamap_create: page reallocation "
-literal|"not implemented"
-argument_list|)
-expr_stmt|;
-block|}
 name|pages
 operator|=
 name|MAX
@@ -1812,9 +1797,20 @@ name|MIN
 argument_list|(
 name|maxpages
 operator|-
+name|bz
+operator|->
 name|total_bpages
 argument_list|,
 name|pages
+argument_list|)
+expr_stmt|;
+name|pages
+operator|=
+name|MAX
+argument_list|(
+name|pages
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
