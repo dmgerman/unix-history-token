@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)param.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)param.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -213,21 +213,9 @@ end_define
 
 begin_decl_stmt
 name|int
-name|nvnode
+name|desiredvnodes
 init|=
 name|NVNODE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nchsize
-init|=
-name|NVNODE
-operator|*
-literal|11
-operator|/
-literal|10
 decl_stmt|;
 end_decl_stmt
 
@@ -376,17 +364,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|vnode
-modifier|*
-name|vnode
-decl_stmt|,
-modifier|*
-name|vnodeNVNODE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|file
 modifier|*
 name|file
@@ -438,14 +415,6 @@ name|cmap
 decl_stmt|,
 modifier|*
 name|ecmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|namecache
-modifier|*
-name|namecache
 decl_stmt|;
 end_decl_stmt
 
