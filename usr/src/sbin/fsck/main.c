@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.26 (Berkeley) %G%"
+literal|"@(#)main.c	1.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,22 +215,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|MPC
-value|((dp->di_mode& IFMT) == IFMPC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPB
-value|((dp->di_mode& IFMT) == IFMPB)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SPECIAL
-value|(BLK || CHR || MPC || MPB)
+value|(BLK || CHR)
 end_define
 
 begin_decl_stmt
@@ -7986,10 +7972,7 @@ case|case
 name|IFCHR
 case|:
 case|case
-name|IFMPC
-case|:
-case|case
-name|IFMPB
+name|IFLNK
 case|:
 return|return
 operator|(

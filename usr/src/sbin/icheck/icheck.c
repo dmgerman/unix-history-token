@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.19 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ino_t
-name|nmcfile
+name|nlfile
 decl_stmt|;
 end_decl_stmt
 
@@ -592,7 +592,7 @@ name|nbfile
 operator|=
 literal|0
 expr_stmt|;
-name|nmcfile
+name|nlfile
 operator|=
 literal|0
 expr_stmt|;
@@ -1251,14 +1251,14 @@ name|ncfile
 operator|+
 name|nbfile
 operator|+
-name|nmcfile
+name|nlfile
 expr_stmt|;
 ifndef|#
 directive|ifndef
 name|STANDALONE
 name|printf
 argument_list|(
-literal|"files %6u (r=%u,d=%u,b=%u,c=%u,mc=%u)\n"
+literal|"files %6u (r=%u,d=%u,b=%u,c=%u,sl=%u)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1270,14 +1270,14 @@ name|nbfile
 argument_list|,
 name|ncfile
 argument_list|,
-name|nmcfile
+name|nlfile
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|printf
 argument_list|(
-literal|"files %u (r=%u,d=%u,b=%u,c=%u,mc=%u)\n"
+literal|"files %u (r=%u,d=%u,b=%u,c=%u,sl=%u)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1289,7 +1289,7 @@ name|nbfile
 argument_list|,
 name|ncfile
 argument_list|,
-name|nmcfile
+name|nlfile
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1532,6 +1532,13 @@ case|case
 name|IFREG
 case|:
 name|nrfile
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|IFLNK
+case|:
+name|nlfile
 operator|++
 expr_stmt|;
 break|break;
