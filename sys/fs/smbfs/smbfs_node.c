@@ -1599,6 +1599,13 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Indicate that we released something; see comment 			 * in smbfs_unmount(). 			 */
+name|smp
+operator|->
+name|sm_didrele
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{

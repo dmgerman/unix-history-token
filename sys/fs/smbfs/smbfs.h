@@ -260,6 +260,9 @@ expr_stmt|;
 name|u_long
 name|sm_hashlen
 decl_stmt|;
+name|int
+name|sm_didrele
+decl_stmt|;
 block|}
 struct|;
 end_struct
