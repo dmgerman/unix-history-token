@@ -68,6 +68,16 @@ modifier|*
 name|im_mountp
 decl_stmt|;
 name|struct
+name|g_consumer
+modifier|*
+name|im_cp
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|im_bo
+decl_stmt|;
+name|struct
 name|cdev
 modifier|*
 name|im_dev
