@@ -381,6 +381,16 @@ name|Header_lines
 else|:
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|lines
+operator|<
+literal|0
+condition|)
+name|lines
+operator|=
+literal|0
+expr_stmt|;
 comment|/* we don't want more than MAX_COLS columns, since the machine-dependent        modules make static allocations based on MAX_COLS and we don't want        to run off the end of their buffers */
 name|display_width
 operator|=
