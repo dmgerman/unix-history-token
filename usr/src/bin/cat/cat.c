@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cat.c	8.1 (Berkeley) %G%"
+literal|"@(#)cat.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1081,8 +1081,6 @@ name|off
 operator|=
 literal|0
 init|;
-name|off
-operator|<
 name|nr
 condition|;
 name|nr
