@@ -205,6 +205,17 @@ begin_comment
 comment|/* Eicon DIVA 2.02 IPAC	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VID_COMPAQ_M610
+value|0x0210110e
+end_define
+
+begin_comment
+comment|/* Compaq Microcom 610	*/
+end_comment
+
 begin_struct
 specifier|static
 struct|struct
@@ -233,6 +244,11 @@ name|defined
 argument_list|(
 name|CRTX_S0_P
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAQ_M610
+argument_list|)
 block|{
 name|VID_TEL163PNP
 block|,
@@ -243,6 +259,12 @@ block|{
 name|VID_CREATIXPP
 block|,
 literal|"Creatix S0/16 PnP"
+block|}
+block|,
+block|{
+name|VID_COMPAQ_M610
+block|,
+literal|"Compaq Microcom 610"
 block|}
 block|,
 endif|#
@@ -796,6 +818,11 @@ name|defined
 argument_list|(
 name|CRTX_S0_P
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAQ_M610
+argument_list|)
 case|case
 name|VID_TEL163PNP
 case|:
@@ -821,6 +848,23 @@ operator|->
 name|sc_cardtyp
 operator|=
 name|CARD_TYPEP_CS0P
+expr_stmt|;
+name|ret
+operator|=
+name|isic_attach_Cs0P
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VID_COMPAQ_M610
+case|:
+name|sc
+operator|->
+name|sc_cardtyp
+operator|=
+name|CARD_TYPEP_COMPAQ_M610
 expr_stmt|;
 name|ret
 operator|=
