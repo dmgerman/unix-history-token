@@ -4123,6 +4123,14 @@ expr_stmt|;
 comment|/* 	 * FreeBSD-specific extension fields for tcp_info. 	 */
 name|ti
 operator|->
+name|tcpi_rcv_space
+operator|=
+name|tp
+operator|->
+name|rcv_wnd
+expr_stmt|;
+name|ti
+operator|->
 name|tcpi_snd_wnd
 operator|=
 name|tp

@@ -698,8 +698,9 @@ name|u_int32_t
 name|__tcpi_rcv_rtt
 decl_stmt|;
 name|u_int32_t
-name|__tcpi_rcv_space
+name|tcpi_rcv_space
 decl_stmt|;
+comment|/* Advertised recv window. */
 comment|/* FreeBSD extensions to tcp_info. */
 name|u_int32_t
 name|tcpi_snd_wnd
