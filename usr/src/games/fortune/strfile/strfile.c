@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strfile.c	5.5 (Berkeley) %G%"
+literal|"@(#)strfile.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,7 +466,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -494,7 +493,6 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
