@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.7 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5294,12 +5294,18 @@ condition|;
 name|sw
 operator|++
 control|)
+if|if
+condition|(
+name|sw
+operator|->
+name|sw_freed
+condition|)
 name|nswap
 operator|+=
 name|sw
 operator|->
 name|sw_nblks
-operator|,
+expr_stmt|;
 name|free
 operator|=
 literal|0
