@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_backspace[] = "@(#)backspace.c	1.4";  *  * Backspace records  */
+comment|/* char id_backspace[] = "@(#)backspace.c	1.5";  *  * Backspace records  */
 end_comment
 
 begin_include
@@ -10,9 +10,10 @@ file|"fio.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
-modifier|*
 name|bksp
+index|[]
 init|=
 literal|"backspace"
 decl_stmt|;
@@ -367,6 +368,26 @@ name|OK
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|b
+operator|->
+name|uwrt
+operator|&&
+operator|!
+name|nowreading
+argument_list|(
+name|b
+argument_list|)
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|bksp
+argument_list|)
 while|while
 condition|(
 name|last_char
@@ -378,8 +399,8 @@ argument_list|)
 operator|!=
 literal|'\n'
 condition|)
-empty_stmt|;
 comment|/* slow but simple */
+empty_stmt|;
 return|return
 operator|(
 name|OK
