@@ -156,7 +156,6 @@ parameter_list|)
 name|vm_map_t
 name|map
 decl_stmt|;
-specifier|register
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -164,7 +163,6 @@ block|{
 name|vm_offset_t
 name|addr
 decl_stmt|;
-specifier|register
 name|int
 name|result
 decl_stmt|;
@@ -245,7 +243,6 @@ parameter_list|)
 name|vm_map_t
 name|map
 decl_stmt|;
-specifier|register
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -253,7 +250,6 @@ block|{
 name|vm_offset_t
 name|addr
 decl_stmt|;
-specifier|register
 name|int
 name|result
 decl_stmt|;
@@ -331,11 +327,9 @@ name|map
 parameter_list|,
 name|size
 parameter_list|)
-specifier|register
 name|vm_map_t
 name|map
 decl_stmt|;
-specifier|register
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -343,7 +337,6 @@ block|{
 name|vm_offset_t
 name|addr
 decl_stmt|;
-specifier|register
 name|vm_offset_t
 name|offset
 decl_stmt|;
@@ -548,7 +541,6 @@ parameter_list|)
 name|vm_map_t
 name|map
 decl_stmt|;
-specifier|register
 name|vm_offset_t
 name|addr
 decl_stmt|;
@@ -580,7 +572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_suballoc:  *  *	Allocates a map to manage a subrange  *	of the kernel virtual address space.  *  *	Arguments are as follows:  *  *	parent		Map to take range from  *	size		Size of range to find  *	min, max	Returned endpoints of map  *	pageable	Can the region be paged  */
+comment|/*  *	kmem_suballoc:  *  *	Allocates a map to manage a subrange  *	of the kernel virtual address space.  *  *	Arguments are as follows:  *  *	parent		Map to take range from  *	min, max	Returned endpoints of map  *	size		Size of range to find  */
 end_comment
 
 begin_function
@@ -772,11 +764,9 @@ name|size
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|register
 name|vm_map_t
 name|map
 decl_stmt|;
-specifier|register
 name|vm_size_t
 name|size
 decl_stmt|;
@@ -784,7 +774,6 @@ name|int
 name|flags
 decl_stmt|;
 block|{
-specifier|register
 name|vm_offset_t
 name|offset
 decl_stmt|,
@@ -1432,7 +1421,6 @@ decl_stmt|,
 name|end
 decl_stmt|;
 block|{
-specifier|register
 name|vm_map_t
 name|m
 decl_stmt|;
