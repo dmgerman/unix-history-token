@@ -72,7 +72,7 @@ name|pwd
 operator|->
 name|pw_name
 else|:
-literal|"nope"
+literal|":"
 decl_stmt|;
 name|int
 name|sflag
