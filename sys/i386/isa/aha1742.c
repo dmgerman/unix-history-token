@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.12 1993/11/25 01:31:25 wollman Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.13 1993/12/19 00:50:27 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1380,6 +1380,10 @@ name|MAX_SLOTS
 value|8
 end_define
 
+begin_comment
+comment|/* XXX should this be 16?? Need EISA spec */
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|ahb_slot
@@ -2043,8 +2047,8 @@ expr_stmt|;
 while|while
 condition|(
 name|ahb_slot
-operator|<
-literal|8
+operator|<=
+name|MAX_SLOTS
 condition|)
 block|{
 name|port
