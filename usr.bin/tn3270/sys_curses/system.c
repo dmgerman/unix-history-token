@@ -2589,9 +2589,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|gets
+name|fgets
 argument_list|(
 name|inputbuffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inputbuffer
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|setconnmode
