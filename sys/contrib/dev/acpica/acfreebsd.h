@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 13 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acfreebsd.h - OS specific defines, etc.  *       $Revision: 15 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -17,17 +17,6 @@ begin_define
 define|#
 directive|define
 name|__ACFREEBSD_H__
-end_define
-
-begin_comment
-comment|/*  * Some systems' ASL may have problems because they look for names   * of Microsoft operating systems.  To override this, set hw.acpi.os_name  * to the appropriate string.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_OS_NAME
-value|"FreeBSD"
 end_define
 
 begin_comment
