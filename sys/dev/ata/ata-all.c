@@ -1217,16 +1217,22 @@ return|return
 literal|"Intel PIIX4 ATA33 controller"
 return|;
 case|case
+literal|0x24218086
+case|:
+return|return
+literal|"Intel ICH0 ATA33 controller"
+return|;
+case|case
 literal|0x24118086
 case|:
 return|return
 literal|"Intel ICH ATA66 controller"
 return|;
 case|case
-literal|0x24218086
+literal|0x244b8086
 case|:
 return|return
-literal|"Intel ICH0 ATA33 controller"
+literal|"Intel ICH2 ATA100 controller"
 return|;
 case|case
 literal|0x522910b9
@@ -1343,11 +1349,51 @@ return|return
 literal|"Promise ATA66 controller"
 return|;
 case|case
+literal|0x4d30105a
+case|:
+return|return
+literal|"Promise ATA100 controller"
+return|;
+case|case
 literal|0x00041103
+case|:
+switch|switch
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x00
+case|:
+case|case
+literal|0x01
 case|:
 return|return
 literal|"HighPoint HPT366 ATA66 controller"
 return|;
+case|case
+literal|0x02
+case|:
+return|return
+literal|"HighPoint HPT368 ATA66 controller"
+return|;
+case|case
+literal|0x03
+case|:
+case|case
+literal|0x04
+case|:
+return|return
+literal|"HighPoint HPT370 ATA100 controller"
+return|;
+default|default:
+return|return
+literal|"Unknown revision HighPoint ATA controller"
+return|;
+block|}
 comment|/* unsupported but known chipsets, generic DMA only */
 case|case
 literal|0x10001042
@@ -1692,10 +1738,14 @@ literal|0x4d38105a
 operator|||
 name|type
 operator|==
+literal|0x4d30105a
+operator|||
+name|type
+operator|==
 literal|0x00041103
 condition|)
 block|{
-comment|/* Promise and HPT366 controllers support busmastering DMA */
+comment|/* Promise and HighPoint controllers support busmastering DMA */
 name|rid
 operator|=
 literal|0x20
@@ -1774,6 +1824,10 @@ case|case
 literal|0x4d38105a
 case|:
 comment|/* Promise 66's need their clock changed */
+case|case
+literal|0x4d30105a
+case|:
+comment|/* Promise 100 too */
 name|outb
 argument_list|(
 name|rman_get_start
@@ -1835,7 +1889,21 @@ break|break;
 case|case
 literal|0x00041103
 case|:
-comment|/* HPT366 turn of fast interrupt prediction */
+comment|/* HighPoint's need to turn off interrupt prediction */
+switch|switch
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0x00
+case|:
+case|case
+literal|0x01
+case|:
 name|pci_write_config
 argument_list|(
 name|dev
@@ -1859,6 +1927,86 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|0x02
+case|:
+case|case
+literal|0x03
+case|:
+case|case
+literal|0x04
+case|:
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x51
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x51
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+operator|~
+literal|0x02
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x55
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x55
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+operator|~
+literal|0x02
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x5a
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x5a
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+operator|~
+literal|0x10
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|0x05711106
@@ -5713,7 +5861,7 @@ literal|0
 case|case
 literal|0x00041103
 case|:
-comment|/* HighPoint HPT366 */
+comment|/* HighPoint HPT366/368/370 */
 if|if
 condition|(
 operator|!
@@ -5753,6 +5901,10 @@ case|case
 literal|0x4d38105a
 case|:
 comment|/* Promise 66's */
+case|case
+literal|0x4d30105a
+case|:
+comment|/* Promise 100's */
 block|{
 name|struct
 name|ata_pci_softc
@@ -7890,6 +8042,12 @@ return|return
 literal|"UDMA66"
 return|;
 case|case
+name|ATA_UDMA5
+case|:
+return|return
+literal|"UDMA100"
+return|;
+case|case
 name|ATA_DMA
 case|:
 return|return
@@ -8102,6 +8260,17 @@ operator|&
 name|ATA_FLAG_88
 condition|)
 block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|udmamodes
+operator|&
+literal|0x20
+condition|)
+return|return
+literal|5
+return|;
 if|if
 condition|(
 name|ap

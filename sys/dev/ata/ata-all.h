@@ -1414,6 +1414,10 @@ define|#
 directive|define
 name|ATA_UDMA4
 value|0x44
+define|#
+directive|define
+name|ATA_UDMA5
+value|0x45
 name|int32_t
 name|flags
 decl_stmt|;
