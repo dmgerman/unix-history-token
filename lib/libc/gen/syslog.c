@@ -405,6 +405,7 @@ comment|/* Check priority against setlogmask values. */
 if|if
 condition|(
 operator|!
+operator|(
 name|LOG_MASK
 argument_list|(
 name|LOG_PRI
@@ -414,6 +415,7 @@ argument_list|)
 argument_list|)
 operator|&
 name|LogMask
+operator|)
 condition|)
 return|return;
 name|saved_errno
