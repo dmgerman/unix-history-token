@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	4.13 83/05/03"
+literal|"@(#)rlogind.c	4.14 83/05/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -2037,6 +2037,15 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+name|SCPYN
+argument_list|(
+name|wtmp
+operator|.
+name|ut_host
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -2109,6 +2118,15 @@ argument_list|(
 name|wtmp
 operator|.
 name|ut_name
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|SCPYN
+argument_list|(
+name|wtmp
+operator|.
+name|ut_host
 argument_list|,
 literal|""
 argument_list|)
