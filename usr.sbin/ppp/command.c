@@ -11683,7 +11683,7 @@ condition|)
 operator|*
 name|change
 operator|=
-name|DEF_MRU
+literal|0
 expr_stmt|;
 elseif|else
 if|if
