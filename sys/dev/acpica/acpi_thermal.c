@@ -415,18 +415,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|acpi_tz_all_off
-parameter_list|(
-name|struct
-name|acpi_tz_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void	acpi_tz_all_off(struct acpi_tz_softc *sc);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1430,12 +1429,7 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* Power everything off and erase any existing state. */
-name|acpi_tz_all_off
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/* Erase any existing state. */
 for|for
 control|(
 name|i
@@ -1877,12 +1871,6 @@ name|i
 index|]
 argument_list|,
 literal|"_ACx"
-argument_list|)
-expr_stmt|;
-comment|/*      * Power off everything that we've just been given.      */
-name|acpi_tz_all_off
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|return_VALUE
@@ -2567,107 +2555,31 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Turn off all the cooling devices.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|acpi_tz_all_off
-parameter_list|(
-name|struct
-name|acpi_tz_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|ACPI_FUNCTION_TRACE
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
-name|__func__
-argument_list|)
-expr_stmt|;
+begin_comment
+unit|static void acpi_tz_all_off(struct acpi_tz_softc *sc) {     int		i;      ACPI_FUNCTION_TRACE((char *)(uintptr_t)__func__);
 comment|/* Scan all the _ALx objects and turn them all off. */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TZ_NUMLEVELS
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|tz_zone
-operator|.
-name|al
-index|[
-name|i
-index|]
-operator|.
-name|Pointer
-operator|==
-name|NULL
-condition|)
-continue|continue;
-name|acpi_ForeachPackageObject
-argument_list|(
-operator|(
-name|ACPI_OBJECT
-operator|*
-operator|)
-name|sc
-operator|->
-name|tz_zone
-operator|.
-name|al
-index|[
-name|i
-index|]
-operator|.
-name|Pointer
-argument_list|,
-name|acpi_tz_switch_cooler_off
-argument_list|,
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
+end_comment
+
+begin_comment
+unit|for (i = 0; i< TZ_NUMLEVELS; i++) { 	if (sc->tz_zone.al[i].Pointer == NULL) 	    continue; 	acpi_ForeachPackageObject((ACPI_OBJECT *)sc->tz_zone.al[i].Pointer, 				  acpi_tz_switch_cooler_off, sc);     }
 comment|/*      * XXX revert any passive-cooling options.      */
-name|sc
-operator|->
-name|tz_active
-operator|=
-name|TZ_ACTIVE_NONE
-expr_stmt|;
-name|sc
-operator|->
-name|tz_thflags
-operator|=
-name|TZ_THFLAG_NONE
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|sc->tz_active = TZ_ACTIVE_NONE;     sc->tz_thflags = TZ_THFLAG_NONE;      return_VOID; }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Given an object, verify that it's a reference to a device of some sort,   * and try to switch it off.  */
@@ -3166,10 +3078,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Respond to a Notify event sent to the zone.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -3317,7 +3225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Poll the thermal zone.  */
+comment|/*  * Notifies can be generated asynchronously but have also been seen to be  * triggered by other thermal methods.  One system generates a notify of  * 0x81 when the fan is turned on or off.  Another generates it when _SCP  * is called.  To handle these situations, we check the zone via  * acpi_tz_monitor() before evaluating changes to setpoints or the cooling  * policy.  */
 end_comment
 
 begin_function
@@ -3334,6 +3242,12 @@ name|int
 name|flags
 parameter_list|)
 block|{
+comment|/* Check the current temperature and take action based on it */
+name|acpi_tz_monitor
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* If requested, get the power profile settings. */
 if|if
 condition|(
@@ -3346,24 +3260,25 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* If requested, check for new devices/setpoints. */
+comment|/*      * If requested, check for new devices/setpoints.  After finding them,      * check if we need to switch fans based on the new values.      */
 if|if
 condition|(
 name|flags
 operator|&
 name|TZ_FLAG_GETSETTINGS
 condition|)
+block|{
 name|acpi_tz_establish
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Check the current temperature and take action based on it */
 name|acpi_tz_monitor
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* XXX passive cooling actions? */
 block|}
 end_function
