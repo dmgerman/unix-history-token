@@ -894,11 +894,6 @@ name|defined
 argument_list|(
 name|_POSIX_NO_TRUNC
 argument_list|)
-operator|&&
-name|_POSIX_NO_TRUNC
-operator|!=
-operator|-
-literal|1
 end_if
 
 begin_define
