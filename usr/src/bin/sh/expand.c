@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	5.4 (Berkeley) %G%"
+literal|"@(#)expand.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3465,14 +3465,20 @@ name|savelastp
 condition|)
 block|{
 comment|/*  			 * no matches  			 */
+ifdef|#
+directive|ifdef
+name|PUTBACK_ZFLAG
 if|if
 condition|(
 operator|!
 name|zflag
 condition|)
 block|{
+operator|...
+endif|#
+directive|endif
 name|nometa
-label|:
+operator|:
 operator|*
 name|exparg
 operator|.
@@ -3496,7 +3502,6 @@ name|str
 operator|->
 name|next
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -3550,13 +3555,7 @@ name|next
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Do metacharacter (i.e. *, ?, [...]) expansion.  */
-end_comment
-
-begin_function
 name|STATIC
 name|void
 name|expmeta
@@ -4175,13 +4174,7 @@ operator|=
 literal|'/'
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Add a file name to the list.  */
-end_comment
-
-begin_function
 name|STATIC
 name|void
 name|addfname
@@ -4258,13 +4251,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Sort the results of file name expansion.  It calculates the number of  * strings to sort and then calls msort (short for merge sort) to do the  * work.  */
-end_comment
-
-begin_function
 name|STATIC
 name|struct
 name|strlist
@@ -4317,9 +4304,6 @@ name|len
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|STATIC
 name|struct
 name|strlist
@@ -4526,13 +4510,7 @@ return|return
 name|list
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Returns true if the pattern matches the string.  */
-end_comment
-
-begin_function
 name|int
 name|patmatch
 parameter_list|(
@@ -4587,9 +4565,6 @@ name|string
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 name|STATIC
 name|int
 name|pmatch
@@ -4991,13 +4966,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Remove any CTLESC characters from a string.  */
-end_comment
-
-begin_function
 name|void
 name|rmescapes
 parameter_list|(
@@ -5073,13 +5042,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * See if a pattern matches in a case statement.  */
-end_comment
-
-begin_function
 name|int
 name|casematch
 parameter_list|(
