@@ -191,6 +191,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNSAFE
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -208,6 +214,34 @@ init|=
 name|IOM_END
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|mem_start
+init|=
+literal|0xd0000
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_long
+name|mem_end
+init|=
+literal|0xeffff
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|SYSCTL_ULONG
