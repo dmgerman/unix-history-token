@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	6.7	85/02/15	*/
+comment|/*	user.h	6.8	85/03/07	*/
 end_comment
 
 begin_ifdef
@@ -91,7 +91,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*<= MAXNAMLEN,>= sizeof(a_comm) */
+comment|/*<= MAXNAMLEN,>= sizeof(ac_comm) */
 end_comment
 
 begin_struct
@@ -116,7 +116,7 @@ comment|/* address of users saved R0 */
 name|char
 name|u_comm
 index|[
-name|MAXNAMLEN
+name|MAXCOMLEN
 operator|+
 literal|1
 index|]
@@ -178,29 +178,29 @@ name|u_eosys
 decl_stmt|;
 comment|/* special action on end of syscall */
 comment|/* 1.1 - processes and protection */
-name|short
+name|uid_t
 name|u_uid
 decl_stmt|;
 comment|/* effective user id */
-name|short
+name|uid_t
+name|u_ruid
+decl_stmt|;
+comment|/* real user id */
+name|gid_t
 name|u_gid
 decl_stmt|;
 comment|/* effective group id */
-name|short
+name|gid_t
+name|u_rgid
+decl_stmt|;
+comment|/* real group id */
+name|gid_t
 name|u_groups
 index|[
 name|NGROUPS
 index|]
 decl_stmt|;
 comment|/* groups, 0 terminated */
-name|short
-name|u_ruid
-decl_stmt|;
-comment|/* real user id */
-name|short
-name|u_rgid
-decl_stmt|;
-comment|/* real group id */
 comment|/* 1.2 - memory management */
 name|size_t
 name|u_tsize
@@ -269,6 +269,10 @@ name|u_sigonstack
 decl_stmt|;
 comment|/* signals to take on sigstack */
 name|int
+name|u_sigintr
+decl_stmt|;
+comment|/* signals that interrupt syscalls */
+name|int
 name|u_oldmask
 decl_stmt|;
 comment|/* saved mask from before sigpause */
@@ -306,6 +310,10 @@ name|NOFILE
 index|]
 decl_stmt|;
 comment|/* per-process flags of open files */
+name|int
+name|u_lastfile
+decl_stmt|;
+comment|/* high-water mark of u_ofile */
 define|#
 directive|define
 name|UF_EXCLOSE
@@ -461,28 +469,14 @@ begin_define
 define|#
 directive|define
 name|JUSTRETURN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESTARTSYS
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|SIMULATERTI
+name|RESTARTSYS
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|REALLYRETURN
-value|3
 end_define
 
 begin_comment
