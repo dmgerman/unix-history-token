@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.30 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -676,6 +676,12 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+name|dolog
+argument_list|(
+operator|&
+name|his_addr
+argument_list|)
+expr_stmt|;
 comment|/* do telnet option negotiation here */
 comment|/* 	 * Set up default state 	 */
 name|logged_in
@@ -863,8 +869,16 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
+comment|/* The strcmp does not catch null passwords! */
 if|if
 condition|(
+operator|*
+name|pw
+operator|->
+name|pw_passwd
+operator|==
+literal|'\0'
+operator|||
 name|strcmp
 argument_list|(
 name|xpasswd
@@ -873,8 +887,6 @@ name|pw
 operator|->
 name|pw_passwd
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|reply
@@ -938,10 +950,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|if
-condition|(
-name|guest
-condition|)
 comment|/* grab wtmp before chroot */
 name|wtmp
 operator|=
@@ -975,6 +983,27 @@ argument_list|,
 literal|"Can't set guest privileges."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wtmp
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|wtmp
+argument_list|)
+expr_stmt|;
+name|wtmp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 goto|goto
 name|bad
 goto|;
@@ -3543,37 +3572,6 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|guest
-operator|&&
-operator|(
-name|wtmp
-operator|>=
-literal|0
-operator|)
-condition|)
-name|lseek
-argument_list|(
-name|wtmp
-argument_list|,
-literal|0
-argument_list|,
-name|L_XTND
-argument_list|)
-expr_stmt|;
-else|else
-name|wtmp
-operator|=
-name|open
-argument_list|(
-literal|"/usr/adm/wtmp"
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_APPEND
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|wtmp
 operator|>=
 literal|0
@@ -3648,6 +3646,13 @@ name|utmp
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|guest
+condition|)
+block|{
+comment|/* anon must hang on */
 operator|(
 name|void
 operator|)
@@ -3656,6 +3661,12 @@ argument_list|(
 name|wtmp
 argument_list|)
 expr_stmt|;
+name|wtmp
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -3692,24 +3703,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|guest
-operator|&&
-operator|(
 name|wtmp
-operator|>=
+operator|<
 literal|0
-operator|)
 condition|)
-name|lseek
-argument_list|(
-name|wtmp
-argument_list|,
-literal|0
-argument_list|,
-name|L_XTND
-argument_list|)
-expr_stmt|;
-else|else
 name|wtmp
 operator|=
 name|open
