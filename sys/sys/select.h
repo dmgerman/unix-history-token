@@ -15,16 +15,6 @@ directive|define
 name|_SYS_SELECT_H_
 end_define
 
-begin_comment
-comment|/*  * For the moment, just include<sys/selinfo.h> until all clients are  * fixed.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/selinfo.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
