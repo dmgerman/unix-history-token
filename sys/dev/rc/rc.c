@@ -4995,10 +4995,10 @@ name|error
 operator|=
 name|tsleep
 argument_list|(
-operator|&
+name|TSA_CARR_ON
+argument_list|(
 name|tp
-operator|->
-name|t_rawq
+argument_list|)
 argument_list|,
 name|TTIPRI
 operator||
@@ -5446,16 +5446,12 @@ expr_stmt|;
 comment|/* wake bi */
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
+name|TSA_CARR_ON
+argument_list|(
 name|tp
-operator|->
-name|t_rawq
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* wake dcd */
 operator|(
 name|void
 operator|)

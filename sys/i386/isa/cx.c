@@ -257,6 +257,16 @@ parameter_list|)
 value|getc(&q)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TSA_CARR_ON
+end_ifndef
+
+begin_comment
+comment|/* FreeBSD 2.x before not long after 2.0.5 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -276,6 +286,11 @@ name|q
 parameter_list|)
 value|((caddr_t)&(q)->t_out)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
