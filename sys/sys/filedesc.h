@@ -504,6 +504,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|fdcheckstd
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|file
 modifier|*
