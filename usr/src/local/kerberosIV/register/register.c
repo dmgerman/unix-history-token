@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)register.c	1.9 (Berkeley) %G%"
+literal|"@(#)register.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1191,19 +1191,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"couldn't open key file for local host %s\n"
+literal|"couldn't open key file %s for local host: "
 argument_list|,
-name|inet_ntoa
-argument_list|(
-name|local
-operator|.
-name|sin_addr
-argument_list|)
+name|namebuf
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"open"
+literal|""
 argument_list|)
 expr_stmt|;
 name|exit
