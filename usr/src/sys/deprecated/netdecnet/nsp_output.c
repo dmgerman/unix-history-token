@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nsp_output.c	1.2	82/05/15	*/
+comment|/*	nsp_output.c	1.3	82/10/09	*/
 end_comment
 
 begin_include
@@ -42,25 +42,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/dn_systm.h"
+file|"../netdecnet/dn_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/nsp.h"
+file|"../netdecnet/nsp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/nsp_var.h"
+file|"../netdecnet/nsp_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../errno.h"
+file|<errno.h>
 end_include
 
 begin_comment
