@@ -1879,7 +1879,7 @@ operator|==
 literal|0
 condition|)
 goto|goto
-name|dropwithreset
+name|maybedropwithreset
 goto|;
 if|if
 condition|(
@@ -2018,7 +2018,7 @@ name|tcps_badsyn
 operator|++
 expr_stmt|;
 goto|goto
-name|dropwithreset
+name|maybedropwithreset
 goto|;
 block|}
 goto|goto
@@ -2834,7 +2834,7 @@ operator|&
 name|TH_ACK
 condition|)
 goto|goto
-name|dropwithreset
+name|maybedropwithreset
 goto|;
 if|if
 condition|(
@@ -2890,6 +2890,18 @@ name|M_BCAST
 operator||
 name|M_MCAST
 operator|)
+operator|||
+name|IN_MULTICAST
+argument_list|(
+name|ntohl
+argument_list|(
+name|ti
+operator|->
+name|ti_src
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
 operator|||
 name|IN_MULTICAST
 argument_list|(
@@ -3435,7 +3447,7 @@ argument_list|)
 operator|)
 condition|)
 goto|goto
-name|dropwithreset
+name|maybedropwithreset
 goto|;
 break|break;
 comment|/* 	 * If the state is SYN_SENT: 	 *	if seg contains an ACK, but not for our SYN, drop the input. 	 *	if seg contains a RST, then drop the connection. 	 *	if seg does not contain SYN, then drop it. 	 * Otherwise this is an acceptable SYN segment 	 *	initialize tp->rcv_nxt and tp->irs 	 *	if seg contains ack then advance tp->snd_una 	 *	if SYN has been acked change to ESTABLISHED else SYN_RCVD state 	 *	arrange for segment to be acked (eventually) 	 *	continue processing rest of data/controls, beginning with URG 	 */
@@ -6497,7 +6509,7 @@ argument_list|)
 operator|)
 condition|)
 goto|goto
-name|dropwithreset
+name|maybedropwithreset
 goto|;
 ifdef|#
 directive|ifdef
@@ -6546,6 +6558,27 @@ name|tp
 argument_list|)
 expr_stmt|;
 return|return;
+comment|/* 	 * Conditionally drop with reset or just drop depending on whether 	 * we think we are under attack or not. 	 */
+name|maybedropwithreset
+label|:
+ifdef|#
+directive|ifdef
+name|ICMP_BANDLIM
+if|if
+condition|(
+name|badport_bandlim
+argument_list|(
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|drop
+goto|;
+endif|#
+directive|endif
+comment|/* fall through */
 name|dropwithreset
 label|:
 ifdef|#
@@ -6578,6 +6611,18 @@ name|M_BCAST
 operator||
 name|M_MCAST
 operator|)
+operator|||
+name|IN_MULTICAST
+argument_list|(
+name|ntohl
+argument_list|(
+name|ti
+operator|->
+name|ti_src
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
 operator|||
 name|IN_MULTICAST
 argument_list|(
