@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.22 %G%"
+literal|"@(#)ffs_alloc.c 2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
