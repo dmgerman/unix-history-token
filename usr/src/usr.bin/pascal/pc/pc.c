@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.14 %G%"
+literal|"@(#)pc.c 3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,8 @@ decl_stmt|,
 name|gflag
 decl_stmt|,
 name|pflag
+decl_stmt|,
+name|wflag
 decl_stmt|;
 end_decl_stmt
 
@@ -291,7 +293,7 @@ begin_decl_stmt
 name|int
 name|pc3argx
 init|=
-literal|2
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -310,7 +312,7 @@ value|pc0args
 end_define
 
 begin_comment
-comment|/* char	*pc3args[NARGS] =	{ "pc3", /usr/lib/pcexterns.o, 0 }; */
+comment|/* char	*pc3args[NARGS] =	{ "pc3", 0 }; */
 end_comment
 
 begin_comment
@@ -872,13 +874,7 @@ case|case
 literal|'b'
 case|:
 case|case
-literal|'g'
-case|:
-case|case
 literal|'s'
-case|:
-case|case
-literal|'w'
 case|:
 case|case
 literal|'z'
@@ -894,18 +890,37 @@ index|]
 operator|=
 name|argp
 expr_stmt|;
-if|if
-condition|(
-name|argp
-index|[
+continue|continue;
+case|case
+literal|'w'
+case|:
+name|wflag
+operator|=
 literal|1
+expr_stmt|;
+name|pc0args
+index|[
+name|pc0argx
+operator|++
 index|]
-operator|==
+operator|=
+name|argp
+expr_stmt|;
+continue|continue;
+case|case
 literal|'g'
-condition|)
+case|:
 name|gflag
 operator|=
 literal|1
+expr_stmt|;
+name|pc0args
+index|[
+name|pc0argx
+operator|++
+index|]
+operator|=
+name|argp
 expr_stmt|;
 continue|continue;
 case|case
@@ -1475,7 +1490,7 @@ condition|)
 name|done
 argument_list|()
 expr_stmt|;
-comment|/* char	*pc3args[NARGS] =	{ "pc3", "/usr/lib/pcexterns.o", 0 }; */
+comment|/* char	*pc3args[NARGS] =	{ "pc3", 0 }; */
 name|pc3args
 index|[
 literal|0
@@ -1483,9 +1498,22 @@ index|]
 operator|=
 literal|"pc3"
 expr_stmt|;
+if|if
+condition|(
+name|wflag
+condition|)
 name|pc3args
 index|[
-literal|1
+name|pc3argx
+operator|++
+index|]
+operator|=
+literal|"-w"
+expr_stmt|;
+name|pc3args
+index|[
+name|pc3argx
+operator|++
 index|]
 operator|=
 literal|"/usr/lib/pcexterns.o"
@@ -1606,6 +1634,8 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|>
+literal|1
 condition|)
 name|done
 argument_list|()
