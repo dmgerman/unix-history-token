@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.16	81/02/26	*/
+comment|/*	machdep.c	4.17	81/02/26	*/
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.16) 81/02/26 04:26:10 \n"
+literal|"VM/UNIX (Berkeley Version 4.17) 81/02/26 21:56:22 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1850,12 +1850,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -2266,11 +2260,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
