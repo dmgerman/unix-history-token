@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.36	82/09/04	*/
+comment|/*	init_main.c	4.37	82/09/06	*/
 end_comment
 
 begin_include
@@ -482,6 +482,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* initialize wall clock */
 name|clockinit
 argument_list|(
 name|fs
@@ -493,6 +494,17 @@ name|boottime
 operator|=
 name|time
 expr_stmt|;
+comment|/* kick off timeout driven events by calling first time */
+name|roundrobin
+argument_list|()
+expr_stmt|;
+name|schedcpu
+argument_list|()
+expr_stmt|;
+name|schedpaging
+argument_list|()
+expr_stmt|;
+comment|/* set up the root file system */
 name|rootdir
 operator|=
 name|iget
