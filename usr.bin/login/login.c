@@ -2700,33 +2700,6 @@ name|environ
 operator|=
 name|envinit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USE_PAM
-comment|/* 	 * Add any environmental variables that the 	 * PAM modules may have set. 	 */
-if|if
-condition|(
-name|pamh
-condition|)
-block|{
-name|environ_pam
-operator|=
-name|pam_getenvlist
-argument_list|(
-name|pamh
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|environ_pam
-condition|)
-name|export_pam_environment
-argument_list|()
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* USE_PAM */
 comment|/* 	 * PAM modules might add supplementary groups during pam_setcred(). 	 */
 if|if
 condition|(
@@ -2828,6 +2801,27 @@ argument_list|,
 name|e
 argument_list|)
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	         * Add any environmental variables that the 	         * PAM modules may have set. 		 * Call *after* opening session! 		 */
+if|if
+condition|(
+name|pamh
+condition|)
+block|{
+name|environ_pam
+operator|=
+name|pam_getenvlist
+argument_list|(
+name|pamh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|environ_pam
+condition|)
+name|export_pam_environment
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 		 * We must fork() before setuid() because we need to call 		 * pam_close_session() as root. 		 */
