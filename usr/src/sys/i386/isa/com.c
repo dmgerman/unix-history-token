@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991 The Regents of the University of  * California. All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)com.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991 The Regents of the University of  * California. All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)com.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"dca.h"
+file|"com.h"
 end_include
 
 begin_if
 if|#
 directive|if
-name|NDCA
+name|NCOM
 operator|>
 literal|0
 end_if
@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
@@ -149,7 +149,7 @@ begin_decl_stmt
 name|int
 name|ncom
 init|=
-name|NDCA
+name|NCOM
 decl_stmt|;
 end_decl_stmt
 
@@ -174,7 +174,7 @@ begin_decl_stmt
 name|short
 name|com_addr
 index|[
-name|NDCA
+name|NCOM
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -184,7 +184,7 @@ name|struct
 name|tty
 name|com_tty
 index|[
-name|NDCA
+name|NCOM
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -610,12 +610,44 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|comopen
+argument_list|(
+argument|dev_t dev
+argument_list|,
+argument|int flag
+argument_list|,
+argument|int mode
+argument_list|,
+argument|struct proc *p
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|comopen
 argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -624,6 +656,27 @@ name|dev_t
 name|dev
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -653,7 +706,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NDCA
+name|NCOM
 operator|||
 operator|(
 name|com_active
@@ -781,9 +834,11 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|!=
 literal|0
 condition|)
