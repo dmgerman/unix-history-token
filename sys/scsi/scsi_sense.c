@@ -63,12 +63,11 @@ name|NSCAN
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|NOPMEM
-value|0
-end_define
+begin_include
+include|#
+directive|include
+file|"od.h"
+end_include
 
 begin_include
 include|#
