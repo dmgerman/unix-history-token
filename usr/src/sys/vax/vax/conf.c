@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.2	%G%	*/
+comment|/*	conf.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -138,6 +138,13 @@ name|hptab
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HPTAB
+value|&hptab
+end_define
+
 begin_else
 else|#
 directive|else
@@ -174,7 +181,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|hptab
+name|HTTAB
 value|0
 end_define
 
@@ -223,6 +230,13 @@ name|httab
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HTTAB
+value|&httab
+end_define
+
 begin_else
 else|#
 directive|else
@@ -266,7 +280,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|httab
+name|HTTAB
 value|0
 end_define
 
@@ -312,6 +326,13 @@ name|uptab
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|UPTAB
+value|&uptab
+end_define
+
 begin_else
 else|#
 directive|else
@@ -348,7 +369,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|uptab
+name|UPTAB
 value|0
 end_define
 
@@ -383,8 +404,7 @@ name|nulldev
 block|,
 name|hpstrategy
 block|,
-operator|&
-name|hptab
+name|HPTAB
 block|,
 comment|/*0*/
 name|htopen
@@ -393,8 +413,7 @@ name|htclose
 block|,
 name|htstrategy
 block|,
-operator|&
-name|httab
+name|HTTAB
 block|,
 comment|/*1*/
 name|nulldev
@@ -403,8 +422,7 @@ name|nulldev
 block|,
 name|upstrategy
 block|,
-operator|&
-name|uptab
+name|UPTAB
 block|,
 comment|/*2*/
 comment|/* 3 reserved for rk07 */
