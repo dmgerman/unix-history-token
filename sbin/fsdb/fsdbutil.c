@@ -15,11 +15,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fsdbutil.c,v 1.5 1997/03/13 12:44:53 peter Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,25 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include
@@ -71,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -89,37 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<ufs/ufs/dinode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
@@ -650,6 +615,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwuid
@@ -658,6 +624,7 @@ name|dp
 operator|->
 name|di_uid
 argument_list|)
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -680,6 +647,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|grp
 operator|=
 name|getgrgid
@@ -688,6 +656,7 @@ name|dp
 operator|->
 name|di_gid
 argument_list|)
+operator|)
 condition|)
 name|printf
 argument_list|(
