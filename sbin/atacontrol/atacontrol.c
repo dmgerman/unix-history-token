@@ -120,6 +120,12 @@ return|return
 literal|"UDMA100"
 return|;
 case|case
+name|ATA_UDMA6
+case|:
+return|return
+literal|"UDMA133"
+return|;
+case|case
 name|ATA_DMA
 case|:
 return|return
