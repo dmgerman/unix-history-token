@@ -56,6 +56,7 @@ value|\ )
 end_define
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|scsireq_t
 modifier|*
 name|scsireq_reset
@@ -431,6 +432,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
