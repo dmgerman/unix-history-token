@@ -5321,7 +5321,7 @@ return|return
 name|EIO
 return|;
 block|}
-comment|/* 	 * Allow us to set the XT_KEYBD flag in UserConfig so that keyboards 	 * such as those on the IBM ThinkPad laptop computers can be used 	 * with the standard console driver. 	 */
+comment|/* 	 * Allow us to set the XT_KEYBD flag so that keyboards 	 * such as those on the IBM ThinkPad laptop computers can be used 	 * with the standard console driver. 	 */
 if|if
 condition|(
 name|codeset

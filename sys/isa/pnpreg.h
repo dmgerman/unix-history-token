@@ -26,28 +26,6 @@ name|PNP_MAX_CARDS
 value|8
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * the following is the maximum number of PnP Logical devices that  * userconfig can handle.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_PNP_LDN
-value|20
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Static ports to access PnP state machine */
 end_comment

@@ -204,10 +204,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Global variable, so UserConfig can change it. */
-end_comment
-
 begin_define
 define|#
 directive|define

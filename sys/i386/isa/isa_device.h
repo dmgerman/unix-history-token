@@ -126,12 +126,6 @@ name|id_enabled
 decl_stmt|;
 comment|/* is device enabled */
 name|struct
-name|isa_device
-modifier|*
-name|id_next
-decl_stmt|;
-comment|/* used in isa_devlist in userconfig() */
-name|struct
 name|device
 modifier|*
 name|id_device

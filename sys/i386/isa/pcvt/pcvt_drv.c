@@ -2567,7 +2567,7 @@ directive|if
 name|PCVT_SCANSET
 operator|==
 literal|2
-comment|/* 	 * Turn off scancode translation early so that UserConfig  	 * and DDB can read the keyboard. 	 */
+comment|/* 	 * Turn off scancode translation early so that 	 * DDB can read the keyboard. 	 */
 if|if
 condition|(
 name|kbd

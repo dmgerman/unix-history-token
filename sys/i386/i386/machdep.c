@@ -75,10 +75,6 @@ directive|include
 file|"opt_kstack_pages.h"
 end_include
 
-begin_comment
-comment|/* #include "opt_userconfig.h" */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -1127,21 +1123,6 @@ operator|&
 name|kmi
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USERCONFIG
-argument_list|)
-name|userconfig
-argument_list|()
-expr_stmt|;
-name|cninit
-argument_list|()
-expr_stmt|;
-comment|/* the preferred console may have changed */
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"avail memory = %u (%uK bytes)\n"
