@@ -15,7 +15,7 @@ name|char
 name|RCSid
 index|[]
 init|=
-literal|"$Id: rshrcmd.c,v 1.7 1995/12/12 00:20:55 mcooper Exp $"
+literal|"$Id: rshrcmd.c,v 1.1 1996/08/10 07:54:17 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,15 +345,6 @@ argument_list|(
 literal|0
 argument_list|,
 literal|1
-argument_list|)
-operator|<
-literal|0
-operator|||
-name|dup2
-argument_list|(
-literal|0
-argument_list|,
-literal|2
 argument_list|)
 operator|<
 literal|0
