@@ -2014,7 +2014,7 @@ name|NIL
 operator|)
 operator|&&
 operator|(
-name|comptr
+name|strptr
 operator|<
 name|blksptr
 operator|||
@@ -2024,7 +2024,7 @@ name|NIL
 operator|)
 operator|&&
 operator|(
-name|comptr
+name|strptr
 operator|<
 name|blkeptr
 operator|||
@@ -2065,7 +2065,7 @@ condition|)
 if|if
 condition|(
 operator|(
-name|comptr
+name|chrptr
 operator|<
 name|blksptr
 operator|||
@@ -2075,7 +2075,7 @@ name|NIL
 operator|)
 operator|&&
 operator|(
-name|comptr
+name|chrptr
 operator|<
 name|blkeptr
 operator|||
