@@ -120,6 +120,30 @@ value|__archive_strappend_char_UTF8
 end_define
 
 begin_comment
+comment|/* Append an integer in the specified base (2<= base<= 16). */
+end_comment
+
+begin_function_decl
+name|struct
+name|archive_string
+modifier|*
+name|__archive_strappend_int
+parameter_list|(
+name|struct
+name|archive_string
+modifier|*
+name|as
+parameter_list|,
+name|int
+name|d
+parameter_list|,
+name|int
+name|base
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Basic append operation. */
 end_comment
 
