@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scanner.c	3.2 83/11/22"
+literal|"@(#)scanner.c	3.3 83/12/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -504,6 +504,9 @@ literal|'Z'
 case|:
 case|case
 literal|'_'
+case|:
+case|case
+literal|'.'
 case|:
 operator|*
 name|p
@@ -1030,6 +1033,9 @@ literal|'Z'
 case|:
 case|case
 literal|'_'
+case|:
+case|case
+literal|'.'
 case|:
 case|case
 literal|'0'
