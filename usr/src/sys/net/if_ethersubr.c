@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_ethersubr.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_ethersubr.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -722,6 +722,9 @@ name|l
 decl_stmt|;
 name|iso_again
 label|:
+name|iso_etherout
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -748,35 +751,23 @@ operator|&
 name|RTF_GATEWAY
 condition|)
 block|{
-specifier|register
-name|struct
-name|llinfo_llc
-modifier|*
-name|lc
-init|=
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_llinfo
+condition|)
+block|{
+name|rt
+operator|=
 operator|(
 expr|struct
-name|llinfo_llc
+name|rtentry
 operator|*
 operator|)
 name|rt
 operator|->
 name|rt_llinfo
-decl_stmt|;
-if|if
-condition|(
-name|lc
-operator|&&
-name|lc
-operator|->
-name|lc_rtgate
-condition|)
-block|{
-name|rt
-operator|=
-name|lc
-operator|->
-name|lc_rtgate
 expr_stmt|;
 goto|goto
 name|iso_again
@@ -2120,6 +2111,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|iso_etherout
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
 
 end_unit
 
