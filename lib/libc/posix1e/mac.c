@@ -1442,15 +1442,6 @@ name|ld_entries
 argument_list|)
 control|)
 block|{
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|ld
-operator|->
-name|ld_name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
