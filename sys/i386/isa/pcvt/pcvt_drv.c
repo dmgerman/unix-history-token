@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:38:24 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_drv.c	VT220 Driver Main Module / OS - Interface  *	---------------------------------------------------------  *  *	Last Edit-Date: [Thu Apr  6 09:44:24 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -42,17 +42,49 @@ end_undef
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bus.h>
 end_include
 
-begin_comment
-comment|/* XXX */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isa/isareg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isa/isavar.h>
+end_include
 
 begin_decl_stmt
 specifier|static
 name|kbd_callback_func_t
-name|pcevent
+name|pcvt_event
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +131,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pcstart
+name|pcvt_start
 parameter_list|(
 specifier|register
 name|struct
@@ -113,7 +145,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pcparam
+name|pcvt_param
 parameter_list|(
 name|struct
 name|tty
@@ -131,61 +163,61 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|cn_probe_t
-name|pccnprobe
+name|pcvt_cn_probe
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_init_t
-name|pccninit
+name|pcvt_cn_init
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_term_t
-name|pccnterm
+name|pcvt_cn_term
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_getc_t
-name|pccngetc
+name|pcvt_cn_getc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_checkc_t
-name|pccncheckc
+name|pcvt_cn_checkc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|cn_putc_t
-name|pccnputc
+name|pcvt_cn_putc
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|CONS_DRIVER
 argument_list|(
-name|pc
+name|vt
 argument_list|,
-name|pccnprobe
+name|pcvt_cn_probe
 argument_list|,
-name|pccninit
+name|pcvt_cn_init
 argument_list|,
-name|pccnterm
+name|pcvt_cn_term
 argument_list|,
-name|pccngetc
+name|pcvt_cn_getc
 argument_list|,
-name|pccncheckc
+name|pcvt_cn_checkc
 argument_list|,
-name|pccnputc
+name|pcvt_cn_putc
 argument_list|,
 name|NULL
 argument_list|)
@@ -195,28 +227,28 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|d_open_t
-name|pcopen
+name|pcvt_open
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_close_t
-name|pcclose
+name|pcvt_close
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_ioctl_t
-name|pcioctl
+name|pcvt_ioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|d_mmap_t
-name|pcmmap
+name|pcvt_mmap
 decl_stmt|;
 end_decl_stmt
 
@@ -231,14 +263,14 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|pc_cdevsw
+name|vt_cdevsw
 init|=
 block|{
 comment|/* open */
-name|pcopen
+name|pcvt_open
 block|,
 comment|/* close */
-name|pcclose
+name|pcvt_close
 block|,
 comment|/* read */
 name|ttyread
@@ -247,13 +279,13 @@ comment|/* write */
 name|ttywrite
 block|,
 comment|/* ioctl */
-name|pcioctl
+name|pcvt_ioctl
 block|,
 comment|/* poll */
 name|ttypoll
 block|,
 comment|/* mmap */
-name|pcmmap
+name|pcvt_mmap
 block|,
 comment|/* strategy */
 name|nostrategy
@@ -283,11 +315,9 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
-name|pcprobe
+name|pcvt_probe
 parameter_list|(
-name|struct
-name|isa_device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 function_decl|;
@@ -296,33 +326,90 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pcattach
+name|pcvt_attach
 parameter_list|(
-name|struct
-name|isa_device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|struct
-name|isa_driver
-name|vtdriver
+specifier|static
+name|device_method_t
+name|pcvt_methods
+index|[]
 init|=
 block|{
-comment|/* driver routines */
-name|pcprobe
+name|DEVMETHOD
+argument_list|(
+name|device_probe
+argument_list|,
+name|pcvt_probe
+argument_list|)
 block|,
-name|pcattach
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|pcvt_attach
+argument_list|)
 block|,
-literal|"vt"
+name|DEVMETHOD
+argument_list|(
+name|bus_print_child
+argument_list|,
+name|bus_generic_print_child
+argument_list|)
 block|,
-literal|1
-block|, }
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|pcvt_driver
+init|=
+block|{
+literal|"vt"
+block|,
+name|pcvt_methods
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|pcvt_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|pcvt
+argument_list|,
+name|isa
+argument_list|,
+name|pcvt_driver
+argument_list|,
+name|pcvt_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	driver probe  *---------------------------------------------------------------------------*/
@@ -331,17 +418,89 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcprobe
+name|pcvt_probe
 parameter_list|(
-name|struct
-name|isa_device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
+name|device_t
+name|bus
+decl_stmt|;
+name|int
+name|unit
+init|=
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+comment|/* No pnp support */
+if|if
+condition|(
+name|isa_get_vendorid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+name|ENXIO
+return|;
+if|if
+condition|(
+name|unit
+operator|!=
+literal|0
+condition|)
+return|return
+name|ENXIO
+return|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"pcvt VT220 console driver"
+argument_list|)
+expr_stmt|;
+name|bus
+operator|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|bus_set_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+literal|0
+argument_list|,
+literal|0x3b0
+argument_list|,
+literal|0x30
+argument_list|)
+expr_stmt|;
+name|bus_set_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|Crtat
+argument_list|,
+literal|0x8000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kbd
@@ -374,15 +533,17 @@ operator|)
 operator|&
 name|kbd
 argument_list|,
-name|pcevent
+name|pcvt_event
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|dev
-operator|->
-name|id_unit
+operator|&
+name|vs
+index|[
+name|unit
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -407,10 +568,7 @@ name|NULL
 operator|)
 condition|)
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 name|reset_keyboard
@@ -422,10 +580,7 @@ name|kbd_code_init
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
-operator|-
-literal|1
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -437,17 +592,96 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcattach
+name|pcvt_attach
 parameter_list|(
-name|struct
-name|isa_device
-modifier|*
+name|device_t
 name|dev
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|port
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|mem
+decl_stmt|;
+name|int
+name|unit
+init|=
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|!=
+literal|0
+condition|)
+return|return
+name|ENXIO
+return|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|port
+operator|=
+name|bus_alloc_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+operator|&
+name|i
+argument_list|,
+literal|0
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|RF_ACTIVE
+operator||
+name|RF_SHAREABLE
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+name|mem
+operator|=
+name|bus_alloc_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+operator|&
+name|i
+argument_list|,
+literal|0
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|RF_ACTIVE
+operator||
+name|RF_SHAREABLE
+argument_list|)
+expr_stmt|;
 name|vt_coldmalloc
 argument_list|()
 expr_stmt|;
@@ -466,9 +700,11 @@ operator|(
 name|void
 operator|*
 operator|)
-name|dev
-operator|->
-name|id_unit
+operator|&
+name|vs
+index|[
+name|unit
+index|]
 argument_list|,
 name|hz
 operator|*
@@ -479,9 +715,7 @@ name|printf
 argument_list|(
 literal|"vt%d: "
 argument_list|,
-name|dev
-operator|->
-name|id_unit
+name|unit
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -494,7 +728,7 @@ name|MDA_ADAPTOR
 case|:
 name|printf
 argument_list|(
-literal|"mda"
+literal|"MDA"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -503,7 +737,7 @@ name|CGA_ADAPTOR
 case|:
 name|printf
 argument_list|(
-literal|"cga"
+literal|"CGA"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -512,7 +746,7 @@ name|EGA_ADAPTOR
 case|:
 name|printf
 argument_list|(
-literal|"ega"
+literal|"EGA"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -539,13 +773,13 @@ name|can_do_132col
 condition|)
 name|printf
 argument_list|(
-literal|"80/132 col"
+literal|"80/132 columns"
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"80 col"
+literal|"80 columns"
 argument_list|)
 expr_stmt|;
 name|vgapelinit
@@ -579,7 +813,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", %d scr, "
+literal|", %d screens, "
 argument_list|,
 name|totalscreens
 argument_list|)
@@ -594,7 +828,7 @@ name|KB_AT
 case|:
 name|printf
 argument_list|(
-literal|"at-"
+literal|"AT-"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -603,7 +837,7 @@ name|KB_MFII
 case|:
 name|printf
 argument_list|(
-literal|"mf2-"
+literal|"MF2-"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -617,7 +851,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|"kbd\n"
+literal|"keyboard\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -637,7 +871,7 @@ block|{
 name|ttyregister
 argument_list|(
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 name|i
 index|]
@@ -651,7 +885,7 @@ operator|.
 name|vs_tty
 operator|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 name|i
 index|]
@@ -659,7 +893,7 @@ expr_stmt|;
 name|make_dev
 argument_list|(
 operator|&
-name|pc_cdevsw
+name|vt_cdevsw
 argument_list|,
 name|i
 argument_list|,
@@ -681,14 +915,8 @@ name|UPDATE_START
 argument_list|)
 expr_stmt|;
 comment|/* start asynchronous updates */
-name|dev
-operator|->
-name|id_ointr
-operator|=
-name|pcrint
-expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -700,7 +928,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcopen
+name|pcvt_open
 parameter_list|(
 name|dev_t
 name|dev
@@ -767,7 +995,7 @@ return|;
 name|tp
 operator|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 name|i
 index|]
@@ -787,13 +1015,13 @@ name|tp
 operator|->
 name|t_oproc
 operator|=
-name|pcstart
+name|pcvt_start
 expr_stmt|;
 name|tp
 operator|->
 name|t_param
 operator|=
-name|pcparam
+name|pcvt_param
 expr_stmt|;
 name|tp
 operator|->
@@ -859,7 +1087,7 @@ name|t_ospeed
 operator|=
 name|TTYDEF_SPEED
 expr_stmt|;
-name|pcparam
+name|pcvt_param
 argument_list|(
 name|tp
 argument_list|,
@@ -1015,7 +1243,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcclose
+name|pcvt_close
 parameter_list|(
 name|dev_t
 name|dev
@@ -1072,7 +1300,7 @@ return|;
 name|tp
 operator|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 name|i
 index|]
@@ -1131,7 +1359,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcioctl
+name|pcvt_ioctl
 parameter_list|(
 name|dev_t
 name|dev
@@ -1181,7 +1409,7 @@ return|;
 name|tp
 operator|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 name|i
 index|]
@@ -1214,18 +1442,6 @@ condition|)
 return|return
 name|error
 return|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * just for compatibility: 	 * XFree86< 2.0 and SuperProbe still might use it 	 * 	 * NB: THIS IS A HACK! Do not use it unless you explicitly need. 	 * Especially, since the vty is not put into process-controlled 	 * mode (this would require the application to co-operate), any 	 * attempts to switch vtys while this kind of X mode is active 	 * may cause serious trouble. 	 */
-block|switch(cmd) 	{ 	  case CONSOLE_X_MODE_ON: 	  { 	    int i;  	    if((error = usl_vt_ioctl(dev, KDENABIO, 0, flag, p))> 0) 	      return error;  	    i = KD_GRAPHICS; 	    if((error = usl_vt_ioctl(dev, KDSETMODE, (caddr_t)&i, flag, p))> 0) 	      return error;  	    i = K_RAW; 	    error = usl_vt_ioctl(dev, KDSKBMODE, (caddr_t)&i, flag, p); 	    return error; 	  }  	  case CONSOLE_X_MODE_OFF: 	  { 	    int i;  	    (void)usl_vt_ioctl(dev, KDDISABIO, 0, flag, p);  	    i = KD_TEXT; 	    (void)usl_vt_ioctl(dev, KDSETMODE, (caddr_t)&i, flag, p);  	    i = K_XLATE; 	    (void)usl_vt_ioctl(dev, KDSKBMODE, (caddr_t)&i, flag, p); 	    return 0; 	  }  	  case CONSOLE_X_BELL:
-comment|/* 		 * If `data' is non-null, the first int value denotes 		 * the pitch, the second a duration. Otherwise, behaves 		 * like BEL. 		 */
-block|if (data) 		{ 			sysbeep(PCVT_SYSBEEPF / ((int *)data)[0], 				((int *)data)[1] * hz / 3000); 		} 		else 		{ 			sysbeep(PCVT_SYSBEEPF / 1493, hz / 4); 		} 		return (0);  	  default:
-comment|/* fall through */
-block|; 	}
-endif|#
-directive|endif
-comment|/* 0 */
 endif|#
 directive|endif
 comment|/* XSERVER */
@@ -1348,7 +1564,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcmmap
+name|pcvt_mmap
 parameter_list|(
 name|dev_t
 name|dev
@@ -1470,7 +1686,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|pcconsp
+name|pcvt_ttyp
 operator|->
 name|t_line
 index|]
@@ -1480,7 +1696,7 @@ operator|)
 operator|(
 literal|'\0'
 operator|,
-name|pcconsp
+name|pcvt_ttyp
 operator|)
 expr_stmt|;
 block|}
@@ -1498,7 +1714,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|pcconsp
+name|pcvt_ttyp
 operator|->
 name|t_line
 index|]
@@ -1512,7 +1728,7 @@ operator|++
 operator|&
 literal|0xff
 operator|,
-name|pcconsp
+name|pcvt_ttyp
 operator|)
 expr_stmt|;
 block|}
@@ -1584,7 +1800,7 @@ operator|)
 operator|&
 name|kbd
 argument_list|,
-name|pcevent
+name|pcvt_event
 argument_list|,
 operator|(
 name|void
@@ -1652,7 +1868,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcevent
+name|pcvt_event
 parameter_list|(
 name|keyboard_t
 modifier|*
@@ -1692,7 +1908,7 @@ block|{
 case|case
 name|KBDIO_KEYINPUT
 case|:
-name|pcrint
+name|pcvt_rint
 argument_list|(
 name|unit
 argument_list|)
@@ -1755,7 +1971,7 @@ end_comment
 
 begin_function
 name|void
-name|pcrint
+name|pcvt_rint
 parameter_list|(
 name|int
 name|unit
@@ -1939,7 +2155,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pcstart
+name|pcvt_start
 parameter_list|(
 specifier|register
 name|struct
@@ -2114,7 +2330,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccnprobe
+name|pcvt_cn_probe
 parameter_list|(
 name|struct
 name|consdev
@@ -2206,7 +2422,7 @@ operator|->
 name|cn_tp
 operator|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 literal|0
 index|]
@@ -2221,7 +2437,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccninit
+name|pcvt_cn_init
 parameter_list|(
 name|struct
 name|consdev
@@ -2284,7 +2500,7 @@ operator|)
 operator|&
 name|kbd
 argument_list|,
-name|pcevent
+name|pcvt_event
 argument_list|,
 operator|(
 name|void
@@ -2361,7 +2577,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccnterm
+name|pcvt_cn_term
 parameter_list|(
 name|struct
 name|consdev
@@ -2401,7 +2617,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccnputc
+name|pcvt_cn_putc
 parameter_list|(
 name|dev_t
 name|dev
@@ -2458,7 +2674,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccngetc
+name|pcvt_cn_getc
 parameter_list|(
 name|dev_t
 name|dev
@@ -2527,7 +2743,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-comment|/* block pcrint while we poll */
+comment|/* block pcvt_rint while we poll */
 name|kbd_polling
 operator|=
 literal|1
@@ -2628,7 +2844,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccncheckc
+name|pcvt_cn_checkc
 parameter_list|(
 name|dev_t
 name|dev
@@ -2728,7 +2944,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pcparam
+name|pcvt_param
 parameter_list|(
 name|struct
 name|tty

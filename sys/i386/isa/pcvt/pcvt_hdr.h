@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *  *	Last Edit-Date: [Mon Mar 27 16:10:50 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *  *	Last Edit-Date: [Wed Apr  5 18:21:32 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -176,24 +176,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/pcvt/pcvt_conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
 end_include
 
 begin_comment
@@ -3397,7 +3379,7 @@ end_comment
 begin_decl_stmt
 name|struct
 name|tty
-name|pccons
+name|pcvt_tty
 index|[
 name|PCVT_NSCREENS
 index|]
@@ -4152,10 +4134,10 @@ begin_decl_stmt
 name|struct
 name|tty
 modifier|*
-name|pcconsp
+name|pcvt_ttyp
 init|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 literal|0
 index|]
@@ -5192,7 +5174,7 @@ specifier|extern
 name|struct
 name|tty
 modifier|*
-name|pcconsp
+name|pcvt_ttyp
 decl_stmt|;
 end_decl_stmt
 
@@ -5765,11 +5747,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|ointhand2_t
-name|pcrint
-decl_stmt|;
-end_decl_stmt
+begin_function_decl
+name|void
+name|pcvt_rint
+parameter_list|(
+name|int
+name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:54:07 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_kbd.c	VT220 Driver Keyboard Interface Code  *	----------------------------------------------------  *  *	Last Edit-Date: [Wed Apr  5 18:16:52 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -894,7 +894,7 @@ operator|(
 name|kbd
 operator|)
 condition|)
-name|pcrint
+name|pcvt_rint
 argument_list|(
 literal|0
 argument_list|)

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_ext.c	VT220 Driver Extended Support Routines  *	------------------------------------------------------  *  * 	Last Edit-Date: [Sun Mar 26 10:38:27 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_ext.c	VT220 Driver Extended Support Routines  *	------------------------------------------------------  *  * 	Last Edit-Date: [Wed Apr  5 18:18:54 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -9416,10 +9416,10 @@ operator|=
 name|n
 expr_stmt|;
 comment|/* current screen no */
-name|pcconsp
+name|pcvt_ttyp
 operator|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 name|n
 index|]
@@ -9974,12 +9974,6 @@ operator|&
 name|VT_WAIT_ACK
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|assert (!(ostatus&VT_WAIT_REL)); 		assert (vsp == vsx&& 			vt_switch_pending == current_video_screen + 1); 		vt_switch_pending = 0;
-else|#
-directive|else
 if|if
 condition|(
 name|vsp
@@ -9996,8 +9990,6 @@ name|vt_switch_pending
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -10013,12 +10005,6 @@ name|vt_switch_pending
 operator|-
 literal|1
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|assert(vsp == vsx&& vt_switch_pending); 		vt_switch_pending = 0; 		vgapage (new_screen);
-else|#
-directive|else
 if|if
 condition|(
 name|vsp
@@ -10038,8 +10024,6 @@ name|new_screen
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function

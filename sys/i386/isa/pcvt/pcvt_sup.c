@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *  *	Last Edit-Date: [Fri Mar 31 10:23:04 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *  *	Last Edit-Date: [Wed Apr  5 17:24:20 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -6530,10 +6530,10 @@ operator|=
 name|n
 expr_stmt|;
 comment|/* current screen no */
-name|pcconsp
+name|pcvt_ttyp
 operator|=
 operator|&
-name|pccons
+name|pcvt_tty
 index|[
 name|n
 index|]
@@ -7981,26 +7981,8 @@ directive|if
 name|PCVT_GREENSAVER
 end_if
 
-begin_define
-define|#
-directive|define
-name|TSIDX
-value|IO_VGA+0x04
-end_define
-
 begin_comment
-comment|/* timing sequencer idx */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TSREG
-value|IO_VGA+0x05
-end_define
-
-begin_comment
-comment|/* timing sequencer data */
+comment|/*---------------------------------------------------------------------------*  *	switch monitor on/off  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -8022,7 +8004,7 @@ condition|)
 block|{
 name|outb
 argument_list|(
-name|TSIDX
+name|TS_INDEX
 argument_list|,
 literal|0x01
 argument_list|)
@@ -8031,19 +8013,19 @@ name|val
 operator|=
 name|inb
 argument_list|(
-name|TSREG
+name|TS_DATA
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|TSIDX
+name|TS_INDEX
 argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|TSREG
+name|TS_DATA
 argument_list|,
 name|val
 operator||
@@ -8083,7 +8065,7 @@ else|else
 block|{
 name|outb
 argument_list|(
-name|TSIDX
+name|TS_INDEX
 argument_list|,
 literal|0x01
 argument_list|)
@@ -8092,19 +8074,19 @@ name|val
 operator|=
 name|inb
 argument_list|(
-name|TSREG
+name|TS_DATA
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|TSIDX
+name|TS_INDEX
 argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|TSREG
+name|TS_DATA
 argument_list|,
 name|val
 operator|&
