@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.17	%G%	*/
+comment|/*	%H%	3.18	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Emulex UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * NB: This driver works reliably only on an SC-11B controller with  *     rev. level at least J (in particular rev. level H will not work well).  *     If you have an older controller you may be able to get by if you  *		#define	OLDUCODE  *     which implements larger delays for slow ucode.  *  * Controller switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(on=closed, enable)  *	SW2-4	unused		(off=open)  */
+comment|/*  * Emulex UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * NB: This driver works reliably only on an SC-11B controller with  *     rev. level at least J (in particular rev. level H will not work well).  *     If you have an newer controller you should change olducode below to:  *		int	olducode = 0;  *     which saves time by stalling less in the system.  *  * Controller switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(on=closed, enable)  *	SW2-4	unused		(off=open)  */
 end_comment
 
 begin_include
@@ -797,6 +797,14 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|olducode
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|idelay
 init|=
 literal|500
@@ -807,65 +815,49 @@ begin_comment
 comment|/* Delay after PRESET or DCLR */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OLDUCODE
-end_ifdef
-
 begin_decl_stmt
 name|int
-name|sdelay
+name|osdelay
 init|=
 literal|150
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Delay after selecting drive in upcs2 */
+comment|/* Old delay after selecting drive in upcs2 */
 end_comment
 
 begin_decl_stmt
 name|int
-name|rdelay
+name|ordelay
 init|=
 literal|100
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Delay after SEARCH */
+comment|/* Old delay after SEARCH */
 end_comment
 
 begin_decl_stmt
 name|int
-name|asdel
+name|oasdel
 init|=
 literal|100
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Delay after clearing bit in upas */
+comment|/* Old delay after clearing bit in upas */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_decl_stmt
 name|int
-name|sdelay
+name|nsdelay
 init|=
 literal|25
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1326,7 +1318,11 @@ name|unit
 expr_stmt|;
 name|DELAY
 argument_list|(
-name|sdelay
+name|olducode
+condition|?
+name|osdelay
+else|:
+name|nsdelay
 argument_list|)
 expr_stmt|;
 name|nwaitcs2
@@ -1583,16 +1579,15 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|OLDUCODE
+if|if
+condition|(
+name|olducode
+condition|)
 name|DELAY
 argument_list|(
-name|rdelay
+name|ordelay
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 goto|goto
 name|out
 goto|;
@@ -2335,7 +2330,11 @@ name|unit
 expr_stmt|;
 name|DELAY
 argument_list|(
-name|sdelay
+name|olducode
+condition|?
+name|osdelay
+else|:
+name|nsdelay
 argument_list|)
 expr_stmt|;
 name|nwaitcs2
@@ -2786,16 +2785,15 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OLDUCODE
+if|if
+condition|(
+name|olducode
+condition|)
 name|DELAY
 argument_list|(
-name|asdel
+name|oasdel
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
