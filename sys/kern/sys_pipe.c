@@ -3639,7 +3639,7 @@ name|pipe_peer
 expr_stmt|;
 name|PIPE_LOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 comment|/* 	 * detect loss of pipe read side, issue SIGPIPE if lost. 	 */
@@ -3662,7 +3662,7 @@ condition|)
 block|{
 name|PIPE_UNLOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 return|return
@@ -3742,7 +3742,7 @@ condition|)
 block|{
 name|PIPE_GET_GIANT
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 if|if
@@ -3761,7 +3761,7 @@ operator|++
 expr_stmt|;
 name|PIPE_DROP_GIANT
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 name|pipeunlock
@@ -3820,7 +3820,7 @@ expr_stmt|;
 block|}
 name|PIPE_UNLOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 return|return
@@ -3971,7 +3971,7 @@ name|wpipe
 argument_list|,
 name|PIPE_MTX
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 argument_list|,
 name|PRIBIO
@@ -4183,7 +4183,7 @@ expr_stmt|;
 comment|/* Transfer first segment */
 name|PIPE_UNLOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 name|error
@@ -4211,7 +4211,7 @@ argument_list|)
 expr_stmt|;
 name|PIPE_LOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 if|if
@@ -4249,7 +4249,7 @@ argument_list|)
 expr_stmt|;
 name|PIPE_UNLOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 name|error
@@ -4275,7 +4275,7 @@ argument_list|)
 expr_stmt|;
 name|PIPE_LOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 block|}
@@ -4444,7 +4444,7 @@ name|wpipe
 argument_list|,
 name|PIPE_MTX
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 argument_list|,
 name|PRIBIO
@@ -4621,7 +4621,7 @@ argument_list|)
 expr_stmt|;
 name|PIPE_UNLOCK
 argument_list|(
-name|wpipe
+name|rpipe
 argument_list|)
 expr_stmt|;
 return|return
