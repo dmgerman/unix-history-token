@@ -101,7 +101,7 @@ specifier|const
 name|maketId
 index|[]
 init|=
-literal|"$Id: maketime.c,v 5.11 1995/06/16 06:19:24 eggert Exp $"
+literal|"$Id: maketime.c,v 1.3 1995/10/28 21:49:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1614,9 +1614,13 @@ index|]
 decl_stmt|;
 while|while
 condition|(
-name|gets
+name|fgets
 argument_list|(
 name|buf
+argument_list|,
+literal|1000
+argument_list|,
+name|stdin
 argument_list|)
 condition|)
 block|{

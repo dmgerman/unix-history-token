@@ -22,7 +22,7 @@ name|libId
 argument_list|(
 argument|revId
 argument_list|,
-literal|"$Id: rcsrev.c,v 1.3 1995/10/28 21:49:51 peter Exp $"
+literal|"$Id: rcsrev.c,v 1.4 1995/10/29 22:06:29 peter Exp $"
 argument_list|)
 end_macro
 
@@ -3839,9 +3839,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|gets
+name|fgets
 argument_list|(
 name|symrevno
+argument_list|,
+literal|100
+argument_list|,
+name|stdin
 argument_list|)
 condition|)
 break|break;
@@ -3888,9 +3892,13 @@ argument_list|,
 literal|"Date: "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|date
+argument_list|,
+literal|20
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|aprintf
@@ -3909,9 +3917,13 @@ argument_list|,
 literal|"Author: "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|author
+argument_list|,
+literal|20
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|aprintf
@@ -3930,9 +3942,13 @@ argument_list|,
 literal|"State: "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|state
+argument_list|,
+literal|20
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|aprintf
