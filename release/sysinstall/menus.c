@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.27 1995/10/18 05:01:57 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.28 1995/10/19 15:55:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -426,7 +426,8 @@ literal|"ftp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.freebsd.org/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -440,7 +441,8 @@ literal|"freefall.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://freefall.freebsd.org/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://freefall.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -454,7 +456,8 @@ literal|"Specify some other ftp site by URL"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=other"
+name|FTP_PATH
+literal|"=other"
 block|,
 literal|0
 block|,
@@ -468,7 +471,8 @@ literal|"ftp.physics.usyd.edu.au"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.physics.usyd.edu.au/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.physics.usyd.edu.au/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -482,7 +486,8 @@ literal|"nic.funet.fi"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://nic.funet.fi/pub/unix/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://nic.funet.fi/pub/unix/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -496,7 +501,8 @@ literal|"ftp.ibp.fr"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.ibp.fr/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.ibp.fr/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -510,7 +516,8 @@ literal|"ftp.fb9dv.uni-duisburg.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.fb9dv.uni-duisburg.de/pub/unix/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.fb9dv.uni-duisburg.de/pub/unix/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -524,7 +531,8 @@ literal|"gil.physik.rwth-aachen.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://gil.physik.rwth-aachen.de/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://gil.physik.rwth-aachen.de/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -538,7 +546,8 @@ literal|"ftp.uni-paderborn.de"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.uni-paderborn.de/freebsd/"
+name|FTP_PATH
+literal|"=ftp://ftp.uni-paderborn.de/freebsd/"
 block|,
 literal|0
 block|,
@@ -552,7 +561,8 @@ literal|"ftp.hk.super.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.hk.super.net/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.hk.super.net/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -566,7 +576,8 @@ literal|"orgchem.weizmann.ac.il"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://orgchem.weizmann.ac.il/pub/FreeBSD-"
+name|FTP_PATH
+literal|"=ftp://orgchem.weizmann.ac.il/pub/FreeBSD-"
 block|,
 literal|0
 block|,
@@ -580,7 +591,8 @@ literal|"ftp.sra.co.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.sra.co.jp/pub/os/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.sra.co.jp/pub/os/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -594,7 +606,8 @@ literal|"ftp.mei.co.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.mei.co.jp/free/PC-UNIX/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -608,7 +621,8 @@ literal|"ftp.waseda.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.waseda.ac.jp/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.waseda.ac.jp/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -622,7 +636,8 @@ literal|"ftp.pu-toyama.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.pu-toyama.ac.jp/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -636,7 +651,8 @@ literal|"ftpsv1.u-aizu.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftpsv1.u-aizu.ac.jp/pub/os/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -664,7 +680,8 @@ literal|"ftp.ee.uec.ac.jp"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.ee.uec.ac.jp/pub/os/mirror/ftp.freebsd.org/"
+name|FTP_PATH
+literal|"=ftp://ftp.ee.uec.ac.jp/pub/os/mirror/ftp.freebsd.org/"
 block|,
 literal|0
 block|,
@@ -692,7 +709,8 @@ literal|"ftp.cau.ac.kr"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.cau.ac.kr/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.cau.ac.kr/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -706,7 +724,8 @@ literal|"ftp.nl.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.nl.net/pub/os/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.nl.net/pub/os/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -720,7 +739,8 @@ literal|"ftp.kiae.su"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.kiae.su/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.kiae.su/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -734,7 +754,8 @@ literal|"ftp.luth.se"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.luth.se/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.luth.se/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -748,7 +769,8 @@ literal|"netbsd.csie.nctu.edu.tw"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://netbsd.csie.nctu.edu.tw/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://netbsd.csie.nctu.edu.tw/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -762,7 +784,8 @@ literal|"ftp.nectec.or.th"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.nectec.or.th/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.nectec.or.th/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -776,7 +799,8 @@ literal|"ftp.demon.co.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -790,7 +814,8 @@ literal|"src.doc.ic.ac.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -804,7 +829,8 @@ literal|"unix.hensa.ac.uk"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://unix.hensa.ac.uk/mirrors/walnut.creek/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://unix.hensa.ac.uk/mirrors/walnut.creek/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -818,7 +844,8 @@ literal|"ref.tfs.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ref.tfs.com/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ref.tfs.com/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -832,7 +859,8 @@ literal|"ftp.dataplex.net"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.dataplex.net/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.dataplex.net/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -846,7 +874,8 @@ literal|"kryten.atinc.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://kryten.atinc.com/pub/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://kryten.atinc.com/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -860,7 +889,8 @@ literal|"ftp.neosoft.com"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
-literal|"ftp=ftp://ftp.neosoft.com/systems/FreeBSD/"
+name|FTP_PATH
+literal|"=ftp://ftp.neosoft.com/systems/FreeBSD/"
 block|,
 literal|0
 block|,

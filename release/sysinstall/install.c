@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.39 1995/10/19 15:55:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.40 1995/10/19 18:37:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1179,11 +1179,6 @@ argument_list|()
 operator|)
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|fd
-decl_stmt|;
 name|struct
 name|termios
 name|foo
@@ -2664,6 +2659,10 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|cfg_file
+decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -2734,12 +2733,12 @@ condition|(
 literal|1
 condition|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|cfg_file
+operator|=
 name|variable_get_value
 argument_list|(
 name|CONFIG_FILE
@@ -2747,8 +2746,7 @@ argument_list|,
 literal|"Please insert the floppy containing this configuration file\n"
 literal|"into drive A now and press [ENTER]."
 argument_list|)
-operator|!=
-name|RET_SUCCESS
+operator|)
 condition|)
 break|break;
 if|if
@@ -2807,17 +2805,10 @@ block|}
 block|}
 name|fnord
 label|:
-name|cp
-operator|=
-name|variable_get
-argument_list|(
-name|CONFIG_FILE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|cp
+name|cfg_file
 condition|)
 break|break;
 name|sprintf
@@ -2826,7 +2817,7 @@ name|buf
 argument_list|,
 literal|"/mnt2/%s"
 argument_list|,
-name|cp
+name|cfg_file
 argument_list|)
 expr_stmt|;
 name|msgDebug
@@ -2914,7 +2905,7 @@ name|msgConfirm
 argument_list|(
 literal|"Cannot parse configuration file %s!  Please verify your media."
 argument_list|,
-name|cp
+name|cfg_file
 argument_list|)
 expr_stmt|;
 else|else
@@ -2964,7 +2955,7 @@ argument_list|(
 literal|"Configuration file %s loaded successfully!\n"
 literal|"Some parameters may now have new default values."
 argument_list|,
-name|cp
+name|cfg_file
 argument_list|)
 expr_stmt|;
 block|}
