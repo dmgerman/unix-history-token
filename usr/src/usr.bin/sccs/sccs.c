@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.43 %G%"
+literal|"@(#)sccs.c	1.44 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +437,17 @@ begin_comment
 comment|/* check command */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TELLC
+value|3
+end_define
+
+begin_comment
+comment|/* give list of files being edited */
+end_comment
+
 begin_comment
 comment|/* **  Description of commands known to this program. **	First argument puts the command into a class.  Second arg is **	info regarding treatment of this command.  Third arg is a **	list of flags this command accepts from macros, etc.  Fourth **	arg is the pathname of the implementing program, or the **	macro definition, or the arg to a sub-algorithm. */
 end_comment
@@ -659,6 +670,20 @@ name|char
 operator|*
 operator|)
 name|CHECKC
+block|,
+literal|"tell"
+block|,
+name|CLEAN
+block|,
+name|REALUSER
+block|,
+literal|""
+block|,
+operator|(
+name|char
+operator|*
+operator|)
+name|TELLC
 block|,
 literal|"unedit"
 block|,
@@ -2963,6 +2988,21 @@ name|NULL
 condition|)
 block|{
 comment|/* the file exists -- report it's contents */
+if|if
+condition|(
+name|mode
+operator|==
+name|TELLC
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|basefile
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 while|while
 condition|(
 name|fgets
@@ -2986,6 +3026,7 @@ argument_list|,
 name|pline
 argument_list|)
 expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|pfp
