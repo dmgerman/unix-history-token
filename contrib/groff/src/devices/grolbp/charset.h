@@ -4,6 +4,7 @@ comment|// Definition of the WP54 character set
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|symset
 index|[]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.      Written by Eli Zaretskii (eliz@is.elta.co.il)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.      Written by Eli Zaretskii (eliz@is.elta.co.il)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_comment
@@ -42,6 +42,11 @@ directive|if
 name|defined
 argument_list|(
 name|__MSDOS__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__EMX__
 argument_list|)
 expr|\
 operator|||
@@ -267,6 +272,29 @@ begin_comment
 comment|/* The system shell.  Groff assumes a Unixy shell, but non-Posix    systems don't have standard places where it lives, and might not    have it installed to begin with.  We want to give them some leeway.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__EMX__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|getcwd
+parameter_list|(
+name|b
+parameter_list|,
+name|s
+parameter_list|)
+value|_getcwd2(b,s)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -290,6 +318,11 @@ name|s
 parameter_list|)
 value|(is_system_shell(s))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The separator for directories in PATH and other environment    variables.  */
@@ -409,6 +442,27 @@ end_endif
 begin_comment
 comment|/* Defaults, for Posix systems.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SET_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SET_BINARY
+parameter_list|(
+name|f
+parameter_list|)
+value|do {} while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

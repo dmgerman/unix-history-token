@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.  *  *  Gaius Mulley (gaius@glam.ac.uk) wrote html-text.cc  *  *  html-text.h  *  *  provides a state machine interface which generates html text.  */
+comment|/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  *  *  Gaius Mulley (gaius@glam.ac.uk) wrote html-text.h  *  *  html-text.h  *  *  provides a state machine interface which generates html text.  */
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *  the state of the current paragraph.  *  It allows post-html.cc to request font changes, paragraph start/end  *  and emits balanced tags with a small amount of peephole optimization.  */
+comment|/*  *  the state of the current paragraph.  *  It allows post-html.cpp to request font changes, paragraph start/end  *  and emits balanced tags with a small amount of peephole optimization.  */
 end_comment
 
 begin_decl_stmt
@@ -504,10 +504,12 @@ function_decl|;
 name|void
 name|issue_tag
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|tagname
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|arg

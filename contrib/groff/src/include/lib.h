@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989-2000, 2001, 2002 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989-2000, 2001, 2002, 2003 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_ifdef
@@ -143,6 +143,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SETLOCALE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|setlocale
+parameter_list|(
+name|category
+parameter_list|,
+name|locale
+parameter_list|)
+value|do {} while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|char
 modifier|*
@@ -194,11 +228,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/* HP-UX 10.20 doesn't declare snprintf() */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|HAVE_SNPRINTF
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NEED_DECLARATION_SNPRINTF
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -256,7 +303,7 @@ name|HAVE_MKSTEMP
 end_ifndef
 
 begin_comment
-comment|/* since mkstemp() is defined as a real C++ function if taken from    groff's mkstemp.cc we need a declaration */
+comment|/* since mkstemp() is defined as a real C++ function if taken from    groff's mkstemp.cpp we need a declaration */
 end_comment
 
 begin_function_decl
@@ -501,6 +548,34 @@ begin_comment
 comment|/* NEED_DECLARATION_STRCASECMP */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_STRCASECMP */
+end_comment
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+name|int
+name|strcasecmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+end_extern
+
 begin_endif
 endif|#
 directive|endif
@@ -575,6 +650,36 @@ begin_comment
 comment|/* NEED_DECLARATION_STRNCASECMP */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not HAVE_STRNCASECMP */
+end_comment
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+name|int
+name|strncasecmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+block|}
+end_extern
+
 begin_endif
 endif|#
 directive|endif
@@ -592,54 +697,6 @@ end_endif
 begin_comment
 comment|/* !_AIX&& !sinix&& !__sinix__ */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_STRCASECMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|strcasecmp
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|strcmp((a),(b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_STRNCASECMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|strncasecmp
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|strncmp((a),(b),(c))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
