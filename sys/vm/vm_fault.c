@@ -2665,6 +2665,9 @@ name|entry
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|fs
@@ -2725,6 +2728,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -3131,6 +3137,9 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|PHYS_TO_VM_PAGE
@@ -3140,6 +3149,9 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 block|}

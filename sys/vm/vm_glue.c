@@ -816,6 +816,9 @@ argument_list|(
 literal|"vm_proc_dispose: incorrect number of pages in upobj"
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -851,6 +854,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|up
 operator|=
 operator|(
@@ -934,6 +940,9 @@ argument_list|(
 literal|"vm_proc_dispose: incorrect number of pages in upobj"
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|m
@@ -956,6 +965,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|up
 operator|=
 operator|(
