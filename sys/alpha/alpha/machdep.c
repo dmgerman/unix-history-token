@@ -6303,27 +6303,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Test and fetch the context structure. 	 * We grab it all at once for speed. 	 */
+comment|/* 	 * Fetch the entire context structure at once for speed. 	 */
 if|if
 condition|(
-name|useracc
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|scp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|scp
-argument_list|)
-argument_list|,
-name|VM_PROT_READ
-argument_list|)
-operator|==
-literal|0
-operator|||
 name|copyin
 argument_list|(
 operator|(
@@ -6645,26 +6627,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Test and fetch the context structure. 	 * We grab it all at once for speed. 	 */
+comment|/* 	 * Fetch the entire context structure at once for speed. 	 */
 if|if
 condition|(
-name|useracc
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ucp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ucontext_t
-argument_list|)
-argument_list|,
-name|VM_PROT_READ
-argument_list|)
-operator|==
-literal|0
-operator|||
 name|copyin
 argument_list|(
 operator|(
