@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.50	82/01/18	*/
+comment|/*	tcp_input.c	1.51	82/01/25	*/
 end_comment
 
 begin_include
@@ -3694,14 +3694,13 @@ name|q
 operator|->
 name|ti_next
 expr_stmt|;
-name|m_freem
-argument_list|(
+name|m
+operator|=
 name|dtom
 argument_list|(
 name|q
 operator|->
 name|ti_prev
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|remque
@@ -3709,6 +3708,11 @@ argument_list|(
 name|q
 operator|->
 name|ti_prev
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 block|}
