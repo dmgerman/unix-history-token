@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.8 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * Define _NOQUAD if the compiler does NOT support 64-bit integers.  */
-end_comment
-
-begin_comment
-comment|/* #define _NOQUAD */
+comment|/*  * Copyright (c) 1987, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)endian.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.53 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -382,7 +382,7 @@ name|va_fileid
 decl_stmt|;
 comment|/* file id */
 name|u_quad_t
-name|va_qsize
+name|va_size
 decl_stmt|;
 comment|/* file size in bytes */
 name|long
@@ -417,7 +417,7 @@ name|va_rdev
 decl_stmt|;
 comment|/* device the special file represents */
 name|u_quad_t
-name|va_qbytes
+name|va_bytes
 decl_stmt|;
 comment|/* bytes of disk space held by file */
 name|u_quad_t
@@ -427,64 +427,6 @@ comment|/* file modification number */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_NOQUAD
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|va_size
-value|va_qsize.val[_QUAD_LOWWORD]
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_size_rsv
-value|va_qsize.val[_QUAD_HIGHWORD]
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_bytes
-value|va_qbytes.val[_QUAD_LOWWORD]
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_bytes_rsv
-value|va_qbytes.val[_QUAD_HIGHWORD]
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|va_size
-value|va_qsize
-end_define
-
-begin_define
-define|#
-directive|define
-name|va_bytes
-value|va_qbytes
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Flags for ioflag.  */
