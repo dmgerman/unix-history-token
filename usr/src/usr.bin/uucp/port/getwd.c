@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getwd.c	5.4 (Berkeley) %G%"
+literal|"@(#)getwd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ name|fp
 operator|=
 name|rpopen
 argument_list|(
-literal|"PATH=/bin:/usr/bin:/usr/ucb;pwd 2>&-"
+literal|"PATH=/bin:/usr/bin;pwd 2>&-"
 argument_list|,
 literal|"r"
 argument_list|)

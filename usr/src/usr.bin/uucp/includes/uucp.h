@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)uucp.h	5.16	%G%	*/
+comment|/*	@(#)uucp.h	5.17	%G%	*/
 end_comment
 
 begin_include
@@ -543,7 +543,7 @@ comment|/**/
 end_comment
 
 begin_comment
-comment|/*  * Traditionally LCK (lock) files have been kept in /usr/spool/uucp.  * If you want that define LOCKDIR to be ".".  * If you want the locks kept in a subdirectory, define LOCKDIR as "LCK".  * Good news about LCK. subdirectory: the directory can be mode 777 so  * unprivileged programs can share the uucp locking system,  * and the subdirectory keeps down clutter in the main directory.  * The BAD news: you have to change 'tip' and another programs that  * know where the LCK files are kept, and you have to change your /etc/rc  * if your rc cleans out the lock files (as it should).  */
+comment|/*  * Traditionally LCK (lock) files have been kept in /var/spool/uucp.  * If you want that define LOCKDIR to be ".".  * If you want the locks kept in a subdirectory, define LOCKDIR as "LCK".  * Good news about LCK. subdirectory: the directory can be mode 777 so  * unprivileged programs can share the uucp locking system,  * and the subdirectory keeps down clutter in the main directory.  * The BAD news: you have to change 'tip' and another programs that  * know where the LCK files are kept, and you have to change your /etc/rc  * if your rc cleans out the lock files (as it should).  */
 end_comment
 
 begin_comment
@@ -588,11 +588,11 @@ comment|/*  * If you want the logfile stored in a file for each site instead  * 
 end_comment
 
 begin_comment
-comment|/* #define LOGBYSITE	"/usr/spool/uucp/LOG" /**/
+comment|/* #define LOGBYSITE	"/var/spool/uucp/LOG" /**/
 end_comment
 
 begin_comment
-comment|/*  * define USE_SYSLOG if you want error messages to use SYSLOG instead  * of being written to /usr/spool/log/ERRLOG  */
+comment|/*  * define USE_SYSLOG if you want error messages to use SYSLOG instead  * of being written to /var/spool/log/ERRLOG  */
 end_comment
 
 begin_define
@@ -610,14 +610,14 @@ comment|/*  * If you are doing rebilling and need connect accounting,  * define 
 end_comment
 
 begin_comment
-comment|/*#define DO_CONNECT_ACCOUNTING	"/usr/spool/uucp/CONNECT"	/**/
+comment|/*#define DO_CONNECT_ACCOUNTING	"/var/spool/uucp/CONNECT"	/**/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XQTDIR
-value|"/usr/spool/uucp/XTMP"
+value|"/var/spool/uucp/XTMP"
 end_define
 
 begin_define
@@ -698,21 +698,21 @@ begin_define
 define|#
 directive|define
 name|SPOOL
-value|"/usr/spool/uucp"
+value|"/var/spool/uucp"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYSLOG
-value|"/usr/spool/uucp/SYSLOG"
+value|"/var/spool/uucp/SYSLOG"
 end_define
 
 begin_define
 define|#
 directive|define
 name|PUBDIR
-value|"/usr/spool/uucppublic"
+value|"/var/spool/uucppublic"
 end_define
 
 begin_define
@@ -754,35 +754,35 @@ begin_define
 define|#
 directive|define
 name|LOGFILE
-value|"/usr/spool/uucp/LOGFILE"
+value|"/var/spool/uucp/LOGFILE"
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERRLOG
-value|"/usr/spool/uucp/ERRLOG"
+value|"/var/spool/uucp/ERRLOG"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CMDSDIR
-value|"/usr/spool/uucp/C."
+value|"/var/spool/uucp/C."
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATADIR
-value|"/usr/spool/uucp/D."
+value|"/var/spool/uucp/D."
 end_define
 
 begin_define
 define|#
 directive|define
 name|XEQTDIR
-value|"/usr/spool/uucp/X."
+value|"/var/spool/uucp/X."
 end_define
 
 begin_define

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuxqt.c	5.12	(Berkeley) %G%"
+literal|"@(#)uuxqt.c	5.13	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,7 +219,7 @@ index|[
 name|MAXFULLNAME
 index|]
 init|=
-literal|"PATH=/bin:/usr/bin:/usr/ucb"
+literal|"PATH=/bin:/usr/bin"
 decl_stmt|;
 end_decl_stmt
 
