@@ -4501,11 +4501,13 @@ define|#
 directive|define
 name|SWAP
 parameter_list|(
+name|t
+parameter_list|,
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ __typeof__(a) c = a; a = b; b = c; }
+value|{ t c = a; a = b; b = c; }
 name|omask
 operator|=
 name|sigblock
@@ -4607,6 +4609,9 @@ expr_stmt|;
 block|}
 name|SWAP
 argument_list|(
+name|pid_t
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_pids
@@ -4725,6 +4730,9 @@ name|se_accept
 expr_stmt|;
 name|SWAP
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_user
@@ -4736,6 +4744,9 @@ argument_list|)
 expr_stmt|;
 name|SWAP
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_group
@@ -4750,6 +4761,9 @@ directive|ifdef
 name|LOGIN_CAP
 name|SWAP
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_class
@@ -4763,6 +4777,9 @@ endif|#
 directive|endif
 name|SWAP
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_server
@@ -4774,6 +4791,9 @@ argument_list|)
 expr_stmt|;
 name|SWAP
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_server_name
@@ -4798,6 +4818,9 @@ operator|++
 control|)
 name|SWAP
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_argv
@@ -4818,6 +4841,9 @@ directive|ifdef
 name|IPSEC
 name|SWAP
 argument_list|(
+name|char
+operator|*
+argument_list|,
 name|sep
 operator|->
 name|se_policy
