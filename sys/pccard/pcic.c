@@ -724,7 +724,7 @@ end_comment
 
 begin_function
 name|int
-name|lkm_pcic
+name|pcic_mod
 parameter_list|(
 name|lkmtp
 parameter_list|,
