@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acu.c	4.10 (Berkeley) %G%"
+literal|"@(#)acu.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +211,9 @@ condition|(
 name|conflag
 condition|)
 name|disconnect
-argument_list|()
+argument_list|(
+name|NOSTR
+argument_list|)
 expr_stmt|;
 else|else
 call|(
@@ -631,8 +633,17 @@ end_function
 
 begin_macro
 name|disconnect
-argument_list|()
+argument_list|(
+argument|reason
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|reason
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -642,6 +653,13 @@ operator|!
 name|conflag
 condition|)
 return|return;
+if|if
+condition|(
+name|reason
+operator|!=
+name|NOSTR
+condition|)
+block|{
 name|logent
 argument_list|(
 name|value
@@ -671,6 +689,24 @@ condition|)
 name|printf
 argument_list|(
 literal|"\r\ndisconnecting..."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|logent
+argument_list|(
+name|value
+argument_list|(
+name|HOST
+argument_list|)
+argument_list|,
+literal|""
+argument_list|,
+name|acu
+operator|->
+name|acu_name
+argument_list|,
+name|reason
 argument_list|)
 expr_stmt|;
 call|(

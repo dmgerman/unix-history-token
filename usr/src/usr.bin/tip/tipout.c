@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tipout.c	4.8 (Berkeley) %G%"
+literal|"@(#)tipout.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,6 +355,10 @@ specifier|register
 name|int
 name|cnt
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|int
 name|omask
 decl_stmt|;
@@ -450,7 +454,19 @@ name|cnt
 operator|<=
 literal|0
 condition|)
-continue|continue;
+block|{
+comment|/* lost carrier */
+if|if
+condition|(
+name|cnt
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EIO
+condition|)
+block|{
 define|#
 directive|define
 name|mask
@@ -458,6 +474,21 @@ parameter_list|(
 name|s
 parameter_list|)
 value|(1<< ((s) - 1))
+name|sigblock
+argument_list|(
+name|mask
+argument_list|(
+name|SIGTERM
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|intTERM
+argument_list|()
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+continue|continue;
+block|}
 define|#
 directive|define
 name|ALLSIGS

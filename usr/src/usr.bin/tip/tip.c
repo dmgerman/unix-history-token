@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	4.16 (Berkeley) %G%"
+literal|"@(#)tip.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2179,6 +2179,10 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|bp
 operator|=
 name|buf
@@ -2214,6 +2218,8 @@ name|bp
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|write
 argument_list|(
 name|fd
@@ -2222,7 +2228,28 @@ name|buf
 argument_list|,
 name|n
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EIO
+condition|)
+name|abort
+argument_list|(
+literal|"Lost carrier."
+argument_list|)
 expr_stmt|;
+comment|/* this is questionable */
+name|perror
+argument_list|(
+literal|"write"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
