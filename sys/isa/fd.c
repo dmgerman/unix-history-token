@@ -504,16 +504,6 @@ name|fdc_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|FDNUMTOUNIT
-parameter_list|(
-name|n
-parameter_list|)
-value|(((n)& 3)<< 6)
-end_define
-
 begin_comment
 comment|/*  * fdc maintains a set (1!) of ivars per child of each controller.  */
 end_comment
