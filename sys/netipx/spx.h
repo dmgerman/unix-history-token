@@ -72,6 +72,7 @@ name|spx_alo
 decl_stmt|;
 comment|/* allocation number */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -92,6 +93,7 @@ name|spxhdr
 name|si_s
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
