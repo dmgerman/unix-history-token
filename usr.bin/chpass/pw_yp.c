@@ -1267,7 +1267,7 @@ name|char
 modifier|*
 name|server
 decl_stmt|;
-name|int
+name|long
 name|resultlen
 decl_stmt|;
 name|char
