@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.43 2000/03/29 18:24:53 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.47 2000/08/24 14:12:34 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -707,36 +707,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* Flag to see if we are in the cold boot process. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cold
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|Static
