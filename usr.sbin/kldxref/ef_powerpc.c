@@ -84,8 +84,6 @@ name|Elf_Addr
 modifier|*
 name|where
 decl_stmt|,
-name|addr
-decl_stmt|,
 name|addend
 decl_stmt|;
 name|Elf_Word
