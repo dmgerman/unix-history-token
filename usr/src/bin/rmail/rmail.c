@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)rmail.c	4.2	(Berkeley)	%G%"
+literal|"@(#)rmail.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
