@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.30	82/05/02	*/
+comment|/*	if_imp.c	4.31	82/05/06	*/
 end_comment
 
 begin_include
@@ -2389,11 +2389,6 @@ argument_list|)
 expr_stmt|;
 name|start
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|icp
 operator|=
 operator|&
@@ -2424,6 +2419,11 @@ argument_list|(
 name|ifp
 operator|->
 name|if_unit
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
