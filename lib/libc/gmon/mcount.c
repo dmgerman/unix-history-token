@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mcount.c,v 1.9 1997/02/22 14:58:27 peter Exp $"
+literal|"$Id: mcount.c,v 1.10 1998/03/09 04:42:19 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,11 +58,49 @@ directive|ifndef
 name|__NETBSD_SYSCALLS
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Kludge to get fptrint_t declared. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|KERNEL
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1096,6 +1134,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !__NETBSD_SYSCALLS */
+end_comment
 
 end_unit
 

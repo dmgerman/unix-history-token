@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: types.h,v 1.4 1998/06/14 15:26:03 bde Exp $ */
+comment|/* $Id: types.h,v 1.5 1998/06/27 15:35:00 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -204,6 +204,28 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/* An unsigned integral type that can hold object pointers. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|ptrint_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* An unsigned integral type that can hold function pointers. */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|fptrint_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
