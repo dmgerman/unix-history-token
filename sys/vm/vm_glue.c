@@ -1802,13 +1802,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NO_SWAPPING
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -1816,9 +1812,6 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NO_SWAPPING
 if|if
 condition|(
 operator|(
@@ -1838,6 +1831,21 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* !NO_SWAPPING */
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If another process is swapping in this process, 	 * just wait until it finishes. 	 */
 if|if
 condition|(
@@ -1997,6 +2005,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* NO_SWAPPING */
 block|}
 end_function
 
