@@ -124,11 +124,8 @@ end_include
 begin_decl_stmt
 name|void
 name|usage
-name|__P
 argument_list|(
-operator|(
 name|void
-operator|)
 argument_list|)
 name|__dead2
 decl_stmt|;
@@ -143,8 +140,8 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|)
 block|{
 name|int
@@ -425,7 +422,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -433,7 +432,9 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
