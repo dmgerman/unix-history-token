@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pup.c	4.3	82/10/09	*/
+comment|/*	pup.c	4.4	82/10/17	*/
 end_comment
 
 begin_include
@@ -97,23 +97,6 @@ operator|->
 name|spup_addr
 operator|.
 name|pp_host
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|->
-name|afh_hosthash
-operator|<
-literal|0
-condition|)
-name|hp
-operator|->
-name|afh_hosthash
-operator|=
-operator|-
-name|hp
-operator|->
-name|afh_hosthash
 expr_stmt|;
 block|}
 end_block
