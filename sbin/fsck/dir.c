@@ -9,15 +9,9 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)dir.c	5.19 (Berkeley) 7/26/91"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)dir.c	5.19 (Berkeley) 7/26/91";*/
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -25,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/fsck/dir.c,v 1.2 1993/07/22 16:51:46 jkh Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
