@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.9 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,7 +183,7 @@ name|sprintf
 argument_list|(
 name|result
 argument_list|,
-literal|"%.3s %.3s%3d %.2d:%.2d:%.2d %d\n"
+literal|"%.3s %.3s%3d %02d:%02d:%02d %d\n"
 argument_list|,
 name|wday_name
 index|[
