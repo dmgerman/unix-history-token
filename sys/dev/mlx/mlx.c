@@ -10252,6 +10252,8 @@ name|me_firmware_id
 operator|>>
 literal|16
 operator|)
+operator|&
+literal|0xff
 argument_list|,
 name|sc
 operator|->
