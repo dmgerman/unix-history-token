@@ -2898,6 +2898,20 @@ name|XL_FLAG_INVERT_MII_PWR
 value|0x0040
 end_define
 
+begin_define
+define|#
+directive|define
+name|XL_FLAG_NO_XCVR_PWR
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|XL_NO_XCVR_PWR_MAGICBITS
+value|0x0900
+end_define
+
 begin_struct
 struct|struct
 name|xl_softc
