@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gprof.h	5.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/gmon.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<a.out.h>
 end_include
 
@@ -30,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gmon.h"
+file|<stdlib.h>
 end_include
 
 begin_if
@@ -53,13 +59,13 @@ end_endif
 begin_if
 if|#
 directive|if
-name|sun
+name|sparc
 end_if
 
 begin_include
 include|#
 directive|include
-file|"sun.h"
+file|"sparc.h"
 end_include
 
 begin_endif
@@ -757,7 +763,7 @@ comment|/* string table in core */
 end_comment
 
 begin_decl_stmt
-name|off_t
+name|long
 name|ssiz
 decl_stmt|;
 end_decl_stmt
