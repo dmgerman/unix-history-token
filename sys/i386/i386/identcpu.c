@@ -5621,7 +5621,7 @@ file|<vm/pmap.h>
 end_include
 
 begin_decl_stmt
-name|u_char
+name|uint16_t
 modifier|*
 name|elan_mmcr
 decl_stmt|;
