@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"yppasswd_comm.h"
+file|"yppasswd_private.h"
 end_include
 
 begin_decl_stmt
@@ -169,6 +169,12 @@ name|NULL
 decl_stmt|;
 name|uid_t
 name|uid
+decl_stmt|;
+name|char
+modifier|*
+name|sockname
+init|=
+name|YP_SOCKNAME
 decl_stmt|;
 name|_use_yp
 operator|=
@@ -644,16 +650,34 @@ condition|)
 block|{
 if|if
 condition|(
-name|senddat
+operator|(
+name|clnt
+operator|=
+name|clnt_create
 argument_list|(
-operator|&
-name|master_yppasswd
+name|sockname
+argument_list|,
+name|MASTER_YPPASSWDPROG
+argument_list|,
+name|MASTER_YPPASSWDVERS
+argument_list|,
+literal|"unix"
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"failed to send request to rpc.yppasswdd"
+literal|"failed to contact rpc.yppasswdd on host %s: %s"
+argument_list|,
+name|master
+argument_list|,
+name|clnt_spcreateerror
+argument_list|(
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -662,11 +686,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|status
-operator|=
-name|getresp
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -708,6 +727,7 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
 comment|/* 	 * The yppasswd.x file said `unix authentication required', 	 * so I added it. This is the only reason it is in here. 	 * My yppasswdd doesn't use it, but maybe some others out there 	 * do. 					--okir 	 */
 name|clnt
 operator|->
@@ -716,6 +736,21 @@ operator|=
 name|authunix_create_default
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|suser_override
+condition|)
+name|status
+operator|=
+name|yppasswdproc_update_master_1
+argument_list|(
+operator|&
+name|master_yppasswd
+argument_list|,
+name|clnt
+argument_list|)
+expr_stmt|;
+else|else
 name|status
 operator|=
 name|yppasswdproc_update_1
@@ -746,19 +781,13 @@ argument_list|(
 name|clnt
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-operator|(
-operator|!
-name|suser_override
-operator|&&
 name|err
 operator|.
 name|re_status
 operator|!=
 name|RPC_SUCCESS
-operator|)
 operator|||
 name|status
 operator|==
@@ -774,25 +803,12 @@ literal|1
 argument_list|,
 literal|"Failed to change NIS password: %s"
 argument_list|,
-operator|(
-name|err
-operator|.
-name|re_status
-operator|!=
-name|RPC_SUCCESS
-operator|&&
-operator|!
-name|suser_override
-operator|)
-condition|?
 name|clnt_sperrno
 argument_list|(
 name|err
 operator|.
 name|re_status
 argument_list|)
-else|:
-literal|"rpc.yppasswdd returned error status"
 argument_list|)
 expr_stmt|;
 block|}
@@ -801,16 +817,11 @@ argument_list|(
 literal|"\nNIS password has%s been changed on %s.\n"
 argument_list|,
 operator|(
-operator|(
 name|err
 operator|.
 name|re_status
 operator|!=
 name|RPC_SUCCESS
-operator|&&
-operator|!
-name|suser_override
-operator|)
 operator|||
 name|status
 operator|==

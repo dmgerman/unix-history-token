@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * NIS interface routines for chpass  *   * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  *	$Id: pw_yp.c,v 1.9 1997/02/22 19:54:26 peter Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * NIS interface routines for chpass  *   * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Center for Telecommunications Research  * Columbia University, New York City  *  *	$Id: pw_yp.c,v 1.2 1997/07/28 18:32:05 wpaul Exp $  */
 end_comment
 
 begin_ifdef
@@ -164,12 +164,6 @@ begin_include
 include|#
 directive|include
 file|"ypxfr_extern.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"yppasswd_comm.h"
 end_include
 
 begin_include
@@ -1756,6 +1750,12 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
+name|char
+modifier|*
+name|sockname
+init|=
+name|YP_SOCKNAME
+decl_stmt|;
 comment|/* 	 * Sometimes we are called just to probe for rpc.yppasswdd and 	 * set the suser_override flag. Just return NULL and leave 	 * suser_override at 0 if _use_yp doesn't indicate that NIS is 	 * in use and we weren't called from use_yp() itself. 	 * Without this check, we might try probing and fail with an NIS 	 * error in non-NIS environments. 	 */
 if|if
 condition|(
@@ -2032,6 +2032,12 @@ decl_stmt|;
 name|struct
 name|rpc_err
 name|err
+decl_stmt|;
+name|char
+modifier|*
+name|sockname
+init|=
+name|YP_SOCKNAME
 decl_stmt|;
 name|_use_yp
 operator|=
@@ -2382,18 +2388,34 @@ name|suser_override
 condition|)
 block|{
 comment|/* Talk to server via AF_UNIX socket. */
+name|clnt
+operator|=
+name|clnt_create
+argument_list|(
+name|sockname
+argument_list|,
+name|MASTER_YPPASSWDPROG
+argument_list|,
+name|MASTER_YPPASSWDVERS
+argument_list|,
+literal|"unix"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|senddat
-argument_list|(
-operator|&
-name|master_yppasswd
-argument_list|)
+name|clnt
+operator|==
+name|NULL
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"failed to contact local rpc.yppasswdd"
+literal|"failed to contact rpc.yppasswdd: %s"
+argument_list|,
+name|clnt_spcreateerror
+argument_list|(
+name|master
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pw_error
@@ -2406,12 +2428,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get return code. */
-name|status
-operator|=
-name|getresp
-argument_list|()
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2458,6 +2474,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|clnt
 operator|->
 name|cl_auth
@@ -2465,6 +2482,21 @@ operator|=
 name|authunix_create_default
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|suser_override
+condition|)
+name|status
+operator|=
+name|yppasswdproc_update_master_1
+argument_list|(
+operator|&
+name|master_yppasswd
+argument_list|,
+name|clnt
+argument_list|)
+expr_stmt|;
+else|else
 name|status
 operator|=
 name|yppasswdproc_update_1
@@ -2495,18 +2527,12 @@ argument_list|(
 name|clnt
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Call failed: signal the error. */
 if|if
 condition|(
-operator|(
-operator|!
-name|suser_override
-operator|&&
 name|err
 operator|.
 name|re_status
-operator|)
 operator|!=
 name|RPC_SUCCESS
 operator|||
@@ -2522,25 +2548,12 @@ name|warnx
 argument_list|(
 literal|"NIS update failed: %s"
 argument_list|,
-operator|(
-name|err
-operator|.
-name|re_status
-operator|!=
-name|RPC_SUCCESS
-operator|&&
-operator|!
-name|suser_override
-operator|)
-condition|?
 name|clnt_sperrno
 argument_list|(
 name|err
 operator|.
 name|re_status
 argument_list|)
-else|:
-literal|"rpc.yppasswdd returned error status"
 argument_list|)
 expr_stmt|;
 name|pw_error
