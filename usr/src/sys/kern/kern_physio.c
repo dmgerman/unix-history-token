@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_physio.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
@@ -72,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|"vnode.h"
 end_include
 
 begin_include
@@ -142,7 +136,7 @@ argument|rdflg
 argument_list|,
 argument|flag
 argument_list|,
-argument|dev
+argument|vp
 argument_list|,
 argument|pfcent
 argument_list|)
@@ -179,8 +173,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|dev_t
-name|dev
+name|struct
+name|vnode
+modifier|*
+name|vp
 decl_stmt|;
 end_decl_stmt
 
@@ -457,6 +453,42 @@ condition|)
 block|{
 name|bp
 operator|->
+name|b_blkno
+operator|=
+name|dblkno
+expr_stmt|;
+name|bp
+operator|->
+name|b_dev
+operator|=
+name|vp
+operator|->
+name|v_rdev
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+condition|)
+name|brelvp
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_count
+operator|++
+expr_stmt|;
+name|bp
+operator|->
+name|b_vp
+operator|=
+name|vp
+expr_stmt|;
+name|bp
+operator|->
 name|b_bcount
 operator|=
 name|nbytes
@@ -472,18 +504,6 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
-name|bp
-operator|->
-name|b_blkno
-operator|=
-name|dblkno
-expr_stmt|;
-name|bp
-operator|->
-name|b_dev
-operator|=
-name|dev
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TRACE
@@ -491,7 +511,7 @@ name|trace
 argument_list|(
 name|TR_SWAPIO
 argument_list|,
-name|dev
+name|vp
 argument_list|,
 name|bp
 operator|->
@@ -500,21 +520,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-operator|*
-name|bdevsw
-index|[
-name|major
+name|VOP_STRATEGY
 argument_list|(
-name|dev
-argument_list|)
-index|]
-operator|.
-name|d_strategy
-operator|)
-operator|(
 name|bp
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/* pageout daemon doesn't wait for pushed pages */
 if|if

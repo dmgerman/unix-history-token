@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_syscalls.c	7.9 (Berkeley) %G%  */
+comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_syscalls.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
@@ -2441,6 +2435,12 @@ name|UIO_USERSPACE
 expr_stmt|;
 name|auio
 operator|.
+name|uio_rw
+operator|=
+name|UIO_WRITE
+expr_stmt|;
+name|auio
+operator|.
 name|uio_offset
 operator|=
 literal|0
@@ -3707,6 +3707,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* ARGSUSED */
 name|recvit
 argument_list|(
 argument|s
@@ -3811,6 +3812,12 @@ operator|.
 name|uio_segflg
 operator|=
 name|UIO_USERSPACE
+expr_stmt|;
+name|auio
+operator|.
+name|uio_rw
+operator|=
+name|UIO_READ
 expr_stmt|;
 name|auio
 operator|.
@@ -5114,7 +5121,11 @@ name|u
 operator|.
 name|u_ofile
 index|[
-name|r
+name|u
+operator|.
+name|u_r
+operator|.
+name|r_val1
 index|]
 operator|=
 literal|0
@@ -5975,24 +5986,41 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-name|fp
-operator|=
-name|getf
-argument_list|(
-name|fdes
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
+name|fdes
+operator|>=
+name|NOFILE
+operator|||
+operator|(
 name|fp
+operator|=
+name|u
+operator|.
+name|u_ofile
+index|[
+name|fdes
+index|]
+operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|EBADF
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|fp

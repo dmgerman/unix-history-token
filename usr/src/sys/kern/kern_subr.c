@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_subr.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_subr.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,19 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"uio.h"
 end_include
 
 begin_expr_stmt
@@ -39,8 +27,6 @@ argument_list|(
 name|cp
 argument_list|,
 name|n
-argument_list|,
-name|rw
 argument_list|,
 name|uio
 argument_list|)
@@ -54,13 +40,6 @@ begin_decl_stmt
 specifier|register
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|enum
-name|uio_rw
-name|rw
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +68,25 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_rw
+operator|!=
+name|UIO_READ
+operator|&&
+name|uio
+operator|->
+name|uio_rw
+operator|!=
+name|UIO_WRITE
+condition|)
+name|panic
+argument_list|(
+literal|"uiomove: mode"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|n
@@ -156,7 +154,9 @@ name|UIO_USERISPACE
 case|:
 if|if
 condition|(
-name|rw
+name|uio
+operator|->
+name|uio_rw
 operator|==
 name|UIO_READ
 condition|)
@@ -202,7 +202,9 @@ name|UIO_SYSSPACE
 case|:
 if|if
 condition|(
-name|rw
+name|uio
+operator|->
+name|uio_rw
 operator|==
 name|UIO_READ
 condition|)
@@ -453,6 +455,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_comment
 comment|/*  * Get next character written in by user from uio.  */
 end_comment
@@ -640,6 +648,15 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unused */
+end_comment
 
 end_unit
 

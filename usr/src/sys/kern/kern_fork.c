@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_fork.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_fork.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"user.h"
 end_include
 
@@ -48,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|"vnode.h"
 end_include
 
 begin_include
@@ -84,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"quota.h"
+file|"../ufs/quota.h"
 end_include
 
 begin_include
@@ -776,7 +770,7 @@ operator|->
 name|p_flag
 operator|&
 operator|(
-name|SPAGI
+name|SPAGV
 operator||
 name|SOUSIG
 operator|)
@@ -1244,7 +1238,7 @@ name|u
 operator|.
 name|u_cdir
 operator|->
-name|i_count
+name|v_count
 operator|++
 expr_stmt|;
 if|if
@@ -1257,8 +1251,15 @@ name|u
 operator|.
 name|u_rdir
 operator|->
-name|i_count
+name|v_count
 operator|++
+expr_stmt|;
+name|crhold
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|)
 expr_stmt|;
 comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
 name|rip

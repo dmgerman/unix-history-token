@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
@@ -121,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vnode.h"
 end_include
 
 begin_include
@@ -3227,12 +3227,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|proc
-modifier|*
-name|pp
-decl_stmt|;
 name|tp
 operator|->
 name|t_dev
@@ -5914,7 +5908,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 condition|)
 block|{
 name|splx
@@ -6093,7 +6087,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 condition|)
 block|{
 name|splx
@@ -6274,11 +6268,6 @@ literal|0
 expr_stmt|;
 block|}
 end_block
-
-begin_label
-name|checktandem
-label|:
-end_label
 
 begin_comment
 comment|/* 	 * Look to unblock output now that (presumably) 	 * the input queue has gone down. 	 */
@@ -6553,8 +6542,6 @@ name|int
 name|cc
 decl_stmt|,
 name|ce
-decl_stmt|,
-name|c
 decl_stmt|;
 name|int
 name|i
@@ -6642,7 +6629,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 condition|)
 block|{
 name|splx
@@ -6871,8 +6858,6 @@ argument_list|(
 name|cp
 argument_list|,
 name|cc
-argument_list|,
-name|UIO_WRITE
 argument_list|,
 name|uio
 argument_list|)
@@ -7295,7 +7280,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 condition|)
 block|{
 name|splx

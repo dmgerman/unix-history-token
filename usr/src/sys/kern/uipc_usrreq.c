@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_usrreq.c	7.10 (Berkeley) %G%  */
+comment|/*  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_usrreq.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,19 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mbuf.h"
 end_include
 
 begin_include
@@ -86,6 +74,16 @@ include|#
 directive|include
 file|"stat.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
+end_include
+
+begin_comment
+comment|/* XXX must appear after mount.h */
+end_comment
 
 begin_comment
 comment|/*  * Unix communications domain.  *  * TODO:  *	SEQPACKET, RDM  *	rethink name space problems  *	need a proper out-of-band  */
@@ -1663,7 +1661,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vop_abortop
+name|VOP_ABORTOP
 argument_list|(
 name|ndp
 argument_list|)
@@ -1696,7 +1694,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|vop_create
+name|VOP_CREATE
 argument_list|(
 name|ndp
 argument_list|,
@@ -1745,7 +1743,7 @@ operator|)
 name|M_COPYALL
 argument_list|)
 expr_stmt|;
-name|vop_unlock
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|)
@@ -1915,6 +1913,8 @@ operator|=
 name|LOOKUP
 operator||
 name|FOLLOW
+operator||
+name|LOCKLEAF
 expr_stmt|;
 name|ndp
 operator|->
@@ -1952,9 +1952,9 @@ name|vp
 argument_list|,
 name|VWRITE
 argument_list|,
-name|u
-operator|.
-name|u_cred
+name|ndp
+operator|->
+name|ni_cred
 argument_list|)
 condition|)
 goto|goto
@@ -2114,7 +2114,7 @@ argument_list|)
 expr_stmt|;
 name|bad
 label|:
-name|vrele
+name|vput
 argument_list|(
 name|vp
 argument_list|)
@@ -2805,6 +2805,8 @@ decl_stmt|;
 specifier|register
 name|int
 name|i
+decl_stmt|,
+name|fd
 decl_stmt|;
 specifier|register
 name|struct
@@ -2837,10 +2839,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-name|getf
-argument_list|(
+block|{
+name|fd
+operator|=
 operator|*
 operator|(
 name|int
@@ -2848,15 +2849,31 @@ operator|*
 operator|)
 name|rp
 operator|++
-argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|fd
+operator|>=
+name|NOFILE
+operator|||
+name|u
+operator|.
+name|u_ofile
+index|[
+name|fd
+index|]
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
 name|EBADF
 operator|)
 return|;
+block|}
 name|rp
 operator|=
 name|mtod
@@ -2885,15 +2902,17 @@ control|)
 block|{
 name|fp
 operator|=
-name|getf
-argument_list|(
+name|u
+operator|.
+name|u_ofile
+index|[
 operator|*
 operator|(
 name|int
 operator|*
 operator|)
 name|rp
-argument_list|)
+index|]
 expr_stmt|;
 operator|*
 name|rp

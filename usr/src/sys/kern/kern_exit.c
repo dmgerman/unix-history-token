@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_exit.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_exit.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
 end_include
 
 begin_include
@@ -72,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|"vnode.h"
 end_include
 
 begin_include
@@ -490,14 +484,14 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|ilock
+name|VOP_LOCK
 argument_list|(
 name|u
 operator|.
 name|u_cdir
 argument_list|)
 expr_stmt|;
-name|iput
+name|vput
 argument_list|(
 name|u
 operator|.
@@ -511,14 +505,14 @@ operator|.
 name|u_rdir
 condition|)
 block|{
-name|ilock
+name|VOP_LOCK
 argument_list|(
 name|u
 operator|.
 name|u_rdir
 argument_list|)
 expr_stmt|;
-name|iput
+name|vput
 argument_list|(
 name|u
 operator|.
@@ -548,6 +542,13 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+name|crfree
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -558,7 +559,7 @@ name|p
 operator|->
 name|p_tracep
 condition|)
-name|irele
+name|vrele
 argument_list|(
 name|p
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_pty.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_pty.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"user.h"
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vnode.h"
 end_include
 
 begin_include
@@ -814,7 +814,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 condition|)
 return|return
 operator|(
@@ -1869,7 +1869,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 condition|)
 return|return
 operator|(
@@ -1978,8 +1978,6 @@ argument_list|(
 name|buf
 argument_list|,
 name|cc
-argument_list|,
-name|UIO_READ
 argument_list|,
 name|uio
 argument_list|)
@@ -2786,8 +2784,6 @@ name|cp
 argument_list|,
 name|cc
 argument_list|,
-name|UIO_WRITE
-argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
@@ -2943,8 +2939,6 @@ argument_list|(
 name|cp
 argument_list|,
 name|cc
-argument_list|,
-name|UIO_WRITE
 argument_list|,
 name|uio
 argument_list|)
@@ -3110,7 +3104,7 @@ operator|||
 operator|(
 name|flag
 operator|&
-name|FNDELAY
+name|IO_NDELAY
 operator|)
 condition|)
 block|{

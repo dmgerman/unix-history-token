@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -18,18 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"user.h"
 end_include
 
@@ -42,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"inode.h"
+file|"vnode.h"
 end_include
 
 begin_include
@@ -60,19 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acct.h"
 end_include
 
 begin_include
@@ -422,6 +398,15 @@ name|text
 modifier|*
 name|xp
 decl_stmt|;
+name|struct
+name|vattr
+name|vattr
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 if|if
 condition|(
 name|ipc
@@ -605,6 +590,24 @@ operator|->
 name|p_textp
 condition|)
 block|{
+name|vp
+operator|=
+name|xp
+operator|->
+name|x_vptr
+expr_stmt|;
+name|VOP_GETATTR
+argument_list|(
+name|vp
+argument_list|,
+operator|&
+name|vattr
+argument_list|,
+name|u
+operator|.
+name|u_cred
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xp
@@ -613,13 +616,13 @@ name|x_count
 operator|!=
 literal|1
 operator|||
-name|xp
-operator|->
-name|x_iptr
-operator|->
-name|i_mode
+operator|(
+name|vattr
+operator|.
+name|va_mode
 operator|&
-name|ISVTX
+name|VSVTX
+operator|)
 condition|)
 goto|goto
 name|error
