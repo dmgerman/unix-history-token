@@ -2200,9 +2200,10 @@ argument_list|(
 name|SMP
 argument_list|)
 operator|&&
+operator|!
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|NO_ADAPTIVE_MUTEXES
 argument_list|)
 name|struct
 name|thread
@@ -2534,9 +2535,10 @@ argument_list|(
 name|SMP
 argument_list|)
 operator|&&
+operator|!
 name|defined
 argument_list|(
-name|ADAPTIVE_MUTEXES
+name|NO_ADAPTIVE_MUTEXES
 argument_list|)
 comment|/* 		 * If the current owner of the lock is executing on another 		 * CPU, spin instead of blocking. 		 */
 name|owner
@@ -2601,7 +2603,7 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-comment|/* SMP&& ADAPTIVE_MUTEXES */
+comment|/* SMP&& !NO_ADAPTIVE_MUTEXES */
 comment|/* 		 * We definitely must sleep for this lock. 		 */
 name|mtx_assert
 argument_list|(
