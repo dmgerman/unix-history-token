@@ -237,8 +237,10 @@ block|{
 comment|/* 	 * Make sure that the userland devstat version matches the kernel 	 * devstat version.  If not, exit and print a message informing  	 * the user of his mistake. 	 */
 if|if
 condition|(
-name|checkversion
-argument_list|()
+name|devstat_checkversion
+argument_list|(
+name|NULL
+argument_list|)
 operator|<
 literal|0
 condition|)
@@ -277,8 +279,10 @@ name|DS_MATCHTYPE_NONE
 expr_stmt|;
 if|if
 condition|(
-name|getdevs
+name|devstat_getdevs
 argument_list|(
+name|NULL
+argument_list|,
 name|s1
 argument_list|)
 operator|==
@@ -317,7 +321,7 @@ expr_stmt|;
 comment|/* 	 * At this point, selectdevs will almost surely indicate that the 	 * device list has changed, so we don't look for return values of 0 	 * or 1.  If we get back -1, though, there is an error. 	 */
 if|if
 condition|(
-name|selectdevs
+name|devstat_selectdevs
 argument_list|(
 operator|&
 name|dev_select
@@ -532,7 +536,7 @@ condition|)
 block|{
 name|retval
 operator|=
-name|selectdevs
+name|devstat_selectdevs
 argument_list|(
 operator|&
 name|dev_select
@@ -883,7 +887,7 @@ control|)
 block|{
 if|if
 condition|(
-name|buildmatch
+name|devstat_buildmatch
 argument_list|(
 name|tstr
 index|[
@@ -927,7 +931,7 @@ name|DS_MATCHTYPE_PATTERN
 expr_stmt|;
 name|retval
 operator|=
-name|selectdevs
+name|devstat_selectdevs
 argument_list|(
 operator|&
 name|dev_select
@@ -1307,7 +1311,7 @@ name|DS_MATCHTYPE_SPEC
 expr_stmt|;
 name|retval
 operator|=
-name|selectdevs
+name|devstat_selectdevs
 argument_list|(
 operator|&
 name|dev_select
