@@ -1522,6 +1522,18 @@ name|ea
 argument_list|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"no interface found for %s\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
