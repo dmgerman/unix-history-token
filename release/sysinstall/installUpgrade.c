@@ -964,17 +964,15 @@ expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|systemDisplayHelp
-argument_list|(
-literal|"UPGRADE"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Given all that scary stuff you just read, are you sure you want to\n"
-literal|"risk it all and proceed with this upgrade?"
+literal|"Before beginning a binary upgrade, please review the upgrade instructions,\n"
+literal|"which are located in the \"Install\" document under the main documentation\n"
+literal|"menu.  Given that you have read these instructions and understand the risks\n"
+literal|"and precautions involved, are you sure that you want to proceed with\n"
+literal|"this upgrade?"
 argument_list|)
 operator|!=
 literal|0
