@@ -2917,6 +2917,7 @@ operator|,
 expr|struct
 name|thread
 operator|*
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3894,7 +3895,7 @@ operator|,
 expr|struct
 name|thread
 operator|*
-name|p
+name|td
 operator|)
 argument_list|)
 decl_stmt|;
