@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: cd.c,v 1.6 93/08/26 21:09:07 julian Exp Locker: julian $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: cd.c,v 1.6 1993/08/28 03:08:49 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -419,6 +419,7 @@ name|openparts
 decl_stmt|;
 comment|/* one bit for each open partition */
 block|}
+modifier|*
 name|cd_data
 index|[
 name|NCD
@@ -498,11 +499,9 @@ name|cd_parms
 modifier|*
 name|dp
 decl_stmt|;
-name|unit
-operator|=
-name|next_cd_unit
-operator|++
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -514,7 +513,15 @@ argument_list|(
 literal|"cdattach: "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* Check we have the resources for another drive		* 	\*******************************************************/
+name|unit
+operator|=
+name|next_cd_unit
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -544,9 +551,70 @@ block|}
 name|cd
 operator|=
 name|cd_data
-operator|+
+index|[
 name|unit
+index|]
 expr_stmt|;
+if|if
+condition|(
+name|cd_data
+index|[
+name|unit
+index|]
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cd%d: Already has storage!\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|cd
+operator|=
+name|cd_data
+index|[
+name|unit
+index|]
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cd_data
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cd
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cd%d: malloc failed in cd.c\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|dp
 operator|=
 operator|&
@@ -721,12 +789,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|cd
-operator|=
-name|cd_data
-operator|+
-name|unit
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -750,6 +815,9 @@ argument_list|,
 name|part
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* Check the unit is legal				* 	\*******************************************************/
 if|if
 condition|(
@@ -764,9 +832,23 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*******************************************************\ 	* Make sure the disk has been initialised		* 	* At some point in the future, get the scsi driver	* 	* to look for a new device if we are not initted	* 	\*******************************************************/
+name|cd
+operator|=
+name|cd_data
+index|[
+name|unit
+index|]
+expr_stmt|;
+comment|/*******************************************************\ 	* Make sure the device has been initialised		* 	\*******************************************************/
 if|if
 condition|(
+operator|(
+name|cd
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 operator|!
 operator|(
 name|cd
@@ -774,6 +856,7 @@ operator|->
 name|flags
 operator|&
 name|CDINIT
+operator|)
 operator|)
 condition|)
 return|return
@@ -819,6 +902,9 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -830,12 +916,18 @@ argument_list|(
 literal|"not reponding\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -847,6 +939,9 @@ argument_list|(
 literal|"Device present\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* In case it is a funny one, tell it to start		* 	* not needed for hard drives				* 	\*******************************************************/
 name|cd_start_unit
 argument_list|(
@@ -866,6 +961,9 @@ argument_list|,
 name|SCSI_SILENT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -877,6 +975,9 @@ argument_list|(
 literal|"started "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* Load the physical device parameters 			* 	\*******************************************************/
 name|cd_get_parms
 argument_list|(
@@ -885,6 +986,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -896,12 +1000,18 @@ argument_list|(
 literal|"Params loaded "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* Load the partition info if not already loaded		* 	\*******************************************************/
 name|cdgetdisklabel
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -913,6 +1023,9 @@ argument_list|(
 literal|"Disklabel fabricated "
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* Check the partition is legal				* 	\*******************************************************/
 if|if
 condition|(
@@ -933,6 +1046,9 @@ name|RAW_PART
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -952,6 +1068,9 @@ operator|.
 name|d_npartitions
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 name|cd_prevent_unit
 argument_list|(
 name|unit
@@ -1011,6 +1130,9 @@ operator|<<
 name|part
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1022,6 +1144,9 @@ argument_list|(
 literal|"open complete\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 name|cd
 operator|->
 name|flags
@@ -1031,6 +1156,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1044,6 +1172,9 @@ argument_list|,
 name|part
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 name|cd_prevent_unit
 argument_list|(
 name|unit
@@ -1388,7 +1519,7 @@ operator|->
 name|b_dev
 argument_list|)
 index|]
-operator|.
+operator|->
 name|sc_sw
 operator|->
 name|scsi_minphys
@@ -1451,9 +1582,13 @@ expr_stmt|;
 name|cd
 operator|=
 name|cd_data
-operator|+
+index|[
 name|unit
+index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1486,6 +1621,9 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 name|cdminphys
 argument_list|(
 name|bp
@@ -1727,14 +1865,18 @@ modifier|*
 name|cd
 init|=
 name|cd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
 name|struct
 name|partition
 modifier|*
 name|p
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -1748,6 +1890,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* See if there is a buf to do and we are not already	* 	* doing one						* 	\*******************************************************/
 if|if
 condition|(
@@ -2204,6 +2349,9 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -2217,6 +2365,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 if|if
 condition|(
 operator|!
@@ -2343,7 +2494,7 @@ name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|sc_sw
 operator|->
 name|scsi_cmd
@@ -2478,12 +2629,14 @@ argument_list|)
 expr_stmt|;
 name|cd
 operator|=
-operator|&
 name|cd_data
 index|[
 name|unit
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -2497,6 +2650,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 comment|/*******************************************************\ 	* If the device is not valid.. abandon ship		* 	\*******************************************************/
 if|if
 condition|(
@@ -2506,7 +2662,7 @@ name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|flags
 operator|&
 name|CDVALID
@@ -4393,10 +4549,11 @@ modifier|*
 name|cd
 init|=
 name|cd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
-comment|/*******************************************************\ 	* If the inflo is already loaded, use it		* 	\*******************************************************/
+comment|/*******************************************************\ 	* If the info is already loaded, use it			* 	\*******************************************************/
 if|if
 condition|(
 name|cd
@@ -4792,6 +4949,9 @@ operator|<<
 literal|24
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|cd_debug
@@ -4807,11 +4967,14 @@ argument_list|,
 name|blksize
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|params
 operator|.
 name|disksize
@@ -4822,7 +4985,7 @@ name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|params
 operator|.
 name|blksize
@@ -5919,7 +6082,7 @@ name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|openparts
 operator|&
 operator|~
@@ -6074,7 +6237,7 @@ name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|openparts
 operator|==
 literal|0
@@ -6490,8 +6653,9 @@ modifier|*
 name|cd
 init|=
 name|cd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
 comment|/*******************************************************\ 	* First check if we have it all loaded			* 	\*******************************************************/
 if|if
@@ -6584,6 +6748,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -6592,18 +6759,20 @@ name|TRACEOPENS
 condition|)
 name|printf
 argument_list|(
-literal|"closing cd%d part %d\n"
+literal|"cd%d: closing part %d\n"
 argument_list|,
 name|unit
 argument_list|,
 name|part
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|partflags
 index|[
 name|part
@@ -6616,7 +6785,7 @@ name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|openparts
 operator|&=
 operator|~
@@ -6706,9 +6875,13 @@ modifier|*
 name|cd
 init|=
 name|cd_data
-operator|+
+index|[
 name|unit
+index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CDDEBUG
 if|if
 condition|(
 name|scsi_debug
@@ -6722,6 +6895,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/*CDDEBUG*/
 if|if
 condition|(
 name|cd
@@ -7512,14 +7688,14 @@ name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|openparts
 condition|)
 name|cd_data
 index|[
 name|unit
 index|]
-operator|.
+operator|->
 name|flags
 operator|&=
 operator|~
