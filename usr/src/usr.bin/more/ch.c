@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ch.c	5.1 (Berkeley) %G%"
+literal|"@(#)ch.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,11 +1163,11 @@ argument_list|(
 name|file
 argument_list|,
 operator|(
-name|offset_t
+name|off_t
 operator|)
 literal|0
 argument_list|,
-literal|2
+name|L_XTND
 argument_list|)
 argument_list|)
 operator|)

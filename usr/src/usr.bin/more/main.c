@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1000,11 +1000,11 @@ argument_list|(
 name|logfile
 argument_list|,
 operator|(
-name|offset_t
+name|off_t
 operator|)
 literal|0
 argument_list|,
-literal|2
+name|L_XTND
 argument_list|)
 operator|<
 literal|0
