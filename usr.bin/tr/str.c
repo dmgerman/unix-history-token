@@ -1383,6 +1383,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|u_char
+operator|)
 operator|*
 name|s
 operator|->
@@ -1485,6 +1488,9 @@ control|)
 block|{
 name|ch
 operator|=
+operator|(
+name|u_char
+operator|)
 operator|*
 operator|++
 name|s
