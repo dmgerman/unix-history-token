@@ -117,6 +117,14 @@ end_expr_stmt
 begin_expr_stmt
 name|DECL
 argument_list|(
+name|power_main
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DECL
+argument_list|(
 name|rdattr_main
 argument_list|)
 expr_stmt|;
@@ -211,6 +219,14 @@ block|,
 name|pccardmem_main
 block|,
 literal|"Allocate memory for pccard driver"
+block|}
+block|,
+block|{
+literal|"power"
+block|,
+name|power_main
+block|,
+literal|"Power on/off slots"
 block|}
 block|,
 block|{
