@@ -136,6 +136,8 @@ parameter_list|,
 name|type
 parameter_list|,
 name|proto
+parameter_list|,
+name|p
 parameter_list|)
 name|int
 name|dom
@@ -153,15 +155,12 @@ decl_stmt|;
 name|int
 name|proto
 decl_stmt|;
-block|{
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+block|{
 specifier|register
 name|struct
 name|protosw
