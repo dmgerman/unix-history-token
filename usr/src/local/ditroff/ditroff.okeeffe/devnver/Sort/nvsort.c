@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nvsort.c	1.3 (CWI) 86/11/26"
+literal|"@(#)nvsort.c	1.4 (CWI) 87/03/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -3747,10 +3747,18 @@ name|vp
 operator|->
 name|x
 condition|)
-comment|/* doesn't need position, etc.		*/
+comment|/* doesn't need font or size  */
 name|printf
 argument_list|(
-literal|"%s"
+literal|"H%dV%d\n%s"
+argument_list|,
+name|vp
+operator|->
+name|h
+argument_list|,
+name|vp
+operator|->
+name|v
 argument_list|,
 name|vp
 operator|->
