@@ -4402,9 +4402,14 @@ condition|)
 continue|continue;
 name|j
 operator|=
-name|sprintf
+name|snprintf
 argument_list|(
 name|tmpbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmpbuf
+argument_list|)
 argument_list|,
 literal|" %ld%s"
 argument_list|,
