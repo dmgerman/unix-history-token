@@ -3126,8 +3126,6 @@ name|vp
 argument_list|,
 name|LK_EXCLUSIVE
 operator||
-name|LK_NOOBJ
-operator||
 name|LK_TIMELOCK
 argument_list|,
 name|curthread

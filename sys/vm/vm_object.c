@@ -1294,8 +1294,6 @@ operator|->
 name|handle
 argument_list|,
 name|LK_RETRY
-operator||
-name|LK_NOOBJ
 argument_list|,
 name|curthread
 argument_list|)
