@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpr.c	4.28 (Berkeley) %G%"
+literal|"@(#)lpr.c	4.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,7 +1121,7 @@ if|if
 condition|(
 name|RG
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -1142,6 +1142,16 @@ argument_list|(
 literal|"Restricted group specified incorrectly"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gptr
+operator|->
+name|gr_gid
+operator|!=
+name|getgid
+argument_list|()
+condition|)
+block|{
 while|while
 condition|(
 operator|*
@@ -1189,6 +1199,7 @@ argument_list|(
 literal|"Not a member of the restricted group"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Check to make sure queuing is enabled if userid is not root. 	 */
 operator|(
