@@ -239,8 +239,6 @@ name|Hflag
 decl_stmt|,
 name|Lflag
 decl_stmt|,
-name|Pflag
-decl_stmt|,
 name|ch
 decl_stmt|;
 operator|(
@@ -272,8 +270,6 @@ expr_stmt|;
 name|Hflag
 operator|=
 name|Lflag
-operator|=
-name|Pflag
 operator|=
 literal|0
 expr_stmt|;
@@ -315,8 +311,6 @@ literal|1
 expr_stmt|;
 name|Lflag
 operator|=
-name|Pflag
-operator|=
 literal|0
 expr_stmt|;
 break|break;
@@ -329,18 +323,12 @@ literal|1
 expr_stmt|;
 name|Hflag
 operator|=
-name|Pflag
-operator|=
 literal|0
 expr_stmt|;
 break|break;
 case|case
 literal|'P'
 case|:
-name|Pflag
-operator|=
-literal|1
-expr_stmt|;
 name|Hflag
 operator|=
 name|Lflag
