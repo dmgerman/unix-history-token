@@ -19,6 +19,16 @@ directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_comment
+comment|/* XXX: Revert to old (broken for over 1.5Tb filesystems) version of cgbase    (see sys/ufs/ffs/fs.h rev 1.39) so that i386 boot loader (boot2) can    support both UFS1 and UFS2 again. */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -36,6 +46,11 @@ name|c
 parameter_list|)
 value|((ufs2_daddr_t)((fs)->fs_fpg * (c)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * We use 4k `virtual' blocks for filesystem data, whatever the actual  * filesystem block size. FFS blocks are always a multiple of 4k.  */
