@@ -6748,7 +6748,11 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 condition|)
 continue|continue;
