@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * dumptab.c - handles dumping the database  */
+comment|/*  * dumptab.c - handles dumping the database  *  *	$Id$  */
 end_comment
 
 begin_include

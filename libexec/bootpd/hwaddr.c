@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hwaddr.c - routines that deal with hardware addresses.  * (i.e. Ethernet)  */
+comment|/*  * hwaddr.c - routines that deal with hardware addresses.  * (i.e. Ethernet)  *  *	$Id$  */
 end_comment
 
 begin_include
