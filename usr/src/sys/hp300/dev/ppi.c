@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ppi.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ppi.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -70,11 +70,15 @@ argument_list|()
 decl_stmt|,
 name|ppistart
 argument_list|()
-decl_stmt|,
-name|ppitimo
-argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|ppitimo
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -617,23 +621,23 @@ name|unit
 index|]
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|ppitimo
-argument_list|(
-argument|unit
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|unit
+parameter_list|)
 name|int
 name|unit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -677,7 +681,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|ppiread
@@ -982,6 +986,10 @@ name|timeout
 argument_list|(
 name|ppitimo
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|,
 name|sc
@@ -1129,6 +1137,10 @@ name|untimeout
 argument_list|(
 name|ppitimo
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -1380,8 +1392,25 @@ name|PPIF_DELAY
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|void
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+operator|)
 name|ppistart
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|,
 name|sc
@@ -1473,6 +1502,10 @@ name|untimeout
 argument_list|(
 name|ppitimo
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
@@ -1495,8 +1528,25 @@ condition|)
 block|{
 name|untimeout
 argument_list|(
+operator|(
+name|void
+argument_list|(
+argument|*
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+operator|)
 name|ppistart
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|)
 expr_stmt|;
