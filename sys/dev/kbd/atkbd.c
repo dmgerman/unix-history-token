@@ -434,9 +434,8 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* The following comments are extracted from syscons.c (1.287) */
-comment|/*  	 * With release 2.1 of the Xaccel server, the keyboard is left 	 * hanging pretty often. Apparently an interrupt from the 	 * keyboard is lost, and I don't know why (yet). 	 * This ugly hack calls scintr if input is ready for the keyboard 	 * and conveniently hides the problem.			XXX 	 */
-comment|/* 	 * Try removing anything stuck in the keyboard controller; whether 	 * it's a keyboard scan code or mouse data. `scintr()' doesn't 	 * read the mouse data directly, but `kbdio' routines will, as a 	 * side effect. 	 */
+comment|/* 	 * The original text of the following comments are extracted  	 * from syscons.c (1.287) 	 *  	 * With release 2.1 of the Xaccel server, the keyboard is left 	 * hanging pretty often. Apparently an interrupt from the 	 * keyboard is lost, and I don't know why (yet). 	 * This ugly hack calls the low-level interrupt routine if input 	 * is ready for the keyboard and conveniently hides the problem. XXX 	 * 	 * Try removing anything stuck in the keyboard controller; whether 	 * it's a keyboard scan code or mouse data. The low-level 	 * interrupt routine doesn't read the mouse data directly,  	 * but the keyboard controller driver will, as a side effect. 	 */
+comment|/* 	 * And here is bde's original comment about this: 	 * 	 * This is necessary to handle edge triggered interrupts - if we 	 * returned when our IRQ is high due to unserviced input, then there 	 * would be no more keyboard IRQs until the keyboard is reset by 	 * external powers. 	 * 	 * The keyboard apparently unwedges the irq in most cases. 	 */
 name|s
 operator|=
 name|spltty
@@ -541,10 +540,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* cdev driver functions */
-end_comment
 
 begin_comment
 comment|/* LOW-LEVEL */
