@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.15 (Berkeley) %G%"
+literal|"@(#)dir.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2783,6 +2783,21 @@ operator|>=
 name|NDADDR
 operator|-
 literal|1
+operator|||
+name|dp
+operator|->
+name|di_db
+index|[
+name|lastbn
+index|]
+operator|==
+literal|0
+operator|||
+name|dp
+operator|->
+name|di_size
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
