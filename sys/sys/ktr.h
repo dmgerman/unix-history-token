@@ -640,7 +640,7 @@ parameter_list|,
 name|_desc
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			memcpy (_ktrptr->ktr_desc, _desc, KTRDESCSIZE);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			memcpy (_ktrptr->ktr_desc, _desc, KTRDESCSIZE);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -655,7 +655,7 @@ parameter_list|,
 name|_p1
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -672,7 +672,7 @@ parameter_list|,
 name|_p2
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -691,7 +691,7 @@ parameter_list|,
 name|_p3
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -712,7 +712,7 @@ parameter_list|,
 name|_p4
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3, _p4);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3, _p4);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -735,7 +735,7 @@ parameter_list|,
 name|_p5
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3, _p4, _p5);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {					\ 		if ((ktr_mask& (m))&& ((1<< _TR_CPU)& ktr_cpumask)) { \ 			_TR()					\ 			snprintf (_ktrptr->ktr_desc, KTRDESCSIZE, _desc, _p1, _p2, _p3, _p4, _p5);	\ 		}						\ 	}
 end_define
 
 begin_else
@@ -779,7 +779,7 @@ parameter_list|,
 name|_desc
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 		}						\ 	}
 end_define
 
 begin_define
@@ -794,7 +794,7 @@ parameter_list|,
 name|_p1
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -811,7 +811,7 @@ parameter_list|,
 name|_p2
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -830,7 +830,7 @@ parameter_list|,
 name|_p3
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -851,7 +851,7 @@ parameter_list|,
 name|_p4
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 			_ktrptr->ktr_parm4 = (u_long)(_p4);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 			_ktrptr->ktr_parm4 = (u_long)(_p4);	\ 		}						\ 	}
 end_define
 
 begin_define
@@ -874,7 +874,7 @@ parameter_list|,
 name|_p5
 parameter_list|)
 define|\
-value|if (KTR_COMPILE& m) {					\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 			_ktrptr->ktr_parm4 = (u_long)(_p4);	\ 			_ktrptr->ktr_parm5 = (u_long)(_p5);	\ 		}						\ 	}
+value|if (KTR_COMPILE& (m)) {				\ 		if (ktr_mask& (m)) {				\ 			_TR(_desc)				\ 			_ktrptr->ktr_parm1 = (u_long)(_p1);	\ 			_ktrptr->ktr_parm2 = (u_long)(_p2);	\ 			_ktrptr->ktr_parm3 = (u_long)(_p3);	\ 			_ktrptr->ktr_parm4 = (u_long)(_p4);	\ 			_ktrptr->ktr_parm5 = (u_long)(_p5);	\ 		}						\ 	}
 end_define
 
 begin_endif
