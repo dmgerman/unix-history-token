@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1997 KATO Takenori.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Id: machdep.c,v 1.193 1996/06/18 01:22:04 bde Exp  *	$Id: identcpu.c,v 1.20 1997/05/19 12:41:35 kato Exp $  */
+comment|/*  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1997 KATO Takenori.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Id: machdep.c,v 1.193 1996/06/18 01:22:04 bde Exp  *	$Id: identcpu.c,v 1.21 1997/05/23 06:22:47 charnier Exp $  */
 end_comment
 
 begin_include
@@ -331,7 +331,7 @@ block|}
 block|,
 comment|/* CPU_BLUE */
 block|{
-literal|"Cyrix M2"
+literal|"Cyrix 6x86MX"
 block|,
 name|CPUCLASS_586
 block|}
@@ -788,6 +788,37 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
+name|cpu_id
+operator|&
+literal|0xf00
+condition|)
+block|{
+case|case
+literal|0x500
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"6x86"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x600
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"6x86MX"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* cpuid instruction is not supported */
+switch|switch
+condition|(
 name|cyrix_did
 operator|&
 literal|0xf0
@@ -1104,7 +1135,7 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"M2"
+literal|"6x86MX"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1169,6 +1200,8 @@ argument_list|,
 literal|"Unknown"
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 break|break;
 block|}
 block|}
@@ -1417,6 +1450,27 @@ literal|"AuthenticAMD"
 argument_list|)
 operator|==
 literal|0
+operator|||
+operator|(
+operator|(
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"CyrixInstead"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|cpu_id
+operator|&
+literal|0xf00
+operator|>
+literal|5
+operator|)
+operator|)
 condition|)
 block|{
 name|printf
@@ -1702,7 +1756,7 @@ name|trap_by_wrmsr
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * Cyrix 486-class CPU does not support wrmsr instruction. 	 * The wrmsr instruction causes invalid opcode fault, and exception 	 * will be trapped by bluetrap() on Cyrix 486-class CPU.  The bluetrap() 	 * set the magic number to tra_by_wrmsr. 	 */
+comment|/*  	 * Cyrix 486-class CPU does not support wrmsr instruction. 	 * The wrmsr instruction causes invalid opcode fault, and exception 	 * will be trapped by bluetrap() on Cyrix 486-class CPU.  The bluetrap() 	 * set the magic number to trap_by_wrmsr. 	 */
 name|setidt
 argument_list|(
 literal|6
@@ -1964,10 +2018,26 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+switch|switch
+condition|(
+name|cpu_id
+operator|&
+literal|0xf00
+condition|)
+block|{
+case|case
+literal|0x600
+case|:
+name|cpu
+operator|=
+name|CPU_M2
+expr_stmt|;
+break|break;
+default|default:
 name|identifycyrix
 argument_list|()
 expr_stmt|;
-comment|/* 		 * This routine contains a trick. 		 * Don't check (cpu_id& 0x00f0) == 0x50 to detect M2, now. 		 */
+comment|/* 			 * This routine contains a trick. 			 * Don't check (cpu_id& 0x00f0) == 0x50 to detect M2, now. 			 */
 switch|switch
 condition|(
 name|cyrix_did
@@ -2040,6 +2110,7 @@ operator|=
 name|CPU_M2
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 block|}
