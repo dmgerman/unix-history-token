@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6642,6 +6642,10 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+name|cc
+operator|=
+literal|0
+expr_stmt|;
 name|loop
 label|:
 name|s
@@ -6866,12 +6870,8 @@ name|loop
 goto|;
 block|}
 comment|/* 	 * Process the user's data in at most OBUFSIZ chunks.  Perform any 	 * output translation.  Keep track of high water mark, sleep on 	 * overflow awaiting device aid in acquiring new space. 	 */
-for|for
-control|(
-name|cc
-operator|=
-literal|0
-init|;
+while|while
+condition|(
 name|uio
 operator|->
 name|uio_resid
@@ -6881,8 +6881,7 @@ operator|||
 name|cc
 operator|>
 literal|0
-condition|;
-control|)
+condition|)
 block|{
 if|if
 condition|(
