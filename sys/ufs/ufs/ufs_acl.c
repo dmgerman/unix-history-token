@@ -927,7 +927,6 @@ name|a_aclp
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
 block|}
 break|break;
 case|case
@@ -1050,7 +1049,6 @@ operator|)
 return|;
 block|}
 break|break;
-default|default:
 block|}
 break|break;
 default|default:
