@@ -57,143 +57,24 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|TIOCMODG
-value|_IOR('t', 3, int)
-end_define
-
 begin_comment
-comment|/* get modem control state */
+comment|/* 0-2 compat */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCMODS
-value|_IOW('t', 4, int)
-end_define
-
 begin_comment
-comment|/* set modem control state */
+comment|/* 3-4 obsolete */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCM_LE
-value|0001
-end_define
-
 begin_comment
-comment|/* line enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_DTR
-value|0002
-end_define
-
-begin_comment
-comment|/* data terminal ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_RTS
-value|0004
-end_define
-
-begin_comment
-comment|/* request to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_ST
-value|0010
-end_define
-
-begin_comment
-comment|/* secondary transmit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_SR
-value|0020
-end_define
-
-begin_comment
-comment|/* secondary receive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_CTS
-value|0040
-end_define
-
-begin_comment
-comment|/* clear to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_CAR
-value|0100
-end_define
-
-begin_comment
-comment|/* carrier detect */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_CD
-value|TIOCM_CAR
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCM_RNG
-value|0200
-end_define
-
-begin_comment
-comment|/* ring */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_RI
-value|TIOCM_RNG
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCM_DSR
-value|0400
-end_define
-
-begin_comment
-comment|/* data set ready */
+comment|/* 5-7 obsolete or unused */
 end_comment
 
 begin_comment
 comment|/* 8-10 compat */
+end_comment
+
+begin_comment
+comment|/* 11-12 obsolete or unusedor unused  */
 end_comment
 
 begin_define
@@ -281,6 +162,10 @@ begin_comment
 comment|/* drn out, fls in, set */
 end_comment
 
+begin_comment
+comment|/* 23-25 obsolete or unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -301,6 +186,10 @@ end_define
 
 begin_comment
 comment|/* set line discipline */
+end_comment
+
+begin_comment
+comment|/* 28-69 free */
 end_comment
 
 begin_comment
@@ -578,6 +467,119 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCM_LE
+value|0001
+end_define
+
+begin_comment
+comment|/* line enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_DTR
+value|0002
+end_define
+
+begin_comment
+comment|/* data terminal ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_RTS
+value|0004
+end_define
+
+begin_comment
+comment|/* request to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_ST
+value|0010
+end_define
+
+begin_comment
+comment|/* secondary transmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_SR
+value|0020
+end_define
+
+begin_comment
+comment|/* secondary receive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CTS
+value|0040
+end_define
+
+begin_comment
+comment|/* clear to send */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CAR
+value|0100
+end_define
+
+begin_comment
+comment|/* carrier detect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CD
+value|TIOCM_CAR
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCM_RNG
+value|0200
+end_define
+
+begin_comment
+comment|/* ring */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_RI
+value|TIOCM_RNG
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCM_DSR
+value|0400
+end_define
+
+begin_comment
+comment|/* data set ready */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TIOCREMOTE
 value|_IOW('t', 105, int)
 end_define
@@ -644,6 +646,14 @@ begin_comment
 comment|/* usr cntl op "n" */
 end_comment
 
+begin_comment
+comment|/* 100 see consio.h */
+end_comment
+
+begin_comment
+comment|/* 99 obsolete or unused */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -664,6 +674,10 @@ end_define
 
 begin_comment
 comment|/* become controlling tty */
+end_comment
+
+begin_comment
+comment|/* 97-90 tun; some conflicts */
 end_comment
 
 begin_define
@@ -699,6 +713,10 @@ begin_comment
 comment|/* wait till output drained */
 end_comment
 
+begin_comment
+comment|/* 92-90 tap; some conflicts */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -719,6 +737,10 @@ end_define
 
 begin_comment
 comment|/* modem: get wait on close */
+end_comment
+
+begin_comment
+comment|/* 90-70 ppp; many conflicts */
 end_comment
 
 begin_define
@@ -743,6 +765,10 @@ begin_comment
 comment|/* enable/get timestamp 						 * of last DCd rise */
 end_comment
 
+begin_comment
+comment|/* 88 slip; conflicts */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -763,6 +789,10 @@ end_define
 
 begin_comment
 comment|/* get ttywait timeout */
+end_comment
+
+begin_comment
+comment|/* 84-80 slip */
 end_comment
 
 begin_define
