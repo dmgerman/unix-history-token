@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c 1.3 %G%"
+literal|"@(#)utilities.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,7 +476,7 @@ if|if
 condition|(
 name|_nodump
 operator|==
-literal|0
+name|FALSE
 condition|)
 name|fprintf
 argument_list|(
