@@ -670,10 +670,14 @@ case|:
 comment|/* Zero means do not send any signal */
 if|if
 condition|(
+name|uap
+operator|->
 name|data
 operator|<
 literal|0
 operator|||
+name|uap
+operator|->
 name|data
 operator|>
 name|_SIG_MAXSIG
