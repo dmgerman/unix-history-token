@@ -203,6 +203,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|opt_no_switch
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|dev_name
 index|[
@@ -654,7 +662,7 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"watch -[ciotW] [tty name]\n"
+literal|"watch -[ciotnW] [tty name]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1155,18 +1163,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getuid
-argument_list|()
-operator|!=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|isatty
 argument_list|(
 name|std_out
@@ -1192,7 +1188,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"Wciot"
+literal|"Wciotn"
 argument_list|)
 operator|)
 operator|!=
@@ -1244,6 +1240,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+name|opt_no_switch
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -1286,6 +1290,9 @@ block|{
 if|if
 condition|(
 name|opt_interactive
+operator|&&
+operator|!
+name|opt_no_switch
 condition|)
 name|ask_dev
 argument_list|(
@@ -1469,6 +1476,11 @@ break|break;
 case|case
 name|CHR_SWITCH
 case|:
+if|if
+condition|(
+name|opt_no_switch
+condition|)
+break|break;
 name|detach_snp
 argument_list|()
 expr_stmt|;
@@ -1507,6 +1519,15 @@ condition|)
 block|{
 name|detach_snp
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|opt_no_switch
+condition|)
+name|fatal
+argument_list|(
+literal|"Write failed."
+argument_list|)
 expr_stmt|;
 name|ask_dev
 argument_list|(
@@ -1578,6 +1599,9 @@ elseif|else
 if|if
 condition|(
 name|opt_interactive
+operator|&&
+operator|!
+name|opt_no_switch
 condition|)
 block|{
 name|ask_dev
@@ -1614,6 +1638,9 @@ elseif|else
 if|if
 condition|(
 name|opt_interactive
+operator|&&
+operator|!
+name|opt_no_switch
 condition|)
 block|{
 name|ask_dev
