@@ -317,10 +317,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|HEADER_DES_H
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HEADER_NEW_DES_H
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
