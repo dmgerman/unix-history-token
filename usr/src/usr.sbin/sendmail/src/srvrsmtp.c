@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.46 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.47 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.46 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.47 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3077,8 +3077,6 @@ block|}
 comment|/* open alias database */
 name|initaliases
 argument_list|(
-name|AliasFile
-argument_list|,
 name|FALSE
 argument_list|,
 name|e

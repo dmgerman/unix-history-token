@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.31 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3520,6 +3520,8 @@ expr_stmt|;
 comment|/* 	**  See if this option is preset for us. 	*/
 if|if
 condition|(
+name|safe
+operator|&&
 name|bitnset
 argument_list|(
 name|opt
@@ -3588,14 +3590,13 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|AliasFile
-operator|=
+name|setalias
+argument_list|(
 literal|"aliases"
+argument_list|)
 expr_stmt|;
 else|else
-name|AliasFile
-operator|=
-name|newstr
+name|setalias
 argument_list|(
 name|val
 argument_list|)

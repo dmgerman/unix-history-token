@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.50 (Berkeley) %G%"
+literal|"@(#)conf.c	6.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -508,6 +508,9 @@ literal|0
 expr_stmt|;
 comment|/* option p */
 name|setdefuser
+argument_list|()
+expr_stmt|;
+name|setupaliases
 argument_list|()
 expr_stmt|;
 name|setupmaps

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.60 (Berkeley) %G%"
+literal|"@(#)main.c	6.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3150,8 +3150,6 @@ case|:
 comment|/* initialize alias database */
 name|initaliases
 argument_list|(
-name|AliasFile
-argument_list|,
 name|TRUE
 argument_list|,
 name|CurEnv
@@ -3171,8 +3169,6 @@ default|default:
 comment|/* open the alias database */
 name|initaliases
 argument_list|(
-name|AliasFile
-argument_list|,
 name|FALSE
 argument_list|,
 name|CurEnv
