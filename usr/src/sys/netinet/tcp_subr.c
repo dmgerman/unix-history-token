@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1192,25 +1192,6 @@ argument_list|(
 name|tp
 operator|->
 name|t_template
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_tcpopt
-condition|)
-operator|(
-name|void
-operator|)
-name|m_free
-argument_list|(
-name|dtom
-argument_list|(
-name|tp
-operator|->
-name|t_tcpopt
 argument_list|)
 argument_list|)
 expr_stmt|;
