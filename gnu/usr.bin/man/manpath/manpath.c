@@ -446,7 +446,9 @@ name|get_dirlist
 argument_list|()
 condition|)
 name|gripe_reading_mp_config
-argument_list|()
+argument_list|(
+name|config_file
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1046,7 +1048,9 @@ block|}
 else|else
 block|{
 name|gripe_reading_mp_config
-argument_list|()
+argument_list|(
+name|config_file
+argument_list|)
 expr_stmt|;
 block|}
 name|dlp
