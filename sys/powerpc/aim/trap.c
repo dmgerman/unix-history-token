@@ -861,17 +861,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-name|fputhread
-operator|!=
-name|td
-argument_list|,
-operator|(
-literal|"floating-point already enabled"
-operator|)
-argument_list|)
-expr_stmt|;
 name|save_fpu
 argument_list|(
 name|fputhread
