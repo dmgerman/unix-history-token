@@ -13178,7 +13178,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"mask: must be 16 bit"
+literal|"port mask must be 16 bit"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -13202,7 +13202,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"mask: must be 8 bit"
+literal|"proto mask must be 8 bit"
 argument_list|)
 expr_stmt|;
 name|p
