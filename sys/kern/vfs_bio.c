@@ -3205,13 +3205,15 @@ operator|(
 name|B_READ
 operator||
 name|B_ERROR
+operator||
+name|B_INVAL
 operator|)
 operator|)
 operator|==
 name|B_ERROR
 condition|)
 block|{
-comment|/* 		 * Failed write, redirty.  Must clear B_ERROR to prevent 		 * pages from being scrapped.  Note: B_INVAL is ignored 		 * here but will presumably be dealt with later. 		 */
+comment|/* 		 * Failed write, redirty.  Must clear B_ERROR to prevent 		 * pages from being scrapped.  If B_INVAL is set then 		 * this case is not run and the next case is run to  		 * destroy the buffer.  B_INVAL can occur if the buffer 		 * is outside the range supported by the underlying device. 		 */
 name|bp
 operator|->
 name|b_flags
