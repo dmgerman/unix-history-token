@@ -1948,6 +1948,16 @@ name|hostf
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 name|p
 operator|=
 name|buf
