@@ -95,6 +95,11 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* block read/write data */
+name|struct
+name|mtx
+name|mutex
+decl_stmt|;
+comment|/* device mutex */
 block|}
 struct|;
 end_struct
