@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.39	82/09/08	*/
+comment|/*	kern_clock.c	4.40	82/09/08	*/
 end_comment
 
 begin_include
@@ -92,64 +92,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"dh.h"
-end_include
+begin_comment
+comment|/*  * Clock handling routines.  *  * This code is written for a machine with only one interval timer,  * and does timing and resource utilization estimation statistically  * based on the state of the machine hz times a second.  A machine  * with proper clocks (running separately in user state, system state,  * interrupt state and idle state) as well as a time-of-day clock  * would allow a non-approximate implementation.  */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"dz.h"
-end_include
+begin_comment
+comment|/*  * TODO:  *	* Keep more accurate statistics by simulating good interval timers.  *	* Use the time-of-day clock on the VAX to keep more accurate time  *	  than is possible by repeated use of the interval timer.  *	* Allocate more timeout table slots when table overflows.  */
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"ps.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPROF
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|profiling
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|s_lowpc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|s_textsize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_short
-modifier|*
-name|kcount
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* bump a timeval by a small number of usec's */
+end_comment
 
 begin_define
 define|#
@@ -157,10 +110,16 @@ directive|define
 name|bumptime
 parameter_list|(
 name|tp
+parameter_list|,
+name|usec
 parameter_list|)
 define|\
-value|(tp)->tv_usec += tick; \ 	if ((tp)->tv_usec>= 1000000) { \ 		(tp)->tv_usec -= 1000000; \ 		(tp)->tv_sec++; \ 	}
+value|(tp)->tv_usec += usec; \ 	if ((tp)->tv_usec>= 1000000) { \ 		(tp)->tv_usec -= 1000000; \ 		(tp)->tv_sec++; \ 	}
 end_define
+
+begin_comment
+comment|/*  * The (single) hardware interval timer.  * We update the events relating to real time, and then  * make a gross assumption: that the system has been in the  * state it is in (user state, kernel state, interrupt state,  * or idle state) for the entire last time interval, and  * update statistics accordingly.  */
+end_comment
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -206,21 +165,7 @@ name|double
 name|avenrun
 index|[]
 decl_stmt|;
-if|#
-directive|if
-name|NPS
-operator|>
-literal|0
-name|psextsync
-argument_list|(
-name|pc
-argument_list|,
-name|ps
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* update callout times */
+comment|/* 	 * Update real-time timeout queue. 	 * At front of queue are some number of events which are ``due''. 	 * The time to these is<= 0 and if negative represents the 	 * number of ticks which have passed since it was supposed to happen. 	 * The rest of the q elements (times> 0) are events yet to happen, 	 * where the time for each is given as a delta from the previous. 	 * Decrementing just the first of these serves to decrement the time 	 * to all events. 	 */
 for|for
 control|(
 name|p1
@@ -257,7 +202,7 @@ name|p1
 operator|->
 name|c_time
 expr_stmt|;
-comment|/* charge process for resource usage... statistically! */
+comment|/* 	 * If the cpu is currently scheduled to a process, then 	 * charge it with resource utilization for a tick, updating 	 * statistics which run in (user+system) virtual time, 	 * such as the cpu time limit and profiling timers. 	 * This assumes that the current process has been running 	 * the entire last tick. 	 */
 if|if
 condition|(
 operator|!
@@ -454,7 +399,7 @@ name|SIGPROF
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* charge for cpu */
+comment|/* 	 * Charge the time out based on the mode the cpu is in. 	 * Here again we fudge for the lack of proper interval timers 	 * assuming that the current state has been around at least 	 * one tick. 	 */
 if|if
 condition|(
 name|USERMODE
@@ -463,6 +408,7 @@ name|ps
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * CPU was in user state.  Increment 		 * user time counter, and process process-virtual time 		 * interval timer. 		 */
 name|bumptime
 argument_list|(
 operator|&
@@ -471,6 +417,8 @@ operator|.
 name|u_ru
 operator|.
 name|ru_utime
+argument_list|,
+name|tick
 argument_list|)
 expr_stmt|;
 if|if
@@ -534,6 +482,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * CPU was in system state.  If profiling kernel 		 * increment a counter.  If no process is running 		 * then this is a system tick if we were running 		 * at a non-zero IPL (in a driver).  If a process is running, 		 * then we charge it with system time even if we were 		 * at a non-zero IPL, since the system often runs 		 * this way during processing of system calls. 		 * This is approximate, but the lack of true interval 		 * timers makes doing anything else difficult. 		 */
 ifdef|#
 directive|ifdef
 name|GPROF
@@ -602,11 +551,13 @@ operator|.
 name|u_ru
 operator|.
 name|ru_stime
+argument_list|,
+name|tick
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* iostat statistics */
+comment|/* 	 * We maintain statistics shown by user-level statistics 	 * programs:  the amount of time in each cpu state, and 	 * the amount of time each of DK_NDRIVE ``drives'' is busy. 	 */
 name|cp_time
 index|[
 name|cpstate
@@ -642,7 +593,7 @@ name|s
 index|]
 operator|++
 expr_stmt|;
-comment|/* adjust priority of current process */
+comment|/* 	 * We adjust the priority of the current process. 	 * The priority of a process gets worse as it accumulates 	 * CPU time.  The cpu usage estimator (p_cpu) is increased here 	 * and the formula for computing priorities (in kern_synch.c) 	 * will compute a different value each time the p_cpu increases 	 * by 4.  The cpu usage estimator ramps up quite quickly when 	 * the process is running (linearly), and decays away exponentially, 	 * at a rate which is proportionally slower when the system is 	 * busy.  The basic principal is that the system will 90% forget 	 * that a process used a lot of CPU time in 5*loadav seconds. 	 * This causes the system to favor processes which haven't run 	 * much recently, and to round-robin among other processes. 	 */
 if|if
 condition|(
 operator|!
@@ -735,11 +686,13 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|p
 operator|->
 name|p_cpu
-operator|%
-literal|4
+operator|&
+literal|3
+operator|)
 operator|==
 literal|0
 condition|)
@@ -770,10 +723,13 @@ name|p_usrpri
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Increment the time-of-day, and schedule 	 * processing of the callouts at a very low cpu priority, 	 * so we don't keep the relatively high clock interrupt 	 * priority any longer than necessary. 	 */
 name|bumptime
 argument_list|(
 operator|&
 name|time
+argument_list|,
+name|tick
 argument_list|)
 expr_stmt|;
 name|setsoftclock
@@ -781,6 +737,10 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Software priority level clock interrupt.  * Run periodic events from timeout queue.  */
+end_comment
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -803,6 +763,12 @@ end_decl_stmt
 
 begin_block
 block|{
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 specifier|register
 name|struct
 name|callout
@@ -810,14 +776,10 @@ modifier|*
 name|p1
 decl_stmt|;
 specifier|register
-name|int
-name|a
-decl_stmt|,
-name|s
-decl_stmt|;
 name|caddr_t
 name|arg
 decl_stmt|;
+specifier|register
 name|int
 function_decl|(
 modifier|*
@@ -825,19 +787,12 @@ name|func
 function_decl|)
 parameter_list|()
 function_decl|;
-if|if
-condition|(
-name|panicstr
-condition|)
-goto|goto
-name|nocallout
-goto|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
+specifier|register
+name|int
+name|a
+decl_stmt|,
+name|s
+decl_stmt|;
 name|s
 operator|=
 name|spl7
@@ -869,14 +824,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|calltodo
-operator|.
-name|c_next
-operator|=
-name|p1
-operator|->
-name|c_next
-expr_stmt|;
 name|arg
 operator|=
 name|p1
@@ -894,6 +841,14 @@ operator|=
 name|p1
 operator|->
 name|c_time
+expr_stmt|;
+name|calltodo
+operator|.
+name|c_next
+operator|=
+name|p1
+operator|->
+name|c_next
 expr_stmt|;
 name|p1
 operator|->
@@ -921,70 +876,6 @@ argument_list|(
 name|arg
 argument_list|,
 name|a
-argument_list|)
-expr_stmt|;
-block|}
-name|nocallout
-label|:
-if|#
-directive|if
-name|NDH
-operator|>
-literal|0
-name|s
-operator|=
-name|spl5
-argument_list|()
-expr_stmt|;
-name|dhtimer
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|NDZ
-operator|>
-literal|0
-name|s
-operator|=
-name|spl5
-argument_list|()
-expr_stmt|;
-name|dztimer
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* if nothing to do, try swapin */
-if|if
-condition|(
-name|noproc
-operator|&&
-name|runin
-condition|)
-block|{
-name|runin
-operator|=
-literal|0
-expr_stmt|;
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|runin
 argument_list|)
 expr_stmt|;
 block|}
@@ -1295,6 +1186,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Compute number of hz until specified time.  * Used to compute third argument to timeout() from an  * absolute time.  */
+end_comment
+
 begin_macro
 name|hzto
 argument_list|(
@@ -1313,8 +1208,12 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
+name|long
 name|ticks
+decl_stmt|;
+specifier|register
+name|long
+name|sec
 decl_stmt|;
 name|int
 name|s
@@ -1322,6 +1221,27 @@ init|=
 name|spl7
 argument_list|()
 decl_stmt|;
+comment|/* 	 * If number of milliseconds will fit in 32 bit arithmetic, 	 * then compute number of milliseconds to time and scale to 	 * ticks.  Otherwise just compute number of hz in time, rounding 	 * times greater than representible to maximum value. 	 * 	 * Delta times less than 25 days can be computed ``exactly''. 	 * Maximum value for any timeout in 10ms ticks is 250 days. 	 */
+name|sec
+operator|=
+name|tv
+operator|->
+name|tv_sec
+operator|-
+name|time
+operator|.
+name|tv_sec
+expr_stmt|;
+if|if
+condition|(
+name|sec
+operator|<=
+literal|0x7fffffff
+operator|/
+literal|1000
+operator|-
+literal|1000
+condition|)
 name|ticks
 operator|=
 operator|(
@@ -1355,6 +1275,26 @@ name|tick
 operator|/
 literal|1000
 operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sec
+operator|<=
+literal|0x7fffffff
+operator|/
+name|hz
+condition|)
+name|ticks
+operator|=
+name|sec
+operator|*
+name|hz
+expr_stmt|;
+else|else
+name|ticks
+operator|=
+literal|0x7fffffff
 expr_stmt|;
 name|splx
 argument_list|(
