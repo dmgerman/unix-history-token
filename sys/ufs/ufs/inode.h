@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)inode.h	8.4 (Berkeley) 1/21/94  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)inode.h	8.9 (Berkeley) 5/14/95  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dir.h>
+end_include
 
 begin_include
 include|#
@@ -10,37 +16,20 @@ file|<ufs/ufs/dinode.h>
 end_include
 
 begin_comment
-comment|/*  * Theoretically, directories can be more than 2Gb in length, however, in  * practice this seems unlikely. So, we define the type doff_t as a long  * to keep down the cost of doing lookup on a 32-bit machine. If you are  * porting to a 64-bit architecture, you should make doff_t the same as off_t.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|doff_t
-value|long
-end_define
-
-begin_comment
-comment|/*  * The inode is used to describe each active (or recently active)  * file in the UFS filesystem. It is composed of two types of  * information. The first part is the information that is needed  * only while the file is active (such as the identity of the file  * and linkage to speed its lookup). The second part is the   * permannent meta-data associated with the file which is read  * in from the permanent dinode from long term storage when the  * file becomes active, and is put back when the file is no longer  * being used.  */
+comment|/*  * The inode is used to describe each active (or recently active) file in the  * UFS filesystem. It is composed of two types of information. The first part  * is the information that is needed only while the file is active (such as  * the identity of the file and linkage to speed its lookup). The second part  * is * the permanent meta-data associated with the file which is read in  * from the permanent dinode from long term storage when the file becomes  * active, and is put back when the file is no longer being used.  */
 end_comment
 
 begin_struct
 struct|struct
 name|inode
 block|{
-name|struct
-name|inode
-modifier|*
-name|i_next
-decl_stmt|;
-comment|/* Hash chain forward. */
-name|struct
-name|inode
-modifier|*
-modifier|*
-name|i_prev
-decl_stmt|;
-comment|/* Hash chain back. */
+name|LIST_ENTRY
+argument_list|(
+argument|inode
+argument_list|)
+name|i_hash
+expr_stmt|;
+comment|/* Hash chain. */
 name|struct
 name|vnode
 modifier|*
@@ -53,10 +42,10 @@ modifier|*
 name|i_devvp
 decl_stmt|;
 comment|/* Vnode for block I/O. */
-name|u_long
+name|u_int32_t
 name|i_flag
 decl_stmt|;
-comment|/* I* flags. */
+comment|/* flags, see below */
 name|dev_t
 name|i_dev
 decl_stmt|;
@@ -103,23 +92,20 @@ comment|/* Dquot structures. */
 name|u_quad_t
 name|i_modrev
 decl_stmt|;
-comment|/* Revision level for lease. */
+comment|/* Revision level for NFS lease. */
 name|struct
 name|lockf
 modifier|*
 name|i_lockf
 decl_stmt|;
 comment|/* Head of byte-level lock list. */
-name|pid_t
-name|i_lockholder
+name|struct
+name|lock
+name|i_lock
 decl_stmt|;
-comment|/* DEBUG: holder of inode lock. */
-name|pid_t
-name|i_lockwaiter
-decl_stmt|;
-comment|/* DEBUG: latest blocked for inode lock. */
+comment|/* Inode lock. */
 comment|/* 	 * Side effects; used during directory lookup. 	 */
-name|long
+name|int32_t
 name|i_count
 decl_stmt|;
 comment|/* Size of free slot in directory. */
@@ -139,17 +125,10 @@ name|ino_t
 name|i_ino
 decl_stmt|;
 comment|/* Inode number of found directory. */
-name|u_long
+name|u_int32_t
 name|i_reclen
 decl_stmt|;
 comment|/* Size of found directory entry. */
-name|long
-name|i_spare
-index|[
-literal|11
-index|]
-decl_stmt|;
-comment|/* Spares to round up to 128 bytes. */
 comment|/* 	 * The on-disk dinode itself. 	 */
 name|struct
 name|dinode
@@ -170,6 +149,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|i_atimensec
+value|i_din.di_atimensec
+end_define
+
+begin_define
+define|#
+directive|define
 name|i_blocks
 value|i_din.di_blocks
 end_define
@@ -179,6 +165,13 @@ define|#
 directive|define
 name|i_ctime
 value|i_din.di_ctime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_ctimensec
+value|i_din.di_ctimensec
 end_define
 
 begin_define
@@ -228,6 +221,13 @@ define|#
 directive|define
 name|i_mtime
 value|i_din.di_mtime
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_mtimensec
+value|i_din.di_mtimensec
 end_define
 
 begin_define
@@ -294,41 +294,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_EXLOCK
+name|IN_UPDATE
 value|0x0004
 end_define
 
 begin_comment
-comment|/* File has exclusive lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LOCKED
-value|0x0008
-end_define
-
-begin_comment
-comment|/* Inode lock. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_LWAIT
-value|0x0010
-end_define
-
-begin_comment
-comment|/* Process waiting on file lock. */
+comment|/* Modification time update request. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IN_MODIFIED
-value|0x0020
+value|0x0008
 end_define
 
 begin_comment
@@ -339,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|IN_RENAME
-value|0x0040
+value|0x0010
 end_define
 
 begin_comment
@@ -350,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|IN_SHLOCK
-value|0x0080
+value|0x0020
 end_define
 
 begin_comment
@@ -360,23 +338,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN_UPDATE
-value|0x0100
+name|IN_EXLOCK
+value|0x0040
 end_define
 
 begin_comment
-comment|/* Modification time update request. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IN_WANTED
-value|0x0200
-end_define
-
-begin_comment
-comment|/* Inode is wanted by a process. */
+comment|/* File has exclusive lock. */
 end_comment
 
 begin_ifdef
@@ -393,7 +360,7 @@ begin_struct
 struct|struct
 name|indir
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|in_lbn
 decl_stmt|;
 comment|/* Logical block number. */
@@ -444,7 +411,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{						\ 	if ((ip)->i_flag& (IN_ACCESS | IN_CHANGE | IN_UPDATE)) {	\ 		(ip)->i_flag |= IN_MODIFIED;				\ 		if ((ip)->i_flag& IN_ACCESS)				\ 			(ip)->i_atime.ts_sec = (t1)->tv_sec;		\ 		if ((ip)->i_flag& IN_UPDATE) {				\ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec;		\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& IN_CHANGE)				\ 			(ip)->i_ctime.ts_sec = time.tv_sec;		\ 		(ip)->i_flag&= ~(IN_ACCESS | IN_CHANGE | IN_UPDATE);	\ 	}								\ }
+value|{						\ 	if ((ip)->i_flag& (IN_ACCESS | IN_CHANGE | IN_UPDATE)) {	\ 		(ip)->i_flag |= IN_MODIFIED;				\ 		if ((ip)->i_flag& IN_ACCESS)				\ 			(ip)->i_atime = (t1)->tv_sec;			\ 		if ((ip)->i_flag& IN_UPDATE) {				\ 			(ip)->i_mtime = (t2)->tv_sec;			\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& IN_CHANGE)				\ 			(ip)->i_ctime = time.tv_sec;			\ 		(ip)->i_flag&= ~(IN_ACCESS | IN_CHANGE | IN_UPDATE);	\ 	}								\ }
 end_define
 
 begin_comment
@@ -455,19 +422,19 @@ begin_struct
 struct|struct
 name|ufid
 block|{
-name|u_short
+name|u_int16_t
 name|ufid_len
 decl_stmt|;
 comment|/* Length of structure. */
-name|u_short
+name|u_int16_t
 name|ufid_pad
 decl_stmt|;
-comment|/* Force long alignment. */
+comment|/* Force 32-bit alignment. */
 name|ino_t
 name|ufid_ino
 decl_stmt|;
 comment|/* File number (ino). */
-name|long
+name|int32_t
 name|ufid_gen
 decl_stmt|;
 comment|/* Generation number. */

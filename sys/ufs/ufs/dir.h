@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dir.h	8.2 (Berkeley) 1/21/94  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)dir.h	8.5 (Berkeley) 4/27/95  */
 end_comment
 
 begin_ifndef
@@ -13,6 +13,24 @@ begin_define
 define|#
 directive|define
 name|_DIR_H_
+end_define
+
+begin_comment
+comment|/*  * Theoretically, directories can be more than 2Gb in length, however, in  * practice this seems unlikely. So, we define the type doff_t as a 32-bit  * quantity to keep down the cost of doing lookup on a 32-bit machine.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|doff_t
+value|int32_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXDIRSIZE
+value|(0x7fffffff)
 end_define
 
 begin_comment
@@ -37,19 +55,19 @@ begin_struct
 struct|struct
 name|direct
 block|{
-name|u_long
+name|u_int32_t
 name|d_ino
 decl_stmt|;
 comment|/* inode number of entry */
-name|u_short
+name|u_int16_t
 name|d_reclen
 decl_stmt|;
 comment|/* length of this record */
-name|u_char
+name|u_int8_t
 name|d_type
 decl_stmt|;
 comment|/* file type, see below */
-name|u_char
+name|u_int8_t
 name|d_namlen
 decl_stmt|;
 comment|/* length of string in d_name */
@@ -126,6 +144,13 @@ name|DT_SOCK
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|DT_WHT
+value|14
+end_define
+
 begin_comment
 comment|/*  * Convert between stat structure types and directory types.  */
 end_comment
@@ -174,7 +199,7 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|((oldfmt) ? \     ((sizeof (struct direct) - (MAXNAMLEN+1)) + (((dp)->d_type+1 + 3)&~ 3)) : \     ((sizeof (struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3)))
+value|((oldfmt) ? \     ((sizeof(struct direct) - (MAXNAMLEN+1)) + (((dp)->d_type+1 + 3)&~ 3)) : \     ((sizeof(struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3)))
 end_define
 
 begin_else
@@ -192,7 +217,7 @@ parameter_list|,
 name|dp
 parameter_list|)
 define|\
-value|((sizeof (struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
+value|((sizeof(struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
 end_define
 
 begin_endif
@@ -215,23 +240,23 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * Template for manipulating directories.  * Should use struct direct's, but the name field  * is MAXNAMLEN - 1, and this just won't do.  */
+comment|/*  * Template for manipulating directories.  Should use struct direct's,  * but the name field is MAXNAMLEN - 1, and this just won't do.  */
 end_comment
 
 begin_struct
 struct|struct
 name|dirtemplate
 block|{
-name|u_long
+name|u_int32_t
 name|dot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dot_reclen
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dot_type
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dot_namlen
 decl_stmt|;
 name|char
@@ -241,16 +266,16 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* must be multiple of 4 */
-name|u_long
+name|u_int32_t
 name|dotdot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dotdot_reclen
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dotdot_type
 decl_stmt|;
-name|u_char
+name|u_int8_t
 name|dotdot_namlen
 decl_stmt|;
 name|char
@@ -272,13 +297,13 @@ begin_struct
 struct|struct
 name|odirtemplate
 block|{
-name|u_long
+name|u_int32_t
 name|dot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dot_reclen
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|dot_namlen
 decl_stmt|;
 name|char
@@ -288,13 +313,13 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* must be multiple of 4 */
-name|u_long
+name|u_int32_t
 name|dotdot_ino
 decl_stmt|;
-name|short
+name|int16_t
 name|dotdot_reclen
 decl_stmt|;
-name|u_short
+name|u_int16_t
 name|dotdot_namlen
 decl_stmt|;
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_inode.c	8.5 (Berkeley) 12/30/93  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_inode.c	8.9 (Berkeley) 5/8/95  */
 end_comment
 
 begin_include
@@ -98,20 +98,6 @@ include|#
 directive|include
 file|<ufs/lfs/lfs_extern.h>
 end_include
-
-begin_function
-name|int
-name|lfs_init
-parameter_list|()
-block|{
-return|return
-operator|(
-name|ufs_init
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/* Search a block for a specific dinode. */
@@ -288,8 +274,6 @@ condition|)
 name|ip
 operator|->
 name|i_atime
-operator|.
-name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -309,8 +293,6 @@ block|{
 name|ip
 operator|->
 name|i_mtime
-operator|.
-name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -337,8 +319,6 @@ condition|)
 name|ip
 operator|->
 name|i_ctime
-operator|.
-name|ts_sec
 operator|=
 name|time
 operator|.
@@ -417,14 +397,17 @@ define|#
 directive|define
 name|UPDATE_SEGUSE
 define|\
-value|if (lastseg != -1) { \ 		LFS_SEGENTRY(sup, fs, lastseg, sup_bp); \ 		if ((num<< fs->lfs_bshift)> sup->su_nbytes) \ 			panic("lfs_truncate: negative bytes in segment %d\n", \ 			    lastseg); \ 		sup->su_nbytes -= num<< fs->lfs_bshift; \ 		e1 = VOP_BWRITE(sup_bp); \ 		blocksreleased += num; \ 	}
+value|if (lastseg != -1) { \ 		LFS_SEGENTRY(sup, fs, lastseg, sup_bp); \ 		if (num> sup->su_nbytes) \ 			panic("lfs_truncate: negative bytes in segment %d\n", \ 			    lastseg); \ 		sup->su_nbytes -= num; \ 		e1 = VOP_BWRITE(sup_bp); \ 		fragsreleased += numfrags(fs, num); \ 	}
 end_define
 
 begin_define
 define|#
 directive|define
 name|SEGDEC
-value|{ \ 	if (daddr != 0) { \ 		if (lastseg != (seg = datosn(fs, daddr))) { \ 			UPDATE_SEGUSE; \ 			num = 1; \ 			lastseg = seg; \ 		} else \ 			++num; \ 	} \ }
+parameter_list|(
+name|S
+parameter_list|)
+value|{ \ 	if (daddr != 0) { \ 		if (lastseg != (seg = datosn(fs, daddr))) { \ 			UPDATE_SEGUSE; \ 			num = (S); \ 			lastseg = seg; \ 		} else \ 			num += (S); \ 	} \ }
 end_define
 
 begin_comment
@@ -459,7 +442,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|daddrp
 decl_stmt|;
@@ -527,7 +510,7 @@ name|SEGUSE
 modifier|*
 name|sup
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|daddr
 decl_stmt|,
 name|lastblock
@@ -536,12 +519,19 @@ name|lbn
 decl_stmt|,
 name|olastblock
 decl_stmt|;
+name|ufs_daddr_t
+name|oldsize_lastblock
+decl_stmt|,
+name|oldsize_newlast
+decl_stmt|,
+name|newsize
+decl_stmt|;
 name|long
 name|off
 decl_stmt|,
 name|a_released
 decl_stmt|,
-name|blocksreleased
+name|fragsreleased
 decl_stmt|,
 name|i_released
 decl_stmt|;
@@ -560,7 +550,7 @@ name|offset
 decl_stmt|,
 name|seg
 decl_stmt|,
-name|size
+name|freesize
 decl_stmt|;
 name|ip
 operator|=
@@ -742,7 +732,7 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Update the size of the file. If the file is not being truncated to 	 * a block boundry, the contents of the partial block following the end 	 * of the file must be zero'ed in case it ever become accessable again 	 * because of subsequent file growth. 	 */
+comment|/* 	 * Update the size of the file. If the file is not being truncated to 	 * a block boundry, the contents of the partial block following the end 	 * of the file must be zero'ed in case it ever become accessable again 	 * because of subsequent file growth.  For this part of the code, 	 * oldsize_newlast refers to the old size of the new last block in the file. 	 */
 name|offset
 operator|=
 name|blkoff
@@ -750,6 +740,38 @@ argument_list|(
 name|fs
 argument_list|,
 name|length
+argument_list|)
+expr_stmt|;
+name|lbn
+operator|=
+name|lblkno
+argument_list|(
+name|fs
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+name|oldsize_newlast
+operator|=
+name|blksize
+argument_list|(
+name|fs
+argument_list|,
+name|ip
+argument_list|,
+name|lbn
+argument_list|)
+expr_stmt|;
+comment|/* Now set oldsize to the current size of the current last block */
+name|oldsize_lastblock
+operator|=
+name|blksize
+argument_list|(
+name|fs
+argument_list|,
+name|ip
+argument_list|,
+name|olastblock
 argument_list|)
 expr_stmt|;
 if|if
@@ -766,15 +788,6 @@ name|length
 expr_stmt|;
 else|else
 block|{
-name|lbn
-operator|=
-name|lblkno
-argument_list|(
-name|fs
-argument_list|,
-name|length
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -804,9 +817,7 @@ name|vp
 argument_list|,
 name|lbn
 argument_list|,
-name|fs
-operator|->
-name|lfs_bsize
+name|oldsize_newlast
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -825,19 +836,23 @@ name|i_size
 operator|=
 name|length
 expr_stmt|;
-name|size
-operator|=
-name|blksize
-argument_list|(
-name|fs
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
 name|vnode_pager_uncache
 argument_list|(
 name|vp
+argument_list|)
+expr_stmt|;
+name|newsize
+operator|=
+name|blksize
+argument_list|(
+name|fs
+argument_list|,
+name|ip
+argument_list|,
+name|lbn
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -856,7 +871,7 @@ call|(
 name|u_int
 call|)
 argument_list|(
-name|size
+name|newsize
 operator|-
 name|offset
 argument_list|)
@@ -866,7 +881,7 @@ name|allocbuf
 argument_list|(
 name|bp
 argument_list|,
-name|size
+name|newsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -885,7 +900,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Modify sup->su_nbyte counters for each deleted block; keep track 	 * of number of blocks removed for ip->i_blocks. 	 */
-name|blocksreleased
+name|fragsreleased
 operator|=
 literal|0
 expr_stmt|;
@@ -934,6 +949,7 @@ name|lbn
 operator|==
 name|olastblock
 condition|)
+block|{
 for|for
 control|(
 name|i
@@ -956,6 +972,18 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|freesize
+operator|=
+name|oldsize_lastblock
+expr_stmt|;
+block|}
+else|else
+name|freesize
+operator|=
+name|fs
+operator|->
+name|lfs_bsize
+expr_stmt|;
 switch|switch
 condition|(
 name|depth
@@ -975,6 +1003,9 @@ name|lbn
 index|]
 expr_stmt|;
 name|SEGDEC
+argument_list|(
+name|freesize
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -1102,7 +1133,7 @@ expr_stmt|;
 name|daddrp
 operator|=
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1140,6 +1171,9 @@ name|daddrp
 operator|++
 expr_stmt|;
 name|SEGDEC
+argument_list|(
+name|freesize
+argument_list|)
 expr_stmt|;
 block|}
 name|a_end
@@ -1174,7 +1208,7 @@ block|{
 name|bzero
 argument_list|(
 operator|(
-name|daddr_t
+name|ufs_daddr_t
 operator|*
 operator|)
 name|bp
@@ -1195,7 +1229,7 @@ name|in_off
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1250,6 +1284,9 @@ name|off
 index|]
 expr_stmt|;
 name|SEGDEC
+argument_list|(
+name|freesize
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -1342,24 +1379,34 @@ name|ip
 operator|->
 name|i_blocks
 operator|<
-name|fsbtodb
+name|fragstodb
 argument_list|(
 name|fs
 argument_list|,
-name|blocksreleased
+name|fragsreleased
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"lfs_truncate: block count< 0\n"
+literal|"lfs_truncate: frag count< 0\n"
 argument_list|)
 expr_stmt|;
-name|blocksreleased
+name|fragsreleased
 operator|=
+name|dbtofrags
+argument_list|(
+name|fs
+argument_list|,
 name|ip
 operator|->
 name|i_blocks
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"lfs_truncate: frag count< 0\n"
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -1368,22 +1415,22 @@ name|ip
 operator|->
 name|i_blocks
 operator|-=
-name|fsbtodb
+name|fragstodb
 argument_list|(
 name|fs
 argument_list|,
-name|blocksreleased
+name|fragsreleased
 argument_list|)
 expr_stmt|;
 name|fs
 operator|->
 name|lfs_bfree
 operator|+=
-name|fsbtodb
+name|fragstodb
 argument_list|(
 name|fs
 argument_list|,
-name|blocksreleased
+name|fragsreleased
 argument_list|)
 expr_stmt|;
 name|ip
@@ -1432,8 +1479,16 @@ operator|&
 name|B_LOCKED
 condition|)
 block|{
-operator|++
 name|a_released
+operator|+=
+name|numfrags
+argument_list|(
+name|fs
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
 expr_stmt|;
 comment|/* 			 * XXX 			 * When buffers are created in the cache, their block 			 * number is set equal to their logical block number. 			 * If that is still true, we are assuming that the 			 * blocks are new (not yet on disk) and weren't 			 * counted above.  However, there is a slight chance 			 * that a block's disk address is equal to its logical 			 * block number in which case, we'll get an overcounting 			 * here. 			 */
 if|if
@@ -1446,43 +1501,61 @@ name|bp
 operator|->
 name|b_lblkno
 condition|)
-operator|++
 name|i_released
-expr_stmt|;
-block|}
-name|blocksreleased
-operator|=
-name|fsbtodb
+operator|+=
+name|numfrags
 argument_list|(
 name|fs
 argument_list|,
-name|i_released
+name|bp
+operator|->
+name|b_bcount
 argument_list|)
+expr_stmt|;
+block|}
+name|fragsreleased
+operator|=
+name|i_released
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|blocksreleased
+name|fragsreleased
 operator|>
+name|dbtofrags
+argument_list|(
+name|fs
+argument_list|,
 name|ip
 operator|->
 name|i_blocks
+argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"lfs_inode: Warning! %s\n"
 argument_list|,
-literal|"more blocks released from inode than are in inode"
+literal|"more frags released from inode than are in inode"
 argument_list|)
 expr_stmt|;
-name|blocksreleased
+name|fragsreleased
 operator|=
+name|dbtofrags
+argument_list|(
+name|fs
+argument_list|,
 name|ip
 operator|->
 name|i_blocks
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"lfs_inode: Warning.  More frags released\n"
+argument_list|)
 expr_stmt|;
 block|}
 endif|#
@@ -1491,13 +1564,23 @@ name|fs
 operator|->
 name|lfs_bfree
 operator|+=
-name|blocksreleased
+name|fragstodb
+argument_list|(
+name|fs
+argument_list|,
+name|fragsreleased
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
 name|i_blocks
 operator|-=
-name|blocksreleased
+name|fragstodb
+argument_list|(
+name|fs
+argument_list|,
+name|fragsreleased
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1514,6 +1597,7 @@ name|i_blocks
 operator|!=
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"lfs_inode: Warning! %s%d%s\n"
@@ -1527,13 +1611,19 @@ argument_list|,
 literal|" blocks left on inode"
 argument_list|)
 expr_stmt|;
+name|panic
+argument_list|(
+literal|"lfs_inode"
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|fs
 operator|->
 name|lfs_avail
 operator|+=
-name|fsbtodb
+name|fragstodb
 argument_list|(
 name|fs
 argument_list|,

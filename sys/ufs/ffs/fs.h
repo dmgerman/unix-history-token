@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fs.h	8.7 (Berkeley) 4/19/94  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)fs.h	8.13 (Berkeley) 3/21/95  */
 end_comment
 
 begin_comment
@@ -39,14 +39,14 @@ begin_define
 define|#
 directive|define
 name|BBLOCK
-value|((daddr_t)(0))
+value|((ufs_daddr_t)(0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|SBLOCK
-value|((daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
+value|((ufs_daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
 end_define
 
 begin_comment
@@ -65,7 +65,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for a  * maximum of two million cylinders.  */
+comment|/*  * The path name on which the file system is mounted is maintained  * in fs_fsmnt. MAXMNTLEN defines the amount of space allocated in   * the super block for this name.  */
 end_comment
 
 begin_define
@@ -75,11 +75,15 @@ name|MAXMNTLEN
 value|512
 end_define
 
+begin_comment
+comment|/*  * The limit on the amount of summary information per file system  * is defined by MAXCSBUFS. It is currently parameterized for a  * size of 128 bytes (2 million cylinder groups on machines with  * 32-bit pointers, and 1 million on 64-bit machines). One pointer  * is taken away to point to an array of cluster sizes that is  * computed as cylinder groups are inspected.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAXCSBUFS
-value|32
+value|((128 / sizeof(void *)) - 1)
 end_define
 
 begin_comment
@@ -119,19 +123,19 @@ begin_struct
 struct|struct
 name|csum
 block|{
-name|long
+name|int32_t
 name|cs_ndir
 decl_stmt|;
 comment|/* number of directories */
-name|long
+name|int32_t
 name|cs_nbfree
 decl_stmt|;
 comment|/* number of free blocks */
-name|long
+name|int32_t
 name|cs_nifree
 decl_stmt|;
 comment|/* number of free inodes */
-name|long
+name|int32_t
 name|cs_nffree
 decl_stmt|;
 comment|/* number of free frags */
@@ -140,46 +144,42 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Super block for a file system.  */
+comment|/*  * Super block for an FFS file system.  */
 end_comment
 
 begin_struct
 struct|struct
 name|fs
 block|{
-name|struct
-name|fs
-modifier|*
-name|fs_link
+name|int32_t
+name|fs_firstfield
 decl_stmt|;
-comment|/* linked list of file systems */
-name|struct
-name|fs
-modifier|*
-name|fs_rlink
+comment|/* historic file system linked list, */
+name|int32_t
+name|fs_unused_1
 decl_stmt|;
 comment|/*     used for incore super blocks */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_sblkno
 decl_stmt|;
 comment|/* addr of super-block in filesys */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_cblkno
 decl_stmt|;
 comment|/* offset of cyl-block in filesys */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_iblkno
 decl_stmt|;
 comment|/* offset of inode-blocks in filesys */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_dblkno
 decl_stmt|;
 comment|/* offset of first data after cg */
-name|long
+name|int32_t
 name|fs_cgoffset
 decl_stmt|;
 comment|/* cylinder group offset in cylinder */
-name|long
+name|int32_t
 name|fs_cgmask
 decl_stmt|;
 comment|/* used to calc mod fs_ntrak */
@@ -187,169 +187,169 @@ name|time_t
 name|fs_time
 decl_stmt|;
 comment|/* last time written */
-name|long
+name|int32_t
 name|fs_size
 decl_stmt|;
 comment|/* number of blocks in fs */
-name|long
+name|int32_t
 name|fs_dsize
 decl_stmt|;
 comment|/* number of data blocks in fs */
-name|long
+name|int32_t
 name|fs_ncg
 decl_stmt|;
 comment|/* number of cylinder groups */
-name|long
+name|int32_t
 name|fs_bsize
 decl_stmt|;
 comment|/* size of basic blocks in fs */
-name|long
+name|int32_t
 name|fs_fsize
 decl_stmt|;
 comment|/* size of frag blocks in fs */
-name|long
+name|int32_t
 name|fs_frag
 decl_stmt|;
 comment|/* number of frags in a block in fs */
 comment|/* these are configuration parameters */
-name|long
+name|int32_t
 name|fs_minfree
 decl_stmt|;
 comment|/* minimum percentage of free blocks */
-name|long
+name|int32_t
 name|fs_rotdelay
 decl_stmt|;
 comment|/* num of ms for optimal next block */
-name|long
+name|int32_t
 name|fs_rps
 decl_stmt|;
 comment|/* disk revolutions per second */
 comment|/* these fields can be computed from the others */
-name|long
+name|int32_t
 name|fs_bmask
 decl_stmt|;
 comment|/* ``blkoff'' calc of blk offsets */
-name|long
+name|int32_t
 name|fs_fmask
 decl_stmt|;
 comment|/* ``fragoff'' calc of frag offsets */
-name|long
+name|int32_t
 name|fs_bshift
 decl_stmt|;
 comment|/* ``lblkno'' calc of logical blkno */
-name|long
+name|int32_t
 name|fs_fshift
 decl_stmt|;
 comment|/* ``numfrags'' calc number of frags */
 comment|/* these are configuration parameters */
-name|long
+name|int32_t
 name|fs_maxcontig
 decl_stmt|;
 comment|/* max number of contiguous blks */
-name|long
+name|int32_t
 name|fs_maxbpg
 decl_stmt|;
 comment|/* max number of blks per cyl group */
 comment|/* these fields can be computed from the others */
-name|long
+name|int32_t
 name|fs_fragshift
 decl_stmt|;
 comment|/* block to frag shift */
-name|long
+name|int32_t
 name|fs_fsbtodb
 decl_stmt|;
 comment|/* fsbtodb and dbtofsb shift constant */
-name|long
+name|int32_t
 name|fs_sbsize
 decl_stmt|;
 comment|/* actual size of super block */
-name|long
+name|int32_t
 name|fs_csmask
 decl_stmt|;
 comment|/* csum block offset */
-name|long
+name|int32_t
 name|fs_csshift
 decl_stmt|;
 comment|/* csum block number */
-name|long
+name|int32_t
 name|fs_nindir
 decl_stmt|;
 comment|/* value of NINDIR */
-name|long
+name|int32_t
 name|fs_inopb
 decl_stmt|;
 comment|/* value of INOPB */
-name|long
+name|int32_t
 name|fs_nspf
 decl_stmt|;
 comment|/* value of NSPF */
 comment|/* yet another configuration parameter */
-name|long
+name|int32_t
 name|fs_optim
 decl_stmt|;
 comment|/* optimization preference, see below */
 comment|/* these fields are derived from the hardware */
-name|long
+name|int32_t
 name|fs_npsect
 decl_stmt|;
 comment|/* # sectors/track including spares */
-name|long
+name|int32_t
 name|fs_interleave
 decl_stmt|;
 comment|/* hardware sector interleave */
-name|long
+name|int32_t
 name|fs_trackskew
 decl_stmt|;
 comment|/* sector 0 skew, per track */
-name|long
+name|int32_t
 name|fs_headswitch
 decl_stmt|;
 comment|/* head switch time, usec */
-name|long
+name|int32_t
 name|fs_trkseek
 decl_stmt|;
 comment|/* track-to-track seek, usec */
 comment|/* sizes determined by number of cylinder groups and their sizes */
-name|daddr_t
+name|ufs_daddr_t
 name|fs_csaddr
 decl_stmt|;
 comment|/* blk addr of cyl grp summary area */
-name|long
+name|int32_t
 name|fs_cssize
 decl_stmt|;
 comment|/* size of cyl grp summary area */
-name|long
+name|int32_t
 name|fs_cgsize
 decl_stmt|;
 comment|/* cylinder group size */
 comment|/* these fields are derived from the hardware */
-name|long
+name|int32_t
 name|fs_ntrak
 decl_stmt|;
 comment|/* tracks per cylinder */
-name|long
+name|int32_t
 name|fs_nsect
 decl_stmt|;
 comment|/* sectors per track */
-name|long
+name|int32_t
 name|fs_spc
 decl_stmt|;
 comment|/* sectors per cylinder */
 comment|/* this comes from the disk driver partitioning */
-name|long
+name|int32_t
 name|fs_ncyl
 decl_stmt|;
 comment|/* cylinders in file system */
 comment|/* these fields can be computed from the others */
-name|long
+name|int32_t
 name|fs_cpg
 decl_stmt|;
 comment|/* cylinders per group */
-name|long
+name|int32_t
 name|fs_ipg
 decl_stmt|;
 comment|/* inodes per group */
-name|long
+name|int32_t
 name|fs_fpg
 decl_stmt|;
 comment|/* blocks per group * fs_frag */
@@ -360,23 +360,23 @@ name|fs_cstotal
 decl_stmt|;
 comment|/* cylinder summary information */
 comment|/* these fields are cleared at mount time */
-name|char
+name|int8_t
 name|fs_fmod
 decl_stmt|;
 comment|/* super block modified flag */
-name|char
+name|int8_t
 name|fs_clean
 decl_stmt|;
 comment|/* file system is clean flag */
-name|char
+name|int8_t
 name|fs_ronly
 decl_stmt|;
 comment|/* mounted read-only flag */
-name|char
+name|int8_t
 name|fs_flags
 decl_stmt|;
 comment|/* currently unused flag */
-name|char
+name|u_char
 name|fs_fsmnt
 index|[
 name|MAXMNTLEN
@@ -384,7 +384,7 @@ index|]
 decl_stmt|;
 comment|/* name mounted on */
 comment|/* these fields retain the current block allocation info */
-name|long
+name|int32_t
 name|fs_cgrotor
 decl_stmt|;
 comment|/* last cg searched */
@@ -397,11 +397,16 @@ name|MAXCSBUFS
 index|]
 decl_stmt|;
 comment|/* list of fs_cs info buffers */
-name|long
+name|int32_t
+modifier|*
+name|fs_maxcluster
+decl_stmt|;
+comment|/* max cluster in each cyl group */
+name|int32_t
 name|fs_cpc
 decl_stmt|;
 comment|/* cyl per cycle in postbl */
-name|short
+name|int16_t
 name|fs_opostbl
 index|[
 literal|16
@@ -411,62 +416,62 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* old rotation block list head */
-name|long
+name|int32_t
 name|fs_sparecon
 index|[
 literal|50
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
-name|long
+name|int32_t
 name|fs_contigsumsize
 decl_stmt|;
 comment|/* size of cluster summary array */
-name|long
+name|int32_t
 name|fs_maxsymlinklen
 decl_stmt|;
 comment|/* max length of an internal symlink */
-name|long
+name|int32_t
 name|fs_inodefmt
 decl_stmt|;
 comment|/* format of on-disk inodes */
-name|u_quad_t
+name|u_int64_t
 name|fs_maxfilesize
 decl_stmt|;
 comment|/* maximum representable file size */
-name|quad_t
+name|int64_t
 name|fs_qbmask
 decl_stmt|;
-comment|/* ~fs_bmask - for use with quad size */
-name|quad_t
+comment|/* ~fs_bmask for use with 64-bit size */
+name|int64_t
 name|fs_qfmask
 decl_stmt|;
-comment|/* ~fs_fmask - for use with quad size */
-name|long
+comment|/* ~fs_fmask for use with 64-bit size */
+name|int32_t
 name|fs_state
 decl_stmt|;
 comment|/* validate fs_clean field */
-name|long
+name|int32_t
 name|fs_postblformat
 decl_stmt|;
 comment|/* format of positional layout tables */
-name|long
+name|int32_t
 name|fs_nrpos
 decl_stmt|;
 comment|/* number of rotational positions */
-name|long
+name|int32_t
 name|fs_postbloff
 decl_stmt|;
-comment|/* (short) rotation block list head */
-name|long
+comment|/* (u_int16) rotation block list head */
+name|int32_t
 name|fs_rotbloff
 decl_stmt|;
-comment|/* (u_char) blocks for each rotation */
-name|long
+comment|/* (u_int8) blocks for each rotation */
+name|int32_t
 name|fs_magic
 decl_stmt|;
 comment|/* magic number */
-name|u_char
+name|u_int8_t
 name|fs_space
 index|[
 literal|1
@@ -479,7 +484,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Filesystem idetification  */
+comment|/*  * Filesystem identification  */
 end_comment
 
 begin_define
@@ -592,7 +597,7 @@ parameter_list|,
 name|cylno
 parameter_list|)
 define|\
-value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_opostbl[cylno]) \     : ((short *)((char *)(fs) + (fs)->fs_postbloff) + (cylno) * (fs)->fs_nrpos))
+value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_opostbl[cylno]) \     : ((int16_t *)((u_int8_t *)(fs) + \ 	(fs)->fs_postbloff) + (cylno) * (fs)->fs_nrpos))
 end_define
 
 begin_define
@@ -603,7 +608,7 @@ parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_space) \     : ((u_char *)((char *)(fs) + (fs)->fs_rotbloff)))
+value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_space) \     : ((u_int8_t *)((u_int8_t *)(fs) + (fs)->fs_rotbloff)))
 end_define
 
 begin_comment
@@ -619,11 +624,11 @@ name|fs
 parameter_list|)
 define|\
 comment|/* base cg */
-value|(sizeof(struct cg) + sizeof(long) + \
+value|(sizeof(struct cg) + sizeof(int32_t) + \
 comment|/* blktot size */
-value|(fs)->fs_cpg * sizeof(long) + \
+value|(fs)->fs_cpg * sizeof(int32_t) + \
 comment|/* blks size */
-value|(fs)->fs_cpg * (fs)->fs_nrpos * sizeof(short) + \
+value|(fs)->fs_cpg * (fs)->fs_nrpos * sizeof(int16_t) + \
 comment|/* inode map */
 value|howmany((fs)->fs_ipg, NBBY) + \
 comment|/* block map */
@@ -631,7 +636,7 @@ value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPF(fs), NBBY) +\
 comment|/* if present */
 value|((fs)->fs_contigsumsize<= 0 ? 0 : \
 comment|/* cluster sum */
-value|(fs)->fs_contigsumsize * sizeof(long) + \
+value|(fs)->fs_contigsumsize * sizeof(int32_t) + \
 comment|/* cluster map */
 value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPB(fs), NBBY)))
 end_define
@@ -668,13 +673,11 @@ begin_struct
 struct|struct
 name|cg
 block|{
-name|struct
-name|cg
-modifier|*
-name|cg_link
+name|int32_t
+name|cg_firstfield
 decl_stmt|;
-comment|/* linked list of cyl groups */
-name|long
+comment|/* historic cyl groups linked list */
+name|int32_t
 name|cg_magic
 decl_stmt|;
 comment|/* magic number */
@@ -682,19 +685,19 @@ name|time_t
 name|cg_time
 decl_stmt|;
 comment|/* time last written */
-name|long
+name|int32_t
 name|cg_cgx
 decl_stmt|;
 comment|/* we are the cgx'th cylinder group */
-name|short
+name|int16_t
 name|cg_ncyl
 decl_stmt|;
 comment|/* number of cyl's this cg */
-name|short
+name|int16_t
 name|cg_niblk
 decl_stmt|;
 comment|/* number of inode blocks this cg */
-name|long
+name|int32_t
 name|cg_ndblk
 decl_stmt|;
 comment|/* number of data blocks this cg */
@@ -703,65 +706,65 @@ name|csum
 name|cg_cs
 decl_stmt|;
 comment|/* cylinder summary information */
-name|long
+name|int32_t
 name|cg_rotor
 decl_stmt|;
 comment|/* position of last used block */
-name|long
+name|int32_t
 name|cg_frotor
 decl_stmt|;
 comment|/* position of last used frag */
-name|long
+name|int32_t
 name|cg_irotor
 decl_stmt|;
 comment|/* position of last used inode */
-name|long
+name|int32_t
 name|cg_frsum
 index|[
 name|MAXFRAG
 index|]
 decl_stmt|;
 comment|/* counts of available frags */
-name|long
+name|int32_t
 name|cg_btotoff
 decl_stmt|;
-comment|/* (long) block totals per cylinder */
-name|long
+comment|/* (int32) block totals per cylinder */
+name|int32_t
 name|cg_boff
 decl_stmt|;
-comment|/* (short) free block positions */
-name|long
+comment|/* (u_int16) free block positions */
+name|int32_t
 name|cg_iusedoff
 decl_stmt|;
-comment|/* (char) used inode map */
-name|long
+comment|/* (u_int8) used inode map */
+name|int32_t
 name|cg_freeoff
 decl_stmt|;
-comment|/* (u_char) free block map */
-name|long
+comment|/* (u_int8) free block map */
+name|int32_t
 name|cg_nextfreeoff
 decl_stmt|;
-comment|/* (u_char) next available space */
-name|long
+comment|/* (u_int8) next available space */
+name|int32_t
 name|cg_clustersumoff
 decl_stmt|;
-comment|/* (long) counts of avail clusters */
-name|long
+comment|/* (u_int32) counts of avail clusters */
+name|int32_t
 name|cg_clusteroff
 decl_stmt|;
-comment|/* (char) free cluster map */
-name|long
+comment|/* (u_int8) free cluster map */
+name|int32_t
 name|cg_nclusterblks
 decl_stmt|;
 comment|/* number of clusters this cg */
-name|long
+name|int32_t
 name|cg_sparecon
 index|[
 literal|13
 index|]
 decl_stmt|;
 comment|/* reserved for future use */
-name|u_char
+name|u_int8_t
 name|cg_space
 index|[
 literal|1
@@ -785,7 +788,7 @@ parameter_list|(
 name|cgp
 parameter_list|)
 define|\
-value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_btot) \     : ((long *)((char *)(cgp) + (cgp)->cg_btotoff)))
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_btot) \     : ((int32_t *)((u_int8_t *)(cgp) + (cgp)->cg_btotoff)))
 end_define
 
 begin_define
@@ -800,7 +803,7 @@ parameter_list|,
 name|cylno
 parameter_list|)
 define|\
-value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_b[cylno]) \     : ((short *)((char *)(cgp) + (cgp)->cg_boff) + (cylno) * (fs)->fs_nrpos))
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_b[cylno]) \     : ((int16_t *)((u_int8_t *)(cgp) + \ 	(cgp)->cg_boff) + (cylno) * (fs)->fs_nrpos))
 end_define
 
 begin_define
@@ -811,7 +814,7 @@ parameter_list|(
 name|cgp
 parameter_list|)
 define|\
-value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_iused) \     : ((char *)((char *)(cgp) + (cgp)->cg_iusedoff)))
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_iused) \     : ((u_int8_t *)((u_int8_t *)(cgp) + (cgp)->cg_iusedoff)))
 end_define
 
 begin_define
@@ -822,7 +825,7 @@ parameter_list|(
 name|cgp
 parameter_list|)
 define|\
-value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_free) \     : ((u_char *)((char *)(cgp) + (cgp)->cg_freeoff)))
+value|(((cgp)->cg_magic != CG_MAGIC) \     ? (((struct ocg *)(cgp))->cg_free) \     : ((u_int8_t *)((u_int8_t *)(cgp) + (cgp)->cg_freeoff)))
 end_define
 
 begin_define
@@ -844,7 +847,7 @@ parameter_list|(
 name|cgp
 parameter_list|)
 define|\
-value|((u_char *)((char *)(cgp) + (cgp)->cg_clusteroff))
+value|((u_int8_t *)((u_int8_t *)(cgp) + (cgp)->cg_clusteroff))
 end_define
 
 begin_define
@@ -855,7 +858,7 @@ parameter_list|(
 name|cgp
 parameter_list|)
 define|\
-value|((long *)((char *)(cgp) + (cgp)->cg_clustersumoff))
+value|((int32_t *)((u_int8_t *)(cgp) + (cgp)->cg_clustersumoff))
 end_define
 
 begin_comment
@@ -866,35 +869,31 @@ begin_struct
 struct|struct
 name|ocg
 block|{
-name|struct
-name|ocg
-modifier|*
-name|cg_link
+name|int32_t
+name|cg_firstfield
 decl_stmt|;
-comment|/* linked list of cyl groups */
-name|struct
-name|ocg
-modifier|*
-name|cg_rlink
+comment|/* historic linked list of cyl groups */
+name|int32_t
+name|cg_unused_1
 decl_stmt|;
 comment|/*     used for incore cyl groups */
 name|time_t
 name|cg_time
 decl_stmt|;
 comment|/* time last written */
-name|long
+name|int32_t
 name|cg_cgx
 decl_stmt|;
 comment|/* we are the cgx'th cylinder group */
-name|short
+name|int16_t
 name|cg_ncyl
 decl_stmt|;
 comment|/* number of cyl's this cg */
-name|short
+name|int16_t
 name|cg_niblk
 decl_stmt|;
 comment|/* number of inode blocks this cg */
-name|long
+name|int32_t
 name|cg_ndblk
 decl_stmt|;
 comment|/* number of data blocks this cg */
@@ -903,33 +902,33 @@ name|csum
 name|cg_cs
 decl_stmt|;
 comment|/* cylinder summary information */
-name|long
+name|int32_t
 name|cg_rotor
 decl_stmt|;
 comment|/* position of last used block */
-name|long
+name|int32_t
 name|cg_frotor
 decl_stmt|;
 comment|/* position of last used frag */
-name|long
+name|int32_t
 name|cg_irotor
 decl_stmt|;
 comment|/* position of last used inode */
-name|long
+name|int32_t
 name|cg_frsum
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* counts of available frags */
-name|long
+name|int32_t
 name|cg_btot
 index|[
 literal|32
 index|]
 decl_stmt|;
 comment|/* block totals per cylinder */
-name|short
+name|int16_t
 name|cg_b
 index|[
 literal|32
@@ -939,18 +938,18 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* positions of free blocks */
-name|char
+name|u_int8_t
 name|cg_iused
 index|[
 literal|256
 index|]
 decl_stmt|;
 comment|/* used inode map */
-name|long
+name|int32_t
 name|cg_magic
 decl_stmt|;
 comment|/* magic number */
-name|u_char
+name|u_int8_t
 name|cg_free
 index|[
 literal|1
@@ -1003,7 +1002,7 @@ name|fs
 parameter_list|,
 name|c
 parameter_list|)
-value|((daddr_t)((fs)->fs_fpg * (c)))
+value|((ufs_daddr_t)((fs)->fs_fpg * (c)))
 end_define
 
 begin_define
@@ -1109,7 +1108,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((daddr_t)(cgimin(fs, ino_to_cg(fs, x)) +			\ 	    (blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
+value|((ufs_daddr_t)(cgimin(fs, ino_to_cg(fs, x)) +			\ 	    (blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
 end_define
 
 begin_define
@@ -1356,7 +1355,7 @@ value|((fsb)&~ ((fs)->fs_frag - 1))
 end_define
 
 begin_comment
-comment|/*  * Determine the number of available frags given a  * percentage to hold in reserve  */
+comment|/*  * Determine the number of available frags given a  * percentage to hold in reserve.  */
 end_comment
 
 begin_define
@@ -1407,7 +1406,7 @@ value|(((lbn)>= NDADDR || (dip)->di_size>= ((lbn) + 1)<< (fs)->fs_bshift) \ 	   
 end_define
 
 begin_comment
-comment|/*  * Number of disk sectors per block; assumes DEV_BSIZE byte sector size.  */
+comment|/*  * Number of disk sectors per block/fragment; assumes DEV_BSIZE byte  * sector size.  */
 end_comment
 
 begin_define
@@ -1431,7 +1430,7 @@ value|((fs)->fs_nspf)
 end_define
 
 begin_comment
-comment|/*  * INOPB is the number of inodes in a secondary storage block.  */
+comment|/*  * Number of inodes in a secondary storage block/fragment.  */
 end_comment
 
 begin_define
@@ -1455,7 +1454,7 @@ value|((fs)->fs_inopb>> (fs)->fs_fragshift)
 end_define
 
 begin_comment
-comment|/*  * NINDIR is the number of indirects in a file system block.  */
+comment|/*  * Number of indirects in a file system block.  */
 end_comment
 
 begin_define
