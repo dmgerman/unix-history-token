@@ -205,8 +205,9 @@ parameter_list|(
 name|e
 parameter_list|,
 name|s
+modifier|...
 parameter_list|)
-value|fprintf(stderr,(s))
+value|fprintf(stderr,s)
 end_define
 
 begin_decl_stmt
