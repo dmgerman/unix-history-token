@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -290,9 +290,8 @@ condition|(
 name|p
 condition|)
 block|{
-if|if
-condition|(
-operator|(
+name|secs
+operator|=
 name|p
 operator|->
 name|p_utime
@@ -306,7 +305,10 @@ operator|.
 name|tv_sec
 operator|+
 literal|1
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|secs
 operator|>
 name|p
 operator|->
@@ -317,6 +319,28 @@ index|]
 operator|.
 name|rlim_cur
 condition|)
+block|{
+if|if
+condition|(
+name|secs
+operator|>
+name|p
+operator|->
+name|p_rlimit
+index|[
+name|RLIMIT_CPU
+index|]
+operator|.
+name|rlim_max
+condition|)
+name|psignal
+argument_list|(
+name|p
+argument_list|,
+name|SIGKILL
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 name|psignal
 argument_list|(
@@ -356,6 +380,7 @@ name|rlim_cur
 operator|+=
 literal|5
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
