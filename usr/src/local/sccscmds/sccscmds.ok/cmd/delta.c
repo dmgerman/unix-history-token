@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)delta.c	4.8	%G%"
+literal|"@(#)delta.c	4.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1317,8 +1317,7 @@ comment|/* 			Re-try. 			*/
 if|if
 condition|(
 name|difflim
-operator|=
-operator|-
+operator|-=
 literal|500
 condition|)
 block|{
@@ -2149,15 +2148,13 @@ operator|.
 name|d_sid
 operator|.
 name|s_rel
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 name|dt
 operator|.
 name|d_serial
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 if|if
@@ -2169,8 +2166,7 @@ condition|)
 name|dt
 operator|.
 name|d_pred
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 else|else

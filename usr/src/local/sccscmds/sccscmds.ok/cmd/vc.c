@@ -33,7 +33,7 @@ operator|)
 name|vc
 operator|.
 name|c
-literal|4.1
+literal|4.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1100,8 +1100,7 @@ name|i
 index|]
 operator|.
 name|usage
-operator|=
-operator||
+operator||=
 name|DCL
 expr_stmt|;
 name|NONBLANK
@@ -1331,8 +1330,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 name|sptr
-operator|=
-operator|+
+operator|+=
 literal|4
 expr_stmt|;
 block|}
@@ -1406,8 +1404,7 @@ name|sptr
 operator|++
 expr_stmt|;
 name|value
-operator|=
-operator||
+operator||=
 name|doand
 argument_list|()
 expr_stmt|;
@@ -1457,8 +1454,7 @@ name|sptr
 operator|++
 expr_stmt|;
 name|value
-operator|=
-operator|&
+operator|&=
 name|exp
 argument_list|()
 expr_stmt|;
@@ -2189,8 +2185,7 @@ name|j
 index|]
 operator|.
 name|usage
-operator|=
-operator||
+operator||=
 name|USD
 expr_stmt|;
 block|}
@@ -2235,8 +2230,7 @@ name|j
 operator|++
 control|)
 name|newlen
-operator|=
-operator|+
+operator|+=
 operator|(
 name|size
 argument_list|(
@@ -2602,8 +2596,7 @@ expr_stmt|;
 name|s
 operator|->
 name|usage
-operator|=
-operator||
+operator||=
 name|ASG
 expr_stmt|;
 return|return

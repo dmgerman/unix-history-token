@@ -175,8 +175,7 @@ name|ltime
 argument_list|)
 expr_stmt|;
 name|ltime
-operator|=
-operator|-
+operator|-=
 name|Statbuf
 operator|.
 name|st_mtime

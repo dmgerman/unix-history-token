@@ -21,7 +21,7 @@ operator|)
 name|stree
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -344,8 +344,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator|&
+operator|&=
 operator|~
 name|FTLEXIT
 expr_stmt|;
@@ -353,8 +352,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|Fflags
-operator|=
-operator||
+operator||=
 name|FTLJMP
 expr_stmt|;
 end_expr_stmt

@@ -29,7 +29,7 @@ operator|)
 name|scv
 operator|.
 name|c
-literal|4.5
+literal|4.6
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2009,8 +2009,7 @@ init|;
 name|mask
 condition|;
 name|mask
-operator|=
-operator|<<
+operator|<<=
 literal|1
 control|)
 block|{
@@ -2450,8 +2449,7 @@ operator|->
 name|Rlevs
 expr_stmt|;
 name|n
-operator|=
-operator|+
+operator|+=
 name|rt
 operator|->
 name|Rlevs
@@ -2708,8 +2706,7 @@ name|n
 operator|++
 expr_stmt|;
 name|n
-operator|=
-operator|&
+operator|&=
 operator|~
 literal|1
 expr_stmt|;
@@ -3715,8 +3712,7 @@ condition|)
 name|pkt
 operator|->
 name|p_nhash
-operator|=
-operator|+
+operator|+=
 operator|*
 name|p
 operator|++
@@ -4273,8 +4269,7 @@ decl_stmt|;
 name|buf
 operator|->
 name|Irecptr
-operator|=
-operator|+
+operator|+=
 name|buf
 operator|->
 name|Ilen
@@ -4370,8 +4365,7 @@ operator|=
 name|buf
 operator|->
 name|Irecptr
-operator|=
-operator|-
+operator|-=
 literal|512
 expr_stmt|;
 while|while
@@ -4500,8 +4494,7 @@ expr_stmt|;
 name|buf
 operator|->
 name|Ihcnt
-operator|=
-operator|+
+operator|+=
 name|sumr
 argument_list|(
 name|w
@@ -4589,8 +4582,7 @@ name|to
 condition|;
 control|)
 name|sum
-operator|=
-operator|+
+operator|+=
 operator|*
 name|from
 operator|++
