@@ -13106,9 +13106,9 @@ literal|0
 argument_list|,
 name|sysctl_kern_ttys
 argument_list|,
-literal|"S,tty"
+literal|"S,xtty"
 argument_list|,
-literal|"All struct ttys"
+literal|"All ttys"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
