@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/assym.h>
+file|<stddef.h>
 end_include
 
 begin_include
@@ -19,16 +19,10 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
 begin_include
 include|#
 directive|include
-file|<svr4/svr4.h>
+file|<sys/assym.h>
 end_include
 
 begin_include
