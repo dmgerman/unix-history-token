@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: isp.c,v 1.7 1998/12/05 01:33:57 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* isp.c 1.27 */
+comment|/* isp.c 1.28 */
 end_comment
 
 begin_comment
@@ -3471,9 +3471,7 @@ name|icbp
 operator|->
 name|icb_hardaddr
 operator|=
-name|fcp
-operator|->
-name|isp_loopid
+name|loopid
 expr_stmt|;
 name|MAKE_NODE_NAME_FROM_WWN
 argument_list|(
