@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rusers.c,v 1.5 1997/02/22 19:56:52 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -61,13 +68,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<strings.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/pmap_clnt.h>
 end_include
 
 begin_include
@@ -102,13 +127,6 @@ directive|define
 name|LINE_WIDTH
 value|15
 end_define
-
-begin_decl_stmt
-name|char
-modifier|*
-name|argv0
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -243,22 +261,13 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no memory.\n"
-argument_list|,
-name|argv0
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no memory"
 argument_list|)
 expr_stmt|;
-block|}
 name|hp
 operator|->
 name|addr
@@ -282,16 +291,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|rusers_reply
-argument_list|(
-argument|char *replyp
-argument_list|,
-argument|struct sockaddr_in *raddrp
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|replyp
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+name|raddrp
+parameter_list|)
 block|{
 name|int
 name|x
@@ -791,16 +803,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|onehost
-argument_list|(
-argument|char *host
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|host
+parameter_list|)
 block|{
 name|utmpidlearr
 name|up
@@ -835,24 +847,15 @@ name|hp
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unknown host \"%s\"\n"
-argument_list|,
-name|argv0
+literal|"unknown host \"%s\""
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|rusers_clnt
 operator|=
 name|clnt_create
@@ -872,18 +875,18 @@ name|rusers_clnt
 operator|==
 name|NULL
 condition|)
-block|{
-name|clnt_pcreateerror
-argument_list|(
-name|argv0
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|clnt_spcreateerror
+argument_list|(
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|(
@@ -934,20 +937,20 @@ argument_list|)
 operator|!=
 name|RPC_SUCCESS
 condition|)
-block|{
-name|clnt_perror
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|clnt_sperror
 argument_list|(
 name|rusers_clnt
 argument_list|,
-name|argv0
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|addr
 operator|.
 name|sin_addr
@@ -977,14 +980,12 @@ name|addr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|allhosts
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|utmpidlearr
 name|up
@@ -1040,14 +1041,11 @@ name|clnt_stat
 operator|!=
 name|RPC_TIMEDOUT
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|argv0
+literal|"%s"
 argument_list|,
 name|clnt_sperrno
 argument_list|(
@@ -1055,29 +1053,20 @@ name|clnt_stat
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-la] [hosts ...]\n"
-argument_list|,
-name|argv0
+literal|"usage: rusers [-la] [hosts ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1086,9 +1075,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -1103,38 +1093,6 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|argv0
-operator|=
-name|rindex
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-condition|)
-name|argv0
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-else|else
-name|argv0
-operator|++
-expr_stmt|;
 while|while
 condition|(
 operator|(
