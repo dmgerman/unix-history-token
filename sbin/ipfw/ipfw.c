@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.21 1996/02/24 13:39:46 phk Exp $  *  */
+comment|/*  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.15.4.2 1996/02/26 15:27:00 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -864,9 +864,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|chain
-operator|->
-name|fw_nsp
+literal|0
 operator|&&
 operator|(
 name|chain
@@ -1564,7 +1562,7 @@ literal|"\t\tdelete number\n"
 literal|"\t\tlist [number]\n"
 literal|"\t\tzero [number]\n"
 literal|"\trule:\taction proto src dst extras...\n"
-literal|"\t\taction: {allow|deny|reject|count}[,log]\n"
+literal|"\t\taction: {allow|deny|reject|count} [log]\n"
 literal|"\t\tproto: {ip|tcp|udp|icmp}}\n"
 literal|"\t\tsrc: {any|ip[{/bits|:mask}]} [{port|port-port},...]\n"
 literal|"\t\tdst: {any|ip[{/bits|:mask}]} [{port|port-port},...]\n"
@@ -2007,7 +2005,10 @@ expr_stmt|;
 block|}
 while|while
 condition|(
-literal|1
+operator|*
+name|av
+operator|!=
+name|NULL
 condition|)
 block|{
 name|s
