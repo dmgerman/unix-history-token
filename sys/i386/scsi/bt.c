@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt.c,v 1.3.2.2 1996/02/16 17:56:22 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt.c,v 1.8 1996/03/10 07:11:45 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/stdarg.h>
 end_include
 
 begin_include
@@ -870,7 +876,7 @@ name|u_char
 name|num_mbx
 decl_stmt|;
 comment|/* Number of mailbox */
-name|int32
+name|int32_t
 name|mbx_base
 decl_stmt|;
 comment|/* mailbox base address */
@@ -1052,7 +1058,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32
+name|u_int32_t
 name|bt_adapter_info
 name|__P
 argument_list|(
@@ -1085,12 +1091,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1098,8 +1098,10 @@ name|bt_cmd
 name|__P
 argument_list|(
 operator|(
-name|int
-name|unit
+expr|struct
+name|bt_data
+operator|*
+name|bt
 operator|,
 name|int
 name|icnt
@@ -1114,7 +1116,7 @@ name|u_char
 operator|*
 name|retval
 operator|,
-name|unsigned
+name|u_char
 name|opcode
 operator|,
 operator|...
@@ -1122,24 +1124,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|bt_cmd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1313,7 +1297,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
-name|int32
+name|int32_t
 name|bt_scsi_cmd
 name|__P
 argument_list|(
@@ -1375,7 +1359,7 @@ specifier|static
 name|int
 name|btprobing
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1516,13 +1500,43 @@ value|1000
 end_define
 
 begin_comment
-comment|/*  * bt_cmd(bt, icnt, ocnt, wait, retval, opcode, args)  *  * Activate Adapter command  *    icnt:   number of args (outbound bytes written after opcode)  *    ocnt:   number of expected returned bytes  *    wait:   number of seconds to wait for response  *    retval: buffer where to place returned bytes  *    opcode: opcode BT_NOP, BT_MBX_INIT, BT_START_SCSI ...  *    args:   parameters  *  * Performs an adapter command through the ports.  Not to be confused with a  * scsi command, which is read in via the dma; one of the adapter commands  * tells it to read in a scsi command.  */
+comment|/*  * bt_cmd(bt, icnt, ocnt, wait, retval, opcode, ...)  *  * Activate Adapter command  *    icnt:   number of args (outbound bytes written after opcode)  *    ocnt:   number of expected returned bytes  *    wait:   number of seconds to wait for response  *    retval: buffer where to place returned bytes  *    opcode: opcode BT_NOP, BT_MBX_INIT, BT_START_SCSI ...  *    ...:    parameters to the command specified by opcode  *  * Performs an adapter command through the ports.  Not to be confused with a  * scsi command, which is read in via the dma; one of the adapter commands  * tells it to read in a scsi command.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
+ifdef|#
+directive|ifdef
+name|__STDC__
 name|bt_cmd
+parameter_list|(
+name|struct
+name|bt_data
+modifier|*
+name|bt
+parameter_list|,
+name|int
+name|icnt
+parameter_list|,
+name|int
+name|ocnt
+parameter_list|,
+name|int
+name|wait
+parameter_list|,
+name|u_char
+modifier|*
+name|retval
+parameter_list|,
+name|u_char
+name|opcode
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|bt_cmd
 parameter_list|(
 name|bt
 parameter_list|,
@@ -1536,7 +1550,7 @@ name|retval
 parameter_list|,
 name|opcode
 parameter_list|,
-name|args
+name|va_alist
 parameter_list|)
 name|struct
 name|bt_data
@@ -1545,30 +1559,27 @@ name|bt
 decl_stmt|;
 name|int
 name|icnt
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ocnt
-decl_stmt|;
-name|int
+decl_stmt|,
 name|wait
 decl_stmt|;
 name|u_char
 modifier|*
 name|retval
 decl_stmt|;
-name|unsigned
+name|u_char
 name|opcode
+decl_stmt|;
+function|va_dcl
+endif|#
+directive|endif
+block|{
+name|va_list
+name|ap
 decl_stmt|;
 name|u_char
-name|args
-decl_stmt|;
-block|{
-name|unsigned
-modifier|*
-name|ic
-init|=
-operator|&
-name|opcode
+name|data
 decl_stmt|;
 name|u_char
 name|oc
@@ -1692,15 +1703,39 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Output the command and the number of arguments given 	 * for each byte, first check the port is empty. 	 */
-name|icnt
-operator|++
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|opcode
+argument_list|)
 expr_stmt|;
-comment|/* include the command */
-while|while
-condition|(
+comment|/* test icnt>= 0, to include the command in data sent */
+for|for
+control|(
+name|data
+operator|=
+name|opcode
+init|;
+name|icnt
+operator|>=
+literal|0
+condition|;
 name|icnt
 operator|--
-condition|)
+operator|,
+name|data
+operator|=
+operator|(
+name|u_char
+operator|)
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
+argument_list|)
+control|)
 block|{
 name|sts
 operator|=
@@ -1782,17 +1817,15 @@ name|outb
 argument_list|(
 name|BT_CMD_DATA_PORT
 argument_list|,
-call|(
-name|u_char
-call|)
-argument_list|(
-operator|*
-name|ic
-operator|++
-argument_list|)
+name|data
 argument_list|)
 expr_stmt|;
 block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If we expect input, loop that many times, each time, 	 * looking for the data register to have valid data 	 */
 while|while
 condition|(
@@ -2238,6 +2271,14 @@ name|bt
 operator|->
 name|sc_link
 operator|.
+name|adapter_softc
+operator|=
+name|bt
+expr_stmt|;
+name|bt
+operator|->
+name|sc_link
+operator|.
 name|adapter
 operator|=
 operator|&
@@ -2308,7 +2349,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32
+name|u_int32_t
 name|bt_adapter_info
 parameter_list|(
 name|unit
@@ -3682,10 +3723,6 @@ case|case
 name|BT_ABORTED
 case|:
 comment|/* No response */
-case|case
-name|BT_SEL_TIMEOUT
-case|:
-comment|/* No response */
 name|SC_DEBUG
 argument_list|(
 name|xs
@@ -3704,6 +3741,29 @@ operator|->
 name|error
 operator|=
 name|XS_TIMEOUT
+expr_stmt|;
+break|break;
+case|case
+name|BT_SEL_TIMEOUT
+case|:
+name|SC_DEBUG
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|,
+name|SDEV_DB3
+argument_list|,
+operator|(
+literal|"selection timeout reported back\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|xs
+operator|->
+name|error
+operator|=
+name|XS_SELTIMEOUT
 expr_stmt|;
 break|break;
 default|default:
@@ -3966,6 +4026,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|binfo
 argument_list|,
@@ -4052,6 +4116,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|info
 argument_list|,
@@ -4283,6 +4351,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|conf
 argument_list|,
@@ -4855,6 +4927,10 @@ argument_list|)
 argument_list|,
 literal|100
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|sync
 argument_list|,
@@ -4881,6 +4957,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|bID
 argument_list|,
@@ -5028,6 +5108,10 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|setup
 argument_list|,
@@ -5405,7 +5489,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int32
+name|int32_t
 name|bt_scsi_cmd
 parameter_list|(
 name|xs
@@ -5439,15 +5523,6 @@ decl_stmt|,
 name|nextphys
 decl_stmt|;
 name|int
-name|unit
-init|=
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|adapter_unit
-decl_stmt|;
-name|int
 name|bytes_this_seg
 decl_stmt|,
 name|bytes_this_page
@@ -5463,10 +5538,16 @@ name|bt
 decl_stmt|;
 name|bt
 operator|=
-name|btdata
-index|[
-name|unit
-index|]
+operator|(
+expr|struct
+name|bt_data
+operator|*
+operator|)
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|adapter_softc
 expr_stmt|;
 name|SC_DEBUG
 argument_list|(
@@ -5499,6 +5580,8 @@ name|printf
 argument_list|(
 literal|"bt%d: Already done?\n"
 argument_list|,
+name|bt
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -5524,6 +5607,8 @@ name|printf
 argument_list|(
 literal|"bt%d: Not in use?\n"
 argument_list|,
+name|bt
+operator|->
 name|unit
 argument_list|)
 expr_stmt|;
@@ -6082,6 +6167,8 @@ name|printf
 argument_list|(
 literal|"bt%d: bt_scsi_cmd, more than %d DMA segs\n"
 argument_list|,
+name|bt
+operator|->
 name|unit
 argument_list|,
 name|BT_NSEG
