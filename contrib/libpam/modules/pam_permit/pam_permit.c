@@ -4,7 +4,7 @@ comment|/* pam_permit module */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_permit.c,v 1.5 1997/02/15 19:03:15 morgan Exp $  *  * Written by Andrew Morgan<morgan@parc.power.net> 1996/3/11  *  * $Log: pam_permit.c,v $  * Revision 1.5  1997/02/15 19:03:15  morgan  * fixed email address  *  * Revision 1.4  1997/02/15 16:03:10  morgan  * force a name for user  *  * Revision 1.3  1996/06/02 08:10:14  morgan  * updated for new static protocol  *  */
+comment|/*  * $Id: pam_permit.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  * $FreeBSD$  *  * Written by Andrew Morgan<morgan@parc.power.net> 1996/3/11  *  */
 end_comment
 
 begin_define

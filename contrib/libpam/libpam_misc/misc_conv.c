@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: misc_conv.c,v 1.3 2001/01/20 22:29:47 agmorgan Exp $  *  * A generic conversation function for text based applications  *  * Written by Andrew Morgan<morgan@linux.kernel.org>  */
+comment|/*  * $Id: misc_conv.c,v 1.3 2001/01/20 22:29:47 agmorgan Exp $  * $FreeBSD$  *  * A generic conversation function for text based applications  *  * Written by Andrew Morgan<morgan@linux.kernel.org>  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<security/pam_appl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/pam_client.h>
 end_include
 
 begin_include
