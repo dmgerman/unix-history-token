@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.15 1996/06/10 21:03:38 julian Exp $"
+literal|"$Id: route.c,v 1.16 1996/06/15 17:08:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -768,7 +768,7 @@ name|AF_APPLETALK
 case|:
 name|afname
 operator|=
-literal|"ATALK"
+literal|"AppleTalk"
 expr_stmt|;
 break|break;
 case|case
@@ -2040,13 +2040,29 @@ case|case
 name|AF_APPLETALK
 case|:
 block|{
+if|if
+condition|(
+name|mask
+condition|)
+name|cp
+operator|=
+name|atalk_print2
+argument_list|(
+name|sa
+argument_list|,
+name|mask
+argument_list|,
+literal|11
+argument_list|)
+expr_stmt|;
+else|else
 name|cp
 operator|=
 name|atalk_print
 argument_list|(
 name|sa
 argument_list|,
-literal|3
+literal|11
 argument_list|)
 expr_stmt|;
 break|break;

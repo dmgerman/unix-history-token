@@ -871,7 +871,7 @@ name|atalk_print
 argument_list|(
 name|sa
 argument_list|,
-literal|1
+literal|9
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -883,7 +883,7 @@ name|atalk_print
 argument_list|(
 name|sa
 argument_list|,
-literal|3
+literal|11
 argument_list|)
 argument_list|)
 expr_stmt|;

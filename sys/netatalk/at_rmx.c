@@ -249,18 +249,6 @@ name|radix_node
 modifier|*
 name|rn
 decl_stmt|;
-name|struct
-name|sockaddr_at
-modifier|*
-name|dst
-init|=
-name|v_arg
-decl_stmt|,
-modifier|*
-name|mask
-init|=
-name|n_arg
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"at_addroute: v=%s\n"
@@ -337,13 +325,6 @@ name|struct
 name|radix_node
 modifier|*
 name|rn
-decl_stmt|;
-name|struct
-name|sockaddr_at
-modifier|*
-name|dst
-init|=
-name|v_arg
 decl_stmt|;
 name|printf
 argument_list|(

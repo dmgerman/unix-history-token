@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.8 1996/05/08 20:48:59 wollman Exp $"
+literal|"$Id: route.c,v 1.9 1996/07/09 19:02:28 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -8108,7 +8108,10 @@ name|addr
 operator|->
 name|s_net
 operator|=
+name|htons
+argument_list|(
 name|net
+argument_list|)
 expr_stmt|;
 name|addr
 operator|->
@@ -8155,9 +8158,12 @@ argument_list|)
 argument_list|,
 literal|"%u.%u"
 argument_list|,
+name|ntohs
+argument_list|(
 name|at
 operator|.
 name|s_net
+argument_list|)
 argument_list|,
 name|at
 operator|.
