@@ -519,7 +519,7 @@ literal|"Exit: Single threading fouled up"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * All other activity in this process is now stopped. 		 * Remove excess KSEs and KSEGRPS. XXXKSE (when we have them) 		 * ...  		 * Turn off threading support. 		 */
+comment|/* 		 * All other activity in this process is now stopped. 		 * Remove excess KSEs and KSEGRPS. XXXKSE (when we have them) 		 * ... 		 * Turn off threading support. 		 */
 name|p
 operator|->
 name|p_flag
@@ -652,7 +652,7 @@ name|p_stype
 argument_list|)
 expr_stmt|;
 comment|/* Wakeup anyone in procfs' PIOCWAIT */
-comment|/*  	 * Check if any loadable modules need anything done at process exit. 	 * e.g. SYSV IPC stuff 	 * XXX what if one of these generates an error? 	 */
+comment|/* 	 * Check if any loadable modules need anything done at process exit. 	 * e.g. SYSV IPC stuff 	 * XXX what if one of these generates an error? 	 */
 name|TAILQ_FOREACH
 argument_list|(
 name|ep
@@ -1762,7 +1762,7 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE check if this should be in thread_exit */
-comment|/* 	 * Make sure the scheduler takes this thread out of its tables etc. 	 * This will also release this thread's reference to the ucred.  	 * Other thread parts to release include pcb bits and such. 	 */
+comment|/* 	 * Make sure the scheduler takes this thread out of its tables etc. 	 * This will also release this thread's reference to the ucred. 	 * Other thread parts to release include pcb bits and such. 	 */
 name|thread_exit
 argument_list|()
 expr_stmt|;
@@ -2068,7 +2068,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * This special case handles a kthread spawned by linux_clone  		 * (see linux_misc.c).  The linux_wait4 and linux_waitpid 		 * functions need to be able to distinguish between waiting 		 * on a process and waiting on a thread.  It is a thread if 		 * p_sigparent is not SIGCHLD, and the WLINUXCLONE option 		 * signifies we want to wait for threads and not processes. 		 */
+comment|/* 		 * This special case handles a kthread spawned by linux_clone 		 * (see linux_misc.c).  The linux_wait4 and linux_waitpid 		 * functions need to be able to distinguish between waiting 		 * on a process and waiting on a thread.  It is a thread if 		 * p_sigparent is not SIGCHLD, and the WLINUXCLONE option 		 * signifies we want to wait for threads and not processes. 		 */
 if|if
 condition|(
 operator|(
@@ -3129,7 +3129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The next two functions are to handle adding/deleting items on the  * exit callout list  *   * at_exit():  * Take the arguments given and put them onto the exit callout list,  * However first make sure that it's not already there.  * returns 0 on success.  */
+comment|/*  * The next two functions are to handle adding/deleting items on the  * exit callout list  *  * at_exit():  * Take the arguments given and put them onto the exit callout list,  * However first make sure that it's not already there.  * returns 0 on success.  */
 end_comment
 
 begin_function
