@@ -648,21 +648,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__sparc64__
 comment|/* Short-circuit the device probing, since it takes too long. */
 return|return
 literal|0
 return|;
-else|#
-directive|else
-return|return
-name|ofwd_init_devs
-argument_list|()
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -85,6 +85,15 @@ name|chosen
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|ihandle_t
+name|memory
+decl_stmt|,
+name|mmu
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This isn't actually an OpenFirmware function, but it seemed like the right  * place for it to go.  */
 end_comment

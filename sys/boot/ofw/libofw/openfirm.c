@@ -57,14 +57,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|ihandle_t
 name|mmu
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|ihandle_t
 name|memory
 decl_stmt|;
