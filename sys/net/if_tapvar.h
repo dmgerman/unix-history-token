@@ -32,10 +32,12 @@ define|#
 directive|define
 name|tap_if
 value|arpcom.ac_if
-name|dev_t
-name|tap_dev
+name|struct
+name|resource
+modifier|*
+name|tap_unit
 decl_stmt|;
-comment|/* device                    */
+comment|/* unit                      */
 name|u_short
 name|tap_flags
 decl_stmt|;
@@ -86,6 +88,13 @@ name|selinfo
 name|tap_rsel
 decl_stmt|;
 comment|/* read select               */
+name|SLIST_ENTRY
+argument_list|(
+argument|tap_softc
+argument_list|)
+name|tap_next
+expr_stmt|;
+comment|/* next device in chain      */
 block|}
 struct|;
 end_struct
