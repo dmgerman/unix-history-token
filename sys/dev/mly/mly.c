@@ -8617,12 +8617,10 @@ block|}
 comment|/*      * If physical channel registration has been requested, register these first.      * Note that we enable tagged command queueing for physical channels.      */
 if|if
 condition|(
-name|getenv
+name|testenv
 argument_list|(
 literal|"hw.mly.register_physical_channels"
 argument_list|)
-operator|!=
-name|NULL
 condition|)
 block|{
 name|chn

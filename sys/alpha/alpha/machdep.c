@@ -3267,6 +3267,11 @@ argument_list|(
 name|AllowMem
 argument_list|)
 expr_stmt|;
+name|freeenv
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 while|while
 condition|(
@@ -3980,6 +3985,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|freeenv
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Pick up kernelname. 	 */
 if|if
@@ -4037,6 +4047,11 @@ name|kernelname
 argument_list|)
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|freeenv
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}

@@ -2239,6 +2239,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|freeenv
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2253,6 +2258,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|fallback_elf_brand
 operator|=
 name|strtol
@@ -2264,6 +2270,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|freeenv
+argument_list|(
+name|var
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|path

@@ -669,12 +669,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|getenv
+name|testenv
 argument_list|(
 literal|"debug.acpi.timer_test"
 argument_list|)
-operator|!=
-name|NULL
 condition|)
 name|acpi_timer_test
 argument_list|()

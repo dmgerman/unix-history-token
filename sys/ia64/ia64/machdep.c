@@ -2331,6 +2331,11 @@ operator||=
 name|RB_VERBOSE
 expr_stmt|;
 block|}
+name|freeenv
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2540,6 +2545,7 @@ if|if
 condition|(
 name|p
 condition|)
+block|{
 name|strncpy
 argument_list|(
 name|kernelname
@@ -2554,6 +2560,12 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|freeenv
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 name|kernstartpfn
 operator|=
 name|atop

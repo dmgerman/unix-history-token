@@ -268,8 +268,14 @@ name|foo
 name|__unused
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|error
 decl_stmt|;
 comment|/*  	 * The root filesystem information is compiled in, and we are 	 * booted with instructions to use it. 	 */
 ifdef|#
@@ -354,16 +360,37 @@ block|}
 comment|/* 	 * Try to use the value read by the loader from /etc/fstab, or 	 * supplied via some other means.  This is the preferred  	 * mechanism. 	 */
 if|if
 condition|(
-operator|!
-name|vfs_mountroot_try
-argument_list|(
+operator|(
+name|cp
+operator|=
 name|getenv
 argument_list|(
 literal|"vfs.root.mountfrom"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|vfs_mountroot_try
+argument_list|(
+name|cp
 argument_list|)
+expr_stmt|;
+name|freeenv
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
 condition|)
 return|return;
+block|}
 comment|/*  	 * Try values that may have been computed by the machine-dependant 	 * legacy code. 	 */
 if|if
 condition|(

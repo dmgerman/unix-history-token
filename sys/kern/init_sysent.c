@@ -5379,6 +5379,20 @@ name|nosys
 block|}
 block|,
 comment|/* 389 = __mac_set_file */
+block|{
+name|AS
+argument_list|(
+name|kenv_args
+argument_list|)
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|kenv
+block|}
+block|,
+comment|/* 390 = kenv */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -5802,7 +5802,6 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|cp
@@ -6793,6 +6792,11 @@ operator|=
 name|atop
 argument_list|(
 name|AllowMem
+argument_list|)
+expr_stmt|;
+name|freeenv
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 block|}

@@ -33,6 +33,12 @@ directive|include
 file|<sys/callout.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -347,6 +353,21 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|dynamic_kenv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|kenv_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|kern_envp
@@ -372,6 +393,15 @@ end_decl_stmt
 begin_comment
 comment|/* by config for now */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|kenvp
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * General function declarations.  */
@@ -1585,6 +1615,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|freeenv
+parameter_list|(
+name|char
+modifier|*
+name|env
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|getenv_int
 parameter_list|(
@@ -1631,6 +1672,47 @@ parameter_list|,
 name|quad_t
 modifier|*
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setenv
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|unsetenv
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|testenv
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 function_decl|;
 end_function_decl

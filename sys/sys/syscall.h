@@ -1944,8 +1944,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_MAXSYSCALL
+name|SYS_kenv
 value|390
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_MAXSYSCALL
+value|391
 end_define
 
 end_unit

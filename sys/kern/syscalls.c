@@ -1180,6 +1180,9 @@ comment|/* 388 = __mac_set_fd */
 literal|"#389"
 block|,
 comment|/* 389 = __mac_set_file */
+literal|"kenv"
+block|,
+comment|/* 390 = kenv */
 block|}
 decl_stmt|;
 end_decl_stmt
