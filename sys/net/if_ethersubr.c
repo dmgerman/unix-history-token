@@ -5117,16 +5117,7 @@ argument_list|(
 name|ENETDOWN
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If a simplex interface, and the packet is being sent to our 	 * Ethernet address or a broadcast address, loopback a copy. 	 * XXX To make a simplex device behave exactly like a duplex 	 * device, we should copy in the case of sending to our own 	 * ethernet address (thus letting the original actually appear 	 * on the wire). However, we don't do that here for security 	 * reasons and compatibility with the original behavior. 	 */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_SIMPLEX
-condition|)
-block|{
+comment|/* drop in the MAC address */
 name|eh
 operator|=
 name|mtod
@@ -5138,6 +5129,32 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|ac_enaddr
+argument_list|,
+name|eh
+operator|->
+name|ether_shost
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If a simplex interface, and the packet is being sent to our 	 * Ethernet address or a broadcast address, loopback a copy. 	 * XXX To make a simplex device behave exactly like a duplex 	 * device, we should copy in the case of sending to our own 	 * ethernet address (thus letting the original actually appear 	 * on the wire). However, we don't do that here for security 	 * reasons and compatibility with the original behavior. 	 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_SIMPLEX
+condition|)
+block|{
 if|if
 condition|(
 name|m
