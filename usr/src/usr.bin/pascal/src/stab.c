@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.10 %G%"
+literal|"@(#)stab.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +97,13 @@ name|x
 parameter_list|)
 value|( x< 0 ? -x : x )
 end_define
+
+begin_function_decl
+name|long
+name|checksum
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*      *	global variables      */
@@ -1203,6 +1210,9 @@ operator|^=
 name|input
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|filep

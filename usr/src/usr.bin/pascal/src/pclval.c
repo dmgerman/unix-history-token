@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pclval.c 1.6 %G%"
+literal|"@(#)pclval.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,9 +155,6 @@ name|struct
 name|nl
 modifier|*
 name|firstp
-decl_stmt|,
-modifier|*
-name|lastp
 decl_stmt|;
 name|char
 modifier|*
@@ -556,10 +553,6 @@ return|return
 name|NLNIL
 return|;
 block|}
-name|lastp
-operator|=
-name|p
-expr_stmt|;
 name|p
 operator|=
 name|p
