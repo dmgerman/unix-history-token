@@ -312,7 +312,7 @@ modifier|*
 name|name
 parameter_list|,
 name|int
-name|af
+name|_af
 name|__unused
 parameter_list|)
 block|{
@@ -672,7 +672,7 @@ name|void
 name|intpr
 parameter_list|(
 name|int
-name|interval
+name|_interval
 parameter_list|,
 name|u_long
 name|ifnetaddr
@@ -816,7 +816,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|interval
+name|_interval
 condition|)
 block|{
 name|sidewaysintpr
@@ -824,7 +824,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|interval
+name|_interval
 argument_list|,
 name|ifnetaddr
 argument_list|)
