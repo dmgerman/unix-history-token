@@ -80,6 +80,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_PCIC_TI1251B
+value|0xac1f104cul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
 value|0x060a1179ul
 end_define
