@@ -7934,6 +7934,20 @@ name|VAR_LINUX_ENABLE
 literal|"=YES"
 block|}
 block|,
+block|{
+literal|"SCO"
+block|,
+literal|"This host wants to be able to run IBCS2 binaries."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"ibcs2_enable=YES"
+block|}
+block|,
 endif|#
 directive|endif
 block|{
@@ -7948,20 +7962,6 @@ block|,
 name|NULL
 block|,
 literal|"check_quotas=YES"
-block|}
-block|,
-block|{
-literal|"SCO"
-block|,
-literal|"This host wants to be able to run IBCS2 binaries."
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"ibcs2_enable=YES"
 block|}
 block|,
 block|{
