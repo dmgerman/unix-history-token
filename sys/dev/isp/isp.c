@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp.c,v 1.20 1999/05/12 18:56:55 mjacob Exp $ */
+comment|/* $Id: $ */
 end_comment
 
 begin_comment
