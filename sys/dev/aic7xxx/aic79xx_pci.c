@@ -4257,8 +4257,6 @@ operator||=
 name|AHD_LQOOVERRUN_BUG
 operator||
 name|AHD_EARLY_REQ_BUG
-operator||
-name|AHD_BUSFREEREV_BUG
 expr_stmt|;
 comment|/* 		 * Some issues have been resolved in the 7901B. 		 */
 if|if
@@ -4280,6 +4278,8 @@ operator||=
 name|AHD_INTCOLLISION_BUG
 operator||
 name|AHD_ABORT_LQI_BUG
+operator||
+name|AHD_BUSFREEREV_BUG
 expr_stmt|;
 comment|/* 		 * IO Cell paramter setup. 		 */
 name|AHD_SET_PRECOMP
