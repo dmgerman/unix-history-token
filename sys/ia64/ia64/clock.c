@@ -158,7 +158,7 @@ value|(((y) % 4) == 0)
 end_define
 
 begin_decl_stmt
-name|device_t
+name|kobj_t
 name|clockdev
 decl_stmt|;
 end_decl_stmt
@@ -222,7 +222,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_char
+name|u_int64_t
 name|itc_frequency
 decl_stmt|;
 end_decl_stmt
@@ -380,7 +380,7 @@ begin_function
 name|void
 name|clockattach
 parameter_list|(
-name|device_t
+name|kobj_t
 name|dev
 parameter_list|)
 block|{
