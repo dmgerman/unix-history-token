@@ -2664,9 +2664,6 @@ decl_stmt|;
 name|int
 name|maxlaunder
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3440,11 +3437,6 @@ goto|;
 block|}
 block|}
 comment|/* 			 * If a page is dirty, then it is either being washed 			 * (but not yet cleaned) or it is still in the 			 * laundry.  If it is still in the laundry, then we 			 * start the cleaning operation.  			 * 			 * This operation may cluster, invalidating the 'next' 			 * pointer.  To prevent an inordinate number of 			 * restarts we use our marker to remember our place. 			 * 			 * decrement page_shortage on success to account for 			 * the (future) cleaned page.  Otherwise we could wind 			 * up laundering or cleaning too many pages. 			 */
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|TAILQ_INSERT_AFTER
 argument_list|(
 operator|&
@@ -3461,11 +3453,6 @@ operator|&
 name|marker
 argument_list|,
 name|pageq
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -3485,11 +3472,6 @@ operator|--
 name|maxlaunder
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|next
 operator|=
 name|TAILQ_NEXT
@@ -3514,11 +3496,6 @@ operator|&
 name|marker
 argument_list|,
 name|pageq
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|unlock_and_continue
@@ -3879,11 +3856,6 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 comment|/* 	 * We try to maintain some *really* free pages, this allows interrupt 	 * code to be guaranteed space.  Since both cache and free queues  	 * are considered basically 'free', moving pages from cache to free 	 * does not effect other calculations. 	 */
 while|while
 condition|(
@@ -3962,11 +3934,6 @@ name|v_dfree
 operator|++
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
@@ -4416,9 +4383,6 @@ decl_stmt|;
 name|int
 name|page_shortage
 decl_stmt|;
-name|int
-name|s0
-decl_stmt|;
 name|page_shortage
 operator|=
 operator|(
@@ -4456,11 +4420,6 @@ operator|<=
 literal|0
 condition|)
 return|return;
-name|s0
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -4726,11 +4685,6 @@ block|}
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|splx
-argument_list|(
-name|s0
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4748,8 +4702,6 @@ name|int
 name|error
 decl_stmt|,
 name|pass
-decl_stmt|,
-name|s
 decl_stmt|;
 comment|/* 	 * Initialize some paging parameters. 	 */
 name|cnt
@@ -5065,11 +5017,6 @@ condition|(
 name|TRUE
 condition|)
 block|{
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -5183,11 +5130,6 @@ block|{
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|pass
 operator|=
 literal|0
@@ -5209,11 +5151,6 @@ operator|++
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|vm_pageout_scan
 argument_list|(
