@@ -433,6 +433,34 @@ define|\
 value|(SMBUS_BREAD(device_get_parent(bus), slave, cmd, count, buf))
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMBUS_MODVER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMBUS_MINVER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMBUS_MAXVER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMBUS_PREFVER
+value|SMBUS_MODVER
+end_define
+
 begin_endif
 endif|#
 directive|endif
