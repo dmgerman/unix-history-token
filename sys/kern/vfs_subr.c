@@ -9663,12 +9663,8 @@ operator|&=
 operator|~
 name|VI_DOINGINACT
 expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 block|}
+else|else
 name|VI_LOCK
 argument_list|(
 name|vp
