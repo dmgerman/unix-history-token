@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.1	82/02/08	*/
+comment|/*	if_dmc.c	4.2	82/02/12	*/
 end_comment
 
 begin_include
@@ -1246,7 +1246,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|btop
+name|btoc
 argument_list|(
 name|DMCMTU
 argument_list|)
