@@ -2132,13 +2132,11 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"vx%d: adapter reset\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"adapter reset\n"
 argument_list|)
 expr_stmt|;
 name|vxreset
@@ -3941,13 +3939,11 @@ name|if_flags
 operator|&
 name|IFF_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"vx%d: device timeout\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"device timeout\n"
 argument_list|)
 expr_stmt|;
 name|ifp
