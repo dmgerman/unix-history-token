@@ -2992,7 +2992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	IRQ token. Must be number> 0&&< 16.  *	If force is set, IRQ must exist, and can also be '?'.  */
+comment|/*  *	IRQ token. Must be number> 0&&< 16.  *	If force is set, IRQ must exist, and can also be '?' or 'any'.  */
 end_comment
 
 begin_function
@@ -3043,6 +3043,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* old PAO syntax -- people are still using it! */
 if|if
 condition|(
 name|strcmp
