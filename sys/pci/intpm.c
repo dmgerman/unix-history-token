@@ -126,7 +126,7 @@ specifier|static
 struct|struct
 name|_pcsid
 block|{
-name|pcidi_t
+name|u_int32_t
 name|type
 decl_stmt|;
 name|char
@@ -637,9 +637,6 @@ name|pmst
 decl_stmt|;
 name|bus_space_handle_t
 name|pmsh
-decl_stmt|;
-name|pcici_t
-name|cfg
 decl_stmt|;
 name|device_t
 name|smbus
