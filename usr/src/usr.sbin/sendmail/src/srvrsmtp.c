@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -2162,13 +2162,10 @@ name|childpid
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|OneXact
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|{
 name|childpid
 operator|=
 name|dofork
@@ -2254,6 +2251,9 @@ name|InChild
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
+block|}
+comment|/* child (or ONEX command specified) */
 name|clearenvelope
 argument_list|(
 name|CurEnv
@@ -2272,7 +2272,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_block
 
