@@ -3469,23 +3469,6 @@ literal|"syscall: kse/thread UNLINKED"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|->
-name|td_kse
-operator|->
-name|ke_thread
-operator|==
-name|td
-operator|)
-argument_list|,
-operator|(
-literal|"syscall:kse/thread mismatch"
-operator|)
-argument_list|)
-expr_stmt|;
 name|sticks
 operator|=
 name|td
