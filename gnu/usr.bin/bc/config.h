@@ -20,5 +20,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|YYTEXT_POINTER
+value|1
+end_define
+
 end_unit
 
