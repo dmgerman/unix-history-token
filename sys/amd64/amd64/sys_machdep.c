@@ -1366,11 +1366,12 @@ block|{
 if|if
 condition|(
 name|td
+operator|->
+name|td_proc
 operator|!=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
+operator|->
+name|td_proc
 condition|)
 return|return;
 name|mtx_lock_spin
