@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuq.c	4.7 (Berkeley) %G%"
+literal|"@(#)uuq.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * This file contains no ATT code and is not subject to the ATT  * license provisions regarding redistribution.  * 	Rick Adams 2/23/88  */
+end_comment
 
 begin_comment
 comment|/*  * uuq - looks at uucp queues  *  * Lou Salkind  * New York University  *  */
@@ -285,7 +289,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|double
+name|float
 name|atof
 parameter_list|()
 function_decl|;
@@ -295,7 +299,7 @@ begin_decl_stmt
 name|float
 name|baudrate
 init|=
-literal|1200.
+literal|2400.
 decl_stmt|;
 end_decl_stmt
 
@@ -550,9 +554,9 @@ expr_stmt|;
 comment|/* reduce speed because of protocol overhead */
 name|baudrate
 operator|*=
-literal|6.
+literal|7.5
 expr_stmt|;
-comment|/* convert to chars/minute (60/10) */
+comment|/* convert to chars/minute (60/8) */
 name|gather
 argument_list|()
 expr_stmt|;
@@ -661,7 +665,7 @@ literal|60
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", %d bytes, "
+literal|", %ld bytes, "
 argument_list|,
 name|sp
 operator|->
@@ -827,7 +831,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s %2d %-*s%7d%5.1f %-12.12s %c %.*s\n"
+literal|"%s %2d %-*s%7ld%5.1f %-12.12s %c %.*s\n"
 argument_list|,
 name|jp
 operator|->
@@ -938,7 +942,7 @@ name|sprintf
 argument_list|(
 name|pbuf
 argument_list|,
-literal|"%s/%c.%szPOLL"
+literal|"%s/%c.%s%cPOLL"
 argument_list|,
 name|subdir
 argument_list|(
@@ -952,8 +956,15 @@ argument_list|,
 name|sp
 operator|->
 name|s_name
+argument_list|,
+name|jp
+operator|->
+name|j_grade
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|pbuf
