@@ -616,17 +616,30 @@ condition|)
 block|{
 comment|/* ethertypes */
 case|case
-name|ETHERTYPE_IP
-case|:
-comment|/* shouldn't need a schednetisr(), as */
-case|case
 name|WCCP_PROTOCOL_TYPE
 case|:
-comment|/* we are in ip_input */
+if|if
+condition|(
+name|sc
+operator|->
+name|wccp_ver
+operator|==
+name|WCCP_V2
+condition|)
+name|hlen
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|ETHERTYPE_IP
+case|:
+comment|/* shouldn't need a schednetisr(), */
 name|isr
 operator|=
 name|NETISR_IP
 expr_stmt|;
+comment|/* as we are in ip_input */
 break|break;
 ifdef|#
 directive|ifdef

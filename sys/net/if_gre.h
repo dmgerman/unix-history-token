@@ -41,6 +41,24 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_comment
+comment|/*  * Version of the WCCP, need to be configured manually since  * header for version 2 is the same but IP payload is prepended  * with additional 4-bytes field.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|WCCP_V1
+init|=
+literal|0
+block|,
+name|WCCP_V2
+block|}
+name|wccp_ver_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|gre_softc
@@ -91,6 +109,10 @@ name|int
 name|called
 decl_stmt|;
 comment|/* infinite recursion preventer */
+name|wccp_ver_t
+name|wccp_ver
+decl_stmt|;
+comment|/* version of the WCCP */
 block|}
 struct|;
 end_struct
