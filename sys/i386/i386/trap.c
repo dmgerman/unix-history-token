@@ -992,7 +992,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 		 * First check that we shouldn't just abort. 		 * But check if we are the single thread first! 		 */
+comment|/* 		 * First check that we shouldn't just abort. 		 * But check if we are the single thread first! 		 * XXX p_singlethread not locked, but should be safe. 		 */
 if|if
 condition|(
 operator|(

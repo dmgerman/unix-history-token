@@ -1999,6 +1999,14 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
@@ -2325,7 +2333,7 @@ literal|"singlethread not set"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * The only suspension in action is 			 * a single-threading. Treat it ever 			 * so slightly different if it is 			 * in a special situation. 			 */
+comment|/* 			 * The only suspension in action is 			 * a single-threading. Treat it ever 			 * so slightly different if it is 			 * in a special situation. 			 * XXX Should be safe to access unlocked  			 * as it can only be set to be true by us. 			 */
 if|if
 condition|(
 name|p
@@ -2536,6 +2544,14 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
