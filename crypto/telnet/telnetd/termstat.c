@@ -1377,7 +1377,7 @@ return|return;
 endif|#
 directive|endif
 comment|/* LINEMODE */
-comment|/* 		 * Change terminal speed as requested by client. 		 * We set the receive speed first, so that if we can't 		 * store seperate receive and transmit speeds, the transmit 		 * speed will take precedence. 		 */
+comment|/* 		 * Change terminal speed as requested by client. 		 * We set the receive speed first, so that if we can't 		 * store separate receive and transmit speeds, the transmit 		 * speed will take precedence. 		 */
 name|tty_rspeed
 argument_list|(
 name|parm2

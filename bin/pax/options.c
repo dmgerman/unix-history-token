@@ -3193,7 +3193,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * str_offt()  *	Convert an expression of the following forms to an off_t> 0.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1024).  *	4) A positive decimal number followed by a m (mult by 512).  *	5) A positive decimal number followed by a w (mult by sizeof int)  *	6) Two or more positive decimal numbers (with/without k,b or w).  *	   seperated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  * Return:  *	0 for an error, a positive value o.w.  */
+comment|/*  * str_offt()  *	Convert an expression of the following forms to an off_t> 0.  * 	1) A positive decimal number.  *	2) A positive decimal number followed by a b (mult by 512).  *	3) A positive decimal number followed by a k (mult by 1024).  *	4) A positive decimal number followed by a m (mult by 512).  *	5) A positive decimal number followed by a w (mult by sizeof int)  *	6) Two or more positive decimal numbers (with/without k,b or w).  *	   separated by x (also * for backwards compatibility), specifying  *	   the product of the indicated values.  * Return:  *	0 for an error, a positive value o.w.  */
 end_comment
 
 begin_if

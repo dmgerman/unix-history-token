@@ -1653,7 +1653,7 @@ goto|goto
 name|err1
 goto|;
 block|}
-comment|/* 	 * clase [SEP clause [SEP clause ...]] 	 * Split into "clauses", which are seperated by a : or whitespace. 	 * 	 * clause = [caplist]actionlist 	 * caplist = capabilityname[,capabilityname[, ...]] 	 * actionlist = op[flags][op[flags]] 	 * Split clauses into a (possibly null) capability name list, and a 	 * set of one or more {op,flags} pairs. 	 * 	 * Each assignment is then applied to a running "state" to 	 * produce an end-result in the internal representation. 	 * Parsing failure at any time releases resources and results 	 * in EINVAL. 	 */
+comment|/* 	 * clase [SEP clause [SEP clause ...]] 	 * Split into "clauses", which are separated by a : or whitespace. 	 * 	 * clause = [caplist]actionlist 	 * caplist = capabilityname[,capabilityname[, ...]] 	 * actionlist = op[flags][op[flags]] 	 * Split clauses into a (possibly null) capability name list, and a 	 * set of one or more {op,flags} pairs. 	 * 	 * Each assignment is then applied to a running "state" to 	 * produce an end-result in the internal representation. 	 * Parsing failure at any time releases resources and results 	 * in EINVAL. 	 */
 name|cur
 operator|=
 name|mybuf
