@@ -8306,6 +8306,9 @@ operator|=
 operator|(
 name|int
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|context
 expr_stmt|;
 if|if
@@ -8381,6 +8384,9 @@ argument_list|,
 operator|(
 name|void
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|sstate
 argument_list|,
