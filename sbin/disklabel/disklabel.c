@@ -164,13 +164,20 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|i386
+name|__386BSD__
 argument_list|)
 end_if
 
 begin_comment
 comment|/* with 386BSD, 'c' maps the portion of the disk given over to 386BSD,    and 'd' maps the entire drive, ignoring any partition tables */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LABELPARTITION
+value|('c' - 'a')
+end_define
 
 begin_define
 define|#
@@ -184,23 +191,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|defined
-argument_list|(
-name|i386
-argument_list|)
-operator|==
-literal|0
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RAWPARTITION
+end_ifndef
 
 begin_define
 define|#
@@ -246,7 +241,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|i386
+name|__386BSD__
 argument_list|)
 end_if
 
@@ -870,6 +865,10 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* not used (some bootstraps copy wd tables to 0x300) */
 block|{
 name|int
 name|mfd
@@ -912,6 +911,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|op
@@ -936,6 +937,29 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 			 * It's too much trouble to make -e -r work 			 * when there is no on-disk label. 			 * 			 * XXX -e without -r will fail if there is no 			 * on-disk label, but not until the user has 			 * wasted time editing the in-core label. 			 */
+name|errno
+operator|=
+name|ESRCH
+expr_stmt|;
+name|l_perror
+argument_list|(
+literal|"-e flag is not suitable"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|edit
@@ -999,6 +1023,32 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Ignoring -r and trying to read in-core label\n"
+argument_list|)
+expr_stmt|;
+name|rflag
+operator|=
+literal|0
+expr_stmt|;
+name|lp
+operator|=
+name|readlabel
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+block|}
 name|display
 argument_list|(
 name|stdout
@@ -1634,6 +1684,8 @@ init|=
 name|lp
 operator|->
 name|d_partitions
+operator|+
+name|LABELPARTITION
 decl_stmt|;
 endif|#
 directive|endif
@@ -1672,7 +1724,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__386BSD__
-comment|/* 		 * If 386BSD DOS partition is missing, or if  		 * the label to be written is not within partition, 		 * prompt first. Need to allow this in case operator 		 * wants to convert the drive for dedicated use. 		 * In this case, partition 'a' had better start at 0, 		 * otherwise we reject the request as meaningless. -wfj 		 */
+comment|/* 		 * If 386BSD DOS partition is missing, or if  		 * the label to be written is not within partition, 		 * prompt first. Need to allow this in case operator 		 * wants to convert the drive for dedicated use. 		 * In this case, partition 'c' had better start at 0, 		 * otherwise we reject the request as meaningless. -wfj 		 */
 if|if
 condition|(
 name|dosdp
@@ -1710,12 +1762,12 @@ condition|(
 name|dosdp
 condition|)
 block|{
-name|char
+name|int
 name|c
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"overwriting disk with DOS partition table? (n):"
+literal|"overwrite DOS partition table? [n]: "
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -1736,9 +1788,6 @@ name|EOF
 operator|&&
 name|c
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 while|while
@@ -1746,20 +1795,14 @@ condition|(
 name|getchar
 argument_list|()
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 empty_stmt|;
 if|if
 condition|(
 name|c
-operator|==
-operator|(
-name|int
-operator|)
-literal|'n'
+operator|!=
+literal|'y'
 condition|)
 name|exit
 argument_list|(
@@ -1940,16 +1983,64 @@ block|{
 name|daddr_t
 name|alt
 decl_stmt|;
+comment|/* 		 * XXX this knows too much about bad144 internals 		 */
+ifdef|#
+directive|ifdef
+name|__386BSD__
+define|#
+directive|define
+name|BAD144_PART
+value|2
+comment|/* XXX scattered magic numbers */
+define|#
+directive|define
+name|BSD_PART
+value|0
+comment|/* XXX should be 2 but bad144.c uses 0 */
+if|if
+condition|(
+name|lp
+operator|->
+name|d_partitions
+index|[
+name|BSD_PART
+index|]
+operator|.
+name|p_offset
+operator|!=
+literal|0
+condition|)
 name|alt
 operator|=
 name|lp
 operator|->
-name|d_ncylinders
-operator|*
+name|d_partitions
+index|[
+name|BAD144_PART
+index|]
+operator|.
+name|p_offset
+operator|+
 name|lp
 operator|->
-name|d_secpercyl
-operator|-
+name|d_partitions
+index|[
+name|BAD144_PART
+index|]
+operator|.
+name|p_size
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|alt
+operator|=
+name|lp
+operator|->
+name|d_secperunit
+expr_stmt|;
+name|alt
+operator|-=
 name|lp
 operator|->
 name|d_nsectors
@@ -1975,9 +2066,6 @@ operator|+=
 literal|2
 control|)
 block|{
-operator|(
-name|void
-operator|)
 name|lseek
 argument_list|(
 name|f
@@ -2007,6 +2095,14 @@ argument_list|(
 name|f
 argument_list|,
 name|boot
+operator|+
+operator|(
+name|LABELSECTOR
+operator|*
+name|lp
+operator|->
+name|d_secsize
+operator|)
 argument_list|,
 name|lp
 operator|->
@@ -2103,7 +2199,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"use \"disklabel -r\" to install initial label\n"
+literal|"use flags \"-w -r\" or \"-R -r\" to install initial label\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2217,6 +2313,7 @@ index|[
 name|DEV_BSIZE
 index|]
 decl_stmt|;
+comment|/* XXX - DOS_DEV_BSIZE */
 name|int
 name|i
 decl_stmt|,
@@ -2279,7 +2376,7 @@ name|dos_partitions
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Don't (yet) know disk geometry (BIOS), use 	 * partition table to find 386BSD partition, and obtain 	 * disklabel from there. 	 */
+comment|/* 	 * Don't (yet) know disk geometry (BIOS), use 	 * partition table to find 386BSD partition, and obtain 	 * disklabel from there. 	 * 	 * XXX - the checks for a valid partition table are inadequate. 	 * This gets called for floppies, which will never have an mbr 	 * and may have junk that looks like a partition table... 	 */
 name|dp
 operator|=
 name|dos_partitions
@@ -2371,6 +2468,7 @@ name|dp
 expr_stmt|;
 block|}
 comment|/* valid partition table? */
+comment|/* 	 * XXX - ignore `nboot'.  Drives other than the first do not need a 	 * boot flag.  The first drive doesn't need a boot flag when it is 	 * booted from a multi-boot program. 	 */
 if|if
 condition|(
 name|npart
@@ -2619,16 +2717,15 @@ argument_list|,
 literal|"Bad pack magic number (label is damaged, or pack is unlabeled)\n"
 argument_list|)
 expr_stmt|;
-comment|/* lp = (struct disklabel *)(bootarea + LABELOFFSET); 			exit (1); */
-goto|goto
-name|tryioctl
-goto|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 block|}
 else|else
 block|{
-name|tryioctl
-label|:
 name|lp
 operator|=
 operator|&
@@ -3751,9 +3848,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|pp
+operator|->
+name|p_offset
+operator|+
 name|pp
 operator|->
 name|p_size
+operator|)
 operator|%
 name|lp
 operator|->
@@ -4009,9 +4112,6 @@ name|EOF
 operator|&&
 name|c
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 while|while
@@ -4019,9 +4119,6 @@ condition|(
 name|getchar
 argument_list|()
 operator|!=
-operator|(
-name|int
-operator|)
 literal|'\n'
 condition|)
 empty_stmt|;
@@ -4029,9 +4126,6 @@ if|if
 condition|(
 name|c
 operator|==
-operator|(
-name|int
-operator|)
 literal|'n'
 condition|)
 break|break;
@@ -5937,6 +6031,10 @@ decl_stmt|;
 name|char
 name|part
 decl_stmt|;
+name|unsigned
+name|long
+name|secper
+decl_stmt|;
 if|if
 condition|(
 name|lp
@@ -6056,17 +6154,7 @@ operator|->
 name|d_rpm
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lp
-operator|->
-name|d_secpercyl
-operator|==
-literal|0
-condition|)
-name|lp
-operator|->
-name|d_secpercyl
+name|secper
 operator|=
 name|lp
 operator|->
@@ -6080,13 +6168,44 @@ if|if
 condition|(
 name|lp
 operator|->
-name|d_secperunit
+name|d_secpercyl
 operator|==
 literal|0
 condition|)
 name|lp
 operator|->
-name|d_secperunit
+name|d_secpercyl
+operator|=
+name|secper
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lp
+operator|->
+name|d_secpercyl
+operator|!=
+name|secper
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"sectors/cylinder %lu should be %lu\n"
+argument_list|,
+name|lp
+operator|->
+name|d_secpercyl
+argument_list|,
+name|secper
+argument_list|)
+expr_stmt|;
+name|errors
+operator|++
+expr_stmt|;
+block|}
+name|secper
 operator|=
 name|lp
 operator|->
@@ -6096,6 +6215,48 @@ name|lp
 operator|->
 name|d_ncylinders
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_secperunit
+operator|==
+literal|0
+condition|)
+name|lp
+operator|->
+name|d_secperunit
+operator|=
+name|secper
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lp
+operator|->
+name|d_secperunit
+operator|!=
+name|secper
+condition|)
+block|{
+comment|/* 		 * lp->d_secperunit makes sense as a limit on the disk size 		 * independent of the product.  However, bad144 handling at 		 * least requires it to be the same as the product, and the 		 * "whole disk" partition may be used to limit the size. 		 * 		 * XXX It's silly to accept derived quantities as input only 		 * to reject them. 		 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"sectors/unit %lu should be %lu\n"
+argument_list|,
+name|lp
+operator|->
+name|d_secperunit
+argument_list|,
+name|secper
+argument_list|)
+expr_stmt|;
+name|errors
+operator|++
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|__386BSD__notyet
