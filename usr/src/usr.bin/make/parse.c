@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	8.1 (Berkeley) %G%"
+literal|"@(#)parse.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7505,6 +7505,19 @@ operator|&
 name|OP_DOUBLEDEP
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|Lst_AtEnd
+argument_list|(
+expr|main
+argument_list|,
+operator|(
+name|ClientData
+operator|)
+name|mainNode
+argument_list|)
+expr_stmt|;
 name|Lst_Concat
 argument_list|(
 expr|main
@@ -7517,6 +7530,7 @@ name|LST_CONCNEW
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 operator|(
 name|void
 operator|)
