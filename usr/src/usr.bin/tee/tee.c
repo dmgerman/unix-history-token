@@ -61,7 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -73,13 +79,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_typedef
@@ -163,14 +181,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|buf
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 name|off_t
 name|lseek
@@ -329,7 +339,7 @@ name|O_CREAT
 operator||
 name|O_TRUNC
 argument_list|,
-literal|0600
+name|DEFFILEMODE
 argument_list|)
 operator|)
 operator|<
@@ -534,26 +544,12 @@ name|LIST
 modifier|*
 name|p
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
-decl_stmt|;
-comment|/* NOSTRICT */
 if|if
 condition|(
 operator|!
 operator|(
 name|p
 operator|=
-operator|(
-name|LIST
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
