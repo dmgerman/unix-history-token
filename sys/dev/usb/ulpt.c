@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ulpt.c,v 1.51 2002/08/15 09:32:50 augustss Exp $	*/
+comment|/*	$NetBSD: ulpt.c,v 1.55 2002/10/23 09:14:01 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -467,12 +467,78 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-operator|||
+end_if
+
+begin_expr_stmt
+name|dev_type_open
+argument_list|(
+name|ulptopen
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|dev_type_close
+argument_list|(
+name|ulptclose
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|dev_type_write
+argument_list|(
+name|ulptwrite
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|dev_type_ioctl
+argument_list|(
+name|ulptioctl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|cdevsw
+name|ulpt_cdevsw
+init|=
+block|{
+name|ulptopen
+block|,
+name|ulptclose
+block|,
+name|noread
+block|,
+name|ulptwrite
+block|,
+name|ulptioctl
+block|,
+name|nostop
+block|,
+name|notty
+block|,
+name|nopoll
+block|,
+name|nommap
+block|,
+name|nokqfilter
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__OpenBSD__
 argument_list|)
-end_if
+end_elif
 
 begin_expr_stmt
 name|cdev_decl
@@ -983,7 +1049,7 @@ name|iend
 condition|)
 name|panic
 argument_list|(
-literal|"ulpt: iface desc out of range\n"
+literal|"ulpt: iface desc out of range"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1527,7 +1593,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-break|break;
 case|case
 name|DVACT_DEACTIVATE
 case|:
@@ -1720,6 +1785,26 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 comment|/* locate the major number */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|maj
+operator|=
+name|cdevsw_lookup_major
+argument_list|(
+operator|&
+name|ulpt_cdevsw
+argument_list|)
+expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 for|for
 control|(
 name|maj
@@ -1745,6 +1830,8 @@ operator|==
 name|ulptopen
 condition|)
 break|break;
+endif|#
+directive|endif
 comment|/* Nuke the vnodes for any open instances (calls close). */
 name|mn
 operator|=
