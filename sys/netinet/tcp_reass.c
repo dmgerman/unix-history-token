@@ -3290,7 +3290,15 @@ else|else
 block|{
 if|if
 condition|(
-name|ip6_mapped_addr_on
+operator|(
+name|inp
+operator|->
+name|inp_flags
+operator|&
+name|IN6P_BINDV6ONLY
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|inp

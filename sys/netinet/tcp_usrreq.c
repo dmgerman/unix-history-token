@@ -927,8 +927,6 @@ name|INP_IPV6
 expr_stmt|;
 if|if
 condition|(
-name|ip6_mapped_addr_on
-operator|&&
 operator|(
 name|inp
 operator|->
@@ -937,7 +935,7 @@ operator|&
 name|IN6P_BINDV6ONLY
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 if|if
@@ -1212,8 +1210,6 @@ name|INP_IPV4
 expr_stmt|;
 if|if
 condition|(
-name|ip6_mapped_addr_on
-operator|&&
 operator|(
 name|inp
 operator|->
@@ -1222,7 +1218,7 @@ operator|&
 name|IN6P_BINDV6ONLY
 operator|)
 operator|==
-name|NULL
+literal|0
 condition|)
 name|inp
 operator|->
@@ -1521,7 +1517,15 @@ goto|;
 block|}
 if|if
 condition|(
-name|ip6_mapped_addr_on
+operator|(
+name|inp
+operator|->
+name|inp_flags
+operator|&
+name|IN6P_BINDV6ONLY
+operator|)
+operator|==
+literal|0
 operator|&&
 name|IN6_IS_ADDR_V4MAPPED
 argument_list|(
