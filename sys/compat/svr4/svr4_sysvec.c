@@ -459,9 +459,14 @@ name|svr4_sysent
 block|,
 literal|0xff
 block|,
-name|SVR4_SIGTBLSZ
+name|SVR4_NSIG
+operator|-
+literal|1
 block|,
+comment|/* NB: signal trans table indexed with signno-1 */
 name|bsd_to_svr4_sig
+operator|+
+literal|1
 block|,
 name|ELAST
 block|,

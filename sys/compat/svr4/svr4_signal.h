@@ -275,13 +275,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SVR4_SIGTBLSZ
-value|31
-end_define
-
-begin_define
-define|#
-directive|define
 name|SVR4_SIGNO_MASK
 value|0x00FF
 end_define
@@ -420,7 +413,9 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|bsd_to_svr4_sig
-index|[]
+index|[
+name|SVR4_NSIG
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -428,7 +423,9 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|svr4_to_bsd_sig
-index|[]
+index|[
+name|SVR4_NSIG
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -440,7 +437,7 @@ parameter_list|(
 name|sig
 parameter_list|)
 define|\
-value|(((sig)<= SVR4_SIGTBLSZ) ? bsd_to_svr4_sig[_SIG_IDX(sig)] : sig)
+value|(((sig)< SVR4_NSIG) ? bsd_to_svr4_sig[sig] : sig)
 end_define
 
 begin_define
@@ -451,7 +448,7 @@ parameter_list|(
 name|sig
 parameter_list|)
 define|\
-value|(((sig)<= SVR4_SIGTBLSZ) ? svr4_to_bsd_sig[_SIG_IDX(sig)] : sig)
+value|(((sig)< SVR4_NSIG) ? svr4_to_bsd_sig[sig] : sig)
 end_define
 
 begin_typedef
