@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.61 2003/07/26 17:45:45 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.62 2003/08/07 19:33:11 imp Exp   */
 end_comment
 
 begin_comment
@@ -444,6 +444,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_MELCO
+value|0x018a
+end_define
+
+begin_comment
+comment|/* Melco Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_DAYNA
 value|0x0194
 end_define
@@ -758,17 +769,6 @@ end_define
 
 begin_comment
 comment|/* Compex Corporation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_MELCO
-value|0x8a01
-end_define
-
-begin_comment
-comment|/* Melco Corporation */
 end_comment
 
 begin_define
@@ -3005,6 +3005,27 @@ name|PCMCIA_STR_MELCO_LPC3_TX
 value|"Melco LPC3-TX"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_MELCO_LPC3_CLX
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_MELCO_LPC3_CLX
+value|0x0301
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_MELCO_LPC3_CLX
+value|"Melco LPC3-CLX Ethernet Adapter"
+end_define
+
 begin_comment
 comment|/* Motorola Products */
 end_comment
@@ -4950,6 +4971,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_MELCO2
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* Melco Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_NAKAGAWAMETAL
 value|0xffffffff
 end_define
@@ -6201,21 +6233,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_MELCO_LPC2_TX
+name|PCMCIA_CIS_MELCO2_LPC2_TX
 value|{ "MELCO", "LPC2-TX", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_MELCO_LPC2_TX
+name|PCMCIA_PRODUCT_MELCO2_LPC2_TX
 value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_MELCO_LPC2_TX
+name|PCMCIA_STR_MELCO2_LPC2_TX
 value|"Melco LPC2-TX"
 end_define
 
