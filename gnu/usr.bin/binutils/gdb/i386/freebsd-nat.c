@@ -382,9 +382,7 @@ operator|)
 operator|->
 name|u_kproc
 operator|.
-name|kp_proc
-operator|.
-name|p_addr
+name|ki_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(

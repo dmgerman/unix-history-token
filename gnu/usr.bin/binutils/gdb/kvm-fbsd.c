@@ -2162,9 +2162,7 @@ name|CORE_ADDR
 operator|)
 name|kp
 operator|->
-name|kp_eproc
-operator|.
-name|e_paddr
+name|ki_paddr
 argument_list|)
 condition|)
 name|error
@@ -3284,9 +3282,7 @@ condition|)
 continue|continue;
 name|kp
 operator|.
-name|kp_eproc
-operator|.
-name|e_paddr
+name|ki_paddr
 operator|=
 name|p
 expr_stmt|;
