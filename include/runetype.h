@@ -18,39 +18,32 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<machine/ansi.h>
 end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_BSD_WCHAR_T_
+name|_BSD_RUNE_T_
 end_ifdef
 
 begin_typedef
 typedef|typedef
-name|_BSD_WCHAR_T_
+name|_BSD_RUNE_T_
 name|rune_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|_BSD_WCHAR_T_
-name|wchar_t
 typedef|;
 end_typedef
 
 begin_undef
 undef|#
 directive|undef
-name|_BSD_WCHAR_T_
+name|_BSD_RUNE_T_
 end_undef
 
 begin_endif
@@ -75,6 +68,30 @@ begin_undef
 undef|#
 directive|undef
 name|_BSD_SIZE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_WCHAR_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_WCHAR_T_
+name|wchar_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_WCHAR_T_
 end_undef
 
 begin_endif

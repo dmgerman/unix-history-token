@@ -22,7 +22,7 @@ name|___runetype
 parameter_list|(
 name|c
 parameter_list|)
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|c
 decl_stmt|;
 block|{

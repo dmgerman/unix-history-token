@@ -574,7 +574,7 @@ parameter_list|)
 value|__istype((c), _T)
 endif|#
 directive|endif
-comment|/* See comments in<machine/ansi.h> about _BSD_RUNE_T_. */
+comment|/* See comments in<machine/ansi.h> about _BSD_CT_RUNE_T_. */
 name|__BEGIN_DECLS
 name|unsigned
 name|long
@@ -582,31 +582,31 @@ name|___runetype
 name|__P
 argument_list|(
 operator|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|___tolower
 name|__P
 argument_list|(
 operator|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|___toupper
 name|__P
 argument_list|(
 operator|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 operator|)
 argument_list|)
 decl_stmt|;
@@ -660,7 +660,7 @@ name|__inline
 name|int
 name|__istype
 parameter_list|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|_c
 parameter_list|,
 name|unsigned
@@ -712,7 +712,7 @@ name|__inline
 name|int
 name|__isctype
 parameter_list|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|_c
 parameter_list|,
 name|unsigned
@@ -752,10 +752,10 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|__toupper
 parameter_list|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|_c
 parameter_list|)
 block|{
@@ -788,10 +788,10 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|__tolower
 parameter_list|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|_c
 parameter_list|)
 block|{
@@ -837,7 +837,7 @@ name|__istype
 name|__P
 argument_list|(
 operator|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 operator|,
 name|unsigned
 name|long
@@ -852,7 +852,7 @@ name|__isctype
 name|__P
 argument_list|(
 operator|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 operator|,
 name|unsigned
 name|long
@@ -862,24 +862,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|__toupper
 name|__P
 argument_list|(
 operator|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 name|__tolower
 name|__P
 argument_list|(
 operator|(
-name|_BSD_RUNE_T_
+name|_BSD_CT_RUNE_T_
 operator|)
 argument_list|)
 decl_stmt|;
