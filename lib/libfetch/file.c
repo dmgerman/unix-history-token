@@ -60,6 +60,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -154,6 +155,7 @@ name|url
 modifier|*
 name|u
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -182,6 +184,7 @@ name|url
 modifier|*
 name|u
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -271,6 +274,7 @@ specifier|static
 name|int
 name|_fetch_stat_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fn
@@ -368,6 +372,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -397,6 +402,7 @@ name|url
 modifier|*
 name|u
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags

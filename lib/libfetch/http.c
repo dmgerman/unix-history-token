@@ -1098,6 +1098,7 @@ block|{
 name|hdr
 name|num
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1180,6 +1181,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1472,14 +1474,17 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|_http_match
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hdr
@@ -1554,6 +1559,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1681,6 +1687,7 @@ specifier|static
 name|int
 name|_http_parse_mtime
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1818,6 +1825,7 @@ specifier|static
 name|int
 name|_http_parse_length
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1893,6 +1901,7 @@ specifier|static
 name|int
 name|_http_parse_range
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2498,14 +2507,17 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hdr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|usr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pwd
@@ -2600,10 +2612,12 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hdr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|p
@@ -2769,6 +2783,7 @@ name|url
 modifier|*
 name|purl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -2905,7 +2920,9 @@ name|struct
 name|url
 modifier|*
 name|_http_get_proxy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|url
@@ -3032,6 +3049,7 @@ name|url
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|op
@@ -3046,6 +3064,7 @@ name|url
 modifier|*
 name|purl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -3091,6 +3110,7 @@ decl_stmt|;
 name|time_t
 name|mtime
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -4305,6 +4325,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4342,6 +4363,7 @@ name|url
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4374,6 +4396,7 @@ name|url
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4408,6 +4431,7 @@ name|url_stat
 modifier|*
 name|us
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
@@ -4469,6 +4493,7 @@ name|url
 modifier|*
 name|url
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags

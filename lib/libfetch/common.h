@@ -94,6 +94,7 @@ begin_function_decl
 name|void
 name|_fetch_info
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -107,6 +108,7 @@ begin_function_decl
 name|int
 name|_fetch_default_port
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -117,6 +119,7 @@ begin_function_decl
 name|int
 name|_fetch_default_proxy_port
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -127,6 +130,7 @@ begin_function_decl
 name|int
 name|_fetch_connect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
@@ -173,6 +177,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -201,6 +206,7 @@ name|int
 modifier|*
 name|len
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -303,6 +309,7 @@ name|url
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|op
@@ -317,6 +324,7 @@ name|url
 modifier|*
 name|purl
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|flags
