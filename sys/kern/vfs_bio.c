@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.59 1995/08/24 13:59:14 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.60 1995/08/28 09:18:53 julian Exp $  */
 end_comment
 
 begin_comment
@@ -245,6 +245,21 @@ name|bp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|buf
+operator|*
+name|gbincore
+argument_list|(
+argument|struct vnode * vp
+argument_list|,
+argument|daddr_t blkno
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -2441,18 +2456,103 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Check to see if a block is currently memory resident.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|__inline
+expr|struct
+name|buf
+operator|*
+name|gbincore
+argument_list|(
+argument|struct vnode * vp
+argument_list|,
+argument|daddr_t blkno
+argument_list|)
+block|{ 	struct
+name|buf
+operator|*
+name|bp
+block|; 	struct
+name|bufhashhdr
+operator|*
+name|bh
+block|;
+name|bh
+operator|=
+name|BUFHASH
+argument_list|(
+name|vp
+argument_list|,
+name|blkno
+argument_list|)
+block|;
+name|bp
+operator|=
+name|bh
+operator|->
+name|lh_first
+block|;
+comment|/* Search hash chain */
+while|while
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* hit */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+operator|==
+name|vp
+operator|&&
+name|bp
+operator|->
+name|b_lblkno
+operator|==
+name|blkno
+condition|)
+block|{
+break|break;
+block|}
+name|bp
+operator|=
+name|bp
+operator|->
+name|b_hash
+operator|.
+name|le_next
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|} 	return
+operator|(
+name|bp
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|}
 comment|/*  * this routine implements clustered async writes for  * clearing out B_DELWRI buffers...  This is much better  * than the old way of writing only one buffer at a time.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|vfs_bio_awrite
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
+argument_list|(
+argument|struct buf * bp
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -2555,7 +2655,7 @@ condition|(
 operator|(
 name|bpa
 operator|=
-name|incore
+name|gbincore
 argument_list|(
 name|vp
 argument_list|,
@@ -2704,7 +2804,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Find a buffer header which is available for use.  */
@@ -3301,16 +3401,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|bp
-operator|)
-return|;
+break|break;
 block|}
 name|bp
 operator|=
@@ -3328,7 +3419,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|bp
 operator|)
 return|;
 block|}
@@ -3822,7 +3913,7 @@ if|if
 condition|(
 name|bp
 operator|=
-name|incore
+name|gbincore
 argument_list|(
 name|vp
 argument_list|,
@@ -3836,7 +3927,11 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_BUSY
+operator||
+name|B_INVAL
+operator|)
 condition|)
 block|{
 name|bp
@@ -3999,7 +4094,7 @@ argument_list|(
 name|vp
 argument_list|)
 operator|&&
-name|incore
+name|gbincore
 argument_list|(
 name|vp
 argument_list|,
@@ -4217,6 +4312,8 @@ name|s
 decl_stmt|;
 name|int
 name|newbsize
+decl_stmt|,
+name|mbsize
 decl_stmt|;
 name|int
 name|i
@@ -4251,6 +4348,22 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Just get anonymous memory from the kernel 		 */
+name|mbsize
+operator|=
+operator|(
+operator|(
+name|size
+operator|+
+name|DEV_BSIZE
+operator|-
+literal|1
+operator|)
+operator|/
+name|DEV_BSIZE
+operator|)
+operator|*
+name|DEV_BSIZE
+expr_stmt|;
 name|newbsize
 operator|=
 name|round_page
@@ -5729,22 +5842,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|vm_page_set_valid
-argument_list|(
-name|m
-argument_list|,
-name|foff
-operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
-argument_list|,
-name|resid
-argument_list|)
-expr_stmt|;
-name|vm_page_set_clean
+name|vm_page_set_validclean
 argument_list|(
 name|m
 argument_list|,
@@ -6020,7 +6118,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|void
 name|vfs_update
 parameter_list|()
@@ -6031,7 +6128,6 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-comment|/* XXX redundant?  wrong place?*/
 while|while
 condition|(
 literal|1
@@ -6409,6 +6505,19 @@ name|resid
 operator|=
 name|iocount
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_CLUSTER
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|obj
 operator|->
 name|paging_in_progress
@@ -6419,6 +6528,7 @@ operator|->
 name|busy
 operator|++
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|clear_modify
@@ -6431,22 +6541,7 @@ argument_list|,
 name|VM_PROT_READ
 argument_list|)
 expr_stmt|;
-name|vm_page_set_valid
-argument_list|(
-name|m
-argument_list|,
-name|foff
-operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
-argument_list|,
-name|resid
-argument_list|)
-expr_stmt|;
-name|vm_page_set_clean
+name|vm_page_set_validclean
 argument_list|(
 name|m
 argument_list|,
@@ -6637,22 +6732,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|vm_page_set_valid
-argument_list|(
-name|m
-argument_list|,
-name|foff
-operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
-argument_list|,
-name|resid
-argument_list|)
-expr_stmt|;
-name|vm_page_set_clean
+name|vm_page_set_validclean
 argument_list|(
 name|m
 argument_list|,
