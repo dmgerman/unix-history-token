@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"sendmail.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -21,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.21 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.22 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.21 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.22 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +55,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
-end_include
 
 begin_ifdef
 ifdef|#
