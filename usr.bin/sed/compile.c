@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)compile.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)compile.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -825,11 +838,15 @@ name|stack
 operator|!=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unexpected EOF (pending }'s)"
+literal|"%lu: %s: unexpected EOF (pending }'s)"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1018,11 +1035,15 @@ operator|!
 operator|*
 name|p
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"command expected"
+literal|"%lu: %s: command expected"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -1062,11 +1083,15 @@ name|fp
 operator|->
 name|code
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"invalid command code %c"
+literal|"%lu: %s: invalid command code %c"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 operator|*
 name|p
@@ -1080,11 +1105,15 @@ name|fp
 operator|->
 name|naddr
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"command %c expects up to %d address(es), found %d"
+literal|"%lu: %s: command %c expects up to %d address(es), found %d"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 operator|*
 name|p
@@ -1179,11 +1208,15 @@ name|stack
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unexpected }"
+literal|"%lu: %s: unexpected }"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|cmd2
@@ -1240,11 +1273,15 @@ condition|(
 operator|*
 name|p
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"extra characters at the end of %c command"
+literal|"%lu: %s: extra characters at the end of %c command"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|cmd
 operator|->
@@ -1269,11 +1306,15 @@ name|p
 operator|!=
 literal|'\\'
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"command %c expects \\ followed by text"
+literal|"%lu: %s: command %c expects \\ followed by text"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|cmd
 operator|->
@@ -1291,11 +1332,15 @@ condition|(
 operator|*
 name|p
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"extra characters after \\ at the end of %c command"
+literal|"%lu: %s: extra characters after \\ at the end of %c command"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|cmd
 operator|->
@@ -1332,11 +1377,15 @@ name|p
 operator|==
 literal|'\0'
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"filename expected"
+literal|"%lu: %s: filename expected"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -1394,16 +1443,11 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|p
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1424,11 +1468,15 @@ name|p
 operator|==
 literal|'\0'
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"filename expected"
+literal|"%lu: %s: filename expected"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 else|else
@@ -1510,11 +1558,15 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"empty label"
+literal|"%lu: %s: empty label"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|enterlabel
@@ -1542,11 +1594,15 @@ name|p
 operator|==
 literal|'\\'
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"substitute pattern can not be delimited by newline or backslash"
+literal|"%lu: %s: substitute pattern can not be delimited by newline or backslash"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -1586,11 +1642,15 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unterminated substitute pattern"
+literal|"%lu: %s: unterminated substitute pattern"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 operator|--
@@ -1704,11 +1764,15 @@ condition|(
 operator|*
 name|p
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"extra text at the end of a transform command"
+literal|"%lu: %s: extra text at the end of a transform command"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1769,11 +1833,15 @@ name|c
 operator|==
 literal|'\\'
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"\\ can not be used as a string delimiter"
+literal|"%lu: %s: \\ can not be used as a string delimiter"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1783,11 +1851,15 @@ name|c
 operator|==
 literal|'\n'
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"newline can not be used as a string delimiter"
+literal|"%lu: %s: newline can not be used as a string delimiter"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 while|while
@@ -1820,11 +1892,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unbalanced brackets ([])"
+literal|"%lu: %s: unbalanced brackets ([])"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2288,11 +2364,15 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"RE error: %s"
+literal|"%lu: %s: RE error: %s"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|strregerror
 argument_list|(
@@ -2505,11 +2585,15 @@ name|re
 operator|->
 name|re_nsub
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"\\%c not defined in the RE"
+literal|"%lu: %s: \\%c not defined in the RE"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 operator|*
 name|p
@@ -2600,11 +2684,15 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unescaped newline inside substitute pattern"
+literal|"%lu: %s: unescaped newline inside substitute pattern"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -2662,11 +2750,15 @@ argument_list|)
 argument_list|)
 condition|)
 do|;
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unterminated substitute in regular expression"
+literal|"%lu: %s: unterminated substitute in regular expression"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -2764,11 +2856,15 @@ if|if
 condition|(
 name|gn
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"more than one number or 'g' in substitute flags"
+literal|"%lu: %s: more than one number or 'g' in substitute flags"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|gn
@@ -2837,11 +2933,15 @@ if|if
 condition|(
 name|gn
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"more than one number or 'g' in substitute flags"
+literal|"%lu: %s: more than one number or 'g' in substitute flags"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|gn
@@ -2884,11 +2984,13 @@ operator|!=
 literal|' '
 condition|)
 block|{
-name|err
+name|warnx
 argument_list|(
-name|WARNING
+literal|"%lu: %s: space missing before w wfile"
 argument_list|,
-literal|"space missing before w wfile"
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 return|return
@@ -2940,11 +3042,15 @@ name|q
 operator|==
 name|wfile
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"no wfile specified"
+literal|"%lu: %s: no wfile specified"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|s
@@ -2987,16 +3093,11 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|wfile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3005,11 +3106,15 @@ name|p
 operator|)
 return|;
 default|default:
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"bad flag in substitute command: '%c'"
+literal|"%lu: %s: bad flag in substitute command: '%c'"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 operator|*
 name|p
@@ -3089,11 +3194,15 @@ name|p
 operator|==
 literal|'\\'
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"transform pattern can not be delimited by newline or backslash"
+literal|"%lu: %s: transform pattern can not be delimited by newline or backslash"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|p
@@ -3111,20 +3220,17 @@ name|p
 operator|==
 name|NULL
 condition|)
-block|{
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unterminated transform source string"
+literal|"%lu: %s: unterminated transform source string"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|p
 operator|=
 name|compile_delimited
@@ -3141,20 +3247,17 @@ name|p
 operator|==
 name|NULL
 condition|)
-block|{
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unterminated transform target string"
+literal|"%lu: %s: unterminated transform target string"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|EATSPACE
 argument_list|()
 expr_stmt|;
@@ -3170,20 +3273,17 @@ argument_list|(
 name|old
 argument_list|)
 condition|)
-block|{
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"transform strings are not the same length"
+literal|"%lu: %s: transform strings are not the same length"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 comment|/* We assume characters are 8 bits */
 name|lt
 operator|=
@@ -3516,11 +3616,15 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"unterminated regular expression"
+literal|"%lu: %s: unterminated regular expression"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 name|a
@@ -3610,11 +3714,15 @@ name|end
 operator|)
 return|;
 default|default:
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"expected context address"
+literal|"%lu: %s: expected context address"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|)
 expr_stmt|;
 return|return
@@ -3704,11 +3812,13 @@ if|if
 condition|(
 name|ws
 condition|)
-name|err
+name|warnx
 argument_list|(
-name|WARNING
+literal|"%lu: %s: whitespace after %s"
 argument_list|,
-literal|"whitespace after %s"
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|ctype
 argument_list|)
@@ -3839,11 +3949,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE2
+literal|1
 argument_list|,
-literal|"undefined label '%s'"
+literal|"%lu: %s: undefined label '%s'"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|cp
 operator|->
@@ -4008,11 +4122,15 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-name|COMPILE2
+literal|1
 argument_list|,
-literal|"duplicate label '%s'"
+literal|"%lu: %s: duplicate label '%s'"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|cp
 operator|->
@@ -4269,11 +4387,13 @@ name|lh
 operator|->
 name|lh_ref
 condition|)
-name|err
+name|warnx
 argument_list|(
-name|WARNING
+literal|"%lu: %s: unused label '%s'"
 argument_list|,
-literal|"unused label '%s'"
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|lh
 operator|->
