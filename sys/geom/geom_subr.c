@@ -780,6 +780,13 @@ name|hh
 operator|->
 name|error
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 name|g_waitidle
 argument_list|()
 expr_stmt|;
@@ -806,6 +813,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|g_free
 argument_list|(
 name|hh
