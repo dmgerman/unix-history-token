@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ccdconfig.c,v 1.11 1999/04/05 06:30:12 peter Exp $"
+literal|"$Id: ccdconfig.c,v 1.12 1999/05/06 19:20:34 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
 end_include
 
 begin_include
@@ -944,6 +950,7 @@ name|argc
 operator|<
 literal|4
 condition|)
+block|{
 if|if
 condition|(
 name|argc
@@ -985,6 +992,7 @@ else|else
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 comment|/* First argument is the ccd to configure. */
 name|cp
@@ -1370,8 +1378,11 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|", %d blocks "
+literal|", %lu blocks "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ccio
 operator|.
 name|ccio_size
