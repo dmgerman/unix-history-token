@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.7 (Berkeley) %G%"
+literal|"@(#)od.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1991,18 +1991,6 @@ operator|)
 operator|=
 name|d
 expr_stmt|;
-if|if
-condition|(
-name|addr_base
-operator|==
-literal|0
-condition|)
-name|addr_base
-operator|=
-name|d
-operator|->
-name|df_radix
-expr_stmt|;
 while|while
 condition|(
 name|isdigit
@@ -2140,18 +2128,6 @@ operator|~
 name|nelm
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|addr_base
-operator|==
-literal|0
-condition|)
-name|addr_base
-operator|=
-name|d
-operator|->
-name|df_radix
-expr_stmt|;
 operator|*
 operator|(
 name|cv
@@ -2177,10 +2153,6 @@ operator|==
 name|conv_vec
 condition|)
 block|{
-name|addr_base
-operator|=
-literal|8
-expr_stmt|;
 operator|*
 operator|(
 name|cv
