@@ -3,17 +3,17 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)printgprof.c	8.1 (Berkeley) 6/6/93";
@@ -21,14 +21,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -62,12 +62,10 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|printprof
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|nltype
@@ -127,15 +125,13 @@ operator|*
 operator|)
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"[printprof] ran out of memory for time sorting\n"
+literal|"[printprof] ran out of memory for time sorting"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|index
@@ -216,28 +212,26 @@ name|sortednlp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|timecmp
-argument_list|(
-argument|npp1
-argument_list|,
-argument|npp2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|npp1
+parameter_list|,
+name|npp2
+parameter_list|)
 name|nltype
 modifier|*
 modifier|*
 name|npp1
 decl_stmt|,
-modifier|*
+decl|*
 modifier|*
 name|npp2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -344,12 +338,10 @@ begin_comment
 comment|/*      *	header for flatprofline      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|flatprofheader
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -399,7 +391,7 @@ argument_list|(
 literal|" no time accumulated\n\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	     *	this doesn't hurt sinc eall the numerators will be zero. 	     */
+comment|/* 	     *	this doesn't hurt since all the numerators will be zero. 	     */
 name|totime
 operator|=
 literal|1.0
@@ -468,21 +460,19 @@ literal|"name"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|flatprofline
-argument_list|(
+parameter_list|(
 name|np
-argument_list|)
+parameter_list|)
 specifier|register
 name|nltype
-operator|*
+modifier|*
 name|np
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -730,14 +720,12 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|gprofheader
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -858,21 +846,19 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|gprofline
-argument_list|(
+parameter_list|(
 name|np
-argument_list|)
+parameter_list|)
 specifier|register
 name|nltype
-operator|*
+modifier|*
 name|np
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 name|kirkbuffer
@@ -1001,24 +987,19 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|printgprof
-argument_list|(
-argument|timesortnlp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|timesortnlp
+parameter_list|)
 name|nltype
 modifier|*
 modifier|*
 name|timesortnlp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|index
@@ -1164,7 +1145,7 @@ name|timesortnlp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	sort by decreasing propagated time      *	if times are equal, but one is a cycle header,      *		say that's first (e.g. less, i.e. -1).      *	if one's name doesn't have an underscore and the other does,      *		say the one is first.      *	all else being equal, sort by names.      */
@@ -1396,21 +1377,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|printparents
-argument_list|(
-argument|childp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|childp
+parameter_list|)
 name|nltype
 modifier|*
 name|childp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|nltype
 modifier|*
@@ -1610,23 +1586,18 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|printchildren
-argument_list|(
-argument|parentp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|nltype
 modifier|*
@@ -1779,23 +1750,18 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|printname
-argument_list|(
-argument|selfp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|selfp
+parameter_list|)
 name|nltype
 modifier|*
 name|selfp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1915,23 +1881,18 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|sortchildren
-argument_list|(
-argument|parentp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -2051,23 +2012,18 @@ operator|.
 name|arc_childlist
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|sortparents
-argument_list|(
-argument|childp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|childp
+parameter_list|)
 name|nltype
 modifier|*
 name|childp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -2187,27 +2143,22 @@ operator|.
 name|arc_parentlist
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	print a cycle header      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printcycle
-argument_list|(
-argument|cyclep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cyclep
+parameter_list|)
 name|nltype
 modifier|*
 name|cyclep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|kirkbuffer
@@ -2306,27 +2257,22 @@ name|index
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	print the members of a cycle      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printmembers
-argument_list|(
-argument|cyclep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cyclep
+parameter_list|)
 name|nltype
 modifier|*
 name|cyclep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|nltype
 modifier|*
@@ -2425,27 +2371,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	sort members of a cycle      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sortmembers
-argument_list|(
-argument|cyclep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cyclep
+parameter_list|)
 name|nltype
 modifier|*
 name|cyclep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|nltype
 modifier|*
@@ -2555,7 +2496,7 @@ name|doing
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	major sort is on propself + propchild,      *	next is sort on ncalls + selfcalls.      */
@@ -3052,21 +2993,16 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|printblurb
-argument_list|(
-argument|blurbname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|blurbname
+parameter_list|)
 name|char
 modifier|*
 name|blurbname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -3091,8 +3027,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|blurbname
 argument_list|)
 expr_stmt|;
@@ -3124,7 +3062,7 @@ name|blurbfile
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -3170,12 +3108,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|printindex
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|nltype
 modifier|*
@@ -3204,7 +3140,7 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-comment|/* 	 *	Now, sort regular function name alphbetically 	 *	to create an index. 	 */
+comment|/* 	 *	Now, sort regular function name alphabetically 	 *	to create an index. 	 */
 name|namesortnlp
 operator|=
 operator|(
@@ -3236,13 +3172,13 @@ operator|*
 operator|)
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"ran out of memory for sorting"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|index
@@ -3489,7 +3425,7 @@ name|namesortnlp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

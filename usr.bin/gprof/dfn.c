@@ -3,17 +3,17 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)dfn.c	8.1 (Berkeley) 6/6/93";
@@ -21,25 +21,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -58,7 +47,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -118,12 +107,10 @@ name|dfn_counter
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|dfn_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|dfn_depth
 operator|=
@@ -134,27 +121,22 @@ operator|=
 name|DFN_NAN
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	given this parent, depth first number its children.      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dfn
-argument_list|(
-argument|parentp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -189,7 +171,7 @@ block|}
 endif|#
 directive|endif
 comment|/* DEBUG */
-comment|/* 	 *	if we're already numbered, no need to look any furthur. 	 */
+comment|/* 	 *	if we're already numbered, no need to look any further. 	 */
 if|if
 condition|(
 name|dfn_numbered
@@ -264,27 +246,22 @@ name|parentp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	push a parent onto the stack and mark it busy      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dfn_pre_visit
-argument_list|(
-argument|parentp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|dfn_depth
 operator|+=
@@ -296,20 +273,13 @@ name|dfn_depth
 operator|>=
 name|DFN_DEPTH
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[dfn] out of my depth (dfn_stack overflow)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"[dfn] out of my depth (dfn_stack overflow)"
 argument_list|)
 expr_stmt|;
-block|}
 name|dfn_stack
 index|[
 name|dfn_depth
@@ -366,7 +336,7 @@ endif|#
 directive|endif
 comment|/* DEBUG */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	are we already numbered?      */
@@ -439,21 +409,16 @@ begin_comment
 comment|/*      *	MISSING: an explanation      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dfn_findcycle
-argument_list|(
-argument|childp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|childp
+parameter_list|)
 name|nltype
 modifier|*
 name|childp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|cycletop
@@ -526,20 +491,13 @@ name|cycletop
 operator|<=
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[dfn_findcycle] couldn't find head of cycle\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"[dfn_findcycle] couldn't find head of cycle"
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -861,27 +819,22 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	deal with self-cycles      *	for lint: ARGSUSED      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dfn_self_cycle
-argument_list|(
-argument|parentp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 *	since we are taking out self-cycles elsewhere 	 *	no need for the special case, here. 	 */
 ifdef|#
@@ -914,27 +867,22 @@ endif|#
 directive|endif
 comment|/* DEBUG */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	visit a node after all its children      *	[MISSING: an explanation]      *	and pop it off the stack      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dfn_post_visit
-argument_list|(
-argument|parentp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|nltype
 modifier|*
@@ -1066,7 +1014,7 @@ operator|-=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -29,17 +29,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)gprof.c	8.1 (Berkeley) 6/6/93";
@@ -47,14 +47,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -133,6 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -778,8 +779,10 @@ comment|/* 	 *	print the index 	 */
 name|printindex
 argument_list|()
 expr_stmt|;
-name|done
-argument_list|()
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -788,21 +791,16 @@ begin_comment
 comment|/*      *	information from a gmon.out file is in two parts:      *	an array of sampling hits within pc ranges,      *	and the arcs.      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|getpfile
-argument_list|(
-argument|filename
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|filename
+parameter_list|)
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -893,7 +891,7 @@ name|pfile
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|FILE
@@ -936,16 +934,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 name|fread
 argument_list|(
 operator|&
@@ -994,18 +991,15 @@ operator|.
 name|ncnt
 operator|)
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: incompatible with first gmon file"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 name|gmonhdr
 operator|=
 name|tmp
@@ -1092,12 +1086,11 @@ name|hz
 operator|!=
 name|rate
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|0
 argument_list|,
-literal|"%s: profile clock rate (%d) %s (%ld) in first gmon file\n"
+literal|"%s: profile clock rate (%d) %s (%ld) in first gmon file"
 argument_list|,
 name|filename
 argument_list|,
@@ -1108,10 +1101,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|gmonhdr
@@ -1280,22 +1269,17 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|tally
-argument_list|(
-argument|rawp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rawp
+parameter_list|)
 name|struct
 name|rawarc
 modifier|*
 name|rawp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|nltype
 modifier|*
@@ -1410,27 +1394,22 @@ name|raw_count
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * dump out the gmon.sum file  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dumpsum
-argument_list|(
-argument|sumfile
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sumfile
+parameter_list|)
 name|char
 modifier|*
 name|sumfile
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|nltype
@@ -1465,16 +1444,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|sumfile
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 comment|/*      * dump the header; use the last header read in      */
 if|if
 condition|(
@@ -1493,16 +1471,15 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|sumfile
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 comment|/*      * dump the samples      */
 if|if
 condition|(
@@ -1519,16 +1496,15 @@ argument_list|)
 operator|!=
 name|nsamples
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|sumfile
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 comment|/*      * dump the normalized raw arc information      */
 for|for
 control|(
@@ -1606,16 +1582,15 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|sumfile
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1655,7 +1630,7 @@ name|sfile
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1737,21 +1712,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|readsamples
-argument_list|(
-argument|pfile
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pfile
+parameter_list|)
 name|FILE
 modifier|*
 name|pfile
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|i
@@ -1788,18 +1758,15 @@ name|samples
 operator|==
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|0
+argument_list|,
 literal|"no room for %d sample pc's"
 argument_list|,
 name|nsamples
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 for|for
 control|(
@@ -1998,9 +1965,10 @@ name|i
 operator|!=
 name|nsamples
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unexpected EOF after reading %d/%d samples"
 argument_list|,
 operator|--
@@ -2009,23 +1977,17 @@ argument_list|,
 name|nsamples
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
 block|}
-block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Assign samples to the procedures to which they belong.  *  *	There are three cases as to where pcl and pch can be  *	with respect to the routine entry addresses svalue0 and svalue1  *	as shown in the following diagram.  overlap computes the  *	distance between the arrows, the fraction of the sample  *	that is to be credited to the routine which starts at svalue0.  *  *	    svalue0                                         svalue1  *	       |                                               |  *	       v                                               v  *  *	       +-----------------------------------------------+  *	       |					       |  *	  |  ->|    |<-		->|         |<-		->|    |<-  |  *	  |         |		  |         |		  |         |  *	  +---------+		  +---------+		  +---------+  *  *	  ^         ^		  ^         ^		  ^         ^  *	  |         |		  |         |		  |         |  *	 pcl       pch		 pcl       pch		 pcl       pch  *  *	For the vax we assert that samples will never fall in the first  *	two bytes of any routine, since that is the entry mask,  *	thus we give call alignentries() to adjust the entry points if  *	the entry mask falls in one bucket but the code for the routine  *	doesn't start until the next bucket.  In conjunction with the  *	alignment of routine addresses, this should allow us to have  *	only one sample for every four bytes of text space and never  *	have any overlap (the two end cases, above).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|asgnsamples
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -2328,7 +2290,7 @@ endif|#
 directive|endif
 comment|/* DEBUG */
 block|}
-end_block
+end_function
 
 begin_function
 name|unsigned
@@ -2404,12 +2366,10 @@ begin_comment
 comment|/*      *	calculate scaled entry point addresses (to save time in asgnsamples),      *	and possibly push the scaled entry points over the entry mask,      *	if it turns out that the entry point is in one bucket and the code      *	for a routine is in the next bucket.      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|alignentries
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2526,22 +2486,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
-
-begin_macro
-name|done
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+end_function
 
 end_unit
 

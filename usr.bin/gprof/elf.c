@@ -280,7 +280,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot fstat %s"
+literal|"cannot fstat %s"
 argument_list|,
 name|filename
 argument_list|)
@@ -314,7 +314,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Cannot mmap %s"
+literal|"cannot mmap %s"
 argument_list|,
 name|filename
 argument_list|)
@@ -514,7 +514,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Insufficient memory for symbol table"
+literal|"insufficient memory for symbol table"
 argument_list|)
 expr_stmt|;
 comment|/* Read them in. */

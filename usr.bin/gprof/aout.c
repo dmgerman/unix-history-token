@@ -57,6 +57,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"gprof.h"
 end_include
 
@@ -212,16 +218,15 @@ name|nfile
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 name|fread
 argument_list|(
 operator|&
@@ -397,18 +402,15 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: no string table (old format?)"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 name|strtab
 operator|=
 name|calloc
@@ -424,20 +426,17 @@ name|strtab
 operator|==
 name|NULL
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
-literal|"%s: no room for %d bytes of string table"
+literal|1
+argument_list|,
+literal|"%s: no room for %ld bytes of string table"
 argument_list|,
 name|filename
 argument_list|,
 name|ssiz
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|fread
@@ -463,18 +462,15 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: error reading string table"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -586,18 +582,15 @@ name|nname
 operator|==
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"%s: no symbols"
 argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 name|askfor
 operator|=
 name|nname
@@ -626,9 +619,10 @@ name|nl
 operator|==
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"no room for %d bytes of symbol table"
 argument_list|,
 name|askfor
@@ -639,10 +633,6 @@ name|nltype
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 comment|/* pass2 - read symbols */
 name|fseek
 argument_list|(
@@ -857,7 +847,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"ran out room for %d bytes of text space: can't do -c"
+literal|"no room for %lu bytes of text space: can't do -c"
 argument_list|,
 name|xbuf
 operator|.
@@ -1065,11 +1055,13 @@ endif|#
 directive|endif
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|name
 operator|++
+operator|)
 condition|)
 block|{
 if|if

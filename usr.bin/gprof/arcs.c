@@ -3,17 +3,17 @@ begin_comment
 comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)arcs.c	8.1 (Berkeley) 6/6/93";
@@ -21,14 +21,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -99,38 +99,27 @@ begin_comment
 comment|/*      *	add (or just increment) an arc      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|addarc
-argument_list|(
-argument|parentp
-argument_list|,
-argument|childp
-argument_list|,
-argument|count
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|,
+name|childp
+parameter_list|,
+name|count
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|nltype
 modifier|*
 name|childp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -230,6 +219,19 @@ expr|*
 name|arcp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arcp
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 name|arcp
 operator|->
 name|arc_parentp
@@ -279,7 +281,7 @@ operator|=
 name|arcp
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	the code below topologically sorts the graph (collapsing cycles),      *	and propagates time bottom up and flags top down.      */
@@ -297,32 +299,24 @@ name|topsortnlp
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|topcmp
-argument_list|(
-argument|npp1
-argument_list|,
-argument|npp2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|npp1
+parameter_list|,
+name|npp2
+parameter_list|)
 name|nltype
 modifier|*
 modifier|*
 name|npp1
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|nltype
 modifier|*
 modifier|*
 name|npp2
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -340,7 +334,7 @@ operator|->
 name|toporder
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|nltype
@@ -717,15 +711,13 @@ operator|*
 operator|)
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"[doarcs] ran out of memory for topo sorting\n"
+literal|"[doarcs] ran out of memory for topo sorting"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|index
@@ -837,7 +829,7 @@ comment|/* 	 *	starting from the topological top, 	 *	propagate print flags to c
 name|doflags
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	starting from the topological bottom, 	 *	propogate children times up to parents. 	 */
+comment|/* 	 *	starting from the topological bottom, 	 *	propagate children times up to parents. 	 */
 name|dotime
 argument_list|()
 expr_stmt|;
@@ -873,13 +865,13 @@ operator|*
 operator|)
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"ran out of memory for sorting"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|index
@@ -989,12 +981,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|dotime
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|index
@@ -1027,23 +1017,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|timepropagate
-argument_list|(
-argument|parentp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|parentp
+parameter_list|)
 name|nltype
 modifier|*
 name|parentp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -1414,14 +1399,12 @@ directive|endif
 comment|/* DEBUG */
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|cyclelink
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|nltype
@@ -1444,7 +1427,7 @@ name|arctype
 modifier|*
 name|arcp
 decl_stmt|;
-comment|/* 	 *	Count the number of cycles, and initialze the cycle lists 	 */
+comment|/* 	 *	Count the number of cycles, and initialize the cycle lists 	 */
 name|ncycle
 operator|=
 literal|0
@@ -1510,9 +1493,10 @@ name|cyclenl
 operator|==
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"no room for %d bytes of cycle headers"
 argument_list|,
 operator|(
@@ -1527,10 +1511,6 @@ name|nltype
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|done
-argument_list|()
-expr_stmt|;
-block|}
 comment|/* 	 *	now link cycles to true cycleheads, 	 *	number them, accumulate the data for the cycle 	 */
 name|cycle
 operator|=
@@ -1840,18 +1820,16 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	analyze cycles to determine breakup      */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|cycleanalyze
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|arctype
 modifier|*
@@ -2035,9 +2013,10 @@ name|cyclestack
 operator|==
 literal|0
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"no room for %d bytes of cycle stack"
 argument_list|,
 operator|(
@@ -2053,8 +2032,6 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2256,43 +2233,32 @@ name|done
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|bool
 name|descend
-argument_list|(
-argument|node
-argument_list|,
-argument|stkstart
-argument_list|,
-argument|stkp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|node
+parameter_list|,
+name|stkstart
+parameter_list|,
+name|stkp
+parameter_list|)
 name|nltype
 modifier|*
 name|node
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|arctype
 modifier|*
 modifier|*
 name|stkstart
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|arctype
 modifier|*
 modifier|*
 name|stkp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -2445,35 +2411,32 @@ name|FALSE
 operator|)
 return|;
 block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|bool
 name|addcycle
-argument_list|(
-argument|stkstart
-argument_list|,
-argument|stkend
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|stkstart
+parameter_list|,
+name|stkend
+parameter_list|)
 name|arctype
 modifier|*
 modifier|*
 name|stkstart
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|arctype
 modifier|*
 modifier|*
 name|stkend
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -2870,14 +2833,12 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|compresslist
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|cltype
 modifier|*
@@ -3426,7 +3387,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -3434,21 +3395,16 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|printsubcycle
-argument_list|(
-argument|clp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|clp
+parameter_list|)
 name|cltype
 modifier|*
 name|clp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|arctype
 modifier|*
@@ -3532,7 +3488,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -3543,12 +3499,10 @@ begin_comment
 comment|/* DEBUG */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cycletime
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|cycle
@@ -3636,18 +3590,16 @@ name|time
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	in one top to bottom pass over the topologically sorted namelist      *	propagate:      *		printflag as the union of parents' printflags      *		propfraction as the sum of fractional parents' propfractions      *	and while we're here, sum time for functions.      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|doflags
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|index
@@ -3873,7 +3825,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 *	it has parents to pass time to, 		 *	but maybe someone wants to shut it up 		 *	by puttting it on -E list.  (but favor -F over -E) 		 */
+comment|/* 		 *	it has parents to pass time to, 		 *	but maybe someone wants to shut it up 		 *	by putting it on -E list.  (but favor -F over -E) 		 */
 if|if
 condition|(
 operator|!
@@ -3976,27 +3928,22 @@ directive|endif
 comment|/* DEBUG */
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	check if any parent of this child      *	(or outside parents of this cycle)      *	have their print flags on and set the      *	print flag of the child (cycle) appropriately.      *	similarly, deal with propagation fractions from parents.      */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|inheritflags
-argument_list|(
-argument|childp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|childp
+parameter_list|)
 name|nltype
 modifier|*
 name|childp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|nltype
 modifier|*
@@ -4290,7 +4237,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
