@@ -5509,6 +5509,7 @@ comment|/*  * Purge a ksegrp resource. When a ksegrp is preparing to  * exit, it
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|kse_purge_group
 parameter_list|(
@@ -5637,6 +5638,7 @@ comment|/*  * Purge a process's KSE resource. When a process is preparing to   *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|kse_purge
 parameter_list|(
@@ -5672,12 +5674,6 @@ argument_list|,
 operator|(
 literal|"bad thread number"
 operator|)
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 while|while
@@ -5887,12 +5883,6 @@ name|p
 operator|->
 name|p_numksegrps
 operator|++
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -8096,11 +8086,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|P_SHOULDSTOP
@@ -8131,6 +8116,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_stats
