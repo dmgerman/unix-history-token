@@ -531,6 +531,11 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|error
