@@ -473,13 +473,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PANIC_STACK_PAGES
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|KSTACK_GUARD
 end_define
 
@@ -702,41 +695,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|ASSERT_EQUAL
+name|CTASSERT
 parameter_list|(
 name|x
-parameter_list|,
-name|y
 parameter_list|)
-value|_ASSERT_EQUAL(x, y, __LINE__)
+value|_CTASSERT(x, __LINE__)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_ASSERT_EQUAL
+name|_CTASSERT
 parameter_list|(
 name|x
 parameter_list|,
 name|y
-parameter_list|,
-name|z
 parameter_list|)
-value|__ASSERT_EQUAL(x, y, z)
+value|__CTASSERT(x, y)
 end_define
 
 begin_define
 define|#
 directive|define
-name|__ASSERT_EQUAL
+name|__CTASSERT
 parameter_list|(
 name|x
 parameter_list|,
 name|y
-parameter_list|,
-name|z
 parameter_list|)
-value|typedef char __assert ## z[(x) == (y) ? 1 : -1]
+value|typedef char __assert ## y[(x) ? 1 : -1]
 end_define
 
 begin_endif
