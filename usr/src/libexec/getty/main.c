@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.3 (Berkeley) 83/07/07"
+literal|"@(#)main.c	4.4 (Berkeley) 83/07/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -1182,6 +1182,23 @@ expr_stmt|;
 name|prompt
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|PF
+operator|>
+literal|0
+condition|)
+block|{
+name|sleep
+argument_list|(
+name|PF
+argument_list|)
+expr_stmt|;
+name|PF
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|ioctl
 argument_list|(
 literal|0

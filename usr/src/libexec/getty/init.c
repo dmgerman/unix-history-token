@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	4.3 (Berkeley) 83/07/09"
+literal|"@(#)init.c	4.4 (Berkeley) 83/07/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,11 @@ literal|"f2"
 block|}
 block|,
 comment|/* user mode flags */
+block|{
+literal|"pf"
+block|}
+block|,
+comment|/* delay before flush at 1st prompt */
 block|{
 literal|0
 block|}
