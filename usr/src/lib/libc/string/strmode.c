@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strmode.c	5.1 (Berkeley) %G%"
+literal|"@(#)strmode.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,28 +49,29 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_expr_stmt
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_function
+name|void
 name|strmode
-argument_list|(
+parameter_list|(
 name|mode
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
 name|mode_t
 name|mode
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* print type */
 switch|switch
@@ -471,13 +472,8 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
-end_block
+end_function
 
 end_unit
 
