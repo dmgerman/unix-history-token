@@ -491,7 +491,7 @@ name|_res
 operator|.
 name|retry
 operator|=
-literal|4
+name|RES_DFLRETRY
 expr_stmt|;
 if|if
 condition|(
