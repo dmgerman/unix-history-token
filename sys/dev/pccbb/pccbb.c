@@ -303,32 +303,6 @@ name|DETACH_FORCE
 value|0x1
 end_define
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|pccbb_sclist
@@ -2179,7 +2153,7 @@ operator|->
 name|sc_base_res
 condition|)
 block|{
-comment|/* 		 * XXX EVILE HACK BAD THING! XXX 		 * Some BIOSes doesn't assign a memory space properly. 		 * So we try to manually put one in... 		 */
+comment|/* 		 * XXX eVILE HACK BAD THING! XXX 		 * The pci bus device should do this for us. 		 * Some BIOSes doesn't assign a memory space properly. 		 * So we try to manually put one in... 		 */
 name|u_int32_t
 name|sockbase
 decl_stmt|;
@@ -7828,6 +7802,16 @@ operator|=
 literal|0xdffff
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|type
+operator|==
+name|SYS_RES_IRQ
+condition|)
+name|flags
+operator||=
+name|RF_SHAREABLE
+expr_stmt|;
 if|if
 condition|(
 name|type
