@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.26 1998/11/04 19:56:24 ken Exp $  */
+comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.27 1998/11/25 13:50:10 joerg Exp $  */
 end_comment
 
 begin_include
@@ -3868,7 +3868,7 @@ name|union
 name|ccb
 name|ccb
 decl_stmt|;
-comment|/* 			 * This is an immedaite CCB, so it's okay to 			 * allocate it on the stack. 			 */
+comment|/* 			 * This is an immediate CCB, so it's okay to 			 * allocate it on the stack. 			 */
 comment|/* 			 * Create a path using the bus, target, and lun the 			 * user passed in. 			 */
 if|if
 condition|(
@@ -12874,6 +12874,7 @@ name|CAM_DEBUG_NONE
 expr_stmt|;
 block|}
 else|else
+block|{
 name|start_ccb
 operator|->
 name|ccb_h
@@ -12882,6 +12883,19 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
+name|xpt_print_path
+argument_list|(
+name|cam_dpath
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"debugging flags now %x\n"
+argument_list|,
+name|cam_dflags
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -13472,7 +13486,7 @@ name|old_priority
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_TRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"xpt_schedule_dev\n"
@@ -13516,7 +13530,7 @@ argument_list|)
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_SUBTRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"changed priority to %d\n"
@@ -13548,7 +13562,7 @@ name|new_priority
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_SUBTRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"Inserting onto queue\n"
@@ -13621,7 +13635,7 @@ name|s
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_TRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"xpt_run_dev_allocq\n"
@@ -13638,7 +13652,7 @@ name|devq
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_SUBTRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"   qfrozen_cnt == 0x%x, entries == %d, "
@@ -13760,7 +13774,7 @@ name|device
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_SUBTRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"running device %p\n"
@@ -13898,7 +13912,7 @@ argument_list|)
 expr_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_SUBTRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"calling periph start\n"
@@ -13982,7 +13996,7 @@ name|s
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_TRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"xpt_run_dev_sendq\n"
@@ -14129,7 +14143,7 @@ continue|continue;
 block|}
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_SUBTRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"running device %p\n"
@@ -15782,7 +15796,7 @@ name|bus
 decl_stmt|;
 name|CAM_DEBUG_PRINT
 argument_list|(
-name|CAM_DEBUG_TRACE
+name|CAM_DEBUG_XPT
 argument_list|,
 operator|(
 literal|"xpt_release_ccb\n"
