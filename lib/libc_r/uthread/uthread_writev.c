@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_writev.c,v 1.4 1998/02/13 01:27:34 julian Exp $  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_writev.c,v 1.5 1998/04/29 09:59:34 jb Exp $  *  */
 end_comment
 
 begin_include
@@ -69,7 +69,25 @@ name|iovcnt
 parameter_list|)
 block|{
 name|int
+name|blocking
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+name|ssize_t
+name|n
+decl_stmt|;
+name|ssize_t
+name|num
+init|=
+literal|0
+decl_stmt|;
+name|ssize_t
 name|ret
+decl_stmt|;
+name|struct
+name|iovec
+name|liov
 decl_stmt|;
 comment|/* Lock the file descriptor for write: */
 if|if
@@ -94,27 +112,27 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Perform a non-blocking writev syscall: */
-while|while
-condition|(
-operator|(
-name|ret
+comment|/* Make a local copy of the caller's iov: */
+name|liov
+operator|.
+name|iov_base
 operator|=
-name|_thread_sys_writev
-argument_list|(
-name|fd
-argument_list|,
 name|iov
-argument_list|,
-name|iovcnt
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|->
+name|iov_base
+expr_stmt|;
+name|liov
+operator|.
+name|iov_len
+operator|=
+name|iov
+operator|->
+name|iov_len
+expr_stmt|;
+comment|/* Check if file operations are to block */
+name|blocking
+operator|=
+operator|(
 operator|(
 name|_thread_fd_table
 index|[
@@ -127,6 +145,68 @@ name|O_NONBLOCK
 operator|)
 operator|==
 literal|0
+operator|)
+expr_stmt|;
+comment|/* 		 * Loop while no error occurs and until the expected number 		 * of bytes are written if performing a blocking write: 		 */
+while|while
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Perform a non-blocking write syscall: */
+name|n
+operator|=
+name|_thread_sys_writev
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|liov
+argument_list|,
+name|iovcnt
+operator|-
+name|num
+argument_list|)
+expr_stmt|;
+comment|/* Check if one or more bytes were written: */
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Update the local iov: */
+name|liov
+operator|.
+name|iov_base
+operator|+=
+name|n
+expr_stmt|;
+name|liov
+operator|.
+name|iov_len
+operator|+=
+name|n
+expr_stmt|;
+comment|/* 				 * Keep a count of the number of bytes 				 * written: 				 */
+name|num
+operator|+=
+name|n
+expr_stmt|;
+block|}
+comment|/* 			 * If performing a blocking write, check if the 			 * write would have blocked or if some bytes 			 * were written but there are still more to 			 * write: 			 */
+if|if
+condition|(
+name|blocking
+operator|&&
+operator|(
+operator|(
+name|n
+operator|<
+literal|0
 operator|&&
 operator|(
 name|errno
@@ -136,6 +216,12 @@ operator|||
 name|errno
 operator|==
 name|EAGAIN
+operator|)
+operator|)
+operator|||
+name|num
+operator|<
+name|iovcnt
 operator|)
 condition|)
 block|{
@@ -178,22 +264,46 @@ operator|->
 name|interrupted
 condition|)
 block|{
-name|errno
-operator|=
-name|EINTR
-expr_stmt|;
+comment|/* Return an error: */
 name|ret
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-break|break;
 block|}
+comment|/* 			 * If performing a non-blocking write or if an 			 * error occurred, just return whatever the write 			 * syscall did: 			 */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|blocking
+operator|||
+name|n
+operator|<
+literal|0
+condition|)
 block|{
+comment|/* A non-blocking call might return zero: */
+name|ret
+operator|=
+name|n
+expr_stmt|;
 break|break;
+comment|/* Check if the write has completed: */
 block|}
+elseif|else
+if|if
+condition|(
+name|num
+operator|>=
+name|iovcnt
+condition|)
+comment|/* Return the number of bytes written: */
+name|ret
+operator|=
+name|num
+expr_stmt|;
 block|}
 name|_thread_fd_unlock
 argument_list|(
