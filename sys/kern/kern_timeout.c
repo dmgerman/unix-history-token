@@ -239,7 +239,7 @@ comment|/* Next callout to be checked. */
 end_comment
 
 begin_comment
-comment|/*  * Locked by callout_lock:  *   curr_callout    - If a callout is in progress, it is curr_callout.  *                     If curr_callout is non-NULL, threads waiting on  *                     callout_wait will be woken up as soon as the   *                     relevant callout completes.  *   wakeup_needed   - If a thread is waiting on callout_wait, then  *                     wakeup_needed is nonzero.  Increased only when  *                     cutt_callout is non-NULL.  *   wakeup_ctr      - Incremented every time a thread wants to wait  *                     for a callout to complete.  Modified only when  *                     curr_callout is non-NULL.  */
+comment|/*-  * Locked by callout_lock:  *   curr_callout    - If a callout is in progress, it is curr_callout.  *                     If curr_callout is non-NULL, threads waiting on  *                     callout_wait will be woken up as soon as the   *                     relevant callout completes.  *   wakeup_ctr      - Incremented every time a thread wants to wait  *                     for a callout to complete.  Modified only when  *                     curr_callout is non-NULL.  *   wakeup_needed   - If a thread is waiting on callout_wait, then  *                     wakeup_needed is nonzero.  Increased only when  *                     cutt_callout is non-NULL.  */
 end_comment
 
 begin_decl_stmt
@@ -254,19 +254,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|wakeup_needed
+name|wakeup_ctr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
-name|wakeup_ctr
+name|wakeup_needed
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Locked by callout_wait_lock:  *   callout_wait    - If wakeup_needed is set, callout_wait will be  *                     triggered after the current callout finishes.  *   wakeup_done_ctr - Set to the current value of wakeup_ctr after  *                     callout_wait is triggered.  */
+comment|/*-  * Locked by callout_wait_lock:  *   callout_wait    - If wakeup_needed is set, callout_wait will be  *                     triggered after the current callout finishes.  *   wakeup_done_ctr - Set to the current value of wakeup_ctr after  *                     callout_wait is triggered.  */
 end_comment
 
 begin_decl_stmt
@@ -526,22 +526,6 @@ name|callout_wait
 argument_list|,
 literal|"callout_wait"
 argument_list|)
-expr_stmt|;
-name|curr_callout
-operator|=
-name|NULL
-expr_stmt|;
-name|wakeup_needed
-operator|=
-literal|0
-expr_stmt|;
-name|wakeup_ctr
-operator|=
-literal|0
-expr_stmt|;
-name|wakeup_done_ctr
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
@@ -1083,7 +1067,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-empty_stmt|;
 name|steps
 operator|=
 literal|0
@@ -1415,7 +1398,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|c
@@ -1499,7 +1481,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* For binary compatibility */
+comment|/* For binary compatibility. */
 end_comment
 
 begin_undef
@@ -1588,7 +1570,7 @@ operator|&&
 name|safe
 condition|)
 block|{
-comment|/* We need to wait until the callout is finished */
+comment|/* We need to wait until the callout is finished. */
 name|wakeup_needed
 operator|=
 literal|1
