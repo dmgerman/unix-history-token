@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	1.10 (Berkeley) %G%"
+literal|"@(#)utilities.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -376,10 +376,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|fflush
+argument_list|(
+name|NetTrace
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* find next unique line */
 block|}
+name|fflush
+argument_list|(
+name|NetTrace
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
