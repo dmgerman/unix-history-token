@@ -607,28 +607,5 @@ parameter_list|)
 value|do {				\ 	if ((fp)->_extra->orientation == 0)		\ 		(fp)->_extra->orientation = (o);	\ } while (0)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOCKFILE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ORIENTLOCK
-parameter_list|(
-name|fp
-parameter_list|,
-name|o
-parameter_list|)
-value|do {			\ 	FLOCKFILE(fp);					\ 	ORIENT(fp, o);					\ 	FUNLOCKFILE(fp);				\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 end_unit
 
