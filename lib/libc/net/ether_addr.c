@@ -420,7 +420,7 @@ name|sprintf
 argument_list|(
 name|a
 argument_list|,
-literal|"%x:%x:%x:%x:%x:%x"
+literal|"%02x:%02x:%02x:%02x:%02x:%02x"
 argument_list|,
 name|n
 operator|->
