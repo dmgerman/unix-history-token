@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.16 1995/05/04 07:00:54 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.17 1995/05/06 03:28:29 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -183,6 +183,11 @@ decl_stmt|;
 name|void
 modifier|*
 name|p
+decl_stmt|;
+name|u_long
+name|offset
+init|=
+literal|0
 decl_stmt|;
 name|strcpy
 argument_list|(
@@ -460,12 +465,18 @@ name|dp_typ
 operator|==
 name|DOSPTYP_ONTRACK
 condition|)
+block|{
 name|d
 operator|->
 name|flags
 operator||=
 name|DISK_ON_TRACK
 expr_stmt|;
+name|offset
+operator|=
+literal|63
+expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
@@ -529,7 +540,8 @@ name|Add_Chunk
 argument_list|(
 name|d
 argument_list|,
-literal|0
+operator|-
+name|offset
 argument_list|,
 name|size
 argument_list|,
@@ -595,6 +607,17 @@ operator|.
 name|ds_size
 condition|)
 continue|continue;
+name|ds
+operator|.
+name|dss_slices
+index|[
+name|i
+index|]
+operator|.
+name|ds_offset
+operator|-=
+name|offset
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|sname
@@ -641,6 +664,9 @@ expr_stmt|;
 break|break;
 case|case
 literal|0x1
+case|:
+case|case
+literal|0x6
 case|:
 case|case
 literal|0x4

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.9 1995/05/07 01:25:22 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: chunk.c,v 1.10 1995/05/07 01:28:16 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -959,7 +959,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
-name|u_long
+name|long
 name|offset
 parameter_list|,
 name|u_long
@@ -1583,7 +1583,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%p %8lu %8lu %8lu %-8s %-8s 0x%02x "
+literal|"%p %8ld %8lu %8lu %-8s %-8s 0x%02x "
 argument_list|,
 name|c1
 argument_list|,
