@@ -2230,7 +2230,7 @@ name|qup
 operator|->
 name|fsname
 argument_list|,
-literal|"blocks in use:"
+literal|"kbytes in use:"
 argument_list|,
 call|(
 name|unsigned
@@ -2564,7 +2564,7 @@ name|sscanf
 argument_list|(
 name|cp
 argument_list|,
-literal|" blocks in use: %lu, limits (soft = %lu, hard = %lu)"
+literal|" kbytes in use: %lu, limits (soft = %lu, hard = %lu)"
 argument_list|,
 operator|&
 name|curblocks
