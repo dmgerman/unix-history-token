@@ -302,15 +302,6 @@ operator|->
 name|v_usecount
 argument_list|)
 expr_stmt|;
-name|drive
-operator|->
-name|vp
-operator|->
-name|v_usecount
-operator|=
-literal|1
-expr_stmt|;
-comment|/* will this work? */
 block|}
 name|error
 operator|=
@@ -1013,7 +1004,6 @@ name|vp
 operator|->
 name|v_usecount
 condition|)
-block|{
 comment|/* XXX shouldn't happen */
 name|log
 argument_list|(
@@ -1032,16 +1022,6 @@ operator|->
 name|v_usecount
 argument_list|)
 expr_stmt|;
-name|drive
-operator|->
-name|vp
-operator|->
-name|v_usecount
-operator|=
-literal|0
-expr_stmt|;
-comment|/* will this work? */
-block|}
 name|drive
 operator|->
 name|vp
