@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ioa.h	7.1 (Berkeley) %G%  */
+comment|/*  * @(#)ioa.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/****************************************************************  *                                                              *  *        Licensed from Digital Equipment Corporation           *  *                       Copyright (c)                          *  *               Digital Equipment Corporation                  *  *                   Maynard, Massachusetts                     *  *                         1985, 1986                           *  *                    All rights reserved.                      *  *                                                              *  *        The Information in this software is subject to change *  *   without notice and should not be construed as a commitment *  *   by  Digital  Equipment  Corporation.   Digital   makes  no *  *   representations about the suitability of this software for *  *   any purpose.  It is supplied "As Is" without expressed  or *  *   implied  warranty.                                         *  *                                                              *  *        If the Regents of the University of California or its *  *   licensees modify the software in a manner creating         *  *   diriviative copyright rights, appropriate copyright        *  *   legends may be placed on  the drivative work in addition   *  *   to that set forth above.                                   *  *								*  ****************************************************************/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
 
 begin_define
 define|#
@@ -248,6 +254,12 @@ directive|define
 name|IOA_SBIA
 value|0x10
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VAX8600
+end_endif
 
 end_unit
 
