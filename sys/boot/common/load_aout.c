@@ -878,8 +878,11 @@ expr_stmt|;
 comment|/* symbol table */
 name|printf
 argument_list|(
-literal|"symbols=[0x%x+0x%lx"
+literal|"symbols=[0x%lx+0x%lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ehdr
@@ -967,8 +970,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"+0x%x+0x%x]"
+literal|"+0x%lx+0x%x]"
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ss
