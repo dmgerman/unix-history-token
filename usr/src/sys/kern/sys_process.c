@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.33 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -226,7 +226,7 @@ operator|==
 name|PT_ATTACH
 condition|)
 block|{
-comment|/* 		 * Must be root if the process has used set user or 		 * group privileges or does not belong to the real 		 * user. Must not be already traced. 		 */
+comment|/* 		 * Must be root if the process has used set user or group 		 * privileges or does not belong to the real user.  Must 		 * not be already traced.  Can't attach to ourselves. 		 */
 if|if
 condition|(
 operator|(
@@ -286,6 +286,21 @@ name|EALREADY
 operator|)
 return|;
 comment|/* ??? */
+if|if
+condition|(
+name|p
+operator|->
+name|p_pid
+operator|==
+name|curp
+operator|->
+name|p_pid
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 		 * It would be nice if the tracing relationship was separate 		 * from the parent relationship but that would require 		 * another set of links in the proc struct or for "wait" 		 * to scan the entire proc table.  To make life easier, 		 * we just re-parent the process we're trying to trace. 		 * The old parent is remembered so we can put things back 		 * on a "detach". 		 */
 name|p
 operator|->
