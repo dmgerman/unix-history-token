@@ -4,7 +4,7 @@ comment|/*  * io.c --- routines for dealing with input and output and records  *
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1976, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
+comment|/*   * Copyright (C) 1976, 1988, 1989, 1991-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2642,6 +2642,63 @@ name|flag
 operator||=
 name|RED_NOBUF
 expr_stmt|;
+comment|/* Move rp to the head of the list. */
+if|if
+condition|(
+name|red_head
+operator|!=
+name|rp
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|rp
+operator|->
+name|prev
+operator|->
+name|next
+operator|=
+name|rp
+operator|->
+name|next
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|rp
+operator|->
+name|next
+operator|->
+name|prev
+operator|=
+name|rp
+operator|->
+name|prev
+expr_stmt|;
+name|red_head
+operator|->
+name|prev
+operator|=
+name|rp
+expr_stmt|;
+name|rp
+operator|->
+name|prev
+operator|=
+name|NULL
+expr_stmt|;
+name|rp
+operator|->
+name|next
+operator|=
+name|red_head
+expr_stmt|;
+name|red_head
+operator|=
+name|rp
+expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -2690,6 +2747,30 @@ operator|==
 literal|0
 condition|)
 comment|/* HACK! */
+name|close_one
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|VMS
+comment|/* Alpha/VMS V7.1's C RTL is returning this instead 			   of EMFILE (haven't tried other post-V6.2 systems) */
+define|#
+directive|define
+name|SS$_EXQUOTA
+value|0x001C
+elseif|else
+if|if
+condition|(
+name|errno
+operator|==
+name|EIO
+operator|&&
+name|vaxc$errno
+operator|==
+name|SS$_EXQUOTA
+condition|)
 name|close_one
 argument_list|()
 expr_stmt|;
@@ -3361,21 +3442,6 @@ literal|"pipe"
 else|:
 literal|"file"
 expr_stmt|;
-if|if
-condition|(
-name|exitwarn
-condition|)
-name|warning
-argument_list|(
-literal|"no explicit close of %s `%s' provided"
-argument_list|,
-name|what
-argument_list|,
-name|rp
-operator|->
-name|value
-argument_list|)
-expr_stmt|;
 comment|/* SVR4 awk checks and warns about status of close */
 if|if
 condition|(
@@ -3443,6 +3509,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|exitwarn
+condition|)
+name|warning
+argument_list|(
+literal|"no explicit close of %s `%s' provided"
+argument_list|,
+name|what
+argument_list|,
+name|rp
+operator|->
+name|value
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rp
@@ -9579,6 +9660,13 @@ name|stlen
 operator|>
 literal|1
 condition|)
+block|{
+specifier|static
+name|int
+name|warned
+init|=
+name|FALSE
+decl_stmt|;
 name|RS_regexp
 operator|=
 name|make_regexp
@@ -9596,6 +9684,25 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_lint
+operator|&&
+operator|!
+name|warned
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|"multicharacter value of `RS' is not portable"
+argument_list|)
+expr_stmt|;
+name|warned
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+block|}
 name|set_FS_if_not_FIELDWIDTHS
 argument_list|()
 expr_stmt|;
