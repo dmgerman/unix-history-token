@@ -57,7 +57,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.54 %G%"
+literal|"@(#)sccs.c	1.55 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -737,6 +737,14 @@ name|PROGPATH
 argument_list|(
 name|bdiff
 argument_list|)
+block|,
+literal|"print"
+block|,
+name|CMACRO
+block|,
+literal|0
+block|,
+literal|"prt -e/get -p -m -s"
 block|,
 name|NULL
 block|,
