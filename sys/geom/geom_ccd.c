@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.24 1997/06/14 13:56:01 bde Exp $ */
+comment|/* $Id: ccd.c,v 1.25 1997/10/11 07:35:25 phk Exp $ */
 end_comment
 
 begin_comment
@@ -106,6 +106,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -234,6 +240,7 @@ value|0x10
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ccddebug
 init|=
@@ -248,6 +255,27 @@ operator||
 name|CCDB_VNODE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ccddebug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ccddebug
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_undef
 undef|#
@@ -368,48 +396,56 @@ value|(makedev(major((dev)), dkmakeminor(ccdunit((dev)), 0, RAW_PART)))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|d_open_t
 name|ccdopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_close_t
 name|ccdclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_strategy_t
 name|ccdstrategy
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_ioctl_t
 name|ccdioctl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_dump_t
 name|ccddump
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_psize_t
 name|ccdsize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_read_t
 name|ccdread
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|d_write_t
 name|ccdwrite
 decl_stmt|;
@@ -502,6 +538,7 @@ comment|/* called by biodone() at interrupt time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|void
 name|ccdiodone
 name|__P
@@ -754,6 +791,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|numccd
 init|=
@@ -801,6 +839,7 @@ comment|/*  * Called by main() during pseudo-device attachment.  All we need  * 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ccdattach
 parameter_list|(
@@ -2630,6 +2669,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ccdopen
 parameter_list|(
@@ -2893,6 +2933,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ccdclose
 parameter_list|(
@@ -3071,6 +3112,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ccdstrategy
 parameter_list|(
@@ -3588,6 +3630,7 @@ comment|/*  * Build a component buffer header.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ccdbuffer
 parameter_list|(
@@ -4480,6 +4523,7 @@ comment|/*  * Called at interrupt time.  * Mark the component as done and if all
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ccdiodone
 parameter_list|(
@@ -4769,6 +4813,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ccdioctl
 parameter_list|(
@@ -6190,6 +6235,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ccdsize
 parameter_list|(
@@ -6330,6 +6376,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ccddump
 parameter_list|(
