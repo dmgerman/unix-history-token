@@ -150,7 +150,7 @@ condition|)
 block|{
 name|time_to_sleep
 operator|.
-name|ts_nsec
+name|tv_nsec
 operator|=
 operator|(
 name|useconds
@@ -162,7 +162,7 @@ literal|1000
 expr_stmt|;
 name|time_to_sleep
 operator|.
-name|ts_sec
+name|tsvsec
 operator|=
 name|useconds
 operator|/

@@ -133,13 +133,13 @@ condition|)
 block|{
 name|time_to_sleep
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|seconds
 expr_stmt|;
 name|time_to_sleep
 operator|.
-name|ts_nsec
+name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
@@ -156,7 +156,7 @@ name|seconds
 operator|=
 name|time_remaining
 operator|.
-name|ts_sec
+name|tv_sec
 expr_stmt|;
 block|}
 return|return
