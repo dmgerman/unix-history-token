@@ -627,10 +627,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|bootverbose
-init|=
-literal|0
-decl_stmt|,
 name|Maxmem
 init|=
 literal|0
@@ -988,23 +984,7 @@ decl_stmt|;
 name|vm_offset_t
 name|minaddr
 decl_stmt|;
-if|if
-condition|(
-name|boothowto
-operator|&
-name|RB_VERBOSE
-condition|)
-name|bootverbose
-operator|++
-expr_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|version
-argument_list|)
-expr_stmt|;
 name|identifycpu
 argument_list|()
 expr_stmt|;
