@@ -57,6 +57,9 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+name|pthread_t
+name|thread
+decl_stmt|;
 name|_thread_enter_cancellation_point
 argument_list|()
 expr_stmt|;
@@ -102,36 +105,94 @@ name|EDEADLK
 operator|)
 return|;
 block|}
-comment|/* 	 * Find the thread in the list of active threads or in the 	 * list of dead threads: 	 */
+comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
 if|if
 condition|(
-operator|(
-name|_find_thread
+name|pthread_mutex_lock
 argument_list|(
-name|pthread
+operator|&
+name|_gc_mutex
 argument_list|)
 operator|!=
 literal|0
-operator|)
-operator|&&
-operator|(
-name|_find_dead_thread
-argument_list|(
-name|pthread
-argument_list|)
-operator|!=
-literal|0
-operator|)
 condition|)
-comment|/* Return an error: */
-name|ret
-operator|=
-name|ESRCH
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
 expr_stmt|;
-comment|/* Check if this thread has been detached: */
-elseif|else
+comment|/* 	 * Defer signals to protect the thread list from access 	 * by the signal handler: 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Unlock the garbage collector mutex, now that the garbage collector 	 * can't be run: 	 */
 if|if
 condition|(
+name|pthread_mutex_unlock
+argument_list|(
+operator|&
+name|_gc_mutex
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot lock gc mutex"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Search for the specified thread in the list of active threads.  This 	 * is done manually here rather than calling _find_thread() because 	 * the searches in _thread_list and _dead_list (as well as setting up 	 * join/detach state) have to be done atomically. 	 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|thread
+argument_list|,
+argument|&_thread_list
+argument_list|,
+argument|tle
+argument_list|)
+block|{
+if|if
+condition|(
+name|thread
+operator|==
+name|pthread
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|thread
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 		 * Search for the specified thread in the list of dead threads: 		 */
+name|TAILQ_FOREACH
+argument_list|(
+argument|thread
+argument_list|,
+argument|&_dead_list
+argument_list|,
+argument|dle
+argument_list|)
+block|{
+if|if
+condition|(
+name|thread
+operator|==
+name|pthread
+condition|)
+break|break;
+block|}
+block|}
+comment|/* Check if the thread was not found or has been detached: */
+if|if
+condition|(
+name|thread
+operator|==
+name|NULL
+operator|||
+operator|(
 operator|(
 name|pthread
 operator|->
@@ -143,12 +204,19 @@ name|PTHREAD_DETACHED
 operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
+block|{
+comment|/* Undefer and handle pending signals, yielding if necessary: */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 comment|/* Return an error: */
 name|ret
 operator|=
 name|ESRCH
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -158,12 +226,18 @@ name|joiner
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* Undefer and handle pending signals, yielding if necessary: */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 comment|/* Multiple joiners are not supported. */
 name|ret
 operator|=
 name|ENOTSUP
 expr_stmt|;
 comment|/* Check if the thread is not dead: */
+block|}
 elseif|else
 if|if
 condition|(
@@ -240,7 +314,7 @@ operator|->
 name|ret
 expr_stmt|;
 block|}
-comment|/* 		 * Make the thread collectable by the garbage collector.  There 		 * is a race here with the garbage collector if multiple threads 		 * try to join the thread, but the behavior of multiple joiners 		 * is undefined, so don't bother protecting against the race. 		 */
+comment|/* Make the thread collectable by the garbage collector. */
 name|pthread
 operator|->
 name|attr
@@ -248,6 +322,10 @@ operator|.
 name|flags
 operator||=
 name|PTHREAD_DETACHED
+expr_stmt|;
+comment|/* Undefer and handle pending signals, yielding if necessary: */
+name|_thread_kern_sig_undefer
+argument_list|()
 expr_stmt|;
 block|}
 name|_thread_leave_cancellation_point
