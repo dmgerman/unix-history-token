@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.43 92/04/23$  *  *	@(#)hpux_compat.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_compat.c 1.43 92/04/23$  *  *	@(#)hpux_compat.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2967,6 +2967,8 @@ operator|->
 name|hsb
 argument_list|,
 name|FOLLOW
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -3039,6 +3041,8 @@ operator|->
 name|hsb
 argument_list|,
 name|NOFOLLOW
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -3181,6 +3185,8 @@ name|f_data
 argument_list|,
 operator|&
 name|sb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3202,6 +3208,8 @@ name|f_data
 argument_list|,
 operator|&
 name|sb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4688,6 +4696,8 @@ argument_list|,
 argument|hsb
 argument_list|,
 argument|follow
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4709,6 +4719,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|follow
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -4740,7 +4758,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|fname
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -4768,6 +4786,8 @@ name|ni_vp
 argument_list|,
 operator|&
 name|sb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -9865,6 +9885,8 @@ argument_list|,
 name|uap
 operator|->
 name|sb
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -9982,6 +10004,8 @@ argument_list|,
 name|uap
 operator|->
 name|sb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -10006,6 +10030,8 @@ parameter_list|(
 name|vp
 parameter_list|,
 name|ub
+parameter_list|,
+name|p
 parameter_list|)
 specifier|register
 name|struct
@@ -10017,6 +10043,11 @@ name|struct
 name|ohpuxstat
 modifier|*
 name|ub
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -10040,11 +10071,11 @@ argument_list|,
 operator|&
 name|vattr
 argument_list|,
-name|curproc
+name|p
 operator|->
 name|p_ucred
 argument_list|,
-name|curproc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
