@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.22 1997/05/01 12:30:02 dfr Exp $"
+literal|"$Id: mount_nfs.c,v 1.23 1997/06/03 13:49:26 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1190,7 +1190,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"23a:bcdD:g:I:iKL:lm:o:PpqR:r:sTt:w:x:U"
+literal|"23a:bcdD:g:I:iKL:lm:No:PpqR:r:sTt:w:x:U"
 argument_list|)
 operator|)
 operator|!=
@@ -1554,6 +1554,17 @@ break|break;
 endif|#
 directive|endif
 case|case
+literal|'N'
+case|:
+name|nfsargsp
+operator|->
+name|flags
+operator|&=
+operator|~
+name|NFSMNT_RESVPORT
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 name|altflags
@@ -1724,12 +1735,7 @@ break|break;
 case|case
 literal|'P'
 case|:
-name|nfsargsp
-operator|->
-name|flags
-operator||=
-name|NFSMNT_RESVPORT
-expr_stmt|;
+comment|/* obsolete for NFSMNT_RESVPORT, now default */
 break|break;
 ifdef|#
 directive|ifdef
