@@ -6162,8 +6162,8 @@ argument_list|)
 operator|&
 name|CBB_STATE_CD
 operator|)
-operator|==
-name|CBB_STATE_CD
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -9854,7 +9854,7 @@ name|sockstate
 operator|&
 name|CBB_STATE_CD
 operator|)
-operator|!=
+operator|==
 literal|0
 operator|&&
 operator|(
@@ -9864,8 +9864,8 @@ name|flags
 operator|&
 name|CBB_CARD_OK
 operator|)
-operator|!=
-literal|0
+operator|==
+name|CBB_CARD_OK
 operator|)
 return|;
 block|}
