@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mknodes.c	5.1 (Berkeley) %G%"
+literal|"@(#)mknodes.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,6 +437,11 @@ name|argv
 index|[
 literal|2
 index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
