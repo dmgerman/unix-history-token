@@ -6076,7 +6076,7 @@ name|MAC
 if|if
 condition|(
 operator|(
-name|type
+name|flags
 operator|&
 name|M_PKTHDR
 operator|)
