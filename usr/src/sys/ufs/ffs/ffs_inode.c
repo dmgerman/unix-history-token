@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.43 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -221,6 +221,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|type
+decl_stmt|,
 name|error
 decl_stmt|;
 name|ump
@@ -287,12 +289,45 @@ name|error
 operator|)
 return|;
 block|}
-name|ip
+name|type
 operator|=
-name|VTOI
+name|ump
+operator|->
+name|um_devvp
+operator|->
+name|v_tag
+operator|==
+name|VT_MFS
+condition|?
+name|M_MFSNODE
+else|:
+name|M_FFSNODE
+expr_stmt|;
+comment|/* XXX */
+name|MALLOC
 argument_list|(
-name|vp
+name|ip
+argument_list|,
+expr|struct
+name|inode
+operator|*
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|inode
 argument_list|)
+argument_list|,
+name|type
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_data
+operator|=
+name|ip
 expr_stmt|;
 name|ip
 operator|->
@@ -418,7 +453,7 @@ name|bp
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain.  Iput() will 		 * return it to the free list. 		 */
+comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain. It will be 		 * returned to the free list by ufs_iput(). 		 */
 name|remque
 argument_list|(
 name|ip
@@ -487,7 +522,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the vnode from the inode, check for aliases.  In all 	 * cases re-init ip, the underlying vnode/inode may have changed. 	 */
+comment|/* 	 * Initialize the vnode from the inode, check for aliases. 	 * Note that the underlying vnode may have changed. 	 */
 if|if
 condition|(
 name|error
@@ -523,13 +558,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Finish inode initialization now that aliasing has been resolved. 	 */
-name|ip
-operator|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|ip
 operator|->
 name|i_fs
