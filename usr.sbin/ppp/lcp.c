@@ -6556,7 +6556,7 @@ name|link
 operator|.
 name|lcp
 operator|.
-name|auth_ineed
+name|want_auth
 operator|)
 operator|&&
 operator|(
@@ -7738,7 +7738,7 @@ name|link
 operator|.
 name|lcp
 operator|.
-name|auth_ineed
+name|want_auth
 condition|)
 operator|*
 name|dec
