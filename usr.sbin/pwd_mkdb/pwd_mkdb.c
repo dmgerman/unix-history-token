@@ -3090,7 +3090,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pwd_mkdb [-p] [-d<dest dir>] [-u<local username> file\n"
+literal|"usage: pwd_mkdb [-p] [-d<dest dir>] [-u<local username>] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
