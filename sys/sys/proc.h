@@ -852,12 +852,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED10
+name|TDF_BOUNDARY
 value|0x00000400
 end_define
 
 begin_comment
-comment|/* --available -- */
+comment|/* Thread suspended at user boundary */
 end_comment
 
 begin_define
@@ -2101,6 +2101,10 @@ modifier|*
 name|p_xthread
 decl_stmt|;
 comment|/* (c) Trap thread */
+name|int
+name|p_boundary_count
+decl_stmt|;
+comment|/* (c) Num threads at user boundary */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2514,6 +2518,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_SINGLE_BOUNDARY
+value|0x400000
+end_define
+
+begin_comment
+comment|/* Threads should suspend at user boundary. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_JAILED
 value|0x1000000
 end_define
@@ -2828,8 +2843,15 @@ name|SINGLE_EXIT
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SINGLE_BOUNDARY
+value|2
+end_define
+
 begin_comment
-comment|/* XXXKSE: Missing values for thread_signal_check(). */
+comment|/* XXXKSE: Missing values for thread_suspsend_check(). */
 end_comment
 
 begin_ifdef
