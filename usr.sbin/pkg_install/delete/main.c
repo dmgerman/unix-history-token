@@ -61,7 +61,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvDdnfp:"
+literal|"adDfGhinp:vx"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Boolean
-name|NoDeInstall
+name|CleanDirs
 init|=
 name|FALSE
 decl_stmt|;
@@ -84,9 +84,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Boolean
-name|CleanDirs
+name|Interactive
 init|=
 name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|NoDeInstall
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|match_t
+name|MatchType
+init|=
+name|MATCH_GLOB
 decl_stmt|;
 end_decl_stmt
 
@@ -224,6 +240,38 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'a'
+case|:
+name|MatchType
+operator|=
+name|MATCH_ALL
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+name|MatchType
+operator|=
+name|MATCH_EXACT
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|MatchType
+operator|=
+name|MATCH_REGEX
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|Interactive
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 case|case
@@ -250,6 +298,13 @@ operator|*
 name|argv
 condition|)
 block|{
+comment|/* Don't try to apply heuristics if arguments are regexs */
+if|if
+condition|(
+name|MatchType
+operator|!=
+name|MATCH_REGEX
+condition|)
 while|while
 condition|(
 operator|(
@@ -276,7 +331,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	     * If character after the '/' is alphanumeric, then we've found the 	     * package name.  Otherwise we've come across a trailing '/' and 	     * need to continue our quest. 	     */
+comment|/* 		 * If character after the '/' is alphanumeric, then we've found the 		 * package name.  Otherwise we've come across a trailing '/' and 		 * need to continue our quest. 		 */
 if|if
 condition|(
 name|isalpha
@@ -284,6 +339,24 @@ argument_list|(
 operator|*
 name|pkgs_split
 argument_list|)
+operator|||
+operator|(
+operator|(
+name|MatchType
+operator|==
+name|MATCH_GLOB
+operator|)
+operator|&&
+expr|\
+name|strpbrk
+argument_list|(
+name|pkgs_split
+argument_list|,
+literal|"*?[]"
+argument_list|)
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
 operator|*
@@ -309,6 +382,10 @@ condition|(
 name|pkgs
 operator|==
 name|start
+operator|&&
+name|MatchType
+operator|!=
+name|MATCH_ALL
 condition|)
 name|warnx
 argument_list|(
@@ -433,7 +510,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: pkg_delete [-vDdnf] [-p prefix] pkg-name ...\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: pkg_delete [-dDfGinvx] [-p prefix] pkg-name ..."
+argument_list|,
+literal|"       pkg_delete -a [flags]"
 argument_list|)
 expr_stmt|;
 name|exit
