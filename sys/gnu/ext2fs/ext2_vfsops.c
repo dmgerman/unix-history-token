@@ -3353,18 +3353,6 @@ name|error
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|READONLY
-comment|/* turn on this to force it to be read-only */
-name|mp
-operator|->
-name|mnt_flag
-operator||=
-name|MNT_RDONLY
-expr_stmt|;
-endif|#
-directive|endif
 name|ronly
 operator|=
 operator|(
