@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.68 1996/12/11 19:35:26 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.69 1996/12/12 08:23:51 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -62,6 +62,13 @@ directive|define
 name|DOC_TMP_FILE
 value|"/tmp/doc.tmp"
 end_define
+
+begin_decl_stmt
+specifier|static
+name|pid_t
+name|ehs_pid
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Handle interrupt signals - this probably won't work in all cases  * due to our having bogotified the internal state of dialog or curses,  * but we'll give it a try.  */
@@ -1251,9 +1258,88 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|ehs_pid
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|pstat
+decl_stmt|;
+if|if
+condition|(
+name|kill
+argument_list|(
+name|ehs_pid
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|msgYesNo
+argument_list|(
+literal|"There seems to be an emergency holographic shell\n"
+literal|"already running von VTY 4.\n"
+literal|"Kill it and start a new one?"
+argument_list|)
+condition|)
+return|return;
+comment|/* try cleaning up as much as possible */
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+name|ehs_pid
+argument_list|,
+name|SIGHUP
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+name|ehs_pid
+argument_list|,
+name|SIGKILL
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* avoid too many zombies */
+operator|(
+name|void
+operator|)
+name|waitpid
+argument_list|(
+name|ehs_pid
+argument_list|,
+operator|&
+name|pstat
+argument_list|,
+name|WNOHANG
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|ehs_pid
+operator|=
 name|fork
 argument_list|()
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|int
