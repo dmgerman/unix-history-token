@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  *  *	@(#)machdep.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -313,6 +313,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* set when safe to use msgbuf */
+end_comment
+
+begin_decl_stmt
+name|int
+name|maxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max memory per process */
 end_comment
 
 begin_decl_stmt
@@ -2040,6 +2050,11 @@ decl_stmt|,
 name|fsize
 decl_stmt|;
 specifier|extern
+name|short
+name|exframesize
+index|[]
+decl_stmt|;
+specifier|extern
 name|char
 name|sigcode
 index|[]
@@ -2501,32 +2516,31 @@ name|ss_frame
 operator|.
 name|F_u
 argument_list|,
-operator|(
+name|exframesize
+index|[
 name|ft
-operator|==
-name|FMT9
-operator|)
-condition|?
-name|FMT9SIZE
-else|:
-operator|(
-name|ft
-operator|==
-name|FMTA
-operator|)
-condition|?
-name|FMTASIZE
-else|:
-name|FMTBSIZE
+index|]
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Gag!  Leave an indicator that we need to clean up the 		 * kernel stack.  We do this by setting the "pad word" 		 * above the hardware stack frame.  "bexit" in locore 		 * will then know that it must compress the kernel stack 		 * and create a normal four word stack frame. 		 */
+comment|/* 		 * Leave an indicator that we need to clean up the kernel 		 * stack.  We do this by setting the "pad word" above the 		 * hardware stack frame to the amount the stack must be 		 * adjusted by. 		 * 		 * N.B. we increment rather than just set f_stackadj in 		 * case we are called from syscall when processing a 		 * sigreturn.  In that case, f_stackadj may be non-zero. 		 */
 name|frame
 operator|->
 name|f_stackadj
+operator|+=
+name|exframesize
+index|[
+name|ft
+index|]
+expr_stmt|;
+name|frame
+operator|->
+name|f_format
 operator|=
-operator|-
-literal|1
+name|frame
+operator|->
+name|f_vector
+operator|=
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2545,23 +2559,10 @@ name|p
 operator|->
 name|p_pid
 argument_list|,
-operator|(
+name|exframesize
+index|[
 name|ft
-operator|==
-name|FMT9
-operator|)
-condition|?
-name|FMT9SIZE
-else|:
-operator|(
-name|ft
-operator|==
-name|FMTA
-operator|)
-condition|?
-name|FMTASIZE
-else|:
-name|FMTBSIZE
+index|]
 argument_list|,
 name|ft
 argument_list|)
@@ -3165,6 +3166,11 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+specifier|extern
+name|short
+name|exframesize
+index|[]
+decl_stmt|;
 name|scp
 operator|=
 name|uap
@@ -3650,6 +3656,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * fuword failed (bogus sc_ap value). 	 */
+if|if
+condition|(
+name|flags
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 if|if
 condition|(
 name|flags
@@ -3793,50 +3812,31 @@ expr_stmt|;
 if|if
 condition|(
 name|sz
-operator|==
-name|FMT9
-condition|)
+operator|>
+literal|15
+operator|||
+operator|(
 name|sz
 operator|=
-name|FMT9SIZE
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+name|exframesize
+index|[
 name|sz
-operator|==
-name|FMTA
-condition|)
-name|sz
-operator|=
-name|FMTASIZE
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|sz
-operator|==
-name|FMTB
-condition|)
-block|{
-name|sz
-operator|=
-name|FMTBSIZE
-expr_stmt|;
-comment|/* no k-stack adjustment necessary */
-name|frame
-operator|->
-name|f_stackadj
-operator|=
+index|]
+operator|)
+operator|<
 literal|0
-expr_stmt|;
-block|}
-else|else
+condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+name|frame
+operator|->
+name|f_stackadj
+operator|-=
+name|sz
+expr_stmt|;
 name|frame
 operator|->
 name|f_format
@@ -4313,6 +4313,14 @@ begin_comment
 comment|/* also for savecore */
 end_comment
 
+begin_decl_stmt
+name|long
+name|dumplo
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|dumpconf
 argument_list|()
@@ -4681,24 +4689,38 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|straytrap
 argument_list|(
-name|addr
+argument|pc
+argument_list|,
+argument|evec
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|int
-name|addr
-expr_stmt|;
-end_expr_stmt
+name|pc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_short
+name|evec
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
 name|printf
 argument_list|(
-literal|"stray trap, addr 0x%x\n"
+literal|"unexpected trap (vector offset %x) from %x\n"
 argument_list|,
-name|addr
+name|evec
+operator|&
+literal|0xFFF
+argument_list|,
+name|pc
 argument_list|)
 expr_stmt|;
 block|}
@@ -5276,11 +5298,34 @@ block|{
 ifdef|#
 directive|ifdef
 name|PANICBUTTON
+specifier|static
+name|int
+name|innmihand
+init|=
+literal|0
+decl_stmt|;
+comment|/* 		 * Attempt to reduce the window of vulnerability for recursive 		 * NMIs (e.g. someone holding down the keyboard reset button). 		 */
+if|if
+condition|(
+name|innmihand
+operator|==
+literal|0
+condition|)
+block|{
+name|innmihand
+operator|=
+literal|1
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Got a keyboard NMI\n"
 argument_list|)
 expr_stmt|;
+name|innmihand
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|panicbutton
@@ -5351,7 +5396,7 @@ begin_define
 define|#
 directive|define
 name|PARREG
-value|((volatile short *)IOV(0x5B0000))
+value|((volatile short *)IIOV(0x5B0000))
 end_define
 
 begin_decl_stmt
