@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c	1.7 (Berkeley from Hp Labs) %G%"
+literal|"@(#)file.c	1.8 (Berkeley from Hp Labs) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,16 +1163,21 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-comment|/* then use current uid */
-name|pw
-operator|=
-name|getpwuid
+operator|(
+name|void
+operator|)
+name|strcpy
 argument_list|(
-name|getuid
-argument_list|()
+name|new
+argument_list|,
+name|value
+argument_list|(
+literal|"home"
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|pw
 operator|=
 name|getpwnam
@@ -1203,6 +1208,7 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
