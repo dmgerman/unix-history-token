@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	3.27 %G%"
+literal|"@(#)cmd1.c	3.28 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ name|terse
 condition|)
 name|wwputs
 argument_list|(
-literal|"Upper left corner: "
+literal|"New window (upper left corner): "
 argument_list|,
 name|cmdwin
 argument_list|)
@@ -203,7 +203,7 @@ name|terse
 condition|)
 name|wwputs
 argument_list|(
-literal|"\nLower right corner: "
+literal|"\nNew window (lower right corner): "
 argument_list|,
 name|cmdwin
 argument_list|)
