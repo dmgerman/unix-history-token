@@ -18,13 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)utime.c	5.4 (Berkeley) 2/23/91";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)utime.c	5.4 (Berkeley) 2/23/91"
+literal|"$Id: utime.c,v 1.3 1993/08/13 23:58:50 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +80,36 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|times
+operator|==
+operator|(
+expr|struct
+name|utimbuf
+operator|*
+operator|)
+name|NULL
+condition|)
+block|{
+return|return
+operator|(
+name|utimes
+argument_list|(
+name|path
+argument_list|,
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
+name|NULL
+argument_list|)
+operator|)
+return|;
+block|}
+else|else
+block|{
 name|tv
 index|[
 literal|0
@@ -124,6 +158,7 @@ name|tv
 argument_list|)
 operator|)
 return|;
+block|}
 block|}
 end_function
 
