@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.3 1998/02/20 13:11:45 bde Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.4 1998/02/25 11:56:37 bde Exp $"
 end_empty
 
 begin_define
@@ -128,6 +128,18 @@ define|#
 directive|define
 name|INLINE_Q
 end_define
+
+begin_comment
+comment|/* dpt_isa.c, dpt_eisa.c, and dpt_pci.c need this in a central place */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dpt_controllers_present
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Function Prototypes */
@@ -968,7 +980,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|dpt_rb_t
 name|dpt_register_buffer
 parameter_list|(
@@ -1003,7 +1014,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|int
 name|dpt_send_buffer
 parameter_list|(
@@ -2258,7 +2268,6 @@ comment|/**  * Schedule a buffer to be sent to another target.  * The work will 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|dpt_send_buffer
 parameter_list|(
@@ -2891,7 +2900,6 @@ comment|/**  * Use this function to register a client for a buffer read target o
 end_comment
 
 begin_function
-specifier|static
 name|dpt_rb_t
 name|dpt_register_buffer
 parameter_list|(

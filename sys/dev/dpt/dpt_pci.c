@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  Pseudo device drivers for DPT on PCI on FreeBSD   *  *
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.3 1998/02/10 17:36:41 eivind Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.4 1998/02/20 13:11:50 bde Exp $"
 end_empty
 
 begin_include
@@ -127,14 +127,6 @@ end_define
 begin_comment
 comment|/* Global variables */
 end_comment
-
-begin_decl_stmt
-name|int
-name|dpt_controllers_present
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Function Prototypes */
