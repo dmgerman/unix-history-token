@@ -511,7 +511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a surplus system slot, try assign a new runnable thread to it.  * Called from:  *  sched_thread_exit()  (local)  *  sched_switch()  (local)  *  sched_thread_exit()  (local)  *  remrunqueue()  (local)   */
+comment|/*  * Given a surplus system slot, try assign a new runnable thread to it.  * Called from:  *  sched_thread_exit()  (local)  *  sched_switch()  (local)  *  sched_thread_exit()  (local)  *  remrunqueue()  (local)  (not at the moment)  */
 end_comment
 
 begin_function
@@ -591,11 +591,6 @@ operator|->
 name|kg_last_assigned
 operator|=
 name|td
-expr_stmt|;
-name|kg
-operator|->
-name|kg_avail_opennings
-operator|--
 expr_stmt|;
 name|sched_add
 argument_list|(
@@ -734,11 +729,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|kg
-operator|->
-name|kg_avail_opennings
-operator|++
-expr_stmt|;
 name|ke
 operator|->
 name|ke_state
@@ -789,11 +779,6 @@ name|sched_rem
 argument_list|(
 name|td
 argument_list|)
-expr_stmt|;
-name|kg
-operator|->
-name|kg_avail_opennings
-operator|++
 expr_stmt|;
 name|ke
 operator|->
@@ -965,11 +950,6 @@ name|td
 operator|->
 name|td_ksegrp
 expr_stmt|;
-name|TD_SET_CAN_RUN
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ke
@@ -1007,11 +987,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|kg
-operator|->
-name|kg_avail_opennings
-operator|++
-expr_stmt|;
 block|}
 name|TAILQ_REMOVE
 argument_list|(
@@ -1029,6 +1004,11 @@ name|kg
 operator|->
 name|kg_runnable
 operator|--
+expr_stmt|;
+name|TD_SET_CAN_RUN
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -1079,9 +1059,6 @@ name|struct
 name|thread
 modifier|*
 name|tda
-decl_stmt|;
-name|int
-name|count
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -1213,11 +1190,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|kg
-operator|->
-name|kg_avail_opennings
-operator|--
-expr_stmt|;
 name|sched_add
 argument_list|(
 name|td
@@ -1227,13 +1199,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*  	 * If the concurrency has reduced, and we would go in the  	 * assigned section, then keep removing entries from the  	 * system run queue, until we are not in that section  	 * or there is room for us to be put in that section. 	 * What we MUST avoid is the case where there are threads of less 	 * priority than the new one scheduled, but it can not 	 * be scheduled itself. That would lead to a non contiguous set 	 * of scheduled threads, and everything would break. 	 */
 name|tda
 operator|=
 name|kg
 operator|->
 name|kg_last_assigned
 expr_stmt|;
-if|if
+while|while
 condition|(
 operator|(
 name|kg
@@ -1297,10 +1270,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Add the thread to the ksegrp's run queue at 	 * the appropriate place. 	 */
-name|count
-operator|=
-literal|0
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|td2
@@ -1337,28 +1306,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* XXX Debugging hack */
-if|if
-condition|(
-operator|++
-name|count
-operator|>
-literal|10000
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"setrunqueue(): corrupt kq_runq, td= %p\n"
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"deadlock in setrunqueue"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1386,7 +1333,7 @@ name|td_runq
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we have a slot to use, then put the thread on the system 	 * run queue and if needed, readjust the last_assigned pointer. 	 */
+comment|/* 	 * If we have a slot to use, then put the thread on the system 	 * run queue and if needed, readjust the last_assigned pointer. 	 * it may be that we need to schedule something anyhow 	 * even if the availabel slots are -ve so that 	 * all the items< last_assigned are scheduled. 	 */
 if|if
 condition|(
 name|kg
@@ -1403,7 +1350,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * No pre-existing last assigned so whoever is first 			 * gets the KSE we brought in.. (maybe us) 			 */
+comment|/* 			 * No pre-existing last assigned so whoever is first 			 * gets the slot.. (maybe us) 			 */
 name|td2
 operator|=
 name|TAILQ_FIRST
@@ -1440,7 +1387,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * We are past last_assigned, so  			 * gave the next slot to whatever is next, 			 * which may or may not be us. 			 */
+comment|/*  			 * We are past last_assigned, so  			 * give the next slot to whatever is next, 			 * which may or may not be us. 			 */
 name|td2
 operator|=
 name|TAILQ_NEXT
@@ -1457,11 +1404,6 @@ operator|=
 name|td2
 expr_stmt|;
 block|}
-name|kg
-operator|->
-name|kg_avail_opennings
-operator|--
-expr_stmt|;
 name|sched_add
 argument_list|(
 name|td2

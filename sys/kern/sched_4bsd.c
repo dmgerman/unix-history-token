@@ -2897,7 +2897,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/*  	 * The thread we are about to run needs to be counted as if it had been  	 * added to the run queue and selected. 	 */
+comment|/*  	 * The thread we are about to run needs to be counted as if it had been  	 * added to the run queue and selected. 	 * it came from: 	 * A preemption 	 * An upcall  	 * A followon 	 * Do this before saving curthread so that the slot count  	 * doesn't give an overly optimistic view when that happens. 	 */
 if|if
 condition|(
 name|newtd
@@ -3851,6 +3851,13 @@ condition|)
 name|sched_tdcnt
 operator|++
 expr_stmt|;
+name|td
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|--
+expr_stmt|;
 name|runq_add
 argument_list|(
 name|ke
@@ -3957,6 +3964,13 @@ condition|)
 name|sched_tdcnt
 operator|--
 expr_stmt|;
+name|td
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|++
+expr_stmt|;
 name|runq_remove
 argument_list|(
 name|ke
@@ -3972,15 +3986,19 @@ name|ke_state
 operator|=
 name|KES_THREAD
 expr_stmt|;
-name|ke
+name|td
 operator|->
-name|ke_ksegrp
+name|td_ksegrp
 operator|->
 name|kg_runq_kses
 operator|--
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Select threads to run.  * Notice that the running threads still consume a slot.  */
+end_comment
 
 begin_function
 name|struct

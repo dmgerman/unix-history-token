@@ -7771,6 +7771,13 @@ name|td
 argument_list|)
 condition|)
 return|return;
+name|td
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|--
+expr_stmt|;
 name|ke
 operator|->
 name|ke_ksegrp
@@ -7865,6 +7872,13 @@ operator|->
 name|ke_state
 operator|=
 name|KES_THREAD
+expr_stmt|;
+name|td
+operator|->
+name|td_ksegrp
+operator|->
+name|kg_avail_opennings
+operator|++
 expr_stmt|;
 name|ke
 operator|->
