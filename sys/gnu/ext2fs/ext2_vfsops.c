@@ -4782,18 +4782,11 @@ name|vpp
 operator|!=
 name|NULL
 condition|)
-block|{
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* Read in the disk contents for the inode, copy into the inode. */
 if|#
 directive|if

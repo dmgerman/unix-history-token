@@ -2835,18 +2835,11 @@ name|vpp
 operator|!=
 name|NULL
 condition|)
-block|{
-name|vput
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 comment|/* 	 * Copy in the file entry.  Per the spec, the size can only be 1 block. 	 */
 name|sector
 operator|=

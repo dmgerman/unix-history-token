@@ -448,11 +448,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|vput
-argument_list|(
-name|nvp
-argument_list|)
-expr_stmt|;
 operator|*
 name|depp
 operator|=
@@ -472,11 +467,6 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX: Not sure this is right */
-name|vput
-argument_list|(
-name|nvp
-argument_list|)
-expr_stmt|;
 name|nvp
 operator|=
 name|xvp
