@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)rlogind.c	8.1 (Berkeley) 6/4/93";
+unit|static const char sccsid[] = "@(#)rlogind.c	8.1 (Berkeley) 6/4/93";
 endif|#
 directive|endif
 end_endif
@@ -81,6 +81,12 @@ end_define
 begin_comment
 comment|/* don't need many bits for select */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -241,7 +247,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/krb.h>
+file|<krb.h>
 end_include
 
 begin_define
@@ -927,9 +933,7 @@ name|from
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -1499,18 +1503,23 @@ condition|)
 operator|(
 name|void
 operator|)
-name|des_write
+name|des_enc_write
 argument_list|(
 name|f
 argument_list|,
 name|SECURE_MESSAGE
 argument_list|,
-sizeof|sizeof
+name|strlen
 argument_list|(
 name|SECURE_MESSAGE
 argument_list|)
-operator|-
-literal|1
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2380,7 +2389,7 @@ name|doencrypt
 condition|)
 name|fcc
 operator|=
-name|des_read
+name|des_enc_read
 argument_list|(
 name|f
 argument_list|,
@@ -2390,6 +2399,13 @@ sizeof|sizeof
 argument_list|(
 name|fibuf
 argument_list|)
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 else|else
@@ -2768,13 +2784,20 @@ name|doencrypt
 condition|)
 name|cc
 operator|=
-name|des_write
+name|des_enc_write
 argument_list|(
 name|f
 argument_list|,
 name|pbp
 argument_list|,
 name|pcc
+argument_list|,
+name|schedule
+argument_list|,
+operator|&
+name|kdata
+operator|->
+name|session
 argument_list|)
 expr_stmt|;
 else|else
@@ -3597,7 +3620,7 @@ argument_list|,
 name|version
 argument_list|)
 expr_stmt|;
-name|des_set_key_krb
+name|des_set_key
 argument_list|(
 operator|&
 name|kdata
