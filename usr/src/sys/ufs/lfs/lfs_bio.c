@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -244,6 +244,14 @@ name|wakeup
 argument_list|(
 operator|&
 name|lfs_allclean_wakeup
+argument_list|)
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|fs
+operator|->
+name|lfs_nextseg
 argument_list|)
 expr_stmt|;
 if|if
