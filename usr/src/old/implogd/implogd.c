@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implogd.c	5.2 (Berkeley) %G%"
+literal|"@(#)implogd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -172,6 +178,8 @@ index|[]
 decl_stmt|;
 block|{
 name|int
+name|i
+decl_stmt|,
 name|s
 decl_stmt|;
 name|time_t
@@ -186,6 +194,17 @@ operator|--
 operator|,
 name|argv
 operator|++
+expr_stmt|;
+name|openlog
+argument_list|(
+literal|"implogd"
+argument_list|,
+name|LOG_PID
+operator||
+name|LOG_ODELAY
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -230,6 +249,15 @@ operator|<
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m\n"
+argument_list|,
+name|LOGFILE
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 literal|"implogd: open"
@@ -294,6 +322,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"socket: %m\n"
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 literal|"implogd: socket"
@@ -320,23 +355,33 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|s
+name|i
 operator|=
 literal|0
 init|;
-name|s
+name|i
 operator|<
 literal|10
 condition|;
-name|s
+name|i
 operator|++
 control|)
+if|if
+condition|(
+name|i
+operator|!=
+name|log
+operator|&&
+name|i
+operator|!=
+name|s
+condition|)
 operator|(
 name|void
 operator|)
 name|close
 argument_list|(
-name|t
+name|i
 argument_list|)
 expr_stmt|;
 operator|(
@@ -450,6 +495,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"recvfrom: %m\n"
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 literal|"implogd: recvfrom"
