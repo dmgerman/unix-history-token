@@ -8334,9 +8334,7 @@ name|array_number
 operator|=
 name|rdp
 operator|->
-name|magic_0
-operator|>>
-literal|16
+name|lun
 expr_stmt|;
 name|config
 operator|->
