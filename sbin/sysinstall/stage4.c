@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.3 1994/10/29 10:01:37 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.4 1994/11/02 06:19:49 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -149,6 +149,9 @@ literal|0
 condition|)
 break|break;
 block|}
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|TellEm
 argument_list|(
 literal|"cd /stand ; gunzip< /dev/fd0 | cpio -idum"
