@@ -6602,7 +6602,9 @@ parameter_list|)
 block|{
 name|ucontext_t
 name|uc
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|ucontext_t
 modifier|*
 name|ucp
 decl_stmt|;
@@ -6665,14 +6667,8 @@ if|if
 condition|(
 name|copyin
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ucp
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|uc
 argument_list|,
