@@ -73,7 +73,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* Ignore "/*" after match. */
+comment|/* Ignore /<tail> after Imatch. */
 end_comment
 
 begin_define
