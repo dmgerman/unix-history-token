@@ -170,7 +170,7 @@ expr_stmt|;
 end_typedef
 
 begin_comment
-comment|/* Lists of init or fini functions */
+comment|/* Types of init and fini functions */
 end_comment
 
 begin_typedef
@@ -184,37 +184,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|Struct_Funclist_Entry
-block|{
-name|STAILQ_ENTRY
-argument_list|(
-argument|Struct_Funclist_Entry
-argument_list|)
-name|link
-expr_stmt|;
-name|InitFunc
-name|func
-decl_stmt|;
-block|}
-name|Funclist_Entry
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|STAILQ_HEAD
-argument_list|(
-argument|Struct_Funclist
-argument_list|,
-argument|Struct_Funclist_Entry
-argument_list|)
-name|Funclist
-expr_stmt|;
 end_typedef
 
 begin_comment
@@ -574,6 +543,10 @@ name|bool
 name|jmpslots_done
 decl_stmt|;
 comment|/* Already have relocated the jump slots */
+name|bool
+name|init_done
+decl_stmt|;
+comment|/* Already have added object to init list */
 name|struct
 name|link_map
 name|linkmap
