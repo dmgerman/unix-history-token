@@ -1702,7 +1702,7 @@ name|pos
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*      	* here follow the standard ioctls (filio.h etc.)      	*/
+comment|/* 	 * here follow the standard ioctls (filio.h etc.) 	 */
 case|case
 name|FIONREAD
 case|:
@@ -1804,7 +1804,7 @@ name|CHN_F_NBIO
 expr_stmt|;
 block|}
 break|break;
-comment|/*      	* Finally, here is the linux-compatible ioctl interface      	*/
+comment|/* 	 * Finally, here is the linux-compatible ioctl interface 	 */
 define|#
 directive|define
 name|THE_REAL_SNDCTL_DSP_GETBLKSIZE
@@ -1894,9 +1894,12 @@ break|break;
 case|case
 name|SNDCTL_DSP_SYNC
 case|:
+name|DEB
+argument_list|(
 name|printf
 argument_list|(
 literal|"dsp sync\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|splx
