@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C) 1997 Luigi Rizzo (luigi@iet.unipi.it)  *  * This file contains information and macro definitions for  * the ad1816 chip  *  * $FreeBSD$  */
+comment|/*-  * (C) 1997 Luigi Rizzo (luigi@iet.unipi.it)  *  * This file contains information and macro definitions for  * the ad1816 chip  *  * $FreeBSD$  */
 end_comment
 
 begin_comment

@@ -12,7 +12,7 @@ comment|/*      $NetBSD: if_snreg.h,v 1.4 1997/06/15 20:20:12 scottr Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1991   Algorithmics Ltd (http://www.algor.co.uk)  * You may use, copy, and modify this program so long as you retain the  * copyright line.  */
+comment|/*-  * Copyright (c) 1991   Algorithmics Ltd (http://www.algor.co.uk)  * You may use, copy, and modify this program so long as you retain the  * copyright line.  */
 end_comment
 
 begin_comment
