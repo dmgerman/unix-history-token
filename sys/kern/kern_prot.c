@@ -6466,11 +6466,11 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Some compat layers use SIGTHR for communications between 	 * different kernel threads of the same process, so that 	 * they are expecting that it's always possible to deliver 	 * it, even for suid applications where cr_cansignal() can 	 * deny such ability for security consideration.  It should be 	 * pretty safe to do since the only way to create two processes 	 * with the same p_leader is via rfork(2). 	 */
+comment|/* 	 * Some compat layers use SIGTHR and higher signals for 	 * communication between different kernel threads of the same 	 * process, so that they expect that it's always possible to 	 * deliver them, even for suid applications where cr_cansignal() can 	 * deny such ability for security consideration.  It should be 	 * pretty safe to do since the only way to create two processes 	 * with the same p_leader is via rfork(2). 	 */
 if|if
 condition|(
 name|signum
-operator|==
+operator|>=
 name|SIGTHR
 operator|&&
 name|td
