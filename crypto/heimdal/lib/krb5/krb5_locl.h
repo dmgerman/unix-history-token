@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: krb5_locl.h,v 1.63 1999/12/02 17:05:11 joda Exp $ */
+comment|/* $Id: krb5_locl.h,v 1.66 2001/05/10 15:31:34 assar Exp $ */
 end_comment
 
 begin_comment
@@ -562,7 +562,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<asn1.h>
+file|<krb5_asn1.h>
 end_include
 
 begin_include
@@ -627,6 +627,13 @@ begin_define
 define|#
 directive|define
 name|KEYTAB_DEFAULT
+value|"ANY:FILE:/etc/krb5.keytab,krb4:/etc/srvtab"
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYTAB_DEFAULT_MODIFY
 value|"FILE:/etc/krb5.keytab"
 end_define
 
