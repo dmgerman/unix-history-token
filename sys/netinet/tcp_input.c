@@ -16,6 +16,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -9120,6 +9126,33 @@ name|to_ccecho
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|TCP_SIGNATURE
+comment|/* 		 * XXX In order to reply to a host which has set the 		 * TCP_SIGNATURE option in its initial SYN, we have to 		 * record the fact that the option was observed here 		 * for the syncache code to perform the correct response. 		 */
+case|case
+name|TCPOPT_SIGNATURE
+case|:
+if|if
+condition|(
+name|optlen
+operator|!=
+name|TCPOLEN_SIGNATURE
+condition|)
+continue|continue;
+name|to
+operator|->
+name|to_flags
+operator||=
+operator|(
+name|TOF_SIGNATURE
+operator||
+name|TOF_SIGLEN
+operator|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 continue|continue;
 block|}

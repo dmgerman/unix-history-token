@@ -324,6 +324,24 @@ define|\
 value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|(ccopt)<<8|TCPOLEN_CC)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TCPOPT_SIGNATURE
+value|19
+end_define
+
+begin_comment
+comment|/* Keyed MD5: RFC 2385 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOLEN_SIGNATURE
+value|18
+end_define
+
 begin_comment
 comment|/*  * Default maximum segment size for TCP.  * With an IP MSS of 576, this is 536,  * but 512 is probably more convenient.  * This should be defined as MIN(512, IP_MSS - sizeof (struct tcpiphdr)).  */
 end_comment
@@ -458,6 +476,17 @@ end_define
 
 begin_comment
 comment|/* don't use TCP options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_SIGNATURE_ENABLE
+value|0x10
+end_define
+
+begin_comment
+comment|/* use MD5 digests (RFC2385) */
 end_comment
 
 begin_endif

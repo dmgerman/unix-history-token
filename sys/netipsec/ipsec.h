@@ -374,6 +374,17 @@ name|IPSEC_MODE_TUNNEL
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPSEC_MODE_TCPMD5
+value|3
+end_define
+
+begin_comment
+comment|/* TCP MD5 mode */
+end_comment
+
 begin_comment
 comment|/*  * Direction of security policy.  * NOTE: Since INVALID is used just as flag.  * The other are used for loop counter too.  */
 end_comment
