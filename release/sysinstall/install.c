@@ -2398,111 +2398,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|notyet
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|USAResident
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"I see that you are \"USA_RESIDENT\" according to your earlier\n"
-literal|"response to the CRYPTO distribution dialog.  Do you want to try and\n"
-literal|"load the rsaref package from the current media?  Some restrictions on\n"
-literal|"usage may apply, so be sure to read the package installation output!"
-argument_list|)
-condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|_interactiveHack
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|package_add
-argument_list|(
-literal|"rsaref"
-argument_list|)
-argument_list|)
-operator|!=
-name|DITEM_SUCCESS
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to find an rsaref package on the current intallation media.\n"
-literal|"This is probably because you are installing from a CDROM which\n"
-literal|"was produced for world-wide use, in which case the RSA patent\n"
-literal|"prevents distribution of RSA code on CD.  Please change your\n"
-literal|"media device to point to an International FTP server and install\n"
-literal|"the rsaref package manually through the Packages menu."
-argument_list|)
-expr_stmt|;
-block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|_interactiveHack
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"I see that you are not \"USA_RESIDENT\" according to your earlier\n"
-literal|"response to the CRYPTO distribution dialog.  Do you want to try and\n"
-literal|"load the rsaintl package from the current media?"
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|package_add
-argument_list|(
-literal|"rsaintl"
-argument_list|)
-argument_list|)
-operator|!=
-name|DITEM_SUCCESS
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to find an rsaintl package on the current intallation media.\n"
-literal|"This is probably because you are installing from a CDROM which\n"
-literal|"was produced for use in the USA, in which case the RSA patent\n"
-literal|"prevents distribution of RSA code on CD.  Please change your\n"
-literal|"media device to point to an International FTP server and install\n"
-literal|"the rsaintl package manually through the Packages menu."
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* notyet */
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -4777,11 +4672,6 @@ condition|)
 name|configEnvironmentResolv
 argument_list|(
 literal|"/etc/resolv.conf"
-argument_list|)
-expr_stmt|;
-name|configMake_conf
-argument_list|(
-literal|"/etc/make.conf"
 argument_list|)
 expr_stmt|;
 block|}
