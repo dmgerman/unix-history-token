@@ -1040,6 +1040,16 @@ name|vc_flags
 value|obj.co_flags
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMB_UNICODE_STRINGS
+parameter_list|(
+name|vcp
+parameter_list|)
+value|((vcp)->vc_hflags2& SMB_FLAGS2_UNICODE)
+end_define
+
 begin_comment
 comment|/*  * smb_share structure describes connection to the given SMB share (tree).  * Connection to share is always built on top of the VC.  */
 end_comment
