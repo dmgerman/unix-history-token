@@ -766,7 +766,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/08/22 01:29:53 $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
