@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.204 1999/04/05 19:38:30 julian Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.205 1999/04/07 02:41:54 alc Exp $  */
 end_comment
 
 begin_comment
@@ -5478,6 +5478,8 @@ operator|&
 name|flags
 condition|)
 block|{
+if|if
+condition|(
 name|tsleep
 argument_list|(
 operator|&
@@ -5495,7 +5497,12 @@ literal|"newbuf"
 argument_list|,
 name|slptimeo
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 block|}
 else|else
