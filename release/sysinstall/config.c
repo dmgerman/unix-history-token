@@ -3074,7 +3074,7 @@ if|if
 condition|(
 name|file_readable
 argument_list|(
-literal|"/var/run/ld.so.hints"
+literal|"/var/run/ld-elf.so.hints"
 argument_list|)
 condition|)
 name|vsystem
