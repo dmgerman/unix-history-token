@@ -48,12 +48,34 @@ begin_comment
 comment|/* Define if you have a C++<stdint.h>. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500028
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_CC_STDINT_H
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* #undef HAVE_CC_STDINT_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the<dirent.h> header file. */
