@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1996 Arne Helme. All rights reserved.  *  *   Copyright (c) 1996 Gary Jennejohn. All rights reserved.   *  *   Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isic - I4B Siemens ISDN Chipset Driver for Teles S0/16.3  *	========================================================  *  *	$Id: i4b_tel_s0163.c,v 1.18 1999/02/14 19:51:02 hm Exp $   *  *      last edit-date: [Sun Feb 14 10:28:45 1999]  *  *	-hm	clean up  *	-hm	more cleanup  *      -hm     NetBSD patches from Martin  *	-hm	VSTR detection for older 16.3 cards  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1996 Arne Helme. All rights reserved.  *  *   Copyright (c) 1996 Gary Jennejohn. All rights reserved.   *  *   Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isic - I4B Siemens ISDN Chipset Driver for Teles S0/16.3  *	========================================================  *  *	$Id: i4b_tel_s0163.c,v 1.19 1999/07/26 09:03:25 hm Exp $   *  *      last edit-date: [Mon Jul 26 10:59:38 1999]  *  *	-hm	clean up  *	-hm	more cleanup  *      -hm     NetBSD patches from Martin  *	-hm	VSTR detection for older 16.3 cards  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_if
@@ -1047,7 +1047,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, unit %d>= ISIC_MAXUNIT for Teles S0/16.3!"
+literal|"isic%d: Error, unit %d>= ISIC_MAXUNIT for Teles S0/16.3!\n"
 argument_list|,
 name|dev
 operator|->
@@ -1134,7 +1134,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, mem addr 0x%lx specified for Teles S0/16.3!"
+literal|"isic%d: Error, mem addr 0x%lx specified for Teles S0/16.3!\n"
 argument_list|,
 name|dev
 operator|->
@@ -1181,7 +1181,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"isic%d: Error, invalid iobase 0x%x specified for Teles S0/16.3!"
+literal|"isic%d: Error, invalid iobase 0x%x specified for Teles S0/16.3!\n"
 argument_list|,
 name|dev
 operator|->
@@ -1233,7 +1233,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, signature 1 0x%x != 0x51 or 0x10 for Teles S0/16.3!"
+literal|"isic%d: Error, signature 1 0x%x != 0x51 or 0x10 for Teles S0/16.3!\n"
 argument_list|,
 name|dev
 operator|->
@@ -1268,7 +1268,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, signature 2 0x%x != 0x93 for Teles S0/16.3!"
+literal|"isic%d: Error, signature 2 0x%x != 0x93 for Teles S0/16.3!\n"
 argument_list|,
 name|dev
 operator|->
@@ -1303,7 +1303,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, signature 3 0x%x != 0x1c for Teles S0/16.3!"
+literal|"isic%d: Error, signature 3 0x%x != 0x1c for Teles S0/16.3!\n"
 argument_list|,
 name|dev
 operator|->
@@ -1639,7 +1639,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"isic%d: Error, invalid iobase 0x%x specified for Teles S0/16.3!"
+literal|"isic%d: Error, invalid iobase 0x%x specified for Teles S0/16.3!\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1896,7 +1896,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, mem addr 0x%lx specified for Teles S0/16.3!"
+literal|"isic%d: Error, mem addr 0x%lx specified for Teles S0/16.3!\n"
 argument_list|,
 name|cf
 operator|->
@@ -1951,7 +1951,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, signature 1 0x%x != 0x51 for Teles S0/16.3!"
+literal|"isic%d: Error, signature 1 0x%x != 0x51 for Teles S0/16.3!\n"
 argument_list|,
 name|cf
 operator|->
@@ -1986,7 +1986,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, signature 2 0x%x != 0x93 for Teles S0/16.3!"
+literal|"isic%d: Error, signature 2 0x%x != 0x93 for Teles S0/16.3!\n"
 argument_list|,
 name|cf
 operator|->
@@ -2021,7 +2021,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, signature 3 0x%x != 0x1c for Teles S0/16.3!"
+literal|"isic%d: Error, signature 3 0x%x != 0x1c for Teles S0/16.3!\n"
 argument_list|,
 name|cf
 operator|->

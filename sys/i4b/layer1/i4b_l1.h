@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------*  *  *	i4b_l1.h - isdn4bsd layer 1 header file  *	---------------------------------------  *  *	$Id: i4b_l1.h,v 1.61 1999/04/21 07:50:31 hm Exp $   *  *      last edit-date: [Tue Mar 16 15:50:24 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------*  *  *	i4b_l1.h - isdn4bsd layer 1 header file  *	---------------------------------------  *  *	$Id: i4b_l1.h,v 1.64 1999/07/05 13:46:46 hm Exp $   *  *      last edit-date: [Mon Jul  5 15:32:02 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -71,10 +71,6 @@ begin_comment
 comment|/*---------------------------------------------------------------------------  *	kernel config file flags definition  *---------------------------------------------------------------------------*/
 end_comment
 
-begin_comment
-comment|/* XXX: we do need these only for real ISA (not even ISAPNP cards), and only   * because we are not confident enough in the general ISA probe routine (as   * practiced by the NetBSD variant). *And* it is completely redundant to the   * various options enabling only a few card's support routines to be compiled   * in. Probably the current truth is: this is usefull for anybody with more   * than one supported real ISA card. It is not usefull in generic configs,   * nor in typical one-controller-only configurations.   * Further - it is identical to the CARD_TYPEP_xxx definitions in   * ../machine/i4b_ioctl.h.   */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -110,20 +106,12 @@ name|FLAG_TELES_S0_163_PnP
 value|5
 end_define
 
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|FLAG_CREATIX_S0_PnP
 value|6
 end_define
-
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
 
 begin_define
 define|#
@@ -139,20 +127,12 @@ name|FLAG_DRN_NGO
 value|8
 end_define
 
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|FLAG_SWS
 value|9
 end_define
-
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
 
 begin_define
 define|#
@@ -161,20 +141,12 @@ name|FLAG_AVM_A1_PCMCIA
 value|10
 end_define
 
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|FLAG_DYNALINK
 value|11
 end_define
-
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
 
 begin_define
 define|#
@@ -190,20 +162,12 @@ name|FLAG_ELSA_QS1P_ISA
 value|13
 end_define
 
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|FLAG_ELSA_QS1P_PCI
 value|14
 end_define
-
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
 
 begin_define
 define|#
@@ -219,20 +183,12 @@ name|FLAG_ELSA_MLIMC
 value|16
 end_define
 
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|FLAG_ELSA_MLMCALL
 value|17
 end_define
-
-begin_comment
-comment|/* XXX - not needed, remove! */
-end_comment
 
 begin_define
 define|#
@@ -244,8 +200,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|FLAG_ELSA_PCC16
+name|FLAG_AVMA1PCI
 value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAG_ELSA_PCC16
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAG_AVM_PNP
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAG_SIEMENS_ISURF2
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|FLAG_ASUSCOM_IPAC
+value|23
 end_define
 
 begin_define
@@ -1623,6 +1607,40 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|isic_attach_avm_pnp
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+name|iobase2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|isic_attach_siemens_isurf
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+name|iobase2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|isic_attach_Eqs1pp
 parameter_list|(
 name|int
@@ -1631,6 +1649,23 @@ parameter_list|,
 name|unsigned
 name|int
 name|iobase1
+parameter_list|,
+name|unsigned
+name|int
+name|iobase2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|isic_attach_asi
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
 parameter_list|,
 name|unsigned
 name|int
@@ -1884,6 +1919,40 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|isic_probe_avm_pnp
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+name|iobase2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|isic_probe_siemens_isurf
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+name|iobase2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|isic_probe_Cs0P
 parameter_list|(
 name|struct
@@ -2031,6 +2100,23 @@ begin_function_decl
 specifier|extern
 name|int
 name|isic_probe_Eqs1pi
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dev
+parameter_list|,
+name|unsigned
+name|int
+name|iobase2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|isic_probe_asi
 parameter_list|(
 name|struct
 name|isa_device

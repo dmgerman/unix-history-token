@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor client  *	-----------------------------------  *  *	$Id: main.c,v 1.12 1999/05/11 08:15:59 hm Exp $  *  *      last edit-date: [Tue Apr 20 14:14:26 1999]  *  *	-mh	created  *	-hm	checking in  *	-hm	porting to HPUX  *	-mh	all events the fullscreen mode displays now as monitor event  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor client  *	-----------------------------------  *  *	$Id: main.c,v 1.14 1999/05/30 13:39:55 hm Exp $  *  *      last edit-date: [Sun May 30 15:19:47 1999]  *  *	-mh	created  *	-hm	checking in  *	-hm	porting to HPUX  *	-mh	all events the fullscreen mode displays now as monitor event  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -343,6 +343,9 @@ name|msg
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|readflag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -490,7 +493,8 @@ literal|"dh:p:l:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -1286,6 +1290,8 @@ argument_list|(
 name|buf
 argument_list|,
 name|ret
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1323,14 +1329,27 @@ name|msg
 parameter_list|,
 name|int
 name|len
+parameter_list|,
+name|int
+name|read
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|read
+condition|)
 name|printf
 argument_list|(
-literal|"event dump:"
+literal|"read from socket:"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"write to socket:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1357,14 +1376,14 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\n%02x: "
+literal|"\n%02d: "
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%02x %c  "
+literal|"0x%02x %c  "
 argument_list|,
 name|msg
 index|[
@@ -1895,6 +1914,25 @@ operator|~
 literal|0U
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|dumpall
+condition|)
+name|dump_event
+argument_list|(
+name|cmd
+argument_list|,
+sizeof|sizeof
+name|cmd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|write
 argument_list|(
 name|monsock
@@ -2471,6 +2509,24 @@ argument_list|,
 name|I4B_MON_DUMPRIGHTS_CODE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|dumpall
+condition|)
+name|dump_event
+argument_list|(
+name|cmd
+argument_list|,
+name|I4B_MON_DUMPRIGHTS_SIZE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|write
 argument_list|(
 name|monsock
@@ -2499,6 +2555,24 @@ argument_list|,
 name|I4B_MON_DUMPMCONS_CODE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|dumpall
+condition|)
+name|dump_event
+argument_list|(
+name|cmd
+argument_list|,
+name|I4B_MON_DUMPMCONS_CODE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|write
 argument_list|(
 name|monsock
@@ -2527,6 +2601,24 @@ argument_list|,
 name|I4B_MON_CFGREREAD_CODE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|dumpall
+condition|)
+name|dump_event
+argument_list|(
+name|cmd
+argument_list|,
+name|I4B_MON_CFGREREAD_CODE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|write
 argument_list|(
 name|monsock
@@ -2586,6 +2678,24 @@ argument_list|,
 name|channel
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|dumpall
+condition|)
+name|dump_event
+argument_list|(
+name|cmd
+argument_list|,
+name|I4B_MON_HANGUP_CHANNEL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|write
 argument_list|(
 name|monsock

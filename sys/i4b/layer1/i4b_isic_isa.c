@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic_isa.c - ISA bus interface  *	==================================  *  *	$Id: i4b_isic_isa.c,v 1.20 1999/05/10 09:37:35 hm Exp $   *  *      last edit-date: [Tue Apr 20 11:47:59 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic_isa.c - ISA bus interface  *	==================================  *  *	$Id: i4b_isic_isa.c,v 1.24 1999/07/26 09:03:49 hm Exp $   *  *      last edit-date: [Mon Jul 26 10:59:51 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -813,6 +813,55 @@ argument_list|)
 end_elif
 
 begin_comment
+comment|/*---------------------------------------------------------------------------*  *	isic - pnp device driver probe routine  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|int
+name|isapnp_isicmatch
+parameter_list|(
+name|struct
+name|device
+modifier|*
+name|parent
+parameter_list|,
+name|struct
+name|cfdata
+modifier|*
+name|cf
+parameter_list|,
+name|struct
+name|isa_attach_args
+modifier|*
+name|ia
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DYNALINK
+if|if
+condition|(
+name|isapnp_match_dynalink
+argument_list|(
+name|parent
+argument_list|,
+name|cf
+argument_list|,
+name|ia
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*---------------------------------------------------------------------------*  *	isic - non-pnp device driver probe routine  *---------------------------------------------------------------------------*/
 end_comment
 
@@ -1185,6 +1234,10 @@ name|PARM
 value|parent, self, ia
 define|#
 directive|define
+name|PARM2
+value|parent, self, ia
+define|#
+directive|define
 name|FLAGS
 value|sc->sc_flags
 else|#
@@ -1203,6 +1256,7 @@ name|FLAGS
 value|flags
 endif|#
 directive|endif
+comment|/* __FreeBSD__ */
 specifier|static
 name|char
 modifier|*
@@ -1256,6 +1310,7 @@ operator|!=
 name|next_isic_unit
 condition|)
 block|{
+comment|/*XXX*/
 name|printf
 argument_list|(
 literal|"isicattach: Error: new unit (%d) != next_isic_unit (%d)!\n"
@@ -1430,6 +1485,20 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|amiga
+case|case
+name|FLAG_BLMASTER
+case|:
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+comment|/* full detection was done in caller */
+break|break;
+endif|#
+directive|endif
 comment|/* ======================================================================  * Only P&P cards follow below!!!  */
 ifdef|#
 directive|ifdef
@@ -1531,25 +1600,61 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* __FreeBSD__ / P&P specific part */
-comment|/* --- XXX - don't know how to handle this - should be removed!!!! ---- */
 ifdef|#
 directive|ifdef
-name|amiga
+name|AVM_PNP
 case|case
-name|FLAG_BLMASTER
+name|FLAG_AVM_PNP
 case|:
 name|ret
 operator|=
-literal|1
+name|isic_attach_avm_pnp
+argument_list|(
+name|PARM2
+argument_list|)
 expr_stmt|;
-comment|/* full detection was done in caller */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* ------------------------------------------------------------------- */
+ifdef|#
+directive|ifdef
+name|SIEMENS_ISURF2
+case|case
+name|FLAG_SIEMENS_ISURF2
+case|:
+name|ret
+operator|=
+name|isic_attach_siemens_isurf
+argument_list|(
+name|PARM2
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ASUSCOM_IPAC
+case|case
+name|FLAG_ASUSCOM_IPAC
+case|:
+name|ret
+operator|=
+name|isic_attach_asi
+argument_list|(
+name|PARM2
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* __FreeBSD__ / P&P specific part */
 default|default:
 break|break;
 block|}
@@ -1564,12 +1669,113 @@ operator|(
 literal|0
 operator|)
 return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ipac
+condition|)
+block|{
+name|ret
+operator|=
+name|IPAC_READ
+argument_list|(
+name|IPAC_ID
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|IPAC_V11
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"isic%d: Error, IPAC version %d unknown!\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_isac_version
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_hscx_version
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ipac
+condition|)
+block|{
+name|ret
+operator|=
+name|IPAC_READ
+argument_list|(
+name|IPAC_ID
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|ret
+condition|)
+block|{
+case|case
+literal|0x01
+case|:
+name|printf
+argument_list|(
+literal|"isic%d: IPAC PSB2115 Version 1.1\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"isic%d: Error, IPAC version %d unknown!\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+break|break;
+block|}
+block|}
+else|else
+block|{
 name|sc
 operator|->
 name|sc_isac_version
@@ -1680,7 +1886,8 @@ operator|)
 return|;
 break|break;
 block|}
-empty_stmt|;
+block|}
+block|}
 comment|/* ISAC setup */
 name|isic_isac_init
 argument_list|(
@@ -1960,6 +2167,22 @@ operator|=
 literal|"ELSA PCC-16"
 expr_stmt|;
 break|break;
+case|case
+name|FLAG_ASUSCOM_IPAC
+case|:
+name|drvid
+operator|=
+literal|"Asuscom ISDNlink 128K PnP"
+expr_stmt|;
+break|break;
+case|case
+name|FLAG_SIEMENS_ISURF2
+case|:
+name|drvid
+operator|=
+literal|"Siemens I-Surf 2.0"
+expr_stmt|;
+break|break;
 default|default:
 name|drvid
 operator|=
@@ -1992,6 +2215,24 @@ name|drvid
 argument_list|)
 expr_stmt|;
 comment|/* announce chip versions */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ipac
+condition|)
+block|{
+name|printf
+argument_list|(
+name|ISIC_FMT
+literal|"IPAC PSB2115 Version 1.1\n"
+argument_list|,
+name|ISIC_PARM
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|sc
@@ -2131,6 +2372,13 @@ operator|)
 name|HSCX_B_BASE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
+block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|next_isic_unit
 operator|++
 expr_stmt|;

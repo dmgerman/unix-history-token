@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.106 1999/05/19 08:51:14 hm Exp $   *  *      last edit-date: [Wed May 19 10:56:56 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.125 1999/07/30 07:02:11 hm Exp $   *  *      last edit-date: [Fri Jul 30 08:53:47 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|81
+value|83
 end_define
 
 begin_comment
@@ -448,6 +448,39 @@ begin_comment
 comment|/* ELSA PCC-16			*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_AVM_PNP
+value|21
+end_define
+
+begin_comment
+comment|/* AVM FRITZ!CARD PnP		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_SIE_ISURF2
+value|22
+end_define
+
+begin_comment
+comment|/* Siemens I-Surf 2 PnP		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_ASUSCOMIPAC
+value|23
+end_define
+
+begin_comment
+comment|/* Asuscom ISDNlink 128 K PnP	*/
+end_comment
+
 begin_comment
 comment|/*  * in case you add support for more cards, please update:  *  *	isdnd:		support.c, name_of_controller()  *	diehl/diehlctl:	main.c, listall()  *  * and adjust CARD_TYPEP_MAX below.  */
 end_comment
@@ -456,7 +489,7 @@ begin_define
 define|#
 directive|define
 name|CARD_TYPEP_MAX
-value|20
+value|23
 end_define
 
 begin_comment
@@ -1769,7 +1802,7 @@ value|_IOW('4', 8, msg_alert_req_t)
 end_define
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *	request version and release info from kernel part  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *	request version and release info from kernel part  *	(msg_vr_req_t is also used by tel& rbch drivers)  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_typedef

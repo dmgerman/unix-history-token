@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic.c - global isic stuff  *	==============================  *  *	$Id: i4b_isic.c,v 1.47 1999/04/20 09:34:14 hm Exp $   *  *      last edit-date: [Sun Feb 14 10:27:20 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_isic.c - global isic stuff  *	==============================  *  *	$Id: i4b_isic.c,v 1.51 1999/07/26 09:03:49 hm Exp $   *  *      last edit-date: [Mon Jul 26 10:59:56 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifdef
@@ -413,6 +413,27 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|isapnp_isicmatch
+parameter_list|(
+name|struct
+name|device
+modifier|*
+name|parent
+parameter_list|,
+name|struct
+name|cfdata
+modifier|*
+name|cf
+parameter_list|,
+name|struct
+name|isa_attach_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|isa_isicattach
 parameter_list|(
 name|struct
@@ -495,11 +516,16 @@ operator|==
 name|BUS_PNP
 condition|)
 block|{
-comment|/* return isapnp_isicmatch(parent, cf, ia); */
 return|return
-literal|0
+name|isapnp_isicmatch
+argument_list|(
+name|parent
+argument_list|,
+name|cf
+argument_list|,
+name|ia
+argument_list|)
 return|;
-comment|/* for now */
 block|}
 return|return
 name|isa_isicmatch
@@ -941,6 +967,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|NOTDEF
 if|#
 directive|if
 operator|!
@@ -1007,6 +1036,9 @@ directive|endif
 endif|#
 directive|endif
 comment|/* !AMIGA&& !ATARI */
+endif|#
+directive|endif
+comment|/* NOTDEF */
 name|HSCX_WRITE
 argument_list|(
 literal|0
@@ -1216,11 +1248,7 @@ if|if
 condition|(
 name|ipac_irq_stat
 operator|&
-operator|(
 name|IPAC_ISTA_ICD
-operator||
-name|IPAC_ISTA_EXD
-operator|)
 condition|)
 block|{
 comment|/* ISAC interrupt */
@@ -1239,6 +1267,26 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ipac_irq_stat
+operator|&
+name|IPAC_ISTA_EXD
+condition|)
+block|{
+comment|/* force ISAC interrupt handling */
+name|isic_isac_irq
+argument_list|(
+name|sc
+argument_list|,
+name|ISAC_ISTA_EXI
+argument_list|)
+expr_stmt|;
+name|was_ipac_irq
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* do as long as there are pending irqs in the chip */
 if|if
 condition|(
@@ -1247,6 +1295,9 @@ name|ipac_irq_stat
 condition|)
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|NOTDEF
 if|if
 condition|(
 name|was_ipac_irq
@@ -1268,6 +1319,8 @@ name|sc_unit
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|IPAC_WRITE
 argument_list|(
 name|IPAC_MASK

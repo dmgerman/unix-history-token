@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_rbch.c - device driver for raw B channel data  *	---------------------------------------------------  *  *	$Id: i4b_rbch.c,v 1.3 1999/05/20 10:09:02 hm Exp $  *  *	last edit-date: [Thu May  6 13:40:22 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_rbch.c - device driver for raw B channel data  *	---------------------------------------------------  *  *	$Id: i4b_rbch.c,v 1.36 1999/07/19 14:03:33 hm Exp $  *  *	last edit-date: [Fri Jul  9 09:37:02 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -77,11 +77,19 @@ directive|include
 file|<sys/tty.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -178,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/i4b_rbch_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/i4b_debug.h>
 end_include
 
@@ -190,6 +204,12 @@ begin_include
 include|#
 directive|include
 file|<i4b/i4b_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i4b/i4b_rbch_ioctl.h>
 end_include
 
 begin_include
@@ -683,12 +703,8 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* XXX fix "static" to PDEVSTATIC */
-end_comment
-
 begin_decl_stmt
-specifier|static
+name|PDEVSTATIC
 name|int
 name|i4brbchselect
 name|__P
@@ -863,6 +879,19 @@ name|CDEV_MAJOR
 value|57
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|400006
+end_if
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -931,6 +960,55 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|i4brbch_cdevsw
+init|=
+block|{
+name|i4brbchopen
+block|,
+name|i4brbchclose
+block|,
+name|i4brbchread
+block|,
+name|i4brbchwrite
+block|,
+name|i4brbchioctl
+block|,
+name|nostop
+block|,
+name|noreset
+block|,
+name|nodevtotty
+block|,
+name|POLLFIELD
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"i4brbch"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -970,12 +1048,47 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_version
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|400006
 name|cdevsw_add
 argument_list|(
 operator|&
 name|i4brbch_cdevsw
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|dev_t
+name|dev
+init|=
+name|makedev
+argument_list|(
+name|CDEV_MAJOR
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|cdevsw_add
+argument_list|(
+operator|&
+name|dev
+argument_list|,
+operator|&
+name|i4brbch_cdevsw
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1340,6 +1453,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+name|PDEVSTATIC
 name|int
 name|i4brbchopen
 parameter_list|(
@@ -1433,6 +1547,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+name|PDEVSTATIC
 name|int
 name|i4brbchclose
 parameter_list|(
@@ -1530,6 +1645,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+name|PDEVSTATIC
 name|int
 name|i4brbchread
 parameter_list|(
@@ -2036,6 +2152,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+name|PDEVSTATIC
 name|int
 name|i4brbchwrite
 parameter_list|(
@@ -2651,6 +2768,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	rbch device ioctl handlibg  *---------------------------------------------------------------------------*/
+end_comment
+
 begin_function
 name|PDEVSTATIC
 name|int
@@ -2692,12 +2813,6 @@ condition|(
 name|cmd
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|case I4B_RBCH_DIALOUT: if(bootverbose)printf("EE-rbch%d: attempting dialout (ioctl)\n", unit); 			i4b_l4_dialout(BDRV_RBCH, unit); 			break;
-endif|#
-directive|endif
 case|case
 name|FIOASYNC
 case|:
@@ -2712,29 +2827,33 @@ operator|)
 name|data
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|DBGL4
 argument_list|(
-literal|"EE-rbch%d: setting async mode\n"
+name|L4_RBCHDBG
 argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, setting async mode\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|DBGL4
 argument_list|(
-literal|"EE-rbch%d: clearing async mode\n"
+name|L4_RBCHDBG
 argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, clearing async mode\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2752,15 +2871,17 @@ operator|)
 name|data
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|DBGL4
 argument_list|(
-literal|"EE-rbch%d: setting non-blocking mode\n"
+name|L4_RBCHDBG
 argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, setting non-blocking mode\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
 name|rbch_softc
@@ -2775,15 +2896,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|DBGL4
 argument_list|(
-literal|"EE-rbch%d: clearing non-blocking mode\n"
+name|L4_RBCHDBG
 argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, clearing non-blocking mode\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
 name|rbch_softc
@@ -2814,15 +2937,17 @@ operator|&
 name|ST_CONNECTED
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|DBGL4
 argument_list|(
-literal|"EE-rbch%d: disconnecting for DTR down\n"
+name|L4_RBCHDBG
 argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, disconnecting for DTR down\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l4_disconnect_ind
@@ -2838,18 +2963,95 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|I4B_RBCH_DIALOUT
+case|:
+block|{
+name|size_t
+name|l
+decl_stmt|;
+for|for
+control|(
+name|l
+operator|=
+literal|0
+init|;
+name|l
+operator|<
+name|TELNO_MAX
+operator|&&
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|data
+operator|)
+index|[
+name|l
+index|]
+condition|;
+name|l
+operator|++
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|l
+condition|)
+block|{
+name|DBGL4
+argument_list|(
+name|L4_RBCHDBG
+argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, attempting dialout to %s\n"
+operator|,
+name|unit
+operator|,
+operator|(
+name|char
+operator|*
+operator|)
+name|data
+operator|)
+argument_list|)
+expr_stmt|;
+name|i4b_l4_dialoutnumber
+argument_list|(
+name|BDRV_RBCH
+argument_list|,
+name|unit
+argument_list|,
+name|l
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* fall through to SDTR */
+block|}
+case|case
 name|TIOCSDTR
 case|:
 comment|/* Set DTR */
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
+name|DBGL4
 argument_list|(
-literal|"EE-rbch%d: attempting dialout (DTR)\n"
+name|L4_RBCHDBG
 argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, attempting dialout (DTR)\n"
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
 name|i4b_l4_dialout
@@ -2926,18 +3128,60 @@ operator||=
 name|TIOCM_CD
 expr_stmt|;
 break|break;
+case|case
+name|I4B_RBCH_VR_REQ
+case|:
+block|{
+name|msg_vr_req_t
+modifier|*
+name|mvr
+decl_stmt|;
+name|mvr
+operator|=
+operator|(
+name|msg_vr_req_t
+operator|*
+operator|)
+name|data
+expr_stmt|;
+name|mvr
+operator|->
+name|version
+operator|=
+name|VERSION
+expr_stmt|;
+name|mvr
+operator|->
+name|release
+operator|=
+name|REL
+expr_stmt|;
+name|mvr
+operator|->
+name|step
+operator|=
+name|STEP
+expr_stmt|;
+break|break;
+block|}
 default|default:
 comment|/* Unknown stuff */
-name|printf
+name|DBGL4
 argument_list|(
-literal|"\n ========= i4brbch%d - ioctl, unknown cmd %lx ==================== \n"
+name|L4_RBCHDBG
 argument_list|,
+literal|"i4brbchioctl"
+argument_list|,
+operator|(
+literal|"unit %d, ioctl, unknown cmd %lx\n"
+operator|,
 name|unit
-argument_list|,
+operator|,
 operator|(
 name|u_long
 operator|)
 name|cmd
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -3206,12 +3450,8 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *	device driver select  *---------------------------------------------------------------------------*/
 end_comment
 
-begin_comment
-comment|/* XXX fix "static" to PDEVSTATIC */
-end_comment
-
 begin_function
-specifier|static
+name|PDEVSTATIC
 name|int
 name|i4brbchselect
 parameter_list|(
