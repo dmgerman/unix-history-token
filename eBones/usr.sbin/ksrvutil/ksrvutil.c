@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ksrvutil.c,v 1.1 1995/01/20 22:38:30 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,6 +124,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<com_err.h>
 end_include
 
 begin_ifdef
@@ -2199,24 +2205,16 @@ name|new_key
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|com_err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Key NOT changed: %s\n"
-argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|,
-name|krb_err_txt
-index|[
 name|status
-index|]
+argument_list|,
+literal|": key NOT changed"
 argument_list|)
 expr_stmt|;
 name|change_this_key
