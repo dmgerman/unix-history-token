@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.21 (Berkeley) %G%"
+literal|"@(#)alias.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1466,9 +1466,15 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|errno
 operator|!=
 name|EACCES
+operator|&&
+name|errno
+operator|!=
+name|EROFS
+operator|)
 operator|||
 name|automatic
 operator|||
