@@ -1591,19 +1591,6 @@ condition|)
 return|return
 name|retval
 return|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ruid %d, euid %d\n"
-argument_list|,
-name|getuid
-argument_list|()
-argument_list|,
-name|geteuid
-argument_list|()
-argument_list|)
-expr_stmt|;
 comment|/* Try to create the per-agent file or open it for reading if it 	   exists.  If we can't do either, we won't try to link a 	   per-session filename later.  Start the agent if we can't open 	   the file for reading. */
 name|env_write
 operator|=
