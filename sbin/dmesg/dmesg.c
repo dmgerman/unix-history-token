@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dmesg.c,v 1.4 1996/09/21 08:11:22 bde Exp $"
+literal|"$Id: dmesg.c,v 1.4.2.1 1997/08/26 13:09:06 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,12 +66,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_include
 include|#
@@ -100,19 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
 end_include
 
 begin_include
@@ -125,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
 end_include
 
 begin_include
@@ -233,6 +209,9 @@ decl_stmt|,
 name|cur
 decl_stmt|;
 name|char
+modifier|*
+name|bp
+decl_stmt|,
 modifier|*
 name|memf
 decl_stmt|,
@@ -448,11 +427,6 @@ name|kd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|kvm_close
-argument_list|(
-name|kd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cur
@@ -468,13 +442,72 @@ argument_list|,
 literal|"magic number incorrect"
 argument_list|)
 expr_stmt|;
+name|bp
+operator|=
+name|malloc
+argument_list|(
+name|cur
+operator|.
+name|msg_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bp
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kvm_read
+argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|long
+operator|)
+name|cur
+operator|.
+name|msg_ptr
+argument_list|,
+name|bp
+argument_list|,
+name|cur
+operator|.
+name|msg_size
+argument_list|)
+operator|!=
+name|cur
+operator|.
+name|msg_size
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"kvm_read: %s"
+argument_list|,
+name|kvm_geterr
+argument_list|(
+name|kd
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cur
 operator|.
 name|msg_bufx
 operator|>=
-name|MSG_BSIZE
+name|cur
+operator|.
+name|msg_size
 condition|)
 name|cur
 operator|.
@@ -482,12 +515,15 @@ name|msg_bufx
 operator|=
 literal|0
 expr_stmt|;
+name|kvm_close
+argument_list|(
+name|kd
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The message buffer is circular.  If the buffer has wrapped, the 	 * write pointer points to the oldest data.  Otherwise, the write 	 * pointer points to \0's following the data.  Read the entire 	 * buffer starting at the write pointer and ignore nulls so that 	 * we effectively start at the oldest data. 	 */
 name|p
 operator|=
-name|cur
-operator|.
-name|msg_bufc
+name|bp
 operator|+
 name|cur
 operator|.
@@ -502,11 +538,11 @@ name|msg_bufx
 operator|==
 literal|0
 condition|?
+name|bp
+operator|+
 name|cur
 operator|.
-name|msg_bufc
-operator|+
-name|MSG_BSIZE
+name|msg_size
 else|:
 name|p
 operator|)
@@ -523,17 +559,15 @@ if|if
 condition|(
 name|p
 operator|==
+name|bp
+operator|+
 name|cur
 operator|.
-name|msg_bufc
-operator|+
-name|MSG_BSIZE
+name|msg_size
 condition|)
 name|p
 operator|=
-name|cur
-operator|.
-name|msg_bufc
+name|bp
 expr_stmt|;
 name|ch
 operator|=
