@@ -1789,7 +1789,7 @@ name|ifm_type
 operator|!=
 name|RTM_IFINFO
 condition|)
-break|break;
+continue|continue;
 name|dl
 operator|=
 operator|(
