@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	5.1 (Berkeley) %G%"
+literal|"@(#)err.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,24 +30,6 @@ include|#
 directive|include
 file|"sendmail.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|err
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	5.1 (Berkeley) %G%"
+literal|"@(#)macro.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,24 +36,6 @@ include|#
 directive|include
 file|"conf.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|macro
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  EXPAND -- macro expand a string using $x escapes. ** **	Parameters: **		s -- the string to expand. **		buf -- the place to put the expansion. **		buflim -- the buffer limit, i.e., the address **			of the last usable position in buf. **		e -- envelope in which to work. ** **	Returns: **		none. ** **	Side Effects: **		none. */
