@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,18 +109,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"machine/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"netisr.h"
-end_include
 
 begin_define
 define|#
@@ -659,6 +647,12 @@ block|}
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|ifafree_verbose
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|ifafree
@@ -683,38 +677,56 @@ argument_list|(
 literal|"ifafree"
 argument_list|)
 expr_stmt|;
+comment|/* for now . . . . */
+if|if
+condition|(
+name|ifafree_verbose
+condition|)
+block|{
+if|if
+condition|(
 name|ifa
 operator|->
 name|ifa_refcnt
-operator|--
+operator|<
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"ifafree: would panic\n"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ifa
 operator|->
 name|ifa_refcnt
-operator|<=
+operator|==
 literal|0
-operator|&&
-operator|(
+condition|)
+name|printf
+argument_list|(
+literal|"ifafree((caddr_t)ifa, M_IFADDR)\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ifa
 operator|->
 name|ifa_flags
 operator|&
 name|IFA_ROUTE
-operator|)
-operator|==
-literal|0
 condition|)
-name|free
+name|printf
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ifa
-argument_list|,
-name|M_IFADDR
+literal|"ifafree: has route \n"
 argument_list|)
+expr_stmt|;
+block|}
+name|ifa
+operator|->
+name|ifa_refcnt
+operator|--
 expr_stmt|;
 block|}
 end_function

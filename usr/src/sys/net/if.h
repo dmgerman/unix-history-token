@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Structures defining a network interface, providing a packet  * transport mechanism (ala level 0 of the PUP protocols).  *  * Each interface accepts output datagrams of a specified maximum  * length, and provides higher level routines with input datagrams  * received from its medium.  *  * Output occurs when the routine if_output is called, with three parameters:  *	(*ifp->if_output)(ifp, m, dst)  * Here m is the mbuf chain to be sent and dst is the destination address.  * The output routine encapsulates the supplied datagram if necessary,  * and then transmits it on its medium.  *  * On input, each interface unwraps the data received by it, and either  * places it on the input queue of a internetwork datagram routine  * and posts the associated software interrupt, or passes the datagram to a raw  * packet input routine.  *  * Routines exist for locating interfaces by their addresses  * or for locating a interface on a certain network, as well as more general  * routing and gateway routines maintaining information used to locate  * interfaces.  These routines live in the files if.c and route.c  */
+comment|/*  * Structures defining a network interface, providing a packet  * transport mechanism (ala level 0 of the PUP protocols).  *  * Each interface accepts output datagrams of a specified maximum  * length, and provides higher level routines with input datagrams  * received from its medium.  *  * Output occurs when the routine if_output is called, with three parameters:  *	(*ifp->if_output)(ifp, m, dst, rt)  * Here m is the mbuf chain to be sent and dst is the destination address.  * The output routine encapsulates the supplied datagram if necessary,  * and then transmits it on its medium.  *  * On input, each interface unwraps the data received by it, and either  * places it on the input queue of a internetwork datagram routine  * and posts the associated software interrupt, or passes the datagram to a raw  * packet input routine.  *  * Routines exist for locating interfaces by their addresses  * or for locating a interface on a certain network, as well as more general  * routing and gateway routines maintaining information used to locate  * interfaces.  These routines live in the files if.c and route.c  */
 end_comment
 
 begin_ifndef
@@ -117,61 +117,117 @@ struct|;
 comment|/* output queue */
 comment|/* procedure handles */
 name|int
-function_decl|(
-modifier|*
-name|if_init
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*if_init
+argument_list|)
 comment|/* init routine */
+name|__P
+argument_list|(
+operator|(
 name|int
-function_decl|(
-modifier|*
-name|if_output
-function_decl|)
-parameter_list|()
-function_decl|;
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*if_output
+argument_list|)
 comment|/* output routine (enqueue) */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|mbuf
+operator|*
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+operator|,
+expr|struct
+name|rtentry
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|if_start
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*if_start
+argument_list|)
 comment|/* initiate output routine */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|if_done
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*if_done
+argument_list|)
 comment|/* output complete routine */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* (XXX not used; fake prototype) */
 name|int
-function_decl|(
-modifier|*
-name|if_ioctl
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*if_ioctl
+argument_list|)
 comment|/* ioctl routine */
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
 name|int
-function_decl|(
-modifier|*
-name|if_reset
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* bus reset routine */
+operator|,
+name|caddr_t
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|if_watchdog
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*if_reset
+argument_list|)
+comment|/* XXX; Unibus reset routine for vax */
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* new autoconfig will permit removal */
+name|int
+argument_list|(
+argument|*if_watchdog
+argument_list|)
 comment|/* timer routine */
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* generic interface statistics */
 name|int
 name|if_ipackets
@@ -577,7 +633,7 @@ name|u_short
 name|ifa_flags
 decl_stmt|;
 comment|/* mostly rt_flags for cloning */
-name|u_short
+name|short
 name|ifa_refcnt
 decl_stmt|;
 comment|/* extra to malloc for link info */
@@ -755,7 +811,7 @@ parameter_list|(
 name|ifa
 parameter_list|)
 define|\
-value|if ((ifa)->ifa_refcnt<= 1) \ 		ifafree(ifa); \ 	else \ 		(ifa)->ifa_refcnt--;
+value|if ((ifa)->ifa_refcnt<= 0) \ 		ifafree(ifa); \ 	else \ 		(ifa)->ifa_refcnt--;
 end_define
 
 begin_include
@@ -829,6 +885,20 @@ argument_list|(
 operator|(
 expr|struct
 name|ifaddr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|if_attach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
 operator|*
 operator|)
 argument_list|)
