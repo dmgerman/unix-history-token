@@ -1143,6 +1143,7 @@ name|dp
 operator|->
 name|d_destroyed
 condition|)
+block|{
 name|g_io_deliver
 argument_list|(
 name|bp
@@ -1150,6 +1151,8 @@ argument_list|,
 name|ENXIO
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|error
 operator|=
 name|EJUSTRETURN
