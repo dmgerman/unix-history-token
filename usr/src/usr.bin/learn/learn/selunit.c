@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)selunit.c	4.3	(Berkeley)	%G%"
+literal|"@(#)selunit.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,9 +172,18 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|gets
 argument_list|(
 name|dobuff
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|wrapup
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)selsub.c	4.3	(Berkeley)	%G%"
+literal|"@(#)selsub.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,11 +459,20 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|gets
 argument_list|(
 name|sname
 operator|=
 name|subname
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -493,11 +502,20 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|gets
 argument_list|(
 name|sname
 operator|=
 name|subname
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -571,9 +589,18 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|gets
 argument_list|(
 name|ans2
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

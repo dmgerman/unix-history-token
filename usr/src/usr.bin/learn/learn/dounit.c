@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dounit.c	4.2	(Berkeley)	%G%"
+literal|"@(#)dounit.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,7 +353,12 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Please type yes, no or bye:  "
+literal|"\nPlease type yes, no or bye:  "
+argument_list|)
+expr_stmt|;
+name|clearerr
+argument_list|(
+name|stdin
 argument_list|)
 expr_stmt|;
 name|fflush
