@@ -510,7 +510,7 @@ name|init_level
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Handle Hot-Plug scenarios.  If there is already a peripheral 	 * of our type assigned to this path, we are likely waiting for 	 * final close on an old, invalidated, peripheral.  If this is 	 * the case, queue up a deferred call to the peripheral's async 	 * handler.  If it looks like a mistaken re-alloation, complain. 	 */
+comment|/* 	 * Handle Hot-Plug scenarios.  If there is already a peripheral 	 * of our type assigned to this path, we are likely waiting for 	 * final close on an old, invalidated, peripheral.  If this is 	 * the case, queue up a deferred call to the peripheral's async 	 * handler.  If it looks like a mistaken re-allocation, complain. 	 */
 if|if
 condition|(
 operator|(
