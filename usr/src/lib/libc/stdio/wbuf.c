@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)wbuf.c	4.7 (Berkeley) %G% */
+comment|/* @(#)wbuf.c	4.8 (Berkeley) %G% */
 end_comment
 
 begin_include
@@ -29,19 +29,29 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_macro
 name|_flsbuf
 argument_list|(
-name|c
+argument|c
 argument_list|,
-name|iop
+argument|iop
 argument_list|)
+end_macro
+
+begin_decl_stmt
+name|unsigned
+name|char
+name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|iop
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -177,17 +187,17 @@ name|_ptr
 operator|=
 name|base
 expr_stmt|;
+name|iop
+operator|->
+name|_cnt
+operator|=
+literal|0
+expr_stmt|;
 block|}
 else|else
 name|rn
 operator|=
 name|n
-operator|=
-literal|0
-expr_stmt|;
-name|iop
-operator|->
-name|_cnt
 operator|=
 literal|0
 expr_stmt|;
