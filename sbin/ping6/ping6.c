@@ -5325,19 +5325,6 @@ name|tv
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|>=
-name|FD_SETSIZE
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"descriptor too big"
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 name|fdmaskp
