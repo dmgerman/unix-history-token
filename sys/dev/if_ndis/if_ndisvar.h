@@ -217,6 +217,14 @@ name|struct
 name|mtx
 name|ndis_mtx
 decl_stmt|;
+name|struct
+name|mtx
+name|ndis_intrmtx
+decl_stmt|;
+name|struct
+name|task
+name|ndis_intrtask
+decl_stmt|;
 name|device_t
 name|ndis_dev
 decl_stmt|;
