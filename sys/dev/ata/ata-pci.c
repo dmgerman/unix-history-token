@@ -1561,7 +1561,7 @@ block|{
 case|case
 literal|0x522910b9
 case|:
-comment|/* Aladdin need to activate the ATAPI FIFO */
+comment|/* AcerLabs Aladdin need to activate the ATAPI FIFO */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -1647,7 +1647,7 @@ break|break;
 case|case
 literal|0x00041103
 case|:
-comment|/* HighPoint HPT366/368/370/372 */
+comment|/* HighPoint HPT366/368/370/372 default setup */
 if|if
 condition|(
 name|pci_get_revid
@@ -1772,11 +1772,11 @@ break|break;
 case|case
 literal|0x00051103
 case|:
-comment|/* HighPoint HPT372 */
+comment|/* HighPoint HPT372 default setup */
 case|case
 literal|0x00081103
 case|:
-comment|/* HighPoint HPT374 */
+comment|/* HighPoint HPT374 default setup */
 comment|/* turn off interrupt prediction */
 name|pci_write_config
 argument_list|(
@@ -2074,9 +2074,39 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x02111166
+case|:
+comment|/* ServerWorks ROSB4 enable UDMA33 */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x64
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x64
+argument_list|,
+literal|4
+argument_list|)
+operator|&
+operator|~
+literal|0x00002000
+operator|)
+operator||
+literal|0x00004000
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0x02121166
 case|:
-comment|/* ServerWorks CSB5 ATA66/100 controller */
+comment|/* ServerWorks CSB5 enable UDMA66/100 depending on rev */
 name|pci_write_config
 argument_list|(
 name|dev
