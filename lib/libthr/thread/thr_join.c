@@ -248,17 +248,25 @@ operator|!=
 name|PS_DEAD
 condition|)
 block|{
-name|_thread_critical_enter
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* Set the running thread to be the joiner: */
 name|pthread
 operator|->
 name|joiner
 operator|=
 name|curthread
+expr_stmt|;
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|_thread_critical_enter
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* Keep track of which thread we're joining to: */
 name|curthread
@@ -293,14 +301,6 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|_SPINUNLOCK
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 name|THREAD_LIST_UNLOCK
 expr_stmt|;
 name|DEAD_LIST_UNLOCK
@@ -311,6 +311,11 @@ name|curthread
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/* 			 * XXX - For correctness reasons. 			 * We must aquire these in the same order and also 			 * importantly, release in the same order, order because 			 * otherwise we might deadlock with the joined thread 			 * when we attempt to release one of these locks. 			 */
+name|DEAD_LIST_LOCK
+expr_stmt|;
+name|THREAD_LIST_LOCK
 expr_stmt|;
 name|_thread_critical_enter
 argument_list|(
@@ -354,6 +359,10 @@ name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
 block|}
 else|else
