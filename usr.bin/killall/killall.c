@@ -1557,11 +1557,13 @@ else|else
 block|{
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|thiscmd
 argument_list|,
 name|cmd
+argument_list|,
+name|MAXCOMLEN
 argument_list|)
 operator|!=
 literal|0
