@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.31	82/01/30	*/
+comment|/*	if_en.c	4.32	82/02/03	*/
 end_comment
 
 begin_include
@@ -591,6 +591,16 @@ operator|.
 name|if_ubareset
 operator|=
 name|enreset
+expr_stmt|;
+name|es
+operator|->
+name|es_ifuba
+operator|.
+name|ifu_flags
+operator|=
+name|UBA_NEEDBDP
+operator||
+name|UBA_NEED16
 expr_stmt|;
 name|if_attach
 argument_list|(
@@ -1237,19 +1247,6 @@ if|if
 condition|(
 name|es
 operator|->
-name|es_if
-operator|.
-name|if_snd
-operator|.
-name|ifq_head
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|es
-operator|->
 name|es_ifuba
 operator|.
 name|ifu_xtofree
@@ -1273,6 +1270,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|es
+operator|->
+name|es_if
+operator|.
+name|if_snd
+operator|.
+name|ifq_head
+operator|==
+literal|0
+condition|)
+block|{
 name|es
 operator|->
 name|es_lastx
