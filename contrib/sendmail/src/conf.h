@@ -6541,11 +6541,39 @@ begin_comment
 comment|/* 2.2-current when it appeared */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500012
+end_if
+
+begin_comment
+comment|/* Moved to libc in 5.0-current */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<libutil.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
