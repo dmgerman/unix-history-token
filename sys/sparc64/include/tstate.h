@@ -136,6 +136,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|TSTATE_MM_TSO
+value|TSTATE_PSTATE(PSTATE_MM_TSO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSTATE_MM_PSO
+value|TSTATE_PSTATE(PSTATE_MM_PSO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSTATE_MM_RMO
+value|TSTATE_PSTATE(PSTATE_MM_RMO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TSTATE_TLE
 value|TSTATE_PSTATE(PSTATE_TLE)
 end_define
@@ -203,6 +224,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|TSTATE_ICC_SHIFT
+value|(TSTATE_CCR_SHIFT + ICC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSTATE_ICC_MASK
+value|(ICC_MASK<< TSTATE_CCR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSTATE_XCC_SHIFT
+value|(TSTATE_CCR_SHIFT + XCC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSTATE_XCC_MASK
+value|(XCC_MASK<< TSTATE_CCR_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TSTATE_CCR
 parameter_list|(
 name|x
@@ -264,6 +313,17 @@ define|#
 directive|define
 name|TSTATE_XCC_N
 value|TSTATE_CCR(XCC_N)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSTATE_SECURE
+parameter_list|(
+name|tstate
+parameter_list|)
+define|\
+value|PSTATE_SECURE(((tstate)>> TSTATE_PSTATE_SHIFT)& ((1<< TSTATE_PSTATE_BITS) - 1))
 end_define
 
 begin_endif
