@@ -1177,19 +1177,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_protect
-parameter_list|(
-name|vm_page_t
-name|mem
-parameter_list|,
-name|int
-name|prot
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_copy
 parameter_list|(
 name|vm_page_t

@@ -2510,7 +2510,7 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,
@@ -3392,7 +3392,7 @@ operator|->
 name|dirty
 condition|)
 block|{
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|ma
 index|[
@@ -3461,7 +3461,7 @@ name|ENABLE_VFS_IOOPT
 end_ifdef
 
 begin_comment
-comment|/*  * Same as vm_object_pmap_copy, except range checking really  * works, and is meant for small sections of an object.  *  * This code protects resident pages by making them read-only  * and is typically called on a fork or split when a page  * is converted to copy-on-write.    *  * NOTE: If the page is already at VM_PROT_NONE, calling  * vm_page_protect will have no effect.  */
+comment|/*  * Same as vm_object_pmap_copy, except range checking really  * works, and is meant for small sections of an object.  *  * This code protects resident pages by making them read-only  * and is typically called on a fork or split when a page  * is converted to copy-on-write.    *  * NOTE: If the page is already at VM_PROT_NONE, calling  * pmap_page_protect will have no effect.  */
 end_comment
 
 begin_function
@@ -3533,7 +3533,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|p
 argument_list|,

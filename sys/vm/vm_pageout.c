@@ -1472,7 +1472,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|mc
 index|[
@@ -1642,7 +1642,7 @@ argument_list|(
 name|mt
 argument_list|)
 condition|)
-name|vm_page_protect
+name|pmap_page_protect
 argument_list|(
 name|mt
 argument_list|,
