@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)diff.h 4.3 %G%" */
+comment|/*	diff.h	4.4	83/07/01	*/
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<signal.h>
 end_include
 
 begin_comment
