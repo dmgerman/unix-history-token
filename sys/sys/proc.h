@@ -579,6 +579,11 @@ name|char
 name|p_lock
 decl_stmt|;
 comment|/* Process lock (prevent swap) count. */
+name|struct
+name|mtx
+name|p_mtx
+decl_stmt|;
+comment|/* Process stucture lock.  */
 name|u_char
 name|p_oncpu
 decl_stmt|;

@@ -1402,6 +1402,18 @@ name|p_startcopy
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|p2
+operator|->
+name|p_mtx
+argument_list|,
+literal|"process lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|p2
 operator|->
 name|p_aioinfo
