@@ -787,7 +787,7 @@ value|50
 end_define
 
 begin_comment
-comment|/* Intel IA-46 Processor */
+comment|/* Intel IA-64 Processor */
 end_comment
 
 begin_define
