@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.3 (Berkeley) %G%"
+literal|"@(#)newfs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -2839,21 +2845,9 @@ return|;
 block|}
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl (GDINFO): %s\n"
-argument_list|,
-name|progname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"ioctl (GDINFO)"
 argument_list|)
 expr_stmt|;
 name|fatal
@@ -2951,21 +2945,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl (WDINFO): %s\n"
-argument_list|,
-name|progname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"ioctl (WDINFO)"
 argument_list|)
 expr_stmt|;
 name|fatal
@@ -3191,22 +3173,13 @@ name|lp
 operator|->
 name|d_secsize
 condition|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: alternate label %d write: %s\n"
-argument_list|,
-name|progname
+literal|"alternate label %d write"
 argument_list|,
 name|i
 operator|/
 literal|2
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3277,37 +3250,53 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|fprintf
+if|if
+condition|(
+name|fcntl
 argument_list|(
-name|stderr
+name|STDERR_FILENO
 argument_list|,
-literal|"%s: "
-argument_list|,
+name|F_GETFL
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|openlog
+argument_list|(
 name|progname
+argument_list|,
+name|LOG_CONS
+argument_list|,
+name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
+name|vsyslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
 name|fmt
 argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|va_end
+name|closelog
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vwarnx
 argument_list|(
+name|fmt
+argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|putc
+block|}
+name|va_end
 argument_list|(
-literal|'\n'
-argument_list|,
-name|stderr
+name|ap
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3315,6 +3304,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 end_function
 
