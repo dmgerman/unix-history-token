@@ -1403,7 +1403,13 @@ block|,
 block|{
 literal|0x82
 block|,
-literal|"Linux"
+literal|"Linux swap"
+block|}
+block|,
+block|{
+literal|0x83
+block|,
+literal|"Linux filesystem"
 block|}
 block|,
 block|{
@@ -1421,7 +1427,7 @@ block|,
 block|{
 literal|0xA5
 block|,
-literal|"386BSD"
+literal|"FreeBSD/NetBSD/386BSD"
 block|}
 block|,
 block|{
