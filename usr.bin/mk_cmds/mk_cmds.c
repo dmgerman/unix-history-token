@@ -155,7 +155,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"cmdtbl.ct\n"
+literal|" cmdtbl.ct\n"
 argument_list|,
 name|stderr
 argument_list|)
