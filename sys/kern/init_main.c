@@ -298,6 +298,27 @@ begin_comment
 comment|/* initialized so that it can be patched */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|boothowto
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|boothowto
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Promiscuous argument pass for start_init()  *  * This is a kludge because we use a return from mi_startup() rather than a call  * to a new routine in locore.s to kick the kernel alive from locore.s.  */
 end_comment
