@@ -749,6 +749,28 @@ begin_comment
 comment|/* Default: don't unlink existing files */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ARCHIVE_EXTRACT_ACL
+value|(32)
+end_define
+
+begin_comment
+comment|/* Default: don't restore ACLs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_EXTRACT_FFLAGS
+value|(64)
+end_define
+
+begin_comment
+comment|/* Default: don't restore fflags */
+end_comment
+
 begin_function_decl
 name|int
 name|archive_read_extract
