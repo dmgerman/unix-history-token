@@ -4816,10 +4816,14 @@ name|NULL
 decl_stmt|;
 name|int
 name|s
+init|=
+name|splimp
+argument_list|()
 decl_stmt|;
 name|int
-name|action
+name|is_pipe
 init|=
+operator|(
 name|fwa
 operator|->
 name|rule
@@ -4834,12 +4838,10 @@ name|act_ofs
 index|]
 operator|.
 name|opcode
+operator|==
+name|O_PIPE
+operator|)
 decl_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|pipe_nr
 operator|&=
 literal|0xffff
@@ -5281,9 +5283,7 @@ goto|;
 comment|/*      * If we reach this point the flow was previously idle, so we need      * to schedule it. This involves different actions for fixed-rate or      * WF2Q queues.      */
 if|if
 condition|(
-name|action
-operator|==
-name|O_PIPE
+name|is_pipe
 condition|)
 block|{
 comment|/* 	 * Fixed-rate queue: just insert into the ready_heap. 	 */
