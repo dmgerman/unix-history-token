@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.14 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4355,13 +4355,17 @@ name|node
 operator|.
 name|i_blocks
 operator|=
-name|howmany
+name|btodb
 argument_list|(
+name|fragroundup
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|node
 operator|.
 name|i_size
-argument_list|,
-name|DEV_BSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|wtfs
@@ -4446,13 +4450,17 @@ name|node
 operator|.
 name|i_blocks
 operator|=
-name|howmany
+name|btodb
 argument_list|(
+name|fragroundup
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
 name|node
 operator|.
 name|i_size
-argument_list|,
-name|DEV_BSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|wtfs
