@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *  *	@(#)sysv_shm.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * System V shared memory routines.  */
+comment|/*  * System V shared memory routines.  * TEMPORARY, until mmap is in place;  * needed now for HP-UX compatibility and X server (yech!).  */
 end_comment
 
 begin_ifdef
@@ -262,7 +262,7 @@ begin_struct
 struct|struct
 name|args
 block|{
-name|int
+name|u_int
 name|which
 decl_stmt|;
 block|}
