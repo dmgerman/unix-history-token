@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.15 (Berkeley) %G%"
+literal|"@(#)tset.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6435,20 +6435,14 @@ operator|^=
 literal|0100
 expr_stmt|;
 block|}
-name|p
-operator|=
-literal|"x\n"
-expr_stmt|;
-name|p
-index|[
-literal|0
-index|]
-operator|=
-name|n
-expr_stmt|;
-name|prs
+name|prc
 argument_list|(
-name|p
+name|n
+argument_list|)
+expr_stmt|;
+name|prc
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
