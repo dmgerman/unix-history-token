@@ -8140,8 +8140,10 @@ operator|&
 name|ndis_interlock
 argument_list|)
 expr_stmt|;
+operator|(
 operator|*
 name|addend
+operator|)
 operator|++
 expr_stmt|;
 name|mtx_unlock
@@ -8178,8 +8180,10 @@ operator|&
 name|ndis_interlock
 argument_list|)
 expr_stmt|;
+operator|(
 operator|*
 name|addend
+operator|)
 operator|--
 expr_stmt|;
 name|mtx_unlock
@@ -9445,7 +9449,7 @@ name|ndis_list_entry
 modifier|*
 name|flink
 decl_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|(
 expr|struct
@@ -9487,7 +9491,7 @@ name|nle_flink
 operator|=
 name|entry
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|(
 expr|struct
@@ -9535,7 +9539,7 @@ name|ndis_list_entry
 modifier|*
 name|entry
 decl_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|(
 expr|struct
@@ -9571,7 +9575,7 @@ name|nle_blink
 operator|=
 name|head
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|(
 expr|struct
@@ -9621,7 +9625,7 @@ name|ndis_list_entry
 modifier|*
 name|blink
 decl_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|(
 expr|struct
@@ -9663,7 +9667,7 @@ name|nle_blink
 operator|=
 name|entry
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|(
 expr|struct
