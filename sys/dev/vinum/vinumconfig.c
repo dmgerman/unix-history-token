@@ -2750,7 +2750,7 @@ name|drive_referenced
 condition|)
 block|{
 comment|/* real drive */
-name|lockdrive
+name|LOCKDRIVE
 argument_list|(
 name|drive
 argument_list|)
@@ -8595,6 +8595,22 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|data_sds
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|plex
+operator|->
+name|stripesize
+operator|>
+literal|0
+condition|)
+block|{
 name|remainder
 operator|=
 call|(
@@ -8707,6 +8723,17 @@ name|remainder
 expr_stmt|;
 comment|/* and shorten it */
 block|}
+block|}
+block|}
+else|else
+comment|/* no data sds, */
+name|plex
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset length */
 block|}
 block|}
 block|}
