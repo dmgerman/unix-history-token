@@ -370,28 +370,6 @@ operator|==
 literal|0
 operator|)
 expr_stmt|;
-comment|/* 	 * Emulate sendfile(2) weirdness, sendfile doesn't actually send 	 * nbytes of the file, it really sends (nbytes - headers_size) of 	 * the file.  If (nbytes - headers_size) == 0 we just send trailers. 	 */
-if|if
-condition|(
-name|nbytes
-operator|!=
-literal|0
-condition|)
-block|{
-name|nbytes
-operator|-=
-name|nwritten
-expr_stmt|;
-if|if
-condition|(
-name|nbytes
-operator|<=
-literal|0
-condition|)
-goto|goto
-name|ERROR_2
-goto|;
-block|}
 comment|/* 	 * Loop while no error occurs and until the expected number of bytes are 	 * written. 	 */
 for|for
 control|(
