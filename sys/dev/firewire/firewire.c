@@ -1653,6 +1653,8 @@ name|split_timeout
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|s
 decl_stmt|;
 name|split_timeout
 operator|.
@@ -1680,6 +1682,11 @@ argument_list|,
 operator|&
 name|split_timeout
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splfw
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -1799,6 +1806,11 @@ break|break;
 block|}
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -9099,39 +9111,19 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"retry_count = %d\n"
+literal|"probe failed for %d node\n"
 argument_list|,
 name|fc
 operator|->
 name|retry_count
 argument_list|)
 expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|fc
-operator|->
-name|retry_probe_callout
-argument_list|,
-name|hz
-operator|*
-literal|2
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|fc
-operator|->
-name|ibr
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|fc
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|callout_reset(&fc->retry_probe_callout, hz*2, 					(void *)fc->ibr, (void *)fc);
+endif|#
+directive|endif
 block|}
 return|return;
 block|}
