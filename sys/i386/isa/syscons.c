@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.280 1998/09/26 03:34:08 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.281 1998/09/26 03:38:38 yokota Exp $  */
 end_comment
 
 begin_include
@@ -640,11 +640,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
-name|flags
-init|=
-literal|0
+name|sc_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -1909,18 +1906,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|set_destructive_cursor
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|set_mouse_pos
 parameter_list|(
 name|scr_stat
@@ -2385,7 +2370,7 @@ expr_stmt|;
 comment|/* do we have a destructive cursor ? */
 if|if
 condition|(
-name|flags
+name|sc_flags
 operator|&
 name|CHAR_CURSOR
 condition|)
@@ -2449,14 +2434,14 @@ if|if
 condition|(
 operator|!
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|BLINK_CURSOR
 operator|)
 operator|||
 operator|(
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|BLINK_CURSOR
 operator|)
@@ -2536,14 +2521,14 @@ if|if
 condition|(
 operator|!
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|BLINK_CURSOR
 operator|)
 operator|||
 operator|(
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|BLINK_CURSOR
 operator|)
@@ -3689,7 +3674,7 @@ directive|endif
 name|scinit
 argument_list|()
 expr_stmt|;
-name|flags
+name|sc_flags
 operator|=
 name|dev
 operator|->
@@ -3703,7 +3688,7 @@ argument_list|(
 name|adp_flags
 argument_list|)
 condition|)
-name|flags
+name|sc_flags
 operator|&=
 operator|~
 name|CHAR_CURSOR
@@ -3794,7 +3779,7 @@ argument_list|)
 if|if
 condition|(
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|VESA800X600
 operator|)
@@ -3983,7 +3968,7 @@ literal|"<%d virtual consoles, flags=0x%x>\n"
 argument_list|,
 name|MAXCONS
 argument_list|,
-name|flags
+name|sc_flags
 argument_list|)
 expr_stmt|;
 if|#
@@ -5540,12 +5525,12 @@ operator|)
 operator|&
 literal|0x01
 condition|)
-name|flags
+name|sc_flags
 operator||=
 name|BLINK_CURSOR
 expr_stmt|;
 else|else
-name|flags
+name|sc_flags
 operator|&=
 operator|~
 name|BLINK_CURSOR
@@ -5580,13 +5565,13 @@ condition|)
 return|return
 name|ENXIO
 return|;
-name|flags
+name|sc_flags
 operator||=
 name|CHAR_CURSOR
 expr_stmt|;
 block|}
 else|else
-name|flags
+name|sc_flags
 operator|&=
 operator|~
 name|CHAR_CURSOR
@@ -5608,7 +5593,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
+name|sc_flags
 operator|&
 name|CHAR_CURSOR
 condition|)
@@ -5643,12 +5628,12 @@ operator|)
 operator|&
 literal|0x01
 condition|)
-name|flags
+name|sc_flags
 operator||=
 name|VISUAL_BELL
 expr_stmt|;
 else|else
-name|flags
+name|sc_flags
 operator|&=
 operator|~
 name|VISUAL_BELL
@@ -5666,12 +5651,12 @@ operator|)
 operator|&
 literal|0x02
 condition|)
-name|flags
+name|sc_flags
 operator||=
 name|QUIET_BELL
 expr_stmt|;
 else|else
-name|flags
+name|sc_flags
 operator|&=
 operator|~
 name|QUIET_BELL
@@ -11618,7 +11603,7 @@ block|{
 comment|/* if its a blinking cursor, we may have to update it */
 if|if
 condition|(
-name|flags
+name|sc_flags
 operator|&
 name|BLINK_CURSOR
 condition|)
@@ -12420,7 +12405,7 @@ name|new_scp
 argument_list|)
 operator|&&
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|CHAR_CURSOR
 operator|)
@@ -16099,12 +16084,12 @@ index|]
 operator|&
 literal|0x01
 condition|)
-name|flags
+name|sc_flags
 operator||=
 name|BLINK_CURSOR
 expr_stmt|;
 else|else
-name|flags
+name|sc_flags
 operator|&=
 operator|~
 name|BLINK_CURSOR
@@ -16134,12 +16119,12 @@ operator|->
 name|va_flags
 argument_list|)
 condition|)
-name|flags
+name|sc_flags
 operator||=
 name|CHAR_CURSOR
 expr_stmt|;
 else|else
-name|flags
+name|sc_flags
 operator|&=
 operator|~
 name|CHAR_CURSOR
@@ -16205,7 +16190,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
+name|sc_flags
 operator|&
 name|CHAR_CURSOR
 condition|)
@@ -22352,7 +22337,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
+name|sc_flags
 operator|&
 name|CHAR_CURSOR
 condition|)
@@ -22401,7 +22386,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|set_destructive_cursor
 parameter_list|(
@@ -25359,7 +25343,7 @@ else|else
 block|{
 if|if
 condition|(
-name|flags
+name|sc_flags
 operator|&
 name|CHAR_CURSOR
 condition|)
@@ -25394,7 +25378,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|BLINK_CURSOR
 operator|)
@@ -25506,7 +25490,7 @@ operator|!=
 name|cur_console
 operator|&&
 operator|(
-name|flags
+name|sc_flags
 operator|&
 name|QUIET_BELL
 operator|)
@@ -25514,7 +25498,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|flags
+name|sc_flags
 operator|&
 name|VISUAL_BELL
 condition|)
