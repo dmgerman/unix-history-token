@@ -23,11 +23,11 @@ begin_define
 define|#
 directive|define
 name|_BSD_CLOCK_T_
-value|int
+value|unsigned long
 end_define
 
 begin_comment
-comment|/* clock() */
+comment|/* clock()... */
 end_comment
 
 begin_define
@@ -38,7 +38,7 @@ value|int
 end_define
 
 begin_comment
-comment|/* clockid_t */
+comment|/* clock_gettime()... */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ begin_define
 define|#
 directive|define
 name|_BSD_SSIZE_T_
-value|long
+value|int
 end_define
 
 begin_comment
@@ -115,7 +115,7 @@ value|int
 end_define
 
 begin_comment
-comment|/* time() */
+comment|/* time()... */
 end_comment
 
 begin_define
@@ -126,7 +126,7 @@ value|int
 end_define
 
 begin_comment
-comment|/* timer_t */
+comment|/* timer_gettime()... */
 end_comment
 
 begin_define
@@ -308,6 +308,81 @@ value|((size_t)(&((type *)0)->field))
 end_define
 
 begin_comment
+comment|/*  * XXX this paragraph is very out of date.  * Typedefs for especially magic types.  #define's wouldn't work in the  * __GNUC__ case, since __attribute__(()) only works in certain contexts.  * This is not in<machine/types.h>, since that has too much namespace  * pollution for inclusion in ANSI headers, yet we need __int64_t in at  * least<stdio.h>.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|__mode__
+argument_list|(
+name|__DI__
+argument_list|)
+operator|)
+argument_list|)
+name|__int64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__attribute__
+typedef|((
+name|__mode__
+typedef|(
+name|__DI__
+typedef|)))
+name|__uint64_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|__int64_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* LONGLONG */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|__uint64_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Internal names for basic integral types.  Omit the typedef if  * not possible for a machine/compiler combination.  */
 end_comment
 
@@ -359,23 +434,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
-name|long
-name|__int64_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|long
-name|__uint64_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|int
 name|__intptr_t
 typedef|;
@@ -388,6 +446,239 @@ name|int
 name|__uintptr_t
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|__signed
+name|char
+name|__int_least8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|__uint_least8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|short
+name|__int_least16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|__uint_least16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__int_least32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__uint_least32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int64_t
+name|__int_least64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__uint_least64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__int_fast8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__uint_fast8_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__int_fast16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__uint_fast16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|__int_fast32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__uint_fast32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int64_t
+name|__int_fast64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__uint_fast64_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__int64_t
+name|__intmax_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__uintmax_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|__INT8_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__INT16_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__INT32_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__INT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## LL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINT8_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINT16_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINT32_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## U)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINT64_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## ULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__INTMAX_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## LL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__UINTMAX_C
+parameter_list|(
+name|c
+parameter_list|)
+value|(c ## ULL)
+end_define
 
 begin_comment
 comment|/*  * mbstate_t is an opaque object to keep conversion state, during multibyte  * stream conversions.  The content must not be referenced by user programs.  */
