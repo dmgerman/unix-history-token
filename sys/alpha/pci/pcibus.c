@@ -1221,11 +1221,13 @@ operator|(
 name|void
 operator|*
 operator|)
+name|ALPHA_PHYS_TO_K0SEG
+argument_list|(
 name|rv
 operator|->
 name|r_start
+argument_list|)
 expr_stmt|;
-comment|/* maybe NULL? */
 name|rman_set_virtual
 argument_list|(
 name|rv
