@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.74.1.1
+literal|3.75
 operator|%
 name|G
 operator|%
@@ -2011,6 +2011,15 @@ argument_list|(
 name|realname
 argument_list|,
 literal|"uucp"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|realname
+argument_list|,
+literal|"daemon"
 argument_list|)
 operator|!=
 literal|0
