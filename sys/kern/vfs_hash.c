@@ -459,7 +459,9 @@ name|vp
 operator|->
 name|v_vnlock
 argument_list|,
-name|LK_EXCLUSIVE
+name|flags
+operator|&
+name|LK_TYPE_MASK
 argument_list|,
 name|NULL
 argument_list|,
