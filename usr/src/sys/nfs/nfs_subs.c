@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5963,6 +5963,16 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|cred
+operator|->
+name|cr_ngroups
+operator|=
+name|uidp
+operator|->
+name|nu_cr
+operator|.
+name|cr_ngroups
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6035,6 +6045,12 @@ name|cr_groups
 index|[
 name|i
 index|]
+expr_stmt|;
+name|cred
+operator|->
+name|cr_ngroups
+operator|=
+name|i
 expr_stmt|;
 block|}
 if|if
