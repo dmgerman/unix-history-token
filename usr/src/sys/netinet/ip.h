@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip.h	6.1	83/07/29	*/
+comment|/*	ip.h	6.2	84/02/15	*/
 end_comment
 
 begin_comment
@@ -108,7 +108,7 @@ name|IPOPT_CLASS
 parameter_list|(
 name|o
 parameter_list|)
-value|((o)&0x40)
+value|((o)&0x60)
 end_define
 
 begin_define
@@ -118,7 +118,7 @@ name|IPOPT_NUMBER
 parameter_list|(
 name|o
 parameter_list|)
-value|((o)&0x3f)
+value|((o)&0x1f)
 end_define
 
 begin_define
@@ -132,21 +132,21 @@ begin_define
 define|#
 directive|define
 name|IPOPT_RESERVED1
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPOPT_DEBMEAS
 value|0x20
 end_define
 
 begin_define
 define|#
 directive|define
+name|IPOPT_DEBMEAS
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPOPT_RESERVED2
-value|0x30
+value|0x60
 end_define
 
 begin_define
