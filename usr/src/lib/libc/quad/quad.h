@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)quad.h	5.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)quad.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -155,11 +155,13 @@ begin_comment
 comment|/*  * XXX  * Compensate for gcc 1 vs gcc 2.  Gcc 1 defines ?sh?di3's second argument  * as u_quad_t, while gcc 2 correctly uses int.  Unfortunately, we still use  * both compilers.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sparc
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|>=
+literal|2
+end_if
 
 begin_typedef
 typedef|typedef
