@@ -112,7 +112,7 @@ modifier|*
 name|dataptr
 init|=
 operator|(
-name|int
+name|void
 operator|*
 operator|)
 operator|&
@@ -1028,7 +1028,7 @@ end_comment
 
 begin_function
 name|void
-name|bcopy
+name|memcpy
 parameter_list|(
 specifier|const
 name|void
@@ -1381,7 +1381,7 @@ name|i
 operator|++
 control|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
 operator|(
 name|void

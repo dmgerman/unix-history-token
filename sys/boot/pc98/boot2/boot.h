@@ -461,7 +461,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|bcopy
+name|memcpy
 parameter_list|(
 specifier|const
 name|void

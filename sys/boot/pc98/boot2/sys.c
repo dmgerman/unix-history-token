@@ -374,7 +374,7 @@ argument_list|,
 name|cnt2
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
 name|iobuf
 operator|+
@@ -477,7 +477,7 @@ argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
 name|iobuf
 operator|+
@@ -564,7 +564,7 @@ argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
 name|iobuf
 argument_list|,
@@ -660,7 +660,7 @@ operator|->
 name|fs_bsize
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
 operator|(
 name|void
