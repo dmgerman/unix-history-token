@@ -5040,7 +5040,7 @@ operator|->
 name|inp_ip_tos
 expr_stmt|;
 comment|/* XXX */
-comment|/* 		 * See if we should do MTU discovery.  Route lookups are expensive, 		 * so we will only unset the DF bit if: 		 * 		 *	1) path_mtu_discovery is disabled 		 *	2) the SCF_UNREACH flag has been set 		 */
+comment|/* 		 * See if we should do MTU discovery.  Route lookups are 		 * expensive, so we will only unset the DF bit if: 		 * 		 *	1) path_mtu_discovery is disabled 		 *	2) the SCF_UNREACH flag has been set 		 */
 if|if
 condition|(
 name|path_mtu_discovery
@@ -5057,14 +5057,12 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 name|ip
 operator|->
 name|ip_off
 operator||=
 name|IP_DF
 expr_stmt|;
-block|}
 name|th
 operator|=
 operator|(
@@ -5174,12 +5172,10 @@ comment|/* Tack on the TCP options. */
 if|if
 condition|(
 name|optlen
-operator|==
+operator|!=
 literal|0
 condition|)
-goto|goto
-name|no_options
-goto|;
+block|{
 name|optp
 operator|=
 operator|(
@@ -5287,7 +5283,7 @@ operator|(
 name|optp
 operator|)
 decl_stmt|;
-comment|/* Form timestamp option as shown in appendix A of RFC 1323. */
+comment|/* Form timestamp option per appendix A of RFC 1323. */
 operator|*
 name|lp
 operator|++
@@ -5321,7 +5317,7 @@ operator|+=
 name|TCPOLEN_TSTAMP_APPA
 expr_stmt|;
 block|}
-comment|/*          * Send CC and CC.echo if we received CC from our peer.          */
+comment|/* 		 * Send CC and CC.echo if we received CC from our peer. 		 */
 if|if
 condition|(
 name|sc
@@ -5395,8 +5391,7 @@ operator|*
 literal|2
 expr_stmt|;
 block|}
-name|no_options
-label|:
+block|}
 ifdef|#
 directive|ifdef
 name|INET6
