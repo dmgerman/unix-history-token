@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_extern.h	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_extern.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -42,6 +42,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|vnode
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|vfsconf
 struct_decl|;
 end_struct_decl
 
@@ -142,7 +148,9 @@ name|mfs_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
