@@ -8719,13 +8719,6 @@ operator|&
 name|sigpending
 argument_list|)
 expr_stmt|;
-name|prop
-operator|=
-name|sigprop
-argument_list|(
-name|sig
-argument_list|)
-expr_stmt|;
 name|_STOPEVENT
 argument_list|(
 name|p
@@ -8897,20 +8890,6 @@ operator|->
 name|ps_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the traced bit got turned off, go back up 			 * to the top to rescan signals.  This ensures 			 * that p_sig* and p_sigacts are consistent. 			 */
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
 comment|/* 			 * If parent wants us to take the signal, 			 * then it will leave it in p->p_xstat; 			 * otherwise we just look for signals again. 			 */
 name|SIGDELSET
 argument_list|(
@@ -8931,6 +8910,20 @@ expr_stmt|;
 if|if
 condition|(
 name|sig
+operator|==
+literal|0
+condition|)
+continue|continue;
+comment|/* 			 * If the traced bit got turned off, go back up 			 * to the top to rescan signals.  This ensures 			 * that p_sig* and p_sigact are consistent. 			 */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_TRACED
+operator|)
 operator|==
 literal|0
 condition|)
@@ -8963,6 +8956,13 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|prop
+operator|=
+name|sigprop
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Decide whether the signal should be returned. 		 * Return the signal's number, or fall through 		 * to clear it from the pending mask. 		 */
 switch|switch
 condition|(
