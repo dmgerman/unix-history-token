@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.2	(Berkeley)	83/02/27"
+literal|"@(#)restore.c	3.3	(Berkeley)	83/02/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -2306,7 +2306,7 @@ argument_list|(
 operator|(
 name|long
 operator|)
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|first
@@ -2486,6 +2486,10 @@ operator|==
 name|curfile
 operator|.
 name|ino
+operator|&&
+name|next
+operator|<=
+name|last
 condition|)
 block|{
 name|ep
