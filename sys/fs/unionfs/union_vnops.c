@@ -533,7 +533,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_read_t
+name|vop_write_t
 name|union_write
 decl_stmt|;
 end_decl_stmt
@@ -4045,7 +4045,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|vop_read_args
+name|vop_write_args
 comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
