@@ -1817,6 +1817,9 @@ operator|=
 operator|!
 name|f_recursive
 operator|&&
+operator|!
+name|f_label
+operator|&&
 name|options
 operator|&
 name|FTS_NOSTAT
@@ -3020,7 +3023,13 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"MAC label for %s/%s"
+argument_list|,
+name|cur
+operator|->
+name|fts_parent
+operator|->
+name|fts_path
 argument_list|,
 name|cur
 operator|->
@@ -3113,7 +3122,13 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"MAC label for %s/%s"
+argument_list|,
+name|cur
+operator|->
+name|fts_parent
+operator|->
+name|fts_path
 argument_list|,
 name|cur
 operator|->
@@ -3149,7 +3164,13 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"MAC label for %s/%s"
+argument_list|,
+name|cur
+operator|->
+name|fts_parent
+operator|->
+name|fts_path
 argument_list|,
 name|cur
 operator|->
