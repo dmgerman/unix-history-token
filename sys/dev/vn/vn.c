@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
+file|<sys/bio.h>
 end_include
 
 begin_include
@@ -329,11 +329,6 @@ name|int
 name|sc_maxactive
 decl_stmt|;
 comment|/* max # of active requests 	*/
-name|struct
-name|buf
-name|sc_tab
-decl_stmt|;
-comment|/* transfer queue 		*/
 name|u_long
 name|sc_options
 decl_stmt|;
@@ -1160,12 +1155,17 @@ operator|<=
 literal|0
 condition|)
 block|{
-comment|/* XXX: Normal B_ERROR processing, instead ? */
+name|bp
+operator|->
+name|bio_error
+operator|=
+name|EINVAL
+expr_stmt|;
 name|bp
 operator|->
 name|bio_flags
 operator||=
-name|B_INVAL
+name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -1219,7 +1219,6 @@ name|bio_error
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/* XXX bp->b_flags |= B_INVAL; */
 name|bp
 operator|->
 name|bio_flags

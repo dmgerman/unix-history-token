@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * os.h -- only included by sound_config.h right after local.h  *  */
+comment|/*  * os.h -- only included by sound_config.h right after local.h  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bio.h>
 end_include
 
 begin_include
