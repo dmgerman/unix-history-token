@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI driver for  * Julians SCSI-code  *  * Copyright 1994, Kent Palmkvist (kentp@isy.liu.se)  * Copyright 1994, Robert Knier (rknier@qgraph.com)  * Copyright 1992, 1994 Drew Eckhardt (drew@colorado.edu)  * Copyright 1994, Julian Elischer (julian@tfs.com)  * Copyright 1994-1995, Serge Vakulenko (vak@cronyx.ru)  *  * Others that has contributed by example code is  * 		Glen Overby (overby@cray.com)  *		Tatu Yllnen  *		Brian E Litzinger  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPERS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPERS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * (Free/Net/386)BSD ST01/02, Future Domain TMC-885, TMC-950 SCSI driver for  * Julians SCSI-code  *  * Copyright 1994, Kent Palmkvist (kentp@isy.liu.se)  * Copyright 1994, Robert Knier (rknier@qgraph.com)  * Copyright 1992, 1994 Drew Eckhardt (drew@colorado.edu)  * Copyright 1994, Julian Elischer (julian@tfs.com)  * Copyright 1994-1995, Serge Vakulenko (vak@cronyx.ru)  * Copyright 1995 Stephen Hocking (sysseh@devetir.qld.gov.au)  *  * Others that has contributed by example code is  * 		Glen Overby (overby@cray.com)  *		Tatu Yllnen  *		Brian E Litzinger  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPERS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPERS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  *  * $Id: seagate.c,v 1.7 1995/04/12 20:48:03 wollman Exp $  */
+comment|/*  * kentp  940307 alpha version based on newscsi-03 version of Julians SCSI-code  * kentp  940314 Added possibility to not use messages  * rknier 940331 Added fast transfer code  * rknier 940407 Added assembler coded data transfers  * vak    941226 New probe algorithm, based on expected behaviour  *               instead of BIOS signatures analysis, better timeout handling,  *               new asm fragments for data input/output, target-dependent  *               delays, device flags, polling mode, generic cleanup  * vak    950115 Added request-sense ops  * seh    950701 Fixed up Future Domain TMC-885 problems with disconnects,  *               weird phases and the like. (we could probably investigate  *               what the board's idea of the phases are, but that requires  *               doco that I don't have). Note that it is slower than the  *               2.0R driver with both SEA_BLINDTRANSFER& SEA_ASSEMBLER  *               defined by a factor of more than 2. I'll look at that later!  * seh    950712 The performance release 8^). Put in the blind transfer code  *               from the 2.0R source. Don't use it by commenting out the   *               SEA_BLINDTRANSFER below. Note that it only kicks in during  *               DATAOUT or DATAIN and then only when the transfer is a  *               multiple of BLOCK_SIZE bytes (512). Most devices fit into  *               that category, with the possible exception of scanners and  *               some of the older MO drives.  *  * $Id: seagate.c,v 1.8 1995/05/30 08:03:04 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -197,8 +197,19 @@ begin_comment
 comment|/* address of the adapter on the SCSI bus */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SEA_BLINDTRANSFER
+value|1
+end_define
+
 begin_comment
-comment|/*  * Defice config flags  */
+comment|/* for quicker than quick xfers */
+end_comment
+
+begin_comment
+comment|/*  * Define config flags  */
 end_comment
 
 begin_define
@@ -917,6 +928,18 @@ parameter_list|)
 value|{\ 	register u_long cnt = 100000; char *msg = message;\ 	while (cnt--&& ! (condition)) continue;\ 	if (cnt == -1&& msg)\ 		printf ("sea: %s timeout\n", msg); }
 end_define
 
+begin_define
+define|#
+directive|define
+name|WAITFOR10
+parameter_list|(
+name|condition
+parameter_list|,
+name|message
+parameter_list|)
+value|{\ 	register u_long cnt = 1000000; char *msg = message;\ 	while (cnt--&& ! (condition)) continue;\ 	if (cnt == -1&& msg)\ 		printf ("sea: %s timeout\n", msg); }
+end_define
+
 begin_comment
 comment|/*  * Seagate adapter does not support in hardware  * waiting for REQ deassert after transferring each data byte.  * We must do it in software.  * The problem is that some SCSI devices deassert REQ so fast that  * we can miss it.  We the flag for each target sayind if we should (not)  * wait for REQ deassert.  This flag is initialized when the first  * operation on the target is done.  * 1) Test if we don't need to wait for REQ deassert (`nodelay' flag).  *    Initially the flag is off, i.e. wait.  If the flag is set,  *    go to the step 4.  * 2) Wait for REQ deassert (call sea_wait_for_req_deassert function).  *    If REQ deassert got, go to the step 4.  If REQ did not cleared  *    during timeout period, go to the next step.  * 3) If `nodelay' flag did not initialized yet (`init' flag),  *    then set `ndelay' flag.  * 4) Set `init' flag.  Done.  */
 end_comment
@@ -1126,6 +1149,7 @@ specifier|static
 name|int
 name|sea_select
 parameter_list|(
+specifier|volatile
 name|adapter_t
 modifier|*
 name|z
@@ -1397,6 +1421,21 @@ name|DC_CLS_MISC
 comment|/* host adapters aren't special */
 block|}
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* FD TMC885's can't handle detach& re-attach */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sea_select_cmd
+init|=
+name|CMD_DRVR_ENABLE
+operator||
+name|CMD_ATTN
 decl_stmt|;
 end_decl_stmt
 
@@ -1879,6 +1918,30 @@ name|addr
 operator|+
 literal|0x1e00
 expr_stmt|;
+comment|/* FD TMC885's can't handle detach& re-attach */
+name|sea_select_cmd
+operator|=
+name|CMD_DRVR_ENABLE
+expr_stmt|;
+comment|/* FD TMC-885 is supposed to be at id 6. How strange. */
+name|z
+operator|->
+name|scsi_addr
+operator|=
+name|HOST_SCSI_ADDR
+operator|-
+literal|1
+expr_stmt|;
+name|z
+operator|->
+name|scsi_id
+operator|=
+literal|1
+operator|<<
+name|z
+operator|->
+name|scsi_addr
+expr_stmt|;
 if|if
 condition|(
 name|sea_init
@@ -2147,6 +2210,12 @@ operator|=
 name|CMD_RST
 operator||
 name|CMD_DRVR_ENABLE
+operator||
+name|z
+operator|->
+name|parity
+operator||
+name|CMD_INTR
 expr_stmt|;
 comment|/* Hold reset for at least 25 microseconds. */
 name|DELAY
@@ -2636,7 +2705,33 @@ name|scb_t
 modifier|*
 name|scb
 decl_stmt|;
-comment|/* PRINT (("sea%d/%d/%d command 0x%x\n", unit, xs->sc_link->target, 		xs->sc_link->lun, xs->cmd->opcode)); */
+name|PRINT
+argument_list|(
+operator|(
+literal|"sea%d/%d/%d command 0x%x\n"
+operator|,
+name|unit
+operator|,
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|,
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|lun
+operator|,
+name|xs
+operator|->
+name|cmd
+operator|->
+name|opcode
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xs
@@ -3035,7 +3130,35 @@ name|scb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* PRINT (("sea%d/%d/%d command %s\n", unit, 		xs->sc_link->target, xs->sc_link->lun, 		xs->error ? "failed" : "done")); */
+name|PRINT
+argument_list|(
+operator|(
+literal|"sea%d/%d/%d command %s\n"
+operator|,
+name|unit
+operator|,
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|target
+operator|,
+name|xs
+operator|->
+name|sc_link
+operator|->
+name|lun
+operator|,
+name|xs
+operator|->
+name|error
+condition|?
+literal|"failed"
+else|:
+literal|"done"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|xs
@@ -3420,6 +3543,7 @@ begin_function
 name|int
 name|sea_select
 parameter_list|(
+specifier|volatile
 name|adapter_t
 modifier|*
 name|z
@@ -3438,6 +3562,8 @@ operator|=
 name|z
 operator|->
 name|parity
+operator||
+name|CMD_INTR
 expr_stmt|;
 operator|*
 name|z
@@ -3540,7 +3666,7 @@ return|;
 block|}
 name|DELAY
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3569,11 +3695,9 @@ name|z
 operator|->
 name|CONTROL
 operator|=
-name|CMD_DRVR_ENABLE
+name|sea_select_cmd
 operator||
 name|CMD_SEL
-operator||
-name|CMD_ATTN
 operator||
 name|z
 operator|->
@@ -3581,7 +3705,7 @@ name|parity
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Wait for a bsy from target. 	 * If the target is not present on the bus, we get 	 * the timeout.  Don't PRINT any message -- it's not an error. */
@@ -3669,9 +3793,7 @@ name|z
 operator|->
 name|CONTROL
 operator|=
-name|CMD_DRVR_ENABLE
-operator||
-name|CMD_ATTN
+name|sea_select_cmd
 operator||
 name|z
 operator|->
@@ -3679,8 +3801,41 @@ name|parity
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1
+literal|15
 argument_list|)
+expr_stmt|;
+name|WAITFOR
+argument_list|(
+operator|*
+name|z
+operator|->
+name|STATUS
+operator|&
+name|STAT_REQ
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|z
+operator|->
+name|type
+operator|==
+name|CTLR_FUTURE_DOMAIN
+condition|)
+operator|*
+name|z
+operator|->
+name|CONTROL
+operator|=
+name|CMD_INTR
+operator||
+name|z
+operator|->
+name|parity
+operator||
+name|CMD_DRVR_ENABLE
 expr_stmt|;
 name|WAITFOR
 argument_list|(
@@ -3759,7 +3914,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Check for phase mismatch. */
+comment|/* Check for phase mismatch. FD 885 always seems to get this wrong! */
 if|if
 condition|(
 operator|(
@@ -3772,6 +3927,12 @@ name|PHASE_MASK
 operator|)
 operator|!=
 name|PHASE_MSGOUT
+operator|&&
+name|z
+operator|->
+name|type
+operator|!=
+name|CTLR_FUTURE_DOMAIN
 condition|)
 block|{
 name|PRINT
@@ -3836,7 +3997,16 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Allow disconnects. */
+comment|/* Allow disconnects. (except for FD controllers) */
+if|if
+condition|(
+name|z
+operator|->
+name|type
+operator|==
+name|CTLR_SEAGATE
+condition|)
+block|{
 operator|*
 name|z
 operator|->
@@ -3885,6 +4055,7 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|z
 operator|->
@@ -4041,6 +4212,8 @@ operator||
 name|z
 operator|->
 name|parity
+operator||
+name|CMD_INTR
 expr_stmt|;
 name|WAITFOR
 argument_list|(
@@ -4786,6 +4959,7 @@ modifier|*
 name|plen
 parameter_list|)
 block|{
+specifier|volatile
 name|u_char
 modifier|*
 name|data
@@ -4793,18 +4967,72 @@ init|=
 operator|*
 name|pdata
 decl_stmt|;
+specifier|volatile
 name|u_long
 name|len
 init|=
 operator|*
 name|plen
 decl_stmt|;
-asm|asm ("cld 	1:      movb (%%ebx), %%al 		xorb $1, %%al 		testb $0xf, %%al 		jnz 2f 		testb $0x10, %%al 		jz 1b 		lodsb 		movb %%al, (%%edi) 		loop 1b 	2:" 	: "=S" (data), "=c" (len)
+ifdef|#
+directive|ifdef
+name|SEA_BLINDTRANSFER
+if|if
+condition|(
+name|len
+operator|&&
+operator|!
+operator|(
+name|len
+operator|%
+name|BLOCK_SIZE
+operator|)
+condition|)
+block|{
+while|while
+condition|(
+name|len
+condition|)
+block|{
+name|WAITFOR10
+argument_list|(
+operator|*
+name|z
+operator|->
+name|STATUS
+operator|&
+name|STAT_REQ
+argument_list|,
+literal|"blind block read"
+argument_list|)
+expr_stmt|;
+asm|asm(" 			shr $2, %%ecx; 			cld; 			rep; 			movsl; " : : 			"D" (z->DATA), "S" (data), "c" (BLOCK_SIZE) : 			"cx", "si", "di" );
+name|data
+operator|+=
+name|BLOCK_SIZE
+expr_stmt|;
+name|len
+operator|-=
+name|BLOCK_SIZE
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+endif|#
+directive|endif
+asm|asm ("cld 		1:      movb (%%ebx), %%al 			xorb $1, %%al 			testb $0xf, %%al 			jnz 2f 			testb $0x10, %%al 			jz 1b 			lodsb 			movb %%al, (%%edi) 			loop 1b 		2:" 		: "=S" (data), "=c" (len)
 comment|/* output */
 asm|: "D" (z->DATA), "b" (z->STATUS),
 comment|/* input */
-asm|"0" (data), "1" (len) 	: "eax", "ebx", "edi");
+asm|"0" (data), "1" (len) 		: "eax", "ebx", "edi");
 comment|/* clobbered */
+ifdef|#
+directive|ifdef
+name|SEA_BLINDTRANSFER
+block|}
+endif|#
+directive|endif
 name|PRINT
 argument_list|(
 operator|(
@@ -4852,6 +5080,7 @@ modifier|*
 name|plen
 parameter_list|)
 block|{
+specifier|volatile
 name|u_char
 modifier|*
 name|data
@@ -4859,12 +5088,60 @@ init|=
 operator|*
 name|pdata
 decl_stmt|;
+specifier|volatile
 name|u_long
 name|len
 init|=
 operator|*
 name|plen
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SEA_BLINDTRANSFER
+if|if
+condition|(
+name|len
+operator|&&
+operator|!
+operator|(
+name|len
+operator|%
+name|BLOCK_SIZE
+operator|)
+condition|)
+block|{
+while|while
+condition|(
+name|len
+condition|)
+block|{
+name|WAITFOR10
+argument_list|(
+operator|*
+name|z
+operator|->
+name|STATUS
+operator|&
+name|STAT_REQ
+argument_list|,
+literal|"blind block read"
+argument_list|)
+expr_stmt|;
+asm|asm(" 			shr $2, %%ecx; 			cld; 			rep; 			movsl; " : : 			"S" (z->DATA), "D" (data), "c" (BLOCK_SIZE) : 			"cx", "si", "di" );
+name|data
+operator|+=
+name|BLOCK_SIZE
+expr_stmt|;
+name|len
+operator|-=
+name|BLOCK_SIZE
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|len
@@ -4872,22 +5149,28 @@ operator|>=
 literal|512
 condition|)
 block|{
-asm|asm ("  cld 		1:      movb (%%esi), %%al 			xorb $5, %%al 			testb $0xf, %%al 			jnz 2f 			testb $0x10, %%al 			jz 1b 			movb (%%ebx), %%al 			stosb 			loop 1b 		2:" 		: "=D" (data), "=c" (len)
+asm|asm ("  cld 			1:      movb (%%esi), %%al 				xorb $5, %%al 				testb $0xf, %%al 				jnz 2f 				testb $0x10, %%al 				jz 1b 				movb (%%ebx), %%al 				stosb 				loop 1b 			2:" 			: "=D" (data), "=c" (len)
 comment|/* output */
-asm|: "b" (z->DATA), "S" (z->STATUS), 			"0" (data), "1" (len)
+asm|: "b" (z->DATA), "S" (z->STATUS), 				"0" (data), "1" (len)
 comment|/* input */
 asm|: "eax", "ebx", "esi");
 comment|/* clobbered */
 block|}
 else|else
 block|{
-asm|asm ("  cld 		1:      movb (%%esi), %%al 			xorb $5, %%al 			testb $0xf, %%al 			jnz 2f 			testb $0x10, %%al 			jz 1b 			movb (%%ebx), %%al 			stosb 			movb $1000, %%al 		3:      testb $0x10, (%%esi) 			jz 4f 			dec %%al 			jnz 3b 		4:      loop 1b 		2:" 		: "=D" (data), "=c" (len)
+asm|asm ("  cld 			1:      movb (%%esi), %%al 				xorb $5, %%al 				testb $0xf, %%al 				jnz 2f 				testb $0x10, %%al 				jz 1b 				movb (%%ebx), %%al 				stosb 				movb $1000, %%al 			3:      testb $0x10, (%%esi) 				jz 4f 				dec %%al 				jnz 3b 			4:      loop 1b 			2:" 			: "=D" (data), "=c" (len)
 comment|/* output */
-asm|: "b" (z->DATA), "S" (z->STATUS), 			"0" (data), "1" (len)
+asm|: "b" (z->DATA), "S" (z->STATUS), 				"0" (data), "1" (len)
 comment|/* input */
 asm|: "eax", "ebx", "esi");
 comment|/* clobbered */
 block|}
+ifdef|#
+directive|ifdef
+name|SEA_BLINDTRANSFER
+block|}
+endif|#
+directive|endif
 name|PRINT
 argument_list|(
 operator|(
@@ -4975,6 +5258,14 @@ operator|*
 name|cmd
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|z
+operator|->
+name|type
+operator|==
+name|CTLR_SEAGATE
+condition|)
 name|WAITREQ
 argument_list|(
 name|t
@@ -5011,7 +5302,7 @@ name|STAT_BSY
 operator|)
 condition|)
 break|break;
-comment|/* Check for phase mismatch. */
+comment|/* Check for phase mismatch. FD 885 seems to get this wrong! */
 if|if
 condition|(
 operator|(
@@ -5021,11 +5312,17 @@ name|PHASE_MASK
 operator|)
 operator|!=
 name|PHASE_CMDOUT
+operator|&&
+name|z
+operator|->
+name|type
+operator|!=
+name|CTLR_FUTURE_DOMAIN
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sea: sending command: invalid phase %s\n"
+literal|"sea: sea_cmd_output: invalid phase %s\n"
 argument_list|,
 name|PHASE_NAME
 argument_list|(
@@ -5067,6 +5364,14 @@ operator|*
 name|cmd
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|z
+operator|->
+name|type
+operator|==
+name|CTLR_SEAGATE
+condition|)
 name|WAITREQ
 argument_list|(
 name|t
@@ -5294,7 +5599,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sea: sending message: invalid phase %s\n"
+literal|"sea: sea_msg_input: invalid phase %s\n"
 argument_list|,
 name|PHASE_NAME
 argument_list|(
@@ -6183,6 +6488,14 @@ name|z
 operator|->
 name|DATA
 expr_stmt|;
+if|if
+condition|(
+name|z
+operator|->
+name|type
+operator|==
+name|CTLR_SEAGATE
+condition|)
 name|WAITREQ
 argument_list|(
 name|t
