@@ -304,7 +304,32 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	if (waitfor&& (vp->v_mount->mnt_flag& MNT_ASYNC) == 0) 		return (bwrite(bp)); 	else { */
+if|if
+condition|(
+name|waitfor
+operator|&&
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ASYNC
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|bwrite
+argument_list|(
+name|bp
+argument_list|)
+operator|)
+return|;
+else|else
+block|{
 name|bdwrite
 argument_list|(
 name|bp
@@ -315,7 +340,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	} */
+block|}
 block|}
 end_function
 
