@@ -2723,7 +2723,7 @@ name|log_arp_movements
 argument_list|,
 literal|0
 argument_list|,
-literal|"log arp replies from MACs different the the one in the cache"
+literal|"log arp replies from MACs different than the one in the cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
