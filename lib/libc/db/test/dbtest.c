@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	8.6 (Berkeley) 9/16/93"
+literal|"@(#)dbtest.c	8.7 (Berkeley) 1/2/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|<db.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../PORT/include/compat.h"
 end_include
 
 begin_enum
