@@ -8961,7 +8961,7 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 name|int
