@@ -11276,7 +11276,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * there are couple of p2p interface routing models.  "behavior" lets  * you pick one.  it looks that gated behavior fits best with BSDs,  * since BSD kernels does not look at prefix length on p2p interfaces.  */
+comment|/*  * there are couple of p2p interface routing models.  "behavior" lets  * you pick one.  it looks that gated behavior fits best with BSDs,  * since BSD kernels do not look at prefix length on p2p interfaces.  */
 end_comment
 
 begin_function
@@ -13573,20 +13573,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Don't age static routes */
-if|#
-directive|if
-literal|0
-block|np->rip6_tag = htons(routetag& 0xffff);
-else|#
-directive|else
 name|np
 operator|->
 name|rip6_tag
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|np
 operator|->
 name|rip6_metric
