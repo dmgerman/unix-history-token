@@ -102,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bootarea.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sysinstall.h"
 end_include
 
@@ -254,7 +248,9 @@ specifier|extern
 name|int
 name|disk_size
 parameter_list|(
-name|int
+name|struct
+name|disklabel
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1060,7 +1056,11 @@ name|d_typename
 argument_list|,
 name|disk_size
 argument_list|(
+operator|&
+name|avail_disklabels
+index|[
 name|i
+index|]
 argument_list|)
 argument_list|,
 name|avail_disknames
@@ -1158,6 +1158,10 @@ name|valid
 operator|=
 literal|1
 expr_stmt|;
+name|whole_disk
+operator|=
+literal|0
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|scratch
@@ -1190,7 +1194,11 @@ literal|"Install to entire disk"
 argument_list|,
 name|disk_size
 argument_list|(
-name|disk
+operator|&
+name|avail_disklabels
+index|[
+name|inst_disk
+index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1442,7 +1450,7 @@ name|sprintf
 argument_list|(
 name|scratch
 argument_list|,
-literal|"The following error occured will trying\nto read the master boot record:\n\n%s\nIn order to install FreeBSD a new master boot record\nwill have to be written which will mean all current\ndata on the hard disk will be lost."
+literal|"The following error occured while trying\nto read the master boot record:\n\n%s\nIn order to install FreeBSD a new master boot record\nwill have to be written which will mean all current\ndata on the hard disk will be lost."
 argument_list|,
 name|errmsg
 argument_list|)
@@ -1696,6 +1704,31 @@ name|inst_part
 index|]
 operator|.
 name|dp_start
+argument_list|)
+expr_stmt|;
+name|dialog_msgbox
+argument_list|(
+name|TITLE
+argument_list|,
+literal|"This is an example of how the disklabel configuration\nwill look. It doesn't pass the data back into the real\nstructures yet but you can play around with the\n field editing to get an idea of how it will work.\nHit escape to quit the editor."
+argument_list|,
+literal|10
+argument_list|,
+literal|70
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|edit_disklabel
+argument_list|(
+operator|&
+name|avail_disklabels
+index|[
+name|inst_disk
+index|]
 argument_list|)
 expr_stmt|;
 if|if
