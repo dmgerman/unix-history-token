@@ -4818,6 +4818,15 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|size
