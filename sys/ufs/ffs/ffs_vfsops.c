@@ -461,6 +461,9 @@ name|struct
 name|vnode
 modifier|*
 name|devvp
+decl_stmt|,
+modifier|*
+name|rootvp
 decl_stmt|;
 name|struct
 name|ufs_args
@@ -2559,10 +2562,6 @@ name|devvp
 argument_list|)
 operator|>
 literal|1
-operator|&&
-name|devvp
-operator|!=
-name|rootvp
 condition|)
 return|return
 operator|(

@@ -219,22 +219,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|cdev
-modifier|*
-name|rootdevs
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* possible root devices */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|char
 modifier|*
 name|rootdevnames
@@ -246,19 +230,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* names of possible root devices */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|rootvp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* vnode equivalent to above */
 end_comment
 
 begin_decl_stmt

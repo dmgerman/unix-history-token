@@ -383,6 +383,9 @@ name|struct
 name|vnode
 modifier|*
 name|devvp
+decl_stmt|,
+modifier|*
+name|rootvp
 decl_stmt|;
 name|struct
 name|ntfs_args
@@ -838,10 +841,6 @@ condition|(
 name|ncount
 operator|>
 literal|1
-operator|&&
-name|devvp
-operator|!=
-name|rootvp
 condition|)
 return|return
 operator|(

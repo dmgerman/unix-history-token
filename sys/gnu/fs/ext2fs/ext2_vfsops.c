@@ -482,6 +482,11 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
+name|vnode
+modifier|*
+name|rootvp
+decl_stmt|;
+name|struct
 name|thread
 modifier|*
 name|td
@@ -3283,10 +3288,6 @@ name|devvp
 argument_list|)
 operator|>
 literal|1
-operator|&&
-name|devvp
-operator|!=
-name|rootvp
 condition|)
 return|return
 operator|(

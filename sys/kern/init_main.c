@@ -312,14 +312,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|rootvp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|boothowto
 init|=

@@ -765,10 +765,6 @@ condition|(
 name|ncount
 operator|>
 literal|1
-operator|&&
-name|devvp
-operator|!=
-name|rootvp
 condition|)
 return|return
 operator|(

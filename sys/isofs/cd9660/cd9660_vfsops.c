@@ -572,6 +572,11 @@ name|struct
 name|iso_args
 name|args
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|rootvp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1346,10 +1351,6 @@ name|devvp
 argument_list|)
 operator|>
 literal|1
-operator|&&
-name|devvp
-operator|!=
-name|rootvp
 condition|)
 return|return
 name|EBUSY

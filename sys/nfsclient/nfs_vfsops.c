@@ -2726,10 +2726,6 @@ name|error
 operator|)
 return|;
 block|}
-name|rootvp
-operator|=
-name|vp
-expr_stmt|;
 comment|/* 	 * This is not really an nfs issue, but it is much easier to 	 * set hostname here and then let the "/etc/rc.xxx" files 	 * mount the right /var based upon its preset value. 	 */
 name|bcopy
 argument_list|(
