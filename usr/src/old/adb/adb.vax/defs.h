@@ -1,11 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.3	82/03/30	*/
+comment|/*	defs.h	4.3	82/12/19	*/
 end_comment
 
 begin_comment
 comment|/*  * adb - vax string table version; common definitions  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pte.h>
+end_include
 
 begin_include
 include|#
@@ -17,18 +29,6 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pte.h>
 end_include
 
 begin_include
