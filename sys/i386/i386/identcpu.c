@@ -2889,6 +2889,13 @@ directive|if
 operator|!
 name|defined
 argument_list|(
+name|lint
+argument_list|)
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|I386_CPU
 argument_list|)
 operator|&&
@@ -2914,6 +2921,12 @@ directive|error
 error|This kernel is not configured for one of the supported CPUs
 endif|#
 directive|endif
+else|#
+directive|else
+comment|/* lint */
+endif|#
+directive|endif
+comment|/* lint */
 if|#
 directive|if
 name|defined
@@ -3029,6 +3042,12 @@ name|bluetrap6
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_asm
 asm|__asm
 end_asm
@@ -3064,6 +3083,11 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Special exception 13 handler.  * Accessing non-existent MSR generates general protection fault.  */
 end_comment
@@ -3073,6 +3097,12 @@ name|inthand_t
 name|bluetrap13
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
 
 begin_asm
 asm|__asm
@@ -3108,6 +3138,11 @@ literal|";		\ 	popl	%eax;		/* discard errorcode. */		\ 	addl	$2, (%esp);	/* rdms
 operator|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Distinguish IBM Blue Lightning CPU from Cyrix CPUs that does not  * support cpuid instruction.  This function should be called after  * loading interrupt descriptor table register.  *  * I don't like this method that handles fault, but I couldn't get  * information for any other methods.  Does blue giant know?  */
@@ -4402,6 +4437,7 @@ union|;
 end_union
 
 begin_decl_stmt
+specifier|static
 name|u_int32_t
 name|longrun_modes
 index|[
