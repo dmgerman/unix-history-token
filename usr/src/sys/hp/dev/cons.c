@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.4 88/12/03$  *  *	@(#)cons.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cons.c 1.4 88/12/03$  *  *	@(#)cons.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -131,6 +131,41 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"dcm.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NDCM
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|int
+name|dcmcnprobe
+argument_list|()
+decl_stmt|,
+name|dcmcninit
+argument_list|()
+decl_stmt|,
+name|dcmcngetc
+argument_list|()
+decl_stmt|,
+name|dcmcnputc
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|consdev
@@ -172,6 +207,23 @@ block|}
 block|,
 endif|#
 directive|endif
+if|#
+directive|if
+name|NDCM
+operator|>
+literal|0
+block|{
+name|dcmcnprobe
+block|,
+name|dcmcninit
+block|,
+name|dcmcngetc
+block|,
+name|dcmcnputc
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|}
@@ -182,15 +234,6 @@ end_decl_stmt
 begin_comment
 comment|/* end XXX */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|consdev
-name|constab
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct

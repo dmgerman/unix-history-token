@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -163,12 +163,47 @@ name|BUFMAX
 value|512
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KGDBDEV
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KGDBDEV
+value|-1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KGDBRATE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KGDBRATE
+value|9600
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|kgdb_dev
 init|=
-operator|-
-literal|1
+name|KGDBDEV
 decl_stmt|;
 end_decl_stmt
 
@@ -178,14 +213,14 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|kgdb_baud
+name|kgdb_rate
 init|=
-literal|9600
+name|KGDBRATE
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* baud rate of serial line */
+comment|/* remote debugging baud rate */
 end_comment
 
 begin_decl_stmt
@@ -212,27 +247,18 @@ begin_comment
 comment|/*> 0 prints command& checksum errors */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|int
-name|dcacngetc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|dcacnputc
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|"../hp300/cons.h"
+end_include
 
 begin_define
 define|#
 directive|define
 name|GETC
-value|(dcacngetc(kgdb_dev))
+define|\
+value|(constab[major(kgdb_dev)].cn_getc ? \ 		(*constab[major(kgdb_dev)].cn_getc)(kgdb_dev) : 0)
 end_define
 
 begin_define
@@ -242,7 +268,7 @@ name|PUTC
 parameter_list|(
 name|c
 parameter_list|)
-value|(dcacnputc(kgdb_dev, c))
+value|{ \ 	if (constab[major(kgdb_dev)].cn_putc) \ 		(*constab[major(kgdb_dev)].cn_putc)(kgdb_dev, c); \ }
 end_define
 
 begin_decl_stmt
@@ -507,12 +533,14 @@ name|checksum
 operator|!=
 name|xmitcsum
 condition|)
+block|{
 name|PUTC
 argument_list|(
 literal|'-'
 argument_list|)
 expr_stmt|;
 comment|/* failed checksum */
+block|}
 else|else
 block|{
 name|PUTC
