@@ -610,6 +610,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|QBOGUSSHELL
+value|002000
+end_define
+
+begin_comment
+comment|/* this entry has an invalid shell listed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NULLADDR
 value|((ADDRESS *) NULL)
 end_define
