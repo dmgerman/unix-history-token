@@ -187,7 +187,7 @@ name|char
 name|comment_chars
 index|[]
 init|=
-literal|"#/"
+literal|"#"
 decl_stmt|;
 end_decl_stmt
 
