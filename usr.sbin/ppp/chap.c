@@ -3216,8 +3216,6 @@ name|strlen
 argument_list|(
 name|msg
 argument_list|)
-operator|+
-literal|1
 argument_list|,
 name|NULL
 argument_list|)
@@ -4358,6 +4356,46 @@ argument_list|,
 name|alen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|want_authtype
+operator|==
+literal|0x81
+operator|&&
+name|ans
+index|[
+name|alen
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: Compensating for corrupt (Win98/WinME?) "
+literal|"CHAP81 RESPONSE\n"
+argument_list|,
+name|l
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|ans
+index|[
+name|alen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 name|ans
 index|[
 name|alen
@@ -5286,10 +5324,10 @@ argument_list|)
 expr_stmt|;
 name|log_Printf
 argument_list|(
-name|LogDEBUG
+name|LogWARN
 argument_list|,
-literal|"CHAP81: AuthenticatorResponse: (%s)"
-literal|" != ans: (%s)\n"
+literal|"CHAP81: AuthenticatorResponse: (%.42s)"
+literal|" != ans: (%.42s)\n"
 argument_list|,
 name|chap
 operator|->
