@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.25 1998/02/27 08:19:23 hosokawa Exp $"
+literal|"$Id: cardd.c,v 1.26 1998/02/27 08:40:53 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1463,14 +1463,6 @@ operator|)
 return|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-comment|/* Allocate I/O and memory resources. */
-block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				logmsg("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				logmsg("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
-endif|#
-directive|endif
-comment|/* 0 */
 name|drvp
 operator|->
 name|card
