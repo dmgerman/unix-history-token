@@ -32,6 +32,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -467,6 +473,9 @@ operator|=
 operator|&
 name|result
 expr_stmt|;
+if|if
+condition|(
+operator|(
 operator|*
 name|nextp
 operator|=
@@ -482,6 +491,16 @@ argument_list|(
 expr|struct
 name|vary
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 operator|(
