@@ -66,6 +66,17 @@ file|<sys/timex.h>
 end_include
 
 begin_comment
+comment|/*  * a large step happens on boot.  This constant detects such   * a steps.  It is relatively small so that ntp_update_second gets called  * enough in the typical 'missed a couple of seconds' case, but doesn't  * loop forever when the time step is large.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LARGE_STEP
+value|200
+end_define
+
+begin_comment
 comment|/*  * Implement a dummy timecounter which we can use until we get a real one  * in the air.  This allows the console and other early stuff to use  * time services.  */
 end_comment
 
@@ -1721,6 +1732,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|time_t
+name|t
+decl_stmt|;
 comment|/* 	 * Make the next timehands a copy of the current one, but do not 	 * overwrite the generation or next pointer.  While we update 	 * the contents, the generation must be zero. 	 */
 name|tho
 operator|=
@@ -1839,22 +1853,36 @@ operator|->
 name|th_counter
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Deal with NTP second processing.  The for loop normally only 	 * iterates once, but in extreme situations it might keep NTP sane 	 * if timeouts are not run for several seconds. 	 */
-for|for
-control|(
-name|i
+comment|/* 	 * Compute the UTC time, before any leapsecond adjustments, are 	 * made. 	 */
+name|bt
 operator|=
 name|th
 operator|->
 name|th_offset
+expr_stmt|;
+name|bintime_add
+argument_list|(
+operator|&
+name|bt
+argument_list|,
+operator|&
+name|boottimebin
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Deal with NTP second processing.  The for loop normally only 	 * iterates once, but in extreme situations it might keep NTP sane 	 * if timeouts are not run for several seconds.  At boot, the 	 * time step can be large when the TOD hardware has been read, so 	 * on really large steps, we call ntp_update_second only once. 	 */
+for|for
+control|(
+name|i
+operator|=
+name|bt
 operator|.
 name|sec
 operator|-
 name|tho
 operator|->
-name|th_offset
+name|th_microtime
 operator|.
-name|sec
+name|tv_sec
 init|;
 name|i
 operator|>
@@ -1863,6 +1891,13 @@ condition|;
 name|i
 operator|--
 control|)
+block|{
+name|t
+operator|=
+name|bt
+operator|.
+name|sec
+expr_stmt|;
 name|ntp_update_second
 argument_list|(
 operator|&
@@ -1871,13 +1906,37 @@ operator|->
 name|th_adjustment
 argument_list|,
 operator|&
-name|th
-operator|->
-name|th_offset
+name|bt
 operator|.
 name|sec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bt
+operator|.
+name|sec
+operator|!=
+name|t
+condition|)
+name|boottimebin
+operator|.
+name|sec
+operator|+=
+name|bt
+operator|.
+name|sec
+operator|-
+name|t
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|LARGE_STEP
+condition|)
+break|break;
+block|}
 comment|/* Now is a good time to change timecounters. */
 if|if
 condition|(
@@ -1938,22 +1997,6 @@ operator|=
 name|scale
 operator|*
 literal|2
-expr_stmt|;
-comment|/* Update the UTC timestamps used for the get*() functions. */
-name|bt
-operator|=
-name|th
-operator|->
-name|th_offset
-expr_stmt|;
-name|bintime_add
-argument_list|(
-operator|&
-name|bt
-argument_list|,
-operator|&
-name|boottimebin
-argument_list|)
 expr_stmt|;
 name|bintime2timeval
 argument_list|(
