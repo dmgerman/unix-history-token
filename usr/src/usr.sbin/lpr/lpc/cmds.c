@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.4 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* unlocks as well */
 name|printf
 argument_list|(
 literal|"\tno daemon to abort\n"
@@ -2657,6 +2658,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* unlocks as well */
 name|printf
 argument_list|(
 literal|"\tno daemon present\n"
@@ -2759,6 +2761,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* unlocks as well */
 block|}
 block|}
 end_block
