@@ -318,14 +318,11 @@ name|child
 operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
 name|bus_generic_attach
 argument_list|(
 name|dev
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 comment|/*      * Attach an ISA bus as well (should this be a child of EISA?)      */
 name|child
 operator|=

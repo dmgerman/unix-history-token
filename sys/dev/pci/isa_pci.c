@@ -228,22 +228,23 @@ decl_stmt|;
 comment|/*      * Try for a generic match based on class/subclass.      */
 if|if
 condition|(
+operator|(
 name|pci_get_class
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|PCIC_BRIDGE
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|pci_get_subclass
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|PCIS_BRIDGE_ISA
+operator|)
 condition|)
 block|{
 name|matched
@@ -253,7 +254,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 	     * These are devices that we *know* are PCI:ISA bridges.  	     * Sometimes, however, they don't report themselves as 	     * such.  Check in case one of them is pretending to be 	     * something else. 	     */
+comment|/* 	 * These are devices that we *know* are PCI:ISA bridges.  	 * Sometimes, however, they don't report themselves as 	 * such.  Check in case one of them is pretending to be 	 * something else. 	 */
 switch|switch
 condition|(
 name|pci_get_devid
@@ -375,7 +376,6 @@ expr_stmt|;
 break|break;
 default|default:
 break|break;
-block|}
 block|}
 block|}
 if|if
