@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: io.c,v 1.5 1998/12/28 04:56:23 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.21 1998/12/30 06:04:31 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -19,34 +19,6 @@ directive|include
 file|"opt_vinum.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|<
-literal|3
-end_if
-
-begin_comment
-comment|/* this is in sys/disklabel.h in 3.0 and on */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTYPE_VINUM
-value|12
-end_define
-
-begin_comment
-comment|/* vinum volume */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -56,7 +28,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<dev/vinum/vinumhdr.h>
+file|"vinumhdr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"request.h"
 end_include
 
 begin_include
@@ -88,14 +66,6 @@ begin_comment
 comment|/* data pointer, for returning error messages */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_comment
 comment|/* Why aren't these declared anywhere? XXX */
 end_comment
@@ -120,26 +90,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* pointer to ioctl p parameter, to save passing it around */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proc
+begin_function_decl
+specifier|static
+name|char
 modifier|*
-name|myproc
-decl_stmt|;
-end_decl_stmt
+name|sappend
+parameter_list|(
+name|char
+modifier|*
+name|txt
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|drivecmp
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|va
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|vb
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Open the device associated with the drive, and set drive's vp */
+comment|/* Open the device associated with the drive, and set drive's vp.  * Return an error number */
 end_comment
 
 begin_function
@@ -155,10 +142,11 @@ name|struct
 name|proc
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|nameidata
 name|nd
@@ -247,7 +235,7 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 name|drive
@@ -256,6 +244,10 @@ name|lasterror
 operator|=
 name|error
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"vinum open_drive %s: failed with error %d\n"
@@ -298,9 +290,10 @@ literal|1
 condition|)
 block|{
 comment|/* already in use? */
-if|#
-directive|if
-literal|1
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"open_drive %s: use count %d, ignoring\n"
@@ -326,73 +319,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* will this work? */
-else|#
-directive|else
-if|#
-directive|if
-name|__FreeBSD__
-operator|==
-literal|2
-comment|/* pre-4.4BSD Lite/2 parameters */
-name|VOP_UNLOCK
-argument_list|(
-name|drive
-operator|->
-name|vp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|VOP_UNLOCK
-argument_list|(
-name|drive
-operator|->
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|close_drive
-argument_list|(
-name|drive
-argument_list|)
-expr_stmt|;
-name|set_drive_state
-argument_list|(
-name|drive
-operator|->
-name|driveno
-argument_list|,
-name|drive_down
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|drive
-operator|->
-name|lasterror
-operator|=
-name|EBUSY
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"vinum open_drive %s: Drive in use\n"
-argument_list|,
-name|drive
-operator|->
-name|devicename
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
-return|return
-name|EBUSY
-return|;
-endif|#
-directive|endif
 block|}
 name|error
 operator|=
@@ -407,6 +333,8 @@ name|va
 argument_list|,
 name|NOCRED
 argument_list|,
+name|drive
+operator|->
 name|p
 argument_list|)
 expr_stmt|;
@@ -415,21 +343,6 @@ condition|(
 name|error
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD__
-operator|==
-literal|2
-comment|/* pre-4.4BSD Lite/2 parameters */
-name|VOP_UNLOCK
-argument_list|(
-name|drive
-operator|->
-name|vp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|VOP_UNLOCK
 argument_list|(
 name|drive
@@ -438,11 +351,11 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
+name|drive
+operator|->
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|close_drive
 argument_list|(
 name|drive
@@ -456,7 +369,7 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 name|drive
@@ -465,6 +378,10 @@ name|lasterror
 operator|=
 name|error
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"vinum open_drive %s: GETAATTR returns error %d\n"
@@ -500,21 +417,6 @@ name|VBLK
 condition|)
 block|{
 comment|/* only consider block devices */
-if|#
-directive|if
-name|__FreeBSD__
-operator|==
-literal|2
-comment|/* pre-4.4BSD Lite/2 parameters */
-name|VOP_UNLOCK
-argument_list|(
-name|drive
-operator|->
-name|vp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|VOP_UNLOCK
 argument_list|(
 name|drive
@@ -523,11 +425,11 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
+name|drive
+operator|->
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|close_drive
 argument_list|(
 name|drive
@@ -541,7 +443,7 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* this also closes the drive */
@@ -551,6 +453,10 @@ name|lasterror
 operator|=
 name|ENOTBLK
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"vinum open_drive %s: Not a block device\n"
@@ -573,21 +479,6 @@ name|v_numoutput
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD__
-operator|==
-literal|2
-comment|/* pre-4.4BSD Lite/2 parameters */
-name|VOP_UNLOCK
-argument_list|(
-name|drive
-operator|->
-name|vp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|VOP_UNLOCK
 argument_list|(
 name|drive
@@ -596,11 +487,11 @@ name|vp
 argument_list|,
 literal|0
 argument_list|,
+name|drive
+operator|->
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -660,11 +551,6 @@ name|VINUMHOSTNAMELEN
 argument_list|)
 expr_stmt|;
 comment|/* put in host name */
-if|#
-directive|if
-name|__FreeBSD__
-operator|>=
-literal|3
 name|getmicrotime
 argument_list|(
 operator|&
@@ -676,19 +562,6 @@ name|date_of_birth
 argument_list|)
 expr_stmt|;
 comment|/* and current time */
-else|#
-directive|else
-name|drive
-operator|->
-name|label
-operator|.
-name|date_of_birth
-operator|=
-name|time
-expr_stmt|;
-comment|/* and current time */
-endif|#
-directive|endif
 name|drive
 operator|->
 name|label
@@ -758,19 +631,9 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"vinum open_drive %s: Drive too small\n"
-argument_list|,
-name|drive
-operator|->
-name|devicename
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|drive
 operator|->
 name|lasterror
@@ -861,6 +724,20 @@ operator|-
 name|DATASTART
 expr_stmt|;
 comment|/* and it's this long */
+if|if
+condition|(
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+comment|/* got a name */
 name|set_drive_state
 argument_list|(
 name|drive
@@ -869,10 +746,18 @@ name|driveno
 argument_list|,
 name|drive_up
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 comment|/* our drive is accessible */
+else|else
+comment|/* we know about it, but that's all */
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_uninit
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -891,10 +776,11 @@ name|struct
 name|drive
 modifier|*
 name|drive
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -917,6 +803,7 @@ name|lasterror
 operator|=
 name|EINVAL
 expr_stmt|;
+comment|/* This is a bug if it happens internally, 	 * so print a message regardless */
 name|printf
 argument_list|(
 literal|"vinum: Can't open drive without drive name\n"
@@ -933,7 +820,9 @@ name|open_drive
 argument_list|(
 name|drive
 argument_list|,
-name|myproc
+name|curproc
+argument_list|,
+name|verbose
 argument_list|)
 expr_stmt|;
 comment|/* open the drive */
@@ -967,7 +856,7 @@ name|FREAD
 argument_list|,
 name|NOCRED
 argument_list|,
-name|myproc
+name|curproc
 argument_list|)
 expr_stmt|;
 if|if
@@ -975,6 +864,10 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"vinum open_drive %s: Can't get partition information, error %d\n"
@@ -1006,7 +899,7 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 return|return
@@ -1033,6 +926,10 @@ name|lasterror
 operator|=
 name|EFTYPE
 expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
 name|printf
 argument_list|(
 literal|"vinum open_drive %s: Wrong partition type for vinum\n"
@@ -1056,7 +953,7 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 return|return
@@ -1094,6 +991,12 @@ operator|->
 name|vp
 condition|)
 block|{
+name|lockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* keep the daemon out */
 name|vn_close
 argument_list|(
 name|drive
@@ -1152,6 +1055,11 @@ name|vp
 operator|=
 name|NULL
 expr_stmt|;
+name|unlockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1168,8 +1076,6 @@ name|int
 name|driveno
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|drive
 modifier|*
@@ -1208,19 +1114,12 @@ argument_list|,
 name|VINUM_LABEL_OFFSET
 argument_list|)
 expr_stmt|;
-name|close_drive
+name|free_drive
 argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
-comment|/* and close it */
-name|drive
-operator|->
-name|state
-operator|=
-name|drive_unallocated
-expr_stmt|;
-comment|/* and forget everything we knew about it */
+comment|/* close it and free resources */
 name|save_config
 argument_list|()
 expr_stmt|;
@@ -1229,7 +1128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Transfer drive data.  Usually called from one of these defines;  * #define read_drive(a, b, c, d) driveio (a, b, c, d, B_READ)  * #define write_drive(a, b, c, d) driveio (a, b, c, d, B_WRITE)  *  * Return error number  */
+comment|/* Transfer drive data.  Usually called from one of these defines;  * #define read_drive(a, b, c, d) driveio (a, b, c, d, B_READ)  * #define write_drive(a, b, c, d) driveio (a, b, c, d, B_WRITE)  *  * length and offset are in bytes, but must be multiples of sector  * size.  The function *does not check* for this condition, and  * truncates ruthlessly.  * Return error number  */
 end_comment
 
 begin_function
@@ -1241,7 +1140,7 @@ name|drive
 modifier|*
 name|drive
 parameter_list|,
-name|void
+name|char
 modifier|*
 name|buf
 parameter_list|,
@@ -1255,8 +1154,6 @@ name|int
 name|flag
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1265,49 +1162,42 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|int
-name|spl
+name|char
+name|foo
+index|[
+literal|40
+index|]
 decl_stmt|;
 name|error
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Get a buffer */
+comment|/* to keep the compiler happy */
+while|while
+condition|(
+name|length
+condition|)
+block|{
+comment|/* divide into small enough blocks */
+name|int
+name|len
+init|=
+name|min
+argument_list|(
+name|length
+argument_list|,
+name|MAXBSIZE
+argument_list|)
+decl_stmt|;
+comment|/* maximum block device transfer is MAXBSIZE */
 name|bp
 operator|=
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
-name|Malloc
+name|geteblk
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|buf
-argument_list|)
+name|len
 argument_list|)
 expr_stmt|;
-comment|/* get a buffer */
-name|CHECKALLOC
-argument_list|(
-name|bp
-argument_list|,
-literal|"Can't allocate memory"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* get a buffer header */
 name|bp
 operator|->
 name|b_flags
@@ -1316,19 +1206,12 @@ name|B_BUSY
 operator||
 name|flag
 expr_stmt|;
-comment|/* tell us when it's done */
-name|bp
-operator|->
-name|b_iodone
-operator|=
-name|drive_io_done
-expr_stmt|;
-comment|/* here */
+comment|/* get busy */
 name|bp
 operator|->
 name|b_proc
 operator|=
-name|myproc
+name|curproc
 expr_stmt|;
 comment|/* process */
 name|bp
@@ -1346,23 +1229,6 @@ operator|->
 name|si_rdev
 expr_stmt|;
 comment|/* device */
-if|if
-condition|(
-name|offset
-operator|&
-operator|(
-name|drive
-operator|->
-name|partinfo
-operator|.
-name|disklab
-operator|->
-name|d_secsize
-operator|-
-literal|1
-operator|)
-condition|)
-comment|/* not on a block boundary */
 name|bp
 operator|->
 name|b_blkno
@@ -1386,24 +1252,15 @@ name|buf
 expr_stmt|;
 name|bp
 operator|->
-name|b_vp
-operator|=
-name|drive
-operator|->
-name|vp
-expr_stmt|;
-comment|/* vnode */
-name|bp
-operator|->
 name|b_bcount
 operator|=
-name|length
+name|len
 expr_stmt|;
 name|bp
 operator|->
 name|b_bufsize
 operator|=
-name|length
+name|len
 expr_stmt|;
 operator|(
 operator|*
@@ -1424,74 +1281,95 @@ name|bp
 operator|)
 expr_stmt|;
 comment|/* initiate the transfer */
-name|spl
+name|error
 operator|=
-name|splbio
-argument_list|()
+name|biowait
+argument_list|(
+name|bp
+argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
+name|printf
+argument_list|(
+literal|"driveio: %s dev 0x%x, block 0x%x, len 0x%lx, error %d\n"
+argument_list|,
+comment|/* XXX */
+name|flag
+condition|?
+literal|"read"
+else|:
+literal|"write"
+argument_list|,
 name|bp
 operator|->
-name|b_flags
-operator|&
-name|B_DONE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
+name|b_dev
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|buf
+argument_list|,
+name|foo
+argument_list|,
+literal|40
+argument_list|)
+expr_stmt|;
+name|foo
+index|[
+literal|39
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"---> %s\n"
+argument_list|,
+name|foo
+argument_list|)
+expr_stmt|;
+comment|/* XXXXXX */
 name|bp
 operator|->
 name|b_flags
 operator||=
-name|B_CALL
+name|B_INVAL
+operator||
+name|B_AGE
 expr_stmt|;
-comment|/* wake me again */
-name|tsleep
+name|brelse
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"driveio"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* and wait for it to complete */
-block|}
-name|splx
-argument_list|(
-name|spl
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_ERROR
-condition|)
-comment|/* didn't work */
 name|error
-operator|=
-name|bp
-operator|->
-name|b_error
+condition|)
+break|break;
+name|length
+operator|-=
+name|len
 expr_stmt|;
-comment|/* get the error return */
-name|Free
-argument_list|(
-name|bp
-argument_list|)
+comment|/* update pointers */
+name|buf
+operator|+=
+name|len
 expr_stmt|;
-comment|/* then return the buffer */
+name|offset
+operator|+=
+name|len
+expr_stmt|;
+block|}
 return|return
 name|error
 return|;
@@ -1522,8 +1400,6 @@ name|off_t
 name|offset
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1611,7 +1487,7 @@ name|uio
 operator|.
 name|uio_procp
 operator|=
-name|myproc
+name|curproc
 expr_stmt|;
 name|bscale
 operator|=
@@ -1872,8 +1748,6 @@ name|off_t
 name|offset
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1991,7 +1865,7 @@ name|uio
 operator|.
 name|uio_procp
 operator|=
-name|myproc
+name|curproc
 expr_stmt|;
 name|error
 operator|=
@@ -2084,7 +1958,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* just get it */
+comment|/* just transfer it */
 else|else
 comment|/* partial block: */
 name|error
@@ -2183,7 +2057,7 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2267,8 +2141,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -2290,7 +2162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check a drive for a vinum header.  If found,   * update the drive information.  We come here  * with a partially populated drive structure  * which includes the device name.  *  * Return information on what we found  */
+comment|/* Check a drive for a vinum header.  If found,   * update the drive information.  We come here  * with a partially populated drive structure  * which includes the device name.  *  * Return information on what we found.  *  * This function is called from two places: check_drive,  * which wants to find out whether the drive is a  * Vinum drive, and config_drive, which asserts that  * it is a vinum drive.  In the first case, we don't  * print error messages (verbose==0), in the second  * we do (verbose==1).  */
 end_comment
 
 begin_function
@@ -2302,10 +2174,11 @@ name|struct
 name|drive
 modifier|*
 name|drive
+parameter_list|,
+name|int
+name|verbose
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2324,6 +2197,8 @@ operator|=
 name|init_drive
 argument_list|(
 name|drive
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* find the drive */
@@ -2428,12 +2303,13 @@ comment|/* it's the wrong drive */
 block|}
 else|else
 block|{
-name|set_drive_parms
-argument_list|(
 name|drive
-argument_list|)
+operator|->
+name|state
+operator|=
+name|drive_up
 expr_stmt|;
-comment|/* and set other parameters */
+comment|/* it's OK by us */
 name|result
 operator|=
 name|DL_OURS
@@ -2483,11 +2359,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check a drive for a vinum header.  If found,   * read configuration information from the drive and  * incorporate the data into the configuration.  *  * Return error number  */
+comment|/* Check a drive for a vinum header.  If found,   * read configuration information from the drive and  * incorporate the data into the configuration.  *  * Return   */
 end_comment
 
 begin_function
-name|int
+name|struct
+name|drive
+modifier|*
 name|check_drive
 parameter_list|(
 name|char
@@ -2495,32 +2373,6 @@ modifier|*
 name|drivename
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|struct
-name|nameidata
-name|nd
-decl_stmt|;
-comment|/* mount point credentials */
-name|char
-modifier|*
-name|config_text
-decl_stmt|;
-comment|/* read the config info from disk into here */
-specifier|volatile
-name|char
-modifier|*
-name|cptr
-decl_stmt|;
-comment|/* pointer into config information */
-name|char
-modifier|*
-name|eptr
-decl_stmt|;
-comment|/* end pointer into config information */
 name|int
 name|driveno
 decl_stmt|;
@@ -2529,11 +2381,6 @@ name|drive
 modifier|*
 name|drive
 decl_stmt|;
-name|char
-modifier|*
-name|config_line
-decl_stmt|;
-comment|/* copy the config line to */
 name|driveno
 operator|=
 name|find_drive_by_dev
@@ -2543,7 +2390,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* doesn't exist, create it */
+comment|/* entry doesn't exist, create it */
 name|drive
 operator|=
 operator|&
@@ -2555,299 +2402,33 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* and get a pointer */
-name|strcpy
-argument_list|(
-name|drive
-operator|->
-name|devicename
-argument_list|,
-name|drivename
-argument_list|)
-expr_stmt|;
-comment|/* put in device name */
 if|if
 condition|(
 name|read_drive_label
 argument_list|(
 name|drive
+argument_list|,
+literal|0
 argument_list|)
-operator|==
+operator|!=
 name|DL_OURS
 condition|)
 block|{
-comment|/* ours! */
-name|config_text
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|Malloc
-argument_list|(
-name|MAXCONFIG
-operator|*
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* allocate buffers */
-name|CHECKALLOC
-argument_list|(
-name|config_text
-argument_list|,
-literal|"Can't allocate memory"
-argument_list|)
-expr_stmt|;
-name|config_line
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|Malloc
-argument_list|(
-name|MAXCONFIGLINE
-operator|*
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* allocate buffers */
-name|CHECKALLOC
-argument_list|(
-name|config_line
-argument_list|,
-literal|"Can't allocate memory"
-argument_list|)
-expr_stmt|;
-comment|/* Read in both copies of the configuration information */
-name|error
-operator|=
-name|read_drive
-argument_list|(
-name|drive
-argument_list|,
-name|config_text
-argument_list|,
-name|MAXCONFIG
-operator|*
-literal|2
-argument_list|,
-name|VINUM_CONFIG_OFFSET
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"vinum: Can't read device %s, error %d\n"
-argument_list|,
-name|drive
-operator|->
-name|devicename
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
-name|Free
-argument_list|(
-name|config_text
-argument_list|)
-expr_stmt|;
-name|Free
-argument_list|(
-name|config_line
-argument_list|)
-expr_stmt|;
-name|free_drive
-argument_list|(
-name|drive
-argument_list|)
-expr_stmt|;
-comment|/* give it back */
-return|return
-name|error
-return|;
-block|}
-comment|/* XXX At this point, check that the two copies are the same, and do something useful if not. 	 * In particular, consider which is newer, and what this means for the integrity of the 	 * data on the drive */
-comment|/* Parse the configuration, and add it to the global configuration */
-for|for
-control|(
-name|cptr
-operator|=
-name|config_text
-init|;
-operator|*
-name|cptr
-operator|!=
-literal|'\0'
-condition|;
-control|)
-block|{
-comment|/* love this style(9) */
-specifier|volatile
-name|int
-name|parse_status
-decl_stmt|;
-comment|/* return value from parse_config */
-for|for
-control|(
-name|eptr
-operator|=
-name|config_line
-init|;
-operator|(
-operator|*
-name|cptr
-operator|!=
-literal|'\n'
-operator|)
-operator|&&
-operator|(
-operator|*
-name|cptr
-operator|!=
-literal|'\0'
-operator|)
-condition|;
-control|)
-comment|/* until the end of the line */
-operator|*
-name|eptr
-operator|++
-operator|=
-operator|*
-name|cptr
-operator|++
-expr_stmt|;
-operator|*
-name|eptr
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* and delimit */
-if|if
-condition|(
-name|setjmp
-argument_list|(
-name|command_fail
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* come back here on error and continue */
-name|parse_status
-operator|=
-name|parse_config
-argument_list|(
-name|config_line
-argument_list|,
-operator|&
-name|keyword_set
-argument_list|)
-expr_stmt|;
-comment|/* parse the config line */
-if|if
-condition|(
-name|parse_status
-operator|<
-literal|0
-condition|)
-block|{
-comment|/* error in config */
-comment|/* This config should have been parsed in user 		       * space.  If we run into problems here, something 		       * serious is afoot.  Complain and let the user 		       * snarf the config to see what's wrong */
-name|printf
-argument_list|(
-literal|"vinum: Config error on drive %s, aborting integration\n"
-argument_list|,
-name|nd
-operator|.
-name|ni_dirp
-argument_list|)
-expr_stmt|;
-name|Free
-argument_list|(
-name|config_text
-argument_list|)
-expr_stmt|;
-name|Free
-argument_list|(
-name|config_line
-argument_list|)
-expr_stmt|;
-name|free_drive
-argument_list|(
-name|drive
-argument_list|)
-expr_stmt|;
-comment|/* give it back */
-return|return
-name|EINVAL
-return|;
-block|}
-block|}
-while|while
-condition|(
-operator|*
-name|cptr
-operator|==
-literal|'\n'
-condition|)
-name|cptr
-operator|++
-expr_stmt|;
-comment|/* skip to next line */
-block|}
-name|Free
-argument_list|(
-name|config_text
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|vinum_conf
-operator|.
-name|flags
-operator|&
-name|VF_READING_CONFIG
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* not reading config */
-name|updateconfig
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* update object states */
-name|printf
-argument_list|(
-literal|"vinum: read configuration from %s\n"
-argument_list|,
-name|drivename
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-comment|/* it all worked */
-block|}
-else|else
-block|{
-comment|/* no vinum label found */
+comment|/* not ours */
 if|if
 condition|(
 name|drive
 operator|->
 name|lasterror
+operator|==
+literal|0
 condition|)
-block|{
+name|drive
+operator|->
+name|lasterror
+operator|=
+name|ENODEV
+expr_stmt|;
 name|set_drive_state
 argument_list|(
 name|drive
@@ -2856,26 +2437,52 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|drive
-operator|->
-name|lasterror
 return|;
 block|}
-else|else
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|sappend
+parameter_list|(
+name|char
+modifier|*
+name|txt
+parameter_list|,
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+while|while
+condition|(
+operator|*
+name|s
+operator|++
+operator|=
+operator|*
+name|txt
+operator|++
+condition|)
+empty_stmt|;
 return|return
-name|ENODEV
+name|s
+operator|-
+literal|1
 return|;
-comment|/* not our device */
-block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Kludge: kernel printf doesn't handle longs correctly XXX */
+comment|/* Kludge: kernel printf doesn't handle quads */
 end_comment
 
 begin_function_decl
@@ -2887,23 +2494,6 @@ parameter_list|(
 name|long
 name|long
 name|l
-parameter_list|,
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|sappend
-parameter_list|(
-name|char
-modifier|*
-name|txt
 parameter_list|,
 name|char
 modifier|*
@@ -2983,40 +2573,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|char
-modifier|*
-name|sappend
-parameter_list|(
-name|char
-modifier|*
-name|txt
-parameter_list|,
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-while|while
-condition|(
-operator|*
-name|s
-operator|++
-operator|=
-operator|*
-name|txt
-operator|++
-condition|)
-empty_stmt|;
-return|return
-name|s
-operator|-
-literal|1
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/* Format the configuration in text form into the buffer  * at config.  Don't go beyond len bytes  * XXX this stinks.  Fix soon. */
 end_comment
@@ -3033,8 +2589,14 @@ name|int
 name|len
 parameter_list|)
 block|{
+if|#
+directive|if
+name|__FreeBSD__
+operator|==
+literal|2
 name|BROKEN_GDB
-expr_stmt|;
+endif|#
+directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -3054,102 +2616,16 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* First write the drive configuration */
-for|for
-control|(
-name|i
-operator|=
+if|#
+directive|if
 literal|0
-init|;
-name|i
-operator|<
-name|vinum_conf
-operator|.
-name|drives_used
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|struct
-name|drive
-modifier|*
-name|drive
-decl_stmt|;
-name|drive
-operator|=
-operator|&
-name|vinum_conf
-operator|.
-name|drive
-index|[
-name|i
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|drive
-operator|->
-name|state
-operator|!=
-name|drive_unallocated
-condition|)
-block|{
-name|sprintf
-argument_list|(
-name|s
-argument_list|,
-literal|"drive %s state %s device %s\n"
-argument_list|,
-name|drive
-operator|->
-name|label
-operator|.
-name|name
-argument_list|,
-name|drive_state
-argument_list|(
-name|drive
-operator|->
-name|state
-argument_list|)
-argument_list|,
-name|drive
-operator|->
-name|devicename
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|s
-condition|)
-name|s
-operator|++
-expr_stmt|;
+comment|/* XXX die, die */
+comment|/* First write the drive configuration */
+block|for (i = 0; i< vinum_conf.drives_used; i++)     {     struct drive *drive;          drive =&vinum_conf.drive [i];     if (drive->state != drive_unallocated)       {       sprintf (s, 	       "drive %s state %s device %s\n", 	       drive->label.name, 	       drive_state (drive->state), 	       drive->devicename);       while (*s) 	s++;
 comment|/* find the end */
-if|if
-condition|(
-name|s
-operator|>
-operator|&
-name|config
-index|[
-name|len
-operator|-
-literal|80
-index|]
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"vinum: configuration data overflow\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-block|}
+block|if (s>&config [len - 80]) 	{ 	printf ("vinum: configuration data overflow\n"); 	return; 	}       }     }
+endif|#
+directive|endif
 comment|/* Then the volume configuration */
 for|for
 control|(
@@ -3258,6 +2734,15 @@ name|s
 operator|++
 expr_stmt|;
 comment|/* find the end */
+if|#
+directive|if
+literal|0
+comment|/* Do we need to state the plexes? */
+block|for (j = 0; j< vol->plexes; j++) 	{ 	sprintf (s, " plex %s", vinum_conf.plex [vol->plex [j]].name); 	while (*s) 	  s++;
+comment|/* find the end */
+block|}
+endif|#
+directive|endif
 name|s
 operator|=
 name|sappend
@@ -3373,6 +2858,19 @@ name|organization
 operator|==
 name|plex_striped
 operator|)
+ifdef|#
+directive|ifdef
+name|RAID5
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|sprintf
@@ -3686,25 +3184,44 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write the configuration to all vinum slices */
+comment|/* issue a save config request to the dæmon.  The actual work  * is done in process context by daemon_save_config */
 end_comment
 
 begin_function
-name|int
+name|void
 name|save_config
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
+name|queue_daemon_request
+argument_list|(
+name|daemonrq_saveconfig
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Write the configuration to all vinum slices.  This  * is performed by the dæmon only */
+end_comment
+
+begin_function
+name|void
+name|daemon_save_config
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|int
 name|error
 decl_stmt|;
 name|int
 name|written_config
 decl_stmt|;
-comment|/* set when we firstnwrite the config to disk */
+comment|/* set when we first write the config to disk */
 name|int
 name|driveno
 decl_stmt|;
@@ -3738,9 +3255,7 @@ name|flags
 operator|&
 name|VF_CONFIGURING
 condition|)
-return|return
-literal|0
-return|;
+return|return;
 name|written_config
 operator|=
 literal|0
@@ -3835,6 +3350,13 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* point to drive */
+name|lockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* don't let it change */
+comment|/* First, do some drive consistency checks.  Some 	 * of these are kludges, others require a process 	 * context and couldn't be done before */
 if|if
 condition|(
 operator|(
@@ -3864,6 +3386,11 @@ operator|)
 condition|)
 block|{
 comment|/* XXX we keep getting these nameless drives */
+name|unlockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Removing incomplete drive, index %d\n"
@@ -3910,7 +3437,13 @@ operator|>
 name|drive_down
 operator|)
 condition|)
+block|{
 comment|/* and it thinks it's not down */
+name|unlockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
 name|set_drive_state
 argument_list|(
 name|driveno
@@ -3918,27 +3451,53 @@ argument_list|,
 name|drive_down
 argument_list|,
 name|setstate_force
-operator||
-name|setstate_noupdate
 argument_list|)
 expr_stmt|;
 comment|/* tell it what's what */
+block|}
+if|if
+condition|(
+operator|(
+name|drive
+operator|->
+name|state
+operator|==
+name|drive_down
+operator|)
+comment|/* it's down */
+operator|&&
+operator|(
+name|drive
+operator|->
+name|vp
+operator|!=
+name|NULL
+operator|)
+condition|)
+block|{
+comment|/* but open, */
+name|unlockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+name|close_drive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* close it */
+block|}
+elseif|else
 if|if
 condition|(
 name|drive
 operator|->
 name|state
-operator|!=
+operator|>
 name|drive_down
 condition|)
 block|{
-if|#
-directive|if
-operator|(
-name|__FreeBSD__
-operator|>=
-literal|3
-operator|)
 name|getmicrotime
 argument_list|(
 operator|&
@@ -3950,19 +3509,6 @@ name|last_update
 argument_list|)
 expr_stmt|;
 comment|/* time of last update is now */
-else|#
-directive|else
-name|drive
-operator|->
-name|label
-operator|.
-name|last_update
-operator|=
-name|time
-expr_stmt|;
-comment|/* time of last update is now */
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 operator|(
@@ -4037,7 +3583,7 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|myproc
+name|curproc
 argument_list|)
 expr_stmt|;
 if|if
@@ -4052,6 +3598,10 @@ name|write_drive
 argument_list|(
 name|drive
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|vhdr
 argument_list|,
 name|VINUMHEADERLEN
@@ -4078,11 +3628,40 @@ argument_list|,
 name|VINUM_CONFIG_OFFSET
 argument_list|)
 expr_stmt|;
+comment|/* first config copy */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|error
+operator|=
+name|write_drive
+argument_list|(
+name|drive
+argument_list|,
+name|config
+argument_list|,
+name|MAXCONFIG
+argument_list|,
+name|VINUM_CONFIG_OFFSET
+operator|+
+name|MAXCONFIG
+argument_list|)
+expr_stmt|;
+comment|/* second copy */
 name|wlabel_on
 operator|=
 literal|0
 expr_stmt|;
 comment|/* enable writing the label */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|VOP_IOCTL
 argument_list|(
 name|drive
@@ -4102,7 +3681,12 @@ name|FWRITE
 argument_list|,
 name|NOCRED
 argument_list|,
-name|myproc
+name|curproc
+argument_list|)
+expr_stmt|;
+name|unlockdrive
+argument_list|(
+name|drive
 argument_list|)
 expr_stmt|;
 if|if
@@ -4129,7 +3713,7 @@ name|driveno
 argument_list|,
 name|drive_down
 argument_list|,
-literal|1
+name|setstate_force
 argument_list|)
 expr_stmt|;
 block|}
@@ -4152,12 +3736,6 @@ argument_list|(
 name|config
 argument_list|)
 expr_stmt|;
-return|return
-name|written_config
-operator|==
-literal|0
-return|;
-comment|/* return 1 if we failed to write config */
 block|}
 end_function
 
@@ -4488,6 +4066,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Write a volume label.  This implements the VINUM_LABEL ioctl. */
+end_comment
+
 begin_function
 name|int
 name|write_volume_label
@@ -4753,6 +4335,818 @@ parameter_list|)
 block|{
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Look at all disks on the system for vinum slices */
+end_comment
+
+begin_function
+name|void
+name|vinum_scandisk
+parameter_list|(
+name|char
+modifier|*
+name|drivename
+index|[]
+parameter_list|,
+name|int
+name|drives
+parameter_list|)
+block|{
+name|struct
+name|drive
+modifier|*
+specifier|volatile
+name|drive
+decl_stmt|;
+specifier|volatile
+name|int
+name|driveno
+decl_stmt|;
+name|int
+name|firstdrive
+decl_stmt|;
+comment|/* first drive in this list */
+specifier|volatile
+name|int
+name|gooddrives
+decl_stmt|;
+comment|/* number of usable drives found */
+name|int
+name|firsttime
+decl_stmt|;
+comment|/* set if we have never configured before */
+name|int
+name|error
+decl_stmt|;
+name|struct
+name|nameidata
+name|nd
+decl_stmt|;
+comment|/* mount point credentials */
+name|char
+modifier|*
+name|config_text
+decl_stmt|;
+comment|/* read the config info from disk into here */
+name|char
+modifier|*
+specifier|volatile
+name|cptr
+decl_stmt|;
+comment|/* pointer into config information */
+name|char
+modifier|*
+name|eptr
+decl_stmt|;
+comment|/* end pointer into config information */
+name|char
+modifier|*
+name|config_line
+decl_stmt|;
+comment|/* copy the config line to */
+specifier|volatile
+name|int
+name|status
+decl_stmt|;
+name|struct
+name|drive
+modifier|*
+modifier|*
+specifier|volatile
+name|drivelist
+decl_stmt|;
+define|#
+directive|define
+name|DRIVENAMELEN
+value|64
+define|#
+directive|define
+name|DRIVEPARTS
+value|35
+comment|/* max partitions per drive, excluding c */
+name|char
+name|partname
+index|[
+name|DRIVENAMELEN
+index|]
+decl_stmt|;
+comment|/* for creating partition names */
+name|status
+operator|=
+literal|0
+expr_stmt|;
+comment|/* success indication */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_KERNELOP
+operator||
+name|VF_READING_CONFIG
+expr_stmt|;
+comment|/* kernel operation: reading config */
+name|gooddrives
+operator|=
+literal|0
+expr_stmt|;
+comment|/* number of usable drives found */
+name|firstdrive
+operator|=
+name|vinum_conf
+operator|.
+name|drives_used
+expr_stmt|;
+comment|/* the first drive */
+name|firsttime
+operator|=
+name|vinum_conf
+operator|.
+name|drives_used
+operator|==
+literal|0
+expr_stmt|;
+comment|/* are we a virgin? */
+comment|/* allocate a drive pointer list */
+name|drivelist
+operator|=
+operator|(
+expr|struct
+name|drive
+operator|*
+operator|*
+operator|)
+name|Malloc
+argument_list|(
+name|drives
+operator|*
+name|DRIVEPARTS
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|drive
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CHECKALLOC
+argument_list|(
+name|drivelist
+argument_list|,
+literal|"Can't allocate memory"
+argument_list|)
+expr_stmt|;
+comment|/* Open all drives and find which was modified most recently */
+for|for
+control|(
+name|driveno
+operator|=
+literal|0
+init|;
+name|driveno
+operator|<
+name|drives
+condition|;
+name|driveno
+operator|++
+control|)
+block|{
+name|char
+name|part
+decl_stmt|;
+comment|/* UNIX partition */
+for|for
+control|(
+name|part
+operator|=
+literal|'a'
+init|;
+name|part
+operator|<
+literal|'i'
+condition|;
+name|part
+operator|++
+control|)
+if|if
+condition|(
+name|part
+operator|!=
+literal|'c'
+condition|)
+block|{
+comment|/* don't do the c partition */
+name|snprintf
+argument_list|(
+name|partname
+argument_list|,
+comment|/* /dev/sd0a */
+name|DRIVENAMELEN
+argument_list|,
+literal|"%s%c"
+argument_list|,
+name|drivename
+index|[
+name|driveno
+index|]
+argument_list|,
+name|part
+argument_list|)
+expr_stmt|;
+name|drive
+operator|=
+name|check_drive
+argument_list|(
+name|partname
+argument_list|)
+expr_stmt|;
+comment|/* try to open it */
+if|if
+condition|(
+name|drive
+operator|->
+name|lasterror
+operator|!=
+literal|0
+condition|)
+comment|/* didn't work, */
+name|free_drive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* get rid of it */
+elseif|else
+if|if
+condition|(
+name|drive
+operator|->
+name|flags
+operator|&
+name|VF_CONFIGURED
+condition|)
+comment|/* already read this config, */
+name|printf
+argument_list|(
+literal|"vinum: already read config from %s\n"
+argument_list|,
+comment|/* say so */
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|drivelist
+index|[
+name|gooddrives
+index|]
+operator|=
+name|drive
+expr_stmt|;
+comment|/* keep a pointer to the drive */
+name|drive
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* which is no longer newly born */
+name|gooddrives
+operator|++
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|gooddrives
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vinum: no drives found\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* We now have at least one drive      * open.  Sort them in order of config time      * and merge the config info with what we      * have already */
+name|qsort
+argument_list|(
+name|drivelist
+argument_list|,
+name|gooddrives
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|drive
+operator|*
+argument_list|)
+argument_list|,
+name|drivecmp
+argument_list|)
+expr_stmt|;
+name|config_text
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|Malloc
+argument_list|(
+name|MAXCONFIG
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* allocate buffers */
+name|CHECKALLOC
+argument_list|(
+name|config_text
+argument_list|,
+literal|"Can't allocate memory"
+argument_list|)
+expr_stmt|;
+name|config_line
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|Malloc
+argument_list|(
+name|MAXCONFIGLINE
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* allocate buffers */
+name|CHECKALLOC
+argument_list|(
+name|config_line
+argument_list|,
+literal|"Can't allocate memory"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|driveno
+operator|=
+literal|0
+init|;
+name|driveno
+operator|<
+name|gooddrives
+condition|;
+name|driveno
+operator|++
+control|)
+block|{
+comment|/* now include the config */
+name|drive
+operator|=
+name|drivelist
+index|[
+name|driveno
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|firsttime
+operator|&&
+operator|(
+name|driveno
+operator|==
+literal|0
+operator|)
+condition|)
+comment|/* we've never configured before, */
+name|printf
+argument_list|(
+literal|"vinum: reading configuration from %s\n"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"vinum: updating configuration from %s\n"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|)
+expr_stmt|;
+comment|/* Read in both copies of the configuration information */
+name|error
+operator|=
+name|read_drive
+argument_list|(
+name|drive
+argument_list|,
+name|config_text
+argument_list|,
+name|MAXCONFIG
+operator|*
+literal|2
+argument_list|,
+name|VINUM_CONFIG_OFFSET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vinum: Can't read device %s, error %d\n"
+argument_list|,
+name|drive
+operator|->
+name|devicename
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|config_text
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|config_line
+argument_list|)
+expr_stmt|;
+name|free_drive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* give it back */
+name|status
+operator|=
+name|error
+expr_stmt|;
+block|}
+comment|/* XXX At this point, check that the two copies are the same, and do something useful if not. 	 * In particular, consider which is newer, and what this means for the integrity of the 	 * data on the drive */
+else|else
+block|{
+comment|/* Parse the configuration, and add it to the global configuration */
+for|for
+control|(
+name|cptr
+operator|=
+name|config_text
+init|;
+operator|*
+name|cptr
+operator|!=
+literal|'\0'
+condition|;
+control|)
+block|{
+comment|/* love this style(9) */
+specifier|volatile
+name|int
+name|parse_status
+decl_stmt|;
+comment|/* return value from parse_config */
+for|for
+control|(
+name|eptr
+operator|=
+name|config_line
+init|;
+operator|(
+operator|*
+name|cptr
+operator|!=
+literal|'\n'
+operator|)
+operator|&&
+operator|(
+operator|*
+name|cptr
+operator|!=
+literal|'\0'
+operator|)
+condition|;
+control|)
+comment|/* until the end of the line */
+operator|*
+name|eptr
+operator|++
+operator|=
+operator|*
+name|cptr
+operator|++
+expr_stmt|;
+operator|*
+name|eptr
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* and delimit */
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|command_fail
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* come back here on error and continue */
+name|parse_status
+operator|=
+name|parse_config
+argument_list|(
+name|config_line
+argument_list|,
+operator|&
+name|keyword_set
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* parse the config line */
+if|if
+condition|(
+name|parse_status
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* error in config */
+comment|/* This config should have been parsed in user 			   * space.  If we run into problems here, something 			   * serious is afoot.  Complain and let the user 			   * snarf the config to see what's wrong */
+name|printf
+argument_list|(
+literal|"vinum: Config error on drive %s, aborting integration\n"
+argument_list|,
+name|nd
+operator|.
+name|ni_dirp
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|config_text
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|config_line
+argument_list|)
+expr_stmt|;
+name|free_drive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* give it back */
+name|status
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+block|}
+while|while
+condition|(
+operator|*
+name|cptr
+operator|==
+literal|'\n'
+condition|)
+name|cptr
+operator|++
+expr_stmt|;
+comment|/* skip to next line */
+block|}
+block|}
+name|drive
+operator|->
+name|flags
+operator||=
+name|VF_CONFIGURED
+expr_stmt|;
+comment|/* read this drive's configuration */
+block|}
+name|Free
+argument_list|(
+name|config_text
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
+name|drivelist
+argument_list|)
+expr_stmt|;
+name|vinum_conf
+operator|.
+name|flags
+operator|&=
+operator|~
+operator|(
+name|VF_KERNELOP
+operator||
+name|VF_READING_CONFIG
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+literal|0
+condition|)
+name|throw_rude_remark
+argument_list|(
+name|status
+argument_list|,
+literal|"Couldn't read configuration"
+argument_list|)
+expr_stmt|;
+name|updateconfig
+argument_list|(
+name|VF_KERNELOP
+argument_list|)
+expr_stmt|;
+comment|/* update from kernel space */
+block|}
+end_function
+
+begin_comment
+comment|/* Compare the modification dates of the drives, for qsort.  * Return 1 if a< b, 0 if a == b, 01 if a> b: in other  * words, sort backwards */
+end_comment
+
+begin_function
+name|int
+name|drivecmp
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|va
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|vb
+parameter_list|)
+block|{
+name|struct
+name|drive
+modifier|*
+name|a
+init|=
+operator|*
+operator|(
+expr|struct
+name|drive
+operator|*
+operator|*
+operator|)
+name|va
+decl_stmt|;
+name|struct
+name|drive
+modifier|*
+name|b
+init|=
+operator|*
+operator|(
+expr|struct
+name|drive
+operator|*
+operator|*
+operator|)
+name|vb
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|a
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_sec
+operator|==
+name|b
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_sec
+operator|)
+operator|&&
+operator|(
+name|a
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_usec
+operator|==
+name|b
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_usec
+operator|)
+condition|)
+return|return
+literal|0
+return|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|a
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_sec
+operator|>
+name|b
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_sec
+operator|)
+operator|||
+operator|(
+operator|(
+name|a
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_sec
+operator|==
+name|b
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_sec
+operator|)
+operator|&&
+operator|(
+name|a
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_usec
+operator|>
+name|b
+operator|->
+name|label
+operator|.
+name|last_update
+operator|.
+name|tv_usec
+operator|)
+operator|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+else|else
+return|return
+literal|1
 return|;
 block|}
 end_function
