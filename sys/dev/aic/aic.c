@@ -2691,6 +2691,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Find the nexus */
+name|scb
+operator|=
+name|NULL
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ccb_h
