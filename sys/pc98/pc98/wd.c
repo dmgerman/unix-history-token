@@ -1012,6 +1012,20 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+name|disk_open_t
+name|wdopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|disk_strategy_t
+name|wdstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|timeout_t
 name|wdtimeout
 decl_stmt|;
@@ -1075,84 +1089,6 @@ name|wdcdriver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_open_t
-name|wdopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_strategy_t
-name|wdstrategy
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|3
-end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|wd_cdevsw
-init|=
-block|{
-comment|/* open */
-name|wdopen
-block|,
-comment|/* close */
-name|nullclose
-block|,
-comment|/* read */
-name|physread
-block|,
-comment|/* write */
-name|physwrite
-block|,
-comment|/* ioctl */
-name|noioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|wdstrategy
-block|,
-comment|/* name */
-literal|"wd"
-block|,
-comment|/* maj */
-name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-name|D_DISK
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|wddisk_cdevsw
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2105,9 +2041,6 @@ name|char
 modifier|*
 name|dname
 decl_stmt|;
-name|dev_t
-name|dev
-decl_stmt|;
 name|dvp
 operator|->
 name|id_intr
@@ -2714,8 +2647,48 @@ name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Register this media as a disk 			 */
-name|dev
+name|du
+operator|->
+name|disk
+operator|.
+name|d_open
 operator|=
+name|wdopen
+expr_stmt|;
+name|du
+operator|->
+name|disk
+operator|.
+name|d_strategy
+operator|=
+name|wdstrategy
+expr_stmt|;
+name|du
+operator|->
+name|disk
+operator|.
+name|d_drv1
+operator|=
+name|du
+expr_stmt|;
+name|du
+operator|->
+name|disk
+operator|.
+name|d_maxsize
+operator|=
+literal|248
+operator|*
+literal|512
+expr_stmt|;
+name|du
+operator|->
+name|disk
+operator|.
+name|d_name
+operator|=
+literal|"wd"
+expr_stmt|;
 name|disk_create
 argument_list|(
 name|lunit
@@ -2727,18 +2700,10 @@ name|disk
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|wd_cdevsw
+name|NULL
 argument_list|,
-operator|&
-name|wddisk_cdevsw
+name|NULL
 argument_list|)
-expr_stmt|;
-name|dev
-operator|->
-name|si_drv1
-operator|=
-name|du
 expr_stmt|;
 block|}
 else|else
@@ -2915,7 +2880,6 @@ comment|/* Read/write routine for a buffer.  Finds the proper unit, range checks
 name|void
 name|wdstrategy
 parameter_list|(
-specifier|register
 name|struct
 name|bio
 modifier|*
@@ -2937,9 +2901,9 @@ name|du
 operator|=
 name|bp
 operator|->
-name|bio_dev
+name|bio_disk
 operator|->
-name|si_drv1
+name|d_drv1
 expr_stmt|;
 if|if
 condition|(
@@ -3786,11 +3750,7 @@ argument|wdustart(du);
 comment|/* anything more for controller to do? */
 argument|wdstart(unit); }
 comment|/*  * Initialize a drive.  */
-argument|int wdopen(dev_t dev, int flags, int fmt, struct thread *td) { 	register struct softc *du;  	du = dev->si_drv1; 	if (du == NULL) 		return (ENXIO);  	dev->si_iosize_max =
-literal|248
-argument|*
-literal|512
-argument|;
+argument|int wdopen(struct disk *dp) { 	register struct softc *du;  	du = dp->d_drv1; 	if (du == NULL) 		return (ENXIO);
 ifdef|#
 directive|ifdef
 name|PC98
