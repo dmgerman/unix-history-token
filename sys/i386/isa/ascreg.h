@@ -4,6 +4,10 @@ comment|/* ascreg.h - port and bit definitions for the GI-1904 interface   *  * 
 end_comment
 
 begin_comment
+comment|/*  * $Id:$  */
+end_comment
+
+begin_comment
 comment|/***    Registers (base=3EB): ************/
 end_comment
 
