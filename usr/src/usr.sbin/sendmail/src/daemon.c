@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.17 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.18 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.17 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.18 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3342,7 +3342,7 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|80
+literal|100
 index|]
 decl_stmt|;
 comment|/* check for null/zero family */
@@ -3368,19 +3368,67 @@ condition|)
 return|return
 literal|"0"
 return|;
-ifdef|#
-directive|ifdef
-name|NETINET
-if|if
+switch|switch
 condition|(
 name|sap
 operator|->
 name|sa
 operator|.
 name|sa_family
-operator|==
-name|AF_INET
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|MAYBENEXTRELEASE
+comment|/*** UNTESTED *** UNTESTED *** UNTESTED ***/
+case|case
+name|AF_UNIX
+case|:
+if|if
+condition|(
+name|sap
+operator|->
+name|sun
+operator|.
+name|sun_path
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"[UNIX: %.64s]"
+argument_list|,
+name|sap
+operator|->
+name|sun
+operator|.
+name|sun_path
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"[UNIX: localhost]"
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETINET
+case|case
+name|AF_INET
+case|:
 return|return
 name|inet_ntoa
 argument_list|(
@@ -3398,6 +3446,10 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+default|default:
+comment|/* this case is only to ensure syntactic correctness */
+break|break;
+block|}
 comment|/* unknown family -- just dump bytes */
 operator|(
 name|void
@@ -3511,12 +3563,12 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|NAMED_BIND
 name|int
 name|saveretry
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 comment|/* shorten name server timeout to avoid higher level timeouts */
 name|saveretry
 operator|=
@@ -3606,6 +3658,20 @@ name|siso_addr
 argument_list|,
 name|AF_ISO
 argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|MAYBENEXTRELEASE
+comment|/*** UNTESTED *** UNTESTED *** UNTESTED ***/
+case|case
+name|AF_UNIX
+case|:
+name|hp
+operator|=
+name|NULL
 expr_stmt|;
 break|break;
 endif|#
