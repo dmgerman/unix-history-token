@@ -2667,6 +2667,8 @@ decl_stmt|;
 name|unsigned
 name|short
 name|len
+decl_stmt|,
+name|copylen
 decl_stmt|;
 name|unsigned
 name|short
@@ -2948,6 +2950,8 @@ name|packet
 expr_stmt|;
 name|packetlen
 operator|=
+name|copylen
+operator|=
 name|len
 expr_stmt|;
 name|len
@@ -3009,7 +3013,7 @@ name|p
 operator|+=
 name|len
 expr_stmt|;
-name|packetlen
+name|copylen
 operator|-=
 name|len
 expr_stmt|;
@@ -3026,7 +3030,7 @@ name|pktoff
 argument_list|,
 name|p
 argument_list|,
-name|packetlen
+name|copylen
 argument_list|)
 expr_stmt|;
 else|else
@@ -3038,7 +3042,7 @@ name|pktoff
 argument_list|,
 name|p
 argument_list|,
-name|packetlen
+name|copylen
 argument_list|)
 expr_stmt|;
 name|type
