@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.49 1996/05/02 10:43:01 phk Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.50 1996/05/11 04:27:24 bde Exp $  */
 end_comment
 
 begin_comment
@@ -61,6 +61,14 @@ name|namebuf
 index|[
 name|NAMEBUF_LEN
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|dflt_name
 decl_stmt|;
 end_decl_stmt
 
@@ -286,8 +294,65 @@ block|}
 endif|#
 directive|endif
 block|}
+comment|/* 	 * XXX 	 * DAMN! I don't understand why this is not being set  	 * by the code in boot2.S 	 */
+name|dflt_name
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0x0000ffb0
+expr_stmt|;
 name|loadstart
 label|:
+if|if
+condition|(
+operator|(
+name|dflt_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'D'
+operator|)
+operator|&&
+operator|(
+name|dflt_name
+index|[
+literal|1
+index|]
+operator|==
+literal|'N'
+operator|)
+operator|&&
+name|dflt_name
+index|[
+literal|2
+index|]
+condition|)
+block|{
+name|name
+operator|=
+name|dflt_name
+operator|+
+literal|2
+expr_stmt|;
+name|dflt_name
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|name
+operator|=
+name|dflname
+expr_stmt|;
+comment|/* re-initialize in case of loop */
+block|}
 comment|/* print this all each time.. (saves space to do so) */
 comment|/* If we have looped, use the previous entries as defaults */
 name|printf
@@ -321,11 +386,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|name
-operator|=
-name|dflname
-expr_stmt|;
-comment|/* re-initialize in case of loop */
 name|loadflags
 operator|&=
 name|RB_SERIAL
