@@ -612,7 +612,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ED_SIL */
+comment|/* ED_SIC */
 end_comment
 
 end_unit
