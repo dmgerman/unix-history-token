@@ -3971,7 +3971,7 @@ name|bp
 operator|->
 name|b_vp
 expr_stmt|;
-comment|/* 		 * Get the base offset and length of the buffer.  Note that  		 * for block sizes that are less then PAGE_SIZE, the b_data 		 * base of the buffer does not represent exactly b_offset and 		 * neither b_offset nor b_size are necessarily page aligned. 		 * Instead, the starting position of b_offset is: 		 * 		 * 	b_data + (b_offset& PAGE_MASK) 		 * 		 * block sizes less then DEV_BSIZE (usually 512) are not  		 * supported due to the page granularity bits (m->valid, 		 * m->dirty, etc...).  		 * 		 * See man buf(9) for more information 		 */
+comment|/* 		 * Get the base offset and length of the buffer.  Note that  		 * in the VMIO case if the buffer block size is not 		 * page-aligned then b_data pointer may not be page-aligned. 		 * But our b_pages[] array *IS* page aligned. 		 * 		 * block sizes less then DEV_BSIZE (usually 512) are not  		 * supported due to the page granularity bits (m->valid, 		 * m->dirty, etc...).  		 * 		 * See man buf(9) for more information 		 */
 name|resid
 operator|=
 name|bp
