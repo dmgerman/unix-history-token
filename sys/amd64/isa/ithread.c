@@ -345,6 +345,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|u_int
+name|straycount
+index|[
+name|NHWI
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|SYSINIT
 argument_list|(
@@ -359,6 +369,13 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
+
+begin_define
+define|#
+directive|define
+name|MAX_STRAY_LOG
+value|5
+end_define
 
 begin_comment
 comment|/*  * Schedule a heavyweight interrupt process.  This function is called  * from the interrupt handlers Xintr<num>.  */
@@ -424,6 +441,75 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* one more global interrupt */
+comment|/* 	 * If we don't have an interrupt resource or an interrupt thread for 	 * this IRQ, log it as a stray interrupt. 	 */
+if|if
+condition|(
+name|ir
+operator|==
+name|NULL
+operator|||
+name|ir
+operator|->
+name|it_proc
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|irq
+operator|<
+name|NHWI
+condition|)
+block|{
+if|if
+condition|(
+name|straycount
+index|[
+name|irq
+index|]
+operator|<
+name|MAX_STRAY_LOG
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"stray irq %d\n"
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|++
+name|straycount
+index|[
+name|irq
+index|]
+operator|==
+name|MAX_STRAY_LOG
+condition|)
+name|printf
+argument_list|(
+literal|"got %d stray irq %d's: "
+literal|"not logging anymore\n"
+argument_list|,
+name|MAX_STRAY_LOG
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+name|panic
+argument_list|(
+literal|"sched_ithd: ithds[%d] == NULL"
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+block|}
 name|CTR3
 argument_list|(
 name|KTR_INTR
