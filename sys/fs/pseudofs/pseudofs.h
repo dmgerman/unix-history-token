@@ -232,6 +232,42 @@ comment|/* opaque */
 end_comment
 
 begin_comment
+comment|/*  * Visibility callback  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFS_VIS_ARGS
+define|\
+value|struct thread *td, struct proc *p, struct pfs_node *pn
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_VIS_PROTO
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|int name(PFS_VIS_ARGS);
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pfs_vis_t
+function_decl|)
+parameter_list|(
+name|PFS_VIS_ARGS
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/*  * pfs_info: describes a pseudofs instance  */
 end_comment
 
@@ -310,6 +346,9 @@ value|u1._pn_nodes
 name|pfs_attr_t
 name|pn_attr
 decl_stmt|;
+name|pfs_vis_t
+name|pn_vis
+decl_stmt|;
 name|void
 modifier|*
 name|pn_data
@@ -343,12 +382,14 @@ name|fill
 parameter_list|,
 name|attr
 parameter_list|,
+name|vis
+parameter_list|,
 name|data
 parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|{ (name), (type), { (fill) }, (attr), (data), (flags) }
+value|{ (name), (type), { (fill) }, (attr), (vis), (data), (flags) }
 end_define
 
 begin_define
@@ -362,12 +403,14 @@ name|nodes
 parameter_list|,
 name|attr
 parameter_list|,
+name|vis
+parameter_list|,
 name|data
 parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|PFS_NODE(name, pfstype_dir, nodes, attr, data, flags)
+value|PFS_NODE(name, pfstype_dir, nodes, attr, vis, data, flags)
 end_define
 
 begin_define
@@ -378,7 +421,7 @@ parameter_list|(
 name|nodes
 parameter_list|)
 define|\
-value|PFS_NODE("/", pfstype_root, nodes, NULL, NULL, 0)
+value|PFS_NODE("/", pfstype_root, nodes, NULL, NULL, NULL, 0)
 end_define
 
 begin_define
@@ -386,7 +429,7 @@ define|#
 directive|define
 name|PFS_THIS
 define|\
-value|PFS_NODE(".", pfstype_this, NULL, NULL, NULL, 0)
+value|PFS_NODE(".", pfstype_this, NULL, NULL, NULL, NULL, 0)
 end_define
 
 begin_define
@@ -394,7 +437,7 @@ define|#
 directive|define
 name|PFS_PARENT
 define|\
-value|PFS_NODE("..", pfstype_parent, NULL, NULL, NULL, 0)
+value|PFS_NODE("..", pfstype_parent, NULL, NULL, NULL, NULL, 0)
 end_define
 
 begin_define
@@ -408,12 +451,14 @@ name|func
 parameter_list|,
 name|attr
 parameter_list|,
+name|vis
+parameter_list|,
 name|data
 parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|PFS_NODE(name, pfstype_file, func, attr, data, flags)
+value|PFS_NODE(name, pfstype_file, func, attr, vis, data, flags)
 end_define
 
 begin_define
@@ -427,12 +472,14 @@ name|func
 parameter_list|,
 name|attr
 parameter_list|,
+name|vis
+parameter_list|,
 name|data
 parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|PFS_NODE(name, pfstype_symlink, func, attr, data, flags)
+value|PFS_NODE(name, pfstype_symlink, func, attr, vis, data, flags)
 end_define
 
 begin_define
@@ -444,12 +491,14 @@ name|nodes
 parameter_list|,
 name|attr
 parameter_list|,
+name|vis
+parameter_list|,
 name|data
 parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|PFS_NODE("", pfstype_procdir, nodes, attr, data, flags)
+value|PFS_NODE("", pfstype_procdir, nodes, attr, vis, data, flags)
 end_define
 
 begin_define
@@ -457,7 +506,7 @@ define|#
 directive|define
 name|PFS_LASTNODE
 define|\
-value|PFS_NODE("", pfstype_none, NULL, NULL, NULL, 0)
+value|PFS_NODE("", pfstype_none, NULL, NULL, NULL, NULL, 0)
 end_define
 
 begin_comment
