@@ -1304,7 +1304,7 @@ end_define
 
 begin_function
 name|void
-name|setflags
+name|set_flags
 parameter_list|(
 name|n
 parameter_list|)

@@ -2066,7 +2066,7 @@ name|digit
 operator|)
 condition|)
 continue|continue;
-name|setflags
+name|set_flags
 argument_list|(
 literal|2
 argument_list|)
@@ -2641,7 +2641,7 @@ name|SP
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|setflags
+name|set_flags
 argument_list|(
 literal|0
 argument_list|)
@@ -2750,7 +2750,7 @@ argument_list|,
 name|interrupt
 argument_list|)
 expr_stmt|;
-name|setflags
+name|set_flags
 argument_list|(
 literal|1
 argument_list|)

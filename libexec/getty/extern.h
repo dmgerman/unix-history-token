@@ -236,7 +236,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|setflags
+name|set_flags
 name|__P
 argument_list|(
 operator|(
