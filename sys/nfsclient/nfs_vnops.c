@@ -3551,11 +3551,16 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 			 * np->n_size has already been set to vap->va_size 			 * in nfs_meta_setsize(). We must set it again since 			 * nfs_loadattrcache() could be called through 			 * nfs_meta_setsize() and could modify np->n_size. 			 */
 name|np
 operator|->
 name|n_vattr
 operator|.
 name|va_size
+operator|=
+name|np
+operator|->
+name|n_size
 operator|=
 name|vap
 operator|->
