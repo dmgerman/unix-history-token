@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.20 1997/05/20 22:54:04 joerg Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.21 1997/05/22 22:15:39 joerg Exp $  */
 end_comment
 
 begin_include
@@ -5873,8 +5873,10 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: %s tlu\n"
 argument_list|,
 name|ifp
@@ -9065,8 +9067,10 @@ if|if
 condition|(
 name|debug
 condition|)
-name|addlog
+name|log
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"%s%d: lcp parse opt values: "
 argument_list|,
 name|ifp
