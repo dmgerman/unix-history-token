@@ -15,11 +15,6 @@ name|GAMES
 index|[]
 init|=
 literal|"Game_List"
-decl_stmt|,
-name|LOG
-index|[]
-init|=
-literal|"ATC_scores"
 decl_stmt|;
 end_decl_stmt
 

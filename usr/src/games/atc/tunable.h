@@ -5,14 +5,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|SPECIAL_DIR
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|NUM_SCORES
 decl_stmt|;

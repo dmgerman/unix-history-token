@@ -9,9 +9,6 @@ name|char
 name|GAMES
 index|[]
 decl_stmt|,
-name|LOG
-index|[]
-decl_stmt|,
 modifier|*
 name|file
 decl_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	5.4 (Berkeley) %G%"
+literal|"@(#)log.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"include.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_macro
@@ -353,11 +359,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|,
-name|logstr
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|,
 modifier|*
 name|index
 argument_list|()
@@ -383,20 +384,6 @@ name|name
 decl_stmt|;
 endif|#
 directive|endif
-name|strcpy
-argument_list|(
-name|logstr
-argument_list|,
-name|SPECIAL_DIR
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|logstr
-argument_list|,
-name|LOG
-argument_list|)
-expr_stmt|;
 name|umask
 argument_list|(
 literal|0
@@ -406,7 +393,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|logstr
+name|_PATH_SCORE
 argument_list|,
 name|O_CREAT
 operator||
@@ -424,7 +411,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|logstr
+name|_PATH_SCORE
 argument_list|)
 expr_stmt|;
 return|return
@@ -453,7 +440,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|logstr
+name|_PATH_SCORE
 argument_list|)
 expr_stmt|;
 return|return

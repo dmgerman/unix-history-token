@@ -9,6 +9,12 @@ directive|include
 file|"include.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_function
 name|main
 parameter_list|(
@@ -281,7 +287,7 @@ name|strcpy
 argument_list|(
 name|buf
 argument_list|,
-name|SPECIAL_DIR
+name|_PATH_GAMES
 argument_list|)
 expr_stmt|;
 name|buf
@@ -864,7 +870,7 @@ name|strcpy
 argument_list|(
 name|games
 argument_list|,
-name|SPECIAL_DIR
+name|_PATH_GAMES
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -954,7 +960,7 @@ name|strcpy
 argument_list|(
 name|file
 argument_list|,
-name|SPECIAL_DIR
+name|_PATH_GAMES
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -1015,7 +1021,7 @@ name|strcpy
 argument_list|(
 name|games
 argument_list|,
-name|SPECIAL_DIR
+name|_PATH_GAMES
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -1097,7 +1103,7 @@ name|strcpy
 argument_list|(
 name|file
 argument_list|,
-name|SPECIAL_DIR
+name|_PATH_GAMES
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -1198,7 +1204,7 @@ name|strcpy
 argument_list|(
 name|games
 argument_list|,
-name|SPECIAL_DIR
+name|_PATH_GAMES
 argument_list|)
 expr_stmt|;
 name|strcat
