@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufsmount.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -44,6 +44,29 @@ struct_decl|struct
 name|vnode
 struct_decl|;
 end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|radix_node_head
+struct_decl|;
+end_struct_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AF_MAX
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This structure describes the UFS specific mount structure data. */
@@ -135,21 +158,21 @@ index|]
 decl_stmt|;
 comment|/* quota specific flags */
 name|struct
-name|netaddrhash
+name|netcred
 name|um_defexported
 decl_stmt|;
 comment|/* Default export */
 name|struct
-name|netaddrhash
+name|radix_node_head
 modifier|*
-name|um_netaddr
+name|um_rtable
 index|[
-name|NETHASHSZ
+name|AF_MAX
 operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Net addr hash lists */
+comment|/* Individual exports */
 block|}
 struct|;
 end_struct

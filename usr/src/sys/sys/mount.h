@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1123,121 +1123,52 @@ name|fhandle_t
 typedef|;
 end_typedef
 
-begin_comment
-comment|/*  * Network address hash list element  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
-begin_union
-union|union
-name|nethostaddr
-block|{
-name|u_long
-name|had_inetaddr
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|had_nam
-decl_stmt|;
-block|}
-union|;
-end_union
+begin_include
+include|#
+directive|include
+file|<net/radix.h>
+end_include
+
+begin_comment
+comment|/*  * Network address lookup element  */
+end_comment
 
 begin_struct
 struct|struct
-name|netaddrhash
+name|netcred
 block|{
 name|struct
-name|netaddrhash
-modifier|*
-name|neth_next
+name|radix_node
+name|netc_rnodes
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+name|netc_exflags
 decl_stmt|;
 name|struct
 name|ucred
-name|neth_anon
-decl_stmt|;
-name|u_short
-name|neth_family
-decl_stmt|;
-name|union
-name|nethostaddr
-name|neth_haddr
-decl_stmt|;
-name|union
-name|nethostaddr
-name|neth_hmask
-decl_stmt|;
-name|int
-name|neth_exflags
+name|netc_anon
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|neth_inetaddr
-value|neth_haddr.had_inetaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|neth_inetmask
-value|neth_hmask.had_inetaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|neth_nam
-value|neth_haddr.had_nam
-end_define
-
-begin_define
-define|#
-directive|define
-name|neth_msk
-value|neth_hmask.had_nam
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  * Network address hashing defs.  */
+comment|/* KERNEL */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NETHASHSZ
-value|8
-end_define
-
-begin_comment
-comment|/* Must be a power of 2<= 256 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETMASK_HASH
-value|NETHASHSZ
-end_define
-
-begin_comment
-comment|/* Last hash table element is for networks */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETADDRHASH
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|(((a)->sa_family == AF_INET) ? ((a)->sa_data[5]& (NETHASHSZ - 1)) : \ 	 (((a)->sa_family == AF_ISO) ? iso_addrhash(a) : 0))
-end_define
 
 begin_comment
 comment|/*  * Arguments to mount UFS-based filesystems  */
