@@ -2813,9 +2813,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|exit
+name|_exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
