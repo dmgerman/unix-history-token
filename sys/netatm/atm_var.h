@@ -243,6 +243,10 @@ begin_function_decl
 name|int
 name|atm_cm_listen
 parameter_list|(
+name|struct
+name|socket
+modifier|*
+parameter_list|,
 name|Atm_endpoint
 modifier|*
 parameter_list|,
