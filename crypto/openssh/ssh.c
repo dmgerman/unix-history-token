@@ -2094,17 +2094,6 @@ name|pw_gid
 expr_stmt|;
 name|pwcopy
 operator|.
-name|pw_class
-operator|=
-name|xstrdup
-argument_list|(
-name|pw
-operator|->
-name|pw_class
-argument_list|)
-expr_stmt|;
-name|pwcopy
-operator|.
 name|pw_dir
 operator|=
 name|xstrdup
