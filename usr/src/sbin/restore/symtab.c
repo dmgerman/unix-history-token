@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.16	(Berkeley)	85/01/18"
+literal|"@(#)symtab.c	3.17	(Berkeley)	85/03/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -1847,6 +1847,9 @@ decl_stmt|;
 name|ino_t
 name|maxino
 decl_stmt|;
+name|long
+name|ntrec
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2350,6 +2353,12 @@ name|dumpdate
 operator|=
 name|dumpdate
 expr_stmt|;
+name|hdr
+operator|.
+name|ntrec
+operator|=
+name|ntrec
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2752,6 +2761,18 @@ operator|=
 name|hdr
 operator|.
 name|dumpdate
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bflag
+condition|)
+name|newtapebuf
+argument_list|(
+name|hdr
+operator|.
+name|ntrec
+argument_list|)
 expr_stmt|;
 name|getvol
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	restore.h	3.11	85/02/18	*/
+comment|/*	restore.h	3.12	85/03/24	*/
 end_comment
 
 begin_include
@@ -46,6 +46,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* convert from old to new tape format */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set input block size */
 end_comment
 
 begin_decl_stmt

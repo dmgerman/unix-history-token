@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.15	(Berkeley)	85/01/18"
+literal|"@(#)main.c	3.16	(Berkeley)	85/03/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,10 @@ end_include
 
 begin_decl_stmt
 name|int
+name|bflag
+init|=
+literal|0
+decl_stmt|,
 name|cvtflag
 init|=
 literal|0
@@ -105,8 +109,6 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|ntrec
-init|=
-name|NTREC
 decl_stmt|;
 end_decl_stmt
 
@@ -400,6 +402,9 @@ case|case
 literal|'b'
 case|:
 comment|/* 			 * change default tape blocksize 			 */
+name|bflag
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|argc
