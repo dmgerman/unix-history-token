@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_pow.c,v 1.1.1.1 1994/08/19 09:39:44 jkh Exp $"
+literal|"$Id: e_pow.c,v 1.5 1997/03/09 16:29:25 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -657,7 +657,7 @@ literal|0
 condition|)
 comment|/* x>= +0 */
 return|return
-name|sqrt
+name|__ieee754_sqrt
 argument_list|(
 name|x
 argument_list|)

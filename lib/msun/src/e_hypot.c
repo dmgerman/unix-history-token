@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_hypot.c,v 1.1.1.1 1994/08/19 09:39:44 jkh Exp $"
+literal|"$Id: e_hypot.c,v 1.5 1997/03/09 16:29:22 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -441,7 +441,7 @@ name|t1
 expr_stmt|;
 name|w
 operator|=
-name|sqrt
+name|__ieee754_sqrt
 argument_list|(
 name|t1
 operator|*
@@ -512,7 +512,7 @@ name|t1
 expr_stmt|;
 name|w
 operator|=
-name|sqrt
+name|__ieee754_sqrt
 argument_list|(
 name|t1
 operator|*

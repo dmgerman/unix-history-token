@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_acosh.c,v 1.1.1.1 1994/08/19 09:39:43 jkh Exp $"
+literal|"$Id: e_acosh.c,v 1.5 1997/03/09 16:29:16 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,7 +221,7 @@ operator|/
 operator|(
 name|x
 operator|+
-name|sqrt
+name|__ieee754_sqrt
 argument_list|(
 name|t
 operator|-
@@ -245,7 +245,7 @@ name|log1p
 argument_list|(
 name|t
 operator|+
-name|sqrt
+name|__ieee754_sqrt
 argument_list|(
 literal|2.0
 operator|*

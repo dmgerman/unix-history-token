@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_acos.c,v 1.2 1995/05/30 05:47:51 rgrimes Exp $"
+literal|"$Id: e_acos.c,v 1.6 1997/03/09 16:29:14 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_acos(x)  * Method :  *	acos(x)  = pi/2 - asin(x)  *	acos(-x) = pi/2 + asin(x)  * For |x|<=0.5  *	acos(x) = pi/2 - (x + x*x^2*R(x^2))	(see asin.c)  * For x>0.5  * 	acos(x) = pi/2 - (pi/2 - 2asin(sqrt((1-x)/2)))  *		= 2asin(sqrt((1-x)/2))  *		= 2s + 2s*z*R(z) 	...z=(1-x)/2, s=sqrt(z)  *		= 2f + (2c + 2s*z*R(z))  *     where f=hi part of s, and c = (z-f*f)/(s+f) is the correction term  *     for f so that f+c ~ sqrt(z).  * For x<-0.5  *	acos(x) = pi - 2asin(sqrt((1-|x|)/2))  *		= pi - 0.5*(s+s*z*R(z)), where z=(1-|x|)/2,s=sqrt(z)  *  * Special cases:  *	if x is NaN, return x itself;  *	if |x|>1, return NaN with invalid signal.  *  * Function needed: sqrt  */
+comment|/* __ieee754_acos(x)  * Method :  *	acos(x)  = pi/2 - asin(x)  *	acos(-x) = pi/2 + asin(x)  * For |x|<=0.5  *	acos(x) = pi/2 - (x + x*x^2*R(x^2))	(see asin.c)  * For x>0.5  * 	acos(x) = pi/2 - (pi/2 - 2asin(sqrt((1-x)/2)))  *		= 2asin(sqrt((1-x)/2))  *		= 2s + 2s*z*R(z) 	...z=(1-x)/2, s=sqrt(z)  *		= 2f + (2c + 2s*z*R(z))  *     where f=hi part of s, and c = (z-f*f)/(s+f) is the correction term  *     for f so that f+c ~ sqrt(z).  * For x<-0.5  *	acos(x) = pi - 2asin(sqrt((1-|x|)/2))  *		= pi - 0.5*(s+s*z*R(z)), where z=(1-|x|)/2,s=sqrt(z)  *  * Special cases:  *	if x is NaN, return x itself;  *	if |x|>1, return NaN with invalid signal.  *  * Function needed: __ieee754_sqrt  */
 end_comment
 
 begin_include
@@ -461,7 +461,7 @@ operator|)
 expr_stmt|;
 name|s
 operator|=
-name|sqrt
+name|__ieee754_sqrt
 argument_list|(
 name|z
 argument_list|)
@@ -507,7 +507,7 @@ literal|0.5
 expr_stmt|;
 name|s
 operator|=
-name|sqrt
+name|__ieee754_sqrt
 argument_list|(
 name|z
 argument_list|)
