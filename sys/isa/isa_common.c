@@ -3937,6 +3937,8 @@ return|;
 while|while
 condition|(
 name|ids
+operator|&&
+name|ids
 operator|->
 name|ip_id
 condition|)
