@@ -6,20 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"wd.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NWDC
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -7811,11 +7797,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
