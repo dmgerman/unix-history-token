@@ -5464,9 +5464,9 @@ directive|ifdef
 name|IEEE80211_DEBUG_REFCNT
 name|IEEE80211_DPRINTF
 argument_list|(
-name|nt
+name|ni
 operator|->
-name|nt_ic
+name|ni_ic
 argument_list|,
 name|IEEE80211_MSG_NODE
 argument_list|,
