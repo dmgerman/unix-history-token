@@ -1380,7 +1380,7 @@ operator|*
 operator|)
 name|opp
 decl_stmt|;
-comment|/*      * If the dependency mask of the operator and the node don't match and      * the node has actually had an operator applied to it before, and      * the operator actually has some dependency information in it, complain.       */
+comment|/*      * If the dependency mask of the operator and the node don't match and      * the node has actually had an operator applied to it before, and      * the operator actually has some dependency information in it, complain.      */
 if|if
 condition|(
 operator|(
@@ -1536,7 +1536,7 @@ operator|=
 name|cohort
 expr_stmt|;
 block|}
-comment|/*      * We don't want to nuke any previous flags (whatever they were) so we      * just OR the new operator into the old       */
+comment|/*      * We don't want to nuke any previous flags (whatever they were) so we      * just OR the new operator into the old      */
 name|gn
 operator|->
 name|type
@@ -2268,7 +2268,7 @@ operator|*
 name|cp
 condition|)
 block|{
-comment|/* 	     * Ending a dependency line without an operator is a Bozo 	     * no-no  	     */
+comment|/* 	     * Ending a dependency line without an operator is a Bozo 	     * no-no 	     */
 name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
@@ -2300,7 +2300,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * See if the target is a special target that must have it 	     * or its sources handled specially.  	     */
+comment|/* 	     * See if the target is a special target that must have it 	     * or its sources handled specially. 	     */
 name|int
 name|keywd
 init|=
@@ -2618,7 +2618,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Have word in line. Get or create its node and stick it at 	 * the end of the targets list  	 */
+comment|/* 	 * Have word in line. Get or create its node and stick it at 	 * the end of the targets list 	 */
 if|if
 condition|(
 operator|(
@@ -3030,7 +3030,7 @@ operator|&
 name|op
 argument_list|)
 expr_stmt|;
-comment|/*      * Get to the first source       */
+comment|/*      * Get to the first source      */
 while|while
 condition|(
 operator|*
@@ -3190,7 +3190,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/*      * NOW GO FOR THE SOURCES       */
+comment|/*      * NOW GO FOR THE SOURCES      */
 if|if
 condition|(
 operator|(
@@ -3683,7 +3683,7 @@ literal|'\t'
 operator|)
 condition|)
 block|{
-comment|/* 	     * there can be as much white space as desired so long as there is 	     * only one word before the operator  	     */
+comment|/* 	     * there can be as much white space as desired so long as there is 	     * only one word before the operator 	     */
 name|wasSpace
 operator|=
 name|TRUE
@@ -3753,7 +3753,7 @@ name|line
 operator|++
 expr_stmt|;
 block|}
-comment|/*      * A final check: if we stopped on a +, ?, ! or :, the next character must      * be an = or it ain't a valid assignment       */
+comment|/*      * A final check: if we stopped on a +, ?, ! or :, the next character must      * be an = or it ain't a valid assignment      */
 if|if
 condition|(
 operator|(
@@ -3858,8 +3858,8 @@ name|char
 modifier|*
 name|opc
 decl_stmt|;
-comment|/* ptr to operator character to  				 * null-terminate the variable name */
-comment|/*       * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
+comment|/* ptr to operator character to 				 * null-terminate the variable name */
+comment|/*      * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
 if|#
 directive|if
 name|__GNUC__
@@ -4144,7 +4144,7 @@ name|Boolean
 name|freeCmd
 decl_stmt|;
 comment|/* TRUE if the command needs to be freed, i.e. 				 * if any variable expansion was performed */
-comment|/*  	 * Avoid clobbered variable warnings by forcing the compiler 	 * to ``unregister'' variables 	 */
+comment|/* 	 * Avoid clobbered variable warnings by forcing the compiler 	 * to ``unregister'' variables 	 */
 if|#
 directive|if
 name|__GNUC__
@@ -4745,7 +4745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * ParseDoInclude  --  *	Push to another file.  *	  *	The input is the line minus the #include. A file spec is a string  *	enclosed in<> or "". The former is looked for only in sysIncPath.  *	The latter in . and the directories specified by -I command line  *	options  *  * Results:  *	None  *  * Side Effects:  *	A structure is added to the includes Lst and readProc, lineno,  *	fname and curFILE are altered for the new file  *---------------------------------------------------------------------  */
+comment|/*-  *---------------------------------------------------------------------  * ParseDoInclude  --  *	Push to another file.  *  *	The input is the line minus the #include. A file spec is a string  *	enclosed in<> or "". The former is looked for only in sysIncPath.  *	The latter in . and the directories specified by -I command line  *	options  *  * Results:  *	None  *  * Side Effects:  *	A structure is added to the includes Lst and readProc, lineno,  *	fname and curFILE are altered for the new file  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -5261,7 +5261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * Parse_FromString  --  *	Start Parsing from the given string  *	  * Results:  *	None  *  * Side Effects:  *	A structure is added to the includes Lst and readProc, lineno,  *	fname and curFILE are altered for the new file  *---------------------------------------------------------------------  */
+comment|/*-  *---------------------------------------------------------------------  * Parse_FromString  --  *	Start Parsing from the given string  *  * Results:  *	None  *  * Side Effects:  *	A structure is added to the includes Lst and readProc, lineno,  *	fname and curFILE are altered for the new file  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -5399,7 +5399,7 @@ name|SYSVINCLUDE
 end_ifdef
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * ParseTraditionalInclude  --  *	Push to another file.  *	  *	The input is the line minus the "include".  The file name is  *	the string following the "include".  *  * Results:  *	None  *  * Side Effects:  *	A structure is added to the includes Lst and readProc, lineno,  *	fname and curFILE are altered for the new file  *---------------------------------------------------------------------  */
+comment|/*-  *---------------------------------------------------------------------  * ParseTraditionalInclude  --  *	Push to another file.  *  *	The input is the line minus the "include".  The file name is  *	the string following the "include".  *  * Results:  *	None  *  * Side Effects:  *	A structure is added to the includes Lst and readProc, lineno,  *	fname and curFILE are altered for the new file  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -5947,7 +5947,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * ParseReadc  --  *	Read a character from the current file   *  * Results:  *	The character that was read  *  * Side Effects:  *---------------------------------------------------------------------  */
+comment|/*-  *---------------------------------------------------------------------  * ParseReadc  --  *	Read a character from the current file  *  * Results:  *	The character that was read  *  * Side Effects:  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -5989,7 +5989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * ParseUnreadc  --  *	Put back a character to the current file   *  * Results:  *	None.  *  * Side Effects:  *---------------------------------------------------------------------  */
+comment|/*-  *---------------------------------------------------------------------  * ParseUnreadc  --  *	Put back a character to the current file  *  * Results:  *	None.  *  * Side Effects:  *---------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -7269,7 +7269,7 @@ condition|(
 name|inLine
 condition|)
 block|{
-comment|/* 			 * So long as it's not a blank line and we're actually 			 * in a dependency spec, add the command to the list of 			 * commands of all targets in the dependency spec  			 */
+comment|/* 			 * So long as it's not a blank line and we're actually 			 * in a dependency spec, add the command to the list of 			 * commands of all targets in the dependency spec 			 */
 name|Lst_ForEach
 argument_list|(
 name|targets
@@ -7543,7 +7543,7 @@ name|line
 operator|=
 name|cp
 expr_stmt|;
-comment|/* 		     * Need a non-circular list for the target nodes  		     */
+comment|/* 		     * Need a non-circular list for the target nodes 		     */
 if|if
 condition|(
 name|targets
@@ -7586,7 +7586,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Reached EOF, but it may be just EOF of an include file...  	 */
+comment|/* 	 * Reached EOF, but it may be just EOF of an include file... 	 */
 block|}
 do|while
 condition|(

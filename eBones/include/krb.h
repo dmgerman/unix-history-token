@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   * For copying and distribution information, please see the file  *<Copyright.MIT>.   *  * Include file for the Kerberos library.   *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $   *	$Id: krb.h,v 1.4 1994/09/24 14:15:41 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for the Kerberos library.  *  *	from: krb.h,v 4.26 89/08/08 17:55:25 jtkohl Exp $  *	$Id: krb.h,v 1.1.1.1 1994/09/30 14:49:54 csgr Exp $  */
 end_comment
 
 begin_comment
@@ -168,7 +168,7 @@ comment|/* NO_UIDGID_T */
 end_comment
 
 begin_comment
-comment|/*  * Kerberos specific definitions   *  * KRBLOG is the log file for the kerberos master server. KRB_CONF is  * the configuration file where different host machines running master  * and slave servers can be found. KRB_MASTER is the name of the  * machine with the master database.  The admin_server runs on this  * machine, and all changes to the db (as opposed to read-only  * requests, which can go to slaves) must go to it. KRB_HOST is the  * default machine * when looking for a kerberos slave server.  Other  * possibilities are * in the KRB_CONF file. KRB_REALM is the name of  * the realm.   */
+comment|/*  * Kerberos specific definitions  *  * KRBLOG is the log file for the kerberos master server. KRB_CONF is  * the configuration file where different host machines running master  * and slave servers can be found. KRB_MASTER is the name of the  * machine with the master database.  The admin_server runs on this  * machine, and all changes to the db (as opposed to read-only  * requests, which can go to slaves) must go to it. KRB_HOST is the  * default machine * when looking for a kerberos slave server.  Other  * possibilities are * in the KRB_CONF file. KRB_REALM is the name of  * the realm.  */
 end_comment
 
 begin_ifdef

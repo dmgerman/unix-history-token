@@ -1444,7 +1444,7 @@ modifier|*
 name|calloc
 parameter_list|()
 function_decl|;
-comment|/* 	 * We don't have enough buffers.   	 * Allocate some new ones. 	 */
+comment|/* 	 * We don't have enough buffers. 	 * Allocate some new ones. 	 */
 name|newbufs
 operator|=
 operator|(

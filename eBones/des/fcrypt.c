@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1993 Eric Young - see README for more details */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: fcrypt.c,v 1.2 1994/07/19 19:21:58 g89r4222 Exp $  */
+comment|/*-  *	$Id: fcrypt.c,v 1.1.1.1 1994/09/30 14:49:51 csgr Exp $  */
 end_comment
 
 begin_include
@@ -2829,7 +2829,7 @@ comment|/******************************************************************  * m
 end_comment
 
 begin_comment
-comment|/* The changes to this macro may help or hinder, depending on the  * compiler and the achitecture.  gcc2 always seems to do well :-).   * Inspired by Dana How<how@isl.stanford.edu>  * DO NOT use the alternative version on machines with 8 byte longs.  */
+comment|/* The changes to this macro may help or hinder, depending on the  * compiler and the achitecture.  gcc2 always seems to do well :-).  * Inspired by Dana How<how@isl.stanford.edu>  * DO NOT use the alternative version on machines with 8 byte longs.  */
 end_comment
 
 begin_ifdef

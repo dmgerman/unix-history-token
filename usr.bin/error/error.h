@@ -530,7 +530,7 @@ comment|/* inquire for yes/no */
 end_comment
 
 begin_comment
-comment|/*   *	codes for inquire() to return  */
+comment|/*  *	codes for inquire() to return  */
 end_comment
 
 begin_define
@@ -782,7 +782,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   *	Structure definition for a full error  */
+comment|/*  *	Structure definition for a full error  */
 end_comment
 
 begin_typedef

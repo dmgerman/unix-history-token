@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*   * A package to display what is happening every MSG_INTERVAL seconds  * if we are slow connecting.  */
+comment|/*  * A package to display what is happening every MSG_INTERVAL seconds  * if we are slow connecting.  */
 end_comment
 
 begin_include

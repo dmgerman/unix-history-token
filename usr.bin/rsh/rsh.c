@@ -50,7 +50,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rsh.c,v 1.3 1995/01/14 20:36:22 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tconv.c  *  * Ross Ridge   * Public Domain  * 92/02/01 07:30:23  *  * tconv [-b] [-c [-OUGd]] [-i] [-B [-D dir]] [-I] [-k] [-V] [-t term] [file]  *  * -c		convert from termcap  * -i		convert from terminfo source  * -b		convert from terminfo binary  * -B		convert to terminfo binary  * -I		convert to terminfo source  * -V		print version info  *  * The following switches are available when converting from termcap:  * -d		don't supply any defaults for missing capabilities  * -O		include obsolete termcap capabilities  * -G		include GNU capabilities  * -U		include UW capabilities  *  * -k		keep comments  * -D dir	directory to put terminfo binaries in  *  * -t term	name of terminal to translate  * file		filename of termcap/terminfo database to use   *  * If a file is specifed and no terminal is given the entire file we be  * translated.  * If no terminal and no file is specified then the terminal name will be  * taken from the environment variable TERM.  * Unless compiling to a terminfo binary, output is to stdout.  *  */
+comment|/*  * tconv.c  *  * Ross Ridge  * Public Domain  * 92/02/01 07:30:23  *  * tconv [-b] [-c [-OUGd]] [-i] [-B [-D dir]] [-I] [-k] [-V] [-t term] [file]  *  * -c		convert from termcap  * -i		convert from terminfo source  * -b		convert from terminfo binary  * -B		convert to terminfo binary  * -I		convert to terminfo source  * -V		print version info  *  * The following switches are available when converting from termcap:  * -d		don't supply any defaults for missing capabilities  * -O		include obsolete termcap capabilities  * -G		include GNU capabilities  * -U		include UW capabilities  *  * -k		keep comments  * -D dir	directory to put terminfo binaries in  *  * -t term	name of terminal to translate  * file		filename of termcap/terminfo database to use  *  * If a file is specifed and no terminal is given the entire file we be  * translated.  * If no terminal and no file is specified then the terminal name will be  * taken from the environment variable TERM.  * Unless compiling to a terminfo binary, output is to stdout.  *  */
 end_comment
 
 begin_define
@@ -364,7 +364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* output a string indenting at the beginning of a line, and wraping  * at the right margin.   */
+comment|/* output a string indenting at the beginning of a line, and wraping  * at the right margin.  */
 end_comment
 
 begin_function

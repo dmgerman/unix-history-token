@@ -2701,7 +2701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_MTime  --  *	Find the modification time of the file described by gn along the  *	search path dirSearchPath.  *   * Results:  *	The modification time or 0 if it doesn't exist  *  * Side Effects:  *	The modification time is placed in the node's mtime slot.  *	If the node didn't have a path entry before, and Dir_FindFile  *	found one for it, the full name is placed in the path slot.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_MTime  --  *	Find the modification time of the file described by gn along the  *	search path dirSearchPath.  *  * Results:  *	The modification time or 0 if it doesn't exist  *  * Side Effects:  *	The modification time is placed in the node's mtime slot.  *	If the node didn't have a path entry before, and Dir_FindFile  *	found one for it, the full name is placed in the path slot.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2972,7 +2972,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path. The order of  *	the arguments is backwards so ParseDoDependency can do a  *	Lst_ForEach of its list of paths...  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is   *	read and hashed.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path. The order of  *	the arguments is backwards so ParseDoDependency can do a  *	Lst_ForEach of its list of paths...  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is  *	read and hashed.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

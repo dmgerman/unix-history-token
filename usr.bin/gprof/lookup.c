@@ -35,7 +35,7 @@ file|"gprof.h"
 end_include
 
 begin_comment
-comment|/*      *	look up an address in a sorted-by-address namelist      *	    this deals with misses by mapping them to the next lower       *	    entry point.      */
+comment|/*      *	look up an address in a sorted-by-address namelist      *	    this deals with misses by mapping them to the next lower      *	    entry point.      */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Source: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/kadmin.c,v $  * $Author: qjb $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Kerberos database administrator's tool.    *   * The default behavior of kadmin is if the -m option is given   * on the commandline, multiple requests are allowed to be given  * with one entry of the admin password (until the tickets expire).  * If you do not want this to be an available option, compile with  * NO_MULTIPLE defined.  */
+comment|/*  * $Source: /home/ncvs/src/eBones/kadmin/kadmin.c,v $  * $Author: wollman $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Kerberos database administrator's tool.  *  * The default behavior of kadmin is if the -m option is given  * on the commandline, multiple requests are allowed to be given  * with one entry of the admin password (until the tickets expire).  * If you do not want this to be an available option, compile with  * NO_MULTIPLE defined.  */
 end_comment
 
 begin_ifndef
@@ -2174,7 +2174,7 @@ operator|!
 name|inited
 condition|)
 block|{
-comment|/*  	 * This is only as a default/initial realm; we don't care  	 * about failure. 	 */
+comment|/* 	 * This is only as a default/initial realm; we don't care 	 * about failure. 	 */
 if|if
 condition|(
 name|krb_get_lrealm
@@ -2193,7 +2193,7 @@ argument_list|,
 name|KRB_REALM
 argument_list|)
 expr_stmt|;
-comment|/*  	 * If we can reach the local realm, initialize to it.  Otherwise, 	 * don't initialize. 	 */
+comment|/* 	 * If we can reach the local realm, initialize to it.  Otherwise, 	 * don't initialize. 	 */
 if|if
 condition|(
 name|kadm_init_link
@@ -2478,7 +2478,7 @@ argument_list|)
 operator|==
 name|KSUCCESS
 condition|)
-comment|/*  	     * If time is less than lifetime - FUDGE_VALUE after issue date, 	     * tickets will probably last long enough for the next  	     * transaction. 	     */
+comment|/* 	     * If time is less than lifetime - FUDGE_VALUE after issue date, 	     * tickets will probably last long enough for the next 	     * transaction. 	     */
 if|if
 condition|(
 name|time

@@ -238,7 +238,7 @@ value|(cgetcap(bp, f, ':') != NULL)
 end_define
 
 begin_comment
-comment|/* 	Expand the start tilde sequence at the start of the 	specified path. Optionally, free space allocated to 	path before reinitializing it.  */
+comment|/* 	Expand the start tilde sequence at the start of the 	specified path. Optionally, free space allocated to 	path before reinitializing it. */
 end_comment
 
 begin_function

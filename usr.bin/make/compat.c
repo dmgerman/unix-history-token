@@ -432,7 +432,7 @@ operator|*
 operator|)
 name|gnp
 decl_stmt|;
-comment|/*       * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
+comment|/*      * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
 if|#
 directive|if
 name|__GNUC__

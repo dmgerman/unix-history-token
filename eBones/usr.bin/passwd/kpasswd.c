@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kpasswd.c,v 1.1 1995/01/20 22:14:14 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -796,7 +796,7 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-comment|/*      * We don't care about failure; this is to determine whether or      * not to print the realm in the prompt for a new password.       */
+comment|/*      * We don't care about failure; this is to determine whether or      * not to print the realm in the prompt for a new password.      */
 operator|(
 name|void
 operator|)

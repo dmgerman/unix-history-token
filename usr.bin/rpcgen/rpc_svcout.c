@@ -4,7 +4,7 @@ comment|/* @(#)rpc_svcout.c	2.1 88/08/01 4.0 RPCSRC */
 end_comment
 
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_svcout.c,v 1.1 1994/08/07 18:01:36 wollman Exp $"
+literal|"$Id: rpc_svcout.c,v 1.2 1995/03/04 17:47:50 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * rpc_svcout.c, Server-skeleton outputter for the RPC protocol compiler  * Copyright (C) 1987, Sun Microsytsems, Inc.   */
+comment|/*  * rpc_svcout.c, Server-skeleton outputter for the RPC protocol compiler  * Copyright (C) 1987, Sun Microsytsems, Inc.  */
 end_comment
 
 begin_include
@@ -125,7 +125,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * write most of the service, that is, everything but the registrations.   */
+comment|/*  * write most of the service, that is, everything but the registrations.  */
 end_comment
 
 begin_function
@@ -351,7 +351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * write a registration for the given transport   */
+comment|/*  * write a registration for the given transport  */
 end_comment
 
 begin_function
@@ -596,7 +596,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * write the rest of the service   */
+comment|/*  * write the rest of the service  */
 end_comment
 
 begin_function

@@ -95,7 +95,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * replace --  *	Replace or add named members to archive.  Entries already in the  *	archive are swapped in place.  Others are added before or after   *	the key entry, based on the a, b and i options.  If the u option  *	is specified, modification dates select for replacement.  */
+comment|/*  * replace --  *	Replace or add named members to archive.  Entries already in the  *	archive are swapped in place.  Others are added before or after  *	the key entry, based on the a, b and i options.  If the u option  *	is specified, modification dates select for replacement.  */
 end_comment
 
 begin_function

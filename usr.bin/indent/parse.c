@@ -881,7 +881,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * NAME: reduce  *   * FUNCTION: Implements the reduce part of the parsing algorithm  *   * ALGORITHM: The following reductions are done.  Reductions are repeated  *	until no more are possible.  *   * Old TOS		New TOS  *<stmt><stmt><stmtl>  *<stmtl><stmt><stmtl>  * do<stmt>		"dostmt"  * if<stmt>		"ifstmt"  * switch<stmt><stmt>  * decl<stmt><stmt>  * "ifelse"<stmt><stmt>  * for<stmt><stmt>  * while<stmt><stmt>  * "dostmt" while<stmt>  *   * On each reduction, ps.i_l_follow (the indentation for the following line)  * is set to the indentation level associated with the old TOS.  *   * PARAMETERS: None  *   * RETURNS: Nothing  *   * GLOBALS: ps.cstk ps.i_l_follow = ps.il ps.p_stack = ps.tos =  *   * CALLS: None  *   * CALLED BY: parse  *   * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *   */
+comment|/*  * NAME: reduce  *  * FUNCTION: Implements the reduce part of the parsing algorithm  *  * ALGORITHM: The following reductions are done.  Reductions are repeated  *	until no more are possible.  *  * Old TOS		New TOS  *<stmt><stmt><stmtl>  *<stmtl><stmt><stmtl>  * do<stmt>		"dostmt"  * if<stmt>		"ifstmt"  * switch<stmt><stmt>  * decl<stmt><stmt>  * "ifelse"<stmt><stmt>  * for<stmt><stmt>  * while<stmt><stmt>  * "dostmt" while<stmt>  *  * On each reduction, ps.i_l_follow (the indentation for the following line)  * is set to the indentation level associated with the old TOS.  *  * PARAMETERS: None  *  * RETURNS: Nothing  *  * GLOBALS: ps.cstk ps.i_l_follow = ps.il ps.p_stack = ps.tos =  *  * CALLS: None  *  * CALLED BY: parse  *  * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *  */
 end_comment
 
 begin_comment

@@ -237,7 +237,7 @@ operator|=
 operator|-
 literal|10
 expr_stmt|;
-comment|/* 	 * LIZ@UOM 6/18/85 -- Check for goal and max length arguments  	 */
+comment|/* 	 * LIZ@UOM 6/18/85 -- Check for goal and max length arguments 	 */
 if|if
 condition|(
 name|argc
@@ -995,7 +995,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* LIZ@UOM 6/18/85 */
-comment|/* 		 * Collect a 'word,' allowing it to contain escaped white 		 * space.  		 */
+comment|/* 		 * Collect a 'word,' allowing it to contain escaped white 		 * space. 		 */
 while|while
 condition|(
 operator|*
@@ -1043,7 +1043,7 @@ operator|++
 expr_stmt|;
 comment|/* LIZ@UOM 6/18/85 */
 block|}
-comment|/* 		 * Guarantee a space at end of line. Two spaces after end of 		 * sentence punctuation.  		 */
+comment|/* 		 * Guarantee a space at end of line. Two spaces after end of 		 * sentence punctuation. 		 */
 if|if
 condition|(
 operator|*
@@ -1098,7 +1098,7 @@ name|cp2
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 		 * LIZ@UOM 6/18/85 pack(word);  		 */
+comment|/* 		 * LIZ@UOM 6/18/85 pack(word); 		 */
 name|pack
 argument_list|(
 name|word
@@ -1208,7 +1208,7 @@ condition|)
 name|leadin
 argument_list|()
 expr_stmt|;
-comment|/* 	 * LIZ@UOM 6/18/85 -- change condition to check goal_length; s is the 	 * length of the line before the word is added; t is now the length 	 * of the line after the word is added 	 *	t = strlen(word); 	 *	if (t+s<= LENGTH)  	 */
+comment|/* 	 * LIZ@UOM 6/18/85 -- change condition to check goal_length; s is the 	 * length of the line before the word is added; t is now the length 	 * of the line after the word is added 	 *	t = strlen(word); 	 *	if (t+s<= LENGTH) 	 */
 name|s
 operator|=
 name|outp
@@ -1248,7 +1248,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * In like flint!  		 */
+comment|/* 		 * In like flint! 		 */
 for|for
 control|(
 name|cp

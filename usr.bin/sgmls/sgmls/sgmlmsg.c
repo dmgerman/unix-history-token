@@ -1524,7 +1524,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* It is necessary to copy the result of getparm() because 	the specification of catgets() says in can return a  	pointer to a static buffer which may get overwritten 	by the next call to catgets(). */
+comment|/* It is necessary to copy the result of getparm() because 	the specification of catgets() says in can return a 	pointer to a static buffer which may get overwritten 	by the next call to catgets(). */
 switch|switch
 condition|(
 name|e

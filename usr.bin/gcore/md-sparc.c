@@ -720,7 +720,7 @@ argument_list|,
 literal|"cannot copy pcb windows to stack"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * It's possible to be missing the bottomost 			 * page because a stack page hasn't been allocated 			 * for the register save area.  Shift over 			 * the stack segment by a page, and update  			 * the u-area to reflect the new stack size.  YECH! 			 */
+comment|/* 			 * It's possible to be missing the bottomost 			 * page because a stack page hasn't been allocated 			 * for the register save area.  Shift over 			 * the stack segment by a page, and update 			 * the u-area to reflect the new stack size.  YECH! 			 */
 name|shift_page
 argument_list|(
 name|fd

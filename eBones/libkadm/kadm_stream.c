@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kadm_stream.c,v 1.1 1995/01/20 02:02:53 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ value|(((a)< (b)) ? (a) : (b))
 end_define
 
 begin_comment
-comment|/*  vals_to_stream   recieves    : kadm_vals *, u_char *   returns     : a realloced and filled in u_char *       this function creates a byte-stream representation of the kadm_vals structure */
+comment|/* vals_to_stream   recieves    : kadm_vals *, u_char *   returns     : a realloced and filled in u_char *  this function creates a byte-stream representation of the kadm_vals structure */
 end_comment
 
 begin_macro
@@ -782,7 +782,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  stream_to_vals   recieves    : u_char *, kadm_vals *   returns     : a kadm_vals filled in according to u_char *       this decodes a byte stream represntation of a vals struct into kadm_vals */
+comment|/* stream_to_vals   recieves    : u_char *, kadm_vals *   returns     : a kadm_vals filled in according to u_char *  this decodes a byte stream represntation of a vals struct into kadm_vals */
 end_comment
 
 begin_macro

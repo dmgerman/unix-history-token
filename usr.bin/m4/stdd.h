@@ -42,7 +42,7 @@ value|((c) == ' ' || (c) == '\t')
 end_define
 
 begin_comment
-comment|/*   * STREQ is an optimised strcmp(a,b)==0   * STREQN is an optimised strncmp(a,b,n)==0; assumes n> 0   */
+comment|/*  * STREQ is an optimised strcmp(a,b)==0  * STREQN is an optimised strncmp(a,b,n)==0; assumes n> 0  */
 end_comment
 
 begin_define

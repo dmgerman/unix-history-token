@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * kuserok: check if a kerberos principal has  * access to a local account  *  *	from: kuserok.c,v 4.5 89/01/23 09:25:21 jtkohl Exp $  *	$Id: kuserok.c,v 1.2 1994/07/19 19:25:50 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * kuserok: check if a kerberos principal has  * access to a local account  *  *	from: kuserok.c,v 4.5 89/01/23 09:25:21 jtkohl Exp $  *	$Id: kuserok.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kuserok.c,v 1.2 1994/07/19 19:25:50 g89r4222 Exp $"
+literal|"$Id: kuserok.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ file|<kparse.h>
 end_include
 
 begin_comment
-comment|/*  * The parmtable defines the keywords we will recognize with their  * default values, and keeps a pointer to the found value.  The found  * value should be filled in with strsave(), since FreeParameterSet()  * will release memory for all non-NULL found strings.   * *** NOTE WELL! ***   *  * The table below is very nice, but we cannot hard-code a default for the  * realm: we have to get the realm via krb_get_lrealm().  Even though the  * default shows as "from krb_get_lrealm, below", it gets changed in  * kuserok to whatever krb_get_lrealm() tells us.  That code assumes that  * the realm will be the entry number in the table below, so if you  * change the order of the entries below, you have to change the  * #definition of REALM_SCRIPT to reflect it.   */
+comment|/*  * The parmtable defines the keywords we will recognize with their  * default values, and keeps a pointer to the found value.  The found  * value should be filled in with strsave(), since FreeParameterSet()  * will release memory for all non-NULL found strings.  * *** NOTE WELL! ***  *  * The table below is very nice, but we cannot hard-code a default for the  * realm: we have to get the realm via krb_get_lrealm().  Even though the  * default shows as "from krb_get_lrealm, below", it gets changed in  * kuserok to whatever krb_get_lrealm() tells us.  That code assumes that  * the realm will be the entry number in the table below, so if you  * change the order of the entries below, you have to change the  * #definition of REALM_SCRIPT to reflect it.  */
 end_comment
 
 begin_define
@@ -332,7 +332,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* not accessible */
-comment|/* 	 * if he's trying to log in as himself, and there is no .klogin file, 	 * let him.  To find out, call 	 * krb_kntoln to convert the triple in kdata to a name which we can 	 * string compare.  	 */
+comment|/* 	 * if he's trying to log in as himself, and there is no .klogin file, 	 * let him.  To find out, call 	 * krb_kntoln to convert the triple in kdata to a name which we can 	 * string compare. 	 */
 if|if
 condition|(
 operator|!
@@ -437,7 +437,7 @@ ifdef|#
 directive|ifdef
 name|ATHENA_COMPAT
 comment|/* Accept old-style .klogin files */
-comment|/*      * change the default realm from the hard-coded value to the      * accepted realm that Kerberos specifies.       */
+comment|/*      * change the default realm from the hard-coded value to the      * accepted realm that Kerberos specifies.      */
 name|rc
 operator|=
 name|krb_get_lrealm

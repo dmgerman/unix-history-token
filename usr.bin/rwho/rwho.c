@@ -150,7 +150,7 @@ value|(sizeof (wd) - sizeof (wd.wd_we))
 end_define
 
 begin_comment
-comment|/*   * this macro should be shared with ruptime.  */
+comment|/*  * this macro should be shared with ruptime.  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_svc_in_tkt.c,v 4.9 89/07/18 16:33:34 jtkohl Exp $  *	$Id: get_svc_in_tkt.c,v 1.2 1994/07/19 19:25:26 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_svc_in_tkt.c,v 4.9 89/07/18 16:33:34 jtkohl Exp $  *	$Id: get_svc_in_tkt.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: get_svc_in_tkt.c,v 1.2 1994/07/19 19:25:26 g89r4222 Exp $"
+literal|"$Id: get_svc_in_tkt.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * krb_get_svc_in_tkt() passes its arguments on to krb_get_in_tkt(),  * plus two additional arguments: a pointer to the srvtab_to_key()  * function to be used to get the key from the key file and a NULL  * for the decryption procedure indicating that krb_get_in_tkt should   * use the default method of decrypting the response from the KDC.  *  * It returns the return value of the krb_get_in_tkt() call.  */
+comment|/*  * krb_get_svc_in_tkt() passes its arguments on to krb_get_in_tkt(),  * plus two additional arguments: a pointer to the srvtab_to_key()  * function to be used to get the key from the key file and a NULL  * for the decryption procedure indicating that krb_get_in_tkt should  * use the default method of decrypting the response from the KDC.  *  * It returns the return value of the krb_get_in_tkt() call.  */
 end_comment
 
 begin_macro

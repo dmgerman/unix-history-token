@@ -1772,7 +1772,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/*  			 * Historic practice was to delete<blank> characters 			 * following the inserted newline.  This affected the 			 * 'R', 'c', and 's' commands; 'c' and 's' retained 			 * the insert characters only, 'R' moved overwrite and 			 * insert characters into the next TEXT structure. 			 * All other commands simply deleted the overwrite 			 * characters.  We have to keep track of the number of 			 * characters erased for the 'R' command so that we 			 * can get the final resolution of the line correct. 			 */
+comment|/* 			 * Historic practice was to delete<blank> characters 			 * following the inserted newline.  This affected the 			 * 'R', 'c', and 's' commands; 'c' and 's' retained 			 * the insert characters only, 'R' moved overwrite and 			 * insert characters into the next TEXT structure. 			 * All other commands simply deleted the overwrite 			 * characters.  We have to keep track of the number of 			 * characters erased for the 'R' command so that we 			 * can get the final resolution of the line correct. 			 */
 name|tp
 operator|->
 name|R_erase

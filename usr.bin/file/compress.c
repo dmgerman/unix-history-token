@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,   *					    using method, return sizeof new  * $Id: compress.c,v 1.8 1994/01/21 01:38:24 christos Exp $  */
+comment|/*  * compress routines:  *	zmagic() - returns 0 if not recognized, uncompresses and prints  *		   information if recognized  *	uncompress(method, old, n, newch) - uncompress old into new,  *					    using method, return sizeof new  * $Id: compress.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $  */
 end_comment
 
 begin_include
@@ -97,7 +97,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/*       * XXX pcat does not work, cause I don't know how to make it read stdin,      * so we use gzip      */
+comment|/*      * XXX pcat does not work, cause I don't know how to make it read stdin,      * so we use gzip      */
 block|{
 literal|"\037\036"
 block|,

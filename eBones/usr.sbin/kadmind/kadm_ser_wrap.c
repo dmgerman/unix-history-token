@@ -26,7 +26,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/*  kadm_ser_wrap.c unwraps wrapped packets and calls the appropriate server subroutine */
+comment|/* kadm_ser_wrap.c unwraps wrapped packets and calls the appropriate server subroutine */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  kadm_ser_init set up the server_parm structure */
+comment|/* kadm_ser_init set up the server_parm structure */
 end_comment
 
 begin_macro

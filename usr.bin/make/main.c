@@ -2971,7 +2971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Punt --  *	Major exception once jobs are being created. Kills all jobs, prints  *	a message and exits.  *  * Results:  *	None   *  * Side Effects:  *	All children are killed indiscriminately and the program Lib_Exits  */
+comment|/*  * Punt --  *	Major exception once jobs are being created. Kills all jobs, prints  *	a message and exits.  *  * Results:  *	None  *  * Side Effects:  *	All children are killed indiscriminately and the program Lib_Exits  */
 end_comment
 
 begin_comment
@@ -3126,7 +3126,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finish --  *	Called when aborting due to errors in child shell to signal  *	abnormal exit.   *  * Results:  *	None   *  * Side Effects:  *	The program exits  */
+comment|/*  * Finish --  *	Called when aborting due to errors in child shell to signal  *	abnormal exit.  *  * Results:  *	None  *  * Side Effects:  *	The program exits  */
 end_comment
 
 begin_function

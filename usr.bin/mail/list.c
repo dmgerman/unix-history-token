@@ -3297,7 +3297,7 @@ return|;
 case|case
 literal|'.'
 case|:
-comment|/*  		 * Current message. 		 */
+comment|/* 		 * Current message. 		 */
 name|m
 operator|=
 name|dot

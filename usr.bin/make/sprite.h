@@ -80,7 +80,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The following statuses overlap with the first 2 generic statuses   * defined in status.h:  *  * SUCCESS			There was no error.  * FAILURE			There was a general error.  */
+comment|/*  * The following statuses overlap with the first 2 generic statuses  * defined in status.h:  *  * SUCCESS			There was no error.  * FAILURE			There was a general error.  */
 end_comment
 
 begin_define
@@ -98,7 +98,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/*  * A nil pointer must be something that will cause an exception if   * referenced.  There are two nils: the kernels nil and the nil used  * by user processes.  */
+comment|/*  * A nil pointer must be something that will cause an exception if  * referenced.  There are two nils: the kernels nil and the nil used  * by user processes.  */
 end_comment
 
 begin_define

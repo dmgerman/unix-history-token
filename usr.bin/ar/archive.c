@@ -253,7 +253,7 @@ argument_list|(
 name|archive
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Attempt to place a lock on the opened file - if we get an  	 * error then someone is already working on this library (or 	 * it's going across NFS). 	 */
+comment|/* 	 * Attempt to place a lock on the opened file - if we get an 	 * error then someone is already working on this library (or 	 * it's going across NFS). 	 */
 name|opened
 label|:
 if|if

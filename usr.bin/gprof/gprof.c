@@ -2707,7 +2707,7 @@ index|]
 operator|.
 name|svalue
 expr_stmt|;
-comment|/* 		 *	if high end of tick is below entry address,  		 *	go for next tick. 		 */
+comment|/* 		 *	if high end of tick is below entry address, 		 *	go for next tick. 		 */
 if|if
 condition|(
 name|pch

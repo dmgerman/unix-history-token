@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ksrvutil.c,v 1.1 1995/01/20 22:38:30 wollman Exp $"
+literal|"$Id: ksrvutil.c,v 1.2 1995/01/23 22:54:08 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2163,7 +2163,7 @@ condition|(
 name|change_this_key
 condition|)
 block|{
-comment|/*  		     * Pick a new key and determine whether or not 		     * it is safe to change 		     */
+comment|/* 		     * Pick a new key and determine whether or not 		     * it is safe to change 		     */
 if|if
 condition|(
 operator|(

@@ -4,11 +4,11 @@ comment|/* flexdef - definitions file for flex */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *   * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Vern Paxson.  *  * The United States Government has rights in this work pursuant  * to contract no. DE-AC03-76SF00098 between the United States  * Department of Energy and the University of California.  *  * Redistribution and use in source and binary forms are permitted provided  * that: (1) source distributions retain this entire copyright notice and  * comment, and (2) distributions including binaries display the following  * acknowledgement:  ``This product includes software developed by the  * University of California, Berkeley and its contributors'' in the  * documentation or other materials provided with the distribution and in  * all advertising materials mentioning features or use of this software.  * Neither the name of the University nor the names of its contributors may  * be used to endorse or promote products derived from this software without  * specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_comment
-comment|/* @(#) $Header: flexdef.h,v 1.2 94/01/04 14:33:14 vern Exp $ (LBL) */
+comment|/* @(#) $Header: /home/ncvs/src/usr.bin/lex/flexdef.h,v 1.1.1.1 1994/08/24 13:10:32 csgr Exp $ (LBL) */
 end_comment
 
 begin_include
@@ -727,7 +727,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* The percentage the number of homogeneous out-transitions of a state  * must be of the number of total out-transitions of the state in order  * that the state's transition table is first compared with a potential   * template of the most common out-transition instead of with the first  * proto in the proto queue.  */
+comment|/* The percentage the number of homogeneous out-transitions of a state  * must be of the number of total out-transitions of the state in order  * that the state's transition table is first compared with a potential  * template of the most common out-transition instead of with the first  * proto in the proto queue.  */
 end_comment
 
 begin_define
@@ -1072,7 +1072,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Variables used in the flex input routines:  * datapos - characters on current output line  * dataline - number of contiguous lines of data in current data  * 	statement.  Used to generate readable -f output  * linenum - current input line number  * skelfile - the skeleton file  * skel - compiled-in skeleton array  * skel_ind - index into "skel" array, if skelfile is nil  * yyin - input file  * backing_up_file - file to summarize backing-up states to  * infilename - name of input file  * input_files - array holding names of input files  * num_input_files - size of input_files array  * program_name - name with which program was invoked   *  * action_array - array to hold the rule actions  * action_size - size of action_array  * defs1_offset - index where the user's section 1 definitions start  *	in action_array  * prolog_offset - index where the prolog starts in action_array  * action_offset - index where the non-prolog starts in action_array  * action_index - index where the next action should go, with respect  * 	to "action_array"  */
+comment|/* Variables used in the flex input routines:  * datapos - characters on current output line  * dataline - number of contiguous lines of data in current data  * 	statement.  Used to generate readable -f output  * linenum - current input line number  * skelfile - the skeleton file  * skel - compiled-in skeleton array  * skel_ind - index into "skel" array, if skelfile is nil  * yyin - input file  * backing_up_file - file to summarize backing-up states to  * infilename - name of input file  * input_files - array holding names of input files  * num_input_files - size of input_files array  * program_name - name with which program was invoked  *  * action_array - array to hold the rule actions  * action_size - size of action_array  * defs1_offset - index where the user's section 1 definitions start  *	in action_array  * prolog_offset - index where the prolog starts in action_array  * action_offset - index where the non-prolog starts in action_array  * action_index - index where the next action should go, with respect  * 	to "action_array"  */
 end_comment
 
 begin_decl_stmt

@@ -38,7 +38,7 @@ file|<kadm_err.h>
 end_include
 
 begin_comment
-comment|/*  kadm_ser_cpw - the server side of the change_password routine   recieves    : KTEXT, {key}   returns     : CKSUM, RETCODE   acl         : caller can change only own password  Replaces the password (i.e. des key) of the caller with that specified in key. Returns no actual data from the master server, since this is called by a user */
+comment|/* kadm_ser_cpw - the server side of the change_password routine   recieves    : KTEXT, {key}   returns     : CKSUM, RETCODE   acl         : caller can change only own password  Replaces the password (i.e. des key) of the caller with that specified in key. Returns no actual data from the master server, since this is called by a user */
 end_comment
 
 begin_macro

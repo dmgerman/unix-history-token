@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Routines dealing with the "position" table.  * This is a table which tells the position (in the input file) of the  * first char on each currently displayed line.  *  * {{ The position table is scrolled by moving all the entries.  *    Would be better to have a circular table   *    and just change a couple of pointers. }}  */
+comment|/*  * Routines dealing with the "position" table.  * This is a table which tells the position (in the input file) of the  * first char on each currently displayed line.  *  * {{ The position table is scrolled by moving all the entries.  *    Would be better to have a circular table  *    and just change a couple of pointers. }}  */
 end_comment
 
 begin_include

@@ -85,7 +85,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: print.c,v 1.21 1994/05/03 17:58:23 christos Exp $"
+literal|"@(#)$Id: print.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 

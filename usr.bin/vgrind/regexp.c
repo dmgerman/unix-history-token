@@ -409,7 +409,7 @@ comment|/* character following the string */
 end_comment
 
 begin_comment
-comment|/*  *  bit flags in the descriptor   */
+comment|/*  *  bit flags in the descriptor  */
 end_comment
 
 begin_define
@@ -1206,7 +1206,7 @@ comment|/* end of convertre */
 end_comment
 
 begin_comment
-comment|/*  *	The following routine recognises an irregular expresion  *	with the following special characters:  *  *		\?	-	means last match was optional  *		\a	-	matches any number of characters  *		\d	-	matches any number of spaces and tabs  *		\p	-	matches any number of alphanumeric  *				characters. The  *				characters matched will be copied into  *				the area pointed to by 'name'.  *		\|	-	alternation  *		\( \)	-	grouping used mostly for alternation and  *				optionality  *  *	The irregular expression must be translated to internal form  *	prior to calling this routine  *  *	The value returned is the pointer to the first non \a   *	character matched.  */
+comment|/*  *	The following routine recognises an irregular expresion  *	with the following special characters:  *  *		\?	-	means last match was optional  *		\a	-	matches any number of characters  *		\d	-	matches any number of spaces and tabs  *		\p	-	matches any number of alphanumeric  *				characters. The  *				characters matched will be copied into  *				the area pointed to by 'name'.  *		\|	-	alternation  *		\( \)	-	grouping used mostly for alternation and  *				optionality  *  *	The irregular expression must be translated to internal form  *	prior to calling this routine  *  *	The value returned is the pointer to the first non \a  *	character matched.  */
 end_comment
 
 begin_function

@@ -374,7 +374,7 @@ goto|;
 block|}
 continue|continue;
 block|}
-comment|/* 		 * !!! 		 * Historic documentation (USD:15-11, 4.2) said that formfeed 		 * characters (^L) in the first column delimited sections.   		 * The historic code mentions formfeed characters, but never 		 * implements them.  Seems reasonable, do it. 		 */
+comment|/* 		 * !!! 		 * Historic documentation (USD:15-11, 4.2) said that formfeed 		 * characters (^L) in the first column delimited sections. 		 * The historic code mentions formfeed characters, but never 		 * implements them.  Seems reasonable, do it. 		 */
 if|if
 condition|(
 name|p
@@ -801,7 +801,7 @@ name|adjust1
 goto|;
 continue|continue;
 block|}
-comment|/* 		 * !!! 		 * Historic documentation (USD:15-11, 4.2) said that formfeed 		 * characters (^L) in the first column delimited sections.   		 * The historic code mentions formfeed characters, but never 		 * implements them.  Seems reasonable, do it. 		 */
+comment|/* 		 * !!! 		 * Historic documentation (USD:15-11, 4.2) said that formfeed 		 * characters (^L) in the first column delimited sections. 		 * The historic code mentions formfeed characters, but never 		 * implements them.  Seems reasonable, do it. 		 */
 if|if
 condition|(
 name|p

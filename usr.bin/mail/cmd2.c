@@ -95,7 +95,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If some messages were supplied, find the  		 * first applicable one following dot using 		 * wrap around. 		 */
+comment|/* 		 * If some messages were supplied, find the 		 * first applicable one following dot using 		 * wrap around. 		 */
 name|mdot
 operator|=
 name|dot

@@ -812,7 +812,7 @@ comment|/* 	 *	starting from the topological top, 	 *	propagate print flags to c
 name|doflags
 argument_list|()
 expr_stmt|;
-comment|/* 	 *	starting from the topological bottom,  	 *	propogate children times up to parents. 	 */
+comment|/* 	 *	starting from the topological bottom, 	 *	propogate children times up to parents. 	 */
 name|dotime
 argument_list|()
 expr_stmt|;
@@ -3854,7 +3854,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 *	it has parents to pass time to,  		 *	but maybe someone wants to shut it up 		 *	by puttting it on -E list.  (but favor -F over -E) 		 */
+comment|/* 		 *	it has parents to pass time to, 		 *	but maybe someone wants to shut it up 		 *	by puttting it on -E list.  (but favor -F over -E) 		 */
 if|if
 condition|(
 operator|!
@@ -3960,7 +3960,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	check if any parent of this child      *	(or outside parents of this cycle)      *	have their print flags on and set the       *	print flag of the child (cycle) appropriately.      *	similarly, deal with propagation fractions from parents.      */
+comment|/*      *	check if any parent of this child      *	(or outside parents of this cycle)      *	have their print flags on and set the      *	print flag of the child (cycle) appropriately.      *	similarly, deal with propagation fractions from parents.      */
 end_comment
 
 begin_macro
@@ -4113,7 +4113,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     *	its a member of a cycle, look at all parents from  	     *	outside the cycle 	     */
+comment|/* 	     *	its a member of a cycle, look at all parents from 	     *	outside the cycle 	     */
 name|headp
 operator|->
 name|printflag

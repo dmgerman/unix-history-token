@@ -1039,7 +1039,7 @@ name|Errorclass
 name|cpp
 parameter_list|()
 block|{
-comment|/*  	 *	Now attempt a cpp error message match 	 *	Examples: 	 *		./morse.h: 23: undefined control 	 *		morsesend.c: 229: MAGNIBBL: argument mismatch 	 *		morsesend.c: 237: MAGNIBBL: argument mismatch 	 *		test1.c: 6: undefined control 	 */
+comment|/* 	 *	Now attempt a cpp error message match 	 *	Examples: 	 *		./morse.h: 23: undefined control 	 *		morsesend.c: 229: MAGNIBBL: argument mismatch 	 *		morsesend.c: 237: MAGNIBBL: argument mismatch 	 *		test1.c: 6: undefined control 	 */
 if|if
 condition|(
 operator|(
@@ -1479,7 +1479,7 @@ decl_stmt|,
 modifier|*
 name|file
 decl_stmt|;
-comment|/* 	 *	Attempt a match for the new lint style normal compiler 	 *	error messages, of the form 	 *	 	 *	printf("%s(%d): %s\n", filename, linenumber, message); 	 */
+comment|/* 	 *	Attempt a match for the new lint style normal compiler 	 *	error messages, of the form 	 * 	 *	printf("%s(%d): %s\n", filename, linenumber, message); 	 */
 if|if
 condition|(
 name|wordc
@@ -2420,7 +2420,7 @@ name|Errorclass
 name|ri
 parameter_list|()
 block|{
-comment|/*  *	Match an error message produced by ri; here is the  *	procedure yanked from the distributed version of ri  *	April 24, 1980.  *	  *	serror(str, x1, x2, x3)  *		char str[];  *		char *x1, *x2, *x3;  *	{  *		extern int yylineno;  *		  *		putc('"', stdout);  *		fputs(srcfile, stdout);  *		putc('"', stdout);  *		fprintf(stdout, " %d: ", yylineno);  *		fprintf(stdout, str, x1, x2, x3);  *		fprintf(stdout, "\n");  *		synerrs++;  *	}  */
+comment|/*  *	Match an error message produced by ri; here is the  *	procedure yanked from the distributed version of ri  *	April 24, 1980.  *  *	serror(str, x1, x2, x3)  *		char str[];  *		char *x1, *x2, *x3;  *	{  *		extern int yylineno;  *  *		putc('"', stdout);  *		fputs(srcfile, stdout);  *		putc('"', stdout);  *		fprintf(stdout, " %d: ", yylineno);  *		fprintf(stdout, str, x1, x2, x3);  *		fprintf(stdout, "\n");  *		synerrs++;  *	}  */
 if|if
 condition|(
 operator|(

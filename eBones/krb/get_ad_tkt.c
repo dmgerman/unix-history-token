@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_ad_tkt.c,v 4.15 89/07/07 15:18:51 jtkohl Exp $  *	$Id: get_ad_tkt.c,v 1.2 1994/07/19 19:25:11 g89r4222 Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_ad_tkt.c,v 4.15 89/07/07 15:18:51 jtkohl Exp $  *	$Id: get_ad_tkt.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: get_ad_tkt.c,v 1.2 1994/07/19 19:25:11 g89r4222 Exp $"
+literal|"$Id: get_ad_tkt.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * get_ad_tkt obtains a new service ticket from Kerberos, using  * the ticket-granting ticket which must be in the ticket file.  * It is typically called by krb_mk_req() when the client side  * of an application is creating authentication information to be  * sent to the server side.  *  * get_ad_tkt takes four arguments: three pointers to strings which  * contain the name, instance, and realm of the service for which the  * ticket is to be obtained; and an integer indicating the desired  * lifetime of the ticket.  *  * It returns an error status if the ticket couldn't be obtained,  * or AD_OK if all went well.  The ticket is stored in the ticket  * cache.  *  * The request sent to the Kerberos ticket-granting service looks  * like this:  *  * pkt->dat  *  * TEXT			original contents of	authenticator+ticket  *			pkt->dat		built in krb_mk_req call  *   * 4 bytes		time_ws			always 0 (?)  * char			lifetime		lifetime argument passed  * string		service			service name argument  * string		sinstance		service instance arg.  *  * See "prot.h" for the reply packet layout and definitions of the  * extraction macros like pkt_version(), pkt_msg_type(), etc.  */
+comment|/*  * get_ad_tkt obtains a new service ticket from Kerberos, using  * the ticket-granting ticket which must be in the ticket file.  * It is typically called by krb_mk_req() when the client side  * of an application is creating authentication information to be  * sent to the server side.  *  * get_ad_tkt takes four arguments: three pointers to strings which  * contain the name, instance, and realm of the service for which the  * ticket is to be obtained; and an integer indicating the desired  * lifetime of the ticket.  *  * It returns an error status if the ticket couldn't be obtained,  * or AD_OK if all went well.  The ticket is stored in the ticket  * cache.  *  * The request sent to the Kerberos ticket-granting service looks  * like this:  *  * pkt->dat  *  * TEXT			original contents of	authenticator+ticket  *			pkt->dat		built in krb_mk_req call  *  * 4 bytes		time_ws			always 0 (?)  * char			lifetime		lifetime argument passed  * string		service			service name argument  * string		sinstance		service instance arg.  *  * See "prot.h" for the reply packet layout and definitions of the  * extraction macros like pkt_version(), pkt_msg_type(), etc.  */
 end_comment
 
 begin_macro
@@ -308,7 +308,7 @@ name|length
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Look for the session key (and other stuff we don't need)      * in the ticket file for krbtgt.realm@lrealm where "realm"       * is the service's realm (passed in "realm" argument) and       * lrealm is the realm of our initial ticket.  If we don't       * have this, we will try to get it.      */
+comment|/*      * Look for the session key (and other stuff we don't need)      * in the ticket file for krbtgt.realm@lrealm where "realm"      * is the service's realm (passed in "realm" argument) and      * lrealm is the realm of our initial ticket.  If we don't      * have this, we will try to get it.      */
 if|if
 condition|(
 operator|(

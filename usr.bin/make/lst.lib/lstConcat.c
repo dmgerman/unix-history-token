@@ -342,7 +342,7 @@ operator|=
 name|nln
 expr_stmt|;
 block|}
-comment|/* 	 * Finish bookkeeping. The last new element becomes the last element 	 * of list one.  	 */
+comment|/* 	 * Finish bookkeeping. The last new element becomes the last element 	 * of list one. 	 */
 name|list1
 operator|->
 name|lastPtr

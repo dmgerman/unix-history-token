@@ -54,7 +54,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * look -- find lines in a sorted list.  *   * The man page said that TABs and SPACEs participate in -d comparisons.  * In fact, they were ignored.  This implements historic practice, not  * the manual page.  */
+comment|/*  * look -- find lines in a sorted list.  *  * The man page said that TABs and SPACEs participate in -d comparisons.  * In fact, they were ignored.  This implements historic practice, not  * the manual page.  */
 end_comment
 
 begin_include
@@ -124,7 +124,7 @@ file|"pathnames.h"
 end_include
 
 begin_comment
-comment|/*  * FOLD and DICT convert characters to a normal form for comparison,  * according to the user specified flags.  *   * DICT expects integers because it uses a non-character value to  * indicate a character which should not participate in comparisons.  */
+comment|/*  * FOLD and DICT convert characters to a normal form for comparison,  * according to the user specified flags.  *  * DICT expects integers because it uses a non-character value to  * indicate a character which should not participate in comparisons.  */
 end_comment
 
 begin_define
@@ -759,7 +759,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Binary search for "string" in memory between "front" and "back".  *   * This routine is expected to return a pointer to the start of a line at  * *or before* the first word matching "string".  Relaxing the constraint  * this way simplifies the algorithm.  *   * Invariants:  * 	front points to the beginning of a line at or before the first   *	matching string.  *   * 	back points to the beginning of a line at or after the first   *	matching line.  *   * Base of the Invariants.  * 	front = NULL;   *	back = EOF;  *   * Advancing the Invariants:  *   * 	p = first newline after halfway point from front to back.  *   * 	If the string at "p" is not greater than the string to match,   *	p is the new front.  Otherwise it is the new back.  *   * Termination:  *   * 	The definition of the routine allows it return at any point,   *	since front is always at or before the line to print.  *   * 	In fact, it returns when the chosen "p" equals "back".  This   *	implies that there exists a string is least half as long as   *	(back - front), which in turn implies that a linear search will   *	be no more expensive than the cost of simply printing a string or two.  *   * 	Trying to continue with binary search at this point would be   *	more trouble than it's worth.  */
+comment|/*  * Binary search for "string" in memory between "front" and "back".  *  * This routine is expected to return a pointer to the start of a line at  * *or before* the first word matching "string".  Relaxing the constraint  * this way simplifies the algorithm.  *  * Invariants:  * 	front points to the beginning of a line at or before the first  *	matching string.  *  * 	back points to the beginning of a line at or after the first  *	matching line.  *  * Base of the Invariants.  * 	front = NULL;  *	back = EOF;  *  * Advancing the Invariants:  *  * 	p = first newline after halfway point from front to back.  *  * 	If the string at "p" is not greater than the string to match,  *	p is the new front.  Otherwise it is the new back.  *  * Termination:  *  * 	The definition of the routine allows it return at any point,  *	since front is always at or before the line to print.  *  * 	In fact, it returns when the chosen "p" equals "back".  This  *	implies that there exists a string is least half as long as  *	(back - front), which in turn implies that a linear search will  *	be no more expensive than the cost of simply printing a string or two.  *  * 	Trying to continue with binary search at this point would be  *	more trouble than it's worth.  */
 end_comment
 
 begin_define
@@ -888,7 +888,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Find the first line that starts with string, linearly searching from front  * to back.  *   * Return NULL for no such line.  *   * This routine assumes:  *   * 	o front points at the first character in a line.   *	o front is before or at the first line to be printed.  */
+comment|/*  * Find the first line that starts with string, linearly searching from front  * to back.  *  * Return NULL for no such line.  *  * This routine assumes:  *  * 	o front points at the first character in a line.  *	o front is before or at the first line to be printed.  */
 end_comment
 
 begin_function
@@ -1087,7 +1087,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return LESS, GREATER, or EQUAL depending on how the string1 compares with  * string2 (s1 ??? s2).  *   * 	o Matches up to len(s1) are EQUAL.   *	o Matches up to len(s2) are GREATER.  *   * Compare understands about the -f and -d flags, and treats comparisons  * appropriately.  *   * The string "s1" is null terminated.  The string s2 is '\n' terminated (or  * "back" terminated).  */
+comment|/*  * Return LESS, GREATER, or EQUAL depending on how the string1 compares with  * string2 (s1 ??? s2).  *  * 	o Matches up to len(s1) are EQUAL.  *	o Matches up to len(s2) are GREATER.  *  * Compare understands about the -f and -d flags, and treats comparisons  * appropriately.  *  * The string "s1" is null terminated.  The string s2 is '\n' terminated (or  * "back" terminated).  */
 end_comment
 
 begin_function

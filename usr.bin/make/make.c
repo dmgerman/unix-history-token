@@ -137,7 +137,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_TimeStamp --  *	Set the cmtime field of a parent node based on the mtime stamp in its  *	child. Called from MakeOODate via Lst_ForEach.   *  * Results:  *	Always returns 0.   *  * Side Effects:  *	The cmtime of the parent node will be changed if the mtime  *	field of the child is greater than it.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Make_TimeStamp --  *	Set the cmtime field of a parent node based on the mtime stamp in its  *	child. Called from MakeOODate via Lst_ForEach.  *  * Results:  *	Always returns 0.  *  * Side Effects:  *	The cmtime of the parent node will be changed if the mtime  *	field of the child is greater than it.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -228,7 +228,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_OODate --  *	See if a given node is out of date with respect to its sources.  *	Used by Make_Run when deciding which nodes to place on the  *	toBeMade queue initially and by Make_Update to screen out USE and  *	EXEC nodes. In the latter case, however, any other sort of node  *	must be considered out-of-date since at least one of its children  *	will have been recreated.  *  * Results:  *	TRUE if the node is out of date. FALSE otherwise.   *  * Side Effects:  *	The mtime field of the node and the cmtime field of its parents  *	will/may be changed.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Make_OODate --  *	See if a given node is out of date with respect to its sources.  *	Used by Make_Run when deciding which nodes to place on the  *	toBeMade queue initially and by Make_Update to screen out USE and  *	EXEC nodes. In the latter case, however, any other sort of node  *	must be considered out-of-date since at least one of its children  *	will have been recreated.  *  * Results:  *	TRUE if the node is out of date. FALSE otherwise.  *  * Side Effects:  *	The mtime field of the node and the cmtime field of its parents  *	will/may be changed.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -969,7 +969,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Make_Update  --  *	Perform update on the parents of a node. Used by JobFinish once  *	a node has been dealt with and by MakeStartJobs if it finds an  *	up-to-date node.   *  * Results:  *	Always returns 0  *  * Side Effects:  *	The unmade field of pgn is decremented and pgn may be placed on  *	the toBeMade queue if this field becomes 0.  *  * 	If the child was made, the parent's childMade field will be set true  *	and its cmtime set to now.  *  *	If the child wasn't made, the cmtime field of the parent will be  *	altered if the child's mtime is big enough.  *  *	Finally, if the child is the implied source for the parent, the  *	parent's IMPSRC variable is set appropriately.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Make_Update  --  *	Perform update on the parents of a node. Used by JobFinish once  *	a node has been dealt with and by MakeStartJobs if it finds an  *	up-to-date node.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	The unmade field of pgn is decremented and pgn may be placed on  *	the toBeMade queue if this field becomes 0.  *  * 	If the child was made, the parent's childMade field will be set true  *	and its cmtime set to now.  *  *	If the child wasn't made, the cmtime field of the parent will be  *	altered if the child's mtime is big enough.  *  *	Finally, if the child is the implied source for the parent, the  *	parent's IMPSRC variable is set appropriately.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2272,7 +2272,7 @@ name|numNodes
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Make an initial downward pass over the graph, marking nodes to be made      * as we go down. We call Suff_FindDeps to find where a node is and      * to get some children for it if it has none and also has no commands.      * If the node is a leaf, we stick it on the toBeMade queue to      * be looked at in a minute, otherwise we add its children to our queue      * and go on about our business.       */
+comment|/*      * Make an initial downward pass over the graph, marking nodes to be made      * as we go down. We call Suff_FindDeps to find where a node is and      * to get some children for it if it has none and also has no commands.      * If the node is a leaf, we stick it on the toBeMade queue to      * be looked at in a minute, otherwise we add its children to our queue      * and go on about our business.      */
 while|while
 condition|(
 operator|!
@@ -2394,7 +2394,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 	 * Initialization. At the moment, no jobs are running and until some 	 * get started, nothing will happen since the remaining upward 	 * traversal of the graph is performed by the routines in job.c upon 	 * the finishing of a job. So we fill the Job table as much as we can 	 * before going into our loop.  	 */
+comment|/* 	 * Initialization. At the moment, no jobs are running and until some 	 * get started, nothing will happen since the remaining upward 	 * traversal of the graph is performed by the routines in job.c upon 	 * the finishing of a job. So we fill the Job table as much as we can 	 * before going into our loop. 	 */
 operator|(
 name|void
 operator|)

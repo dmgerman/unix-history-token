@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_in_tkt.c,v 4.12 89/07/18 16:32:56 jtkohl Exp $  *	$Id: get_in_tkt.c,v 1.2 1994/07/19 19:25:16 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_in_tkt.c,v 4.12 89/07/18 16:32:56 jtkohl Exp $  *	$Id: get_in_tkt.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: get_in_tkt.c,v 1.2 1994/07/19 19:25:16 g89r4222 Exp $"
+literal|"$Id: get_in_tkt.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,7 +159,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * krb_get_pw_in_tkt() takes the name of the server for which the initial  * ticket is to be obtained, the name of the principal the ticket is  * for, the desired lifetime of the ticket, and the user's password.  * It passes its arguments on to krb_get_in_tkt(), which contacts  * Kerberos to get the ticket, decrypts it using the password provided,  * and stores it away for future use.  *  * krb_get_pw_in_tkt() passes two additional arguments to krb_get_in_tkt():  * the name of a routine (passwd_to_key()) to be used to get the  * password in case the "password" argument is null and NULL for the  * decryption procedure indicating that krb_get_in_tkt should use the   * default method of decrypting the response from the KDC.  *  * The result of the call to krb_get_in_tkt() is returned.  */
+comment|/*  * krb_get_pw_in_tkt() takes the name of the server for which the initial  * ticket is to be obtained, the name of the principal the ticket is  * for, the desired lifetime of the ticket, and the user's password.  * It passes its arguments on to krb_get_in_tkt(), which contacts  * Kerberos to get the ticket, decrypts it using the password provided,  * and stores it away for future use.  *  * krb_get_pw_in_tkt() passes two additional arguments to krb_get_in_tkt():  * the name of a routine (passwd_to_key()) to be used to get the  * password in case the "password" argument is null and NULL for the  * decryption procedure indicating that krb_get_in_tkt should use the  * default method of decrypting the response from the KDC.  *  * The result of the call to krb_get_in_tkt() is returned.  */
 end_comment
 
 begin_macro
@@ -249,7 +249,7 @@ name|NOENCRYPTION
 end_ifdef
 
 begin_comment
-comment|/*  * $Source: /home/CVS/src/eBones/krb/get_in_tkt.c,v $  * $Author: g89r4222 $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
+comment|/*  * $Source: /home/ncvs/src/eBones/krb/get_in_tkt.c,v $  * $Author: csgr $  *  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * This routine prints the supplied string to standard  * output as a prompt, and reads a password string without  * echoing.  */
 end_comment
 
 begin_ifndef
@@ -264,7 +264,7 @@ name|char
 name|rcsid_read_password_c
 index|[]
 init|=
-literal|"Bones$Header: /home/CVS/src/eBones/krb/get_in_tkt.c,v 1.2 1994/07/19 19:25:16 g89r4222 Exp $"
+literal|"Bones$Header: /home/ncvs/src/eBones/krb/get_in_tkt.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 

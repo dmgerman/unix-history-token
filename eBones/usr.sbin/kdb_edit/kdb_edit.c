@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine changes the Kerberos encryption keys for principals,  * i.e., users or services.   *  *	from: kdb_edit.c,v 4.2 90/01/09 16:05:09 raeburn Exp $  *	$Id: kdb_edit.c,v 1.3 1994/09/09 21:43:46 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine changes the Kerberos encryption keys for principals,  * i.e., users or services.  *  *	from: kdb_edit.c,v 4.2 90/01/09 16:05:09 raeburn Exp $  *	$Id: kdb_edit.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * exit returns 	 0 ==> success -1 ==> error   */
+comment|/*  * exit returns 	 0 ==> success -1 ==> error  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdb_edit.c,v 1.3 1994/09/09 21:43:46 g89r4222 Exp $"
+literal|"$Id: kdb_edit.c,v 1.1.1.1 1994/09/30 14:49:56 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1219,7 +1219,7 @@ operator|!
 name|creating
 condition|)
 block|{
-comment|/* 		 * copy the existing data so we can use the old values 		 * for the qualifier clause of the replace  		 */
+comment|/* 		 * copy the existing data so we can use the old values 		 * for the qualifier clause of the replace 		 */
 name|principal_data
 index|[
 name|i
@@ -2125,7 +2125,7 @@ name|temp_long
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	     * remaining fields -- key versions and mod info, should 	     * not be directly manipulated  	     */
+comment|/* 	     * remaining fields -- key versions and mod info, should 	     * not be directly manipulated 	     */
 if|if
 condition|(
 name|changed

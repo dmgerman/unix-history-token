@@ -255,7 +255,7 @@ condition|(
 name|firstline
 condition|)
 block|{
-comment|/*  			 * First line is the From line, so no headers 			 * there to worry about 			 */
+comment|/* 			 * First line is the From line, so no headers 			 * there to worry about 			 */
 name|firstline
 operator|=
 literal|0

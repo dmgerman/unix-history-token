@@ -1778,7 +1778,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * resets environment to eval(), prints an error   * and forces eval to return FALSE.  */
+comment|/*  * resets environment to eval(), prints an error  * and forces eval to return FALSE.  */
 end_comment
 
 begin_function

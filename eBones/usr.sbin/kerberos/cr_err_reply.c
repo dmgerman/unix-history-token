@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: cr_err_reply.c,v 4.10 89/01/10 11:34:42 steiner Exp $  *	$Id: cr_err_reply.c,v 1.1 1994/07/19 19:24:24 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: cr_err_reply.c,v 4.10 89/01/10 11:34:42 steiner Exp $  *	$Id: cr_err_reply.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cr_err_reply.c,v 1.1 1994/07/19 19:24:24 g89r4222 Exp $"
+literal|"$Id: cr_err_reply.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,7 @@ comment|/* this is defined in the kerberos 				 * server code */
 end_comment
 
 begin_comment
-comment|/*  * This routine is used by the Kerberos authentication server to  * create an error reply packet to send back to its client.  *  * It takes a pointer to the packet to be built, the name, instance,  * and realm of the principal, the client's timestamp, an error code  * and an error string as arguments.  Its return value is undefined.  *  * The packet is built in the following format:  *   * type			variable	   data  *			or constant  * ----			-----------	   ----  *  * unsigned char	req_ack_vno	   protocol version number  *   * unsigned char	AUTH_MSG_ERR_REPLY protocol message type  *   * [least significant	HOST_BYTE_ORDER	   sender's (server's) byte  * bit of above field]			   order  *   * string		pname		   principal's name  *   * string		pinst		   principal's instance  *   * string		prealm		   principal's realm  *   * unsigned long	time_ws		   client's timestamp  *   * unsigned long	e		   error code  *   * string		e_string	   error text  */
+comment|/*  * This routine is used by the Kerberos authentication server to  * create an error reply packet to send back to its client.  *  * It takes a pointer to the packet to be built, the name, instance,  * and realm of the principal, the client's timestamp, an error code  * and an error string as arguments.  Its return value is undefined.  *  * The packet is built in the following format:  *  * type			variable	   data  *			or constant  * ----			-----------	   ----  *  * unsigned char	req_ack_vno	   protocol version number  *  * unsigned char	AUTH_MSG_ERR_REPLY protocol message type  *  * [least significant	HOST_BYTE_ORDER	   sender's (server's) byte  * bit of above field]			   order  *  * string		pname		   principal's name  *  * string		pinst		   principal's instance  *  * string		prealm		   principal's realm  *  * unsigned long	time_ws		   client's timestamp  *  * unsigned long	e		   error code  *  * string		e_string	   error text  */
 end_comment
 
 begin_function

@@ -20,7 +20,7 @@ name|_HASH
 end_define
 
 begin_comment
-comment|/*   * The following defines one entry in the hash table.  */
+comment|/*  * The following defines one entry in the hash table.  */
 end_comment
 
 begin_typedef
@@ -84,7 +84,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * The following structure is used by the searching routines  * to record where we are in the search.  */
+comment|/*  * The following structure is used by the searching routines  * to record where we are in the search.  */
 end_comment
 
 begin_typedef
@@ -116,7 +116,7 @@ comment|/*  * Macros.  */
 end_comment
 
 begin_comment
-comment|/*  * ClientData Hash_GetValue(h)   *     Hash_Entry *h;   */
+comment|/*  * ClientData Hash_GetValue(h)  *     Hash_Entry *h;  */
 end_comment
 
 begin_define
@@ -130,7 +130,7 @@ value|((h)->clientData)
 end_define
 
 begin_comment
-comment|/*   * Hash_SetValue(h, val);   *     Hash_Entry *h;   *     char *val;   */
+comment|/*  * Hash_SetValue(h, val);  *     Hash_Entry *h;  *     char *val;  */
 end_comment
 
 begin_define
@@ -146,7 +146,7 @@ value|((h)->clientData = (ClientData) (val))
 end_define
 
 begin_comment
-comment|/*   * Hash_Size(n) returns the number of words in an object of n bytes   */
+comment|/*  * Hash_Size(n) returns the number of words in an object of n bytes  */
 end_comment
 
 begin_define

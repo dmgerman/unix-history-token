@@ -627,7 +627,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*       *	namelist entries for cycle headers.      *	the number of discovered cycles.      */
+comment|/*      *	namelist entries for cycle headers.      *	the number of discovered cycles.      */
 end_comment
 
 begin_decl_stmt

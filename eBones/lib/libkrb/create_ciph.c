@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ciph.c,v 4.8 89/05/18 21:24:26 jis Exp $  *	$Id: create_ciph.c,v 1.2 1994/07/19 19:24:58 g89r4222 Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ciph.c,v 4.8 89/05/18 21:24:26 jis Exp $  *	$Id: create_ciph.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: create_ciph.c,v 1.2 1994/07/19 19:24:58 g89r4222 Exp $"
+literal|"$Id: create_ciph.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ file|<strings.h>
 end_include
 
 begin_comment
-comment|/*  * This routine is used by the authentication server to create  * a packet for its client, containing a ticket for the requested  * service (given in "tkt"), and some information about the ticket,  *  * Returns KSUCCESS no matter what.  *  * The length of the cipher is stored in c->length; the format of  * c->dat is as follows:  *  * 			variable  * type			or constant	   data  * ----			-----------	   ----  *   *   * 8 bytes		session		session key for client, service  *   * string		service		service name  *   * string		instance	service instance  *   * string		realm		KDC realm  *   * unsigned char	life		ticket lifetime  *   * unsigned char	kvno		service key version number  *   * unsigned char	tkt->length	length of following ticket  *   * data			tkt->dat	ticket for service  *   * 4 bytes		kdc_time	KDC's timestamp  *  *<=7 bytes		null		   null pad to 8 byte multiple  *  */
+comment|/*  * This routine is used by the authentication server to create  * a packet for its client, containing a ticket for the requested  * service (given in "tkt"), and some information about the ticket,  *  * Returns KSUCCESS no matter what.  *  * The length of the cipher is stored in c->length; the format of  * c->dat is as follows:  *  * 			variable  * type			or constant	   data  * ----			-----------	   ----  *  *  * 8 bytes		session		session key for client, service  *  * string		service		service name  *  * string		instance	service instance  *  * string		realm		KDC realm  *  * unsigned char	life		ticket lifetime  *  * unsigned char	kvno		service key version number  *  * unsigned char	tkt->length	length of following ticket  *  * data			tkt->dat	ticket for service  *  * 4 bytes		kdc_time	KDC's timestamp  *  *<=7 bytes		null		   null pad to 8 byte multiple  *  */
 end_comment
 
 begin_macro

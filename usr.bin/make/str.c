@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: str.c,v 1.8 1994/06/16 18:50:18 jtc Exp $"
+literal|"$Id: str.c,v 1.3 1995/01/23 21:02:00 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,7 +791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Str_FindSubstring -- See if a string contains a particular substring.  *   * Results: If string contains substring, the return value is the location of  * the first matching instance of substring in string.  If string doesn't  * contain substring, the return value is NULL.  Matching is done on an exact  * character-for-character basis with no wildcards or special characters.  *   * Side effects: None.  */
+comment|/*  * Str_FindSubstring -- See if a string contains a particular substring.  *  * Results: If string contains substring, the return value is the location of  * the first matching instance of substring in string.  If string doesn't  * contain substring, the return value is NULL.  Matching is done on an exact  * character-for-character basis with no wildcards or special characters.  *  * Side effects: None.  */
 end_comment
 
 begin_function
@@ -901,7 +901,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Str_Match --  *   * See if a particular string matches a particular pattern.  *   * Results: Non-zero is returned if string matches pattern, 0 otherwise. The  * matching operation permits the following special characters in the  * pattern: *?\[] (see the man page for details on what these mean).  *   * Side effects: None.  */
+comment|/*  * Str_Match --  *  * See if a particular string matches a particular pattern.  *  * Results: Non-zero is returned if string matches pattern, 0 otherwise. The  * matching operation permits the following special characters in the  * pattern: *?\[] (see the man page for details on what these mean).  *  * Side effects: None.  */
 end_comment
 
 begin_function
@@ -1230,7 +1230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Str_SYSVMatch --  *	Check word against pattern for a match (% is wild),   *	  * Results:  *	Returns the beginning position of a match or null. The number  *	of characters matched is returned in len.  *  * Side Effects:  *	None  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Str_SYSVMatch --  *	Check word against pattern for a match (% is wild),  *  * Results:  *	Returns the beginning position of a match or null. The number  *	of characters matched is returned in len.  *  * Side Effects:  *	None  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1415,7 +1415,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Str_SYSVSubst --  *	Substitute '%' on the pattern with len characters from src.  *	If the pattern does not contain a '%' prepend len characters  *	from src.  *	  * Results:  *	None  *  * Side Effects:  *	Places result on buf  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Str_SYSVSubst --  *	Substitute '%' on the pattern with len characters from src.  *	If the pattern does not contain a '%' prepend len characters  *	from src.  *  * Results:  *	None  *  * Side Effects:  *	Places result on buf  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

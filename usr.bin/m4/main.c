@@ -1865,7 +1865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * initkwds - initialise m4 keywords as fast as possible.   * This very similar to install, but without certain overheads,  * such as calling lookup. Malloc is not used for storing the   * keyword strings, since we simply use the static  pointers  * within keywrds block.  */
+comment|/*  * initkwds - initialise m4 keywords as fast as possible.  * This very similar to install, but without certain overheads,  * such as calling lookup. Malloc is not used for storing the  * keyword strings, since we simply use the static  pointers  * within keywrds block.  */
 end_comment
 
 begin_function

@@ -78,7 +78,7 @@ file|<sys/stat.h>
 end_include
 
 begin_comment
-comment|/*  *	usage:		fsplit [-e efile] ... [file]  *  *	split single file containing source for several fortran programs  *		and/or subprograms into files each containing one  *		subprogram unit.  *	each separate file will be named using the corresponding subroutine,  *		function, block data or program name if one is found; otherwise  *		the name will be of the form mainNNN.f or blkdtaNNN.f .  *		If a file of that name exists, it is saved in a name of the  *		form zzz000.f .  *	If -e option is used, then only those subprograms named in the -e  *		option are split off; e.g.:  *			fsplit -esub1 -e sub2 prog.f  *		isolates sub1 and sub2 in sub1.f and sub2.f.  The space   *		after -e is optional.  *  *	Modified Feb., 1983 by Jerry Berkman, Computing Services, U.C. Berkeley.  *		- added comments  *		- more function types: double complex, character*(*), etc.  *		- fixed minor bugs  *		- instead of all unnamed going into zNNN.f, put mains in  *		  mainNNN.f, block datas in blkdtaNNN.f, dups in zzzNNN.f .  */
+comment|/*  *	usage:		fsplit [-e efile] ... [file]  *  *	split single file containing source for several fortran programs  *		and/or subprograms into files each containing one  *		subprogram unit.  *	each separate file will be named using the corresponding subroutine,  *		function, block data or program name if one is found; otherwise  *		the name will be of the form mainNNN.f or blkdtaNNN.f .  *		If a file of that name exists, it is saved in a name of the  *		form zzz000.f .  *	If -e option is used, then only those subprograms named in the -e  *		option are split off; e.g.:  *			fsplit -esub1 -e sub2 prog.f  *		isolates sub1 and sub2 in sub1.f and sub2.f.  The space  *		after -e is optional.  *  *	Modified Feb., 1983 by Jerry Berkman, Computing Services, U.C. Berkeley.  *		- added comments  *		- more function types: double complex, character*(*), etc.  *		- fixed minor bugs  *		- instead of all unnamed going into zNNN.f, put mains in  *		  mainNNN.f, block datas in blkdtaNNN.f, dups in zzzNNN.f .  */
 end_comment
 
 begin_define
@@ -1168,7 +1168,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*		check for keywords for subprograms	 		return 0 if comment card, 1 if found 		name and put in arg string. invent name for unnamed 		block datas and main programs.		*/
+comment|/*		check for keywords for subprograms 		return 0 if comment card, 1 if found 		name and put in arg string. invent name for unnamed 		block datas and main programs.		*/
 end_comment
 
 begin_macro

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Machine-type definitions: DECstation 3100 (MIPS R2000)  *  *	from: conf-ultmips2.h,v 4.0 89/01/23 09:58:32 jtkohl Exp $  *	$Id: conf-ultmips2.h,v 1.2 1994/07/19 19:23:03 g89r4222 Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Machine-type definitions: DECstation 3100 (MIPS R2000)  *  *	from: conf-ultmips2.h,v 4.0 89/01/23 09:58:32 jtkohl Exp $  *	$Id: conf-ultmips2.h,v 1.1.1.1 1994/09/30 14:49:54 csgr Exp $  */
 end_comment
 
 begin_define

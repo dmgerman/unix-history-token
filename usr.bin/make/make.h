@@ -165,7 +165,7 @@ file|"buf.h"
 end_include
 
 begin_comment
-comment|/*-  * The structure for an individual graph node. Each node has several  * pieces of data associated with it.  *	1) the name of the target it describes  *	2) the location of the target file in the file system.  *	3) the type of operator used to define its sources (qv. parse.c)  *	4) whether it is involved in this invocation of make  *	5) whether the target has been remade  *	6) whether any of its children has been remade  *	7) the number of its children that are, as yet, unmade  *	8) its modification time  *	9) the modification time of its youngest child (qv. make.c)  *	10) a list of nodes for which this is a source  *	11) a list of nodes on which this depends  *	12) a list of nodes that depend on this, as gleaned from the  *	    transformation rules.  *	13) a list of nodes of the same name created by the :: operator  *	14) a list of nodes that must be made (if they're made) before  *	    this node can be, but that do no enter into the datedness of  *	    this node.  *	15) a list of nodes that must be made (if they're made) after  *	    this node is, but that do not depend on this node, in the  *	    normal sense.  *	16) a Lst of ``local'' variables that are specific to this target  *	   and this target only (qv. var.c [$@ $< $?, etc.])  *	17) a Lst of strings that are commands to be given to a shell  *	   to create this target.   */
+comment|/*-  * The structure for an individual graph node. Each node has several  * pieces of data associated with it.  *	1) the name of the target it describes  *	2) the location of the target file in the file system.  *	3) the type of operator used to define its sources (qv. parse.c)  *	4) whether it is involved in this invocation of make  *	5) whether the target has been remade  *	6) whether any of its children has been remade  *	7) the number of its children that are, as yet, unmade  *	8) its modification time  *	9) the modification time of its youngest child (qv. make.c)  *	10) a list of nodes for which this is a source  *	11) a list of nodes on which this depends  *	12) a list of nodes that depend on this, as gleaned from the  *	    transformation rules.  *	13) a list of nodes of the same name created by the :: operator  *	14) a list of nodes that must be made (if they're made) before  *	    this node can be, but that do no enter into the datedness of  *	    this node.  *	15) a list of nodes that must be made (if they're made) after  *	    this node is, but that do not depend on this node, in the  *	    normal sense.  *	16) a Lst of ``local'' variables that are specific to this target  *	   and this target only (qv. var.c [$@ $< $?, etc.])  *	17) a Lst of strings that are commands to be given to a shell  *	   to create this target.  */
 end_comment
 
 begin_typedef
@@ -272,7 +272,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Manifest constants   */
+comment|/*  * Manifest constants  */
 end_comment
 
 begin_define
@@ -283,7 +283,7 @@ value|((GNode *) NIL)
 end_define
 
 begin_comment
-comment|/*  * The OP_ constants are used when parsing a dependency line as a way of  * communicating to other parts of the program the way in which a target  * should be made. These constants are bitwise-OR'ed together and  * placed in the 'type' field of each node. Any node that has  * a 'type' field which satisfies the OP_NOP function was never never on  * the lefthand side of an operator, though it may have been on the  * righthand side...   */
+comment|/*  * The OP_ constants are used when parsing a dependency line as a way of  * communicating to other parts of the program the way in which a target  * should be made. These constants are bitwise-OR'ed together and  * placed in the 'type' field of each node. Any node that has  * a 'type' field which satisfies the OP_NOP function was never never on  * the lefthand side of an operator, though it may have been on the  * righthand side...  */
 end_comment
 
 begin_define
@@ -532,7 +532,7 @@ value|(((t)& OP_OPMASK) == 0x00000000)
 end_define
 
 begin_comment
-comment|/*  * The TARG_ constants are used when calling the Targ_FindNode and  * Targ_FindList functions in targ.c. They simply tell the functions what to  * do if the desired node(s) is (are) not found. If the TARG_CREATE constant  * is given, a new, empty node will be created for the target, placed in the  * table of all targets and its address returned. If TARG_NOCREATE is given,  * a NIL pointer will be returned.   */
+comment|/*  * The TARG_ constants are used when calling the Targ_FindNode and  * Targ_FindList functions in targ.c. They simply tell the functions what to  * do if the desired node(s) is (are) not found. If the TARG_CREATE constant  * is given, a new, empty node will be created for the target, placed in the  * table of all targets and its address returned. If TARG_NOCREATE is given,  * a NIL pointer will be returned.  */
 end_comment
 
 begin_define
@@ -558,7 +558,7 @@ comment|/* don't create it */
 end_comment
 
 begin_comment
-comment|/*  * There are several places where expandable buffers are used (parse.c and  * var.c). This constant is merely the starting point for those buffers. If  * lines tend to be much shorter than this, it would be best to reduce BSIZE.  * If longer, it should be increased. Reducing it will cause more copying to  * be done for longer lines, but will save space for shorter ones. In any  * case, it ought to be a power of two simply because most storage allocation  * schemes allocate in powers of two.   */
+comment|/*  * There are several places where expandable buffers are used (parse.c and  * var.c). This constant is merely the starting point for those buffers. If  * lines tend to be much shorter than this, it would be best to reduce BSIZE.  * If longer, it should be increased. Reducing it will cause more copying to  * be done for longer lines, but will save space for shorter ones. In any  * case, it ought to be a power of two simply because most storage allocation  * schemes allocate in powers of two.  */
 end_comment
 
 begin_define
@@ -573,7 +573,7 @@ comment|/* starting size for expandable buffers */
 end_comment
 
 begin_comment
-comment|/*  * These constants are all used by the Str_Concat function to decide how the  * final string should look. If STR_ADDSPACE is given, a space will be  * placed between the two strings. If STR_ADDSLASH is given, a '/' will  * be used instead of a space. If neither is given, no intervening characters  * will be placed between the two strings in the final output. If the  * STR_DOFREE bit is set, the two input strings will be freed before  * Str_Concat returns.   */
+comment|/*  * These constants are all used by the Str_Concat function to decide how the  * final string should look. If STR_ADDSPACE is given, a space will be  * placed between the two strings. If STR_ADDSLASH is given, a '/' will  * be used instead of a space. If neither is given, no intervening characters  * will be placed between the two strings in the final output. If the  * STR_DOFREE bit is set, the two input strings will be freed before  * Str_Concat returns.  */
 end_comment
 
 begin_define
@@ -812,7 +812,7 @@ comment|/* directory part of PREFIX */
 end_comment
 
 begin_comment
-comment|/*  * Global Variables   */
+comment|/*  * Global Variables  */
 end_comment
 
 begin_decl_stmt

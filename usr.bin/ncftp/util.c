@@ -3389,7 +3389,7 @@ name|path
 operator|)
 return|;
 block|}
-comment|/* Otherwise we can look at the first word of the path, and 		 * try to expand it, like $HOME/ or ~/, or it is a relative path,  		 * which is okay since we won't really do anything with it. 		 */
+comment|/* Otherwise we can look at the first word of the path, and 		 * try to expand it, like $HOME/ or ~/, or it is a relative path, 		 * which is okay since we won't really do anything with it. 		 */
 operator|*
 name|cp
 operator|=

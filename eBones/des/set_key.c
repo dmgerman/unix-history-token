@@ -12,7 +12,7 @@ comment|/* set_key.c v 1.4 eay 24/9/91  * 1.4 Speed up by 400% :-)  * 1.3 added 
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: set_key.c,v 1.2 1994/07/19 19:22:07 g89r4222 Exp $  */
+comment|/*-  *	$Id: set_key.c,v 1.1.1.1 1994/09/30 14:49:51 csgr Exp $  */
 end_comment
 
 begin_include
@@ -504,7 +504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* NOW DEFINED IN des_local.h  * See ecb_encrypt.c for a pseudo description of these macros.   * #define PERM_OP(a,b,t,n,m) ((t)=((((a)>>(n))^(b))&(m)),\  * 	(b)^=(t),\  * 	(a)=((a)^((t)<<(n))))  */
+comment|/* NOW DEFINED IN des_local.h  * See ecb_encrypt.c for a pseudo description of these macros.  * #define PERM_OP(a,b,t,n,m) ((t)=((((a)>>(n))^(b))&(m)),\  * 	(b)^=(t),\  * 	(a)=((a)^((t)<<(n))))  */
 end_comment
 
 begin_define

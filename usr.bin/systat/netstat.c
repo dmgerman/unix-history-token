@@ -2079,7 +2079,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct an Internet address representation.  * If the nflag has been supplied, give   * numeric value, otherwise try for symbolic name.  */
+comment|/*  * Construct an Internet address representation.  * If the nflag has been supplied, give  * numeric value, otherwise try for symbolic name.  */
 end_comment
 
 begin_function

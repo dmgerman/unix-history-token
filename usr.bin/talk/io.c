@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * This file contains the I/O handling and the exchange of   * edit characters. This connection itself is established in  * ctl.c  */
+comment|/*  * This file contains the I/O handling and the exchange of  * edit characters. This connection itself is established in  * ctl.c  */
 end_comment
 
 begin_include
@@ -135,7 +135,7 @@ operator|<<
 name|sockt
 operator|)
 expr_stmt|;
-comment|/* 	 * Wait on both the other process (sockt_mask) and  	 * standard input ( STDIN_MASK ) 	 */
+comment|/* 	 * Wait on both the other process (sockt_mask) and 	 * standard input ( STDIN_MASK ) 	 */
 name|read_template
 operator|=
 name|sockt_mask

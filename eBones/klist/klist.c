@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   * For copying and distribution information, please see the file  *<Copyright.MIT>.   *  * Lists your current Kerberos tickets.  * Written by Bill Sommerfeld, MIT Project Athena.  *  *	from: klist.c,v 4.15 89/08/30 11:19:16 jtkohl Exp $  *	$Id: klist.c,v 1.2 1994/07/19 19:24:38 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Lists your current Kerberos tickets.  * Written by Bill Sommerfeld, MIT Project Athena.  *  *	from: klist.c,v 4.15 89/08/30 11:19:16 jtkohl Exp $  *	$Id: klist.c,v 1.1.1.1 1994/09/30 14:49:58 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: klist.c,v 1.2 1994/07/19 19:24:38 g89r4222 Exp $"
+literal|"$Id: klist.c,v 1.1.1.1 1994/09/30 14:49:58 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,7 +426,7 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-comment|/*       * Since krb_get_tf_realm will return a ticket_file error,       * we will call tf_init and tf_close first to filter out      * things like no ticket file.  Otherwise, the error that       * the user would see would be       * klist: can't find realm of ticket file: No ticket file (tf_util)      * instead of      * klist: No ticket file (tf_util)      */
+comment|/*      * Since krb_get_tf_realm will return a ticket_file error,      * we will call tf_init and tf_close first to filter out      * things like no ticket file.  Otherwise, the error that      * the user would see would be      * klist: can't find realm of ticket file: No ticket file (tf_util)      * instead of      * klist: No ticket file (tf_util)      */
 comment|/* Open ticket file */
 if|if
 condition|(
@@ -472,7 +472,7 @@ operator|)
 name|tf_close
 argument_list|()
 expr_stmt|;
-comment|/*       * We must find the realm of the ticket file here before calling      * tf_init because since the realm of the ticket file is not      * really stored in the principal section of the file, the      * routine we use must itself call tf_init and tf_close.      */
+comment|/*      * We must find the realm of the ticket file here before calling      * tf_init because since the realm of the ticket file is not      * really stored in the principal section of the file, the      * routine we use must itself call tf_init and tf_close.      */
 if|if
 condition|(
 operator|(
@@ -599,7 +599,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * You may think that this is the obvious place to get the      * realm of the ticket file, but it can't be done here as the      * routine to do this must open the ticket file.  This is why       * it was done before tf_init.      */
+comment|/*      * You may think that this is the obvious place to get the      * realm of the ticket file, but it can't be done here as the      * routine to do this must open the ticket file.  This is why      * it was done before tf_init.      */
 if|if
 condition|(
 operator|!

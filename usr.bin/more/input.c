@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * High level routines dealing with getting lines of input   * from the file being viewed.  *  * When we speak of "lines" here, we mean PRINTABLE lines;  * lines processed with respect to the screen width.  * We use the term "raw line" to refer to lines simply  * delimited by newlines; not processed with respect to screen width.  */
+comment|/*  * High level routines dealing with getting lines of input  * from the file being viewed.  *  * When we speak of "lines" here, we mean PRINTABLE lines;  * lines processed with respect to the screen width.  * We use the term "raw line" to refer to lines simply  * delimited by newlines; not processed with respect to screen width.  */
 end_comment
 
 begin_include
@@ -433,7 +433,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 	 * Now scan forwards from the beginning of this line. 	 * We keep discarding "printable lines" (based on screen width) 	 * until we reach the curr_pos. 	 * 	 * {{ This algorithm is pretty inefficient if the lines 	 *    are much longer than the screen width,  	 *    but I don't know of any better way. }} 	 */
+comment|/* 	 * Now scan forwards from the beginning of this line. 	 * We keep discarding "printable lines" (based on screen width) 	 * until we reach the curr_pos. 	 * 	 * {{ This algorithm is pretty inefficient if the lines 	 *    are much longer than the screen width, 	 *    but I don't know of any better way. }} 	 */
 if|if
 condition|(
 name|ch_seek

@@ -154,7 +154,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * There was an invitation waiting for us,  	 * so connect with the other (hopefully waiting) party  	 */
+comment|/* 	 * There was an invitation waiting for us, 	 * so connect with the other (hopefully waiting) party 	 */
 name|current_state
 operator|=
 literal|"Waiting to connect with caller"
@@ -227,7 +227,7 @@ operator|==
 name|ECONNREFUSED
 condition|)
 block|{
-comment|/* 		 * The caller gave up, but his invitation somehow 		 * was not cleared. Clear it and initiate an  		 * invitation. (We know there are no newer invitations, 		 * the talkd works LIFO.) 		 */
+comment|/* 		 * The caller gave up, but his invitation somehow 		 * was not cleared. Clear it and initiate an 		 * invitation. (We know there are no newer invitations, 		 * the talkd works LIFO.) 		 */
 name|ctl_transact
 argument_list|(
 name|his_machine_addr

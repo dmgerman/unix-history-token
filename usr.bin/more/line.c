@@ -88,7 +88,7 @@ comment|/* Printable length, accounting for 				   backspaces, etc. */
 end_comment
 
 begin_comment
-comment|/*  * A ridiculously complex state machine takes care of backspaces.  The  * complexity arises from the attempt to deal with all cases, especially  * involving long lines with underlining, boldfacing or whatever.  There  * are still some cases which will break it.  *  * There are four states:  *	LN_NORMAL is the normal state (not in underline mode).  *	LN_UNDERLINE means we are in underline mode.  We expect to get  *		either a sequence like "_\bX" or "X\b_" to continue  *		underline mode, or anything else to end underline mode.  *	LN_BOLDFACE means we are in boldface mode.  We expect to get sequences  *		like "X\bX\b...X\bX" to continue boldface mode, or anything  *		else to end boldface mode.  *	LN_UL_X means we are one character after LN_UNDERLINE  *		(we have gotten the '_' in "_\bX" or the 'X' in "X\b_").  *	LN_UL_XB means we are one character after LN_UL_X   *		(we have gotten the backspace in "_\bX" or "X\b_";  *		we expect one more ordinary character,   *		which will put us back in state LN_UNDERLINE).  *	LN_BO_X means we are one character after LN_BOLDFACE  *		(we have gotten the 'X' in "X\bX").  *	LN_BO_XB means we are one character after LN_BO_X  *		(we have gotten the backspace in "X\bX";  *		we expect one more 'X' which will put us back  *		in LN_BOLDFACE).  */
+comment|/*  * A ridiculously complex state machine takes care of backspaces.  The  * complexity arises from the attempt to deal with all cases, especially  * involving long lines with underlining, boldfacing or whatever.  There  * are still some cases which will break it.  *  * There are four states:  *	LN_NORMAL is the normal state (not in underline mode).  *	LN_UNDERLINE means we are in underline mode.  We expect to get  *		either a sequence like "_\bX" or "X\b_" to continue  *		underline mode, or anything else to end underline mode.  *	LN_BOLDFACE means we are in boldface mode.  We expect to get sequences  *		like "X\bX\b...X\bX" to continue boldface mode, or anything  *		else to end boldface mode.  *	LN_UL_X means we are one character after LN_UNDERLINE  *		(we have gotten the '_' in "_\bX" or the 'X' in "X\b_").  *	LN_UL_XB means we are one character after LN_UL_X  *		(we have gotten the backspace in "_\bX" or "X\b_";  *		we expect one more ordinary character,  *		which will put us back in state LN_UNDERLINE).  *	LN_BO_X means we are one character after LN_BOLDFACE  *		(we have gotten the 'X' in "X\bX").  *	LN_BO_XB means we are one character after LN_BO_X  *		(we have gotten the backspace in "X\bX";  *		we expect one more 'X' which will put us back  *		in LN_BOLDFACE).  */
 end_comment
 
 begin_decl_stmt
@@ -409,7 +409,7 @@ argument_list|)
 operator|-
 literal|12
 condition|)
-comment|/* 		 * Almost out of room in the line buffer. 		 * Don't take any chances. 		 * {{ Linebuf is supposed to be big enough that this 		 *    will never happen, but may need to be made  		 *    bigger for wide screens or lots of backspaces. }} 		 */
+comment|/* 		 * Almost out of room in the line buffer. 		 * Don't take any chances. 		 * {{ Linebuf is supposed to be big enough that this 		 *    will never happen, but may need to be made 		 *    bigger for wide screens or lots of backspaces. }} 		 */
 return|return
 operator|(
 literal|1
@@ -504,7 +504,7 @@ name|be_width
 operator|>=
 name|sc_width
 condition|)
-comment|/* 				 * Not enough room left on the screen to  				 * enter and exit boldface mode. 				 */
+comment|/* 				 * Not enough room left on the screen to 				 * enter and exit boldface mode. 				 */
 return|return
 operator|(
 literal|1
@@ -531,7 +531,7 @@ operator|==
 literal|' '
 condition|)
 block|{
-comment|/* 				 * Special case for magic cookie terminals: 				 * if the previous char was a space, replace  				 * it with the "enter boldface" sequence. 				 */
+comment|/* 				 * Special case for magic cookie terminals: 				 * if the previous char was a space, replace 				 * it with the "enter boldface" sequence. 				 */
 name|curr
 index|[
 operator|-
@@ -596,7 +596,7 @@ name|ue_width
 operator|>=
 name|sc_width
 condition|)
-comment|/* 				 * Not enough room left on the screen to  				 * enter and exit underline mode. 				 */
+comment|/* 				 * Not enough room left on the screen to 				 * enter and exit underline mode. 				 */
 return|return
 operator|(
 literal|1
@@ -623,7 +623,7 @@ operator|==
 literal|' '
 condition|)
 block|{
-comment|/* 				 * Special case for magic cookie terminals: 				 * if the previous char was a space, replace  				 * it with the "enter underline" sequence. 				 */
+comment|/* 				 * Special case for magic cookie terminals: 				 * if the previous char was a space, replace 				 * it with the "enter underline" sequence. 				 */
 name|curr
 index|[
 operator|-
@@ -878,7 +878,7 @@ name|be_width
 operator|>=
 name|sc_width
 condition|)
-comment|/* 				 * We have just barely enough room to  				 * exit underline mode and handle a possible 				 * underline/boldface run on mixup. 				 */
+comment|/* 				 * We have just barely enough room to 				 * exit underline mode and handle a possible 				 * underline/boldface run on mixup. 				 */
 return|return
 operator|(
 literal|1
@@ -917,7 +917,7 @@ name|ue_width
 operator|>=
 name|sc_width
 condition|)
-comment|/* 				 * We have just barely enough room to  				 * exit underline mode and handle a possible 				 * underline/boldface run on mixup. 				 */
+comment|/* 				 * We have just barely enough room to 				 * exit underline mode and handle a possible 				 * underline/boldface run on mixup. 				 */
 return|return
 operator|(
 literal|1

@@ -806,7 +806,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* char * tail(filename) 	char *filename; { 	char *s; 	 	while (*filename) { 		s = strrchr(filename, '/'); 		if (s == NULL) 			break; 		if (s[1]) 			return (s + 1); 		if (s == filename) 			break;	XXX 		*s = '\0'; 	} 	return (filename); } */
+comment|/* char * tail(filename) 	char *filename; { 	char *s;  	while (*filename) { 		s = strrchr(filename, '/'); 		if (s == NULL) 			break; 		if (s[1]) 			return (s + 1); 		if (s == filename) 			break;	XXX 		*s = '\0'; 	} 	return (filename); } */
 end_comment
 
 begin_comment

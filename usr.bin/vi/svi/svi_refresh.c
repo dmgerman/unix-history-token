@@ -2662,7 +2662,7 @@ expr_stmt|;
 name|clrtoeol
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We put down the file name, the ruler, the mode and the dirty flag. 	 * If there's not enough room, there's not enough room, we don't play 	 * any special games.  We try to put the ruler in the middle and the 	 * mode and dirty flag at the end.   	 * 	 * !!! 	 * Leave the last character blank, in case it's a really dumb terminal 	 * with hardware scroll.  Second, don't paint the last character in the 	 * screen, SunOS 4.1.1 and Ultrix 4.2 curses won't let you. 	 */
+comment|/* 	 * We put down the file name, the ruler, the mode and the dirty flag. 	 * If there's not enough room, there's not enough room, we don't play 	 * any special games.  We try to put the ruler in the middle and the 	 * mode and dirty flag at the end. 	 * 	 * !!! 	 * Leave the last character blank, in case it's a really dumb terminal 	 * with hardware scroll.  Second, don't paint the last character in the 	 * screen, SunOS 4.1.1 and Ultrix 4.2 curses won't let you. 	 */
 name|cols
 operator|=
 name|sp

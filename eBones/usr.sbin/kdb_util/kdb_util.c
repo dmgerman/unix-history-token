@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Kerberos database manipulation utility. This program allows you to  * dump a kerberos database to an ascii readable file and load this  * file into the database. Read locking of the database is done during a  * dump operation. NO LOCKING is done during a load operation. Loads  * should happen with other processes shutdown.   *  * Written July 9, 1987 by Jeffrey I. Schiller  *  *	from: kdb_util.c,v 4.4 90/01/09 15:57:20 raeburn Exp $  *	$Id: kdb_util.c,v 1.3 1994/09/24 14:04:21 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Kerberos database manipulation utility. This program allows you to  * dump a kerberos database to an ascii readable file and load this  * file into the database. Read locking of the database is done during a  * dump operation. NO LOCKING is done during a load operation. Loads  * should happen with other processes shutdown.  *  * Written July 9, 1987 by Jeffrey I. Schiller  *  *	from: kdb_util.c,v 4.4 90/01/09 15:57:20 raeburn Exp $  *	$Id: kdb_util.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kdb_util.c,v 1.3 1994/09/24 14:04:21 g89r4222 Exp $"
+literal|"$Id: kdb_util.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -714,7 +714,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* cv_key is a procedure which takes a principle and changes its key,     either for a new method of encrypting the keys, or a new master key.    if cv_key is null no transformation of key is done (other than net byte    order). */
+comment|/* cv_key is a procedure which takes a principle and changes its key,    either for a new method of encrypting the keys, or a new master key.    if cv_key is null no transformation of key is done (other than net byte    order). */
 end_comment
 
 begin_struct
@@ -2450,7 +2450,7 @@ operator|.
 name|kdc_key_ver
 argument_list|)
 expr_stmt|;
-comment|/*    * now use the master key to decrypt (old style) the key in the db, had better    * be the same!     */
+comment|/*    * now use the master key to decrypt (old style) the key in the db, had better    * be the same!    */
 name|bcopy
 argument_list|(
 operator|(
@@ -2715,7 +2715,7 @@ comment|/* GMT */
 block|}
 else|else
 block|{
-comment|/* old format: local time,  					   year is 2 digits, assuming 19xx */
+comment|/* old format: local time, 					   year is 2 digits, assuming 19xx */
 name|wbuf
 index|[
 literal|0

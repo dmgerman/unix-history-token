@@ -38,7 +38,7 @@ value|1200
 end_define
 
 begin_comment
-comment|/* 	Default frame size for file transfer buffering of writes  	on local side */
+comment|/* 	Default frame size for file transfer buffering of writes 	on local side */
 end_comment
 
 begin_ifndef
@@ -123,7 +123,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* 	System has a millisecond based sleep function  */
+comment|/* 	System has a millisecond based sleep function */
 end_comment
 
 begin_define

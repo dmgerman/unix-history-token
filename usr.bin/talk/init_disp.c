@@ -81,7 +81,7 @@ file|"talk.h"
 end_include
 
 begin_comment
-comment|/*   * Make sure the callee can write to the screen  */
+comment|/*  * Make sure the callee can write to the screen  */
 end_comment
 
 begin_function
@@ -160,7 +160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Set up curses, catch the appropriate signals,  * and build the various windows.  */
+comment|/*  * Set up curses, catch the appropriate signals,  * and build the various windows.  */
 end_comment
 
 begin_macro

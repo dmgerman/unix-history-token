@@ -476,7 +476,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * See if the given datum is on the list. Returns the LstNode containing  * the datum  */
+comment|/*  * See if the given datum is on the list. Returns the LstNode containing  * the datum  */
 end_comment
 
 begin_decl_stmt

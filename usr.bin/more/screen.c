@@ -432,7 +432,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Change terminal to "raw mode", or restore to "normal" mode.  * "Raw mode" means   *	1. An outstanding read will complete on receipt of a single keystroke.  *	2. Input is not echoed.    *	3. On output, \n is mapped to \r\n.  *	4. \t is NOT expanded into spaces.  *	5. Signal-causing characters such as ctrl-C (interrupt),  *	   etc. are NOT disabled.  * It doesn't matter whether an input \n is mapped to \r, or vice versa.  */
+comment|/*  * Change terminal to "raw mode", or restore to "normal" mode.  * "Raw mode" means  *	1. An outstanding read will complete on receipt of a single keystroke.  *	2. Input is not echoed.  *	3. On output, \n is mapped to \r\n.  *	4. \t is NOT expanded into spaces.  *	5. Signal-causing characters such as ctrl-C (interrupt),  *	   etc. are NOT disabled.  * It doesn't matter whether an input \n is mapped to \r, or vice versa.  */
 end_comment
 
 begin_macro
@@ -1283,7 +1283,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 		 * This is not an error here, because we don't  		 * always need sc_move. 		 * We need it only if we don't have home or lower-left. 		 */
+comment|/* 		 * This is not an error here, because we don't 		 * always need sc_move. 		 * We need it only if we don't have home or lower-left. 		 */
 name|sc_move
 operator|=
 literal|""
@@ -1462,7 +1462,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 			 * This last resort for sc_home is supposed to 			 * be an up-arrow suggesting moving to the  			 * top of the "virtual screen". (The one in 			 * your imagination as you try to use this on 			 * a hard copy terminal.) 			 */
+comment|/* 			 * This last resort for sc_home is supposed to 			 * be an up-arrow suggesting moving to the 			 * top of the "virtual screen". (The one in 			 * your imagination as you try to use this on 			 * a hard copy terminal.) 			 */
 name|sc_home
 operator|=
 literal|"|\b^"
@@ -1470,7 +1470,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * No "home" string, 			 * but we can use "move(0,0)". 			 */
+comment|/* 			 * No "home" string, 			 * but we can use "move(0,0)". 			 */
 operator|(
 name|void
 operator|)
@@ -1542,7 +1542,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * No "lower-left" string,  			 * but we can use "move(0,last-line)". 			 */
+comment|/* 			 * No "lower-left" string, 			 * but we can use "move(0,last-line)". 			 */
 operator|(
 name|void
 operator|)
@@ -1676,7 +1676,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Below are the functions which perform all the   * terminal-specific screen manipulation.  */
+comment|/*  * Below are the functions which perform all the  * terminal-specific screen manipulation.  */
 end_comment
 
 begin_function_decl
@@ -1997,7 +1997,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Begin "underline" (hopefully real underlining,   * otherwise whatever the terminal provides).  */
+comment|/*  * Begin "underline" (hopefully real underlining,  * otherwise whatever the terminal provides).  */
 end_comment
 
 begin_macro
@@ -2107,7 +2107,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Erase the character to the left of the cursor   * and move the cursor left.  */
+comment|/*  * Erase the character to the left of the cursor  * and move the cursor left.  */
 end_comment
 
 begin_macro
@@ -2117,7 +2117,7 @@ end_macro
 
 begin_block
 block|{
-comment|/*  	 * Try to erase the previous character by overstriking with a space. 	 */
+comment|/* 	 * Try to erase the previous character by overstriking with a space. 	 */
 name|tputs
 argument_list|(
 name|sc_backspace

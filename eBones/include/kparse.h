@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for kparse routines.  *  *	from: kparse.h,v 4.5 89/01/11 12:05:53 steiner Exp $  *	$Id: kparse.h,v 1.2 1994/07/19 19:23:14 g89r4222 Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Include file for kparse routines.  *  *	from: kparse.h,v 4.5 89/01/11 12:05:53 steiner Exp $  *	$Id: kparse.h,v 1.1.1.1 1994/09/30 14:49:54 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|KPARSE_DEFS
 end_define
 
 begin_comment
-comment|/*  * values returned by fGetParameterSet()   */
+comment|/*  * values returned by fGetParameterSet()  */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ comment|/* nothing more in the file */
 end_comment
 
 begin_comment
-comment|/*  * values returned by fGetKeywordValue()   */
+comment|/*  * values returned by fGetKeywordValue()  */
 end_comment
 
 begin_define
@@ -112,7 +112,7 @@ comment|/* nothing more on this line */
 end_comment
 
 begin_comment
-comment|/*  * values returned by fGetToken()   */
+comment|/*  * values returned by fGetToken()  */
 end_comment
 
 begin_define
@@ -193,7 +193,7 @@ comment|/* one or more whitespace chars */
 end_comment
 
 begin_comment
-comment|/*  * extended character classification macros   */
+comment|/*  * extended character classification macros  */
 end_comment
 
 begin_define
@@ -237,7 +237,7 @@ value|( (C=='\n')  || (C=='\r')  || (C=='\f') )
 end_define
 
 begin_comment
-comment|/*  * tokens consist of any printable charcacter except comma, equal, or  * whitespace   */
+comment|/*  * tokens consist of any printable charcacter except comma, equal, or  * whitespace  */
 end_comment
 
 begin_define
@@ -251,7 +251,7 @@ value|((C>040)&& (C<0177)&& (C != ',')&& (C != '='))
 end_define
 
 begin_comment
-comment|/*  * the parameter table defines the keywords that will be recognized by  * fGetParameterSet, and their default values if not specified.   */
+comment|/*  * the parameter table defines the keywords that will be recognized by  * fGetParameterSet, and their default values if not specified.  */
 end_comment
 
 begin_typedef

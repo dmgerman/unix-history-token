@@ -634,7 +634,7 @@ argument_list|(
 literal|"Calculating line numbers"
 argument_list|)
 block|;
-comment|/* 	 * Set the lnloop flag here, so if the user interrupts while 	 * we are calculating line numbers, the signal handler will  	 * turn off line numbers (linenums=0). 	 */
+comment|/* 	 * Set the lnloop flag here, so if the user interrupts while 	 * we are calculating line numbers, the signal handler will 	 * turn off line numbers (linenums=0). 	 */
 name|lnloop
 operator|=
 literal|1
@@ -761,7 +761,7 @@ operator|->
 name|line
 operator|)
 return|;
-comment|/* 	 * This is the (possibly) time-consuming part. 	 * We start at the line we just found and start 	 * reading the file forward or backward till we 	 * get to the place we want. 	 * 	 * First decide whether we should go forward from the  	 * previous one or backwards from the next one. 	 * The decision is based on which way involves  	 * traversing fewer bytes in the file. 	 */
+comment|/* 	 * This is the (possibly) time-consuming part. 	 * We start at the line we just found and start 	 * reading the file forward or backward till we 	 * get to the place we want. 	 * 	 * First decide whether we should go forward from the 	 * previous one or backwards from the next one. 	 * The decision is based on which way involves 	 * traversing fewer bytes in the file. 	 */
 name|flush
 argument_list|()
 expr_stmt|;

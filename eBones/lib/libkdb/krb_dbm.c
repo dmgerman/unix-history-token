@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.   * For copying and distribution information, please see the file  *<Copyright.MIT>.   *  *	from: krb_dbm.c,v 4.9 89/04/18 16:15:13 wesommer Exp $  *	$Id: krb_dbm.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: krb_dbm.c,v 4.9 89/04/18 16:15:13 wesommer Exp $  *	$Id: krb_dbm.c,v 1.2 1995/01/25 19:45:25 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: krb_dbm.c,v 1.1.1.1 1994/09/30 14:49:55 csgr Exp $"
+literal|"$Id: krb_dbm.c,v 1.2 1995/01/25 19:45:25 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -319,7 +319,7 @@ comment|/*  * This module contains all of the code which directly interfaces to 
 end_comment
 
 begin_comment
-comment|/*  * Locking:  *   * There are two distinct locking protocols used.  One is designed to  * lock against processes (the admin_server, for one) which make  * incremental changes to the database; the other is designed to lock  * against utilities (kdb_util, kpropd) which replace the entire  * database in one fell swoop.  *  * The first locking protocol is implemented using flock() in the   * krb_dbl_lock() and krb_dbl_unlock routines.  *  * The second locking protocol is necessary because DBM "files" are  * actually implemented as two separate files, and it is impossible to  * atomically rename two files simultaneously.  It assumes that the  * database is replaced only very infrequently in comparison to the time  * needed to do a database read operation.  *  * A third file is used as a "version" semaphore; the modification  * time of this file is the "version number" of the database.  * At the start of a read operation, the reader checks the version  * number; at the end of the read operation, it checks again.  If the  * version number changed, or if the semaphore was nonexistant at  * either time, the reader sleeps for a second to let things  * stabilize, and then tries again; if it does not succeed after  * KERB_DB_MAX_RETRY attempts, it gives up.  *   * On update, the semaphore file is deleted (if it exists) before any  * update takes place; at the end of the update, it is replaced, with  * a version number strictly greater than the version number which  * existed at the start of the update.  *   * If the system crashes in the middle of an update, the semaphore  * file is not automatically created on reboot; this is a feature, not  * a bug, since the database may be inconsistant.  Note that the  * absence of a semaphore file does not prevent another _update_ from  * taking place later.  Database replacements take place automatically  * only on slave servers; a crash in the middle of an update will be  * fixed by the next slave propagation.  A crash in the middle of an  * update on the master would be somewhat more serious, but this would  * likely be noticed by an administrator, who could fix the problem and  * retry the operation.  */
+comment|/*  * Locking:  *  * There are two distinct locking protocols used.  One is designed to  * lock against processes (the admin_server, for one) which make  * incremental changes to the database; the other is designed to lock  * against utilities (kdb_util, kpropd) which replace the entire  * database in one fell swoop.  *  * The first locking protocol is implemented using flock() in the  * krb_dbl_lock() and krb_dbl_unlock routines.  *  * The second locking protocol is necessary because DBM "files" are  * actually implemented as two separate files, and it is impossible to  * atomically rename two files simultaneously.  It assumes that the  * database is replaced only very infrequently in comparison to the time  * needed to do a database read operation.  *  * A third file is used as a "version" semaphore; the modification  * time of this file is the "version number" of the database.  * At the start of a read operation, the reader checks the version  * number; at the end of the read operation, it checks again.  If the  * version number changed, or if the semaphore was nonexistant at  * either time, the reader sleeps for a second to let things  * stabilize, and then tries again; if it does not succeed after  * KERB_DB_MAX_RETRY attempts, it gives up.  *  * On update, the semaphore file is deleted (if it exists) before any  * update takes place; at the end of the update, it is replaced, with  * a version number strictly greater than the version number which  * existed at the start of the update.  *  * If the system crashes in the middle of an update, the semaphore  * file is not automatically created on reboot; this is a feature, not  * a bug, since the database may be inconsistant.  Note that the  * absence of a semaphore file does not prevent another _update_ from  * taking place later.  Database replacements take place automatically  * only on slave servers; a crash in the middle of an update will be  * fixed by the next slave propagation.  A crash in the middle of an  * update on the master would be somewhat more serious, but this would  * likely be noticed by an administrator, who could fix the problem and  * retry the operation.  */
 end_comment
 
 begin_comment
@@ -533,7 +533,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * gracefully shut down database--must be called by ANY program that does  * a kerb_db_init   */
+comment|/*  * gracefully shut down database--must be called by ANY program that does  * a kerb_db_init  */
 end_comment
 
 begin_macro
@@ -1452,7 +1452,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/*  * look up a principal in the data base returns number of principals  * found , and whether there were more than requested.   */
+comment|/*  * look up a principal in the data base returns number of principals  * found , and whether there were more than requested.  */
 name|kerb_db_get_principal
 argument_list|(
 argument|name
@@ -2605,7 +2605,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  * look up a dba in the data base returns number of dbas found , and  * whether there were more than requested.   */
+comment|/*  * look up a dba in the data base returns number of dbas found , and  * whether there were more than requested.  */
 name|kerb_db_get_dba
 argument_list|(
 argument|dba_name

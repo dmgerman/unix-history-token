@@ -2632,7 +2632,7 @@ block|{
 case|case
 literal|'a'
 case|:
-comment|/*  			 * The original join allowed "-a", which meant the 			 * same as -a1 plus -a2.  POSIX 1003.2, Draft 11.2 			 * only specifies this as "-a 1" and "a -2", so we 			 * have to use another option flag, one that is 			 * unlikely to ever be used or accidentally entered 			 * on the command line.  (Well, we could reallocate 			 * the argv array, but that hardly seems worthwhile.) 			 */
+comment|/* 			 * The original join allowed "-a", which meant the 			 * same as -a1 plus -a2.  POSIX 1003.2, Draft 11.2 			 * only specifies this as "-a 1" and "a -2", so we 			 * have to use another option flag, one that is 			 * unlikely to ever be used or accidentally entered 			 * on the command line.  (Well, we could reallocate 			 * the argv array, but that hardly seems worthwhile.) 			 */
 if|if
 condition|(
 name|ap

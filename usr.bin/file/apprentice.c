@@ -45,7 +45,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: apprentice.c,v 1.19 1994/05/03 17:58:23 christos Exp $"
+literal|"@(#)$Id: apprentice.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1475,7 +1475,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* 	 * TODO finish this macro and start using it! 	 * #define offsetcheck {if (offset> HOWMANY-1)  	 *	magwarn("offset too big"); } 	 */
+comment|/* 	 * TODO finish this macro and start using it! 	 * #define offsetcheck {if (offset> HOWMANY-1) 	 *	magwarn("offset too big"); } 	 */
 comment|/* 	 * now get last part - the description 	 */
 name|GetDesc
 label|:
@@ -1592,7 +1592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Read a numeric value from a pointer, into the value union of a magic   * pointer, according to the magic type.  Update the string pointer to point   * just after the number read.  Return 0 for success, non-zero for failure.  */
+comment|/*  * Read a numeric value from a pointer, into the value union of a magic  * pointer, according to the magic type.  Update the string pointer to point  * just after the number read.  Return 0 for success, non-zero for failure.  */
 end_comment
 
 begin_function

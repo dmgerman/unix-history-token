@@ -868,7 +868,7 @@ block|,
 literal|"TAGLEN"
 block|,
 literal|"TAGLVL"
-block|,     }
+block|, }
 decl_stmt|;
 end_decl_stmt
 

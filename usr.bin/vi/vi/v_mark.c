@@ -591,7 +591,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Forward marks are always line oriented, and it's set in the 	 * vcmd.c table.  Backward marks that start and stop at column 	 * 0 of the line are also line mode commands.  	 */
+comment|/* 	 * Forward marks are always line oriented, and it's set in the 	 * vcmd.c table.  Backward marks that start and stop at column 	 * 0 of the line are also line mode commands. 	 */
 if|if
 condition|(
 name|vp

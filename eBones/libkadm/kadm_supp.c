@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kadm_supp.c,v 1.1 1995/01/20 02:02:54 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* kadm_prin_to_vals takes a fields arguments, a Kadm_vals and a Principal,    it copies the fields in Principal specified by fields into Kadm_vals,     i.e from old to new */
+comment|/* kadm_prin_to_vals takes a fields arguments, a Kadm_vals and a Principal,    it copies the fields in Principal specified by fields into Kadm_vals,    i.e from old to new */
 end_comment
 
 begin_macro

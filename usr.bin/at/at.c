@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   *  at.c : Put file into atrun queue  *  Copyright (C) 1993, 1994 Thomas Koenig  *  *  Atrun& Atq modifications  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  *  at.c : Put file into atrun queue  *  Copyright (C) 1993, 1994 Thomas Koenig  *  *  Atrun& Atq modifications  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -254,7 +254,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: at.c,v 1.3 1995/04/15 22:08:08 ache Exp $"
+literal|"$Id: at.c,v 1.4 1995/04/27 19:27:41 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -435,7 +435,7 @@ name|int
 name|signo
 parameter_list|)
 block|{
-comment|/* If the user presses ^C, remove the spool file and exit   */
+comment|/* If the user presses ^C, remove the spool file and exit  */
 if|if
 condition|(
 name|fcreated
@@ -981,7 +981,7 @@ name|DAEMON_UID
 argument_list|,
 name|DAEMON_GID
 argument_list|)
-comment|/* We've successfully created the file; let's set the flag so it       * gets removed in case of an interrupt or error.      */
+comment|/* We've successfully created the file; let's set the flag so it      * gets removed in case of an interrupt or error.      */
 name|fcreated
 init|=
 literal|1
@@ -1590,7 +1590,7 @@ name|void
 name|list_jobs
 parameter_list|()
 block|{
-comment|/* List all a user's jobs in the queue, by looping through ATJOB_DIR,       * or everybody's if we are root      */
+comment|/* List all a user's jobs in the queue, by looping through ATJOB_DIR,      * or everybody's if we are root      */
 name|struct
 name|passwd
 modifier|*
@@ -1669,7 +1669,7 @@ literal|"Cannot open "
 name|ATJOB_DIR
 argument_list|)
 expr_stmt|;
-comment|/*	Loop over every file in the directory       */
+comment|/*	Loop over every file in the directory      */
 while|while
 condition|(
 operator|(

@@ -63,7 +63,7 @@ file|"buf.h"
 end_include
 
 begin_comment
-comment|/*  * For statements are of the form:  *  * .for<variable> in<varlist>  * ...  * .endfor  *  * The trick is to look for the matching end inside for for loop  * To do that, we count the current nesting level of the for loops.  * and the .endfor statements, accumulating all the statements between  * the initial .for loop and the matching .endfor;   * then we evaluate the for loop for each variable in the varlist.  */
+comment|/*  * For statements are of the form:  *  * .for<variable> in<varlist>  * ...  * .endfor  *  * The trick is to look for the matching end inside for for loop  * To do that, we count the current nesting level of the for loops.  * and the .endfor statements, accumulating all the statements between  * the initial .for loop and the matching .endfor;  * then we evaluate the for loop for each variable in the varlist.  */
 end_comment
 
 begin_decl_stmt

@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1993 Eric Young - see README for more details */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: enc_read.c,v 1.2 1994/07/19 19:21:54 g89r4222 Exp $  */
+comment|/*-  *	$Id: enc_read.c,v 1.1.1.1 1994/09/30 14:49:50 csgr Exp $  */
 end_comment
 
 begin_include
@@ -87,7 +87,7 @@ index|[
 name|BSIZE
 index|]
 decl_stmt|;
-comment|/* extra unencrypted data  	 * for when a block of 100 comes in but is des_read one byte at 	 * a time. */
+comment|/* extra unencrypted data 	 * for when a block of 100 comes in but is des_read one byte at 	 * a time. */
 specifier|static
 name|char
 name|unnet

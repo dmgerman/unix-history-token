@@ -89,11 +89,11 @@ file|"talk.h"
 end_include
 
 begin_comment
-comment|/*  * There wasn't an invitation waiting, so send a request containing  * our sockt address to the remote talk daemon so it can invite  * him   */
+comment|/*  * There wasn't an invitation waiting, so send a request containing  * our sockt address to the remote talk daemon so it can invite  * him  */
 end_comment
 
 begin_comment
-comment|/*  * The msg.id's for the invitations  * on the local and remote machines.  * These are used to delete the   * invitations.  */
+comment|/*  * The msg.id's for the invitations  * on the local and remote machines.  * These are used to delete the  * invitations.  */
 end_comment
 
 begin_decl_stmt

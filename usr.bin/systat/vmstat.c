@@ -4328,7 +4328,7 @@ name|long
 modifier|*
 name|intrcnt
 decl_stmt|;
-comment|/* 	 * time, wds, seek, and xfer are malloc'd so we have to 	 * save the pointers before the structure copy and then  	 * copy by hand. 	 */
+comment|/* 	 * time, wds, seek, and xfer are malloc'd so we have to 	 * save the pointers before the structure copy and then 	 * copy by hand. 	 */
 name|time
 operator|=
 name|to

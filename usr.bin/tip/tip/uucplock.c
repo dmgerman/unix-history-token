@@ -94,7 +94,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * uucp style locking routines  * return: 0 - success  * 	  -1 - failure  */
+comment|/*  * uucp style locking routines  * return: 0 - success  * 	  -1 - failure  */
 end_comment
 
 begin_macro

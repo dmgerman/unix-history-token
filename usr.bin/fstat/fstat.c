@@ -485,7 +485,7 @@ value|if ((d)> maxfiles) { \ 		free(ofiles); \ 		ofiles = malloc((d) * sizeof(st
 end_define
 
 begin_comment
-comment|/*  * a kvm_read that returns true if everything is read   */
+comment|/*  * a kvm_read that returns true if everything is read  */
 end_comment
 
 begin_define
@@ -2851,7 +2851,7 @@ name|so_type
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*  	 * protocol specific formatting 	 * 	 * Try to find interesting things to print.  For tcp, the interesting 	 * thing is the address of the tcpcb, for udp and others, just the 	 * inpcb (socket pcb).  For unix domain, its the address of the socket 	 * pcb and the address of the connected pcb (if connected).  Otherwise 	 * just print the protocol number and address of the socket itself. 	 * The idea is not to duplicate netstat, but to make available enough 	 * information for further analysis. 	 */
+comment|/* 	 * protocol specific formatting 	 * 	 * Try to find interesting things to print.  For tcp, the interesting 	 * thing is the address of the tcpcb, for udp and others, just the 	 * inpcb (socket pcb).  For unix domain, its the address of the socket 	 * pcb and the address of the connected pcb (if connected).  Otherwise 	 * just print the protocol number and address of the socket itself. 	 * The idea is not to duplicate netstat, but to make available enough 	 * information for further analysis. 	 */
 switch|switch
 condition|(
 name|dom

@@ -1111,7 +1111,7 @@ case|:
 case|case
 name|longrel
 case|:
-comment|/* 			 *	regular pc relative addressing 			 *	check that this is the address of  			 *	a function. 			 */
+comment|/* 			 *	regular pc relative addressing 			 *	check that this is the address of 			 *	a function. 			 */
 name|destpc
 operator|=
 name|reladdr

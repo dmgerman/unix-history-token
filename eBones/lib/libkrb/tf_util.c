@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tf_util.c,v 4.9 90/03/10 19:19:45 jon Exp $  *	$Id: tf_util.c,v 1.2 1994/07/19 19:26:28 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: tf_util.c,v 4.9 90/03/10 19:19:45 jon Exp $  *	$Id: tf_util.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tf_util.c,v 1.2 1994/07/19 19:26:28 g89r4222 Exp $"
+literal|"$Id: tf_util.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,7 +197,7 @@ comment|/* TKT_SHMEM */
 end_comment
 
 begin_comment
-comment|/*  * fd must be initialized to something that won't ever occur as a real  * file descriptor. Since open(2) returns only non-negative numbers as  * valid file descriptors, and tf_init always stuffs the return value  * from open in here even if it is an error flag, we must  * 	a. Initialize fd to a negative number, to indicate that it is  * 	   not initially valid.  *	b. When checking for a valid fd, assume that negative values  *	   are invalid (ie. when deciding whether tf_init has been  *	   called.)  *	c. In tf_close, be sure it gets reinitialized to a negative  *	   number.   */
+comment|/*  * fd must be initialized to something that won't ever occur as a real  * file descriptor. Since open(2) returns only non-negative numbers as  * valid file descriptors, and tf_init always stuffs the return value  * from open in here even if it is an error flag, we must  * 	a. Initialize fd to a negative number, to indicate that it is  * 	   not initially valid.  *	b. When checking for a valid fd, assume that negative values  *	   are invalid (ie. when deciding whether tf_init has been  *	   called.)  *	c. In tf_close, be sure it gets reinitialized to a negative  *	   number.  */
 end_comment
 
 begin_expr_stmt
@@ -258,7 +258,7 @@ comment|/*  * This file contains routines for manipulating the ticket cache file
 end_comment
 
 begin_comment
-comment|/*  * tf_init() should be called before the other ticket file routines.  * It takes the name of the ticket file to use, "tf_name", and a  * read/write flag "rw" as arguments.   *  * It tries to open the ticket file, checks the mode, and if everything  * is okay, locks the file.  If it's opened for reading, the lock is  * shared.  If it's opened for writing, the lock is exclusive.   *  * Returns KSUCCESS if all went well, otherwise one of the following:   *  * NO_TKT_FIL   - file wasn't there  * TKT_FIL_ACC  - file was in wrong mode, etc.  * TKT_FIL_LCK  - couldn't lock the file, even after a retry  */
+comment|/*  * tf_init() should be called before the other ticket file routines.  * It takes the name of the ticket file to use, "tf_name", and a  * read/write flag "rw" as arguments.  *  * It tries to open the ticket file, checks the mode, and if everything  * is okay, locks the file.  If it's opened for reading, the lock is  * shared.  If it's opened for writing, the lock is exclusive.  *  * Returns KSUCCESS if all went well, otherwise one of the following:  *  * NO_TKT_FIL   - file wasn't there  * TKT_FIL_ACC  - file was in wrong mode, etc.  * TKT_FIL_LCK  - couldn't lock the file, even after a retry  */
 end_comment
 
 begin_macro
@@ -481,7 +481,7 @@ return|;
 endif|#
 directive|endif
 comment|/* TKT_SHMEM */
-comment|/*      * If "wflag" is set, open the ticket file in append-writeonly mode      * and lock the ticket file in exclusive mode.  If unable to lock      * the file, sleep and try again.  If we fail again, return with the      * proper error message.       */
+comment|/*      * If "wflag" is set, open the ticket file in append-writeonly mode      * and lock the ticket file in exclusive mode.  If unable to lock      * the file, sleep and try again.  If we fail again, return with the      * proper error message.      */
 name|curpos
 operator|=
 sizeof|sizeof
@@ -732,7 +732,7 @@ return|return
 name|KSUCCESS
 return|;
 block|}
-comment|/*      * Otherwise "wflag" is not set and the ticket file should be opened      * for read-only operations and locked for shared access.       */
+comment|/*      * Otherwise "wflag" is not set and the ticket file should be opened      * for read-only operations and locked for shared access.      */
 name|fd
 operator|=
 name|open
@@ -813,7 +813,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * tf_get_pname() reads the principal's name from the ticket file. It  * should only be called after tf_init() has been called.  The  * principal's name is filled into the "p" parameter.  If all goes well,  * KSUCCESS is returned.  If tf_init() wasn't called, TKT_FIL_INI is  * returned.  If the name was null, or EOF was encountered, or the name  * was longer than ANAME_SZ, TKT_FIL_FMT is returned.   */
+comment|/*  * tf_get_pname() reads the principal's name from the ticket file. It  * should only be called after tf_init() has been called.  The  * principal's name is filled into the "p" parameter.  If all goes well,  * KSUCCESS is returned.  If tf_init() wasn't called, TKT_FIL_INI is  * returned.  If the name was null, or EOF was encountered, or the name  * was longer than ANAME_SZ, TKT_FIL_FMT is returned.  */
 end_comment
 
 begin_macro
@@ -876,7 +876,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * tf_get_pinst() reads the principal's instance from a ticket file.  * It should only be called after tf_init() and tf_get_pname() have been  * called.  The instance is filled into the "inst" parameter.  If all  * goes well, KSUCCESS is returned.  If tf_init() wasn't called,  * TKT_FIL_INI is returned.  If EOF was encountered, or the instance  * was longer than ANAME_SZ, TKT_FIL_FMT is returned.  Note that the  * instance may be null.   */
+comment|/*  * tf_get_pinst() reads the principal's instance from a ticket file.  * It should only be called after tf_init() and tf_get_pname() have been  * called.  The instance is filled into the "inst" parameter.  If all  * goes well, KSUCCESS is returned.  If tf_init() wasn't called,  * TKT_FIL_INI is returned.  If EOF was encountered, or the instance  * was longer than ANAME_SZ, TKT_FIL_FMT is returned.  Note that the  * instance may be null.  */
 end_comment
 
 begin_macro
@@ -938,7 +938,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * tf_get_cred() reads a CREDENTIALS record from a ticket file and fills  * in the given structure "c".  It should only be called after tf_init(),  * tf_get_pname(), and tf_get_pinst() have been called. If all goes well,  * KSUCCESS is returned.  Possible error codes are:   *  * TKT_FIL_INI  - tf_init wasn't called first  * TKT_FIL_FMT  - bad format  * EOF          - end of file encountered  */
+comment|/*  * tf_get_cred() reads a CREDENTIALS record from a ticket file and fills  * in the given structure "c".  It should only be called after tf_init(),  * tf_get_pname(), and tf_get_pinst() have been called. If all goes well,  * KSUCCESS is returned.  Possible error codes are:  *  * TKT_FIL_INI  - tf_init wasn't called first  * TKT_FIL_FMT  - bad format  * EOF          - end of file encountered  */
 end_comment
 
 begin_macro
@@ -1380,7 +1380,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * tf_gets() is an internal routine.  It takes a string "s" and a count  * "n", and reads from the file until either it has read "n" characters,  * or until it reads a null byte. When finished, what has been read exists  * in "s". If it encounters EOF or an error, it closes the ticket file.   *  * Possible return values are:  *  * n            the number of bytes read (including null terminator)  *              when all goes well  *  * 0            end of file or read error  *  * TOO_BIG      if "count" characters are read and no null is  *		encountered. This is an indication that the ticket  *		file is seriously ill.  */
+comment|/*  * tf_gets() is an internal routine.  It takes a string "s" and a count  * "n", and reads from the file until either it has read "n" characters,  * or until it reads a null byte. When finished, what has been read exists  * in "s". If it encounters EOF or an error, it closes the ticket file.  *  * Possible return values are:  *  * n            the number of bytes read (including null terminator)  *              when all goes well  *  * 0            end of file or read error  *  * TOO_BIG      if "count" characters are read and no null is  *		encountered. This is an indication that the ticket  *		file is seriously ill.  */
 end_comment
 
 begin_expr_stmt

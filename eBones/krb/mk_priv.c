@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'private msg', i.e.  * cryptographically sealed with a private session key.  *  * Note-- bcopy is used to avoid alignment problems on IBM RT.  *  * Note-- It's too bad that it did a long int compare on the RT before.  *  * Returns either< 0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_priv.c,v 4.13 89/03/22 14:48:59 jtkohl Exp $  *	$Id: mk_priv.c,v 1.2 1994/07/19 19:25:56 g89r4222 Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'private msg', i.e.  * cryptographically sealed with a private session key.  *  * Note-- bcopy is used to avoid alignment problems on IBM RT.  *  * Note-- It's too bad that it did a long int compare on the RT before.  *  * Returns either< 0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_priv.c,v 4.13 89/03/22 14:48:59 jtkohl Exp $  *	$Id: mk_priv.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mk_priv.c,v 1.2 1994/07/19 19:25:56 g89r4222 Exp $"
+literal|"$Id: mk_priv.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * krb_mk_priv() constructs an AUTH_MSG_PRIVATE message.  It takes  * some user data "in" of "length" bytes and creates a packet in "out"  * consisting of the user data, a timestamp, and the sender's network  * address. #ifndef NOENCRYTION  * The packet is encrypted by pcbc_encrypt(), using the given  * "key" and "schedule". #endif  * The length of the resulting packet "out" is  * returned.  *  * It is similar to krb_mk_safe() except for the additional key  * schedule argument "schedule" and the fact that the data is encrypted  * rather than appended with a checksum.  Also, the protocol version  * number is "private_msg_ver", defined in krb_rd_priv.c, rather than  * KRB_PROT_VERSION, defined in "krb.h".  *  * The "out" packet consists of:  *  * Size			Variable		Field  * ----			--------		-----  *  * 1 byte		private_msg_ver		protocol version number  * 1 byte		AUTH_MSG_PRIVATE |	message type plus local  *			HOST_BYTE_ORDER		byte order in low bit  *  * 4 bytes		c_length		length of data #ifndef NOENCRYPT  * we encrypt from here with pcbc_encrypt #endif  *   * 4 bytes		length			length of user data  * length		in			user data  * 1 byte		msg_time_5ms		timestamp milliseconds  * 4 bytes		sender->sin.addr.s_addr	sender's IP address  *  * 4 bytes		msg_time_sec or		timestamp seconds with  *			-msg_time_sec		direction in sign bit  *  * 0<=n<=7  bytes	pad to 8 byte multiple	zeroes  */
+comment|/*  * krb_mk_priv() constructs an AUTH_MSG_PRIVATE message.  It takes  * some user data "in" of "length" bytes and creates a packet in "out"  * consisting of the user data, a timestamp, and the sender's network  * address. #ifndef NOENCRYTION  * The packet is encrypted by pcbc_encrypt(), using the given  * "key" and "schedule". #endif  * The length of the resulting packet "out" is  * returned.  *  * It is similar to krb_mk_safe() except for the additional key  * schedule argument "schedule" and the fact that the data is encrypted  * rather than appended with a checksum.  Also, the protocol version  * number is "private_msg_ver", defined in krb_rd_priv.c, rather than  * KRB_PROT_VERSION, defined in "krb.h".  *  * The "out" packet consists of:  *  * Size			Variable		Field  * ----			--------		-----  *  * 1 byte		private_msg_ver		protocol version number  * 1 byte		AUTH_MSG_PRIVATE |	message type plus local  *			HOST_BYTE_ORDER		byte order in low bit  *  * 4 bytes		c_length		length of data #ifndef NOENCRYPT  * we encrypt from here with pcbc_encrypt #endif  *  * 4 bytes		length			length of user data  * length		in			user data  * 1 byte		msg_time_5ms		timestamp milliseconds  * 4 bytes		sender->sin.addr.s_addr	sender's IP address  *  * 4 bytes		msg_time_sec or		timestamp seconds with  *			-msg_time_sec		direction in sign bit  *  * 0<=n<=7  bytes	pad to 8 byte multiple	zeroes  */
 end_comment
 
 begin_function
@@ -428,7 +428,7 @@ name|s_addr
 argument_list|)
 expr_stmt|;
 comment|/*      * direction bit is the sign bit of the timestamp.  Ok      * until 2038??      */
-comment|/* For compatibility with broken old code, compares are done in VAX         byte order (LSBFIRST) */
+comment|/* For compatibility with broken old code, compares are done in VAX        byte order (LSBFIRST) */
 if|if
 condition|(
 name|lsb_net_ulong_less

@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rwall.c,v 1.1 1993/09/16 01:11:04 jtc Exp $"
+literal|"$Id: rwall.c,v 1.1.1.1 1994/08/28 15:11:02 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,7 +274,7 @@ operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
-comment|/* 		 * An error occurred while calling the server.  		 * Print error message and die. 		 */
+comment|/* 		 * An error occurred while calling the server. 		 * Print error message and die. 		 */
 name|clnt_perror
 argument_list|(
 name|cl

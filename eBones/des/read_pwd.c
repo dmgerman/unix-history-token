@@ -12,7 +12,7 @@ comment|/* 06-Apr-92 Luke Brennan    Support for VMS */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: read_pwd.c,v 1.1.1.1 1994/09/30 14:49:51 csgr Exp $  */
+comment|/*-  *	$Id: read_pwd.c,v 1.2 1995/01/25 02:27:00 ache Exp $  */
 end_comment
 
 begin_include

@@ -501,7 +501,7 @@ block|{
 name|int
 name|unary_delim
 decl_stmt|;
-comment|/* this is set to 1 if the current token 				 *  				 * forces a following operator to be unary */
+comment|/* this is set to 1 if the current token 				 * 				 * forces a following operator to be unary */
 specifier|static
 name|int
 name|last_code
@@ -609,7 +609,7 @@ name|char
 modifier|*
 name|j
 decl_stmt|;
-comment|/* used for searching thru list of 				 *  				 * reserved words */
+comment|/* used for searching thru list of 				 * 				 * reserved words */
 specifier|register
 name|struct
 name|templ

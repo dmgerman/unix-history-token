@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ticket.c,v 4.11 89/03/22 14:43:23 jtkohl Exp $  *	$Id: create_ticket.c,v 1.2 1994/07/19 19:25:01 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_ticket.c,v 4.11 89/03/22 14:43:23 jtkohl Exp $  *	$Id: create_ticket.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: create_ticket.c,v 1.2 1994/07/19 19:25:01 g89r4222 Exp $"
+literal|"$Id: create_ticket.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ file|<strings.h>
 end_include
 
 begin_comment
-comment|/*  * Create ticket takes as arguments information that should be in a  * ticket, and the KTEXT object in which the ticket should be  * constructed.  It then constructs a ticket and returns, leaving the  * newly created ticket in tkt.  * The length of the ticket is a multiple of  * eight bytes and is in tkt->length.  *  * If the ticket is too long, the ticket will contain nulls.  * The return value of the routine is undefined.  *  * The corresponding routine to extract information from a ticket it  * decomp_ticket.  When changes are made to this routine, the  * corresponding changes should also be made to that file.  *  * The packet is built in the following format:  *   * 			variable  * type			or constant	   data  * ----			-----------	   ----  *  * tkt->length		length of ticket (multiple of 8 bytes)  *   * tkt->dat:  *   * unsigned char	flags		   namely, HOST_BYTE_ORDER  *   * string		pname		   client's name  *   * string		pinstance	   client's instance  *   * string		prealm		   client's realm  *   * 4 bytes		paddress	   client's address  *   * 8 bytes		session		   session key  *   * 1 byte		life		   ticket lifetime  *   * 4 bytes		time_sec	   KDC timestamp  *   * string		sname		   service's name  *   * string		sinstance	   service's instance  *   *<=7 bytes		null		   null pad to 8 byte multiple  *  */
+comment|/*  * Create ticket takes as arguments information that should be in a  * ticket, and the KTEXT object in which the ticket should be  * constructed.  It then constructs a ticket and returns, leaving the  * newly created ticket in tkt.  * The length of the ticket is a multiple of  * eight bytes and is in tkt->length.  *  * If the ticket is too long, the ticket will contain nulls.  * The return value of the routine is undefined.  *  * The corresponding routine to extract information from a ticket it  * decomp_ticket.  When changes are made to this routine, the  * corresponding changes should also be made to that file.  *  * The packet is built in the following format:  *  * 			variable  * type			or constant	   data  * ----			-----------	   ----  *  * tkt->length		length of ticket (multiple of 8 bytes)  *  * tkt->dat:  *  * unsigned char	flags		   namely, HOST_BYTE_ORDER  *  * string		pname		   client's name  *  * string		pinstance	   client's instance  *  * string		prealm		   client's realm  *  * 4 bytes		paddress	   client's address  *  * 8 bytes		session		   session key  *  * 1 byte		life		   ticket lifetime  *  * 4 bytes		time_sec	   KDC timestamp  *  * string		sname		   service's name  *  * string		sinstance	   service's instance  *  *<=7 bytes		null		   null pad to 8 byte multiple  *  */
 end_comment
 
 begin_function

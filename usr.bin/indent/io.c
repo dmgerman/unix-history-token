@@ -1614,7 +1614,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *   * All rights reserved  *   *   * NAME: fill_buffer  *   * FUNCTION: Reads one block of input into input_buffer  *   * HISTORY: initial coding 	November 1976	D A Willcox of CAC 1/7/77 A  * Willcox of CAC	Added check for switch back to partly full input  * buffer from temporary buffer  *   */
+comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *  * All rights reserved  *  *  * NAME: fill_buffer  *  * FUNCTION: Reads one block of input into input_buffer  *  * HISTORY: initial coding 	November 1976	D A Willcox of CAC 1/7/77 A  * Willcox of CAC	Added check for switch back to partly full input  * buffer from temporary buffer  *  */
 end_comment
 
 begin_function
@@ -2147,7 +2147,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *   * All rights reserved  *   *   * NAME: pad_output  *   * FUNCTION: Writes tabs and spaces to move the current column up to the desired  * position.  *   * ALGORITHM: Put tabs and/or blanks into pobuf, then write pobuf.  *   * PARAMETERS: current		integer		The current column target  * nteger		The desired column  *   * RETURNS: Integer value of the new column.  (If current>= target, no action is  * taken, and current is returned.  *   * GLOBALS: None  *   * CALLS: write (sys)  *   * CALLED BY: dump_line  *   * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *   */
+comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *  * All rights reserved  *  *  * NAME: pad_output  *  * FUNCTION: Writes tabs and spaces to move the current column up to the desired  * position.  *  * ALGORITHM: Put tabs and/or blanks into pobuf, then write pobuf.  *  * PARAMETERS: current		integer		The current column target  * nteger		The desired column  *  * RETURNS: Integer value of the new column.  (If current>= target, no action is  * taken, and current is returned.  *  * GLOBALS: None  *  * CALLS: write (sys)  *  * CALLED BY: dump_line  *  * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *  */
 end_comment
 
 begin_macro
@@ -2291,7 +2291,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *   * All rights reserved  *   *   * NAME: count_spaces  *   * FUNCTION: Find out where printing of a given string will leave the current  * character position on output.  *   * ALGORITHM: Run thru input string and add appropriate values to current  * position.  *   * RETURNS: Integer value of position after printing "buffer" starting in column  * "current".  *   * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *   */
+comment|/*  * Copyright (C) 1976 by the Board of Trustees of the University of Illinois  *  * All rights reserved  *  *  * NAME: count_spaces  *  * FUNCTION: Find out where printing of a given string will leave the current  * character position on output.  *  * ALGORITHM: Run thru input string and add appropriate values to current  * position.  *  * RETURNS: Integer value of position after printing "buffer" starting in column  * "current".  *  * HISTORY: initial coding 	November 1976	D A Willcox of CAC  *  */
 end_comment
 
 begin_function

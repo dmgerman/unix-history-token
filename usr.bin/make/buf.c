@@ -993,7 +993,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Buf_Discard --  *	Throw away bytes in a buffer.  *  * Results:  *	None.  *  * Side Effects:  *	The bytes are discarded.   *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Buf_Discard --  *	Throw away bytes in a buffer.  *  * Results:  *	None.  *  * Side Effects:  *	The bytes are discarded.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

@@ -1298,7 +1298,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondCvtArg --  *	Convert the given number into a double. If the number begins  *	with 0x, it is interpreted as a hexadecimal integer  *	and converted to a double from there. All other strings just have  *	strtod called on them.  *  * Results:  *	Sets 'value' to double value of string.  *	Returns true if the string was a valid number, false o.w.  *  * Side Effects:  *	Can change 'value' even if string is not a valid number.  *	  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * CondCvtArg --  *	Convert the given number into a double. If the number begins  *	with 0x, it is interpreted as a hexadecimal integer  *	and converted to a double from there. All other strings just have  *	strtod called on them.  *  * Results:  *	Sets 'value' to double value of string.  *	Returns true if the string was a valid number, false o.w.  *  * Side Effects:  *	Can change 'value' even if string is not a valid number.  *  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2987,7 +2987,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			     * A variable is empty when it just contains  			     * spaces... 4/15/92, christos 			     */
+comment|/* 			     * A variable is empty when it just contains 			     * spaces... 4/15/92, christos 			     */
 name|char
 modifier|*
 name|p

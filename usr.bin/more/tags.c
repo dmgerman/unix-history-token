@@ -402,7 +402,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Search for a tag.  * This is a stripped-down version of search().  * We don't use search() for several reasons:  *   -	We don't want to blow away any search string we may have saved.  *   -	The various regular-expression functions (from different systems:  *	regcmp vs. re_comp) behave differently in the presence of   *	parentheses (which are almost always found in a tag).  */
+comment|/*  * Search for a tag.  * This is a stripped-down version of search().  * We don't use search() for several reasons:  *   -	We don't want to blow away any search string we may have saved.  *   -	The various regular-expression functions (from different systems:  *	regcmp vs. re_comp) behave differently in the presence of  *	parentheses (which are almost always found in a tag).  */
 end_comment
 
 begin_macro
@@ -443,7 +443,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Get lines until we find a matching one or  		 * until we hit end-of-file. 		 */
+comment|/* 		 * Get lines until we find a matching one or 		 * until we hit end-of-file. 		 */
 if|if
 condition|(
 name|sigs
@@ -453,7 +453,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 		 * Read the next line, and save the  		 * starting position of that line in linepos. 		 */
+comment|/* 		 * Read the next line, and save the 		 * starting position of that line in linepos. 		 */
 name|linepos
 operator|=
 name|pos

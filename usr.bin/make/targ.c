@@ -727,7 +727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_FindList --  *	Make a complete list of GNodes from the given list of names   *  * Results:  *	A complete list of graph nodes corresponding to all instances of all  *	the names in names.   *  * Side Effects:  *	If flags is TARG_CREATE, nodes will be created for all names in  *	names which do not yet have graph nodes. If flags is TARG_NOCREATE,  *	an error message will be printed for each name which can't be found.  * -----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Targ_FindList --  *	Make a complete list of GNodes from the given list of names  *  * Results:  *	A complete list of graph nodes corresponding to all instances of all  *	the names in names.  *  * Side Effects:  *	If flags is TARG_CREATE, nodes will be created for all names in  *	names which do not yet have graph nodes. If flags is TARG_NOCREATE,  *	an error message will be printed for each name which can't be found.  * -----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1054,7 +1054,7 @@ comment|/* the main target, as set by Targ_SetMain */
 end_comment
 
 begin_comment
-comment|/*-   *-----------------------------------------------------------------------  * Targ_SetMain --  *	Set our idea of the main target we'll be creating. Used for  *	debugging output.  *  * Results:  *	None.  *  * Side Effects:  *	"mainTarg" is set to the main target's node.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Targ_SetMain --  *	Set our idea of the main target we'll be creating. Used for  *	debugging output.  *  * Results:  *	None.  *  * Side Effects:  *	"mainTarg" is set to the main target's node.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

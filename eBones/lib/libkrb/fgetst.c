@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   * For copying and distribution information, please see the file  *<Copyright.MIT>.   *  *	from: fgetst.c,v 4.0 89/01/23 10:08:31 jtkohl Exp $  *	$Id: fgetst.c,v 1.2 1994/07/19 19:25:10 g89r4222 Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: fgetst.c,v 4.0 89/01/23 10:08:31 jtkohl Exp $  *	$Id: fgetst.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fgetst.c,v 1.2 1994/07/19 19:25:10 g89r4222 Exp $"
+literal|"$Id: fgetst.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*  * fgetst takes a file descriptor, a character pointer, and a count.  * It reads from the file it has either read "count" characters, or  * until it reads a null byte.  When finished, what has been read exists  * in "s". If "count" characters were actually read, the last is changed  * to a null, so the returned string is always null-terminated.  fgetst  * returns the number of characters read, including the null terminator.   */
+comment|/*  * fgetst takes a file descriptor, a character pointer, and a count.  * It reads from the file it has either read "count" characters, or  * until it reads a null byte.  When finished, what has been read exists  * in "s". If "count" characters were actually read, the last is changed  * to a null, so the returned string is always null-terminated.  fgetst  * returns the number of characters read, including the null terminator.  */
 end_comment
 
 begin_macro

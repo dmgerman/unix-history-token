@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.8 1993/09/16 21:09:35 christos Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
+comment|/*  * is_tar() -- figure out whether file is a tar archive.  *  * Stolen (by the author!) from the public domain tar program:  * Pubic Domain version written 26 Aug 1985 John Gilmore (ihnp4!hoptoad!gnu).  *  * @(#)list.c 1.18 9/23/86 Public Domain - gnu  * $Id: is_tar.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $  *  * Comments changed and some code/comments reformatted  * for file command by Ian Darwin.  */
 end_comment
 
 begin_include
@@ -87,7 +87,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Return   *	0 if the checksum is bad (i.e., probably not a tar archive),   *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file.  */
+comment|/*  * Return  *	0 if the checksum is bad (i.e., probably not a tar archive),  *	1 for old UNIX tar file,  *	2 for Unix Std (POSIX) tar file.  */
 end_comment
 
 begin_function

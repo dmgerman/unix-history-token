@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kerberos.c,v 4.19 89/11/01 17:18:07 qjb Exp $  *	$Id: kerberos.c,v 1.3 1994/09/09 21:43:51 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kerberos.c,v 4.19 89/11/01 17:18:07 qjb Exp $  *	$Id: kerberos.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kerberos.c,v 1.3 1994/09/09 21:43:51 g89r4222 Exp $"
+literal|"$Id: kerberos.c,v 1.1.1.1 1994/09/30 14:49:57 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2191,7 +2191,7 @@ name|key_s
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	     * get the user's key, unseal it from the server's key, and 	     * use it to seal the cipher  	     */
+comment|/* 	     * get the user's key, unseal it from the server's key, and 	     * use it to seal the cipher 	     */
 comment|/* a_name_data.key_low a_name_data.key_high */
 name|bcopy
 argument_list|(
@@ -3104,7 +3104,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * setup_disc   *  * disconnect all descriptors, remove ourself from the process  * group that spawned us.   */
+comment|/*  * setup_disc  *  * disconnect all descriptors, remove ourself from the process  * group that spawned us.  */
 end_comment
 
 begin_macro
@@ -3222,7 +3222,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * kerb_er_reply creates an error reply packet and sends it to the  * client.   */
+comment|/*  * kerb_er_reply creates an error reply packet and sends it to the  * client.  */
 end_comment
 
 begin_macro
@@ -3530,7 +3530,7 @@ name|hang
 argument_list|()
 expr_stmt|;
 block|}
-comment|/*      * if more than one p_name, pick one, randomly create a session key,      * compute maximum lifetime, lookup authorizations if applicable,      * and stuff into cipher.       */
+comment|/*      * if more than one p_name, pick one, randomly create a session key,      * compute maximum lifetime, lookup authorizations if applicable,      * and stuff into cipher.      */
 if|if
 condition|(
 name|n

@@ -136,7 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * error handling variables   */
+comment|/*  * error handling variables  */
 end_comment
 
 begin_decl_stmt
@@ -274,7 +274,7 @@ comment|/* The job is stopped */
 end_comment
 
 begin_comment
-comment|/*  * tfile is the name of a file into which all shell commands are put. It is  * used over by removing it before the child shell is executed. The XXXXX in  * the string are replaced by the pid of the make process in a 5-character  * field with leading zeroes.   */
+comment|/*  * tfile is the name of a file into which all shell commands are put. It is  * used over by removing it before the child shell is executed. The XXXXX in  * the string are replaced by the pid of the make process in a 5-character  * field with leading zeroes.  */
 end_comment
 
 begin_decl_stmt
@@ -566,7 +566,7 @@ comment|/* Default format */
 end_comment
 
 begin_comment
-comment|/*  * When JobStart attempts to run a job remotely but can't, and isn't allowed  * to run the job locally, or when Job_CatchChildren detects a job that has  * been migrated home, the job is placed on the stoppedJobs queue to be run  * when the next job finishes.   */
+comment|/*  * When JobStart attempts to run a job remotely but can't, and isn't allowed  * to run the job locally, or when Job_CatchChildren detects a job that has  * been migrated home, the job is placed on the stoppedJobs queue to be run  * when the next job finishes.  */
 end_comment
 
 begin_decl_stmt
@@ -961,7 +961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobPassSig --  *	Pass a signal on to all remote jobs and to all local jobs if  *	USE_PGRP is defined, then die ourselves.  *  * Results:  *	None.  *  * Side Effects:  *	We die by the same signal.  *	  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobPassSig --  *	Pass a signal on to all remote jobs and to all local jobs if  *	USE_PGRP is defined, then die ourselves.  *  * Results:  *	None.  *  * Side Effects:  *	We die by the same signal.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3040,7 +3040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_CheckCommands --  *	Make sure the given node has all the commands it needs.   *  * Results:  *	TRUE if the commands list is/was ok.  *  * Side Effects:  *	The node will have commands from the .DEFAULT rule added to it  *	if it needs them.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Job_CheckCommands --  *	Make sure the given node has all the commands it needs.  *  * Results:  *	TRUE if the commands list is/was ok.  *  * Side Effects:  *	The node will have commands from the .DEFAULT rule added to it  *	if it needs them.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function_decl
@@ -3108,7 +3108,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * No commands. Look for .DEFAULT rule from which we might infer 	 * commands  	 */
+comment|/* 	 * No commands. Look for .DEFAULT rule from which we might infer 	 * commands 	 */
 if|if
 condition|(
 operator|(
@@ -3176,7 +3176,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * The node wasn't the target of an operator we have no .DEFAULT 	     * rule to go on and the target doesn't already exist. There's 	     * nothing more we can do for this branch. If the -k flag wasn't 	     * given, we stop in our tracks, otherwise we just don't update 	     * this node's parents so they never get examined.  	     */
+comment|/* 	     * The node wasn't the target of an operator we have no .DEFAULT 	     * rule to go on and the target doesn't already exist. There's 	     * nothing more we can do for this branch. If the -k flag wasn't 	     * given, we stop in our tracks, otherwise we just don't update 	     * this node's parents so they never get examined. 	     */
 if|if
 condition|(
 name|gn
@@ -3254,7 +3254,7 @@ name|RMT_WILL_WATCH
 end_ifdef
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobLocalInput --  *	Handle a pipe becoming readable. Callback function for Rmt_Watch  *  * Results:  *	None  *  * Side Effects:  *	JobDoOutput is called.  *	  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobLocalInput --  *	Handle a pipe becoming readable. Callback function for Rmt_Watch  *  * Results:  *	None  *  * Side Effects:  *	JobDoOutput is called.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_comment
@@ -3780,7 +3780,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobMakeArgv --  *	Create the argv needed to execute the shell for a given job.  *	  *  * Results:  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobMakeArgv --  *	Create the argv needed to execute the shell for a given job.  *  *  * Results:  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -4012,7 +4012,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobRestart --  *	Restart a job that stopped for some reason.   *  * Results:  *	None.  *  * Side Effects:  *	jobFull will be set if the job couldn't be run.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobRestart --  *	Restart a job that stopped for some reason.  *  * Results:  *	None.  *  * Side Effects:  *	jobFull will be set if the job couldn't be run.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -4206,7 +4206,7 @@ operator|&
 name|JOB_RESTART
 condition|)
 block|{
-comment|/* 	 * Set up the control arguments to the shell. This is based on the 	 * flags set earlier for this job. If the JOB_IGNERR flag is clear, 	 * the 'exit' flag of the commandShell is used to cause it to exit 	 * upon receiving an error. If the JOB_SILENT flag is clear, the 	 * 'echo' flag of the commandShell is used to get it to start echoing 	 * as soon as it starts processing commands.  	 */
+comment|/* 	 * Set up the control arguments to the shell. This is based on the 	 * flags set earlier for this job. If the JOB_IGNERR flag is clear, 	 * the 'exit' flag of the commandShell is used to cause it to exit 	 * upon receiving an error. If the JOB_SILENT flag is clear, the 	 * 'echo' flag of the commandShell is used to get it to start echoing 	 * as soon as it starts processing commands. 	 */
 name|char
 modifier|*
 name|argv
@@ -4607,7 +4607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * JobStart  --  *	Start a target-creation process going for the target described  *	by the graph node gn.   *  * Results:  *	JOB_ERROR if there was an error in the commands, JOB_FINISHED  *	if there isn't actually anything left to do for the job and  *	JOB_RUNNING if the job has been started.  *  * Side Effects:  *	A new Job node is created and added to the list of running  *	jobs. PMake is forked and a child shell created.  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * JobStart  --  *	Start a target-creation process going for the target described  *	by the graph node gn.  *  * Results:  *	JOB_ERROR if there was an error in the commands, JOB_FINISHED  *	if there isn't actually anything left to do for the job and  *	JOB_RUNNING if the job has been started.  *  * Side Effects:  *	A new Job node is created and added to the list of running  *	jobs. PMake is forked and a child shell created.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -5212,7 +5212,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/*      * If we're not supposed to execute a shell, don't.       */
+comment|/*      * If we're not supposed to execute a shell, don't.      */
 if|if
 condition|(
 name|noExec
@@ -5546,7 +5546,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 	 * The job can only be run locally, but we've hit the limit of 	 * local concurrency, so put the job on hold until some other job 	 * finishes. Note that the special jobs (.BEGIN, .INTERRUPT and .END) 	 * may be run locally even when the local limit has been reached 	 * (e.g. when maxLocal == 0), though they will be exported if at 	 * all possible.  	 */
+comment|/* 	 * The job can only be run locally, but we've hit the limit of 	 * local concurrency, so put the job on hold until some other job 	 * finishes. Note that the special jobs (.BEGIN, .INTERRUPT and .END) 	 * may be run locally even when the local limit has been reached 	 * (e.g. when maxLocal == 0), though they will be exported if at 	 * all possible. 	 */
 name|jobFull
 operator|=
 name|TRUE
@@ -5811,7 +5811,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/* 	 * Look for the last newline in the bytes we just got. If there is 	 * one, break out of the loop with 'i' as its index and gotNL set 	 * TRUE.  	 */
+comment|/* 	 * Look for the last newline in the bytes we just got. If there is 	 * one, break out of the loop with 'i' as its index and gotNL set 	 * TRUE. 	 */
 name|max
 operator|=
 name|job
@@ -5906,7 +5906,7 @@ operator|==
 name|JOB_BUFSIZE
 condition|)
 block|{
-comment|/* 		 * If we've run out of buffer space, we have no choice 		 * but to print the stuff. sigh.  		 */
+comment|/* 		 * If we've run out of buffer space, we have no choice 		 * but to print the stuff. sigh. 		 */
 name|gotNL
 operator|=
 name|TRUE
@@ -5924,7 +5924,7 @@ condition|(
 name|gotNL
 condition|)
 block|{
-comment|/* 	     * Need to send the output to the screen. Null terminate it 	     * first, overwriting the newline character if there was one. 	     * So long as the line isn't one we should filter (according 	     * to the shell description), we print the line, preceeded 	     * by a target banner if this target isn't the same as the 	     * one for which we last printed something. 	     * The rest of the data in the buffer are then shifted down 	     * to the start of the buffer and curPos is set accordingly.  	     */
+comment|/* 	     * Need to send the output to the screen. Null terminate it 	     * first, overwriting the newline character if there was one. 	     * So long as the line isn't one we should filter (according 	     * to the shell description), we print the line, preceeded 	     * by a target banner if this target isn't the same as the 	     * one for which we last printed something. 	     * The rest of the data in the buffer are then shifted down 	     * to the start of the buffer and curPos is set accordingly. 	     */
 name|job
 operator|->
 name|outBuf
@@ -6729,7 +6729,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_CatchOutput --  *	Catch the output from our children, if we're using  *	pipes do so. Otherwise just block time until we get a  *	signal (most likely a SIGCHLD) since there's no point in  *	just spinning when there's nothing to do and the reaping  *	of a child can wait for a while.   *  * Results:  *	None   *  * Side Effects:  *	Output is read from pipes if we're piping.  * -----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Job_CatchOutput --  *	Catch the output from our children, if we're using  *	pipes do so. Otherwise just block time until we get a  *	signal (most likely a SIGCHLD) since there's no point in  *	just spinning when there's nothing to do and the reaping  *	of a child can wait for a while.  *  * Results:  *	None  *  * Side Effects:  *	Output is read from pipes if we're piping.  * -----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -8708,7 +8708,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *-----------------------------------------------------------------------  * Job_End --  *	Do final processing such as the running of the commands  *	attached to the .END target.   *  * Results:  *	Number of errors reported.  *  * Side Effects:  *	The process' temporary file (tfile) is removed if it still  *	existed.  *-----------------------------------------------------------------------  */
+comment|/*  *-----------------------------------------------------------------------  * Job_End --  *	Do final processing such as the running of the commands  *	attached to the .END target.  *  * Results:  *	Number of errors reported.  *  * Side Effects:  *	The process' temporary file (tfile) is removed if it still  *	existed.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -8904,7 +8904,7 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-comment|/* 	     * kill the child process with increasingly drastic signals to make 	     * darn sure it's dead.  	     */
+comment|/* 	     * kill the child process with increasingly drastic signals to make 	     * darn sure it's dead. 	     */
 ifdef|#
 directive|ifdef
 name|RMT_WANTS_SIGNALS

@@ -3700,7 +3700,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inln():	input a line of data (unlimited length lines supported)  *		Input is optionally expanded to spaces  *  *	inf:	file  *	buf:	buffer  *	lim:	buffer length  *	cps:	column positon 1st char in buffer (large line support)  *	trnc:	throw away data more than lim up to \n   *	mor:	set if more data in line (not truncated)  */
+comment|/*  * inln():	input a line of data (unlimited length lines supported)  *		Input is optionally expanded to spaces  *  *	inf:	file  *	buf:	buffer  *	lim:	buffer length  *	cps:	column positon 1st char in buffer (large line support)  *	trnc:	throw away data more than lim up to \n  *	mor:	set if more data in line (not truncated)  */
 end_comment
 
 begin_function
@@ -4069,7 +4069,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * otln():	output a line of data. (Supports unlimited length lines)  *		output is optionally contracted to tabs  *  *	buf:	output buffer with data  *	cnt:	number of chars of valid data in buf  *	svips:	buffer input column position (for large lines)  *	svops:	buffer output column position (for large lines)  *	mor:	output line not complete in this buf; more data to come.	  *		1 is more, 0 is complete, -1 is no \n's  */
+comment|/*  * otln():	output a line of data. (Supports unlimited length lines)  *		output is optionally contracted to tabs  *  *	buf:	output buffer with data  *	cnt:	number of chars of valid data in buf  *	svips:	buffer input column position (for large lines)  *	svops:	buffer output column position (for large lines)  *	mor:	output line not complete in this buf; more data to come.  *		1 is more, 0 is complete, -1 is no \n's  */
 end_comment
 
 begin_function
@@ -5790,7 +5790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup:	Validate command args, initialize and perform sanity   *		checks on options  */
+comment|/*  * setup:	Validate command args, initialize and perform sanity  *		checks on options  */
 end_comment
 
 begin_function

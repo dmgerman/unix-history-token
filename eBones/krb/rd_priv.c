@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'private msg', decrypting it,  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...).  If  * the return value is RD_AP_TIME, then either the times are too far  * out of synch, OR the packet was modified.  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_priv.c,v 4.14 89/04/28 11:59:42 jtkohl Exp $  *	$Id: rd_priv.c,v 1.2 1994/07/19 19:26:11 g89r4222 Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine dissects a a Kerberos 'private msg', decrypting it,  * checking its integrity, and returning a pointer to the application  * data contained and its length.  *  * Returns 0 (RD_AP_OK) for success or an error code (RD_AP_...).  If  * the return value is RD_AP_TIME, then either the times are too far  * out of synch, OR the packet was modified.  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: rd_priv.c,v 4.14 89/04/28 11:59:42 jtkohl Exp $  *	$Id: rd_priv.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rd_priv.c,v 1.2 1994/07/19 19:26:11 g89r4222 Exp $"
+literal|"$Id: rd_priv.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -643,7 +643,7 @@ name|time_sec
 argument_list|)
 expr_stmt|;
 comment|/* check direction bit is the sign bit */
-comment|/* For compatibility with broken old code, compares are done in VAX         byte order (LSBFIRST) */
+comment|/* For compatibility with broken old code, compares are done in VAX        byte order (LSBFIRST) */
 if|if
 condition|(
 name|lsb_net_ulong_less

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: kadm_cli_wrap.c,v 1.1 1995/01/20 02:02:51 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/*  * kadm_cli_wrap.c the client side wrapping of the calls to the admin server   */
+comment|/*  * kadm_cli_wrap.c the client side wrapping of the calls to the admin server  */
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/*  * kadm_init_link  *	receives    : name, inst, realm  *  * initializes client parm, the Kadm_Client structure which holds the   * data about the connection between the server and client, the services   * used, the locations and other fun things   */
+comment|/*  * kadm_init_link  *	receives    : name, inst, realm  *  * initializes client parm, the Kadm_Client structure which holds the  * data about the connection between the server and client, the services  * used, the locations and other fun things  */
 end_comment
 
 begin_macro
@@ -430,7 +430,7 @@ comment|/* procedure kadm_init_link */
 end_comment
 
 begin_comment
-comment|/*  * kadm_change_pw  * recieves    : key   *  * Replaces the password (i.e. des key) of the caller with that specified in  * key. Returns no actual data from the master server, since this is called  * by a user   */
+comment|/*  * kadm_change_pw  * recieves    : key  *  * Replaces the password (i.e. des key) of the caller with that specified in  * key. Returns no actual data from the master server, since this is called  * by a user  */
 end_comment
 
 begin_macro
@@ -656,7 +656,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * kadm_add  * 	receives    : vals  * 	returns     : vals   *  * Adds and entry containing values to the database returns the values of the  * entry, so if you leave certain fields blank you will be able to determine  * the default values they are set to   */
+comment|/*  * kadm_add  * 	receives    : vals  * 	returns     : vals  *  * Adds and entry containing values to the database returns the values of the  * entry, so if you leave certain fields blank you will be able to determine  * the default values they are set to  */
 end_comment
 
 begin_macro
@@ -853,7 +853,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * kadm_mod  * 	receives    : KTEXT, {values, values}  *	returns     : CKSUM,  RETCODE, {values}   *	acl         : su, sms (as register or dealloc)   *  * Modifies all entries corresponding to the first values so they match the  * second values. returns the values for the changed entries in vals2  */
+comment|/*  * kadm_mod  * 	receives    : KTEXT, {values, values}  *	returns     : CKSUM,  RETCODE, {values}  *	acl         : su, sms (as register or dealloc)  *  * Modifies all entries corresponding to the first values so they match the  * second values. returns the values for the changed entries in vals2  */
 end_comment
 
 begin_macro
@@ -1126,7 +1126,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * kadm_get  * 	receives   : KTEXT, {values, flags}   *	returns    : CKSUM, RETCODE, {count, values, values, values}  *	acl        : su   *  * gets the fields requested by flags from all entries matching values returns  * this data for each matching recipient, after a count of how many such  * matches there were   */
+comment|/*  * kadm_get  * 	receives   : KTEXT, {values, flags}  *	returns    : CKSUM, RETCODE, {count, values, values, values}  *	acl        : su  *  * gets the fields requested by flags from all entries matching values returns  * this data for each matching recipient, after a count of how many such  * matches there were  */
 end_comment
 
 begin_macro
@@ -1374,7 +1374,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * kadm_cli_send  *	recieves   : opcode, packet, packet length, serv_name, serv_inst  *	returns    : return code from the packet build, the server, or  *			 something else   *  * It assembles a packet as follows:  *	 8 bytes    : VERSION STRING  *	 4 bytes    : LENGTH OF MESSAGE DATA and OPCODE  *		    : KTEXT  *		    : OPCODE       \  *		    : DATA> Encrypted (with make priv)  *		    : ......       /   *  * If it builds the packet and it is small enough, then it attempts to open the  * connection to the admin server.  If the connection is succesfully open  * then it sends the data and waits for a reply.   */
+comment|/*  * kadm_cli_send  *	recieves   : opcode, packet, packet length, serv_name, serv_inst  *	returns    : return code from the packet build, the server, or  *			 something else  *  * It assembles a packet as follows:  *	 8 bytes    : VERSION STRING  *	 4 bytes    : LENGTH OF MESSAGE DATA and OPCODE  *		    : KTEXT  *		    : OPCODE       \  *		    : DATA> Encrypted (with make priv)  *		    : ......       /  *  * If it builds the packet and it is small enough, then it attempts to open the  * connection to the admin server.  If the connection is succesfully open  * then it sends the data and waits for a reply.  */
 end_comment
 
 begin_macro

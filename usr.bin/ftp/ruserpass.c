@@ -449,7 +449,7 @@ operator|!=
 name|ID
 condition|)
 continue|continue;
-comment|/* 			 * Allow match either for user's input host name 			 * or official hostname.  Also allow match of  			 * incompletely-specified host in local domain. 			 */
+comment|/* 			 * Allow match either for user's input host name 			 * or official hostname.  Also allow match of 			 * incompletely-specified host in local domain. 			 */
 if|if
 condition|(
 name|strcasecmp

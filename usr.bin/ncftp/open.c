@@ -1969,7 +1969,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Freshen 'cwd' variable for the prompt.  				 * We have to do atleast one 'cd' so our variable 				 * cwd (which is saved by _cd()) is set to something 				 * valid. 				 */
+comment|/* Freshen 'cwd' variable for the prompt. 				 * We have to do atleast one 'cd' so our variable 				 * cwd (which is saved by _cd()) is set to something 				 * valid. 				 */
 operator|(
 name|void
 operator|)

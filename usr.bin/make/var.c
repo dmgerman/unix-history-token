@@ -2498,7 +2498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2592,7 +2592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarSYSVMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the System V %  *	modifiers.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -2720,7 +2720,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  *  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -7181,7 +7181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Init --  *	Initialize the module  *  * Results:  *	None  *  * Side Effects:  *	The VAR_CMD and VAR_GLOBAL contexts are created   *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Init --  *	Initialize the module  *  * Results:  *	None  *  * Side Effects:  *	The VAR_CMD and VAR_GLOBAL contexts are created  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

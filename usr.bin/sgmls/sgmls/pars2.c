@@ -724,7 +724,7 @@ name|int
 name|ch
 decl_stmt|;
 block|{
-comment|/* If we're reading directly from an internal entity, we can't 	change the entity, since the entity might be referenced again. 	So in this case we copy the entity.  This is inefficient, but 	it will only happen in a case like this:<!entity % amp "&"><!entity e "x%amp;#SPACE;"> 	 	Usually character references will have been processed while the 	entity was being defined.  */
+comment|/* If we're reading directly from an internal entity, we can't 	change the entity, since the entity might be referenced again. 	So in this case we copy the entity.  This is inefficient, but 	it will only happen in a case like this:<!entity % amp "&"><!entity e "x%amp;#SPACE;">  	Usually character references will have been processed while the 	entity was being defined.  */
 if|if
 condition|(
 operator|*

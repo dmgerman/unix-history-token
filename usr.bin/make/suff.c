@@ -1874,7 +1874,7 @@ operator|==
 name|NILLNODE
 condition|)
 block|{
-comment|/* 	 * Make a new graph node for the transformation. It will be filled in 	 * by the Parse module.  	 */
+comment|/* 	 * Make a new graph node for the transformation. It will be filled in 	 * by the Parse module. 	 */
 name|gn
 operator|=
 name|Targ_NewGN
@@ -1967,7 +1967,7 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-comment|/*      * link the two together in the proper relationship and order       */
+comment|/*      * link the two together in the proper relationship and order      */
 if|if
 condition|(
 name|DEBUG
@@ -7039,7 +7039,7 @@ goto|goto
 name|sfnd_abort
 goto|;
 block|}
-comment|/*      * We now have a list of Src structures headed by 'bottom' and linked via      * their 'parent' pointers. What we do next is create links between      * source and target nodes (which may or may not have been created)      * and set the necessary local variables in each target. The      * commands for each target are set from the commands of the      * transformation rule used to get from the src suffix to the targ      * suffix. Note that this causes the commands list of the original      * node, gn, to be replaced by the commands of the final      * transformation rule. Also, the unmade field of gn is incremented.      * Etc.       */
+comment|/*      * We now have a list of Src structures headed by 'bottom' and linked via      * their 'parent' pointers. What we do next is create links between      * source and target nodes (which may or may not have been created)      * and set the necessary local variables in each target. The      * commands for each target are set from the commands of the      * transformation rule used to get from the src suffix to the targ      * suffix. Note that this causes the commands list of the original      * node, gn, to be replaced by the commands of the final      * transformation rule. Also, the unmade field of gn is incremented.      * Etc.      */
 if|if
 condition|(
 name|bottom

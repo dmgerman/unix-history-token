@@ -237,7 +237,7 @@ block|{
 name|int
 name|tnum
 decl_stmt|;
-comment|/* Group token: tokens in group.  				 Model header: content tokens at any level. */
+comment|/* Group token: tokens in group. 				 Model header: content tokens at any level. */
 name|struct
 name|etd
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* entgen.c -     Implement entgen() which generates a list of filenames from a struct fpi.        Written by James Clark (jjc@jclark.com). */
+comment|/* entgen.c -     Implement entgen() which generates a list of filenames from a struct fpi.     Written by James Clark (jjc@jclark.com). */
 end_comment
 
 begin_include

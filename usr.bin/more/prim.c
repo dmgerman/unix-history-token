@@ -312,7 +312,7 @@ decl_stmt|;
 name|squish_check
 argument_list|()
 expr_stmt|;
-comment|/* 	 * do_repaint tells us not to display anything till the end,  	 * then just repaint the entire screen. 	 */
+comment|/* 	 * do_repaint tells us not to display anything till the end, 	 * then just repaint the entire screen. 	 */
 name|do_repaint
 operator|=
 operator|(
@@ -968,7 +968,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/*  		 * Probably a pipe with beginning of file no longer buffered.  		 * If he wants to go to line 1, we do the best we can,  		 * by going to the first line which is still buffered. 		 */
+comment|/* 		 * Probably a pipe with beginning of file no longer buffered. 		 * If he wants to go to line 1, we do the best we can, 		 * by going to the first line which is still buffered. 		 */
 if|if
 condition|(
 name|n
@@ -1215,7 +1215,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* 		 * The line is currently displayed.   		 * Just scroll there. 		 */
+comment|/* 		 * The line is currently displayed. 		 * Just scroll there. 		 */
 name|forw
 argument_list|(
 name|nline
@@ -1657,7 +1657,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Search for the n-th occurence of a specified pattern,   * either forward or backward.  */
+comment|/*  * Search for the n-th occurence of a specified pattern,  * either forward or backward.  */
 end_comment
 
 begin_expr_stmt
@@ -1921,7 +1921,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Get lines until we find a matching one or  		 * until we hit end-of-file (or beginning-of-file  		 * if we're going backwards). 		 */
+comment|/* 		 * Get lines until we find a matching one or 		 * until we hit end-of-file (or beginning-of-file 		 * if we're going backwards). 		 */
 if|if
 condition|(
 name|sigs
@@ -1937,7 +1937,7 @@ condition|(
 name|search_forward
 condition|)
 block|{
-comment|/* 			 * Read the next line, and save the  			 * starting position of that line in linepos. 			 */
+comment|/* 			 * Read the next line, and save the 			 * starting position of that line in linepos. 			 */
 name|linepos
 operator|=
 name|pos

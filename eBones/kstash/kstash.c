@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology   * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kstash.c,v 4.0 89/01/23 09:45:43 jtkohl Exp $  *	$Id: kstash.c,v 1.2 1994/07/19 19:27:05 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: kstash.c,v 4.0 89/01/23 09:45:43 jtkohl Exp $  *	$Id: kstash.c,v 1.1.1.1 1994/09/30 14:50:05 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kstash.c,v 1.2 1994/07/19 19:27:05 g89r4222 Exp $"
+literal|"$Id: kstash.c,v 1.1.1.1 1994/09/30 14:50:05 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 

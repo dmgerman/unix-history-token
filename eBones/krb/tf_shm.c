@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Shared memory segment functions for session keys.  Derived from code  * contributed by Dan Kolkowitz (kolk@jessica.stanford.edu).  *  *	from: tf_shm.c,v 4.2 89/10/25 23:26:46 qjb Exp $  *	$Id: tf_shm.c,v 1.2 1994/07/19 19:26:26 g89r4222 Exp $  */
+comment|/*  * Copyright 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * Shared memory segment functions for session keys.  Derived from code  * contributed by Dan Kolkowitz (kolk@jessica.stanford.edu).  *  *	from: tf_shm.c,v 4.2 89/10/25 23:26:46 qjb Exp $  *	$Id: tf_shm.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tf_shm.c,v 1.2 1994/07/19 19:26:26 g89r4222 Exp $"
+literal|"$Id: tf_shm.c,v 1.1.1.1 1994/09/30 14:50:04 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,7 +195,7 @@ operator|=
 name|geteuid
 argument_list|()
 expr_stmt|;
-comment|/*       * now set up the buffer so that we can modify it       */
+comment|/*      * now set up the buffer so that we can modify it      */
 name|shm_buf
 operator|.
 name|shm_perm

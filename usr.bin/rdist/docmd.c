@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: docmd.c,v 1.2 1995/02/21 04:32:54 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -3914,7 +3914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Warn about any unused labels.  As a side effect, release the label hash  * table space.  */
+comment|/*  * Warn about any unused labels.  As a side effect, release the label hash  * table space.  */
 end_comment
 
 begin_function

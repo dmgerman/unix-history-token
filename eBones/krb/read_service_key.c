@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: _service_key.c,v 4.10 90/03/10 19:06:56 jon Exp $  *	$Id: read_service_key.c,v 1.2 1994/07/19 19:26:16 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: _service_key.c,v 4.10 90/03/10 19:06:56 jon Exp $  *	$Id: read_service_key.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: read_service_key.c,v 1.2 1994/07/19 19:26:16 g89r4222 Exp $"
+literal|"$Id: read_service_key.c,v 1.1.1.1 1994/09/30 14:50:03 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ file|<strings.h>
 end_include
 
 begin_comment
-comment|/*  * The private keys for servers on a given host are stored in a  * "srvtab" file (typically "/etc/srvtab").  This routine extracts  * a given server's key from the file.  *  * read_service_key() takes the server's name ("service"), "instance",  * and "realm" and a key version number "kvno", and looks in the given  * "file" for the corresponding entry, and if found, returns the entry's  * key field in "key".  *   * If "instance" contains the string "*", then it will match  * any instance, and the chosen instance will be copied to that  * string.  For this reason it is important that the there is enough  * space beyond the "*" to receive the entry.  *  * If "kvno" is 0, it is treated as a wild card and the first  * matching entry regardless of the "vno" field is returned.  *  * This routine returns KSUCCESS on success, otherwise KFAILURE.  *  * The format of each "srvtab" entry is as follows:  *  * Size			Variable		Field in file  * ----			--------		-------------  * string		serv			server name  * string		inst			server instance  * string		realm			server realm  * 1 byte		vno			server key version #  * 8 bytes		key			server's key  * ...			...			...  */
+comment|/*  * The private keys for servers on a given host are stored in a  * "srvtab" file (typically "/etc/srvtab").  This routine extracts  * a given server's key from the file.  *  * read_service_key() takes the server's name ("service"), "instance",  * and "realm" and a key version number "kvno", and looks in the given  * "file" for the corresponding entry, and if found, returns the entry's  * key field in "key".  *  * If "instance" contains the string "*", then it will match  * any instance, and the chosen instance will be copied to that  * string.  For this reason it is important that the there is enough  * space beyond the "*" to receive the entry.  *  * If "kvno" is 0, it is treated as a wild card and the first  * matching entry regardless of the "vno" field is returned.  *  * This routine returns KSUCCESS on success, otherwise KFAILURE.  *  * The format of each "srvtab" entry is as follows:  *  * Size			Variable		Field in file  * ----			--------		-------------  * string		serv			server name  * string		inst			server instance  * string		realm			server realm  * 1 byte		vno			server key version #  * 8 bytes		key			server's key  * ...			...			...  */
 end_comment
 
 begin_comment

@@ -29,11 +29,11 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Routines for calling up on a Hayes Modem  * (based on the old VenTel driver).  * The modem is expected to be strapped for "echo".  * Also, the switches enabling the DTR and CD lines  * must be set correctly.  * NOTICE:  * The easy way to hang up a modem is always simply to  * clear the DTR signal. However, if the +++ sequence  * (which switches the modem back to local mode) is sent  * before modem is hung up, removal of the DTR signal  * has no effect (except that it prevents the modem from  * recognizing commands).  * (by Helge Skrivervik, Calma Company, Sunnyvale, CA. 1984)   */
+comment|/*  * Routines for calling up on a Hayes Modem  * (based on the old VenTel driver).  * The modem is expected to be strapped for "echo".  * Also, the switches enabling the DTR and CD lines  * must be set correctly.  * NOTICE:  * The easy way to hang up a modem is always simply to  * clear the DTR signal. However, if the +++ sequence  * (which switches the modem back to local mode) is sent  * before modem is hung up, removal of the DTR signal  * has no effect (except that it prevents the modem from  * recognizing commands).  * (by Helge Skrivervik, Calma Company, Sunnyvale, CA. 1984)  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * It is probably not a good idea to switch the modem  * state between 'verbose' and terse (status messages).  * This should be kicked out and we should use verbose   * mode only. This would make it consistent with normal  * interactive use thru the command 'tip dialer'.  */
+comment|/*  * TODO:  * It is probably not a good idea to switch the modem  * state between 'verbose' and terse (status messages).  * This should be kicked out and we should use verbose  * mode only. This would make it consistent with normal  * interactive use thru the command 'tip dialer'.  */
 end_comment
 
 begin_include

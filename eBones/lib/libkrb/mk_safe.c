@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'safe msg', i.e. authenticated  * using a private session key to seed a checksum. Msg is NOT  * encrypted.  *  *      Note-- bcopy is used to avoid alignment problems on IBM RT  *  *      Returns either<0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_safe.c,v 4.12 89/03/22 14:50:49 jtkohl Exp $  *	$Id: mk_safe.c,v 1.2 1994/07/19 19:25:59 g89r4222 Exp $  */
+comment|/*  * Copyright 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  * This routine constructs a Kerberos 'safe msg', i.e. authenticated  * using a private session key to seed a checksum. Msg is NOT  * encrypted.  *  *      Note-- bcopy is used to avoid alignment problems on IBM RT  *  *      Returns either<0 ===> error, or resulting size of message  *  * Steve Miller    Project Athena  MIT/DEC  *  *	from: mk_safe.c,v 4.12 89/03/22 14:50:49 jtkohl Exp $  *	$Id: mk_safe.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mk_safe.c,v 1.2 1994/07/19 19:25:59 g89r4222 Exp $"
+literal|"$Id: mk_safe.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * krb_mk_safe() constructs an AUTH_MSG_SAFE message.  It takes some  * user data "in" of "length" bytes and creates a packet in "out"  * consisting of the user data, a timestamp, and the sender's network  * address, followed by a checksum computed on the above, using the  * given "key".  The length of the resulting packet is returned.  *  * The "out" packet consists of:  *  * Size			Variable		Field  * ----			--------		-----  *  * 1 byte		KRB_PROT_VERSION	protocol version number  * 1 byte		AUTH_MSG_SAFE |		message type plus local  *			HOST_BYTE_ORDER		byte order in low bit  *  * ===================== begin checksum ================================  *   * 4 bytes		length			length of user data  * length		in			user data  * 1 byte		msg_time_5ms		timestamp milliseconds  * 4 bytes		sender->sin.addr.s_addr	sender's IP address  *  * 4 bytes		msg_time_sec or		timestamp seconds with  *			-msg_time_sec		direction in sign bit  *  * ======================= end checksum ================================  *  * 16 bytes		big_cksum		quadratic checksum of  *						above using "key"  */
+comment|/*  * krb_mk_safe() constructs an AUTH_MSG_SAFE message.  It takes some  * user data "in" of "length" bytes and creates a packet in "out"  * consisting of the user data, a timestamp, and the sender's network  * address, followed by a checksum computed on the above, using the  * given "key".  The length of the resulting packet is returned.  *  * The "out" packet consists of:  *  * Size			Variable		Field  * ----			--------		-----  *  * 1 byte		KRB_PROT_VERSION	protocol version number  * 1 byte		AUTH_MSG_SAFE |		message type plus local  *			HOST_BYTE_ORDER		byte order in low bit  *  * ===================== begin checksum ================================  *  * 4 bytes		length			length of user data  * length		in			user data  * 1 byte		msg_time_5ms		timestamp milliseconds  * 4 bytes		sender->sin.addr.s_addr	sender's IP address  *  * 4 bytes		msg_time_sec or		timestamp seconds with  *			-msg_time_sec		direction in sign bit  *  * ======================= end checksum ================================  *  * 16 bytes		big_cksum		quadratic checksum of  *						above using "key"  */
 end_comment
 
 begin_function
@@ -404,7 +404,7 @@ name|s_addr
 argument_list|)
 expr_stmt|;
 comment|/*      * direction bit is the sign bit of the timestamp.  Ok until      * 2038??      */
-comment|/* For compatibility with broken old code, compares are done in VAX         byte order (LSBFIRST) */
+comment|/* For compatibility with broken old code, compares are done in VAX        byte order (LSBFIRST) */
 if|if
 condition|(
 name|lsb_net_ulong_less

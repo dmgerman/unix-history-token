@@ -65,7 +65,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * pr_attime --  *	Print the time since the user logged in.   *  *	Note: SCCS forces the bizarre string manipulation, things like  *	8.2 get replaced in the source code.  */
+comment|/*  * pr_attime --  *	Print the time since the user logged in.  *  *	Note: SCCS forces the bizarre string manipulation, things like  *	8.2 get replaced in the source code.  */
 end_comment
 
 begin_function

@@ -287,7 +287,7 @@ operator|==
 literal|0
 condition|)
 do|;
-comment|/* 		 * Keep reading while there are queued messages  		 * (this is not necessary, it just saves extra 		 * request/acknowledgements being sent) 		 */
+comment|/* 		 * Keep reading while there are queued messages 		 * (this is not necessary, it just saves extra 		 * request/acknowledgements being sent) 		 */
 do|do
 block|{
 name|cc

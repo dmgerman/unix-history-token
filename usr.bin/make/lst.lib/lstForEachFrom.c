@@ -39,7 +39,7 @@ file|"lstInt.h"
 end_include
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Lst_ForEachFrom --  *	Apply the given function to each element of the given list. The  *	function should return 0 if traversal should continue and non-  *	zero if it should abort.   *  * Results:  *	None.  *  * Side Effects:  *	Only those created by the passed-in function.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Lst_ForEachFrom --  *	Apply the given function to each element of the given list. The  *	function should return 0 if traversal should continue and non-  *	zero if it should abort.  *  * Results:  *	None.  *  * Side Effects:  *	Only those created by the passed-in function.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_comment

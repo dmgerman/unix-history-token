@@ -927,7 +927,7 @@ condition|)
 goto|goto
 name|aa
 goto|;
-comment|/* See if this line looks like a unix-style ls line.  	 * If so, we can grab the date and size from it. 	 */
+comment|/* See if this line looks like a unix-style ls line. 	 * If so, we can grab the date and size from it. 	 */
 if|if
 condition|(
 name|strpbrk
@@ -5003,7 +5003,7 @@ block|}
 comment|/* end switch */
 block|}
 comment|/* end loop */
-comment|/* 	 *	If we are given an ls with some flags, make sure we use  	 *	columnized output (-C) unless one column output (-1) is 	 *	specified. 	 */
+comment|/* 	 *	If we are given an ls with some flags, make sure we use 	 *	columnized output (-C) unless one column output (-1) is 	 *	specified. 	 */
 if|if
 condition|(
 operator|!

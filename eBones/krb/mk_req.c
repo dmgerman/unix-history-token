@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: mk_req.c,v 4.17 89/07/07 15:20:35 jtkohl Exp $  *	$Id: mk_req.c,v 1.2 1994/07/19 19:25:57 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: der: mk_req.c,v 4.17 89/07/07 15:20:35 jtkohl Exp $  *	$Id: mk_req.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: mk_req.c,v 1.2 1994/07/19 19:25:57 g89r4222 Exp $"
+literal|"$Id: mk_req.c,v 1.1.1.1 1994/09/30 14:50:02 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,7 +314,7 @@ argument_list|,
 name|realm
 argument_list|)
 expr_stmt|;
-comment|/*       * Determine realm of these tickets.  We will send this to the      * KDC from which we are requesting tickets so it knows what to      * with our session key.      */
+comment|/*      * Determine realm of these tickets.  We will send this to the      * KDC from which we are requesting tickets so it knows what to      * with our session key.      */
 if|if
 condition|(
 operator|(
@@ -958,7 +958,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * krb_set_lifetime sets the default lifetime for additional tickets  * obtained via krb_mk_req().  *   * It returns the previous value of the default lifetime.  */
+comment|/*  * krb_set_lifetime sets the default lifetime for additional tickets  * obtained via krb_mk_req().  *  * It returns the previous value of the default lifetime.  */
 end_comment
 
 begin_function

@@ -7714,7 +7714,7 @@ argument_list|,
 name|curtype
 argument_list|)
 expr_stmt|;
-comment|/* Issue the NLST command but don't wait for the reply.  Some FTP   	 * servers make the data connection before issuing the   	 * "150 Opening ASCII mode data connection for /bin/ls" reply.  	 */
+comment|/* Issue the NLST command but don't wait for the reply.  Some FTP  	 * servers make the data connection before issuing the  	 * "150 Opening ASCII mode data connection for /bin/ls" reply.  	 */
 if|if
 condition|(
 name|IssueCommand

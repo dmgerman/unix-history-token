@@ -4445,7 +4445,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Must omit omitted end-tag minimization, if omitted  	start-tag minimization was omitted (because OMITTAG == NO). */
+comment|/* Must omit omitted end-tag minimization, if omitted 	start-tag minimization was omitted (because OMITTAG == NO). */
 if|if
 condition|(
 operator|!

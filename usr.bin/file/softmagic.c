@@ -45,7 +45,7 @@ name|char
 modifier|*
 name|moduleid
 init|=
-literal|"@(#)$Id: softmagic.c,v 1.1.1.1 1994/09/03 19:16:22 csgr Exp $"
+literal|"@(#)$Id: softmagic.c,v 1.2 1995/05/24 02:54:30 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * softmagic - lookup one file in database   * (already read from /etc/magic by apprentice.c).  * Passed the name and FILE * of one file to be typed.  */
+comment|/*  * softmagic - lookup one file in database  * (already read from /etc/magic by apprentice.c).  * Passed the name and FILE * of one file to be typed.  */
 end_comment
 
 begin_comment
@@ -311,7 +311,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/*  			     * main entry didn't match, 			     * flush its continuations 			     */
+comment|/* 			     * main entry didn't match, 			     * flush its continuations 			     */
 while|while
 condition|(
 name|magindex

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Source: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/kadm_server.h,v $  * $Author: jtkohl $  * Header: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/kadm_server.h,v 4.1 89/12/21 17:46:51 jtkohl Exp   *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Definitions for Kerberos administration server& client  */
+comment|/*  * $Source: /home/ncvs/src/eBones/kadmind/kadm_server.h,v $  * $Author: wollman $  * Header: /afs/athena.mit.edu/astaff/project/kerberos/src/kadmin/RCS/kadm_server.h,v 4.1 89/12/21 17:46:51 jtkohl Exp  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  * Copyright.MIT.  *  * Definitions for Kerberos administration server& client  */
 end_comment
 
 begin_ifndef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_krbhst.c,v 4.8 89/01/22 20:00:29 rfrench Exp $  *	$Id: get_krbhst.c,v 1.2 1994/07/19 19:25:17 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: get_krbhst.c,v 4.8 89/01/22 20:00:29 rfrench Exp $  *	$Id: get_krbhst.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: get_krbhst.c,v 1.2 1994/07/19 19:25:17 g89r4222 Exp $"
+literal|"$Id: get_krbhst.c,v 1.1.1.1 1994/09/30 14:50:00 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ file|<strings.h>
 end_include
 
 begin_comment
-comment|/*  * Given a Kerberos realm, find a host on which the Kerberos authenti-  * cation server can be found.  *  * krb_get_krbhst takes a pointer to be filled in, a pointer to the name  * of the realm for which a server is desired, and an integer, n, and  * returns (in h) the nth entry from the configuration file (KRB_CONF,  * defined in "krb.h") associated with the specified realm.  *  * On end-of-file, krb_get_krbhst returns KFAILURE.  If n=1 and the  * configuration file does not exist, krb_get_krbhst will return KRB_HOST  * (also defined in "krb.h").  If all goes well, the routine returnes  * KSUCCESS.  *  * The KRB_CONF file contains the name of the local realm in the first  * line (not used by this routine), followed by lines indicating realm/host  * entries.  The words "admin server" following the hostname indicate that   * the host provides an administrative database server.  *  * For example:  *  *	ATHENA.MIT.EDU  *	ATHENA.MIT.EDU kerberos-1.mit.edu admin server  *	ATHENA.MIT.EDU kerberos-2.mit.edu  *	LCS.MIT.EDU kerberos.lcs.mit.edu admin server  *  * This is a temporary hack to allow us to find the nearest system running  * kerberos.  In the long run, this functionality will be provided by a  * nameserver.  */
+comment|/*  * Given a Kerberos realm, find a host on which the Kerberos authenti-  * cation server can be found.  *  * krb_get_krbhst takes a pointer to be filled in, a pointer to the name  * of the realm for which a server is desired, and an integer, n, and  * returns (in h) the nth entry from the configuration file (KRB_CONF,  * defined in "krb.h") associated with the specified realm.  *  * On end-of-file, krb_get_krbhst returns KFAILURE.  If n=1 and the  * configuration file does not exist, krb_get_krbhst will return KRB_HOST  * (also defined in "krb.h").  If all goes well, the routine returnes  * KSUCCESS.  *  * The KRB_CONF file contains the name of the local realm in the first  * line (not used by this routine), followed by lines indicating realm/host  * entries.  The words "admin server" following the hostname indicate that  * the host provides an administrative database server.  *  * For example:  *  *	ATHENA.MIT.EDU  *	ATHENA.MIT.EDU kerberos-1.mit.edu admin server  *	ATHENA.MIT.EDU kerberos-2.mit.edu  *	LCS.MIT.EDU kerberos.lcs.mit.edu admin server  *  * This is a temporary hack to allow us to find the nearest system running  * kerberos.  In the long run, this functionality will be provided by a  * nameserver.  */
 end_comment
 
 begin_macro

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rup.c,v 1.3 1994/04/10 10:42:28 csgr Exp $"
+literal|"$Id: rup.c,v 1.1.1.1 1994/08/28 15:01:31 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 

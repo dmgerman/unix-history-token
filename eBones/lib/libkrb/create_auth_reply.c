@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_auth_reply.c,v 4.10 89/01/13 17:47:38 steiner Exp $  *	$Id: create_auth_reply.c,v 1.2 1994/07/19 19:24:56 g89r4222 Exp $  */
+comment|/*  * Copyright 1985, 1986, 1987, 1988 by the Massachusetts Institute  * of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: create_auth_reply.c,v 4.10 89/01/13 17:47:38 steiner Exp $  *	$Id: create_auth_reply.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: create_auth_reply.c,v 1.2 1994/07/19 19:24:56 g89r4222 Exp $"
+literal|"$Id: create_auth_reply.c,v 1.1.1.1 1994/09/30 14:49:59 csgr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ file|<strings.h>
 end_include
 
 begin_comment
-comment|/*  * This routine is called by the Kerberos authentication server  * to create a reply to an authentication request.  The routine  * takes the user's name, instance, and realm, the client's  * timestamp, the number of tickets, the user's key version  * number and the ciphertext containing the tickets themselves.  * It constructs a packet and returns a pointer to it.  *  * Notes: The packet returned by this routine is static.  Thus, if you  * intend to keep the result beyond the next call to this routine, you  * must copy it elsewhere.  *  * The packet is built in the following format:  *   * 			variable  * type			or constant	   data  * ----			-----------	   ----  *   * unsigned char	KRB_PROT_VERSION   protocol version number  *   * unsigned char	AUTH_MSG_KDC_REPLY protocol message type  *   * [least significant	HOST_BYTE_ORDER	   sender's (server's) byte  *  bit of above field]			   order  *   * string		pname		   principal's name  *   * string		pinst		   principal's instance  *   * string		prealm		   principal's realm  *   * unsigned long	time_ws		   client's timestamp  *   * unsigned char	n		   number of tickets  *   * unsigned long	x_date		   expiration date  *   * unsigned char	kvno		   master key version  *   * short		w_1		   cipher length  *   * ---			cipher->dat	   cipher data  */
+comment|/*  * This routine is called by the Kerberos authentication server  * to create a reply to an authentication request.  The routine  * takes the user's name, instance, and realm, the client's  * timestamp, the number of tickets, the user's key version  * number and the ciphertext containing the tickets themselves.  * It constructs a packet and returns a pointer to it.  *  * Notes: The packet returned by this routine is static.  Thus, if you  * intend to keep the result beyond the next call to this routine, you  * must copy it elsewhere.  *  * The packet is built in the following format:  *  * 			variable  * type			or constant	   data  * ----			-----------	   ----  *  * unsigned char	KRB_PROT_VERSION   protocol version number  *  * unsigned char	AUTH_MSG_KDC_REPLY protocol message type  *  * [least significant	HOST_BYTE_ORDER	   sender's (server's) byte  *  bit of above field]			   order  *  * string		pname		   principal's name  *  * string		pinst		   principal's instance  *  * string		prealm		   principal's realm  *  * unsigned long	time_ws		   client's timestamp  *  * unsigned char	n		   number of tickets  *  * unsigned long	x_date		   expiration date  *  * unsigned char	kvno		   master key version  *  * short		w_1		   cipher length  *  * ---			cipher->dat	   cipher data  */
 end_comment
 
 begin_function
