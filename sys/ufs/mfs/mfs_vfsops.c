@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ufs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -354,8 +360,18 @@ name|mfs_init
 block|,
 name|vfs_stduninit
 block|,
+ifdef|#
+directive|ifdef
+name|UFS_EXTATTR
+name|ufs_extattrctl
+block|,
+else|#
+directive|else
 name|vfs_stdextattrctl
-block|, }
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 end_decl_stmt
 
