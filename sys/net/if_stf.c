@@ -376,6 +376,10 @@ name|PR_ADDR
 block|,
 name|in_stf_input
 block|,
+operator|(
+name|pr_output_t
+operator|*
+operator|)
 name|rip_output
 block|,
 literal|0
@@ -1327,6 +1331,9 @@ operator|(
 expr|struct
 name|mbuf
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|m
 argument_list|,
