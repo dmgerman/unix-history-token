@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PCSTART.c 1.7 %G%"
+literal|"@(#)PCSTART.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VAX
+name|ADDR32
 end_ifdef
 
 begin_decl_stmt
@@ -102,10 +102,17 @@ literal|0x7fffffff
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+endif|ADDR32
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ADDR16
+end_ifdef
 
 begin_decl_stmt
 name|char
@@ -123,7 +130,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|VAX
+endif|ADDR16
 end_endif
 
 begin_decl_stmt
