@@ -10705,15 +10705,6 @@ argument_list|(
 name|m_head
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"xl%d: no memory for tx list\n"
-argument_list|,
-name|sc
-operator|->
-name|xl_unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -10926,6 +10917,11 @@ decl_stmt|,
 modifier|*
 name|start_tx
 decl_stmt|;
+name|struct
+name|xl_chain
+modifier|*
+name|prev_tx
+decl_stmt|;
 name|u_int32_t
 name|status
 decl_stmt|;
@@ -11027,6 +11023,10 @@ name|NULL
 condition|)
 break|break;
 comment|/* Pick a descriptor off the free list. */
+name|prev_tx
+operator|=
+name|cur_tx
+expr_stmt|;
 name|cur_tx
 operator|=
 name|sc
@@ -11051,7 +11051,13 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|cur_tx
+operator|=
+name|prev_tx
+expr_stmt|;
 continue|continue;
+block|}
 name|sc
 operator|->
 name|xl_cdata
@@ -11375,6 +11381,11 @@ decl_stmt|,
 modifier|*
 name|start_tx
 decl_stmt|;
+name|struct
+name|xl_chain
+modifier|*
+name|prev_tx
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -11483,6 +11494,10 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|prev_tx
+operator|=
+name|cur_tx
+expr_stmt|;
 name|cur_tx
 operator|=
 operator|&
@@ -11511,7 +11526,13 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|cur_tx
+operator|=
+name|prev_tx
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* Chain it together. */
 if|if
 condition|(
