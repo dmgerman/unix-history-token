@@ -3552,13 +3552,7 @@ name|__ia64__
 comment|/* Allocate a new register stack */
 name|stack_addr
 operator|=
-name|sv
-operator|->
-name|sv_usrstack
-operator|-
-literal|2
-operator|*
-name|maxssiz
+name|IA64_BACKINGSTORE
 expr_stmt|;
 name|error
 operator|=

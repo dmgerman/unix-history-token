@@ -352,6 +352,13 @@ name|IA64_ID_PAGE_MASK
 value|(IA64_ID_PAGE_SIZE-1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IA64_BACKINGSTORE
+value|IA64_RR_BASE(4)
+end_define
+
 begin_comment
 comment|/*  * Mach derived constants  */
 end_comment
