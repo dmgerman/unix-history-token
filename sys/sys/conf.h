@@ -882,7 +882,7 @@ begin_define
 define|#
 directive|define
 name|MAXMINOR
-value|0xffff00ff
+value|0xffff00ffU
 end_define
 
 begin_comment
@@ -1287,10 +1287,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|u_int
 name|minor2unit
 parameter_list|(
-name|int
+name|u_int
 name|_minor
 parameter_list|)
 function_decl|;

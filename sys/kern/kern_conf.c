@@ -974,10 +974,10 @@ block|}
 end_function
 
 begin_function
-name|int
+name|u_int
 name|minor2unit
 parameter_list|(
-name|int
+name|u_int
 name|_minor
 parameter_list|)
 block|{
@@ -1008,9 +1008,13 @@ literal|0xff
 operator|)
 operator||
 operator|(
+operator|(
 name|_minor
 operator|>>
 literal|8
+operator|)
+operator|&
+literal|0xffff00
 operator|)
 operator|)
 return|;
@@ -2073,7 +2077,7 @@ name|SI_NAMED
 operator|)
 argument_list|,
 operator|(
-literal|"make_dev() by driver %s on pre-existing device (maj=%d, min=%d, name=%s)"
+literal|"make_dev() by driver %s on pre-existing device (maj=%d, min=%x, name=%s)"
 operator|,
 name|devsw
 operator|->
