@@ -11,6 +11,10 @@ begin_comment
 comment|/* ??? not all decl nodes are given the most useful possible    line numbers.  For example, the CONST_DECLs for enum values.  */
 end_comment
 
+begin_comment
+comment|/*  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00056  * --------------------         -----   ----------------------  *  * 27 Nov 1992	James Clark		Fixed memory bug in g++  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -31138,7 +31142,7 @@ name|build_tree_list
 argument_list|(
 name|NULL_TREE
 argument_list|,
-name|integer_zero_node
+name|current_class_decl
 argument_list|)
 argument_list|,
 name|NULL_TREE
