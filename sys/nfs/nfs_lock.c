@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -269,7 +275,7 @@ name|ap
 operator|->
 name|a_fl
 expr_stmt|;
-comment|/* 	 * the NLM protocol doesn't allow the server to return an error 	 * on ranges, so we do it.  Note that we should be returning  	 * EOVERFLOW in some cases, but we don't have it. 	 */
+comment|/* 	 * the NLM protocol doesn't allow the server to return an error 	 * on ranges, so we do it. 	 */
 if|if
 condition|(
 name|fl
@@ -283,9 +289,14 @@ operator|->
 name|l_len
 operator|<
 literal|0
-operator|||
+condition|)
+return|return
 operator|(
-operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 name|fl
 operator|->
 name|l_len
@@ -295,22 +306,20 @@ operator|&&
 operator|(
 name|fl
 operator|->
-name|l_start
-operator|+
-name|fl
-operator|->
 name|l_len
 operator|-
 literal|1
-operator|)
-operator|<
-literal|0
-operator|)
+operator|>
+name|OFF_MAX
+operator|-
+name|fl
+operator|->
+name|l_start
 operator|)
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EOVERFLOW
 operator|)
 return|;
 comment|/* 	 * Fill in the information structure. 	 */
