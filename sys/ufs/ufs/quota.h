@@ -632,6 +632,10 @@ name|int
 name|getquota
 parameter_list|(
 name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
 name|mount
 modifier|*
 parameter_list|,
@@ -699,6 +703,10 @@ name|int
 name|setquota
 parameter_list|(
 name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
 name|mount
 modifier|*
 parameter_list|,
@@ -715,6 +723,10 @@ begin_function_decl
 name|int
 name|setuse
 parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
 name|struct
 name|mount
 modifier|*
