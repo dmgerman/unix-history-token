@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.14 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2265,21 +2265,6 @@ condition|)
 return|return
 operator|(
 name|R_CURSOR
-operator|)
-return|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|s
-argument_list|,
-literal|"R_CURSORLOG"
-argument_list|)
-condition|)
-return|return
-operator|(
-name|R_CURSORLOG
 operator|)
 return|;
 if|if
