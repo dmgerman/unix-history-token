@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.2	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,31 @@ end_decl_stmt
 
 begin_comment
 comment|/* used to check precision of assignments */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Cflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* filter out certain output, for generating libraries */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|libname
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of the library we're generating */
 end_comment
 
 begin_comment
@@ -702,7 +727,9 @@ literal|"static variable %s unused"
 argument|,
 endif|#
 directive|endif
-argument|p->sname ); 					lineno = k; 					break; 					}  			case EXTERN: 			case USTATIC:
+argument|p->sname ); 					lineno = k; 					break; 					}
+comment|/* no statics in libraries */
+argument|if( Cflag ) break;  			case EXTERN: 			case USTATIC:
 comment|/* with the xflag, worry about externs not used */
 comment|/* the filename may be wrong here... */
 argument|if( xflag&& p->suse>=
@@ -758,7 +785,9 @@ comment|/* code for the beginning of a function; a is an array of 		indices in s
 comment|/* this must also set retlab */
 argument|register i; 	register struct symtab *cfp; 	static ATYPE t;  	retlab =
 literal|1
-argument|; 	cfp =&stab[curftn];
+argument|;  	cfp =&stab[curftn];
+comment|/* if creating library, don't do static functions */
+argument|if( Cflag&& cfp->sclass == STATIC ) return;
 comment|/* if variable number of arguments, only print the ones which will be checked */
 argument|if( vaflag>
 literal|0
@@ -836,9 +865,11 @@ argument|np1 = lnp; 		lprt( p->in.left, down1, use1 ); 		np2 = lnp; 		lprt( p->i
 literal|0
 argument|); 		return;  	case SCONV: 	case PCONV: 	case COLON: 		down1 = down2 = down; 		break;  	case CALL: 	case STCALL: 	case FORTCALL: 		acount = ctargs( p->in.right ); 	case UNARY CALL: 	case UNARY STCALL: 	case UNARY FORTCALL: 		if( p->in.left->in.op == ICON&& (id=p->in.left->tn.rval) != NONAME ){
 comment|/* used to be&name */
-argument|struct symtab *sp =&stab[id]; 			int lty;
+argument|struct symtab *sp =&stab[id]; 			int lty;  			fsave( ftitle );
+comment|/* 			 * if we're generating a library -C then 			 * we don't want to output references to functions 			 */
+argument|if( Cflag ) break;
 comment|/*  if a function used in an effects context is 			 *  cast to type  void  then consider its value 			 *  to have been disposed of properly 			 *  thus a call of type  undef  in an effects 			 *  context is construed to be used in a value 			 *  context 			 */
-argument|if ((down == EFF)&& (p->in.type != UNDEF)) { 				lty = LUE; 			} else if (down == EFF) { 				lty = LUV | LUE; 			} else { 				lty = LUV; 			} 			fsave( ftitle ); 			outdef(sp, lty, acount); 			if( acount ) { 				lpta( p->in.right ); 				} 			} 		break;  	case ICON:
+argument|if ((down == EFF)&& (p->in.type != UNDEF)) { 				lty = LUE; 			} else if (down == EFF) { 				lty = LUV | LUE; 			} else { 				lty = LUV; 			} 			outdef( sp, lty, acount ); 			if( acount ) { 				lpta( p->in.right ); 				} 			} 		break;  	case ICON:
 comment|/* look for&name case */
 argument|if( (id = p->tn.rval)>=
 literal|0
@@ -906,7 +937,7 @@ argument|np2->lid = npx->lid; 		np2->flgs = npx->flgs; 		++np2;  		foundit: ; 		
 comment|/* all finished: merged list is at np1 */
 argument|lnp = np2; 	}  efcode(){
 comment|/* code for the end of a function */
-argument|register struct symtab *cfp;  	cfp =&stab[curftn]; 	if( retstat& RETVAL ) outdef( cfp, LRV, DECTY ); 	if( !vflag ){ 		vflag = argflag; 		argflag =
+argument|register struct symtab *cfp;  	cfp =&stab[curftn]; 	if( retstat& RETVAL&& !(Cflag&& cfp->sclass==STATIC) ) 		outdef( cfp, LRV, DECTY ); 	if( !vflag ){ 		vflag = argflag; 		argflag =
 literal|0
 argument|; 		} 	if( retstat == RETVAL+NRETVAL )
 ifndef|#
@@ -994,9 +1025,9 @@ endif|#
 directive|endif
 argument|}  	}  defnam( p ) register struct symtab *p; {
 comment|/* define the current location as the name p->sname */
-argument|if( p->sclass == STATIC&& p->slevel>
+argument|if( p->sclass == STATIC&& (p->slevel>
 literal|1
-argument|) return;  	if( !ISFTN( p->stype ) ) outdef( p, libflag?LIB:LDI, USUAL ); 	}  zecode( n ){
+argument||| Cflag) ) return;  	if( !ISFTN( p->stype ) ) outdef( p, libflag?LIB:LDI, USUAL ); 	}  zecode( n ){
 comment|/* n integer words of zeros */
 argument|OFFSZ temp; 	temp = n; 	inoff += temp*SZINT; 	; 	}  andable( p ) NODE *p; {
 comment|/* p is a NAME node; can it accept& ? */
@@ -1096,12 +1127,15 @@ ifndef|#
 directive|ifndef
 name|FLEXNAMES
 comment|/* PATCHED by ROBERT HENRY on 8Jul80 to fix 14 character file name bug */
-argument|if( p>=&x[LFNM] ) 				cerror(
-literal|"filename too long"
-argument|);
+argument|if( p>=&x[LFNM] )
+else|#
+directive|else
+argument|if( p>=&x[BUFSIZ] )
 endif|#
 directive|endif
-argument|*p++ = *s; 		} 	} 	stripping =
+argument|cerror(
+literal|"filename too long"
+argument|); 			*p++ = *s; 		} 	} 	stripping =
 literal|0
 argument|; 	*p =
 literal|'\0'
@@ -1141,7 +1175,13 @@ argument|, stdout );
 ifdef|#
 directive|ifdef
 name|FLEXNAMES
-argument|fwrite( fsname.f.fn, strlen(fsname.f.fn)+
+comment|/* if generating a library, prefix with the library name */
+comment|/* only do this for flexnames */
+argument|if( libname ){ 			fwrite( libname, strlen(libname),
+literal|1
+argument|, stdout ); 			putchar(
+literal|':'
+argument|); 			} 		fwrite( fsname.f.fn, strlen(fsname.f.fn)+
 literal|1
 argument|,
 literal|1
@@ -1176,51 +1216,49 @@ argument|if( pflag ) uerror(
 literal|"nonportable field type"
 argument|); 		} 	else uerror(
 literal|"illegal field type"
-argument|); 	return(ALINT); 	}  main( argc, argv ) char *argv[]; { 	char *p;
+argument|); 	return(ALINT); 	}  main( argc, argv ) char *argv[]; { 	char *p; 	int i;
 comment|/* handle options */
-argument|for( p=argv[
+argument|for( i =
 literal|1
-argument|]; argc>
-literal|1
-argument|&& *p; ++p ){  		switch( *p ){  		case
+argument|; i< argc; i++ ) 		for( p=argv[i]; *p; ++p ){  			switch( *p ){  			case
 literal|'-'
-argument|: 			continue;  		case
+argument|: 				continue;  			case
 literal|'\0'
-argument|: 			break;  		case
+argument|: 				break;  			case
 literal|'b'
-argument|: 			brkflag =
+argument|: 				brkflag =
 literal|1
-argument|; 			continue;  		case
+argument|; 				continue;  			case
 literal|'p'
-argument|: 			pflag =
+argument|: 				pflag =
 literal|1
-argument|; 			continue;  		case
+argument|; 				continue;  			case
 literal|'c'
-argument|: 			cflag =
+argument|: 				cflag =
 literal|1
-argument|; 			continue;  		case
+argument|; 				continue;  			case
 literal|'s'
 argument|:
 comment|/* for the moment, -s triggers -h */
 argument|case
 literal|'h'
-argument|: 			hflag =
+argument|: 				hflag =
 literal|1
-argument|; 			continue;  		case
+argument|; 				continue;  			case
 literal|'L'
-argument|: 			libflag =
+argument|: 				libflag =
 literal|1
-argument|; 		case
+argument|; 			case
 literal|'v'
-argument|: 			vflag =
+argument|: 				vflag =
 literal|0
-argument|; 			continue;  		case
+argument|; 				continue;  			case
 literal|'x'
-argument|: 			xflag =
+argument|: 				xflag =
 literal|1
-argument|; 			continue;  		case
+argument|; 				continue;  			case
 literal|'a'
-argument|: 			++aflag; 		case
+argument|: 				++aflag; 			case
 literal|'u'
 argument|:
 comment|/* done in second pass */
@@ -1228,13 +1266,23 @@ argument|case
 literal|'n'
 argument|:
 comment|/* done in shell script */
-argument|continue;  		case
+argument|continue;  			case
 literal|'t'
-argument|: 			werror(
+argument|: 				werror(
 literal|"option %c now default: see `man 6 lint'"
-argument|, *p ); 			continue;  		default: 			uerror(
+argument|, *p ); 				continue;  			case
+literal|'C'
+argument|: 				Cflag =
+literal|1
+argument|; 				if( p[
+literal|1
+argument|] ) libname = p +
+literal|1
+argument|; 				while( p[
+literal|1
+argument|] ) p++; 				continue;  			default: 				uerror(
 literal|"illegal option: %c"
-argument|, *p ); 			continue;  			} 		}  	if( !pflag ){
+argument|, *p ); 				continue;  				} 			}  	if( !pflag ){
 comment|/* set sizes to sizes of target machine */
 ifdef|#
 directive|ifdef
