@@ -464,6 +464,11 @@ decl_stmt|;
 comment|/* 	 * Flush all dirty buffers associated with a vnode. 	 */
 name|loop
 label|:
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -497,6 +502,11 @@ argument_list|,
 name|b_vnbufs
 argument_list|)
 expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|BUF_LOCK
@@ -508,7 +518,14 @@ operator||
 name|LK_NOWAIT
 argument_list|)
 condition|)
+block|{
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -548,11 +565,6 @@ goto|goto
 name|loop
 goto|;
 block|}
-name|VI_LOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|vp
@@ -591,11 +603,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -624,6 +631,11 @@ goto|;
 block|}
 endif|#
 directive|endif
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3060,9 +3072,10 @@ if|if
 condition|(
 name|prtactive
 operator|&&
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)

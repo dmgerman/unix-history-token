@@ -506,9 +506,10 @@ expr_stmt|;
 comment|/* 	 * Do nothing unless this is the last close and the node has a 	 * last-close handler. 	 */
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|vn
-operator|->
-name|v_usecount
+argument_list|)
 operator|>
 literal|1
 operator|||

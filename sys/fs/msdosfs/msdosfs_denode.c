@@ -2455,9 +2455,10 @@ if|if
 condition|(
 name|prtactive
 operator|&&
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -2606,9 +2607,10 @@ if|if
 condition|(
 name|prtactive
 operator|&&
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -2740,9 +2742,10 @@ name|printf
 argument_list|(
 literal|"msdosfs_inactive(): v_usecount %d, de_Name[0] %x\n"
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|,
 name|dep
 operator|->

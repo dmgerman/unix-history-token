@@ -2061,14 +2061,15 @@ index|]
 operator|)
 operator|&&
 operator|(
+name|vrefcnt
+argument_list|(
 name|ntmp
 operator|->
 name|ntm_sysvn
 index|[
 name|i
 index|]
-operator|->
-name|v_usecount
+argument_list|)
 operator|>
 literal|1
 operator|)

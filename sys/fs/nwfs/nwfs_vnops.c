@@ -2764,9 +2764,10 @@ name|np
 operator|->
 name|opened
 operator|||
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|1
 condition|)
@@ -2973,9 +2974,10 @@ if|if
 condition|(
 name|tvp
 operator|&&
+name|vrefcnt
+argument_list|(
 name|tvp
-operator|->
-name|v_usecount
+argument_list|)
 operator|>
 literal|1
 condition|)

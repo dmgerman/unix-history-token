@@ -731,9 +731,10 @@ name|uppervp
 operator|==
 name|NULL
 operator|||
+name|vrefcnt
+argument_list|(
 name|uppervp
-operator|->
-name|v_usecount
+argument_list|)
 operator|>
 literal|0
 operator|)
@@ -1490,9 +1491,10 @@ name|uerror
 operator|,
 name|upperdvp
 operator|,
+name|vrefcnt
+argument_list|(
 name|upperdvp
-operator|->
-name|v_usecount
+argument_list|)
 operator|,
 name|VOP_ISLOCKED
 argument_list|(
@@ -1506,9 +1508,10 @@ operator|,
 operator|(
 name|uppervp
 condition|?
+name|vrefcnt
+argument_list|(
 name|uppervp
-operator|->
-name|v_usecount
+argument_list|)
 else|:
 operator|-
 literal|99
@@ -2110,16 +2113,13 @@ operator|->
 name|a_vpp
 operator|)
 condition|?
-operator|(
-operator|(
+name|vrefcnt
+argument_list|(
 operator|*
 name|ap
 operator|->
 name|a_vpp
-operator|)
-operator|->
-name|v_usecount
-operator|)
+argument_list|)
 else|:
 operator|-
 literal|99
@@ -2222,14 +2222,13 @@ operator|->
 name|a_vpp
 operator|)
 condition|?
-operator|(
+name|vrefcnt
+argument_list|(
 operator|*
 name|ap
 operator|->
 name|a_vpp
-operator|)
-operator|->
-name|v_usecount
+argument_list|)
 else|:
 operator|-
 literal|99
@@ -2473,9 +2472,10 @@ literal|"ALLOCVP-1 FROM %p REFS %d\n"
 operator|,
 name|vp
 operator|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2512,9 +2512,10 @@ name|ap
 operator|->
 name|a_vpp
 operator|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5587,9 +5588,10 @@ literal|"ALLOCVP-2 FROM %p REFS %d\n"
 operator|,
 name|vp
 operator|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5632,9 +5634,10 @@ name|ap
 operator|->
 name|a_vpp
 operator|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6452,7 +6455,7 @@ directive|if
 literal|0
 block|un = VTOUNION(vp);  	if (error == 0) {
 comment|/* 		 * Lock the upper if it exists and this is an exclusive lock 		 * request. 		 */
-block|if (un->un_uppervp != NULLVP&&  		    (flags& LK_TYPE_MASK) == LK_EXCLUSIVE) { 			if ((un->un_flags& UN_ULOCK) == 0&& vp->v_usecount) { 				error = vn_lock(un->un_uppervp, flags, td); 				if (error) { 					struct vop_unlock_args uap = { 0 }; 					uap.a_vp = ap->a_vp; 					uap.a_flags = ap->a_flags; 					uap.a_td = ap->a_td; 					vop_stdunlock(&uap); 					return (error); 				} 				un->un_flags |= UN_ULOCK; 			} 		} 	}
+block|if (un->un_uppervp != NULLVP&&  		    (flags& LK_TYPE_MASK) == LK_EXCLUSIVE) { 			if ((un->un_flags& UN_ULOCK) == 0&& vrefcnt(vp)) { 				error = vn_lock(un->un_uppervp, flags, td); 				if (error) { 					struct vop_unlock_args uap = { 0 }; 					uap.a_vp = ap->a_vp; 					uap.a_flags = ap->a_flags; 					uap.a_td = ap->a_td; 					vop_stdunlock(&uap); 					return (error); 				} 				un->un_flags |= UN_ULOCK; 			} 		} 	}
 endif|#
 directive|endif
 return|return
@@ -6493,7 +6496,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|KASSERT((un->un_uppervp == NULL || un->un_uppervp->v_usecount> 0), ("uppervp usecount is 0"));
+block|KASSERT((un->un_uppervp == NULL || vrefcnt(un->un_uppervp)> 0), ("uppervp usecount is 0"));
 endif|#
 directive|endif
 name|error

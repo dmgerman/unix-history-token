@@ -1466,9 +1466,10 @@ name|np
 operator|->
 name|n_name
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|smbfs_hash_lock
@@ -1694,9 +1695,10 @@ argument_list|)
 operator|->
 name|n_name
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

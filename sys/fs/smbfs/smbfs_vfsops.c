@@ -1210,9 +1210,10 @@ name|SMBVDEBUG
 argument_list|(
 literal|"root.v_usecount = %d\n"
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2277,6 +2278,11 @@ condition|)
 goto|goto
 name|loop
 goto|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|FB_RELENG3
@@ -2320,7 +2326,14 @@ name|waitfor
 operator|==
 name|MNT_LAZY
 condition|)
+block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|vget
@@ -2328,6 +2341,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_INTERLOCK
 argument_list|,
 name|td
 argument_list|)

@@ -3012,6 +3012,11 @@ name|pmp
 operator|->
 name|pm_devvp
 decl_stmt|;
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"msdosfs_umount(): just before calling VOP_CLOSE()\n"
@@ -3143,6 +3148,11 @@ operator|)
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3632,12 +3642,9 @@ operator|&
 name|mntvnode_mtx
 argument_list|)
 expr_stmt|;
-name|mtx_lock
+name|VI_LOCK
 argument_list|(
-operator|&
 name|vp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 name|dep
@@ -3690,12 +3697,9 @@ operator|)
 operator|)
 condition|)
 block|{
-name|mtx_unlock
+name|VI_UNLOCK
 argument_list|(
-operator|&
 name|vp
-operator|->
-name|v_interlock
 argument_list|)
 expr_stmt|;
 name|mtx_lock

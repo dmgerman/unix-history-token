@@ -3112,9 +3112,10 @@ name|np
 operator|->
 name|n_opencount
 operator|||
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|1
 condition|)
@@ -3274,9 +3275,10 @@ if|if
 condition|(
 name|tvp
 operator|&&
+name|vrefcnt
+argument_list|(
 name|tvp
-operator|->
-name|v_usecount
+argument_list|)
 operator|>
 literal|1
 condition|)
@@ -5750,6 +5752,11 @@ name|vp
 operator|=
 operator|*
 name|vpp
+expr_stmt|;
+name|mp_fixme
+argument_list|(
+literal|"Unlocked v_id access."
+argument_list|)
 expr_stmt|;
 name|vpid
 operator|=

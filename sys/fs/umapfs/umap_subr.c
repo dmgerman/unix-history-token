@@ -1061,11 +1061,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|a
 operator|->
 name|umap_lowervp
-operator|->
-name|v_usecount
+argument_list|)
 operator|<
 literal|1
 condition|)

@@ -930,9 +930,10 @@ if|if
 condition|(
 name|ntfs_prtactive
 operator|&&
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)
@@ -1032,9 +1033,10 @@ if|if
 condition|(
 name|ntfs_prtactive
 operator|&&
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|!=
 literal|0
 condition|)
