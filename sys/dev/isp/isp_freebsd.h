@@ -1682,6 +1682,17 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * driver global data  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|isp_announced
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Platform private flags  */
 end_comment
 

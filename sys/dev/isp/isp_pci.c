@@ -273,24 +273,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISP_CODE_ORG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ISP_CODE_ORG
-value|0x1000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -976,11 +958,10 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|ispfwfunc
 modifier|*
 name|isp_get_firmware_p
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1066,16 +1047,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|isp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1232,10 +1203,7 @@ return|;
 block|}
 if|if
 condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
+name|isp_announced
 operator|==
 literal|0
 operator|&&
@@ -1255,6 +1223,9 @@ name|ISP_CORE_VERSION_MAJOR
 argument_list|,
 name|ISP_CORE_VERSION_MINOR
 argument_list|)
+expr_stmt|;
+name|isp_announced
+operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * XXXX: Here is where we might load the f/w module 	 * XXXX: (or increase a reference count to it). 	 */
@@ -3262,10 +3233,6 @@ literal|7
 expr_stmt|;
 block|}
 block|}
-name|isp_debug
-operator|=
-literal|0
-expr_stmt|;
 name|isp_debug
 operator|=
 literal|0
