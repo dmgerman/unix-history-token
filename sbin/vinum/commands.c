@@ -4,11 +4,11 @@ comment|/* commands.c: vinum interface program, main commands */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  */
 end_comment
 
 begin_comment
-comment|/* $Id: commands.c,v 1.6 1999/03/23 03:40:07 grog Exp grog $ */
+comment|/* $Id: commands.c,v 1.7 1999/07/03 05:52:32 grog Exp grog $ */
 end_comment
 
 begin_include
@@ -1655,7 +1655,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pid
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
@@ -1823,6 +1823,45 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the subdisk in initializing state */
+name|message
+operator|->
+name|index
+operator|=
+name|sd
+operator|.
+name|sdno
+expr_stmt|;
+comment|/* pass object number */
+name|message
+operator|->
+name|type
+operator|=
+name|sd_object
+expr_stmt|;
+comment|/* and type of object */
+name|message
+operator|->
+name|state
+operator|=
+name|object_initializing
+expr_stmt|;
+name|message
+operator|->
+name|force
+operator|=
+literal|1
+expr_stmt|;
+comment|/* insist */
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_SETSTATE
+argument_list|,
+name|message
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|offset
@@ -1923,13 +1962,6 @@ name|state
 operator|=
 name|object_up
 expr_stmt|;
-name|message
-operator|->
-name|force
-operator|=
-literal|1
-expr_stmt|;
-comment|/* insist */
 name|ioctl
 argument_list|(
 name|superdev
@@ -2038,6 +2070,18 @@ operator|==
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|message->index = plexno;
+comment|/* pass object number */
+block|message->type = plex_object;
+comment|/* and type of object */
+block|message->state = object_up; 		message->force = 1;
+comment|/* insist */
+block|ioctl(superdev, VINUM_SETSTATE, message);
+endif|#
+directive|endif
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -2425,6 +2469,10 @@ argument_list|(
 name|token
 argument_list|)
 expr_stmt|;
+name|list_defective_objects
+argument_list|()
+expr_stmt|;
+comment|/* and list anything that's down */
 block|}
 else|else
 block|{
@@ -4315,6 +4363,17 @@ block|{
 case|case
 name|sd_object
 case|:
+name|find_object
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|supertype
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|supertype
@@ -4334,14 +4393,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|get_plex_info
-argument_list|(
-operator|&
-name|plex
-argument_list|,
-name|supertype
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|plex
@@ -4379,6 +4430,17 @@ break|break;
 case|case
 name|plex_object
 case|:
+name|find_object
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|supertype
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|supertype
@@ -5563,14 +5625,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPLETE
-end_ifdef
-
 begin_comment
-comment|/* Replace an object.  Syntax and semantics TBD */
+comment|/*  * Replace an object.  Currently only defined for a drive: move all  * the subdisks on a drive to a new drive.  */
 end_comment
 
 begin_function
@@ -5622,7 +5678,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: \trename<object><new name>\n"
+literal|"Usage: \trename<drive><drive>\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5653,44 +5709,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Not implemented yet\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Replace an object.  Syntax and semantics TBD */
-end_comment
-
-begin_function
-name|void
-name|vinum_replace
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
-parameter_list|,
-name|char
-modifier|*
-name|argv0
-index|[]
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"replace function not implemented yet\n"
+literal|"replace not implemented yet\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6209,6 +6228,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -6432,6 +6454,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -6521,6 +6546,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -6668,6 +6696,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -6748,9 +6779,25 @@ argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
 expr_stmt|;
-name|make_devices
-argument_list|()
+name|find_object
+argument_list|(
+name|objectname
+argument_list|,
+operator|&
+name|type
+argument_list|)
 expr_stmt|;
+comment|/* find the index of the volume */
+name|make_vol_dev
+argument_list|(
+name|vol
+operator|.
+name|volno
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* and create the devices */
 if|if
 condition|(
 name|verbose
@@ -7130,6 +7177,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -7219,6 +7269,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -7353,6 +7406,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -7433,9 +7489,25 @@ argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
 expr_stmt|;
-name|make_devices
-argument_list|()
+name|find_object
+argument_list|(
+name|objectname
+argument_list|,
+operator|&
+name|type
+argument_list|)
 expr_stmt|;
+comment|/* find the index of the volume */
+name|make_vol_dev
+argument_list|(
+name|vol
+operator|.
+name|volno
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* and create the devices */
 if|if
 condition|(
 name|verbose
@@ -7888,6 +7960,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -8030,6 +8105,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -8185,6 +8263,9 @@ condition|(
 name|reply
 operator|->
 name|msg
+index|[
+literal|0
+index|]
 condition|)
 name|fprintf
 argument_list|(
@@ -8274,9 +8355,25 @@ argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
 expr_stmt|;
-name|make_devices
-argument_list|()
+name|find_object
+argument_list|(
+name|objectname
+argument_list|,
+operator|&
+name|type
+argument_list|)
 expr_stmt|;
+comment|/* find the index of the volume */
+name|make_vol_dev
+argument_list|(
+name|vol
+operator|.
+name|volno
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* and create the devices */
 if|if
 condition|(
 name|verbose
@@ -8311,6 +8408,246 @@ argument_list|)
 expr_stmt|;
 comment|/* and print info about it */
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|vinum_readpol
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+block|{
+name|int
+name|object
+decl_stmt|;
+name|struct
+name|_ioctl_reply
+name|reply
+decl_stmt|;
+name|struct
+name|vinum_ioctl_msg
+modifier|*
+name|message
+init|=
+operator|(
+expr|struct
+name|vinum_ioctl_msg
+operator|*
+operator|)
+operator|&
+name|reply
+decl_stmt|;
+name|enum
+name|objecttype
+name|type
+decl_stmt|;
+name|struct
+name|plex
+name|plex
+decl_stmt|;
+name|struct
+name|volume
+name|vol
+decl_stmt|;
+name|int
+name|plexno
+decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* start everything */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: readpol<volume><plex>|round\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|object
+operator|=
+name|find_object
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|type
+argument_list|)
+expr_stmt|;
+comment|/* look for it */
+if|if
+condition|(
+name|type
+operator|!=
+name|volume_object
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is not a volume\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|get_volume_info
+argument_list|(
+operator|&
+name|vol
+argument_list|,
+name|object
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"round"
+argument_list|)
+condition|)
+block|{
+comment|/* not 'round' */
+name|object
+operator|=
+name|find_object
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+operator|&
+name|type
+argument_list|)
+expr_stmt|;
+comment|/* look for it */
+if|if
+condition|(
+name|type
+operator|!=
+name|plex_object
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is not a plex\n"
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|get_plex_info
+argument_list|(
+operator|&
+name|plex
+argument_list|,
+name|object
+argument_list|)
+expr_stmt|;
+name|plexno
+operator|=
+name|plex
+operator|.
+name|plexno
+expr_stmt|;
+block|}
+else|else
+comment|/* round */
+name|plexno
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Set the value */
+name|message
+operator|->
+name|index
+operator|=
+name|vol
+operator|.
+name|volno
+expr_stmt|;
+name|message
+operator|->
+name|otherobject
+operator|=
+name|plexno
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_READPOL
+argument_list|,
+name|message
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't set read policy: %s (%d)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|vinum_lpi
+argument_list|(
+name|plexno
+argument_list|,
+name|recurse
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
