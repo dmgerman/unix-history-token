@@ -174,6 +174,12 @@ directive|if
 name|BSD
 operator|>=
 literal|199306
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MAP_FILE
+argument_list|)
 end_if
 
 begin_define
@@ -405,7 +411,7 @@ name|_exit
 parameter_list|(
 name|v
 parameter_list|)
-value|__syscall(SYS_exit, (v))
+value|__syscall(SYS_exit, (int)(v))
 end_define
 
 begin_define
@@ -419,7 +425,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|__syscall(SYS_open, (name), (f), (m))
+value|__syscall(SYS_open, (char *)(name), (int)(f), (int)(m))
 end_define
 
 begin_define
@@ -429,7 +435,7 @@ name|close
 parameter_list|(
 name|fd
 parameter_list|)
-value|__syscall(SYS_close, (fd))
+value|__syscall(SYS_close, (int)(fd))
 end_define
 
 begin_define
@@ -443,7 +449,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|__syscall(SYS_read, (fd), (s), (n))
+value|__syscall(SYS_read, (int)(fd), (void *)(s), (size_t)(n))
 end_define
 
 begin_define
@@ -457,7 +463,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|__syscall(SYS_write, (fd), (s), (n))
+value|__syscall(SYS_write, (int)(fd), (void *)(s), (size_t)(n))
 end_define
 
 begin_define
@@ -467,7 +473,7 @@ name|dup
 parameter_list|(
 name|fd
 parameter_list|)
-value|__syscall(SYS_dup, (fd))
+value|__syscall(SYS_dup, (int)(fd))
 end_define
 
 begin_define
@@ -479,7 +485,7 @@ name|fd
 parameter_list|,
 name|fdnew
 parameter_list|)
-value|__syscall(SYS_dup2, (fd), (fdnew))
+value|__syscall(SYS_dup2, (int)(fd), (int)(fdnew))
 end_define
 
 begin_ifdef
@@ -532,7 +538,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|__syscall(SYS_mmap, (addr), (len), (prot), (flags), (fd), (off))
+value|__syscall(SYS_mmap, (caddr_t)(addr), (size_t)(len), (int)(prot), (int)(flags), (int)(fd), (long)0L, (off_t)(off))
 end_define
 
 begin_endif
