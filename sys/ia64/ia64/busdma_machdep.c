@@ -1435,6 +1435,12 @@ block|}
 else|else
 block|{
 comment|/* 		 * XXX Use Contigmalloc until it is merged into this facility 		 *     and handles multi-seg allocations.  Nobody is doing 		 *     multi-seg allocations yet though. 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 operator|*
 name|vaddr
 operator|=
@@ -1475,6 +1481,12 @@ argument_list|,
 name|dmat
 operator|->
 name|boundary
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -1557,6 +1569,13 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|contigfree
 argument_list|(
 name|vaddr
@@ -1568,6 +1587,13 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3367,6 +3393,12 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|bpage
 operator|->
 name|vaddr
@@ -3391,6 +3423,12 @@ argument_list|,
 name|PAGE_SIZE
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
