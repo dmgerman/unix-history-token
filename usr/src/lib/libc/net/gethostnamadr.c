@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	6.14 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -779,7 +779,7 @@ name|n
 expr_stmt|;
 name|type
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -793,7 +793,7 @@ argument_list|)
 expr_stmt|;
 name|class
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
@@ -812,7 +812,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|getshort
+name|_getshort
 argument_list|(
 name|cp
 argument_list|)
