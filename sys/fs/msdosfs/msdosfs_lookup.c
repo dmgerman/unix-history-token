@@ -251,6 +251,8 @@ name|chksum
 init|=
 operator|-
 literal|1
+decl_stmt|,
+name|chksum_ok
 decl_stmt|;
 name|int
 name|olddos
@@ -881,16 +883,23 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 				 * Check for a checksum or name match 				 */
-if|if
-condition|(
+name|chksum_ok
+operator|=
+operator|(
 name|chksum
-operator|!=
+operator|==
 name|winChksum
 argument_list|(
 name|dep
 operator|->
 name|deName
 argument_list|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|chksum_ok
 operator|&&
 operator|(
 operator|!
@@ -937,6 +946,16 @@ name|de_fndoffset
 operator|=
 name|diroff
 expr_stmt|;
+if|if
+condition|(
+name|chksum_ok
+operator|&&
+name|nameiop
+operator|==
+name|RENAME
+condition|)
+block|{
+comment|/* 					 * Target had correct long name 					 * directory entries, reuse them 					 * as needed. 					 */
 name|dp
 operator|->
 name|de_fndcnt
@@ -945,6 +964,17 @@ name|wincnt
 operator|-
 literal|1
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					 * Long name directory entries 					 * not present or corrupt, can only 					 * reuse dos directory entry. 					 */
+name|dp
+operator|->
+name|de_fndcnt
+operator|=
+literal|0
+expr_stmt|;
+block|}
 goto|goto
 name|found
 goto|;
