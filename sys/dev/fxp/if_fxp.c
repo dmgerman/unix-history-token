@@ -499,6 +499,12 @@ literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
+literal|0x1050
+block|,
+literal|"Intel 82801BA (D865) Pro/100 VE Ethernet"
+block|}
+block|,
+block|{
 literal|0x1059
 block|,
 literal|"Intel 82551QM Pro/100 M Mobile Connection"
