@@ -157,7 +157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* all file systems */
+comment|/* all filesystems */
 end_comment
 
 begin_decl_stmt
@@ -1258,7 +1258,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify file system is mounted and not readonly.  */
+comment|/*  * Verify filesystem is mounted and not readonly.  */
 end_comment
 
 begin_function
