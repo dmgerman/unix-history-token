@@ -1586,7 +1586,7 @@ name|hd_queue
 argument_list|,
 name|buf
 argument_list|,
-name|MIN
+name|min
 argument_list|(
 name|uio
 operator|->
