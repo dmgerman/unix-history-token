@@ -2606,13 +2606,24 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|CTR1
+name|CTR3
 argument_list|(
 name|KTR_PROC
 argument_list|,
-literal|"thread_exit: thread %p"
+literal|"thread_exit: thread %p (pid %ld, %s)"
 argument_list|,
 name|td
+argument_list|,
+operator|(
+name|long
+operator|)
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
 argument_list|)
 expr_stmt|;
 name|mtx_assert
