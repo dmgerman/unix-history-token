@@ -47,24 +47,19 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|fight
-argument_list|(
-argument|enemy
-argument_list|,
-argument|strength
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|enemy
+parameter_list|,
+name|strength
+parameter_list|)
 name|int
 name|enemy
 decl_stmt|,
 name|strength
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|lifeline
@@ -89,6 +84,8 @@ name|i
 decl_stmt|;
 name|int
 name|exhaustion
+init|=
+literal|0
 decl_stmt|;
 name|fighton
 label|:
@@ -123,7 +120,9 @@ literal|"You collapse exhausted, and he pulverizes your skull."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -735,7 +734,9 @@ literal|"The planet is consumed by darkness."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -820,7 +821,9 @@ literal|"I'm afraid you have been killed."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -844,7 +847,7 @@ name|position
 operator|!=
 name|back
 condition|)
-name|move
+name|battlestar_move
 argument_list|(
 name|back
 argument_list|,
@@ -860,7 +863,7 @@ name|position
 operator|!=
 name|ahead
 condition|)
-name|move
+name|battlestar_move
 argument_list|(
 name|ahead
 argument_list|,
@@ -876,7 +879,7 @@ name|position
 operator|!=
 name|left
 condition|)
-name|move
+name|battlestar_move
 argument_list|(
 name|left
 argument_list|,
@@ -892,7 +895,7 @@ name|position
 operator|!=
 name|right
 condition|)
-name|move
+name|battlestar_move
 argument_list|(
 name|right
 argument_list|,
@@ -900,7 +903,7 @@ name|RIGHT
 argument_list|)
 expr_stmt|;
 else|else
-name|move
+name|battlestar_move
 argument_list|(
 name|location
 index|[
@@ -1245,14 +1248,16 @@ literal|"I'm afraid you have suffered fatal injuries."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 goto|goto
 name|fighton
 goto|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -47,12 +47,10 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|writedes
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|compass
@@ -62,6 +60,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|unsigned
 name|int
 name|c
 decl_stmt|;
@@ -93,6 +92,7 @@ name|NORTH
 expr_stmt|;
 for|for
 control|(
+operator|(
 name|p
 operator|=
 name|location
@@ -101,12 +101,15 @@ name|position
 index|]
 operator|.
 name|desc
+operator|)
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|p
 operator|++
+operator|)
 condition|;
 control|)
 if|if
@@ -125,6 +128,9 @@ literal|'+'
 condition|)
 name|putchar
 argument_list|(
+operator|(
+name|int
+operator|)
 name|c
 argument_list|)
 expr_stmt|;
@@ -154,15 +160,14 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|printobjs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
+name|unsigned
 name|int
 modifier|*
 name|p
@@ -218,23 +223,18 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|whichway
-argument_list|(
-argument|here
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|here
+parameter_list|)
 name|struct
 name|room
 name|here
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -355,7 +355,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|const
@@ -370,7 +370,8 @@ parameter_list|)
 name|int
 name|way
 decl_stmt|;
-name|char
+name|unsigned
+name|int
 name|option
 decl_stmt|;
 block|{
@@ -584,20 +585,15 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|newway
-argument_list|(
-argument|thisway
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|thisway
+parameter_list|)
 name|int
 name|thisway
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -742,7 +738,7 @@ block|}
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

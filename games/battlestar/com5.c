@@ -47,12 +47,10 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|kiss
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 while|while
 condition|(
@@ -194,14 +192,12 @@ literal|"I'd prefer not to."
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|love
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -422,14 +418,12 @@ literal|"I't doesn't seem to work."
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|zzz
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|oldtime
@@ -726,14 +720,12 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|chime
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -919,14 +911,12 @@ literal|"I can't tell the time in here."
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|give
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|obj
@@ -944,10 +934,15 @@ init|=
 literal|0
 decl_stmt|,
 name|firstnumber
-decl_stmt|,
+decl_stmt|;
+name|int
 name|last1
+init|=
+literal|0
 decl_stmt|,
 name|last2
+init|=
+literal|0
 decl_stmt|;
 name|firstnumber
 operator|=
@@ -1271,7 +1266,7 @@ operator|==
 name|TALISMAN
 condition|)
 block|{
-name|win
+name|bs_win
 operator|++
 expr_stmt|;
 name|ego
@@ -1284,7 +1279,7 @@ literal|5
 expr_stmt|;
 if|if
 condition|(
-name|win
+name|bs_win
 operator|>=
 literal|3
 condition|)
@@ -1489,7 +1484,7 @@ name|firstnumber
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -671,7 +671,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|win
+name|bs_win
 init|=
 literal|1
 decl_stmt|;

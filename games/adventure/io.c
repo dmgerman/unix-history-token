@@ -1995,8 +1995,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|DEBUG
 end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 begin_function
 specifier|static
@@ -2010,7 +2013,7 @@ name|s
 decl_stmt|;
 comment|/* read the vocabulary          */
 name|int
-name|index
+name|rv_index
 decl_stmt|;
 name|char
 name|buf
@@ -2024,14 +2027,14 @@ init|;
 condition|;
 control|)
 block|{
-name|index
+name|rv_index
 operator|=
 name|rnum
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|rv_index
 operator|<
 literal|0
 condition|)
@@ -2109,7 +2112,7 @@ argument_list|,
 operator|-
 literal|2
 argument_list|,
-name|index
+name|rv_index
 argument_list|)
 expr_stmt|;
 block|}
@@ -2602,7 +2605,7 @@ name|char
 modifier|*
 name|numst
 decl_stmt|,
-name|save
+name|ps_save
 decl_stmt|;
 name|struct
 name|text
@@ -2657,6 +2660,9 @@ name|msg
 operator|->
 name|seekadr
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|msg
 operator|->
 name|txtlen
@@ -2712,7 +2718,7 @@ operator|++
 control|)
 empty_stmt|;
 comment|/* get number  */
-name|save
+name|ps_save
 operator|=
 operator|*
 name|s

@@ -44,13 +44,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"externs.h"
 end_include
 
 begin_decl_stmt

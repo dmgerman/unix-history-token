@@ -631,7 +631,11 @@ block|,
 name|LAMPON
 block|}
 block|,
+block|{
 literal|0
+block|,
+literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt

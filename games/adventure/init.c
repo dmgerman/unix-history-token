@@ -170,6 +170,8 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
+specifier|const
+name|unsigned
 name|char
 name|a
 decl_stmt|,
@@ -1904,6 +1906,10 @@ name|int
 name|sig
 decl_stmt|;
 block|{
+name|sig
+operator|=
+literal|0
+expr_stmt|;
 name|delhit
 operator|=
 literal|1

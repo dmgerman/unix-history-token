@@ -47,12 +47,10 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|cypher
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -134,7 +132,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|move
+name|battlestar_move
 argument_list|(
 name|location
 index|[
@@ -178,7 +176,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|move
+name|battlestar_move
 argument_list|(
 name|location
 index|[
@@ -207,7 +205,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|move
+name|battlestar_move
 argument_list|(
 name|left
 argument_list|,
@@ -231,7 +229,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|move
+name|battlestar_move
 argument_list|(
 name|right
 argument_list|,
@@ -255,7 +253,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|move
+name|battlestar_move
 argument_list|(
 name|ahead
 argument_list|,
@@ -279,7 +277,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|move
+name|battlestar_move
 argument_list|(
 name|back
 argument_list|,
@@ -579,6 +577,7 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
 name|testbit
 argument_list|(
 name|inven
@@ -597,6 +596,7 @@ name|objects
 argument_list|,
 name|n
 argument_list|)
+operator|)
 operator|&&
 name|objsht
 index|[
@@ -1848,7 +1848,9 @@ case|case
 name|QUIT
 case|:
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 default|default:
 name|puts
@@ -1893,7 +1895,7 @@ name|lflag
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -78,6 +78,7 @@ file|"externs.h"
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -292,6 +293,11 @@ argument_list|)
 expr_stmt|;
 comment|/* Shouldn't happen */
 block|}
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

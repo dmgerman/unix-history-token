@@ -47,24 +47,31 @@ directive|include
 file|"externs.h"
 end_include
 
-begin_macro
-name|move
-argument_list|(
-argument|thataway
-argument_list|,
-argument|token
-argument_list|)
-end_macro
-
 begin_decl_stmt
+name|void
+name|convert
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|battlestar_move
+parameter_list|(
+name|thataway
+parameter_list|,
+name|token
+parameter_list|)
 name|int
 name|thataway
 decl_stmt|,
 name|token
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|wordnumber
 operator|++
@@ -85,6 +92,8 @@ name|LAUNCHED
 index|]
 operator|)
 operator|||
+operator|(
+operator|(
 name|testbit
 argument_list|(
 name|location
@@ -100,11 +109,13 @@ operator|||
 name|fuel
 operator|>
 literal|0
+operator|)
 operator|&&
 name|notes
 index|[
 name|LAUNCHED
 index|]
+operator|)
 condition|)
 if|if
 condition|(
@@ -181,30 +192,19 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|convert
-argument_list|(
-argument|tothis
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|tothis
+parameter_list|)
 comment|/* Converts day to night and vice versa. 	    */
-end_comment
-
-begin_decl_stmt
 name|int
 name|tothis
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Day objects are permanent.  Night objects are added*/
-end_comment
-
-begin_block
 block|{
 comment|/* at dusk, and subtracted at dawn.		*/
 specifier|const
@@ -392,14 +392,12 @@ name|dayfile
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|news
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|n
@@ -434,7 +432,9 @@ literal|"frozen void of space and killed."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -1101,7 +1101,9 @@ literal|"I'm afraid you have suffered fatal injuries."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 for|for
@@ -1239,14 +1241,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|crash
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|hurt1
@@ -1329,7 +1329,9 @@ literal|"Thick black smoke billows up from the wreckage."
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|position
@@ -1447,7 +1449,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
