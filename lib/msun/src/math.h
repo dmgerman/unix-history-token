@@ -979,7 +979,7 @@ comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_comment
-comment|/*  * Most of these functions have the side effect of setting errno, so they  * are not declared as __pure2.  (XXX: this point needs to be revisited,  * since C99 doesn't require the mistake of setting errno, and we mostly  * don't set it anyway.  In C99, pragmas and functions for changing the  * rounding mode affect the purity of these functions.)  */
+comment|/*  * Most of these functions depend on the rounding mode and have the side  * effect of raising floating-point exceptions, so they are not declared  * as __pure2.  In C99, FENV_ACCESS affects the purity of these functions.  */
 end_comment
 
 begin_decl_stmt
@@ -1331,14 +1331,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|fabs
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|double
@@ -1361,7 +1362,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * These functions are not in C90 so they can be "right".  The ones that  * never set errno in lib/msun are declared as __pure2.  */
+comment|/*  * These functions are not in C90.  */
 end_comment
 
 begin_if
@@ -1403,15 +1404,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|double
 name|cbrt
-argument_list|(
+parameter_list|(
 name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|double
@@ -1422,25 +1422,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|double
 name|erfc
-argument_list|(
+parameter_list|(
 name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|double
 name|expm1
-argument_list|(
+parameter_list|(
 name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|double
@@ -1453,14 +1451,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_comment
+comment|/* Our ilogb raises no exceptions; we side with IEEE-754R and C99, not POSIX */
+end_comment
+
+begin_decl_stmt
 name|int
 name|ilogb
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|int
@@ -1521,25 +1524,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|double
 name|log1p
-argument_list|(
+parameter_list|(
 name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|double
 name|logb
-argument_list|(
+parameter_list|(
 name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|long
@@ -1581,15 +1582,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|double
 name|rint
-argument_list|(
+parameter_list|(
 name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1767,15 +1767,14 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|double
 name|nearbyint
-argument_list|(
+parameter_list|(
 name|double
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|double
@@ -2057,15 +2056,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|float
 name|expm1f
-argument_list|(
+parameter_list|(
 name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|float
@@ -2083,14 +2081,15 @@ begin_comment
 comment|/* fundamentally !__pure2 */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|ilogbf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|float
@@ -2112,15 +2111,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|float
 name|log1pf
-argument_list|(
+parameter_list|(
 name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|float
@@ -2176,14 +2174,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|fabsf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|float
@@ -2223,27 +2222,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|float
 name|erfcf
-argument_list|(
+parameter_list|(
 name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|float
 name|hypotf
-argument_list|(
+parameter_list|(
 name|float
-argument_list|,
+parameter_list|,
 name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|float
@@ -2281,25 +2278,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|float
 name|cbrtf
-argument_list|(
+parameter_list|(
 name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|float
 name|logbf
-argument_list|(
+parameter_list|(
 name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|float
@@ -2351,15 +2346,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|float
 name|nearbyintf
-argument_list|(
+parameter_list|(
 name|float
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|float
@@ -2657,19 +2651,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|long
 name|double
 name|copysignl
-parameter_list|(
+argument_list|(
 name|long
 name|double
-parameter_list|,
+argument_list|,
 name|long
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -2683,16 +2678,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|long
 name|double
 name|fabsl
-parameter_list|(
+argument_list|(
 name|long
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|long
@@ -2767,21 +2763,27 @@ directive|if
 literal|0
 end_if
 
+begin_comment
+unit|long double	fmodl(long double, long double); long double	frexpl(long double value, int *);
+comment|/* fundamentally !__pure2 */
+end_comment
+
 begin_endif
-unit|long double	fmodl(long double, long double); long double	frexpl(long double value, int *); long double	hypotl(long double, long double);
+unit|long double	hypotl(long double, long double);
 endif|#
 directive|endif
 end_endif
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|ilogbl
-parameter_list|(
+argument_list|(
 name|long
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -2789,8 +2791,13 @@ directive|if
 literal|0
 end_if
 
+begin_comment
+unit|long double	ldexpl(long double, int); long double	lgammal(long double); long long	llrintl(long double); long long	llroundl(long double); long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double); long double	logl(long double); long		lrintl(long double); long		lroundl(long double); long double	modfl(long double, long double *);
+comment|/* fundamentally !__pure2 */
+end_comment
+
 begin_endif
-unit|long double	ldexpl(long double, int); long double	lgammal(long double); long long	llrintl(long double); long long	llroundl(long double); long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double); long double	logbl(long double); long double	logl(long double); long		lrintl(long double); long		lroundl(long double); long double	modfl(long double, long double	*); long double	nanl(const char *); long double	nearbyintl(long double); long double	nextafterl(long double, long double); double		nexttoward(double, long double); float		nexttowardf(float, long double); long double	nexttowardl(long double, long double); long double	powl(long double, long double); long double	remainderl(long double, long double); long double	remquol(long double, long double, int *); long double	rintl(long double); long double	roundl(long double); long double	scalblnl(long double, long); long double	scalbnl(long double, int); long double	sinhl(long double); long double	sinl(long double); long double	sqrtl(long double); long double	tanhl(long double); long double	tanl(long double); long double	tgammal(long double); long double	truncl(long double);
+unit|long double	nanl(const char *) __pure2; long double	nearbyintl(long double); long double	nextafterl(long double, long double); double		nexttoward(double, long double); float		nexttowardf(float, long double); long double	nexttowardl(long double, long double); long double	powl(long double, long double); long double	remainderl(long double, long double); long double	remquol(long double, long double, int *); long double	rintl(long double); long double	roundl(long double); long double	scalblnl(long double, long); long double	scalbnl(long double, int); long double	sinhl(long double); long double	sinl(long double); long double	sqrtl(long double); long double	tanhl(long double); long double	tanl(long double); long double	tgammal(long double); long double	truncl(long double);
 endif|#
 directive|endif
 end_endif
