@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lmonetary.h"
 end_include
 
@@ -153,6 +159,49 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
+name|char
+name|cnv
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|int
+name|i
+init|=
+name|strtol
+argument_list|(
+name|str
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+operator|-
+literal|1
+condition|)
+name|i
+operator|=
+name|CHAR_MAX
+expr_stmt|;
+return|return
+operator|(
+name|char
+operator|)
+name|i
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|__monetary_load_locale
 parameter_list|(
@@ -204,6 +253,7 @@ literal|0
 operator|&&
 name|_monetary_using_locale
 condition|)
+block|{
 name|_monetary_locale
 operator|.
 name|mon_grouping
@@ -215,6 +265,54 @@ operator|.
 name|mon_grouping
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|M_ASSIGN_CHAR
+parameter_list|(
+name|NAME
+parameter_list|)
+value|(((char *)_monetary_locale.NAME)[0] = \ 			     cnv(_monetary_locale.NAME))
+name|M_ASSIGN_CHAR
+argument_list|(
+name|int_frac_digits
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_CHAR
+argument_list|(
+name|frac_digits
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_CHAR
+argument_list|(
+name|p_cs_precedes
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_CHAR
+argument_list|(
+name|p_sep_by_space
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_CHAR
+argument_list|(
+name|n_cs_precedes
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_CHAR
+argument_list|(
+name|n_sep_by_space
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_CHAR
+argument_list|(
+name|p_sign_posn
+argument_list|)
+expr_stmt|;
+name|M_ASSIGN_CHAR
+argument_list|(
+name|n_sign_posn
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|ret
 return|;
@@ -269,14 +367,14 @@ literal|"mon_thousands_sep = %s\n"
 literal|"mon_grouping = %s\n"
 literal|"positive_sign = %s\n"
 literal|"negative_sign = %s\n"
-literal|"int_frac_digits = %s\n"
-literal|"frac_digits = %s\n"
-literal|"p_cs_precedes = %s\n"
-literal|"p_sep_by_space = %s\n"
-literal|"n_cs_precedes = %s\n"
-literal|"n_sep_by_space = %s\n"
-literal|"p_sign_posn = %s\n"
-literal|"n_sign_posn = %s\n"
+literal|"int_frac_digits = %d\n"
+literal|"frac_digits = %d\n"
+literal|"p_cs_precedes = %d\n"
+literal|"p_sep_by_space = %d\n"
+literal|"n_cs_precedes = %d\n"
+literal|"n_sep_by_space = %d\n"
+literal|"p_sign_posn = %d\n"
+literal|"n_sign_posn = %d\n"
 argument_list|,
 name|_monetary_locale
 operator|.
@@ -309,34 +407,58 @@ argument_list|,
 name|_monetary_locale
 operator|.
 name|int_frac_digits
+index|[
+literal|0
+index|]
 argument_list|,
 name|_monetary_locale
 operator|.
 name|frac_digits
+index|[
+literal|0
+index|]
 argument_list|,
 name|_monetary_locale
 operator|.
 name|p_cs_precedes
+index|[
+literal|0
+index|]
 argument_list|,
 name|_monetary_locale
 operator|.
 name|p_sep_by_space
+index|[
+literal|0
+index|]
 argument_list|,
 name|_monetary_locale
 operator|.
 name|n_cs_precedes
+index|[
+literal|0
+index|]
 argument_list|,
 name|_monetary_locale
 operator|.
 name|n_sep_by_space
+index|[
+literal|0
+index|]
 argument_list|,
 name|_monetary_locale
 operator|.
 name|p_sign_posn
+index|[
+literal|0
+index|]
 argument_list|,
 name|_monetary_locale
 operator|.
 name|n_sign_posn
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}

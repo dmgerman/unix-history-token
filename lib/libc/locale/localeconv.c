@@ -58,18 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"lmonetary.h"
 end_include
 
@@ -98,48 +86,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|char
-name|cnv
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-block|{
-name|int
-name|i
-init|=
-name|strtol
-argument_list|(
-name|str
-argument_list|,
-name|NULL
-argument_list|,
-literal|10
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-operator|-
-literal|1
-condition|)
-name|i
-operator|=
-name|CHAR_MAX
-expr_stmt|;
-return|return
-operator|(
-name|char
-operator|)
-name|i
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Return the current locale conversion.  */
@@ -181,7 +127,7 @@ name|M_ASSIGN_CHAR
 parameter_list|(
 name|NAME
 parameter_list|)
-value|(ret.NAME = cnv((char*)mptr->NAME))
+value|(ret.NAME = mptr->NAME[0])
 name|mptr
 operator|=
 name|__get_current_monetary_locale
