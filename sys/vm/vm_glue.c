@@ -320,11 +320,6 @@ operator|+
 name|len
 argument_list|)
 expr_stmt|;
-name|vm_map_lock_read
-argument_list|(
-name|kernel_map
-argument_list|)
-expr_stmt|;
 name|rv
 operator|=
 name|vm_map_check_protection
@@ -336,11 +331,6 @@ argument_list|,
 name|eaddr
 argument_list|,
 name|prot
-argument_list|)
-expr_stmt|;
-name|vm_map_unlock_read
-argument_list|(
-name|kernel_map
 argument_list|)
 expr_stmt|;
 return|return
@@ -449,11 +439,6 @@ name|p_vmspace
 operator|->
 name|vm_map
 expr_stmt|;
-name|vm_map_lock_read
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We save the map hint, and restore it.  Useracc appears to distort 	 * the map hint unnecessarily. 	 */
 name|save_hint
 operator|=
@@ -493,11 +478,6 @@ operator|->
 name|hint
 operator|=
 name|save_hint
-expr_stmt|;
-name|vm_map_unlock_read
-argument_list|(
-name|map
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
