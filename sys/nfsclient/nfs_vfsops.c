@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -556,6 +562,20 @@ argument_list|,
 name|nfs
 argument_list|,
 name|VFCF_NETWORK
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* So that loader and kldload(2) can find us, wherever we are.. */
+end_comment
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|nfs
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
