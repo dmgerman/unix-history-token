@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.25	82/01/17	*/
+comment|/*	uipc_socket.c	4.26	82/01/17	*/
 end_comment
 
 begin_include
@@ -2369,16 +2369,32 @@ name|SIGURG
 argument_list|)
 expr_stmt|;
 else|else
-name|psignal
+block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|pfind
 argument_list|(
 operator|-
 name|so
 operator|->
 name|so_pgrp
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+name|psignal
+argument_list|(
+name|p
 argument_list|,
 name|SIGURG
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
