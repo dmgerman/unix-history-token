@@ -37,7 +37,7 @@ name|p_blessing
 decl_stmt|;
 comment|/* set if player gets the first hit */
 name|int
-name|howmany
+name|flockcnt
 init|=
 literal|1
 decl_stmt|;
@@ -451,7 +451,7 @@ name|Lines
 argument_list|)
 expr_stmt|;
 operator|++
-name|howmany
+name|flockcnt
 expr_stmt|;
 name|longjmp
 argument_list|(
@@ -488,7 +488,7 @@ call|(
 name|double
 call|)
 argument_list|(
-name|howmany
+name|flockcnt
 operator|/
 literal|3
 operator|+
@@ -516,7 +516,7 @@ name|stdscr
 argument_list|,
 name|Lines
 argument_list|,
-name|howmany
+name|flockcnt
 argument_list|)
 expr_stmt|;
 name|more
