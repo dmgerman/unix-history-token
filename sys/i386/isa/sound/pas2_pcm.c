@@ -1475,7 +1475,7 @@ name|dma
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|PAS_NO_AUTODMA
+name|NO_AUTODMA
 if|if
 condition|(
 name|hw_config
@@ -1540,7 +1540,7 @@ index|[
 name|my_devnum
 index|]
 operator|=
-literal|2
+name|DSP_BUFFCOUNT
 expr_stmt|;
 name|sound_buffsizes
 index|[

@@ -38,6 +38,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|NO_AUTODMA
+end_define
+
+begin_comment
+comment|/* still */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SELECTED_SOUND_OPTIONS
 value|0xffffffff
 end_define
