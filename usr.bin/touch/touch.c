@@ -745,6 +745,22 @@ continue|continue;
 comment|/* Try reading/writing. */
 if|if
 condition|(
+operator|!
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
 name|rw
 argument_list|(
 operator|*
@@ -759,6 +775,15 @@ condition|)
 name|rval
 operator|=
 literal|1
+expr_stmt|;
+else|else
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
 expr_stmt|;
 block|}
 name|exit
@@ -1416,19 +1441,11 @@ decl_stmt|;
 name|u_char
 name|byte
 decl_stmt|;
-comment|/* Try regular files and directories. */
+comment|/* Try regular files. */
 if|if
 condition|(
 operator|!
 name|S_ISREG
-argument_list|(
-name|sbp
-operator|->
-name|st_mode
-argument_list|)
-operator|&&
-operator|!
-name|S_ISDIR
 argument_list|(
 name|sbp
 operator|->
