@@ -330,7 +330,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sb.h"
+file|<sb.h>
 end_include
 
 begin_if
@@ -423,7 +423,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"pas.h"
+file|<pas.h>
 end_include
 
 begin_if
