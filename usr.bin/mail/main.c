@@ -228,7 +228,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EINT:b:c:dfins:u:v"
+literal|"FEHINT:b:c:edfins:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -319,6 +319,42 @@ literal|'d'
 case|:
 name|debug
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+comment|/* 			 * User wants to check mail and exit. 			 */
+name|assign
+argument_list|(
+literal|"checkmode"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+comment|/* 			 * User wants a header summary only. 			 */
+name|assign
+argument_list|(
+literal|"headersummary"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+comment|/* 			 * User wants to record messages to files 			 * named after first recipient username. 			 */
+name|assign
+argument_list|(
+literal|"recordrecip"
+argument_list|,
+literal|""
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -472,7 +508,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-EiInv] [-s subject] [-c cc-addr] [-b bcc-addr] to-addr ...\n\        %*s [- sendmail-options ...]\n\        %s [-EiInNv] -f [name]\n\        %s [-EiInNv] [-u user]\n"
+literal|"\ Usage: %s [-EiInv] [-s subject] [-c cc-addr] [-b bcc-addr] [-F] to-addr ...\n\        %*s [- sendmail-options ...]\n\        %s [-EHiInNv] [-F] -f [name]\n\        %s [-EHiInNv] [-F] [-u user]\n\        %s -e [-f name]\n\        %s -H\n"
 argument_list|,
 name|__progname
 argument_list|,
@@ -482,6 +518,10 @@ name|__progname
 argument_list|)
 argument_list|,
 literal|""
+argument_list|,
+name|__progname
+argument_list|,
+name|__progname
 argument_list|,
 name|__progname
 argument_list|,
@@ -766,6 +806,49 @@ name|senderr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|value
+argument_list|(
+literal|"checkmode"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|ef
+operator|==
+name|NULL
+condition|)
+name|ef
+operator|=
+literal|"%"
+expr_stmt|;
+if|if
+condition|(
+name|setfile
+argument_list|(
+name|ef
+argument_list|)
+operator|<=
+literal|0
+condition|)
+comment|/* Either an error has occured, or no mail */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 comment|/* 	 * Ok, we are reading mail. 	 * Decide whether we are editing a mailbox or reading 	 * the system mailbox, and open up the right stuff. 	 */
 if|if
 condition|(
@@ -865,6 +948,21 @@ name|prevint
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If we were in header summary mode, it's time to exit. */
+if|if
+condition|(
+name|value
+argument_list|(
+literal|"headersummary"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|commands
 argument_list|()
 expr_stmt|;

@@ -532,6 +532,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|yanklogin
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|Fclose
 parameter_list|(

@@ -102,7 +102,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set up editing on the given file name.  * If the first character of name is %, we are considered to be  * editing the file, otherwise we are reading our mail which has  * signficance for mbox and so forth.  */
+comment|/*  * Set up editing on the given file name.  * If the first character of name is %, we are considered to be  * editing the file, otherwise we are reading our mail which has  * signficance for mbox and so forth.  *  * If the -e option is being passed to mail, this function has a  * tri-state return code: -1 on error, 0 on no mail, 1 if there is  * mail.  */
 end_comment
 
 begin_function
@@ -121,6 +121,8 @@ modifier|*
 name|ibuf
 decl_stmt|;
 name|int
+name|checkmode
+decl_stmt|,
 name|i
 decl_stmt|,
 name|fd
@@ -580,10 +582,23 @@ name|sawcom
 operator|=
 literal|0
 expr_stmt|;
+name|checkmode
+operator|=
+name|value
+argument_list|(
+literal|"checkmode"
+argument_list|)
+operator|!=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
+operator|(
+name|checkmode
+operator|||
 operator|!
 name|edit
+operator|)
 operator|&&
 name|msgCount
 operator|==
@@ -592,6 +607,12 @@ condition|)
 block|{
 name|nomail
 label|:
+if|if
+condition|(
+operator|!
+name|checkmode
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -608,8 +629,19 @@ literal|1
 operator|)
 return|;
 block|}
+else|else
 return|return
 operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|checkmode
+condition|?
+literal|1
+else|:
 literal|0
 operator|)
 return|;
