@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.45 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.46 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.45 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.46 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -806,6 +806,10 @@ end_expr_stmt
 
 begin_comment
 comment|/* output inode number of data file */
+end_comment
+
+begin_comment
+comment|/* XXX should probably include device major/minor too */
 end_comment
 
 begin_expr_stmt
