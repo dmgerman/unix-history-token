@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.13 (Berkeley) %G%"
+literal|"@(#)printf.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,6 +360,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 specifier|static
 name|char
 modifier|*
