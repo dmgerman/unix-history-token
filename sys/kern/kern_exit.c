@@ -1772,6 +1772,11 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+name|struct
+name|pargs
+modifier|*
+name|pa
+decl_stmt|;
 name|int
 name|status
 decl_stmt|,
@@ -2223,6 +2228,18 @@ name|p_xstat
 operator|=
 literal|0
 expr_stmt|;
+name|pa
+operator|=
+name|p
+operator|->
+name|p_args
+expr_stmt|;
+name|p
+operator|->
+name|p_args
+operator|=
+name|NULL
+expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -2337,9 +2354,7 @@ expr_stmt|;
 comment|/* 			 * Remove unused arguments 			 */
 name|pargs_drop
 argument_list|(
-name|p
-operator|->
-name|p_args
+name|pa
 argument_list|)
 expr_stmt|;
 if|if
