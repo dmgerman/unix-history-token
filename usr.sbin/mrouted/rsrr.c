@@ -808,7 +808,7 @@ name|LOG_WARNING
 argument_list|,
 literal|0
 argument_list|,
-literal|"Can't send RSRR Route Reply because %d is too many vifs %d"
+literal|"Can't send RSRR Route Reply because %d is too many vifs"
 argument_list|,
 name|numvifs
 argument_list|)
