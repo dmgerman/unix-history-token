@@ -1518,15 +1518,9 @@ name|_nsyyin
 operator|==
 name|NULL
 condition|)
-block|{
-name|result
-operator|=
-name|errno
-expr_stmt|;
 goto|goto
 name|fin
 goto|;
-block|}
 name|VECTOR_FREE
 argument_list|(
 name|_nsmap
