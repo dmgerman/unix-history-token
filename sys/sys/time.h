@@ -832,10 +832,6 @@ name|tick
 decl_stmt|;
 comment|/* micro-seconds per hz tick */
 name|int
-name|tickadj
-decl_stmt|;
-comment|/* clock skew rate for adjtime() */
-name|int
 name|stathz
 decl_stmt|;
 comment|/* statistics clock frequency */

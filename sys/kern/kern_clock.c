@@ -1571,12 +1571,6 @@ name|tick
 expr_stmt|;
 name|clkinfo
 operator|.
-name|tickadj
-operator|=
-name|tickadj
-expr_stmt|;
-name|clkinfo
-operator|.
 name|profhz
 operator|=
 name|profhz

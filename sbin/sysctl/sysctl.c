@@ -1205,7 +1205,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"{ hz = %d, tick = %d, tickadj = %d, profhz = %d, stathz = %d }"
+literal|"{ hz = %d, tick = %d, profhz = %d, stathz = %d }"
 argument_list|,
 name|ci
 operator|->
@@ -1214,10 +1214,6 @@ argument_list|,
 name|ci
 operator|->
 name|tick
-argument_list|,
-name|ci
-operator|->
-name|tickadj
 argument_list|,
 name|ci
 operator|->
