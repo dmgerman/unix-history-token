@@ -2155,6 +2155,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* XXX: This happens a lot.  It shouldn't. */
+if|if
+condition|(
+name|udpwrite_p
+operator|->
+name|status
+operator|!=
+literal|1
+condition|)
 name|printf
 argument_list|(
 literal|"sendudp failed %x\n"
