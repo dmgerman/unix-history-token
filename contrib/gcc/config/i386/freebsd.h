@@ -10,19 +10,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|TARGET_VERSION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TARGET_VERSION
-value|fprintf (stderr, " (i386 FreeBSD/ELF)");
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|CC1_SPEC
 end_undef
 
