@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.15	82/12/28	*/
+comment|/*	kern_sig.c	5.16	83/05/21	*/
 end_comment
 
 begin_include
@@ -2482,6 +2482,14 @@ operator|!=
 name|u
 operator|.
 name|u_ruid
+operator|||
+name|u
+operator|.
+name|u_gid
+operator|!=
+name|u
+operator|.
+name|u_rgid
 condition|)
 return|return
 operator|(
@@ -2577,7 +2585,7 @@ name|ip
 operator|=
 name|maknode
 argument_list|(
-literal|0666
+literal|0644
 argument_list|)
 expr_stmt|;
 if|if
