@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmzreg.h	6.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmzreg.h	6.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -100,23 +100,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IR_RMS
+name|IR_RMSTSC
 value|000
 end_define
 
 begin_comment
-comment|/* receive modem status register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IR_TSC
-value|000
-end_define
-
-begin_comment
-comment|/* transmit silo count */
+comment|/* receive modem status, transmit silo count */
 end_comment
 
 begin_define
@@ -171,29 +160,18 @@ value|octet_ir.word
 end_define
 
 begin_comment
-comment|/* transmit buffer for 2 chars */
+comment|/* transmit buffer, 2 chars */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|octet_rms
-value|octet_ir.bytes[1]
+name|octet_rmstsc
+value|octet_ir.word
 end_define
 
 begin_comment
-comment|/* receive modem status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|octet_tsc
-value|octet_ir.bytes[0]
-end_define
-
-begin_comment
-comment|/* transmit silo count */
+comment|/* rcv modem status, xmit silo count */
 end_comment
 
 begin_define
@@ -204,7 +182,7 @@ value|octet_ir.word
 end_define
 
 begin_comment
-comment|/* line control and transmit modem */
+comment|/* line control, xmit modem */
 end_comment
 
 begin_define
@@ -644,14 +622,25 @@ comment|/* alarm timeout */
 end_comment
 
 begin_comment
-comment|/* bits in dmz_rms (taken from dmfreg.h) */
+comment|/* bits in dmz_rmstsc */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMZ_USR
-value|0004
+name|DMZ_TSC
+value|0x00ff
+end_define
+
+begin_comment
+comment|/* transmit silo count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMZ_USRR
+value|0x0400
 end_define
 
 begin_comment
@@ -661,8 +650,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMZ_SR
-value|0010
+name|DMF_SR
+value|0x0800
 end_define
 
 begin_comment
@@ -673,7 +662,7 @@ begin_define
 define|#
 directive|define
 name|DMZ_CTS
-value|0020
+value|0x1000
 end_define
 
 begin_comment
@@ -684,7 +673,7 @@ begin_define
 define|#
 directive|define
 name|DMZ_CAR
-value|0040
+value|0x2000
 end_define
 
 begin_comment
@@ -695,7 +684,7 @@ begin_define
 define|#
 directive|define
 name|DMZ_RNG
-value|0100
+value|0x4000
 end_define
 
 begin_comment
@@ -706,7 +695,7 @@ begin_define
 define|#
 directive|define
 name|DMZ_DSR
-value|0200
+value|0x8000
 end_define
 
 begin_comment
@@ -714,14 +703,14 @@ comment|/* data set ready */
 end_comment
 
 begin_comment
-comment|/* bits in dmz_tms (taken from dmfreg.h) */
+comment|/* bits in dmz_lctmr (tms half) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DMZ_USW
-value|0001
+name|DMZ_USRW
+value|0x0100
 end_define
 
 begin_comment
@@ -732,7 +721,7 @@ begin_define
 define|#
 directive|define
 name|DMZ_DTR
-value|0002
+value|0x0200
 end_define
 
 begin_comment
@@ -742,8 +731,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMZ_RAT
-value|0004
+name|DMZ_RATE
+value|0x0400
 end_define
 
 begin_comment
@@ -753,8 +742,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMZ_ST
-value|0010
+name|DMF_ST
+value|0x0800
 end_define
 
 begin_comment
@@ -765,7 +754,7 @@ begin_define
 define|#
 directive|define
 name|DMZ_RTS
-value|0020
+value|0x1000
 end_define
 
 begin_comment
@@ -775,41 +764,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMZ_BRK
-value|0040
-end_define
-
-begin_comment
-comment|/* pseudo break bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMZ_PMT
-value|0200
+name|DMZ_PREEMPT
+value|0x8000
 end_define
 
 begin_comment
 comment|/* preempt output */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DMZ_ON
-value|(DMZ_DTR|DMZ_RTS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMZ_OFF
-value|0
-end_define
-
 begin_comment
-comment|/* bits in octet_lctmr */
+comment|/* bits in octet_lctmr (lc half) */
 end_comment
 
 begin_define
@@ -837,12 +801,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMZ_RBK
+name|DMZ_BRK
 value|0010
 end_define
 
 begin_comment
-comment|/* real break bit */
+comment|/* send break bit */
 end_comment
 
 begin_define
@@ -896,6 +860,20 @@ name|DMZ_LCE
 value|(DMZ_MIE|DMZ_RE|DMZ_TE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DMZ_ON
+value|(DMZ_DTR|DMZ_RTS|DMZ_LCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMZ_OFF
+value|DMZ_LCE
+end_define
+
 begin_comment
 comment|/* bits in octet_tcc */
 end_comment
@@ -912,13 +890,13 @@ comment|/* high address bits */
 end_comment
 
 begin_comment
-comment|/* bits in dm lsr, copied from dmzreg.h, copied from dh.c */
+comment|/* bits added to dm lsr for DMGET/DMSET */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DM_USR
+name|DML_USR
 value|0001000
 end_define
 
@@ -929,100 +907,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DM_DSR
+name|DML_DSR
 value|0000400
 end_define
 
 begin_comment
 comment|/* data set ready, not a real DM bit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_RNG
-value|0000200
-end_define
-
-begin_comment
-comment|/* ring */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_CAR
-value|0000100
-end_define
-
-begin_comment
-comment|/* carrier detect */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_CTS
-value|0000040
-end_define
-
-begin_comment
-comment|/* clear to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_SR
-value|0000020
-end_define
-
-begin_comment
-comment|/* secondary receive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_ST
-value|0000010
-end_define
-
-begin_comment
-comment|/* secondary transmit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_RTS
-value|0000004
-end_define
-
-begin_comment
-comment|/* request to send */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_DTR
-value|0000002
-end_define
-
-begin_comment
-comment|/* data terminal ready */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DM_LE
-value|0000001
-end_define
-
-begin_comment
-comment|/* line enable */
 end_comment
 
 begin_define
@@ -1043,7 +933,7 @@ name|DMZ
 parameter_list|(
 name|a
 parameter_list|)
-value|a/24
+value|(a/24)
 end_define
 
 begin_define
@@ -1053,7 +943,7 @@ name|OCTET
 parameter_list|(
 name|a
 parameter_list|)
-value|(a%24)/8
+value|((a%24)/8)
 end_define
 
 begin_define
@@ -1063,7 +953,7 @@ name|LINE
 parameter_list|(
 name|a
 parameter_list|)
-value|(a%24)%8
+value|((a%24)%8)
 end_define
 
 begin_define
