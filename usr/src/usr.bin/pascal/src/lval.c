@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c	5.1 (Berkeley) %G%"
+literal|"@(#)lval.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1572,6 +1572,17 @@ name|p
 operator|->
 name|chain
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NLNIL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c	5.1 (Berkeley) %G%"
+literal|"@(#)call.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -904,6 +904,12 @@ expr_stmt|;
 if|if
 condition|(
 name|p2
+operator|==
+name|NLNIL
+operator|||
+name|p2
+operator|->
+name|chain
 operator|==
 name|NLNIL
 operator|||

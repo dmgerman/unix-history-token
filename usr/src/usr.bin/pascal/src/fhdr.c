@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fhdr.c	5.1 (Berkeley) %G%"
+literal|"@(#)fhdr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1378,10 +1378,6 @@ operator|.
 name|next
 control|)
 block|{
-name|p
-operator|=
-name|NLNIL
-expr_stmt|;
 name|formal
 operator|=
 name|formalp
@@ -1406,6 +1402,10 @@ name|pfunc_node
 operator|.
 name|type
 expr_stmt|;
+name|p
+operator|=
+name|NLNIL
+expr_stmt|;
 if|if
 condition|(
 name|typ
@@ -1427,10 +1427,6 @@ argument_list|(
 literal|"Types must be specified for arguments"
 argument_list|)
 expr_stmt|;
-name|p
-operator|=
-name|NLNIL
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -1448,10 +1444,6 @@ name|error
 argument_list|(
 literal|"Procedures cannot have types"
 argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|NLNIL
 expr_stmt|;
 block|}
 else|else
@@ -2063,6 +2055,10 @@ block|}
 block|}
 if|if
 condition|(
+name|typ
+operator|!=
+name|TR_NIL
+operator|&&
 name|typ
 operator|->
 name|tag

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.1 (Berkeley) %G%"
+literal|"@(#)var.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,10 +626,16 @@ directive|endif
 if|if
 condition|(
 name|np
+operator|!=
+name|NLNIL
+operator|&&
+operator|(
+name|np
 operator|->
 name|nl_flags
 operator|&
 name|NFILES
+operator|)
 condition|)
 block|{
 name|dfiles
