@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.5	%G%	*/
+comment|/*	Locore.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/proc.h"
 end_include
 
@@ -72,22 +66,6 @@ end_include
 begin_comment
 comment|/*  * Pseudo file for lint to show what is used/defined in locore.s.  */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|cmap
-modifier|*
-name|cmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|cmap
-modifier|*
-name|ecmap
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -693,28 +671,6 @@ name|char
 name|vmmap
 index|[
 name|NBPG
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pte
-name|bufmap
-index|[
-name|NBUF
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|buffers
-index|[
-name|NBUF
-index|]
-index|[
-name|BSIZE
 index|]
 decl_stmt|;
 end_decl_stmt

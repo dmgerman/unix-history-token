@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.8	%G%	*/
+comment|/*	init_main.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -396,7 +396,7 @@ name|u_smap
 operator|=
 name|zdmap
 expr_stmt|;
-comment|/* 	 * make page-out daemon (process 2) 	 * the daemon has ctopt(NSWBUF*CLSIZE*KLMAX) pages of page 	 * table so that it can map dirty pages into 	 * its address space during asychronous pushes. 	 */
+comment|/* 	 * make page-out daemon (process 2) 	 * the daemon has ctopt(nswbuf*CLSIZE*KLMAX) pages of page 	 * table so that it can map dirty pages into 	 * its address space during asychronous pushes. 	 */
 name|mpid
 operator|=
 literal|1
@@ -412,7 +412,7 @@ name|clrnd
 argument_list|(
 name|ctopt
 argument_list|(
-name|NSWBUF
+name|nswbuf
 operator|*
 name|CLSIZE
 operator|*
@@ -462,7 +462,7 @@ name|u
 operator|.
 name|u_dsize
 operator|=
-name|NSWBUF
+name|nswbuf
 operator|*
 name|CLSIZE
 operator|*
@@ -983,16 +983,17 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|sp
 name|bswlist
 operator|.
 name|av_forw
-operator|=
-operator|&
-name|swbuf
-index|[
-literal|0
-index|]
-expr_stmt|;
+init|=
+name|sp
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -1007,29 +1008,20 @@ literal|1
 condition|;
 name|i
 operator|++
+operator|,
+name|sp
+operator|++
 control|)
-name|swbuf
-index|[
-name|i
-index|]
-operator|.
+name|sp
+operator|->
 name|av_forw
 operator|=
-operator|&
-name|swbuf
-index|[
-name|i
+name|sp
 operator|+
 literal|1
-index|]
 expr_stmt|;
-name|swbuf
-index|[
-name|NSWBUF
-operator|-
-literal|1
-index|]
-operator|.
+name|sp
+operator|->
 name|av_forw
 operator|=
 name|NULL
