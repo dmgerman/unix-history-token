@@ -1501,7 +1501,7 @@ name|SQS_CHGOK
 expr_stmt|;
 if|if
 condition|(
-name|res
+name|chres
 operator|<
 literal|0
 condition|)
