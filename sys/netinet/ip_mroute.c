@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.23 1995/10/06 19:30:43 wollman Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.16.4.2 1995/10/09 06:22:13 davidg Exp $  */
 end_comment
 
 begin_include
@@ -5128,10 +5128,7 @@ name|struct
 name|mfc
 modifier|*
 name|rt
-init|=
-literal|0
 decl_stmt|;
-comment|/* XXX uninit warning */
 specifier|register
 name|u_char
 modifier|*
@@ -5394,7 +5391,7 @@ name|m
 argument_list|,
 name|ifp
 argument_list|,
-name|rt
+name|NULL
 argument_list|,
 name|vifi
 argument_list|)
@@ -5562,6 +5559,15 @@ specifier|register
 name|int
 name|npkts
 decl_stmt|;
+name|int
+name|hlen
+init|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|UPCALL_TIMING
@@ -5616,7 +5622,7 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate mbufs early so that we don't do extra work if we are 	 * just going to fail anyway. 	 */
+comment|/* 	 * Allocate mbufs early so that we don't do extra work if we are 	 * just going to fail anyway.  Make sure to pullup the header so 	 * that other people can't step on it. 	 */
 name|MGET
 argument_list|(
 name|mb_ntry
@@ -5651,6 +5657,32 @@ argument_list|,
 literal|0
 argument_list|,
 name|M_COPYALL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mb0
+operator|&&
+operator|(
+name|M_HASCL
+argument_list|(
+name|mb0
+argument_list|)
+operator|||
+name|mb0
+operator|->
+name|m_len
+operator|<
+name|hlen
+operator|)
+condition|)
+name|mb0
+operator|=
+name|m_pullup
+argument_list|(
+name|mb0
+argument_list|,
+name|hlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -5769,15 +5801,6 @@ name|NULL
 condition|)
 block|{
 name|int
-name|hlen
-init|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 name|struct
@@ -5829,32 +5852,6 @@ argument_list|(
 name|m
 argument_list|,
 literal|0
-argument_list|,
-name|hlen
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mm
-operator|&&
-operator|(
-name|M_HASCL
-argument_list|(
-name|mm
-argument_list|)
-operator|||
-name|mm
-operator|->
-name|m_len
-operator|<
-name|hlen
-operator|)
-condition|)
-name|mm
-operator|=
-name|m_pullup
-argument_list|(
-name|mm
 argument_list|,
 name|hlen
 argument_list|)
