@@ -1,16 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* STARTUP PROCEDURE FOR UNIX FORTRAN PROGRAMS */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)main.c	5.1	%G%  */
 end_comment
-
-begin_decl_stmt
-name|char
-name|id_libF77
-index|[]
-init|=
-literal|"@(#)main.c	2.17	%G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_include
 include|#
