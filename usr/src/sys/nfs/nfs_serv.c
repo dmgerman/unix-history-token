@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -170,6 +176,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -220,6 +228,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -256,7 +272,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -327,6 +343,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -377,6 +395,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -427,6 +447,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -469,7 +497,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -553,6 +581,8 @@ argument_list|,
 name|VWRITE
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
@@ -752,6 +782,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -775,6 +807,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -827,6 +861,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -877,6 +913,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -917,7 +961,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -1087,6 +1131,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -1144,6 +1190,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1194,6 +1242,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -1228,7 +1284,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -1464,6 +1520,17 @@ name|uio_segflg
 operator|=
 name|UIO_SYSSPACE
 expr_stmt|;
+name|uiop
+operator|->
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1579,7 +1646,7 @@ expr_stmt|;
 block|}
 name|nfsm_build
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -1588,7 +1655,7 @@ name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -1626,6 +1693,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1676,6 +1745,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1704,7 +1781,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -1803,7 +1880,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -1818,7 +1895,7 @@ argument_list|(
 name|off_t
 argument_list|,
 operator|*
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 name|nfsm_srvstrsiz
@@ -1862,6 +1939,8 @@ operator||
 name|VEXEC
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -2086,6 +2165,17 @@ name|uio_segflg
 operator|=
 name|UIO_SYSSPACE
 expr_stmt|;
+name|uiop
+operator|->
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|VOP_READ
@@ -2147,6 +2237,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 name|m_freem
@@ -2242,7 +2334,7 @@ expr_stmt|;
 block|}
 name|nfsm_build
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -2251,7 +2343,7 @@ name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -2289,6 +2381,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2331,6 +2425,14 @@ begin_decl_stmt
 name|int
 modifier|*
 name|repstat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -2377,7 +2479,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -2452,7 +2554,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -2470,10 +2572,10 @@ name|off_t
 argument_list|,
 operator|*
 operator|++
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
-name|p
+name|tl
 operator|+=
 literal|2
 expr_stmt|;
@@ -2484,7 +2586,7 @@ argument_list|(
 name|long
 argument_list|,
 operator|*
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 if|if
@@ -2613,6 +2715,8 @@ argument_list|,
 name|VWRITE
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -2644,6 +2748,17 @@ operator|->
 name|uio_segflg
 operator|=
 name|UIO_SYSSPACE
+expr_stmt|;
+name|uiop
+operator|->
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 comment|/* 	 * Do up to NFS_MAXIOVEC mbufs of write each iteration of the 	 * loop until done. 	 */
 while|while
@@ -2882,6 +2997,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -2932,6 +3049,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2977,6 +3096,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -3018,7 +3145,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -3136,7 +3263,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -3165,7 +3292,7 @@ argument_list|(
 name|u_long
 argument_list|,
 operator|*
-name|p
+name|tl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3190,7 +3317,7 @@ operator|=
 name|nfstov_mode
 argument_list|(
 operator|*
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 name|rdev
@@ -3201,7 +3328,7 @@ name|long
 argument_list|,
 operator|*
 operator|(
-name|p
+name|tl
 operator|+
 literal|3
 operator|)
@@ -3231,6 +3358,8 @@ argument_list|(
 name|ndp
 argument_list|,
 name|vap
+argument_list|,
+name|p
 argument_list|)
 condition|)
 name|nfsm_reply
@@ -3372,6 +3501,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 name|nfsm_reply
@@ -3504,6 +3635,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -3579,6 +3712,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3689,6 +3824,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -3734,6 +3871,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -3752,7 +3897,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -3949,6 +4094,8 @@ operator|=
 name|VOP_REMOVE
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4018,6 +4165,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4063,6 +4212,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -4074,7 +4231,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -4444,6 +4601,8 @@ name|ndp
 argument_list|,
 operator|&
 name|tond
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4592,6 +4751,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -4637,6 +4798,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -4655,7 +4824,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -4875,6 +5044,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -4961,6 +5132,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -5006,6 +5179,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -5037,7 +5218,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -5230,6 +5411,17 @@ name|uio_rw
 operator|=
 name|UIO_READ
 expr_stmt|;
+name|io
+operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|nfsm_mtouio
 argument_list|(
 operator|&
@@ -5337,6 +5529,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|pathcp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|out
@@ -5447,6 +5641,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -5492,6 +5688,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -5533,7 +5737,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -5643,7 +5847,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -5669,7 +5873,7 @@ operator|=
 name|nfstov_mode
 argument_list|(
 operator|*
-name|p
+name|tl
 operator|++
 argument_list|)
 expr_stmt|;
@@ -5743,6 +5947,8 @@ argument_list|(
 name|ndp
 argument_list|,
 name|vap
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -5827,6 +6033,8 @@ argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -5937,6 +6145,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -5982,6 +6192,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|struct
@@ -6000,7 +6218,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -6172,6 +6390,8 @@ operator|=
 name|VOP_RMDIR
 argument_list|(
 name|ndp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -6224,7 +6444,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of DIRBLKSIZ<= NFS_MAXREADDIR  * - calls VOP_READDIR()  * - loops around building the reply  *	if the output generated exceeds count break out of loop  *	The nfsm_clget macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it only knows that it has encountered eof when the VOP_READDIR()  *	reads nothing  * - as such one readdir rpc will return eof false although you are there  *	and then the next will return eof  * - it trims out records with d_ino == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * NB: It is tempting to set eof to true if the VOP_READDIR() reads less  *	than requested, but this may not apply to all filesystems. For  *	example, client NFS does not { although it is never remote mounted  *	anyhow }  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
+comment|/*  * nfs readdir service  * - mallocs what it thinks is enough to read  *	count rounded up to a multiple of NFS_DIRBLKSIZ<= NFS_MAXREADDIR  * - calls VOP_READDIR()  * - loops around building the reply  *	if the output generated exceeds count break out of loop  *	The nfsm_clget macro is used here so that the reply will be packed  *	tightly in mbuf clusters.  * - it only knows that it has encountered eof when the VOP_READDIR()  *	reads nothing  * - as such one readdir rpc will return eof false although you are there  *	and then the next will return eof  * - it trims out records with d_ino == 0  *	this doesn't matter for Unix clients, but they might confuse clients  *	for other os'.  * NB: It is tempting to set eof to true if the VOP_READDIR() reads less  *	than requested, but this may not apply to all filesystems. For  *	example, client NFS does not { although it is never remote mounted  *	anyhow }  * PS: The NFS protocol spec. does not clarify what the "count" byte  *	argument is a count of.. just name strings and file id's or the  *	entire reply rpc or ...  *	I tried just file name and id sizes and it confused the Sun client,  *	so I am using the full rpc size now. The "paranoia.." comment refers  *	to including the status longwords that are not a part of the dir.  *	"entry" structures, but are in the rpc.  */
 end_comment
 
 begin_macro
@@ -6243,6 +6463,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -6293,6 +6515,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -6322,7 +6552,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -6434,7 +6664,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -6451,7 +6681,7 @@ argument_list|(
 name|off_t
 argument_list|,
 operator|*
-name|p
+name|tl
 operator|++
 argument_list|)
 expr_stmt|;
@@ -6462,7 +6692,7 @@ name|toff
 operator|&
 operator|~
 operator|(
-name|DIRBLKSIZ
+name|NFS_DIRBLKSIZ
 operator|-
 literal|1
 operator|)
@@ -6474,7 +6704,7 @@ operator|(
 name|toff
 operator|&
 operator|(
-name|DIRBLKSIZ
+name|NFS_DIRBLKSIZ
 operator|-
 literal|1
 operator|)
@@ -6487,7 +6717,7 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 name|siz
@@ -6496,14 +6726,14 @@ operator|(
 operator|(
 name|cnt
 operator|+
-name|DIRBLKSIZ
+name|NFS_DIRBLKSIZ
 operator|-
 literal|1
 operator|)
 operator|&
 operator|~
 operator|(
-name|DIRBLKSIZ
+name|NFS_DIRBLKSIZ
 operator|-
 literal|1
 operator|)
@@ -6555,6 +6785,8 @@ argument_list|,
 name|VEXEC
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 block|{
@@ -6638,6 +6870,17 @@ name|uio_rw
 operator|=
 name|UIO_READ
 expr_stmt|;
+name|io
+operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|VOP_READDIR
@@ -6720,7 +6963,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_build
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -6731,13 +6974,13 @@ name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|nfs_false
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|nfs_true
 expr_stmt|;
@@ -6950,7 +7193,7 @@ comment|/* Build the directory record xdr from the direct entry */
 name|nfsm_clget
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|nfs_true
 expr_stmt|;
@@ -6961,7 +7204,7 @@ expr_stmt|;
 name|nfsm_clget
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -6977,7 +7220,7 @@ expr_stmt|;
 name|nfsm_clget
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -7087,7 +7330,7 @@ operator|->
 name|d_reclen
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -7125,7 +7368,7 @@ block|}
 name|nfsm_clget
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|nfs_false
 expr_stmt|;
@@ -7140,13 +7383,13 @@ condition|(
 name|eofflag
 condition|)
 operator|*
-name|p
+name|tl
 operator|=
 name|nfs_true
 expr_stmt|;
 else|else
 operator|*
-name|p
+name|tl
 operator|=
 name|nfs_false
 expr_stmt|;
@@ -7211,6 +7454,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -7261,6 +7506,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -7278,7 +7531,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -7370,6 +7623,8 @@ operator|->
 name|v_mount
 argument_list|,
 name|sf
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vput
@@ -7475,6 +7730,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -7522,6 +7779,14 @@ begin_decl_stmt
 name|int
 modifier|*
 name|repstat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -7584,6 +7849,8 @@ argument_list|,
 argument|mrq
 argument_list|,
 argument|repstat
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -7634,6 +7901,14 @@ name|repstat
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|caddr_t
@@ -7681,6 +7956,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -7702,6 +7979,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -7829,6 +8114,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 condition|)
 return|return
@@ -7848,6 +8135,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 operator|&&
