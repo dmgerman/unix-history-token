@@ -3225,6 +3225,9 @@ decl_stmt|;
 name|int
 name|rl_maxsegs
 decl_stmt|;
+name|u_int32_t
+name|rl_flags
+decl_stmt|;
 name|struct
 name|rl_desc
 modifier|*
