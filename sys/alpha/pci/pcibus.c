@@ -955,6 +955,11 @@ modifier|*
 name|cookiep
 parameter_list|)
 block|{
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
 comment|/* 	 * XXX - If we aren't the resource manager for this IRQ, assume that 	 * it is actually handled by the ISA PIC. 	 */
 if|if
 condition|(
@@ -984,6 +989,8 @@ name|cookiep
 argument_list|)
 return|;
 else|else
+endif|#
+directive|endif
 return|return
 name|bus_generic_setup_intr
 argument_list|(
@@ -1025,6 +1032,11 @@ modifier|*
 name|cookie
 parameter_list|)
 block|{
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
 comment|/* 	 * XXX - If we aren't the resource manager for this IRQ, assume that 	 * it is actually handled by the ISA PIC. 	 */
 if|if
 condition|(
@@ -1048,6 +1060,8 @@ name|cookie
 argument_list|)
 return|;
 else|else
+endif|#
+directive|endif
 return|return
 name|bus_generic_teardown_intr
 argument_list|(
