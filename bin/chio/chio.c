@@ -121,17 +121,6 @@ comment|/* from crt0.o */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|optreset
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from getopt.o */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|void
 name|usage

@@ -877,15 +877,6 @@ decl_stmt|;
 name|FSUB
 name|tmp
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 comment|/* 	 * process option flags 	 */
 while|while
 condition|(
