@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkfs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4705,22 +4705,9 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cp
-operator|+=
-name|DIRSIZ
-argument_list|(
-operator|&
-name|protodir
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|cp
-operator|-
-name|buf
+name|DIRBLKSIZ
 operator|)
 return|;
 block|}
