@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine scrolls the window up a line.  *  * %G% (Berkeley) @(#)scroll.c	1.2  */
+comment|/*  *	This routine scrolls the window up a line.  *  * %G% (Berkeley) @(#)scroll.c	1.3  */
 end_comment
 
 begin_macro
@@ -63,15 +63,13 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
 name|win
 operator|->
 name|_maxy
-operator|-
-literal|2
 condition|;
 name|i
 operator|++
@@ -81,6 +79,8 @@ operator|->
 name|_y
 index|[
 name|i
+operator|-
+literal|1
 index|]
 operator|=
 name|win
@@ -88,8 +88,6 @@ operator|->
 name|_y
 index|[
 name|i
-operator|+
-literal|1
 index|]
 expr_stmt|;
 for|for
@@ -99,12 +97,14 @@ operator|=
 name|temp
 init|;
 name|sp
-operator|-
-name|temp
 operator|<
+operator|&
+name|temp
+index|[
 name|win
 operator|->
 name|_maxx
+index|]
 condition|;
 control|)
 operator|*
@@ -184,6 +184,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|touchwin
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
 return|return
 name|OK
 return|;
