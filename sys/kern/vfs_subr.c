@@ -8488,6 +8488,8 @@ init|=
 name|curthread
 decl_stmt|;
 comment|/* XXX */
+name|GIANT_REQUIRED
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|vp
