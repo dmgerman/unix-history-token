@@ -2120,13 +2120,16 @@ operator|.
 name|ether_shost
 argument_list|)
 expr_stmt|;
+comment|/* 		 * NB: always use the bssid from ic_bss as the 		 *     neighbor's may be stale after an ibss merge 		 */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|wh
 operator|->
 name|i_addr3
 argument_list|,
-name|ni
+name|ic
+operator|->
+name|ic_bss
 operator|->
 name|ni_bssid
 argument_list|)
