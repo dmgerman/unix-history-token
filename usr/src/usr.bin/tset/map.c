@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	5.1 (Berkeley) %G%"
+literal|"@(#)map.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,12 +175,20 @@ begin_function
 name|void
 name|add_mapping
 parameter_list|(
+name|port
+parameter_list|,
 name|arg
 parameter_list|)
 name|char
 modifier|*
+name|port
+decl_stmt|,
+decl|*
 name|arg
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|MAP
 modifier|*
@@ -310,17 +318,9 @@ name|porttype
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAPDEBUG
 goto|goto
-name|mdebug
+name|done
 goto|;
-else|#
-directive|else
-return|return;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
@@ -499,15 +499,9 @@ operator|==
 name|NULL
 condition|)
 comment|/* Non-optional type. */
+goto|goto
 name|badmopt
-label|:
-name|err
-argument_list|(
-literal|"illegal -m option format: %s"
-argument_list|,
-name|copy
-argument_list|)
-expr_stmt|;
+goto|;
 name|mapp
 operator|->
 name|type
@@ -552,11 +546,39 @@ operator||
 name|LT
 operator|)
 expr_stmt|;
+comment|/* If user specified a port with an option flag, set it. */
+name|done
+label|:
+if|if
+condition|(
+name|port
+condition|)
+block|{
+if|if
+condition|(
+name|mapp
+operator|->
+name|porttype
+condition|)
+name|badmopt
+label|:
+name|err
+argument_list|(
+literal|"illegal -m option format: %s"
+argument_list|,
+name|copy
+argument_list|)
+expr_stmt|;
+name|mapp
+operator|->
+name|porttype
+operator|=
+name|port
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|MAPDEBUG
-name|mdebug
-label|:
 operator|(
 name|void
 operator|)
@@ -678,7 +700,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Return the type of terminal to use for a port of type 'type', as specified  * by the first applicable mapping in 'map'.  If no mappings apply, return  * 'type'.  */

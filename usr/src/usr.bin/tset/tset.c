@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.18 (Berkeley) %G%"
+literal|"@(#)tset.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,6 +240,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|showterm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* display term on stderr */
+end_comment
+
+begin_decl_stmt
+name|int
 name|lines
 decl_stmt|,
 name|columns
@@ -396,7 +406,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-e:Ii:k:m:nQs"
+literal|"-a:d:e:Ii:k:m:np:Qrs"
 argument_list|)
 operator|)
 operator|!=
@@ -411,9 +421,34 @@ block|{
 case|case
 literal|'-'
 case|:
+comment|/* OBSOLETE: display term only */
 name|noset
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* OBSOLETE: map identifier to type */
+name|add_mapping
+argument_list|(
+literal|"arpanet"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* OBSOLETE: map identifier to type */
+name|add_mapping
+argument_list|(
+literal|"dialup"
+argument_list|,
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -560,6 +595,8 @@ case|:
 comment|/* map identifier to type */
 name|add_mapping
 argument_list|(
+name|NULL
+argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
@@ -567,14 +604,34 @@ break|break;
 case|case
 literal|'n'
 case|:
-comment|/* Undocumented (obsolete). */
+comment|/* OBSOLETE: set new tty driver */
 break|break;
-comment|/* set newtty driver */
+case|case
+literal|'p'
+case|:
+comment|/* OBSOLETE: map identifier to type */
+name|add_mapping
+argument_list|(
+literal|"plugboard"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'Q'
 case|:
 comment|/* be quiet */
 name|quiet
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+comment|/* display term on stderr */
+name|showterm
 operator|=
 literal|1
 expr_stmt|;
@@ -756,55 +813,7 @@ operator|&
 name|mode
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If erase, kill and interrupt characters have potentially 		 * been modified and not -Q, display the changes. 		 */
-if|if
-condition|(
-operator|!
-name|quiet
-condition|)
-block|{
-name|report
-argument_list|(
-literal|"Erase"
-argument_list|,
-name|VERASE
-argument_list|,
-name|CERASE
-argument_list|)
-expr_stmt|;
-name|report
-argument_list|(
-literal|"Kill"
-argument_list|,
-name|VKILL
-argument_list|,
-name|CKILL
-argument_list|)
-expr_stmt|;
-name|report
-argument_list|(
-literal|"Interrupt"
-argument_list|,
-name|VINTR
-argument_list|,
-name|CINTR
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-operator|!
-name|dosetenv
-operator|&&
-operator|!
-name|noset
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * The termcap file generally has a two-character name first in each 	 * entry followed by more descriptive names.  If we ended up with the 	 * first one, we switch to the second one for setting or reporting 	 * information. 	 */
 name|p
 operator|=
@@ -898,7 +907,6 @@ if|if
 condition|(
 name|noset
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -909,12 +917,70 @@ argument_list|,
 name|ttype
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|showterm
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Terminal type is %s.\n"
+argument_list|,
+name|ttype
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If erase, kill and interrupt characters could have been 		 * modified and not -Q, display the changes. 		 */
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+block|{
+name|report
+argument_list|(
+literal|"Erase"
+argument_list|,
+name|VERASE
+argument_list|,
+name|CERASE
+argument_list|)
+expr_stmt|;
+name|report
+argument_list|(
+literal|"Kill"
+argument_list|,
+name|VKILL
+argument_list|,
+name|CKILL
+argument_list|)
+expr_stmt|;
+name|report
+argument_list|(
+literal|"Interrupt"
+argument_list|,
+name|VINTR
+argument_list|,
+name|CINTR
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|dosetenv
+condition|)
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Figure out what shell we're using.  A hack, we look for a $SHELL 	 * ending in "csh". 	 */
 name|csh
 operator|=
@@ -1342,7 +1408,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tset [-IQs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
+literal|"usage: tset [-IQrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
 argument_list|)
 expr_stmt|;
 name|exit
