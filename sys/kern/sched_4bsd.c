@@ -546,40 +546,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* kernel uses `FSCALE', userland (SHOULD) use kern.fscale */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fscale
-name|__unused
-init|=
-name|FSCALE
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|fscale
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-name|FSCALE
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * If `ccpu' is not equal to `exp(-1/20)' and you still want to use the  * faster/more-accurate formula, you'll have to estimate CCPU_SHIFT below  * and possibly adjust FSHIFT in "param.h" so that (FSHIFT>= CCPU_SHIFT).  *  * To estimate CCPU_SHIFT for exp(-1/20), the following formula was used:  *	1 - exp(-1/20) ~= 0.0487 ~= 0.0488 == 1 (fixed pt, *11* bits).  *  * If you don't want to bother with the faster/more-accurate formula, you  * can set CCPU_SHIFT to (FSHIFT + 1) which will use a slower/less-accurate  * (more general) method of calculating the %age of CPU used by a process.  */
 end_comment
 
@@ -987,12 +953,6 @@ name|sx_sunlock
 argument_list|(
 operator|&
 name|allproc_lock
-argument_list|)
-expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|lbolt
 argument_list|)
 expr_stmt|;
 name|callout_reset
