@@ -2129,6 +2129,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ttyinitmode
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|echo
+parameter_list|,
+name|int
+name|speed
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ttyinput
 parameter_list|(
