@@ -2393,7 +2393,7 @@ if|if
 condition|(
 name|msgYesNo
 argument_list|(
-literal|"Will this machine be a leaf node (e.g. will not forward packets)\n"
+literal|"Will this machine be a leaf node (e.g. will not forward packets\n"
 literal|"between interfaces)?"
 argument_list|)
 condition|)
