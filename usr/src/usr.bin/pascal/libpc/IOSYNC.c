@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)IOSYNC.c 1.2 %G%"
+literal|"@(#)IOSYNC.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
