@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.22	82/10/20	*/
+comment|/*	if.c	4.23	82/10/31	*/
 end_comment
 
 begin_include
@@ -171,13 +171,13 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_ubareset
+name|if_reset
 condition|)
 call|(
 modifier|*
 name|ifp
 operator|->
-name|if_ubareset
+name|if_reset
 call|)
 argument_list|(
 name|uban
