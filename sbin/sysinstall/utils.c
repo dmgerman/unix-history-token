@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.9 1994/10/22 02:35:09 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.10 1994/10/22 02:37:24 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -370,14 +370,6 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|getpid
-argument_list|()
-operator|==
-literal|1
-condition|)
-block|{
-if|if
-condition|(
 name|dialog_active
 condition|)
 block|{
@@ -388,6 +380,14 @@ name|dialog_update
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|==
+literal|1
+condition|)
+block|{
 if|if
 condition|(
 name|reboot
@@ -441,11 +441,12 @@ condition|(
 name|dialog_active
 condition|)
 block|{
-name|dialog_update
-argument_list|()
-expr_stmt|;
 name|end_dialog
 argument_list|()
+expr_stmt|;
+name|dialog_active
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|exit
