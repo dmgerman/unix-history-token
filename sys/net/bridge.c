@@ -3676,7 +3676,7 @@ condition|?
 name|bdg_dst_names
 index|[
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|dst
 index|]
