@@ -445,24 +445,8 @@ comment|/* 	 * Allocate an sf buf 	 */
 name|sf
 operator|=
 name|sf_buf_alloc
-argument_list|()
-expr_stmt|;
-name|sf
-operator|->
-name|m
-operator|=
-name|pp
-expr_stmt|;
-name|pmap_qenter
 argument_list|(
-name|sf
-operator|->
-name|kva
-argument_list|,
-operator|&
 name|pp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/*  	 * attach to mbuf 	 */

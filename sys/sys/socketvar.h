@@ -1348,7 +1348,10 @@ name|sf_buf
 modifier|*
 name|sf_buf_alloc
 parameter_list|(
-name|void
+name|struct
+name|vm_page
+modifier|*
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
