@@ -1243,7 +1243,7 @@ name|mbuf
 modifier|*
 name|m0
 parameter_list|,
-name|struct
+name|union
 name|ieee80211_information
 modifier|*
 name|elements
@@ -9418,7 +9418,7 @@ operator|+
 literal|1
 operator|)
 decl_stmt|;
-name|struct
+name|union
 name|ieee80211_information
 name|elements
 decl_stmt|;
@@ -9513,7 +9513,7 @@ name|mbuf
 modifier|*
 name|m0
 parameter_list|,
-name|struct
+name|union
 name|ieee80211_information
 modifier|*
 name|elements

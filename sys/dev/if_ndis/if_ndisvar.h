@@ -131,17 +131,14 @@ define|\
 value|(x)->ndis_txidx = ((x)->ndis_txidx + 1) % (x)->ndis_maxpkts
 end_define
 
-begin_define
-define|#
-directive|define
-name|arpcom
-value|ic.ic_ac
-end_define
-
 begin_struct
 struct|struct
 name|ndis_softc
 block|{
+name|struct
+name|arpcom
+name|arpcom
+decl_stmt|;
 name|struct
 name|ieee80211com
 name|ic

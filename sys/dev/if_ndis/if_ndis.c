@@ -2410,6 +2410,12 @@ name|r
 decl_stmt|;
 name|ic
 operator|->
+name|ic_ifp
+operator|=
+name|ifp
+expr_stmt|;
+name|ic
+operator|->
 name|ic_phytype
 operator|=
 name|IEEE80211_T_DS
@@ -3233,12 +3239,12 @@ argument_list|)
 expr_stmt|;
 name|ieee80211_ifattach
 argument_list|(
-name|ifp
+name|ic
 argument_list|)
 expr_stmt|;
 name|ieee80211_media_init
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 name|ieee80211_media_change
 argument_list|,
@@ -3533,7 +3539,10 @@ name|ndis_80211
 condition|)
 name|ieee80211_ifdetach
 argument_list|(
-name|ifp
+operator|&
+name|sc
+operator|->
+name|ic
 argument_list|)
 expr_stmt|;
 else|else
@@ -6343,9 +6352,7 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|ic
-operator|.
-name|ic_ac
+name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
@@ -6416,14 +6423,14 @@ expr_stmt|;
 comment|/* Set WEP */
 ifdef|#
 directive|ifdef
-name|IEEE80211_F_WEPON
+name|IEEE80211_F_PRIVACY
 if|if
 condition|(
 name|ic
 operator|->
 name|ic_flags
 operator|&
-name|IEEE80211_F_WEPON
+name|IEEE80211_F_PRIVACY
 condition|)
 block|{
 else|#
@@ -6462,7 +6469,7 @@ index|[
 name|i
 index|]
 operator|.
-name|wk_len
+name|wk_keylen
 condition|)
 block|{
 name|bzero
@@ -6491,7 +6498,7 @@ index|[
 name|i
 index|]
 operator|.
-name|wk_len
+name|wk_keylen
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -6506,7 +6513,7 @@ index|[
 name|i
 index|]
 operator|.
-name|wk_len
+name|wk_keylen
 operator|<
 literal|5
 condition|)
@@ -6526,7 +6533,7 @@ index|[
 name|i
 index|]
 operator|.
-name|wk_len
+name|wk_keylen
 operator|>
 literal|5
 operator|&&
@@ -6537,7 +6544,7 @@ index|[
 name|i
 index|]
 operator|.
-name|wk_len
+name|wk_keylen
 operator|<
 literal|13
 condition|)
@@ -6578,7 +6585,7 @@ name|i
 operator|==
 name|ic
 operator|->
-name|ic_wep_txkey
+name|ic_def_txkey
 condition|)
 name|wep
 operator|.
@@ -7921,9 +7928,7 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|ic
-operator|.
-name|ic_ac
+name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
@@ -8810,7 +8815,10 @@ name|error
 operator|=
 name|ieee80211_ioctl
 argument_list|(
-name|ifp
+operator|&
+name|sc
+operator|->
+name|ic
 argument_list|,
 name|command
 argument_list|,
@@ -8972,7 +8980,10 @@ name|error
 operator|=
 name|ieee80211_ioctl
 argument_list|(
-name|ifp
+operator|&
+name|sc
+operator|->
+name|ic
 argument_list|,
 name|command
 argument_list|,

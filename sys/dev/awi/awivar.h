@@ -172,6 +172,14 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|struct
+name|arpcom
+name|sc_arp
+decl_stmt|;
+define|#
+directive|define
+name|sc_if
+value|sc_arp.ac_if
 name|device_t
 name|sc_dev
 decl_stmt|;
