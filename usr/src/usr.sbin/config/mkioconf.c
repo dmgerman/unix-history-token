@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*	mkioconf.c	2.2	82/10/24	*/
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -18,7 +22,7 @@ file|"config.h"
 end_include
 
 begin_comment
-comment|/*  * mkioconf.c	2.1	82/10/24  * ioconf:  *	Build the ioconf.c file  */
+comment|/*  * build the ioconf.c file  */
 end_comment
 
 begin_function_decl
@@ -30,7 +34,7 @@ function_decl|;
 end_function_decl
 
 begin_macro
-name|ioconf
+name|vax_ioconf
 argument_list|()
 end_macro
 
@@ -128,13 +132,6 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../h/mbavar.h\"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"#include \"../h/vm.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -142,7 +139,28 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../h/ubavar.h\"\n\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../vaxmba/mbavar.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../vaxuba/ubavar.h\"\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -152,7 +170,7 @@ argument_list|,
 literal|"#define C (caddr_t)\n\n"
 argument_list|)
 expr_stmt|;
-comment|/*      * First print the mba initialization structures      */
+comment|/* 	 * First print the mba initialization structures 	 */
 if|if
 condition|(
 name|seen_mba
@@ -413,7 +431,7 @@ argument_list|,
 literal|"\t0\n};\n\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Print the mbsinit structure 	 * Driver Controller Unit Slave 	 */
+comment|/* 		 * Print the mbsinit structure 		 * Driver Controller Unit Slave 		 */
 name|fprintf
 argument_list|(
 name|fp
@@ -445,7 +463,7 @@ operator|->
 name|d_next
 control|)
 block|{
-comment|/* 	     * All slaves are connected to something which is connected to 	     * the massbus. 	     */
+comment|/* 			 * All slaves are connected to something which 			 * is connected to the massbus. 			 */
 if|if
 condition|(
 operator|(
@@ -528,7 +546,7 @@ literal|"\t0\n};\n\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now generate interrupt vectors for the unibus      */
+comment|/* 	 * Now generate interrupt vectors for the unibus 	 */
 for|for
 control|(
 name|dp
@@ -736,7 +754,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Now spew forth the uba_minfo structure      */
+comment|/* 	 * Now spew forth the uba_minfo structure 	 */
 name|fprintf
 argument_list|(
 name|fp
@@ -866,7 +884,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drives need their own entries; dont specify drive or slave for %s%d\n"
+literal|"drives need their own entries; dont "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"specify drive or slave for %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -888,7 +911,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"controllers (e.g. %s%d) don't have flags, only devices do\n"
+literal|"controllers (e.g. %s%d) "
 argument_list|,
 name|dp
 operator|->
@@ -897,6 +920,11 @@ argument_list|,
 name|dp
 operator|->
 name|d_unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"don't have flags, only devices do\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -943,7 +971,7 @@ argument_list|,
 literal|"\t0\n};\n"
 argument_list|)
 expr_stmt|;
-comment|/*      * Now we go for the uba_device stuff      */
+comment|/* 	 * Now we go for the uba_device stuff 	 */
 name|fprintf
 argument_list|(
 name|fp
@@ -1096,7 +1124,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"must specify csr address for device %s%d\n"
+literal|"must specify csr for device %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1126,7 +1154,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drives/slaves can be specified only for controllers, not for device %s%d\n"
+literal|"drives/slaves can be specified "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"only for controllers, "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"not for device %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1167,7 +1205,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d isn't connected to anything, so %s%d is unattached\n"
+literal|"%s%d isn't connected to anything "
 argument_list|,
 name|mp
 operator|->
@@ -1176,6 +1214,11 @@ argument_list|,
 name|mp
 operator|->
 name|d_unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|", so %s%d is unattached\n"
 argument_list|,
 name|dp
 operator|->
@@ -1205,7 +1248,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"must specify ``drive number'' for %s%d\n"
+literal|"must specify ``drive number'' "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"for %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1231,7 +1279,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"slave numbers should be given only for massbus tapes, not for %s%d\n"
+literal|"slave numbers should be given only "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"for massbus tapes, not for %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1255,7 +1308,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"interrupt vectors should not be given for drive %s%d\n"
+literal|"interrupt vectors should not be "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"given for drive %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1279,7 +1337,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"csr addresses should be given only on controllers, not on %s%d\n"
+literal|"csr addresses should be given only "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"on controllers, not on %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1385,9 +1448,831 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * intv  *	Return vector name  */
-end_comment
+begin_macro
+name|sun_ioconf
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|device
+modifier|*
+name|dp
+decl_stmt|,
+modifier|*
+name|mp
+decl_stmt|,
+modifier|*
+name|np
+decl_stmt|;
+specifier|register
+name|int
+name|uba_n
+decl_stmt|,
+name|slave
+decl_stmt|;
+name|char
+modifier|*
+name|intv
+parameter_list|()
+function_decl|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|path
+argument_list|(
+literal|"ioconf.c"
+argument_list|)
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|path
+argument_list|(
+literal|"ioconf.c"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../h/param.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../h/buf.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../h/map.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../h/vm.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../sunmb/mbvar.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#define C (caddr_t)\n\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now generate interrupt vectors for the Multibus 	 */
+for|for
+control|(
+name|dp
+operator|=
+name|dtab
+init|;
+name|dp
+operator|!=
+name|NULL
+condition|;
+name|dp
+operator|=
+name|dp
+operator|->
+name|d_next
+control|)
+block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|d_pri
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mp
+operator|=
+name|dp
+operator|->
+name|d_conn
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|==
+name|NULL
+operator|||
+name|mp
+operator|==
+name|TO_NEXUS
+operator|||
+operator|!
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
+literal|"mb"
+argument_list|)
+condition|)
+continue|continue;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"extern struct mb_driver %sdriver;\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Now spew forth the mb_cinfo structure 	 */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\nstruct mb_ctlr mbcinit[] = {\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/*\t driver,\tctlr,\talive,\taddr,\tintpri */\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|dp
+operator|=
+name|dtab
+init|;
+name|dp
+operator|!=
+name|NULL
+condition|;
+name|dp
+operator|=
+name|dp
+operator|->
+name|d_next
+control|)
+block|{
+name|mp
+operator|=
+name|dp
+operator|->
+name|d_conn
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_type
+operator|!=
+name|CONTROLLER
+operator|||
+name|mp
+operator|==
+name|TO_NEXUS
+operator|||
+name|mp
+operator|==
+name|NULL
+operator|||
+operator|!
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
+literal|"mb"
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_pri
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"must specify priority for %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_addr
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"must specify csr address for %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_drive
+operator|!=
+name|UNKNOWN
+operator|||
+name|dp
+operator|->
+name|d_slave
+operator|!=
+name|UNKNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"drives need their own entries; "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dont specify drive or slave for %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_flags
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"controllers (e.g. %s%d) don't have flags, "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"only devices do\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t{&%sdriver,\t%d,\t0,\tC 0x%x,\t%d },\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|,
+name|dp
+operator|->
+name|d_addr
+argument_list|,
+name|dp
+operator|->
+name|d_pri
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t0\n};\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Now we go for the mb_device stuff 	 */
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\nstruct mb_device mbdinit[] = {\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t/* driver,  unit, ctlr,  slave,   addr,    pri,    dk, flags*/\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|dp
+operator|=
+name|dtab
+init|;
+name|dp
+operator|!=
+name|NULL
+condition|;
+name|dp
+operator|=
+name|dp
+operator|->
+name|d_next
+control|)
+block|{
+name|mp
+operator|=
+name|dp
+operator|->
+name|d_conn
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_unit
+operator|==
+name|QUES
+operator|||
+name|dp
+operator|->
+name|d_type
+operator|!=
+name|DEVICE
+operator|||
+name|mp
+operator|==
+name|NULL
+operator|||
+name|mp
+operator|==
+name|TO_NEXUS
+operator|||
+name|mp
+operator|->
+name|d_type
+operator|==
+name|MASTER
+operator|||
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
+literal|"mba"
+argument_list|)
+condition|)
+continue|continue;
+name|np
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
+literal|"mb"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|d_pri
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"must specify vector for device %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_addr
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"must specify csr for device %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_drive
+operator|!=
+name|UNKNOWN
+operator|||
+name|dp
+operator|->
+name|d_slave
+operator|!=
+name|UNKNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"drives/slaves can be specified only "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"for controllers, not for device %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|slave
+operator|=
+name|QUES
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|np
+operator|=
+name|mp
+operator|->
+name|d_conn
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%d isn't connected to anything, "
+argument_list|,
+name|mp
+operator|->
+name|d_name
+argument_list|,
+name|mp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"so %s%d is unattached\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_drive
+operator|==
+name|UNKNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"must specify ``drive number'' for %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* NOTE THAT ON THE UNIBUS ``drive'' IS STORED IN */
+comment|/* ``SLAVE'' AND WE DON'T WANT A SLAVE SPECIFIED */
+if|if
+condition|(
+name|dp
+operator|->
+name|d_slave
+operator|!=
+name|UNKNOWN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"slave numbers should be given only "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"for massbus tapes, not for %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_pri
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"interrupt priority should not be "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"given for drive %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|dp
+operator|->
+name|d_addr
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"csr addresses should be given only"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"on controllers, not on %s%d\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+name|slave
+operator|=
+name|dp
+operator|->
+name|d_drive
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t{&%sdriver,  %2d,   %s,    %2d,   C 0x%x, %d,  %d,  0x%x },\n"
+argument_list|,
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
+literal|"mb"
+argument_list|)
+condition|?
+name|dp
+operator|->
+name|d_name
+else|:
+name|mp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|,
+name|eq
+argument_list|(
+name|mp
+operator|->
+name|d_name
+argument_list|,
+literal|"mb"
+argument_list|)
+condition|?
+literal|" -1"
+else|:
+name|qu
+argument_list|(
+name|mp
+operator|->
+name|d_unit
+argument_list|)
+argument_list|,
+name|slave
+argument_list|,
+name|dp
+operator|->
+name|d_addr
+argument_list|,
+name|dp
+operator|->
+name|d_pri
+argument_list|,
+name|dp
+operator|->
+name|d_dk
+argument_list|,
+name|dp
+operator|->
+name|d_flags
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\t0\n};\n"
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_function
 name|char
@@ -1416,13 +2301,16 @@ name|dev
 operator|->
 name|d_vec
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
+operator|(
 literal|"     0"
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|sprintf
 argument_list|(
 name|buf
@@ -1437,6 +2325,7 @@ name|dev
 operator|->
 name|d_unit
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1456,8 +2345,11 @@ operator|==
 name|QUES
 condition|)
 return|return
+operator|(
 literal|"'?'"
+operator|)
 return|;
+elseif|else
 if|if
 condition|(
 name|num
@@ -1465,9 +2357,13 @@ operator|==
 name|UNKNOWN
 condition|)
 return|return
+operator|(
 literal|" -1"
+operator|)
 return|;
+else|else
 return|return
+operator|(
 name|ns
 argument_list|(
 name|sprintf
@@ -1479,6 +2375,7 @@ argument_list|,
 name|num
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
