@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ncurses.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -1109,7 +1103,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -1310,7 +1304,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|choice
@@ -1342,7 +1336,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -1383,9 +1377,6 @@ name|ready
 init|=
 literal|0
 decl_stmt|;
-name|alloc_memory
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -1479,7 +1470,7 @@ literal|75
 argument_list|)
 condition|)
 block|{
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|clear_mbr
@@ -1513,7 +1504,7 @@ literal|75
 argument_list|)
 condition|)
 block|{
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|edit_mbr
@@ -1599,7 +1590,7 @@ name|inst_disk
 index|]
 argument_list|)
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -1686,7 +1677,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage3.c,v 1.2 1994/10/20 04:59:58 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|<dialog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ncurses.h>
 end_include
 
 begin_include
@@ -755,13 +749,13 @@ argument_list|,
 literal|"/sbin/init"
 argument_list|)
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
-name|refresh
+name|dialog_update
 argument_list|()
 expr_stmt|;
-name|endwin
+name|end_dialog
 argument_list|()
 expr_stmt|;
 name|close

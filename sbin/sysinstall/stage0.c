@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage0.c,v 1.2 1994/10/20 04:59:56 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -25,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ncurses.h>
 end_include
 
 begin_include
@@ -61,7 +55,7 @@ name|R_OK
 argument_list|)
 condition|)
 block|{
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|dialog_textbox
@@ -70,7 +64,7 @@ literal|"READ ME FIRST"
 argument_list|,
 name|README_FILE
 argument_list|,
-literal|25
+literal|24
 argument_list|,
 literal|80
 argument_list|)
@@ -87,7 +81,7 @@ name|R_OK
 argument_list|)
 condition|)
 block|{
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|dialog_textbox
@@ -96,7 +90,7 @@ literal|"COPYRIGHT"
 argument_list|,
 name|COPYRIGHT_FILE
 argument_list|,
-literal|25
+literal|24
 argument_list|,
 literal|80
 argument_list|)

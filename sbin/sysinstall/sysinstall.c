@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ncurses.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -387,7 +381,7 @@ condition|)
 name|exit_prompt
 argument_list|()
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -422,7 +416,7 @@ condition|)
 name|exit_sysinstall
 argument_list|()
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -1438,7 +1432,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -1639,7 +1633,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|choice
@@ -1671,7 +1665,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -3063,7 +3057,7 @@ literal|75
 argument_list|)
 condition|)
 block|{
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|clear_mbr
@@ -3097,7 +3091,7 @@ literal|75
 argument_list|)
 condition|)
 block|{
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|edit_mbr
@@ -3183,7 +3177,7 @@ name|inst_disk
 index|]
 argument_list|)
 expr_stmt|;
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
@@ -3270,7 +3264,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|clear
+name|dialog_clear
 argument_list|()
 expr_stmt|;
 block|}
