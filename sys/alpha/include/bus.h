@@ -2092,30 +2092,6 @@ define|\
 value|(t)->ab_ops->abo_barrier(t, (h)+(o), l, f)
 end_define
 
-begin_define
-define|#
-directive|define
-name|barrier_read
-define|\
-value|bus_space_barrier(busspace_isa_mem, 0, BUS_SPACE_UNRESTRICTED,	\ 	    BUS_SPACE_BARRIER_READ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|barrier_write
-define|\
-value|bus_space_barrier(busspace_isa_mem, 0, BUS_SPACE_UNRESTRICTED,	\ 	    BUS_SPACE_BARRIER_WRITE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|barrier_rw
-define|\
-value|bus_space_barrier(busspace_isa_mem, 0, BUS_SPACE_UNRESTRICTED,	\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE)
-end_define
-
 begin_comment
 comment|/*  * Flags used in various bus DMA methods.  */
 end_comment
