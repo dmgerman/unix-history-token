@@ -2039,6 +2039,7 @@ if|if
 condition|(
 name|tflag
 condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -2072,6 +2073,7 @@ argument_list|(
 literal|"*ignore*      "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Dflag
