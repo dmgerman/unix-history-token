@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap.c,v 1.2 1994/09/25 02:31:54 wollman Exp $"
+literal|"$Id: chap.c,v 1.8 1995/07/04 12:32:26 paulus Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -50,12 +56,6 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ppp.h"
 end_include
 
 begin_include
@@ -80,7 +80,7 @@ begin_decl_stmt
 name|chap_state
 name|chap
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -93,7 +93,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapChallengeTimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -106,7 +106,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapResponseTimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -119,7 +119,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveChallenge
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -140,7 +140,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveResponse
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -161,7 +161,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveSuccess
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -182,7 +182,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapReceiveFailure
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -203,7 +203,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapSendStatus
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -219,7 +219,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapSendChallenge
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -233,7 +233,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapSendResponse
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -247,7 +247,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ChapGenChallenge
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|chap_state
@@ -261,7 +261,7 @@ begin_decl_stmt
 specifier|extern
 name|double
 name|drand48
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -274,7 +274,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|srand48
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|long
@@ -348,18 +348,7 @@ name|max_transmits
 operator|=
 name|CHAP_DEFTRANSMITS
 expr_stmt|;
-name|srand48
-argument_list|(
-operator|(
-name|long
-operator|)
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* joggle random number generator */
+comment|/* random number generator is initialized in magic_init */
 block|}
 end_function
 
@@ -434,7 +423,7 @@ name|CHAPCS_PENDING
 expr_stmt|;
 return|return;
 block|}
-comment|/*      * We get here as a result of LCP coming up.      * So even if CHAP was open before, we will      * have to re-authenticate ourselves.      */
+comment|/*      * We get here as a result of LCP coming up.      * So even if CHAP was open before, we will       * have to re-authenticate ourselves.      */
 name|cstate
 operator|->
 name|clientstate
@@ -608,7 +597,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 return|return;
@@ -716,28 +705,6 @@ operator|->
 name|serverstate
 operator|=
 name|CHAPSS_RECHALLENGE
-expr_stmt|;
-if|if
-condition|(
-name|cstate
-operator|->
-name|chal_interval
-operator|!=
-literal|0
-condition|)
-name|TIMEOUT
-argument_list|(
-name|ChapRechallenge
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|cstate
-argument_list|,
-name|cstate
-operator|->
-name|chal_interval
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -988,7 +955,7 @@ name|auth_peer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 if|if
@@ -1009,7 +976,7 @@ name|auth_withpeer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 name|ChapLowerDown
@@ -2007,7 +1974,7 @@ expr_stmt|;
 comment|/* compare local and remote MDs and send the appropriate status */
 if|if
 condition|(
-name|bcmp
+name|memcmp
 argument_list|(
 name|mdContext
 operator|.
@@ -2081,7 +2048,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2129,7 +2096,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2250,7 +2217,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2368,7 +2335,7 @@ name|cstate
 operator|->
 name|unit
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2438,7 +2405,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 comment|/* paste in a CHAP header */
@@ -2513,7 +2480,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|CHAPDEBUG
@@ -2631,7 +2598,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 comment|/* paste in a header */
@@ -2677,7 +2644,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|CHAPDEBUG
@@ -2729,7 +2696,7 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-comment|/* pick a random challenge length between MIN_CHALLENGE_LENGTH and        MAX_CHALLENGE_LENGTH */
+comment|/* pick a random challenge length between MIN_CHALLENGE_LENGTH and         MAX_CHALLENGE_LENGTH */
 name|chal_len
 operator|=
 call|(
@@ -2869,7 +2836,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|CHAP
+name|PPP_CHAP
 argument_list|)
 expr_stmt|;
 name|PUTCHAR
@@ -2948,7 +2915,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|cstate
@@ -3027,7 +2994,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -3337,59 +3304,6 @@ name|CHAP_HEADERLEN
 return|;
 block|}
 end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_DRAND48
-end_ifdef
-
-begin_function
-name|double
-name|drand48
-parameter_list|()
-block|{
-return|return
-operator|(
-name|double
-operator|)
-name|random
-argument_list|()
-operator|/
-operator|(
-name|double
-operator|)
-literal|0x7fffffffL
-return|;
-comment|/* 2**31-1 */
-block|}
-end_function
-
-begin_function
-name|void
-name|srand48
-parameter_list|(
-name|seedval
-parameter_list|)
-name|long
-name|seedval
-decl_stmt|;
-block|{
-name|srand
-argument_list|(
-operator|(
-name|int
-operator|)
-name|seedval
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

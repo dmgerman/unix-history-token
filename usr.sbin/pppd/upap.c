@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: upap.c,v 1.2 1994/09/25 02:32:16 wollman Exp $"
+literal|"$Id: upap.c,v 1.6 1995/06/12 12:02:24 paulus Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -55,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ppp.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pppd.h"
 end_include
 
@@ -74,7 +74,7 @@ begin_decl_stmt
 name|upap_state
 name|upap
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -87,7 +87,20 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_timeout
-name|__ARGS
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|upap_reqtimeout
+name|__P
 argument_list|(
 operator|(
 name|caddr_t
@@ -100,7 +113,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_rauthreq
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -121,7 +134,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_rauthack
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -142,7 +155,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_rauthnak
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -163,7 +176,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_sauthreq
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -177,7 +190,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|upap_sresp
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|upap_state
@@ -279,6 +292,12 @@ operator|->
 name|us_maxtransmits
 operator|=
 literal|10
+expr_stmt|;
+name|u
+operator|->
+name|us_reqtimeout
+operator|=
+name|UPAP_DEFREQTIME
 expr_stmt|;
 block|}
 end_function
@@ -445,11 +464,33 @@ name|us_serverstate
 operator|=
 name|UPAPSS_LISTEN
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|->
+name|us_reqtimeout
+operator|>
+literal|0
+condition|)
+name|TIMEOUT
+argument_list|(
+name|upap_reqtimeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|u
+argument_list|,
+name|u
+operator|->
+name|us_reqtimeout
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * upap_timeout - Timeout expired.  */
+comment|/*  * upap_timeout - Retransmission timer for sending auth-reqs expired.  */
 end_comment
 
 begin_function
@@ -513,7 +554,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 return|return;
@@ -524,6 +565,59 @@ name|u
 argument_list|)
 expr_stmt|;
 comment|/* Send Authenticate-Request */
+block|}
+end_function
+
+begin_comment
+comment|/*  * upap_reqtimeout - Give up waiting for the peer to send an auth-req.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|upap_reqtimeout
+parameter_list|(
+name|arg
+parameter_list|)
+name|caddr_t
+name|arg
+decl_stmt|;
+block|{
+name|upap_state
+modifier|*
+name|u
+init|=
+operator|(
+name|upap_state
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+if|if
+condition|(
+name|u
+operator|->
+name|us_serverstate
+operator|!=
+name|UPAPSS_LISTEN
+condition|)
+return|return;
+comment|/* huh?? */
+name|auth_peer_fail
+argument_list|(
+name|u
+operator|->
+name|us_unit
+argument_list|,
+name|PPP_PAP
+argument_list|)
+expr_stmt|;
+name|u
+operator|->
+name|us_serverstate
+operator|=
+name|UPAPSS_BADAUTH
+expr_stmt|;
 block|}
 end_function
 
@@ -605,12 +699,36 @@ name|us_serverstate
 operator|==
 name|UPAPSS_PENDING
 condition|)
+block|{
 name|u
 operator|->
 name|us_serverstate
 operator|=
 name|UPAPSS_LISTEN
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|->
+name|us_reqtimeout
+operator|>
+literal|0
+condition|)
+name|TIMEOUT
+argument_list|(
+name|upap_reqtimeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|u
+argument_list|,
+name|u
+operator|->
+name|us_reqtimeout
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -658,6 +776,30 @@ name|u
 argument_list|)
 expr_stmt|;
 comment|/* Cancel timeout */
+if|if
+condition|(
+name|u
+operator|->
+name|us_serverstate
+operator|==
+name|UPAPSS_LISTEN
+operator|&&
+name|u
+operator|->
+name|us_reqtimeout
+operator|>
+literal|0
+condition|)
+name|UNTIMEOUT
+argument_list|(
+name|upap_reqtimeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|u
+argument_list|)
+expr_stmt|;
 name|u
 operator|->
 name|us_clientstate
@@ -717,7 +859,7 @@ name|auth_withpeer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -741,7 +883,7 @@ name|auth_peer_fail
 argument_list|(
 name|unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1232,7 +1374,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1250,10 +1392,28 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|u
+operator|->
+name|us_reqtimeout
+operator|>
+literal|0
+condition|)
+name|UNTIMEOUT
+argument_list|(
+name|upap_reqtimeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|u
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1398,7 +1558,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1552,7 +1712,7 @@ name|u
 operator|->
 name|us_unit
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1608,7 +1768,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 name|PUTCHAR
@@ -1698,7 +1858,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|UPAPDEBUG
@@ -1804,7 +1964,7 @@ name|MAKEHEADER
 argument_list|(
 name|outp
 argument_list|,
-name|UPAP
+name|PPP_PAP
 argument_list|)
 expr_stmt|;
 name|PUTCHAR
@@ -1854,7 +2014,7 @@ name|outpacket_buf
 argument_list|,
 name|outlen
 operator|+
-name|DLLHEADERLEN
+name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
 name|UPAPDEBUG
@@ -1919,7 +2079,7 @@ end_function_decl
 
 begin_expr_stmt
 unit|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void

@@ -1,28 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * define path names  *  * $Id: pathnames.h,v 1.4 1994/05/18 06:34:46 paulus Exp $  */
+comment|/*  * define path names  *  * $Id: pathnames.h,v 1.6 1995/06/12 11:22:53 paulus Exp $  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|STREAMS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PATHS_H
+end_ifdef
 
-begin_define
-define|#
-directive|define
-name|_PATH_PIDFILE
-value|"/etc/ppp"
-end_define
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_else
 else|#
@@ -32,8 +23,15 @@ end_else
 begin_define
 define|#
 directive|define
-name|_PATH_PIDFILE
-value|"/var/run"
+name|_PATH_VARRUN
+value|"/etc/ppp/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEVNULL
+value|"/dev/null"
 end_define
 
 begin_endif
@@ -81,6 +79,13 @@ define|#
 directive|define
 name|_PATH_TTYOPT
 value|"/etc/ppp/options."
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_CONNERRS
+value|"/etc/ppp/connect-errors"
 end_define
 
 begin_define

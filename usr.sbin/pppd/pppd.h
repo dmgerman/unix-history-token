@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pppd.h - PPP daemon global declarations.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pppd.h,v 1.2 1994/09/25 02:32:13 wollman Exp $  */
+comment|/*  * pppd.h - PPP daemon global declarations.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pppd.h,v 1.8 1995/04/26 06:46:31 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"args.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -35,10 +29,26 @@ begin_comment
 comment|/* for MAXPATHLEN and BSD4_4, if defined */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_comment
+comment|/* for u_int32_t, if defined */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/ppp_defs.h>
+end_include
+
 begin_define
 define|#
 directive|define
-name|NPPP
+name|NUM_PPP
 value|1
 end_define
 
@@ -101,12 +111,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|debug
+name|hungup
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Debug flag */
+comment|/* Physical layer has disconnected */
 end_comment
 
 begin_decl_stmt
@@ -140,18 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Device file descriptor */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|s
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* socket descriptor */
+comment|/* Serial device file descriptor */
 end_comment
 
 begin_decl_stmt
@@ -163,7 +162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hostname */
+comment|/* Our hostname */
 end_comment
 
 begin_decl_stmt
@@ -175,7 +174,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* buffer for outgoing packets */
+comment|/* Buffer for outgoing packets */
 end_comment
 
 begin_decl_stmt
@@ -186,7 +185,328 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* See values below */
+comment|/* Current state of link - see values below */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|baud_rate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current link speed in bits/sec */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Name of this program */
+end_comment
+
+begin_comment
+comment|/*  * Variables set by command-line options.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Debug flag */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kdebugflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Tell kernel to print debug messages */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|default_device
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Using /dev/tty or equivalent */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|devnam
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Device name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|crtscts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use hardware flow control */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|modem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use modem control lines */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inspeed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Input/Output speed requested */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|netmask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IP netmask to set on interface */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lockflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Create lock file to lock the serial dev */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nodetach
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't detach from controlling tty */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|connector
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Script to establish physical link */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|disconnector
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Script to disestablish physical link */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|user
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Username for PAP */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|passwd
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Password for PAP */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|auth_required
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Peer is required to authenticate */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|proxyarp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set up proxy ARP entry for peer */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|persist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Reopen link after it goes down */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|uselogin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use /etc/passwd for checking PAP */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lcp_echo_interval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Interval between LCP echo-requests */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lcp_echo_fails
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Tolerance to unanswered echo-requests */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|our_name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Our name for authentication purposes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|remote_name
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Peer's name for authentication */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|usehostname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Use hostname for our_name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|disable_defaultip
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't use hostname for default IP adrs */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|ipparam
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Extra parameter for ip up/down scripts */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|cryptpap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Others' PAP passwords are encrypted */
 end_comment
 
 begin_comment
@@ -235,7 +555,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|quit
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -251,7 +571,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|timeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -275,7 +595,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|untimeout
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void
@@ -297,7 +617,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|output
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -318,7 +638,7 @@ end_comment
 begin_decl_stmt
 name|void
 name|demuxprotrej
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -336,7 +656,7 @@ end_comment
 begin_decl_stmt
 name|int
 name|check_passwd
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -369,7 +689,7 @@ end_comment
 begin_decl_stmt
 name|int
 name|get_secret
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -397,12 +717,12 @@ comment|/* get "secret" for chap */
 end_comment
 
 begin_decl_stmt
-name|u_long
+name|u_int32_t
 name|GetMask
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
-name|u_long
+name|u_int32_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -411,6 +731,18 @@ end_decl_stmt
 begin_comment
 comment|/* get netmask for address */
 end_comment
+
+begin_decl_stmt
+name|void
+name|die
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Inline versions of get/put char/short/long.  * Pointer is advanced; we assume that both arguments  * are lvalues and will already be in registers.  * cp MUST be u_char *.  */
@@ -510,6 +842,32 @@ parameter_list|,
 name|cp
 parameter_list|)
 value|((cp) -= (n))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|FALSE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TRUE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
 end_define
 
 begin_comment
@@ -615,7 +973,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|{ \     PUTCHAR(ALLSTATIONS, p); \     PUTCHAR(UI, p); \     PUTSHORT(t, p); }
+value|{ \     PUTCHAR(PPP_ALLSTATIONS, p); \     PUTCHAR(PPP_UI, p); \     PUTSHORT(t, p); }
 end_define
 
 begin_ifdef

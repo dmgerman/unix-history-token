@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * upap.h - User/Password Authentication Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: upap.h,v 1.2 1994/04/11 07:13:44 paulus Exp $  */
+comment|/*  * upap.h - User/Password Authentication Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: upap.h,v 1.4 1995/06/12 12:02:25 paulus Exp $  */
 end_comment
 
 begin_comment
@@ -97,7 +97,7 @@ comment|/* Current id */
 name|int
 name|us_timeouttime
 decl_stmt|;
-comment|/* Timeout time in milliseconds */
+comment|/* Timeout (seconds) for auth-req retrans. */
 name|int
 name|us_transmits
 decl_stmt|;
@@ -106,6 +106,10 @@ name|int
 name|us_maxtransmits
 decl_stmt|;
 comment|/* Maximum number of auth-reqs to send */
+name|int
+name|us_reqtimeout
+decl_stmt|;
+comment|/* Time to wait for auth-req from peer */
 block|}
 name|upap_state
 typedef|;
@@ -263,7 +267,18 @@ value|3
 end_define
 
 begin_comment
-comment|/* Timeout time in seconds */
+comment|/* Timeout (seconds) for retransmitting req */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPAP_DEFREQTIME
+value|30
+end_define
+
+begin_comment
+comment|/* Time to wait for auth-req from peer */
 end_comment
 
 begin_decl_stmt
@@ -277,7 +292,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_init
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -289,7 +304,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_authwithpeer
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -307,7 +322,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_authpeer
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -319,7 +334,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_lowerup
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -331,7 +346,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_lowerdown
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -343,7 +358,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_input
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -360,7 +375,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|upap_protrej
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|int
@@ -372,7 +387,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|upap_printpkt
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|u_char
@@ -384,7 +399,7 @@ name|void
 argument_list|(
 argument|*
 argument_list|)
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|void

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipcp.c,v 1.2 1994/09/25 02:31:59 wollman Exp $"
+literal|"$Id: ipcp.c,v 1.20 1995/08/10 06:51:04 paulus Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pppd.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ppp.h"
+file|"pppd.h"
 end_include
 
 begin_include
@@ -96,7 +96,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_wantoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -109,7 +109,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_gotoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -122,7 +122,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_allowoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -135,7 +135,7 @@ begin_decl_stmt
 name|ipcp_options
 name|ipcp_hisoptions
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -143,29 +143,6 @@ end_decl_stmt
 begin_comment
 comment|/* Options that we ack'd */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|ifname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|devname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|baud_rate
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* local vars */
@@ -176,7 +153,7 @@ specifier|static
 name|int
 name|cis_received
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -193,7 +170,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_resetci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -211,7 +188,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_cilen
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -229,7 +206,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_addci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -253,7 +230,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_ackci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -276,7 +253,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_nakci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -299,7 +276,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_rejci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -322,7 +299,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ipcp_reqci
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -348,7 +325,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_up
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -366,7 +343,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_down
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -384,7 +361,7 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ipcp_script
-name|__ARGS
+name|__P
 argument_list|(
 operator|(
 name|fsm
@@ -405,7 +382,7 @@ begin_decl_stmt
 name|fsm
 name|ipcp_fsm
 index|[
-name|NPPP
+name|NUM_PPP
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -545,7 +522,7 @@ name|ip_ntoa
 parameter_list|(
 name|ipaddr
 parameter_list|)
-name|u_long
+name|u_int32_t
 name|ipaddr
 decl_stmt|;
 block|{
@@ -664,7 +641,7 @@ name|f
 operator|->
 name|protocol
 operator|=
-name|IPCP
+name|PPP_IPCP
 expr_stmt|;
 name|f
 operator|->
@@ -1214,7 +1191,7 @@ parameter_list|,
 name|val2
 parameter_list|)
 define|\
-value|if (neg) { \ 	int addrlen = (old? CILEN_ADDRS: CILEN_ADDR); \ 	if (len>= addrlen) { \ 	    u_long l; \ 	    PUTCHAR(opt, ucp); \ 	    PUTCHAR(addrlen, ucp); \ 	    l = ntohl(val1); \ 	    PUTLONG(l, ucp); \ 	    if (old) { \ 		l = ntohl(val2); \ 		PUTLONG(l, ucp); \ 	    } \ 	    len -= addrlen; \ 	} else \ 	    neg = 0; \     }
+value|if (neg) { \ 	int addrlen = (old? CILEN_ADDRS: CILEN_ADDR); \ 	if (len>= addrlen) { \ 	    u_int32_t l; \ 	    PUTCHAR(opt, ucp); \ 	    PUTCHAR(addrlen, ucp); \ 	    l = ntohl(val1); \ 	    PUTLONG(l, ucp); \ 	    if (old) { \ 		l = ntohl(val2); \ 		PUTLONG(l, ucp); \ 	    } \ 	    len -= addrlen; \ 	} else \ 	    neg = 0; \     }
 comment|/*      * First see if we want to change our options to the old      * forms because we have received old forms from the peer.      */
 if|if
 condition|(
@@ -1430,7 +1407,7 @@ name|citype
 decl_stmt|,
 name|cishort
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|cilong
 decl_stmt|;
 name|u_char
@@ -1472,7 +1449,7 @@ parameter_list|,
 name|val2
 parameter_list|)
 define|\
-value|if (neg) { \ 	int addrlen = (old? CILEN_ADDRS: CILEN_ADDR); \ 	u_long l; \ 	if ((len -= addrlen)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != addrlen || \ 	    citype != opt) \ 	    goto bad; \ 	GETLONG(l, p); \ 	cilong = htonl(l); \ 	if (val1 != cilong) \ 	    goto bad; \ 	if (old) { \ 	    GETLONG(l, p); \ 	    cilong = htonl(l); \ 	    if (val2 != cilong) \ 		goto bad; \ 	} \     }
+value|if (neg) { \ 	int addrlen = (old? CILEN_ADDRS: CILEN_ADDR); \ 	u_int32_t l; \ 	if ((len -= addrlen)< 0) \ 	    goto bad; \ 	GETCHAR(citype, p); \ 	GETCHAR(cilen, p); \ 	if (cilen != addrlen || \ 	    citype != opt) \ 	    goto bad; \ 	GETLONG(l, p); \ 	cilong = htonl(l); \ 	if (val1 != cilong) \ 	    goto bad; \ 	if (old) { \ 	    GETLONG(l, p); \ 	    cilong = htonl(l); \ 	    if (val2 != cilong) \ 		goto bad; \ 	} \     }
 name|ACKCIADDR
 argument_list|(
 operator|(
@@ -1616,7 +1593,7 @@ decl_stmt|;
 name|u_short
 name|cishort
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|ciaddr1
 decl_stmt|,
 name|ciaddr2
@@ -1677,7 +1654,7 @@ value|if (go->neg&& \ 	((cilen = p[1]) == CILEN_COMPRESS || cilen == CILEN_VJ)&&
 comment|/*      * Accept the peer's idea of {our,his} address, if different      * from our idea, only if the accept_{local,remote} flag is set.      */
 name|NAKCIADDR
 argument_list|(
-argument|CI_ADDR
+argument|(go->old_addrs? CI_ADDRS: CI_ADDR)
 argument_list|,
 argument|neg_addr
 argument_list|,
@@ -1916,12 +1893,6 @@ name|bad
 goto|;
 name|try
 operator|.
-name|neg_addr
-operator|=
-literal|1
-expr_stmt|;
-name|try
-operator|.
 name|old_addrs
 operator|=
 literal|0
@@ -1954,6 +1925,20 @@ name|ouraddr
 operator|=
 name|ciaddr1
 expr_stmt|;
+if|if
+condition|(
+name|try
+operator|.
+name|ouraddr
+operator|!=
+literal|0
+condition|)
+name|try
+operator|.
+name|neg_addr
+operator|=
+literal|1
+expr_stmt|;
 name|no
 operator|.
 name|neg_addr
@@ -1961,10 +1946,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-default|default:
-goto|goto
-name|bad
-goto|;
 block|}
 name|p
 operator|=
@@ -2064,7 +2045,7 @@ decl_stmt|;
 name|u_short
 name|cishort
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|cilong
 decl_stmt|;
 name|ipcp_options
@@ -2092,7 +2073,7 @@ parameter_list|,
 name|val2
 parameter_list|)
 define|\
-value|if (go->neg&& \ 	len>= (cilen = old? CILEN_ADDRS: CILEN_ADDR)&& \ 	p[1] == cilen&& \ 	p[0] == opt) { \ 	u_long l; \ 	len -= cilen; \ 	INCPTR(2, p); \ 	GETLONG(l, p); \ 	cilong = htonl(l); \
+value|if (go->neg&& \ 	len>= (cilen = old? CILEN_ADDRS: CILEN_ADDR)&& \ 	p[1] == cilen&& \ 	p[0] == opt) { \ 	u_int32_t l; \ 	len -= cilen; \ 	INCPTR(2, p); \ 	GETLONG(l, p); \ 	cilong = htonl(l); \
 comment|/* Check rejected value. */
 value|\ 	if (cilong != val1) \ 	    goto bad; \ 	if (old) { \ 	    GETLONG(l, p); \ 	    cilong = htonl(l); \
 comment|/* Check rejected value. */
@@ -2312,7 +2293,7 @@ name|u_short
 name|cishort
 decl_stmt|;
 comment|/* Parsed short value */
-name|u_long
+name|u_int32_t
 name|tl
 decl_stmt|,
 name|ciaddr1
@@ -2568,7 +2549,7 @@ name|DECPTR
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 argument_list|,
 name|p
@@ -2591,6 +2572,34 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|ciaddr1
+operator|==
+literal|0
+operator|&&
+name|wo
+operator|->
+name|hisaddr
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * If neither we nor he knows his address, reject the option. 		 */
+name|orc
+operator|=
+name|CONFREJ
+expr_stmt|;
+name|wo
+operator|->
+name|req_addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't NAK with 0.0.0.0 later */
+break|break;
 block|}
 comment|/* 	     * If he doesn't know our address, or if we both have our address 	     * but disagree about it, then NAK it with our idea. 	     */
 name|GETLONG
@@ -2657,7 +2666,7 @@ name|DECPTR
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 argument_list|,
 name|p
@@ -2813,7 +2822,7 @@ name|DECPTR
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|long
+name|u_int32_t
 argument_list|)
 argument_list|,
 name|p
@@ -2836,6 +2845,34 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|ciaddr1
+operator|==
+literal|0
+operator|&&
+name|wo
+operator|->
+name|hisaddr
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Don't ACK an address of 0.0.0.0 - reject it instead. 		 */
+name|orc
+operator|=
+name|CONFREJ
+expr_stmt|;
+name|wo
+operator|->
+name|req_addr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't NAK with 0.0.0.0 later */
+break|break;
 block|}
 name|ho
 operator|->
@@ -3048,8 +3085,6 @@ name|ho
 operator|->
 name|cflag
 operator|=
-name|wo
-operator|->
 name|cflag
 expr_stmt|;
 block|}
@@ -3335,7 +3370,7 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-name|u_long
+name|u_int32_t
 name|mask
 decl_stmt|;
 name|ipcp_options
@@ -3709,7 +3744,7 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-name|u_long
+name|u_int32_t
 name|ouraddr
 decl_stmt|,
 name|hisaddr
@@ -3921,7 +3956,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|devname
+name|devnam
 expr_stmt|;
 name|argv
 index|[
@@ -3947,6 +3982,13 @@ expr_stmt|;
 name|argv
 index|[
 literal|6
+index|]
+operator|=
+name|ipparam
+expr_stmt|;
+name|argv
+index|[
+literal|7
 index|]
 operator|=
 name|NULL
@@ -4053,7 +4095,7 @@ decl_stmt|;
 name|u_short
 name|cishort
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|cilong
 decl_stmt|;
 if|if
