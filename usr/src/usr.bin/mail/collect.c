@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.1 (Berkeley) %G%"
+literal|"@(#)collect.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1861,6 +1861,10 @@ name|char
 name|tempEdit
 index|[]
 decl_stmt|;
+name|char
+modifier|*
+name|shell
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1897,9 +1901,26 @@ expr_stmt|;
 comment|/* 	 * stdin = current message. 	 * stdout = new message. 	 */
 if|if
 condition|(
+operator|(
+name|shell
+operator|=
+name|value
+argument_list|(
+literal|"SHELL"
+argument_list|)
+operator|)
+operator|==
+name|NOSTR
+condition|)
+name|shell
+operator|=
+name|_PATH_CSHELL
+expr_stmt|;
+if|if
+condition|(
 name|run_command
 argument_list|(
-name|cmd
+name|shell
 argument_list|,
 literal|0
 argument_list|,
@@ -1913,9 +1934,9 @@ argument_list|(
 name|nf
 argument_list|)
 argument_list|,
-name|NOSTR
+literal|"-c"
 argument_list|,
-name|NOSTR
+name|cmd
 argument_list|,
 name|NOSTR
 argument_list|)
