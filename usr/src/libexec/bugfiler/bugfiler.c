@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.11 (Berkeley) 87/07/21"
+literal|"@(#)bugfiler.c	5.12 (Berkeley) 87/09/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,6 +223,13 @@ case|case
 literal|'?'
 case|:
 default|default:
+name|fputs
+argument_list|(
+literal|"usage: bugfiler [-ar] [-v version]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"usage: bugfiler [-ar] [-v version]"
