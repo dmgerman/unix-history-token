@@ -1418,6 +1418,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|g_print_bio
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* geom_kern.c / geom_kernsim.c */
 end_comment
