@@ -251,6 +251,16 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|LINKER_GET_NEXT_FILE_ID
+parameter_list|(
+name|a
+parameter_list|)
+value|do {					\     linker_file_t	lftmp;						\ 									\ retry:									\     TAILQ_FOREACH(lftmp,&linker_files, link) {				\         if (next_file_id == lftmp->id) {				\             next_file_id++;						\             goto retry;							\         }								\     }									\     (a) = next_file_id;							\ } while(0)
+end_define
+
 begin_comment
 comment|/* XXX wrong name; we're looking at version provision tags here, not modules */
 end_comment
@@ -1800,12 +1810,12 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+name|LINKER_GET_NEXT_FILE_ID
+argument_list|(
 name|lf
 operator|->
 name|id
-operator|=
-name|next_file_id
-operator|++
+argument_list|)
 expr_stmt|;
 name|lf
 operator|->
