@@ -2558,6 +2558,9 @@ name|cnd
 operator|->
 name|cnd_cn
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 if|if
 condition|(
 operator|!
@@ -2572,6 +2575,8 @@ name|CN_FLAG_NODEBUG
 operator|)
 condition|)
 block|{
+endif|#
+directive|endif
 name|c
 operator|=
 name|cn
@@ -2595,7 +2600,12 @@ name|c
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|DDB
 block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
@@ -2652,6 +2662,9 @@ name|cnd
 operator|->
 name|cnd_cn
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 if|if
 condition|(
 operator|!
@@ -2666,6 +2679,8 @@ name|CN_FLAG_NODEBUG
 operator|)
 condition|)
 block|{
+endif|#
+directive|endif
 if|if
 condition|(
 name|c
@@ -2690,7 +2705,12 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
 block|}
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
