@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.54	82/06/05	*/
+comment|/*	up.c	4.55	82/06/14	*/
 end_comment
 
 begin_include
@@ -2624,15 +2624,6 @@ block|}
 else|else
 block|{
 comment|/* 			 * Retriable error. 			 * If a soft ecc, correct it (continuing 			 * by returning if necessary. 			 * Otherwise fall through and retry the transfer 			 */
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_active
-operator|=
-literal|0
-expr_stmt|;
-comment|/* force retry */
 if|if
 condition|(
 operator|(
@@ -2649,6 +2640,7 @@ operator|)
 operator|==
 name|UPER1_DCK
 condition|)
+block|{
 if|if
 condition|(
 name|upecc
@@ -2657,6 +2649,17 @@ name|ui
 argument_list|)
 condition|)
 return|return;
+block|}
+else|else
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|0
+expr_stmt|;
+comment|/* force retry */
 block|}
 comment|/* 		 * Clear drive error and, every eight attempts, 		 * (starting with the fourth) 		 * recalibrate to clear the slate. 		 */
 name|upaddr
@@ -3615,11 +3618,21 @@ name|upwc
 operator|==
 literal|0
 condition|)
+block|{
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * Have to continue the transfer... clear the drive, 	 * and compute the position where the transfer is to continue. 	 * We have completed npf+1 sectors of the transfer already; 	 * restart at offset o of next sector (i.e. in UBA register reg+1). 	 */
 ifdef|#
 directive|ifdef
