@@ -4697,11 +4697,6 @@ name|struct
 name|uio
 name|auio
 decl_stmt|;
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
