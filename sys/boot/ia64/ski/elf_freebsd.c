@@ -566,6 +566,10 @@ function|;
 end_function
 
 begin_asm
+asm|__asm __volatile("srlz.i;;");
+end_asm
+
+begin_asm
 asm|__asm __volatile("itr.d dtr[%0]=%1;;"
 end_asm
 
