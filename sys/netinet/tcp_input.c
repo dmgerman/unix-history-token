@@ -8526,10 +8526,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|headlocked
-condition|)
+argument_list|,
+operator|(
+literal|"headlocked should be 1"
+operator|)
+argument_list|)
+expr_stmt|;
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
