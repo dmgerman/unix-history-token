@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.26	82/12/21	*/
+comment|/*	sys_generic.c	5.27	82/12/21	*/
 end_comment
 
 begin_include
@@ -1569,13 +1569,6 @@ operator|=
 name|diff
 expr_stmt|;
 block|}
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX */
 name|bn
 operator|=
 name|fsbtodb
@@ -2118,11 +2111,13 @@ name|iovec
 modifier|*
 name|iov
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|u_int
 name|cnt
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(

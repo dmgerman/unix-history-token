@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.32	82/12/21	*/
+comment|/*	ufs_lookup.c	4.33	82/12/21	*/
 end_comment
 
 begin_include
@@ -2601,13 +2601,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * Collapse new free space into previous entry. 		 */
-name|u
-operator|.
-name|u_error
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX */
 name|bp
 operator|=
 name|blkatoff
