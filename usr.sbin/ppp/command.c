@@ -9805,6 +9805,22 @@ name|bundle
 argument_list|)
 condition|)
 block|{
+default|default:
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Altering authname while at phase %s\n"
+argument_list|,
+name|bundle_PhaseName
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* drop through */
 case|case
 name|PHASE_DEAD
 case|:
@@ -9864,19 +9880,6 @@ literal|1
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-break|break;
-default|default:
-name|err
-operator|=
-literal|"set authname: Only available at phase DEAD/ESTABLISH\n"
-expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogWARN
-argument_list|,
-name|err
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
