@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.17 (Berkeley) %G%"
+literal|"@(#)inode.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2418,13 +2418,17 @@ name|printf
 argument_list|(
 literal|"MTIME=%12.12s %4.4s "
 argument_list|,
+operator|&
 name|p
-operator|+
+index|[
 literal|4
+index|]
 argument_list|,
+operator|&
 name|p
-operator|+
+index|[
 literal|20
+index|]
 argument_list|)
 expr_stmt|;
 block|}
