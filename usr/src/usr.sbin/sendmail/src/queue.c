@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -108,10 +108,12 @@ end_decl_stmt
 begin_block
 block|{
 name|char
-name|cf
-index|[
-name|MAXNAME
-index|]
+modifier|*
+name|tf
+decl_stmt|;
+name|char
+modifier|*
+name|qf
 decl_stmt|;
 name|char
 name|buf
@@ -122,7 +124,7 @@ decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
-name|cfp
+name|tfp
 decl_stmt|;
 specifier|register
 name|HDR
@@ -134,66 +136,44 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
 specifier|register
 name|int
 name|i
 decl_stmt|;
 comment|/* 	**  Create control file. 	*/
-operator|(
-name|void
-operator|)
-name|strcpy
+name|tf
+operator|=
+name|newstr
 argument_list|(
-name|cf
+name|queuename
+argument_list|(
+name|e
 argument_list|,
-name|QueueDir
+literal|'t'
+argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|cf
-argument_list|,
-literal|"/tfXXXXXX"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mktemp
-argument_list|(
-name|cf
-argument_list|)
-expr_stmt|;
-name|cfp
+name|tfp
 operator|=
 name|fopen
 argument_list|(
-name|cf
+name|tf
 argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cfp
+name|tfp
 operator|==
 name|NULL
 condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"queueup: cannot create control file %s"
+literal|"queueup: cannot create temp file %s"
 argument_list|,
-name|cf
+name|tf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -203,7 +183,7 @@ name|void
 operator|)
 name|chmod
 argument_list|(
-name|cf
+name|tf
 argument_list|,
 literal|0600
 argument_list|)
@@ -224,7 +204,7 @@ name|printf
 argument_list|(
 literal|"queueing in %s\n"
 argument_list|,
-name|cf
+name|tf
 argument_list|)
 expr_stmt|;
 endif|#
@@ -245,35 +225,17 @@ name|FILE
 modifier|*
 name|dfp
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-name|QueueDir
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"/dfXXXXXX"
-argument_list|)
-expr_stmt|;
 name|e
 operator|->
 name|e_df
 operator|=
 name|newstr
 argument_list|(
-name|mktemp
+name|queuename
 argument_list|(
-name|buf
+name|e
+argument_list|,
+literal|'d'
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -309,7 +271,7 @@ name|void
 operator|)
 name|fclose
 argument_list|(
-name|cfp
+name|tfp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -356,7 +318,7 @@ comment|/* 	**  Output future work requests. 	*/
 comment|/* output name of data file */
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"D%s\n"
 argument_list|,
@@ -368,7 +330,7 @@ expr_stmt|;
 comment|/* output name of sender */
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"S%s\n"
 argument_list|,
@@ -382,7 +344,7 @@ expr_stmt|;
 comment|/* output timeout */
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"T%ld\n"
 argument_list|,
@@ -392,7 +354,7 @@ expr_stmt|;
 comment|/* output message priority */
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"P%ld\n"
 argument_list|,
@@ -404,7 +366,7 @@ expr_stmt|;
 comment|/* output message class */
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"C%d\n"
 argument_list|,
@@ -414,7 +376,7 @@ name|e_class
 argument_list|)
 expr_stmt|;
 comment|/* output macro definitions */
-comment|/* I don't think this is needed any more..... 	for (i = 0; i< 128; i++) 	{ 		register char *p = e->e_macro[i];  		if (p != NULL&& i != (int) 'b') 			fprintf(cfp, "M%c%s\n", i, p); 	} 	.....  */
+comment|/* I don't think this is needed any more..... 	for (i = 0; i< 128; i++) 	{ 		register char *p = e->e_macro[i];  		if (p != NULL&& i != (int) 'b') 			fprintf(tfp, "M%c%s\n", i, p); 	} 	.....  */
 comment|/* output list of recipient addresses */
 for|for
 control|(
@@ -489,7 +451,7 @@ argument_list|)
 condition|)
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"R%s\n"
 argument_list|,
@@ -546,7 +508,7 @@ condition|)
 continue|continue;
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"H"
 argument_list|)
@@ -576,12 +538,12 @@ name|h
 operator|->
 name|h_mflags
 argument_list|,
-name|cfp
+name|tfp
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"%s: "
 argument_list|,
@@ -625,7 +587,7 @@ argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -636,7 +598,7 @@ block|}
 else|else
 name|fprintf
 argument_list|(
-name|cfp
+name|tfp
 argument_list|,
 literal|"%s\n"
 argument_list|,
@@ -652,44 +614,33 @@ name|void
 operator|)
 name|fclose
 argument_list|(
-name|cfp
+name|tfp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|qf
+operator|=
+name|queuename
 argument_list|(
-name|buf
+name|e
 argument_list|,
-name|QueueDir
+literal|'q'
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|unlink
 argument_list|(
-name|buf
-argument_list|,
-literal|"/cfXXXXXX"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mktemp
-argument_list|(
-name|buf
+name|qf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|link
 argument_list|(
-name|cf
+name|tf
 argument_list|,
-name|buf
+name|qf
 argument_list|)
 operator|<
 literal|0
@@ -698,9 +649,9 @@ name|syserr
 argument_list|(
 literal|"cannot link(%s, %s), df=%s"
 argument_list|,
-name|cf
+name|tf
 argument_list|,
-name|buf
+name|qf
 argument_list|,
 name|e
 operator|->
@@ -713,8 +664,14 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|cf
+name|tf
 argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_qf
+operator|=
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -730,11 +687,13 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s queueup: cf=%s, df=%s\n"
+literal|"%s queueup: qf=%s, df=%s\n"
 argument_list|,
-name|MsgId
+name|e
+operator|->
+name|e_id
 argument_list|,
-name|buf
+name|qf
 argument_list|,
 name|e
 operator|->
@@ -1259,7 +1218,7 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|'c'
+literal|'q'
 operator|||
 name|d
 operator|->
@@ -1791,6 +1750,31 @@ name|MailBack
 operator|=
 name|TRUE
 expr_stmt|;
+name|CurEnv
+operator|->
+name|e_qf
+operator|=
+name|w
+operator|->
+name|w_name
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_id
+operator|=
+operator|&
+name|w
+operator|->
+name|w_name
+index|[
+name|strlen
+argument_list|(
+name|QueueDir
+argument_list|)
+operator|+
+literal|3
+index|]
+expr_stmt|;
 comment|/* don't use the headers from sendmail.cf... */
 name|CurEnv
 operator|->
@@ -1806,34 +1790,6 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* create the link to the control file during processing */
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-name|QueueDir
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"/tfXXXXXX"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|mktemp
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|link
@@ -1842,37 +1798,24 @@ name|w
 operator|->
 name|w_name
 argument_list|,
-name|buf
+name|queuename
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|'l'
+argument_list|)
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-comment|/* this can happen normally; another queuer sneaks in */
-comment|/* syserr("dowork: link(%s, %s)", w->w_name, buf); */
+comment|/* being processed by another queuer */
 name|exit
 argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
-name|ControlFile
-operator|=
-name|newstr
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|w
-operator|->
-name|w_name
-argument_list|)
-expr_stmt|;
 comment|/* create ourselves a transcript file */
 name|openxscrpt
 argument_list|()
@@ -1884,7 +1827,9 @@ expr_stmt|;
 comment|/* read the queue control file */
 name|readqf
 argument_list|(
-name|buf
+name|CurEnv
+operator|->
+name|e_qf
 argument_list|)
 expr_stmt|;
 name|eatheader
@@ -1941,19 +1886,6 @@ condition|)
 name|timeout
 argument_list|(
 name|w
-argument_list|)
-expr_stmt|;
-comment|/* get rid of the temporary file -- a new cf will be made */
-name|ControlFile
-operator|=
-name|NULL
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|buf
 argument_list|)
 expr_stmt|;
 comment|/* finish up and exit */

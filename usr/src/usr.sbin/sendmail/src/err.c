@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.27
+literal|3.28
 operator|%
 name|G
 operator|%
@@ -167,6 +167,16 @@ operator|=
 name|EX_OSERR
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|queuename
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|'\0'
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -182,7 +192,9 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s"
 argument_list|,
-name|MsgId
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 operator|&
 name|MsgBuf

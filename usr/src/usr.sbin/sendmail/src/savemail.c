@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -87,12 +87,6 @@ function_decl|(
 modifier|*
 name|fnptr
 function_decl|)
-parameter_list|()
-function_decl|;
-specifier|extern
-name|ENVELOPE
-modifier|*
-name|newenvelope
 parameter_list|()
 function_decl|;
 ifdef|#
@@ -1066,6 +1060,14 @@ end_expr_stmt
 begin_comment
 comment|/* restore state */
 end_comment
+
+begin_expr_stmt
+name|dropenvelope
+argument_list|(
+name|ee
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|CurEnv

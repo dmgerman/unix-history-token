@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.79		%G%"
+literal|"@(#)sendmail.h	3.80		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -954,6 +954,16 @@ modifier|*
 name|e_df
 decl_stmt|;
 comment|/* location of temp file */
+name|char
+modifier|*
+name|e_qf
+decl_stmt|;
+comment|/* queue control file */
+name|char
+modifier|*
+name|e_id
+decl_stmt|;
+comment|/* code for this entry in queue */
 name|char
 modifier|*
 name|e_macro
@@ -2152,30 +2162,6 @@ comment|/* location of queue directory */
 end_comment
 
 begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|ControlFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* when queued, name of control file temp */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|MsgId
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Message-Id: for this message */
-end_comment
-
-begin_decl_stmt
 specifier|extern
 name|char
 name|Arpa_Info
@@ -2370,6 +2356,15 @@ specifier|extern
 name|char
 modifier|*
 name|sfgets
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|queuename
 parameter_list|()
 function_decl|;
 end_function_decl

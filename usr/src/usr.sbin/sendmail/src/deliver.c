@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.99
+literal|3.100
 operator|%
 name|G
 operator|%
@@ -2949,7 +2949,9 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: to=%s, stat=%s"
 argument_list|,
-name|MsgId
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 name|CurEnv
 operator|->
@@ -5490,6 +5492,11 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|ADDRESS
+modifier|*
+name|q
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -5530,11 +5537,35 @@ name|savemail
 argument_list|()
 expr_stmt|;
 comment|/* queue up anything laying around */
-if|if
-condition|(
+for|for
+control|(
+name|q
+operator|=
 name|e
 operator|->
-name|e_queueup
+name|e_sendqueue
+init|;
+name|q
+operator|!=
+name|NULL
+condition|;
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+control|)
+block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QQUEUEUP
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
 condition|)
 block|{
 ifdef|#
@@ -5552,7 +5583,7 @@ directive|else
 else|QUEUE
 name|syserr
 argument_list|(
-literal|"finis: trying to queue %s"
+literal|"checkerrors: trying to queue %s"
 argument_list|,
 name|e
 operator|->
@@ -5562,6 +5593,8 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|QUEUE
+break|break;
+block|}
 block|}
 block|}
 end_block

@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -1656,7 +1656,9 @@ name|LOG_DEBUG
 argument_list|,
 literal|"%s: unlink %s\n"
 argument_list|,
-name|MsgId
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 name|f
 argument_list|)
