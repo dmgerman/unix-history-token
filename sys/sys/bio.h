@@ -21,6 +21,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|disk
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The bio structure describes an I/O operation in the kernel.  */
 end_comment
@@ -37,6 +43,12 @@ name|dev_t
 name|bio_dev
 decl_stmt|;
 comment|/* Device to do I/O on. */
+name|struct
+name|disk
+modifier|*
+name|bio_disk
+decl_stmt|;
+comment|/* Valid below geom_disk.c only */
 name|daddr_t
 name|bio_blkno
 decl_stmt|;

@@ -641,7 +641,7 @@ name|dp
 operator|=
 name|bp
 operator|->
-name|bio_caller1
+name|bio_disk
 expr_stmt|;
 name|bp
 operator|->
@@ -828,7 +828,7 @@ name|dev
 expr_stmt|;
 name|bp2
 operator|->
-name|bio_caller1
+name|bio_disk
 operator|=
 name|dp
 expr_stmt|;
