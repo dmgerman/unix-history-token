@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.13 (Berkeley) %G%"
+literal|"@(#)sort.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -4425,7 +4431,9 @@ end_macro
 
 begin_block
 block|{
-specifier|register
+name|int
+name|fd
+decl_stmt|;
 name|char
 modifier|*
 name|f
@@ -4440,17 +4448,33 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|os
+name|fd
 operator|=
-name|fopen
+name|open
 argument_list|(
 name|f
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+argument_list|,
+literal|0600
+argument_list|)
+operator|)
+operator|<
+literal|0
+operator|||
+operator|!
+operator|(
+name|os
+operator|=
+name|fdopen
+argument_list|(
+name|fd
 argument_list|,
 literal|"w"
 argument_list|)
 operator|)
-operator|==
-name|NULL
 condition|)
 block|{
 name|diag
@@ -4464,8 +4488,8 @@ name|term
 argument_list|()
 expr_stmt|;
 block|}
-name|nfiles
 operator|++
+name|nfiles
 expr_stmt|;
 block|}
 end_block
