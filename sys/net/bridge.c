@@ -4281,14 +4281,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|EH_RESTORE
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-comment|/* restore Ethernet header */
+comment|/* NB: hook should consume packet */
 return|return
-name|m0
+name|NULL
 return|;
 block|}
 if|if
@@ -4297,14 +4292,10 @@ name|m0
 operator|==
 name|NULL
 condition|)
-block|{
-name|bdg_dropped
-operator|++
-expr_stmt|;
+comment|/* consumed by filter */
 return|return
-name|NULL
+name|m0
 return|;
-block|}
 comment|/* 	     * If we get here, the firewall has passed the pkt, but the mbuf 	     * pointer might have changed. Restore ip and the fields ntohs()'d. 	     */
 name|ip
 operator|=

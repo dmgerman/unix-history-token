@@ -3431,8 +3431,8 @@ ifdef|#
 directive|ifdef
 name|PFIL_HOOKS
 comment|/* 	 * Run through list of hooks for output packets. 	 */
-if|if
-condition|(
+name|error
+operator|=
 name|pfil_run_hooks
 argument_list|(
 operator|&
@@ -3445,20 +3445,13 @@ name|ifp
 argument_list|,
 name|PFIL_OUT
 argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|EHOSTUNREACH
 expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 if|if
 condition|(
+name|error
+operator|!=
+literal|0
+operator|||
 name|m
 operator|==
 name|NULL
