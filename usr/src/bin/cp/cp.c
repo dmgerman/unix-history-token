@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.6 (Berkeley) %G%"
+literal|"@(#)cp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -860,13 +860,23 @@ block|}
 name|copy_dir
 argument_list|()
 expr_stmt|;
-comment|/* 		 * If directory didn't exist, set it to be the same as 		 * the from directory, umodified by the umask; arguably 		 * wrong, but it's been that way forever. 		 */
+comment|/* 		 * If not -p and directory didn't exist, set it to be the 		 * same as the from directory, umodified by the umask; 		 * arguably wrong, but it's been that way forever. 		 */
+if|if
+condition|(
+name|preserve_flag
+condition|)
+name|setfile
+argument_list|(
+operator|&
+name|from_stat
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|dne
-operator|&&
-operator|!
-name|preserve_flag
 condition|)
 operator|(
 name|void
