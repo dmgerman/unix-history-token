@@ -265,6 +265,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -274,6 +284,11 @@ end_include
 begin_comment
 comment|/* for DELAY */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1147,6 +1162,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>
+literal|410000
+operator|)
+end_if
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
@@ -1172,6 +1197,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * the boot time probe routine.  */
@@ -1204,13 +1234,26 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|PCI_VENDOR
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|PCI_VENDOR_BROOKTREE
+condition|)
+block|{
 switch|switch
 condition|(
+name|PCI_PRODUCT
+argument_list|(
 name|type
+argument_list|)
 condition|)
 block|{
 case|case
-name|BROOKTREE_848_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT848
 case|:
 if|if
 condition|(
@@ -1237,7 +1280,7 @@ return|return
 literal|0
 return|;
 case|case
-name|BROOKTREE_849_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT849
 case|:
 name|device_set_desc
 argument_list|(
@@ -1250,7 +1293,7 @@ return|return
 literal|0
 return|;
 case|case
-name|BROOKTREE_878_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT878
 case|:
 name|device_set_desc
 argument_list|(
@@ -1263,7 +1306,7 @@ return|return
 literal|0
 return|;
 case|case
-name|BROOKTREE_879_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT879
 case|:
 name|device_set_desc
 argument_list|(
@@ -1275,6 +1318,7 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 block|}
 empty_stmt|;
 return|return
@@ -1871,6 +1915,11 @@ argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
+comment|/* make the device entries */
+name|bktr
+operator|->
+name|bktrdev
+operator|=
 name|make_dev
 argument_list|(
 operator|&
@@ -1889,6 +1938,10 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|bktr
+operator|->
+name|tunerdev
+operator|=
 name|make_dev
 argument_list|(
 operator|&
@@ -1909,6 +1962,10 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|bktr
+operator|->
+name|vbidev
+operator|=
 name|make_dev
 argument_list|(
 operator|&
@@ -1929,6 +1986,64 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+comment|/* if this is unit 0 (/dev/bktr0, /dev/tuner0, /dev/vbi0) then make */
+comment|/* alias entries to /dev/bktr /dev/tuner and /dev/vbi */
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500000
+operator|)
+if|if
+condition|(
+name|unit
+operator|==
+literal|0
+condition|)
+block|{
+name|bktr
+operator|->
+name|bktrdev_alias
+operator|=
+name|make_dev_alias
+argument_list|(
+name|bktr
+operator|->
+name|bktrdev
+argument_list|,
+literal|"bktr"
+argument_list|)
+expr_stmt|;
+name|bktr
+operator|->
+name|tunerdev_alias
+operator|=
+name|make_dev_alias
+argument_list|(
+name|bktr
+operator|->
+name|tunerdev
+argument_list|,
+literal|"tuner"
+argument_list|)
+expr_stmt|;
+name|bktr
+operator|->
+name|vbidev_alias
+operator|=
+name|make_dev_alias
+argument_list|(
+name|bktr
+operator|->
+name|vbidev
+argument_list|,
+literal|"vbi"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -1995,6 +2110,10 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|unsigned
+name|int
+name|unit
+decl_stmt|;
 name|struct
 name|bktr_softc
 modifier|*
@@ -2005,6 +2124,13 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|unit
+operator|=
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Disable the brooktree device */
 name|OUTL
 argument_list|(
@@ -2024,7 +2150,70 @@ argument_list|,
 name|FIFO_RISC_DISABLED
 argument_list|)
 expr_stmt|;
-comment|/* FIXME - Free memory for RISC programs, grab buffer, vbi buffers */
+comment|/* Note: We do not free memory for RISC programs, grab buffer, vbi buffers */
+comment|/* The memory is retained by the bktr_mem module so we can unload and */
+comment|/* then reload the main bktr driver module */
+comment|/* Unregister the /dev/bktrN, tunerN and vbiN devices */
+name|destroy_dev
+argument_list|(
+name|bktr
+operator|->
+name|vbidev
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|bktr
+operator|->
+name|tunerdev
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|bktr
+operator|->
+name|bktrdev
+argument_list|)
+expr_stmt|;
+comment|/* If this is unit 0, then destroy the alias entries too */
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500000
+operator|)
+if|if
+condition|(
+name|unit
+operator|==
+literal|0
+condition|)
+block|{
+name|destroy_dev
+argument_list|(
+name|bktr
+operator|->
+name|vbidev_alias
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|bktr
+operator|->
+name|tunerdev_alias
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|bktr
+operator|->
+name|bktrdev_alias
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Deallocate resources. 	 */
 name|bus_teardown_intr
 argument_list|(
@@ -3654,13 +3843,26 @@ argument_list|)
 operator|&
 literal|0x000000ff
 decl_stmt|;
+if|if
+condition|(
+name|PCI_VENDOR
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|PCI_VENDOR_BROOKTREE
+condition|)
+block|{
 switch|switch
 condition|(
+name|PCI_PRODUCT
+argument_list|(
 name|type
+argument_list|)
 condition|)
 block|{
 case|case
-name|BROOKTREE_848_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT848
 case|:
 if|if
 condition|(
@@ -3680,7 +3882,7 @@ literal|"BrookTree 848"
 operator|)
 return|;
 case|case
-name|BROOKTREE_849_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT849
 case|:
 return|return
 operator|(
@@ -3688,7 +3890,7 @@ literal|"BrookTree 849A"
 operator|)
 return|;
 case|case
-name|BROOKTREE_878_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT878
 case|:
 return|return
 operator|(
@@ -3696,13 +3898,14 @@ literal|"BrookTree 878"
 operator|)
 return|;
 case|case
-name|BROOKTREE_879_PCI_ID
+name|PCI_PRODUCT_BROOKTREE_BT879
 case|:
 return|return
 operator|(
 literal|"BrookTree 879"
 operator|)
 return|;
+block|}
 block|}
 empty_stmt|;
 return|return
