@@ -75,6 +75,12 @@ directive|include
 file|<sys/signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_label.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1979,6 +1985,11 @@ modifier|*
 name|p_emuldata
 decl_stmt|;
 comment|/* (c) Emulator state data. */
+name|struct
+name|label
+name|p_label
+decl_stmt|;
+comment|/* process (not subject) MAC label */
 block|}
 struct|;
 end_struct

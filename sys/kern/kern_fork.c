@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -103,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|<sys/acct.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -1158,6 +1170,16 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_init_proc
+argument_list|(
+name|newproc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Although process entries are dynamically created, we still keep 	 * a global limit on the maximum number we will create.  Don't allow 	 * a nonprivileged user to use the last ten processes; don't let root 	 * exceed the limit. The variable nprocs is the current number of 	 * processes, maxproc is the limit. 	 */
 name|sx_xlock
 argument_list|(

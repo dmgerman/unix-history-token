@@ -657,6 +657,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|mac_init_proc
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mac_init_vnode
 parameter_list|(
 name|struct
@@ -765,6 +776,17 @@ name|mac_destroy_pipe
 parameter_list|(
 name|struct
 name|pipe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mac_destroy_proc
+parameter_list|(
+name|struct
+name|proc
 modifier|*
 parameter_list|)
 function_decl|;

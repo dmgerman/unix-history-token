@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -137,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<sys/filedesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -2673,6 +2685,16 @@ operator|->
 name|p_mtx
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_proc
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|FIRST_THREAD_IN_PROC
