@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip.h 1.1 81/10/14 */
+comment|/* ip.h 1.2 81/10/14 */
 end_comment
 
 begin_struct
@@ -204,6 +204,16 @@ end_define
 begin_comment
 comment|/* maximum time to live (seconds) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ip_bswap
+parameter_list|(
+name|p
+parameter_list|)
+value|{ \ 	p->ip_len = ntohs(p->ip_len); \ 	p->ip_id = ntohs(p->ip_id); \ 	p->ip_off = ntohs(p->ip_off); }
+end_define
 
 end_unit
 
