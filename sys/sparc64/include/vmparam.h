@@ -162,25 +162,40 @@ name|MAXSLP
 value|20
 end_define
 
-begin_define
-define|#
-directive|define
-name|VM_MAXUSER_ADDRESS
-value|(0x7fe00000000)
-end_define
+begin_comment
+comment|/*  * Highest user address.  Also address of initial user stack.  This is  * arbitrary, neither the structure or size of the user page table (tsb)  * nor the location or size of the kernel virtual address space have any  * bearing on what we use for user addresses.  We want something relatively  * high to give a large address space, but we also have to take the out of  * range va hole into account.  So we pick an address just before the start  * of the hole, which gives a user address space of just under 8TB.  Note  * that if this moves above the va hole, we will have to deal with sign  * extension of virtual addresses.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+name|VM_MAXUSER_ADDRESS
+value|((vm_offset_t)0x7fe00000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_ADDRESS
-value|(0x100000)
+value|((vm_offset_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|(VM_MAXUSER_ADDRESS)
+end_define
+
+begin_comment
+comment|/*  * Initial user stack address for 64 bit processes.  Should be highest user  * virtual address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USRSTACK
+value|VM_MAXUSER_ADDRESS
 end_define
 
 begin_comment
@@ -236,11 +251,11 @@ define|#
 directive|define
 name|KVA_RANGE
 define|\
-value|((KVA_PAGES * PAGE_SIZE_4M)<< (PAGE_SHIFT - STTE_SHIFT))
+value|((KVA_PAGES * PAGE_SIZE_4M)<< (PAGE_SHIFT - TTE_SHIFT))
 end_define
 
 begin_comment
-comment|/*  * Lowest kernel virtual address, where the kernel is loaded.  *  * If we are using less than 4 super pages for the kernel tsb, the address  * space is less than 4 gigabytes, so put it at the end of the first 4  * gigbytes.  This allows the kernel and the firmware mappings to be mapped  * with a single contiguous tsb.  Otherwise start at 0, we'll cover them  * anyway.  *  * ie:  * kva_pages = 1  *	vm_max_kernel_address	0xffffe000  *	openfirmware		0xf0000000  *	kernbase		0xc0000000  * kva_pages = 8  *	vm_max_kernel_address	0x1ffffe000  *	openfirmware		0xf0000000  *	kernbase		0x0  *  * There are at least 4 pages of dynamic linker junk before kernel text begins,  * so starting at zero is fairly safe.  */
+comment|/*  * Lowest kernel virtual address, where the kernel is loaded.  *  * If we are using less than 4 super pages for the kernel tsb, the address  * space is less than 4 gigabytes, so put it at the end of the first 4  * gigbytes.  This allows the kernel and the firmware mappings to be mapped  * with a single contiguous tsb.  Otherwise start at 0, we'll cover them  * anyway.  *  * ie:  * kva_pages = 1  *	vm_max_kernel_address	0xffffe000  *	openfirmware		0xf0000000  *	kernbase		0xc0000000  * kva_pages = 8  *	vm_max_kernel_address	0x1ffffe000  *	openfirmware		0xf0000000  *	kernbase		0x0  *  * There are at least 4 pages of dynamic linker junk before kernel text begins,  * so starting at zero is fairly safe (if the firmware will let us).  */
 end_comment
 
 begin_if
@@ -280,13 +295,6 @@ define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
 value|(VM_MIN_KERNEL_ADDRESS + KVA_RANGE - PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPT_MIN_ADDRESS
-value|(VM_MIN_KERNEL_ADDRESS + KVA_RANGE)
 end_define
 
 begin_define
