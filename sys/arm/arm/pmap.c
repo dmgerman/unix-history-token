@@ -14253,11 +14253,15 @@ name|void
 operator|)
 name|pmap_clean_page
 argument_list|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|src_pg
 operator|->
 name|md
 operator|.
-name|pvh_list
+name|pv_list
+argument_list|)
 argument_list|,
 name|TRUE
 argument_list|)
