@@ -2863,12 +2863,18 @@ name|working
 operator|->
 name|numlogs
 argument_list|)
+operator|||
+name|working
+operator|->
+name|numlogs
+operator|<
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"error in config file; bad number:\n%s"
+literal|"error in config file; bad value for count of logs to save:\n%s"
 argument_list|,
 name|errline
 argument_list|)
@@ -5807,7 +5813,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|pid
+operator|)
 return|;
 block|}
 end_function
@@ -5976,8 +5984,10 @@ operator|!=
 literal|'T'
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* 	 * Now t points either to the end of the string (if no time was 	 * provided) or to the letter `T' which separates date and time in 	 * ISO 8601.  The pointer arithmetic is the same for either case. 	 */
 switch|switch
@@ -6075,8 +6085,10 @@ case|:
 break|break;
 default|default:
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* sanity check */
@@ -6113,8 +6125,10 @@ operator|>
 literal|31
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -6156,8 +6170,10 @@ name|t
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 switch|switch
 condition|(
@@ -6211,8 +6227,10 @@ case|:
 break|break;
 default|default:
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* sanity check */
@@ -6255,8 +6273,10 @@ operator|>
 literal|23
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -6284,7 +6304,9 @@ name|errline
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tsecs
+operator|)
 return|;
 block|}
 end_function
@@ -6548,6 +6570,9 @@ modifier|*
 name|dirpart
 parameter_list|)
 block|{
+name|int
+name|res
+decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -6591,22 +6616,22 @@ if|if
 condition|(
 operator|*
 name|s
-operator|==
+operator|!=
 literal|'/'
-operator|||
+operator|&&
 operator|*
 name|s
-operator|==
+operator|!=
 literal|'\0'
 condition|)
-block|{
+continue|continue;
 operator|*
 name|d
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
+name|res
+operator|=
 name|lstat
 argument_list|(
 name|mkdirpath
@@ -6614,7 +6639,31 @@ argument_list|,
 operator|&
 name|st
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|noaction
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mkdir %s\n"
+argument_list|,
+name|mkdirpath
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|res
+operator|=
 name|mkdir
 argument_list|(
 name|mkdirpath
@@ -6622,6 +6671,22 @@ argument_list|,
 literal|0755
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Error on mkdir(\"%s\") for -a"
+argument_list|,
+name|mkdirpath
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -6632,6 +6697,17 @@ literal|'\0'
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"created directory '%s' for -a\n"
+argument_list|,
+name|dirpart
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6831,8 +6907,10 @@ condition|(
 name|Dseen
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|Dseen
 operator|++
@@ -6863,8 +6941,10 @@ operator|>
 literal|23
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|tm
 operator|.
@@ -6881,8 +6961,10 @@ condition|(
 name|WMseen
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|WMseen
 operator|++
@@ -6913,8 +6995,10 @@ operator|>
 literal|6
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -7006,8 +7090,10 @@ condition|(
 name|WMseen
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|WMseen
 operator|++
@@ -7065,8 +7151,10 @@ operator|>
 literal|31
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 if|if
 condition|(
@@ -7075,8 +7163,10 @@ operator|>
 name|nd
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 name|tm
 operator|.
@@ -7140,7 +7230,9 @@ name|errline
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|tsecs
+operator|)
 return|;
 block|}
 end_function
