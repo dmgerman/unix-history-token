@@ -430,14 +430,15 @@ name|struct
 name|linger
 name|linger
 decl_stmt|;
+name|socklen_t
+name|fromlen
+decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
 name|on
 init|=
 literal|1
-decl_stmt|,
-name|fromlen
 decl_stmt|;
 name|struct
 name|sockaddr_storage
@@ -972,7 +973,7 @@ operator|/
 literal|3
 index|]
 decl_stmt|;
-name|int
+name|socklen_t
 name|optsize
 init|=
 sizeof|sizeof

@@ -221,10 +221,11 @@ name|SVCXPRT
 modifier|*
 name|transp
 decl_stmt|;
+name|socklen_t
+name|salen
+decl_stmt|;
 name|int
 name|ok
-decl_stmt|,
-name|salen
 decl_stmt|;
 name|struct
 name|sockaddr_storage

@@ -323,11 +323,11 @@ name|struct
 name|sockaddr_in
 name|from
 decl_stmt|;
-name|int
-name|cc
+name|socklen_t
+name|fromlen
 decl_stmt|;
 name|int
-name|fromlen
+name|cc
 decl_stmt|;
 name|char
 name|msgbuf

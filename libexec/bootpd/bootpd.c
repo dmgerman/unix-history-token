@@ -723,12 +723,13 @@ name|char
 modifier|*
 name|stmp
 decl_stmt|;
-name|int
-name|n
-decl_stmt|,
+name|socklen_t
 name|ba_len
 decl_stmt|,
 name|ra_len
+decl_stmt|;
+name|int
+name|n
 decl_stmt|;
 name|int
 name|nfound

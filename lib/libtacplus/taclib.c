@@ -1142,14 +1142,13 @@ name|struct
 name|sockaddr
 name|peer
 decl_stmt|;
-name|int
+name|socklen_t
+name|errlen
+decl_stmt|,
 name|peerlen
 decl_stmt|;
 name|int
 name|err
-decl_stmt|;
-name|int
-name|errlen
 decl_stmt|;
 comment|/* Wait for the connection to complete. */
 name|FD_ZERO

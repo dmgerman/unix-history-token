@@ -207,6 +207,9 @@ name|struct
 name|sockaddr_storage
 name|ss
 decl_stmt|;
+name|socklen_t
+name|sval
+decl_stmt|;
 name|int
 name|p
 index|[
@@ -218,8 +221,6 @@ decl_stmt|,
 name|pflag
 decl_stmt|,
 name|secure
-decl_stmt|,
-name|sval
 decl_stmt|;
 define|#
 directive|define
