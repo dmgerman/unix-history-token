@@ -1088,7 +1088,7 @@ name|MEXT_REM_REF
 parameter_list|(
 name|m
 parameter_list|)
-value|atomic_subtract_long(&((m)->m_ext.ref_cnt->refcnt), 1)
+value|do {						\ 	KASSERT((m)->m_ext.ref_cnt->refcnt> 0, ("m_ext refcnt< 0"));	\ 	atomic_subtract_long(&((m)->m_ext.ref_cnt->refcnt), 1);		\ 	} while(0)
 end_define
 
 begin_define
