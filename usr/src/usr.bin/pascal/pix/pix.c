@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pix.c	8.1 (Berkeley) %G%"
+literal|"@(#)pix.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,8 +84,23 @@ end_define
 
 begin_decl_stmt
 name|char
+name|argname
+index|[]
+init|=
+literal|"-o/tmp/pixaXXXXX"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|name
+init|=
+operator|&
+name|argname
+index|[
+literal|2
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -231,12 +246,6 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
-name|name
-operator|=
-literal|"-o/tmp/pixaXXXXX"
-operator|+
-literal|2
-expr_stmt|;
 name|mktemp
 argument_list|(
 name|name
