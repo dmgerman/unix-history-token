@@ -2828,6 +2828,7 @@ name|div_sockaddr
 block|,
 operator|.
 name|pru_sosetlabel
+operator|=
 name|in_pcbsosetlabel
 block|}
 decl_stmt|;
