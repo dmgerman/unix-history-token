@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslimits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -55,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
