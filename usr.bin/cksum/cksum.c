@@ -70,12 +70,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -88,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -101,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -342,10 +324,13 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|*
+operator|!
+name|strcmp
+argument_list|(
 name|optarg
-operator|==
-literal|'3'
+argument_list|,
+literal|"3"
+argument_list|)
 condition|)
 block|{
 name|cfncn
@@ -520,7 +505,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cksum [-o 1 | 2] [file ...]\n"
+literal|"usage: cksum [-o 1 | 2 | 3] [file ...]\n"
 argument_list|)
 expr_stmt|;
 operator|(
