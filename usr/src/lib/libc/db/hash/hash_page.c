@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.7 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,6 +235,14 @@ begin_function_decl
 specifier|static
 name|int
 name|open_temp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|ugly_split
 parameter_list|()
 function_decl|;
 end_function_decl
