@@ -3296,17 +3296,13 @@ name|struct
 name|proc
 modifier|*
 name|proc
-init|=
-name|td
-operator|->
-name|td_proc
 decl_stmt|;
 name|vm_offset_t
 name|addr
 decl_stmt|,
-name|start
-decl_stmt|,
 name|end
+decl_stmt|,
+name|start
 decl_stmt|;
 name|vm_size_t
 name|size
@@ -3363,7 +3359,6 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* disable wrap around */
 if|if
 condition|(
 name|end
@@ -3395,6 +3390,12 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|proc
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|proc
@@ -3882,9 +3883,9 @@ block|{
 name|vm_offset_t
 name|addr
 decl_stmt|,
-name|start
-decl_stmt|,
 name|end
+decl_stmt|,
+name|start
 decl_stmt|;
 name|vm_size_t
 name|size
@@ -3939,7 +3940,6 @@ operator|+
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* disable wrap around */
 if|if
 condition|(
 name|end

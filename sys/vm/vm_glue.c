@@ -563,30 +563,22 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|int
 name|vslock
 parameter_list|(
-name|addr
-parameter_list|,
-name|len
-parameter_list|)
 name|void
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|vm_offset_t
-name|start
-decl_stmt|,
 name|end
+decl_stmt|,
+name|start
 decl_stmt|;
 name|int
 name|error
@@ -615,7 +607,6 @@ operator|+
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* disable wrap around */
 if|if
 condition|(
 name|end
@@ -738,25 +729,17 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * MPSAFE  */
-end_comment
-
 begin_function
 name|void
 name|vsunlock
 parameter_list|(
-name|addr
-parameter_list|,
-name|len
-parameter_list|)
 name|void
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Rely on the parameter sanity checks performed by vslock(). */
 operator|(
