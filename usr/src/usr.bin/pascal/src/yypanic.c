@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yypanic.c 1.2 %G%"
+literal|"@(#)yypanic.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,26 @@ continue|continue;
 case|case
 name|YEOF
 case|:
+if|if
+condition|(
+name|kind
+operator|==
+name|PDECL
+condition|)
+block|{
+comment|/* 					 * we have paniced to end of file 					 * during declarations. Separately 					 * compiled segments can syntactically 					 * exit without any error message, so 					 * we force one here. 					 */
+name|yerror
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+name|continuation
+argument_list|()
+expr_stmt|;
+name|yyunexeof
+argument_list|()
+expr_stmt|;
+block|}
 goto|goto
 name|quiet
 goto|;
