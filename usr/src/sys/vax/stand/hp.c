@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.3	83/01/18	*/
+comment|/*	hp.c	4.4	83/01/23	*/
 end_comment
 
 begin_comment
@@ -1356,7 +1356,7 @@ name|i_bn
 expr_stmt|;
 name|hprecal
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|readmore
 label|:
@@ -1721,6 +1721,8 @@ operator|)
 operator|)
 condition|)
 block|{
+name|hard0
+label|:
 name|io
 operator|->
 name|i_error
@@ -1975,14 +1977,22 @@ operator|)
 return|;
 block|}
 block|}
-else|else
+if|if
+condition|(
+name|ML11
+operator|&&
+operator|(
 name|io
 operator|->
-name|i_active
-operator|=
-literal|0
-expr_stmt|;
-comment|/* force retry */
+name|i_errcnt
+operator|>=
+literal|16
+operator|)
+condition|)
+goto|goto
+name|hard0
+goto|;
+comment|/* fall thru to retry */
 name|hpaddr
 operator|->
 name|hpcs1
@@ -2006,24 +2016,6 @@ condition|)
 empty_stmt|;
 if|if
 condition|(
-name|ML11
-condition|)
-block|{
-if|if
-condition|(
-name|io
-operator|->
-name|i_errcnt
-operator|>=
-literal|16
-condition|)
-goto|goto
-name|hard
-goto|;
-block|}
-elseif|else
-if|if
-condition|(
 operator|(
 operator|(
 name|io
@@ -2034,14 +2026,6 @@ literal|07
 operator|)
 operator|==
 literal|4
-operator|)
-operator|&&
-operator|(
-name|io
-operator|->
-name|i_active
-operator|==
-literal|0
 operator|)
 condition|)
 block|{
@@ -2055,10 +2039,10 @@ name|HP_GO
 expr_stmt|;
 name|hprecal
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 goto|goto
-name|nextrecal
+name|try_again
 goto|;
 block|}
 switch|switch
@@ -2083,8 +2067,11 @@ name|HP_SEEK
 operator||
 name|HP_GO
 expr_stmt|;
+name|hprecal
+operator|++
+expr_stmt|;
 goto|goto
-name|nextrecal
+name|try_again
 goto|;
 case|case
 literal|2
@@ -2098,9 +2085,11 @@ operator|<
 literal|16
 operator|||
 operator|(
-name|func
+name|io
+operator|->
+name|i_flgs
 operator|&
-name|READ
+name|F_READ
 operator|)
 operator|==
 literal|0
@@ -2131,16 +2120,8 @@ name|HP_OFFSET
 operator||
 name|HP_GO
 expr_stmt|;
-name|nextrecal
-label|:
 name|hprecal
 operator|++
-expr_stmt|;
-name|io
-operator|->
-name|i_active
-operator|=
-literal|1
 expr_stmt|;
 goto|goto
 name|try_again
@@ -2154,23 +2135,10 @@ name|hprecal
 operator|=
 literal|0
 expr_stmt|;
-name|io
-operator|->
-name|i_active
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|try_again
 goto|;
 block|}
-if|if
-condition|(
-name|io
-operator|->
-name|i_active
-condition|)
-block|{
 if|if
 condition|(
 name|io
@@ -2198,7 +2166,9 @@ name|HPDS_PIP
 condition|)
 empty_stmt|;
 block|}
-block|}
+goto|goto
+name|try_again
+goto|;
 name|success
 label|:
 comment|/* continue with the next block */
@@ -2271,7 +2241,7 @@ directive|ifdef
 name|HPDEBUG
 name|printf
 argument_list|(
-literal|"restart: bl %d, byte %d, mem 0x%x %d\n"
+literal|"restart: bl %d, byte %d, mem 0x%x hprecal %d\n"
 argument_list|,
 name|io
 operator|->
@@ -2285,9 +2255,7 @@ name|io
 operator|->
 name|i_ma
 argument_list|,
-name|io
-operator|->
-name|i_ma
+name|hprecal
 argument_list|)
 expr_stmt|;
 endif|#
