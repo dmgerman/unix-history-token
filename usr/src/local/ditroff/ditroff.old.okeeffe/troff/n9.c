@@ -1662,11 +1662,37 @@ index|]
 operator||
 name|NMOT
 expr_stmt|;
-comment|/* so the net vertical is zero */
+comment|/* so net vertical is zero */
 name|j
 operator|=
 literal|6
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|DRAWTHICK
+operator|||
+name|type
+operator|==
+name|DRAWSTYLE
+condition|)
+block|{
+name|cbuf
+index|[
+literal|4
+index|]
+operator|=
+name|cbuf
+index|[
+literal|3
+index|]
+operator||
+name|NMOT
+expr_stmt|;
+comment|/* so net horizontal is zero */
 block|}
 name|cbuf
 index|[
