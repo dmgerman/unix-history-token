@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/limits.h>
 end_include
 
@@ -3171,13 +3177,12 @@ operator|*
 operator|)
 literal|0
 condition|)
-comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|" in ino %lu on dev<%d, %d>, %s, start %ld, end %ld"
+literal|" in ino %ju on dev<%d, %d>, %s, start %jd, end %jd"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|lock
 operator|->
@@ -3230,14 +3235,14 @@ else|:
 literal|"unknown"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|lock
 operator|->
 name|lf_start
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|lock
 operator|->
@@ -3247,7 +3252,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %s, start %ld, end %ld"
+literal|" %s, start %jd, end %jd"
 argument_list|,
 name|lock
 operator|->
@@ -3276,14 +3281,14 @@ else|:
 literal|"unknown"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|lock
 operator|->
 name|lf_start
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|lock
 operator|->
@@ -3370,12 +3375,12 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"%s: Lock list for ino %lu on dev<%d, %d>:\n"
+literal|"%s: Lock list for ino %ju on dev<%d, %d>:\n"
 argument_list|,
 name|tag
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|lock
 operator|->
@@ -3475,10 +3480,9 @@ operator|->
 name|lf_id
 argument_list|)
 expr_stmt|;
-comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|", %s, start %ld, end %ld"
+literal|", %s, start %jd, end %jd"
 argument_list|,
 name|lf
 operator|->
@@ -3507,14 +3511,14 @@ else|:
 literal|"unknown"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|lf
 operator|->
 name|lf_start
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|lf
 operator|->
@@ -3584,10 +3588,9 @@ operator|->
 name|lf_id
 argument_list|)
 expr_stmt|;
-comment|/* XXX no %qd in kernel.  Truncate. */
 name|printf
 argument_list|(
-literal|", %s, start %ld, end %ld"
+literal|", %s, start %jd, end %jd"
 argument_list|,
 name|blk
 operator|->
@@ -3616,14 +3619,14 @@ else|:
 literal|"unknown"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|blk
 operator|->
 name|lf_start
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|blk
 operator|->
