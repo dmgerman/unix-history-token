@@ -45,6 +45,12 @@ directive|include
 file|<sys/vnioctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
+end_include
+
 begin_define
 define|#
 directive|define
