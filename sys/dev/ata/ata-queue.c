@@ -1056,6 +1056,7 @@ expr_stmt|;
 comment|/* do the all the magic for completition evt retry etc etc */
 if|if
 condition|(
+operator|(
 name|request
 operator|->
 name|status
@@ -1064,6 +1065,7 @@ operator|(
 name|ATA_S_CORR
 operator||
 name|ATA_S_ERROR
+operator|)
 operator|)
 operator|==
 name|ATA_S_CORR
