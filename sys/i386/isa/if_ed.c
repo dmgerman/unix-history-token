@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 1.30 1994/01/31 07:34:20 davidg Exp $  */
+comment|/*  * $Id: if_ed.c,v 1.31 1994/02/02 02:24:38 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1049,6 +1049,14 @@ name|ED_WD_CARD_ID
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set initial values for width/size. 	 */
+name|memsize
+operator|=
+literal|8192
+expr_stmt|;
+name|isa16bit
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -1065,14 +1073,6 @@ name|type_str
 operator|=
 literal|"WD8003S"
 expr_stmt|;
-name|memsize
-operator|=
-literal|8192
-expr_stmt|;
-name|isa16bit
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8003E
@@ -1083,13 +1083,15 @@ name|type_str
 operator|=
 literal|"WD8003E"
 expr_stmt|;
-name|memsize
+break|break;
+case|case
+name|ED_TYPE_WD8003EB
+case|:
+name|sc
+operator|->
+name|type_str
 operator|=
-literal|8192
-expr_stmt|;
-name|isa16bit
-operator|=
-literal|0
+literal|"WD8003EB"
 expr_stmt|;
 break|break;
 case|case
@@ -1100,14 +1102,6 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8003W"
-expr_stmt|;
-name|memsize
-operator|=
-literal|8192
-expr_stmt|;
-name|isa16bit
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1181,14 +1175,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|isa16bit
-operator|=
-literal|0
-expr_stmt|;
-name|memsize
-operator|=
-literal|8192
-expr_stmt|;
 name|sc
 operator|->
 name|type_str
@@ -1346,14 +1332,6 @@ operator|->
 name|type_str
 operator|=
 literal|""
-expr_stmt|;
-name|memsize
-operator|=
-literal|8192
-expr_stmt|;
-name|isa16bit
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 block|}
