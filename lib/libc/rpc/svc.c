@@ -22,21 +22,23 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)svc.c 1.44 88/02/08 Copyr 1984 Sun Micro";*/
-end_comment
-
-begin_comment
-comment|/*static char *sccsid = "from: @(#)svc.c	2.4 88/08/11 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)svc.c 1.44 88/02/08 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|rcsid
+name|sccsid
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)svc.c	2.4 88/08/11 4.0 RPCSRC"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +46,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * svc.c, Server-side remote procedure call interface.  *  * There are two sets of procedures here.  The xprt routines are  * for handling transport handles.  The svc routines handle the  * list of service routines.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */

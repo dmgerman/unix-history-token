@@ -4,12 +4,22 @@ comment|/*	$NetBSD: mt_misc.c,v 1.1 2000/06/02 23:11:11 fvdl Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/* #pragma ident	"@(#)mt_misc.c	1.24	93/04/29 SMI" */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

@@ -11,39 +11,19 @@ begin_empty
 empty|#ident	"@(#)key_call.c	1.25	94/04/24 SMI"
 end_empty
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LIBC_SCCS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * key_call.c, Interface to keyserver  *  * setsecretkey(key) - set your secret key  * encryptsessionkey(agent, deskey) - encrypt a session key to talk to agent  * decryptsessionkey(agent, deskey) - decrypt ditto  * gendeskey(deskey) - generate a secure des key  */

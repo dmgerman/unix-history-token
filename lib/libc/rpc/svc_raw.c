@@ -18,12 +18,6 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|0
-end_if
-
-begin_if
-if|#
-directive|if
 name|defined
 argument_list|(
 name|SCCSIDS
@@ -36,16 +30,34 @@ name|lint
 argument_list|)
 end_if
 
-begin_endif
-unit|static char sccsid[] = "@(#)svc_raw.c 1.25 89/01/31 Copyr 1984 Sun Micro"; static char *rcsid = "$FreeBSD$";
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)svc_raw.c 1.25 89/01/31 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * svc_raw.c,   This a toy for simple testing and timing.  * Interface to create an rpc client and server in the same UNIX process.  * This lets us similate rpc and get rpc (round trip) overhead, without  * any interference from the kernel.  *  */

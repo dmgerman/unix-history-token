@@ -26,21 +26,23 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)clnt_simple.c 1.35 87/08/11 Copyr 1984 Sun Micro";*/
-end_comment
-
-begin_comment
-comment|/*static char *sccsid = "from: @(#)clnt_simple.c	2.2 88/08/01 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"from: @(#)clnt_simple.c 1.35 87/08/11 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|rcsid
+name|sccsid
 init|=
-literal|"$FreeBSD$"
+literal|"from: @(#)clnt_simple.c	2.2 88/08/01 4.0 RPCSRC"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +50,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * clnt_simple.c  * Simplified front end to client rpc.  *  */
