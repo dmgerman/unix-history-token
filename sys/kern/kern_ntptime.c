@@ -846,6 +846,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * ntp_gettime() - NTP user application interface  *  * See the timex.h header file for synopsis and API description. Note  * that the TAI offset is returned in the ntvtimeval.tai structure  * member.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -919,10 +923,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * ntp_gettime() - NTP user application interface  *  * See the timex.h header file for synopsis and API description. Note  * that the TAI offset is returned in the ntvtimeval.tai structure  * member.  */
-end_comment
 
 begin_function
 specifier|static
