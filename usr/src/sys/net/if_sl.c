@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"proc.h"
 end_include
 
 begin_include
@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"errno.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"if.h"
 end_include
 
@@ -134,160 +128,105 @@ end_if
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|"netinet/in.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|"netinet/in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_var.h"
+file|"netinet/in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|"netinet/ip.h"
 end_include
 
-begin_endif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|Huh
+condition|?
+name|Slip
+name|without
+name|inet
+condition|?
 endif|#
 directive|endif
-end_endif
-
-begin_include
 include|#
 directive|include
 file|"machine/mtpr.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"slcompress.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"if_slvar.h"
-end_include
-
-begin_comment
 comment|/*  * SLMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is a hard limit on output packet size.  To insure good  * interactive response, SLMTU wants to be the smallest size that  * amortizes the header cost.  (Remember that even with  * type-of-service queuing, we have to wait for any in-progress  * packet to finish.  I.e., we wait, on the average, 1/2 * mtu /  * cps, where cps is the line speed in characters per second.  * E.g., 533ms wait for a 1024 byte MTU on a 9600 baud line.  The  * average compressed header size is 6-8 bytes so any MTU> 90  * bytes will give us 90% of the line bandwidth.  A 100ms wait is  * tolerable (500ms is not), so want an MTU around 296.  (Since TCP  * will send 256 byte segments (to allow for 40 byte headers), the  * typical packet size on the wire will be around 260 bytes).  In  * 4.3tahoe+ systems, we can set an MTU in a route so we do that&  * leave the interface MTU relatively high (so we don't IP fragment  * when acting as a gateway to someone using a stupid MTU).  *  * Similar considerations apply to SLIP_HIWAT:  It's the amount of  * data that will be queued 'downstream' of us (i.e., in clists  * waiting to be picked up by the tty output interrupt).  If we  * queue a lot of data downstream, it's immune to our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|BUFOFFSET
 value|128
-end_define
-
-begin_define
 define|#
 directive|define
 name|SLMAX
 value|(MCLBYTES - BUFOFFSET)
-end_define
-
-begin_define
 define|#
 directive|define
 name|SLBUFSIZE
 value|(SLMAX + BUFOFFSET)
-end_define
-
-begin_define
 define|#
 directive|define
 name|SLMTU
 value|296
-end_define
-
-begin_define
 define|#
 directive|define
 name|SLIP_HIWAT
 value|roundup(50,CBSIZE)
-end_define
-
-begin_define
 define|#
 directive|define
 name|CLISTRESERVE
 value|1024
-end_define
-
-begin_comment
 comment|/* Can't let clists get too low */
-end_comment
-
-begin_comment
 comment|/*  * SLIP ABORT ESCAPE MECHANISM:  *	(inspired by HAYES modem escape arrangement)  *	1sec escape 1sec escape 1sec escape { 1sec escape 1sec escape }  *	signals a "soft" exit from slip mode by usermode process  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ABT_ESC
 value|'\033'
-end_define
-
-begin_comment
 comment|/* can't be t_intr - distant host must know it*/
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ABT_WAIT
 value|1
-end_define
-
-begin_comment
 comment|/* in seconds - idle before an escape& after */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ABT_RECYCLE
 value|(5*2+2)
-end_define
-
-begin_comment
 comment|/* in seconds - time window processing abort */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|ABT_SOFT
 value|3
-end_define
-
-begin_comment
 comment|/* count of escapes */
-end_comment
-
-begin_comment
 comment|/*  * The following disgusting hack gets around the problem that IP TOS  * can't be set yet.  We want to put "interactive" traffic on a high  * priority queue.  To decide if traffic is interactive, we check that  * a) it is TCP and b) one of its ports is telnet, rlogin or ftp control.  */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|u_short
 name|interactive_ports
 index|[
 literal|8
 index|]
-init|=
+operator|=
 block|{
 literal|0
 block|,
@@ -305,8 +244,8 @@ literal|0
 block|,
 literal|23
 block|, }
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -673,6 +612,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 specifier|register
 name|struct
 name|sl_softc
@@ -692,14 +639,14 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|u
-operator|.
-name|u_cred
+name|p
+operator|->
+name|p_ucred
 argument_list|,
 operator|&
-name|u
-operator|.
-name|u_acflag
+name|p
+operator|->
+name|p_acflag
 argument_list|)
 condition|)
 return|return
@@ -995,11 +942,7 @@ name|cmd
 condition|)
 block|{
 case|case
-name|TIOCGETD
-case|:
-comment|/* XXX */
-case|case
-name|SLIOGUNIT
+name|SLIOCGUNIT
 case|:
 operator|*
 operator|(
