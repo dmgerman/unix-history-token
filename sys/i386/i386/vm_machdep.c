@@ -933,6 +933,15 @@ name|mdproc
 modifier|*
 name|mdp
 decl_stmt|;
+name|struct
+name|pcb
+modifier|*
+name|pcb
+init|=
+name|td
+operator|->
+name|td_pcb
+decl_stmt|;
 comment|/* Reset pc->pcb_gs and %gs before possibly invalidating it. */
 name|mdp
 operator|=
