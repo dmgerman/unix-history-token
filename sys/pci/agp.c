@@ -3237,7 +3237,7 @@ name|info
 operator|->
 name|ai_aperture_size
 operator|=
-name|rmang_get_size
+name|rman_get_size
 argument_list|(
 name|sc
 operator|->
