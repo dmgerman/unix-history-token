@@ -53,7 +53,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-literal|"Unable to compile Linux-emulator due to missing IA32 option!"
+literal|"Unable to compile Linux-emulator due to missing COMPAT_IA32 option!"
 end_error
 
 begin_endif
