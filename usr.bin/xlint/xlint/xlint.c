@@ -1837,6 +1837,14 @@ argument_list|,
 literal|"-U__GNUC__"
 argument_list|)
 expr_stmt|;
+name|appcstrg
+argument_list|(
+operator|&
+name|cflags
+argument_list|,
+literal|"-undef"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|appcstrg
