@@ -2419,7 +2419,16 @@ name|mastermap
 argument_list|,
 literal|"master.passwd.%s"
 argument_list|,
+name|strstr
+argument_list|(
 name|map
+argument_list|,
+literal|"byuid"
+argument_list|)
+condition|?
+literal|"byuid"
+else|:
+literal|"byname"
 argument_list|)
 expr_stmt|;
 name|gotmaster
