@@ -400,6 +400,12 @@ literal|"Creative ViBRA16C PnP"
 block|}
 block|,
 block|{
+literal|0x41008c0e
+block|,
+literal|"Creative ViBRA16CL PnP"
+block|}
+block|,
+block|{
 literal|0x43008c0e
 block|,
 literal|"Creative ViBRA16X PnP"
