@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vipw.c	5.10 (Berkeley) %G%"
+literal|"@(#)vipw.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -911,12 +911,16 @@ comment|/* skip lines that are too big */
 if|if
 condition|(
 operator|!
+operator|(
+name|p
+operator|=
 name|index
 argument_list|(
 name|buf
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(
@@ -933,6 +937,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -943,7 +952,7 @@ name|strsep
 argument_list|(
 name|buf
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 operator|)
 condition|)
@@ -972,7 +981,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* passwd */
@@ -990,7 +999,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 operator|)
 condition|)
@@ -1065,7 +1074,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 operator|)
 condition|)
@@ -1116,7 +1125,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* class */
@@ -1131,7 +1140,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* change */
@@ -1146,7 +1155,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* expire */
@@ -1161,7 +1170,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* gecos */
@@ -1176,7 +1185,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* directory */
@@ -1194,7 +1203,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 operator|)
 condition|)
@@ -1254,6 +1263,8 @@ condition|)
 break|break;
 if|if
 condition|(
+name|p
+operator|=
 name|strsep
 argument_list|(
 operator|(
@@ -1262,11 +1273,23 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|":\n"
+literal|":"
 argument_list|)
 condition|)
 block|{
 comment|/* too many */
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"got {%s}\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|general
 label|:
 operator|(
