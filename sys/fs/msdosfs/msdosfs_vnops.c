@@ -3858,7 +3858,7 @@ condition|)
 block|{
 name|vp
 operator|->
-name|v_vflag
+name|v_iflag
 operator||=
 name|VI_BWAIT
 expr_stmt|;
