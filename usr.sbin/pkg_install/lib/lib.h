@@ -196,6 +196,17 @@ value|"PKG_DBDIR"
 end_define
 
 begin_comment
+comment|/* macro to get name of directory where we put logging information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_DIR
+value|(getenv(PKG_DBDIR) ? getenv(PKG_DBDIR) : DEF_LOG_DIR)
+end_define
+
+begin_comment
 comment|/* The names of our "special" files */
 end_comment
 
