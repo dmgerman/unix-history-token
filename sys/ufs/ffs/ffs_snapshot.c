@@ -610,6 +610,9 @@ if|if
 condition|(
 name|vn_start_write
 argument_list|(
+name|NULL
+argument_list|,
+operator|&
 name|wrtmp
 argument_list|,
 name|V_NOWAIT
@@ -640,6 +643,9 @@ name|error
 operator|=
 name|vn_start_write
 argument_list|(
+name|NULL
+argument_list|,
+operator|&
 name|wrtmp
 argument_list|,
 name|V_XSLEEP
@@ -1344,6 +1350,9 @@ condition|)
 break|break;
 name|vn_start_write
 argument_list|(
+name|NULL
+argument_list|,
+operator|&
 name|wrtmp
 argument_list|,
 name|V_WAIT
@@ -2673,6 +2682,9 @@ argument_list|)
 expr_stmt|;
 name|vn_start_write
 argument_list|(
+name|NULL
+argument_list|,
+operator|&
 name|wrtmp
 argument_list|,
 name|V_WAIT
