@@ -29,29 +29,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTMAP_TID
+name|INTMAP_TID_MASK
 value|0x07c000000LL
 end_define
 
 begin_comment
-comment|/* UPA target ID mask */
+comment|/* UPA target ID */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTMAP_IGN
+name|INTMAP_TID_SHIFT
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTMAP_IGN_MASK
 value|0x0000007c0LL
 end_define
 
 begin_comment
-comment|/* Interrupt group no (sbus only). */
+comment|/* Interrupt group no. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INTMAP_INO
+name|INTMAP_IGN_SHIFT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTMAP_INO_MASK
 value|0x00000003fLL
 end_define
 
@@ -62,14 +76,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTMAP_INR
-value|(INTMAP_IGN | INTMAP_INO)
+name|INTMAP_INR_MASK
+value|(INTMAP_IGN_MASK | INTMAP_INO_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|INTMAP_SBUSSLOT
+name|INTMAP_SBUSSLOT_MASK
 value|0x000000018LL
 end_define
 
@@ -80,7 +94,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTMAP_PCIBUS
+name|INTMAP_PCIBUS_MASK
 value|0x000000010LL
 end_define
 
@@ -91,7 +105,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTMAP_PCISLOT
+name|INTMAP_PCISLOT_MASK
 value|0x00000000cLL
 end_define
 
@@ -102,7 +116,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTMAP_PCIINT
+name|INTMAP_PCIINT_MASK
 value|0x000000003LL
 end_define
 
@@ -113,7 +127,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTMAP_OBIO
+name|INTMAP_OBIO_MASK
 value|0x000000020LL
 end_define
 
@@ -124,42 +138,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTMAP_LSHIFT
-value|11
-end_define
-
-begin_comment
-comment|/* Encode level in vector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTLEVENCODE
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x0f)<< INTMAP_LSHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTLEV
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)>> INTMAP_LSHIFT)& 0x0f)
-end_define
-
-begin_define
-define|#
-directive|define
 name|INTVEC
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& INTMAP_INR)
+value|((x)& INTMAP_INR_MASK)
 end_define
 
 begin_define
@@ -189,7 +172,20 @@ name|INTINO
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& INTMAP_INO)
+value|((x)& INTMAP_INO_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INTMAP_ENABLE
+parameter_list|(
+name|mr
+parameter_list|,
+name|mid
+parameter_list|)
+define|\
+value|(((mr)& ~INTMAP_TID_MASK) | ((mid)<< INTMAP_TID_SHIFT) | INTMAP_V)
 end_define
 
 begin_comment

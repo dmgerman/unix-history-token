@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -1312,7 +1318,7 @@ name|sc_ign
 operator|=
 name|intr
 operator|&
-name|INTMAP_IGN
+name|INTMAP_IGN_MASK
 expr_stmt|;
 comment|/* Find interrupt group no */
 name|sc
@@ -2116,9 +2122,15 @@ name|sc
 argument_list|,
 name|SBR_THERM_INT_MAP
 argument_list|,
+name|INTMAP_ENABLE
+argument_list|(
 name|mr
-operator||
-name|INTMAP_V
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|mid
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rid
@@ -2202,9 +2214,15 @@ name|sc
 argument_list|,
 name|SBR_POWER_INT_MAP
 argument_list|,
+name|INTMAP_ENABLE
+argument_list|(
 name|mr
-operator||
-name|INTMAP_V
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|mid
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the counter-timer. */
@@ -2728,7 +2746,7 @@ condition|(
 operator|(
 name|iv
 operator|&
-name|INTMAP_OBIO
+name|INTMAP_OBIO_MASK
 operator|)
 operator|==
 literal|0
@@ -3447,7 +3465,7 @@ condition|(
 operator|(
 name|inr
 operator|&
-name|INTMAP_OBIO
+name|INTMAP_OBIO_MASK
 operator|)
 operator|==
 literal|0
@@ -3681,18 +3699,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable the interrupt now we have the handler installed. 	 * Read the current value as we can't change it besides the 	 * valid bit so so make sure only this bit is changed. 	 */
+comment|/* 	 * Enable the interrupt and program the target module now we have the 	 * handler installed. 	 */
 name|SYSIO_WRITE8
 argument_list|(
 name|sc
 argument_list|,
 name|intrmapptr
 argument_list|,
+name|INTMAP_ENABLE
+argument_list|(
 name|intrmap
 argument_list|,
 name|PCPU_GET
 argument_list|(
 name|mid
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
