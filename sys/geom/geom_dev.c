@@ -1353,26 +1353,7 @@ sizeof|sizeof
 expr|*
 name|gio
 expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|&
-name|IOC_IN
-condition|)
-name|error
-operator|=
-name|g_io_setattr
-argument_list|(
-literal|"GEOM::ioctl"
-argument_list|,
-name|cp
-argument_list|,
-name|i
-argument_list|,
-name|gio
-argument_list|)
-expr_stmt|;
-else|else
+comment|/* 		 * We always issue ioctls as getattr since the direction of data 		 * movement in ioctl is no indication of the ioctl being a "set" 		 * or "get" type ioctl or if such simplistic terms even apply 		 */
 name|error
 operator|=
 name|g_io_getattr
