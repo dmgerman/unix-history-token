@@ -3392,6 +3392,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mac_check_inpcb_deliver
