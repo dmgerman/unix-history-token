@@ -1183,6 +1183,12 @@ operator|.
 name|ss_family
 operator|==
 name|AF_INET
+operator|||
+name|ss
+operator|.
+name|ss_family
+operator|==
+name|AF_LOCAL
 condition|)
 block|{
 name|ret
