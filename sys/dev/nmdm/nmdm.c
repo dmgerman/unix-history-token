@@ -2580,12 +2580,12 @@ condition|(
 name|ptr1
 condition|)
 block|{
-name|revoke_and_destroy_dev
+name|destroy_dev
 argument_list|(
 name|nextdev1
 argument_list|)
 expr_stmt|;
-name|revoke_and_destroy_dev
+name|destroy_dev
 argument_list|(
 name|nextdev2
 argument_list|)
