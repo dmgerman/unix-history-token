@@ -6914,7 +6914,8 @@ name|resources
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|PCI_ENABLE_IRQ_ROUTING
+name|__i386__
+comment|/* Only supported on x86 in stable */
 name|pcicfgregs
 modifier|*
 name|cfg
@@ -6958,6 +6959,19 @@ operator|->
 name|intpin
 operator|!=
 literal|0
+operator|)
+operator|&&
+operator|(
+name|start
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|end
+operator|==
+operator|~
+literal|0UL
 operator|)
 condition|)
 block|{
