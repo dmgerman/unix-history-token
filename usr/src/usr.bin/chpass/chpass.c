@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.13 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2284,6 +2284,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: can't find \"mkpasswd\".\n"
+argument_list|)
+expr_stmt|;
 name|_exit
 argument_list|(
 literal|127
@@ -2432,6 +2442,18 @@ argument_list|,
 name|file
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: can't find \"%s\".\n"
+argument_list|,
+name|editor
 argument_list|)
 expr_stmt|;
 name|_exit
