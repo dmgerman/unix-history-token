@@ -202,6 +202,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|printit
 name|__P
@@ -287,6 +303,9 @@ name|inbuf
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|LINELENGTH
 argument_list|)
 operator|)
@@ -366,6 +385,9 @@ name|STDIN_FILENO
 argument_list|,
 name|inbuf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|LINELENGTH
 argument_list|)
 operator|)
@@ -599,6 +621,9 @@ name|STDIN_FILENO
 argument_list|,
 name|inbuf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|LINELENGTH
 argument_list|)
 operator|)
