@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.75	83/05/18	*/
+comment|/*	hp.c	4.76	83/05/30	*/
 end_comment
 
 begin_ifdef
@@ -708,36 +708,6 @@ begin_comment
 comment|/* END OF STUFF WHICH SHOULD BE READ IN PER DISK */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_hpSDIST
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|_hpRDIST
-value|3
-end_define
-
-begin_decl_stmt
-name|int
-name|hpSDIST
-init|=
-name|_hpSDIST
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|hpRDIST
-init|=
-name|_hpRDIST
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Table for converting Massbus drive types into  * indices into the partition tables.  Slots are  * left for those drives devined from other means  * (e.g. SI, AMPEX, etc.).  */
 end_comment
@@ -899,6 +869,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Beware, sdist and rdist are not well tuned  * for many of the drives listed in this table.  * Try patching things with something i/o intensive  * running and watch iostat.  */
+end_comment
+
 begin_struct
 struct|struct
 name|hpst
@@ -906,24 +880,38 @@ block|{
 name|short
 name|nsect
 decl_stmt|;
+comment|/* # sectors/track */
 name|short
 name|ntrak
 decl_stmt|;
+comment|/* # tracks/cylinder */
 name|short
 name|nspc
 decl_stmt|;
+comment|/* # sector/cylinders */
 name|short
 name|ncyl
 decl_stmt|;
+comment|/* # cylinders */
 name|struct
 name|size
 modifier|*
 name|sizes
 decl_stmt|;
+comment|/* partition tables */
+name|short
+name|sdist
+decl_stmt|;
+comment|/* seek distance metric */
+name|short
+name|rdist
+decl_stmt|;
+comment|/* rotational distance metric */
 block|}
 name|hpst
 index|[]
 init|=
+block|{
 block|{
 literal|32
 block|,
@@ -937,7 +925,13 @@ literal|823
 block|,
 name|rm03_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* RM03 */
+block|{
 literal|32
 block|,
 literal|19
@@ -950,7 +944,13 @@ literal|823
 block|,
 name|rm05_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* RM05 */
+block|{
 literal|22
 block|,
 literal|19
@@ -963,7 +963,13 @@ literal|815
 block|,
 name|rp06_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* RP06 */
+block|{
 literal|31
 block|,
 literal|14
@@ -976,7 +982,13 @@ literal|559
 block|,
 name|rm80_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* RM80 */
+block|{
 literal|22
 block|,
 literal|19
@@ -989,7 +1001,13 @@ literal|411
 block|,
 name|rp05_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* RP05 */
+block|{
 literal|50
 block|,
 literal|32
@@ -1002,7 +1020,13 @@ literal|630
 block|,
 name|rp07_sizes
 block|,
+literal|7
+block|,
+literal|8
+block|}
+block|,
 comment|/* RP07 */
+block|{
 literal|1
 block|,
 literal|1
@@ -1012,8 +1036,14 @@ block|,
 literal|1
 block|,
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|,
 comment|/* ML11A */
+block|{
 literal|1
 block|,
 literal|1
@@ -1024,7 +1054,13 @@ literal|1
 block|,
 literal|0
 block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
 comment|/* ML11B */
+block|{
 literal|32
 block|,
 literal|40
@@ -1037,7 +1073,13 @@ literal|843
 block|,
 name|cdc9775_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* 9775 */
+block|{
 literal|32
 block|,
 literal|10
@@ -1050,7 +1092,13 @@ literal|823
 block|,
 name|cdc9730_sizes
 block|,
+literal|3
+block|,
+literal|4
+block|}
+block|,
 comment|/* 9730 */
+block|{
 literal|32
 block|,
 literal|16
@@ -1063,7 +1111,13 @@ literal|1024
 block|,
 name|capricorn_sizes
 block|,
+literal|7
+block|,
+literal|8
+block|}
+block|,
 comment|/* Capricorn */
+block|{
 literal|48
 block|,
 literal|20
@@ -1076,7 +1130,13 @@ literal|842
 block|,
 name|eagle_sizes
 block|,
+literal|7
+block|,
+literal|8
+block|}
+block|,
 comment|/* EAGLE */
+block|{
 literal|32
 block|,
 literal|19
@@ -1088,6 +1148,11 @@ block|,
 literal|815
 block|,
 name|cdc9300_sizes
+block|,
+literal|3
+block|,
+literal|4
+block|}
 block|,
 comment|/* 9300 */
 block|}
@@ -2501,7 +2566,9 @@ name|st
 operator|->
 name|nsect
 operator|-
-name|hpSDIST
+name|st
+operator|->
+name|sdist
 operator|)
 operator|%
 name|st
@@ -2572,7 +2639,9 @@ name|st
 operator|->
 name|nsect
 operator|-
-name|hpRDIST
+name|st
+operator|->
+name|rdist
 condition|)
 return|return
 operator|(
