@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.3 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -2137,21 +2143,15 @@ block|{
 name|int
 name|pid
 init|=
-operator|-
 name|getpid
 argument_list|()
 decl_stmt|;
-name|ioctl
+name|fcntl
 argument_list|(
 name|rem
 argument_list|,
-name|SIOCSPGRP
+name|F_SETOWN
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|pid
 argument_list|)
 expr_stmt|;
