@@ -1796,7 +1796,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" us ni sy id\n"
+literal|" us ni sy in id\n"
 argument_list|)
 expr_stmt|;
 block|}
