@@ -10965,6 +10965,21 @@ name|ap
 operator|->
 name|a_vp
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VCHR
+operator|)
+argument_list|,
+operator|(
+literal|"vop_revoke: not VCHR"
+operator|)
+argument_list|)
+expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
