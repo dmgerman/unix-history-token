@@ -8,7 +8,7 @@ comment|/*  * Some lines of this file come from a file of the name "scsi.h"  * d
 end_comment
 
 begin_comment
-comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_disk.h,v 1.7 1995/01/08 15:13:40 ats Exp $  */
+comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_disk.h,v 1.9 1996/05/19 19:29:09 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -465,10 +465,13 @@ directive|define
 name|DISK_FMT_SSEC
 value|0x80
 name|u_char
-name|reserved2
+name|reserved21
 decl_stmt|;
 name|u_char
-name|reserved3
+name|reserved22
+decl_stmt|;
+name|u_char
+name|reserved23
 decl_stmt|;
 block|}
 name|disk_format
@@ -545,13 +548,29 @@ name|land_zone_0
 decl_stmt|;
 comment|/* landing zone cylinder (LSB)	      */
 name|u_char
-name|reserved1
+name|rpl
+decl_stmt|;
+comment|/* rotational position locking (2 bits) */
+name|u_char
+name|rot_offset
+decl_stmt|;
+comment|/* rotational offset */
+name|u_char
+name|reserved19
 decl_stmt|;
 name|u_char
-name|reserved2
+name|medium_rot_rate_1
+decl_stmt|;
+comment|/* medium rotation rate (RPM) (MSB) */
+name|u_char
+name|medium_rot_rate_0
+decl_stmt|;
+comment|/* medium rotation rate (RPM) (LSB) */
+name|u_char
+name|reserved22
 decl_stmt|;
 name|u_char
-name|reserved3
+name|reserved23
 decl_stmt|;
 block|}
 name|rigid_geometry
