@@ -2854,7 +2854,7 @@ name|KASSERT
 argument_list|(
 operator|(
 name|curlen
-operator|==
+operator|!=
 literal|0
 operator|)
 argument_list|,
