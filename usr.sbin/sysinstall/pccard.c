@@ -236,6 +236,12 @@ modifier|*
 name|scard_irq
 decl_stmt|;
 name|char
+name|pccardd_flags
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|char
 name|pccardd_cmd
 index|[
 literal|256
@@ -391,7 +397,7 @@ literal|0
 case|:
 name|card_irq
 operator|=
-literal|" -i 10 -i 11 "
+literal|"-i 10 -i 11"
 expr_stmt|;
 break|break;
 case|case
@@ -399,7 +405,7 @@ literal|1
 case|:
 name|card_irq
 operator|=
-literal|" -i 5 -i 11 "
+literal|"-i 5 -i 11"
 expr_stmt|;
 break|break;
 case|case
@@ -407,7 +413,7 @@ literal|2
 case|:
 name|card_irq
 operator|=
-literal|" -i 11 "
+literal|"-i 11"
 expr_stmt|;
 break|break;
 block|}
@@ -518,6 +524,22 @@ argument_list|(
 name|pccardd_cmd
 argument_list|,
 literal|" -z"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|pccardd_flags
+argument_list|,
+name|card_irq
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"pccardd_flags"
+argument_list|,
+name|card_irq
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|vsystem
