@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.5 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.6 %G%"; */
 end_comment
 
 begin_define
@@ -876,6 +876,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NL_SOFFS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|NL_FLDSZ
 value|1
 end_define
@@ -924,6 +931,31 @@ define|#
 directive|define
 name|ISUNDEF
 value|1
+end_define
+
+begin_comment
+comment|/*  * Variables may reside on the stack as formals or as locals,  * or as register temporaries  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PARAMVAR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCALVAR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGVAR
+value|3
 end_define
 
 begin_escape

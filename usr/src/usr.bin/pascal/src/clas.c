@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clas.c 1.1 %G%"
+literal|"@(#)clas.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -716,6 +716,53 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*      *	is a variable a local, a formal parameter, or a register temporary?      *	all this from just the offset:      *	    positives are parameters      *	    negative evens are locals      *	    negatives odds are encoded registers  ( see tmpalloc() ).      */
+end_comment
+
+begin_macro
+name|whereis
+argument_list|(
+argument|offset
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|offset
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|offset
+operator|>=
+literal|0
+condition|)
+block|{
+return|return
+name|PARAMVAR
+return|;
+block|}
+if|if
+condition|(
+name|offset
+operator|&
+literal|1
+condition|)
+block|{
+return|return
+name|REGVAR
+return|;
+block|}
+return|return
+name|LOCALVAR
+return|;
+block|}
+end_block
 
 end_unit
 

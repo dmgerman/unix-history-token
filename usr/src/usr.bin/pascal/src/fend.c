@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.1 %G%"
+literal|"@(#)fend.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,12 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC
+name|int
+name|savlabel
+init|=
+name|getlab
+argument_list|()
+decl_stmt|;
 name|int
 name|toplabel
 init|=
@@ -885,38 +891,24 @@ name|cbn
 argument_list|)
 expr_stmt|;
 comment|/* 	     *	register save mask 	     */
-if|if
-condition|(
-name|opt
-argument_list|(
-literal|'t'
-argument_list|)
-condition|)
-block|{
 name|putprintf
 argument_list|(
-literal|"	.word	0x%x"
+literal|"	.word	"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|PREFIXFORMAT
 argument_list|,
 literal|0
 argument_list|,
-name|RUNCHECK
-operator||
-name|RSAVEMASK
+name|LABELPREFIX
+argument_list|,
+name|savlabel
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|putprintf
-argument_list|(
-literal|"	.word	0x%x"
-argument_list|,
-literal|0
-argument_list|,
-name|RSAVEMASK
-argument_list|)
-expr_stmt|;
-block|}
 name|putjbr
 argument_list|(
 name|botlabel
@@ -2908,7 +2900,35 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 *	let the second pass allocate locals 		 */
+comment|/* 		 *	let the second pass allocate locals 		 * 	and registers 		 */
+name|putprintf
+argument_list|(
+literal|"	.set	"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+name|PREFIXFORMAT
+argument_list|,
+literal|1
+argument_list|,
+name|LABELPREFIX
+argument_list|,
+name|savlabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|", 0x%x"
+argument_list|,
+literal|0
+argument_list|,
+name|savmask
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|putlab
 argument_list|(
 name|botlabel
