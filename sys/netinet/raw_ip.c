@@ -769,7 +769,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|IPSSEC
+name|IPSEC
 comment|/* check AH/ESP integrity. */
 if|if
 condition|(
