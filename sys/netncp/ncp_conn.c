@@ -411,6 +411,10 @@ name|error
 decl_stmt|;
 if|if
 condition|(
+name|cred
+operator|==
+name|NOCRED
+operator|||
 name|ncp_suser
 argument_list|(
 name|cred
