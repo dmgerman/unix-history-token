@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gename.c	5.1 (Berkeley) %G%"
+literal|"@(#)gename.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_define
@@ -204,6 +210,9 @@ name|ulockf
 argument_list|(
 name|SEQLOCK
 argument_list|,
+operator|(
+name|time_t
+operator|)
 name|SLOCKTIME
 argument_list|)
 condition|)
@@ -220,11 +229,11 @@ name|i
 operator|<
 name|SLOCKTRIES
 argument_list|,
-literal|"CAN NOT GET %s"
+literal|"CAN NOT GET"
 argument_list|,
-literal|""
+literal|"SEQLOCK"
 argument_list|,
-name|SEQLOCK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -430,7 +439,7 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
 literal|0
 argument_list|)
