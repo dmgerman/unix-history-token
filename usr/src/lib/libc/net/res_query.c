@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_query.c	5.3 (Berkeley) %G%"
+literal|"@(#)res_query.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -799,10 +799,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|h_errno
-operator|=
-literal|0
-expr_stmt|;
 block|}
 comment|/* 	 * If the search/default failed, try the name as fully-qualified, 	 * but only if it contained at least one dot (even trailing). 	 */
 if|if
