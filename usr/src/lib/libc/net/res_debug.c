@@ -1917,15 +1917,6 @@ literal|"IN"
 operator|)
 return|;
 case|case
-name|C_CS
-case|:
-comment|/* csnet class */
-return|return
-operator|(
-literal|"CS"
-operator|)
-return|;
-case|case
 name|C_ANY
 case|:
 comment|/* matches any class */
