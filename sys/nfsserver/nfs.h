@@ -706,12 +706,20 @@ name|SLP_VALID
 value|0x01
 end_define
 
+begin_comment
+comment|/* Socket valid for use (XXX) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SLP_DOREC
 value|0x02
 end_define
+
+begin_comment
+comment|/* Socket ready for processing */
+end_comment
 
 begin_define
 define|#
@@ -720,12 +728,20 @@ name|SLP_NEEDQ
 value|0x04
 end_define
 
+begin_comment
+comment|/* Socket has request queued */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SLP_DISCONN
 value|0x08
 end_define
+
+begin_comment
+comment|/* Error received from stream socket */
+end_comment
 
 begin_define
 define|#
@@ -734,12 +750,20 @@ name|SLP_GETSTREAM
 value|0x10
 end_define
 
+begin_comment
+comment|/* nfsrv_getstream in prog on sock */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SLP_LASTFRAG
 value|0x20
 end_define
+
+begin_comment
+comment|/* Socket received end-of-record */
+end_comment
 
 begin_define
 define|#
