@@ -24,6 +24,10 @@ literal|"@(#)ip_fil.c	2.41 6/5/96 (C) 1993-1995 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*static const char rcsid[] = "@(#)$Id: ip_fil.c,v 2.4.2.16 2000/01/16 10:12:42 darrenr Exp $";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -31,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 2.4.2.16 2000/01/16 10:12:42 darrenr Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
