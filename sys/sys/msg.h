@@ -123,7 +123,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure describing a message.  The SVID doesn't suggest any  * particular name for this structure.  There is a reference in the  * msgop man page that reads "The structure mymsg is an example of what  * this user defined buffer might look like, and includes the following  * members:".  This sentence is followed by two lines equivalent  * to the mtype and mtext field declarations below.  It isn't clear  * if "mymsg" refers to the naem of the structure type or the name of an  * instance of the structure...  */
+comment|/*  * Structure describing a message.  The SVID doesn't suggest any  * particular name for this structure.  There is a reference in the  * msgop man page that reads "The structure mymsg is an example of what  * this user defined buffer might look like, and includes the following  * members:".  This sentence is followed by two lines equivalent  * to the mtype and mtext field declarations below.  It isn't clear  * if "mymsg" refers to the name of the structure type or the name of an  * instance of the structure...  */
 end_comment
 
 begin_struct
