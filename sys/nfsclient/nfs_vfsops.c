@@ -2298,6 +2298,11 @@ name|struct
 name|mount
 modifier|*
 name|mp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -2333,14 +2338,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-init|=
-name|curthread
-decl_stmt|;
-comment|/* XXX */
 name|int
 name|error
 decl_stmt|,
@@ -4325,6 +4322,8 @@ block|{
 name|nfs_mountroot
 argument_list|(
 name|mp
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 return|return
