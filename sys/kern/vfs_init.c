@@ -906,11 +906,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_PRELITE2
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_COMPAT_PRELITE2
+end_ifndef
 
 begin_define
 define|#
@@ -992,8 +992,11 @@ name|ovfs
 operator|.
 name|vfc_vfsops
 operator|=
-name|NULL
+name|vfsp
+operator|->
+name|vfc_vfsops
 expr_stmt|;
+comment|/* XXX used as flag */
 name|strcpy
 argument_list|(
 name|ovfs
@@ -1088,7 +1091,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_PRELITE2 */
+comment|/* !NO_COMPAT_PRELITE2 */
 end_comment
 
 begin_comment
