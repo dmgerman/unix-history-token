@@ -176,6 +176,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|acpi_no_reset_video
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|void
@@ -752,6 +759,15 @@ argument_list|,
 name|u_int32_t
 argument_list|,
 name|r_cr4
+argument_list|)
+expr_stmt|;
+name|WAKECODE_FIXUP
+argument_list|(
+name|no_reset_video
+argument_list|,
+name|u_int32_t
+argument_list|,
+name|acpi_no_reset_video
 argument_list|)
 expr_stmt|;
 name|WAKECODE_FIXUP
