@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	5.3 (Berkeley) %G%"
+literal|"@(#)conf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -820,6 +820,12 @@ name|getuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|!=
+name|NULL
+condition|)
 name|myname
 operator|=
 name|pw
