@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.26	82/10/22	*/
+comment|/*	if_ec.c	4.27	82/10/23	*/
 end_comment
 
 begin_include
@@ -2474,6 +2474,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_COPYALL
 argument_list|)
 expr_stmt|;

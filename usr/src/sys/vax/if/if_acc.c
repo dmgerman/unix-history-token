@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.27	82/10/23	*/
+comment|/*	if_acc.c	4.28	82/10/23	*/
 end_comment
 
 begin_include
@@ -468,7 +468,7 @@ expr|struct
 name|ifimpcb
 operator|*
 operator|)
-name|impattach
+name|impattacch
 argument_list|(
 name|ui
 argument_list|,
@@ -519,8 +519,8 @@ name|accstart
 expr_stmt|;
 name|sc
 operator|->
-name|acc_if
-operator|->
+name|acc_ifuba
+operator|.
 name|ifu_flags
 operator|=
 name|UBA_CANTWAIT
