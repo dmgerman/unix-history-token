@@ -1964,16 +1964,18 @@ block|}
 comment|/* not currently stopped */
 if|if
 condition|(
+operator|!
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+operator|||
 operator|(
 name|p
 operator|->
 name|p_flag
 operator|&
-operator|(
-name|P_TRACED
-operator||
 name|P_WAITED
-operator|)
 operator|)
 operator|==
 literal|0
