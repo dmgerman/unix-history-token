@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_comment
@@ -20,12 +20,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD__
-operator|>
-literal|1
-operator|)
 end_if
 
 begin_ifdef
@@ -34,11 +28,46 @@ directive|ifdef
 name|IPFILTER_LKM
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_cc_version
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<osreldate.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_cc_version
+operator|<
+literal|430000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -51,11 +80,46 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_cc_version
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/osreldate.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_cc_version
+operator|<
+literal|430000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -281,16 +345,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD_version
-operator|>=
-literal|199511
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -324,6 +378,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip_var.h>
 end_include
 
@@ -339,31 +399,11 @@ directive|include
 file|<netinet/tcpip.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|(
-name|__FreeBSD__
-operator|>
-literal|1
-operator|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/sysent.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2475,13 +2515,14 @@ begin_comment
 comment|/* IPFILTER_LKM */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|ipl_devsw_installed
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

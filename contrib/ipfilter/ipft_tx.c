@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -248,7 +248,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_tx.c,v 2.3.2.1 2001/01/10 06:19:53 darrenr Exp $"
+literal|"@(#)$Id: ipft_tx.c,v 2.3.2.4 2001/06/26 10:43:18 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1360,9 +1360,11 @@ index|[
 name|i
 index|]
 operator|&&
+operator|(
 name|i
 operator|<
 literal|19
+operator|)
 condition|;
 control|)
 name|cps
@@ -1378,19 +1380,19 @@ argument_list|,
 literal|" \b\t\r\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|<
-literal|2
-condition|)
-return|return
-literal|1
-return|;
 name|cpp
 operator|=
 name|cps
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|cpp
+condition|)
+return|return
+literal|1
+return|;
 name|c
 operator|=
 operator|*
@@ -1458,6 +1460,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|*
+name|cpp
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+operator|!
 name|strcasecmp
 argument_list|(
 operator|*
@@ -1489,6 +1500,15 @@ name|cpp
 operator|++
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|cpp
+condition|)
+return|return
+literal|1
+return|;
 block|}
 name|c
 operator|=

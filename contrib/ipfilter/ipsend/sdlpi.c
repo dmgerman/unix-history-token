@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (C)opyright 1992-1998 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * (C)opyright 1992-1998 Darren Reed. (from tcplog)  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -198,7 +198,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sdlpi.c,v 2.1 1999/08/04 17:31:13 darrenr Exp $"
+literal|"@(#)$Id: sdlpi.c,v 2.1.4.2 2001/06/26 10:43:22 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -267,13 +267,31 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|devname
 argument_list|,
-literal|"/dev/%s"
+literal|"/dev/"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncat
+argument_list|(
+name|devname
 argument_list|,
 name|device
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|devname
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|devname
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|s

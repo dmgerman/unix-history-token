@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  * (C)opyright 1997 by Marc Boucher.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original authors and the contributors.  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  * (C)opyright 1997 by Marc Boucher.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_comment

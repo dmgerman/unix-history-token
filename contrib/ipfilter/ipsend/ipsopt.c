@@ -1,44 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1995-1998 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)ipsopt.c	1.2 1/11/96 (C)1995 Darren Reed"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$Id: ipsopt.c,v 2.1 1999/08/04 17:31:07 darrenr Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -129,47 +92,37 @@ directive|include
 file|"ipsend.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)ipsopt.c	1.2 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|x
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: ipsopt.c,v 2.1.4.2 2001/07/15 22:00:14 darrenr Exp $"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
