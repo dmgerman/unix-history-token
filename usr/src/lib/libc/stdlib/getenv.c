@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getenv.c	5.8 (Berkeley) %G%"
+literal|"@(#)getenv.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +146,8 @@ name|len
 operator|=
 literal|0
 init|;
+name|C
+operator|&&
 operator|*
 name|C
 operator|&&
@@ -167,6 +169,8 @@ name|P
 operator|=
 name|environ
 init|;
+name|P
+operator|&&
 operator|*
 name|P
 condition|;
