@@ -1290,11 +1290,6 @@ literal|"hints.c"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Don't forget to do a ``make depend''\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
