@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.15 1998/08/14 06:36:41 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.16 1998/10/26 05:50:43 grog Exp grog $  */
 end_comment
 
 begin_comment
@@ -27,7 +27,7 @@ file|"vinumstate.h"
 end_include
 
 begin_comment
-comment|/* Some configuration maxima.  They're an enum because  * we can't define global constants.  Sorry about that.  *  * These aren't as bad as they look: most of them  * are soft limits.  Only the MAXCONFIG parameter is set in stone  */
+comment|/* Some configuration maxima.  They're an enum because  * we can't define global constants.  Sorry about that.  *  * These aren't as bad as they look: most of them are soft limits.  */
 end_comment
 
 begin_enum
@@ -121,6 +121,41 @@ name|MAJORDEV_SHIFT
 init|=
 literal|8
 block|,
+name|MAXPLEX
+init|=
+literal|8
+block|,
+comment|/* maximum number of plexes in a volume */
+name|MAXSD
+init|=
+literal|256
+block|,
+comment|/* maximum number of subdisks in a plex */
+name|MAXDRIVENAME
+init|=
+literal|32
+block|,
+comment|/* maximum length of a device name */
+name|MAXSDNAME
+init|=
+literal|64
+block|,
+comment|/* maximum length of a subdisk name */
+name|MAXPLEXNAME
+init|=
+literal|64
+block|,
+comment|/* maximum length of a plex name */
+name|MAXVOLNAME
+init|=
+literal|64
+block|,
+comment|/* maximum length of a volume name */
+name|MAXNAME
+init|=
+literal|64
+block|,
+comment|/* maximum length of any name */
 comment|/* Create a block device number */
 define|#
 directive|define
@@ -250,6 +285,11 @@ init|=
 literal|32768
 block|,
 comment|/* size of block to transfer in one op */
+name|VINUMHOSTNAMELEN
+init|=
+literal|32
+block|,
+comment|/* host name field in label */
 block|}
 enum|;
 end_enum
@@ -334,72 +374,6 @@ directive|define
 name|VINUM_SUPERDEV_NAME
 value|VINUM_DIR"/control"
 end_define
-
-begin_define
-define|#
-directive|define
-name|MAXDRIVENAME
-value|32
-end_define
-
-begin_comment
-comment|/* maximum length of a device name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXSDNAME
-value|64
-end_define
-
-begin_comment
-comment|/* maximum length of a subdisk name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXPLEXNAME
-value|64
-end_define
-
-begin_comment
-comment|/* maximum length of a plex name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXVOLNAME
-value|64
-end_define
-
-begin_comment
-comment|/* maximum length of a volume name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXNAME
-value|64
-end_define
-
-begin_comment
-comment|/* maximum length of any name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXVOLPLEX
-value|8
-end_define
-
-begin_comment
-comment|/* maximum number of plexes in a volume */
-end_comment
 
 begin_comment
 comment|/* Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word. */
@@ -672,13 +646,6 @@ end_enum
 begin_comment
 comment|/* hostname is 256 bytes long, but we don't need to shlep  * multiple copies in vinum.  We use the host name just  * to identify this system, and 32 bytes should be ample  * for that purpose */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VINUMHOSTNAMELEN
-value|32
-end_define
 
 begin_struct
 struct|struct
@@ -1168,17 +1135,6 @@ end_struct
 
 begin_comment
 comment|/*** Volume definitions ***/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXPLEX
-value|8
-end_define
-
-begin_comment
-comment|/* maximum number of plexes */
 end_comment
 
 begin_struct
