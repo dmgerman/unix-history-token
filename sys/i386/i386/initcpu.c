@@ -1141,6 +1141,7 @@ comment|/*  * There are i486 based upgrade products for i386 machines.  * In thi
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|init_i486_on_386
 parameter_list|(

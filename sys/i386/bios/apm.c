@@ -2483,6 +2483,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|apm_resume
 parameter_list|(

@@ -11062,6 +11062,7 @@ name|APIC_DELMODE_FIXED
 argument_list|)
 expr_stmt|;
 block|}
+specifier|static
 name|void
 name|release_aps
 parameter_list|(
