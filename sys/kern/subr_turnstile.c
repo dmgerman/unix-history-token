@@ -2660,6 +2660,9 @@ operator|&
 name|td_contested_lock
 argument_list|)
 expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -2851,6 +2854,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
