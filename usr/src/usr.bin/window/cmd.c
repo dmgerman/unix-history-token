@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.24 84/04/05"
+literal|"@(#)cmd.c	3.25 84/04/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,20 +329,6 @@ condition|)
 name|c_close
 argument_list|(
 name|w
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'C'
-case|:
-name|c_close
-argument_list|(
-operator|(
-expr|struct
-name|ww
-operator|*
-operator|)
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;

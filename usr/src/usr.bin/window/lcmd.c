@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lcmd.c	3.15 84/04/05"
+literal|"@(#)lcmd.c	3.16 84/04/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,6 @@ include|#
 directive|include
 file|"lcmd.h"
 end_include
-
-begin_function_decl
-name|int
-name|l_buffer
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
@@ -90,6 +83,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_label
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_nline
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -146,22 +146,6 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|lcmd_arg
-name|arg_buffer
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|lcmd_arg
-name|arg_close
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|lcmd_arg
 name|arg_cursormodes
 index|[]
 decl_stmt|;
@@ -203,6 +187,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_label
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_nline
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -257,14 +249,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|lcmd_arg
-name|arg_write
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
 name|lcmd_tab
 name|lcmd_tab
 index|[]
@@ -282,9 +266,9 @@ literal|"buffer"
 block|,
 literal|2
 block|,
-name|l_buffer
+name|l_nline
 block|,
-name|arg_buffer
+name|arg_nline
 block|,
 literal|"close"
 block|,
@@ -292,7 +276,7 @@ literal|2
 block|,
 name|l_close
 block|,
-name|arg_close
+literal|0
 block|,
 literal|"cursormodes"
 block|,
@@ -341,6 +325,14 @@ block|,
 name|l_label
 block|,
 name|arg_label
+block|,
+literal|"nlines"
+block|,
+literal|1
+block|,
+name|l_nline
+block|,
+name|arg_nline
 block|,
 literal|"select"
 block|,
@@ -396,7 +388,7 @@ literal|2
 block|,
 name|l_write
 block|,
-name|arg_write
+literal|0
 block|,
 literal|0
 block|}
