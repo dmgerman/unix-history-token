@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fs.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fs.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|MAXMNTLEN
-value|512
+value|384
 end_define
 
 begin_define
@@ -306,17 +306,32 @@ name|long
 name|fs_nspf
 decl_stmt|;
 comment|/* value of NSPF */
+comment|/* yet another configuration parameter */
 name|long
 name|fs_optim
 decl_stmt|;
 comment|/* optimization preference, see below */
+comment|/* these fields are derived from the hardware */
 name|long
-name|fs_sparecon
-index|[
-literal|5
-index|]
+name|fs_npsect
 decl_stmt|;
-comment|/* reserved for future constants */
+comment|/* # sectors/track including spares */
+name|long
+name|fs_interleave
+decl_stmt|;
+comment|/* hardware sector interleave */
+name|long
+name|fs_trackskew
+decl_stmt|;
+comment|/* sector 0 skew, per track */
+name|long
+name|fs_headswitch
+decl_stmt|;
+comment|/* head switch time, usec */
+name|long
+name|fs_trkseek
+decl_stmt|;
+comment|/* track-to-track seek, usec */
 comment|/* sizes determined by number of cylinder groups and their sizes */
 name|daddr_t
 name|fs_csaddr
@@ -330,7 +345,7 @@ name|long
 name|fs_cgsize
 decl_stmt|;
 comment|/* cylinder group size */
-comment|/* these fields should be derived from the hardware */
+comment|/* these fields are derived from the hardware */
 name|long
 name|fs_ntrak
 decl_stmt|;
@@ -391,6 +406,13 @@ name|MAXMNTLEN
 index|]
 decl_stmt|;
 comment|/* name mounted on */
+name|long
+name|fs_sparecon
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* reserved for future constants */
 comment|/* these fields retain the current block allocation info */
 name|long
 name|fs_cgrotor
@@ -849,7 +871,7 @@ parameter_list|,
 name|bno
 parameter_list|)
 define|\
-value|((bno) * NSPF(fs) % (fs)->fs_spc % (fs)->fs_nsect * NRPOS / (fs)->fs_nsect)
+value|(((bno) * NSPF(fs) % (fs)->fs_spc / (fs)->fs_nsect * (fs)->fs_trackskew + \      (bno) * NSPF(fs) % (fs)->fs_spc % (fs)->fs_nsect * (fs)->fs_interleave) % \      (fs)->fs_nsect * NRPOS / (fs)->fs_npsect)
 end_define
 
 begin_comment
