@@ -1865,6 +1865,19 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+name|edit
+operator|=
+name|el_init
+argument_list|(
+literal|"pppctl"
+argument_list|,
+name|stdin
+argument_list|,
+name|stdout
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
 name|history
@@ -1876,8 +1889,6 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|edit
 operator|=
 name|el_init
@@ -1889,6 +1900,8 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|el_source
 argument_list|(
 name|edit
