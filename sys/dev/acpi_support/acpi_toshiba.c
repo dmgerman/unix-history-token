@@ -2577,7 +2577,10 @@ literal|0
 operator|&&
 name|acpi_MatchHid
 argument_list|(
+name|device_get_handle
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 literal|"TOS6201"
 argument_list|)
