@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.3 1998/07/05 12:08:59 dfr Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.4 1998/07/12 16:32:02 dfr Exp $  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sio.h"
 end_include
 
 begin_decl_stmt
@@ -83,6 +89,12 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int32_t
 name|ipending
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32_t
+name|idelayed
 decl_stmt|;
 end_decl_stmt
 
@@ -196,7 +208,16 @@ name|void
 name|swi_tty
 parameter_list|()
 block|{
-comment|/* XXX no users yet */
+if|#
+directive|if
+name|NSIO
+operator|>
+literal|0
+name|siopoll
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -321,67 +342,170 @@ end_function
 begin_define
 define|#
 directive|define
-name|GENSETSOFT
+name|GENSET
 parameter_list|(
 name|name
+parameter_list|,
+name|ptr
 parameter_list|,
 name|bit
 parameter_list|)
 define|\ 						\
-value|void name(void)					\ {						\     atomic_setbit(&ipending, (1<< bit));	\ }
+value|void name(void)					\ {						\     atomic_setbit(ptr, bit);			\ }
 end_define
 
 begin_macro
-name|GENSETSOFT
+name|GENSET
+argument_list|(
+argument|setdelayed
+argument_list|,
+argument|&ipending
+argument_list|,
+argument|atomic_readandclear(&idelayed)
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
 argument_list|(
 argument|setsofttty
 argument_list|,
-argument|SWI_TTY
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_TTY
 argument_list|)
 end_macro
 
 begin_macro
-name|GENSETSOFT
+name|GENSET
 argument_list|(
 argument|setsoftnet
 argument_list|,
-argument|SWI_NET
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_NET
 argument_list|)
 end_macro
 
 begin_macro
-name|GENSETSOFT
+name|GENSET
 argument_list|(
 argument|setsoftcamnet
 argument_list|,
-argument|SWI_CAMNET
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_CAMNET
 argument_list|)
 end_macro
 
 begin_macro
-name|GENSETSOFT
+name|GENSET
 argument_list|(
 argument|setsoftcambio
 argument_list|,
-argument|SWI_CAMBIO
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_CAMBIO
 argument_list|)
 end_macro
 
 begin_macro
-name|GENSETSOFT
+name|GENSET
 argument_list|(
 argument|setsoftvm
 argument_list|,
-argument|SWI_VM
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_VM
 argument_list|)
 end_macro
 
 begin_macro
-name|GENSETSOFT
+name|GENSET
 argument_list|(
 argument|setsoftclock
 argument_list|,
-argument|SWI_CLOCK
+argument|&ipending
+argument_list|,
+literal|1
+argument|<< SWI_CLOCK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
+argument|schedsofttty
+argument_list|,
+argument|&idelayed
+argument_list|,
+literal|1
+argument|<< SWI_TTY
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
+argument|schedsoftnet
+argument_list|,
+argument|&idelayed
+argument_list|,
+literal|1
+argument|<< SWI_NET
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
+argument|schedsoftcamnet
+argument_list|,
+argument|&idelayed
+argument_list|,
+literal|1
+argument|<< SWI_CAMNET
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
+argument|schedsoftcambio
+argument_list|,
+argument|&idelayed
+argument_list|,
+literal|1
+argument|<< SWI_CAMBIO
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
+argument|schedsoftvm
+argument_list|,
+argument|&idelayed
+argument_list|,
+literal|1
+argument|<< SWI_VM
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSET
+argument_list|(
+argument|schedsoftclock
+argument_list|,
+argument|&idelayed
+argument_list|,
+literal|1
+argument|<< SWI_CLOCK
 argument_list|)
 end_macro
 
