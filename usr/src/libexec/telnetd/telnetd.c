@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.15 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,13 +47,13 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * Stripped-down telnet server.  */
+comment|/*  * Telnet server.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -951,7 +951,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"read: %m\n"
 argument_list|)
@@ -1092,7 +1092,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"write sbuf: %m\n"
 argument_list|)
@@ -1195,7 +1195,7 @@ condition|)
 block|{
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 literal|"write sbbuf: %m\n"
 argument_list|)
@@ -2190,7 +2190,7 @@ operator|)
 operator|&&
 operator|(
 name|errno
-operator|=
+operator|==
 name|EINTR
 operator|)
 condition|)
@@ -2262,7 +2262,7 @@ decl_stmt|;
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|net
@@ -2660,7 +2660,7 @@ name|defined
 argument_list|(
 name|SO_OOBINLINE
 argument_list|)
-comment|/* 			 * In 4.2 (and some early 4.3) systems, the 			 * OOB indication and data handling in the kernel 			 * is such that if two separate TCP Urgent requests 			 * come in, one byte of TCP data will be overlaid. 			 * This is fatal for Telnet, but we try to live 			 * with it. 			 * 			 * In addition, in 4.2 (and...), a special protocol 			 * is needed to pick up the TCP Urgent data in 			 * the correct sequence. 			 * 			 * What we do is:  if we think we are in urgent 			 * mode, we look to see if we are "at the mark". 			 * If we are, we do an OOB receive.  If we run 			 * this twice, we will do the OOB receive twice, 			 * but the second will fail, since the second 			 * time we were "at the mark", but there wasn't 			 * any data there (the kernel doesn't reset 			 * "at the mark" until we do a normal read). 			 * Once we've read the OOB data, we go ahead 			 * and do normal reads. 			 * 			 * There is also another problem, which is that 			 * since the OOB byte we read doesn't put us 			 * out of OOB state, and since that byte is most 			 * likely the TELNET DM (data mark), we would 			 * stay in the TELNET SYNCH (SYNCHing) state. 			 * So, clocks to the rescue.  If we've "just" 			 * received a DM, then we test for the 			 * presence of OOB data when the receive OOB 			 * fails (and AFTER we did the normal mode read 			 * to clear "at the mark"). 			 */
+comment|/* 			 * In 4.2 (and 4.3 beta) systems, the 			 * OOB indication and data handling in the kernel 			 * is such that if two separate TCP Urgent requests 			 * come in, one byte of TCP data will be overlaid. 			 * This is fatal for Telnet, but we try to live 			 * with it. 			 * 			 * In addition, in 4.2 (and...), a special protocol 			 * is needed to pick up the TCP Urgent data in 			 * the correct sequence. 			 * 			 * What we do is:  if we think we are in urgent 			 * mode, we look to see if we are "at the mark". 			 * If we are, we do an OOB receive.  If we run 			 * this twice, we will do the OOB receive twice, 			 * but the second will fail, since the second 			 * time we were "at the mark", but there wasn't 			 * any data there (the kernel doesn't reset 			 * "at the mark" until we do a normal read). 			 * Once we've read the OOB data, we go ahead 			 * and do normal reads. 			 * 			 * There is also another problem, which is that 			 * since the OOB byte we read doesn't put us 			 * out of OOB state, and since that byte is most 			 * likely the TELNET DM (data mark), we would 			 * stay in the TELNET SYNCH (SYNCHing) state. 			 * So, clocks to the rescue.  If we've "just" 			 * received a DM, then we test for the 			 * presence of OOB data when the receive OOB 			 * fails (and AFTER we did the normal mode read 			 * to clear "at the mark"). 			 */
 if|if
 condition|(
 name|SYNCHing
@@ -3723,6 +3723,15 @@ name|TS_DATA
 expr_stmt|;
 continue|continue;
 default|default:
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"telnetd: panic state=%d\n"
+argument_list|,
+name|state
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"telnetd: panic state=%d\n"
