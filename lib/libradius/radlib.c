@@ -280,13 +280,13 @@ name|pass_len
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|h
 operator|->
 name|pass_pos
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 end_function
 
