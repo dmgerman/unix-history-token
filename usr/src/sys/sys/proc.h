@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.34 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -197,7 +197,9 @@ decl_stmt|;
 name|char
 name|p_stat
 decl_stmt|;
-comment|/*	char	p_space; */
+name|char
+name|p_pad1
+decl_stmt|;
 name|pid_t
 name|p_pid
 decl_stmt|;
@@ -243,6 +245,14 @@ modifier|*
 name|p_cptr
 decl_stmt|;
 comment|/* pointer to youngest living child */
+name|pid_t
+name|p_oppid
+decl_stmt|;
+comment|/* save parent pid during ptrace XXX */
+name|short
+name|p_dupfd
+decl_stmt|;
+comment|/* sideways return value from fdopen XXX */
 comment|/* scheduling */
 name|u_int
 name|p_cpu
@@ -260,6 +270,11 @@ name|caddr_t
 name|p_wchan
 decl_stmt|;
 comment|/* event process is awaiting */
+name|char
+modifier|*
+name|p_wmesg
+decl_stmt|;
+comment|/* reason for sleep */
 name|u_int
 name|p_time
 decl_stmt|;
@@ -275,14 +290,21 @@ decl_stmt|;
 comment|/* alarm timer */
 name|struct
 name|timeval
-name|p_utime
+name|p_rtime
 decl_stmt|;
-comment|/* user time */
-name|struct
-name|timeval
-name|p_stime
+comment|/* real time */
+name|u_quad_t
+name|p_uticks
 decl_stmt|;
-comment|/* system time */
+comment|/* statclock hits in user mode */
+name|u_quad_t
+name|p_sticks
+decl_stmt|;
+comment|/* statclock hits in system mode */
+name|u_quad_t
+name|p_iticks
+decl_stmt|;
+comment|/* statclock hits processing intr */
 name|int
 name|p_traceflag
 decl_stmt|;
@@ -297,6 +319,23 @@ name|int
 name|p_sig
 decl_stmt|;
 comment|/* signals pending to this process */
+name|struct
+name|timeval
+name|p_utime
+decl_stmt|;
+comment|/* user time */
+name|struct
+name|timeval
+name|p_stime
+decl_stmt|;
+comment|/* system time */
+name|long
+name|p_spare
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* tmp spares to avoid shifting eproc */
 comment|/* end area that is zeroed on creation */
 define|#
 directive|define
@@ -331,13 +370,6 @@ name|char
 name|p_nice
 decl_stmt|;
 comment|/* nice for cpu usage */
-comment|/*	char	p_space1; */
-name|struct
-name|pgrp
-modifier|*
-name|p_pgrp
-decl_stmt|;
-comment|/* pointer to process group */
 name|char
 name|p_comm
 index|[
@@ -346,16 +378,17 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|struct
+name|pgrp
+modifier|*
+name|p_pgrp
+decl_stmt|;
+comment|/* pointer to process group */
 comment|/* end area that is copied on creation */
 define|#
 directive|define
 name|p_endcopy
-value|p_wmesg
-name|char
-modifier|*
-name|p_wmesg
-decl_stmt|;
-comment|/* reason for sleep */
+value|p_thread
 name|int
 name|p_thread
 decl_stmt|;
@@ -366,10 +399,6 @@ modifier|*
 name|p_addr
 decl_stmt|;
 comment|/* kernel virtual addr of u-area (PROC ONLY) */
-name|swblk_t
-name|p_swaddr
-decl_stmt|;
-comment|/* disk address of u area when swapped */
 name|struct
 name|mdproc
 name|p_md
@@ -379,28 +408,16 @@ name|u_short
 name|p_xstat
 decl_stmt|;
 comment|/* Exit status for wait; also stop signal */
-name|short
-name|p_dupfd
-decl_stmt|;
-comment|/* sideways return value from fdopen XXX */
 name|u_short
 name|p_acflag
 decl_stmt|;
 comment|/* accounting flags */
-comment|/*	short	p_space2; */
 name|struct
 name|rusage
 modifier|*
 name|p_ru
 decl_stmt|;
 comment|/* exit information XXX */
-name|long
-name|p_spare
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* tmp spares to avoid shifting eproc */
 block|}
 struct|;
 end_struct
@@ -707,12 +724,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SUGID
+value|0x0020000
+end_define
+
+begin_comment
+comment|/* had set id privileges since last exec */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SADVLCK
 value|0x0040000
 end_define
 
 begin_comment
 comment|/* process may hold a POSIX advisory lock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPROFIL
+value|0x0080000
+end_define
+
+begin_comment
+comment|/* has started profiling */
 end_comment
 
 begin_comment
@@ -767,21 +806,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not currently in use (never set) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPAGE
-value|0x0020000
-end_define
-
-begin_comment
-comment|/* process in page wait state */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -916,15 +940,24 @@ begin_decl_stmt
 name|struct
 name|proc
 modifier|*
-name|zombproc
-decl_stmt|,
-modifier|*
 name|allproc
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* lists of procs in various states */
+comment|/* list of active procs */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|zombproc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of zombie procs */
 end_comment
 
 begin_decl_stmt
