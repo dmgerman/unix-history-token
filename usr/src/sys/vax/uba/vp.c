@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.24	83/03/10	*/
+comment|/*	vp.c	4.25	83/03/31	*/
 end_comment
 
 begin_include
@@ -1405,7 +1405,7 @@ argument|dev
 argument_list|,
 argument|cmd
 argument_list|,
-argument|addr
+argument|data
 argument_list|,
 argument|flag
 argument_list|)
@@ -1426,7 +1426,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|caddr_t
-name|addr
+name|data
 decl_stmt|;
 end_decl_stmt
 
@@ -1486,41 +1486,21 @@ block|{
 case|case
 name|VGETSTATE
 case|:
+operator|*
 operator|(
-name|void
+name|int
+operator|*
 operator|)
-name|suword
-argument_list|(
-name|addr
-argument_list|,
+name|data
+operator|=
 name|sc
 operator|->
 name|sc_state
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|VSETSTATE
 case|:
-name|m
-operator|=
-name|fuword
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
 name|sc
 operator|->
 name|sc_state
@@ -1535,7 +1515,14 @@ name|VPSC_MODE
 operator|)
 operator||
 operator|(
-name|m
+operator|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|)
 operator|&
 operator|(
 name|VPSC_MODE
