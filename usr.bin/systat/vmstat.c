@@ -570,10 +570,10 @@ block|}
 block|,
 define|#
 directive|define
-name|X_TOTAL
+name|X_BUFFERSPACE
 value|2
 block|{
-literal|"_total"
+literal|"_bufspace"
 block|}
 block|,
 define|#
@@ -654,14 +654,6 @@ name|X_EINTRCNT
 value|12
 block|{
 literal|"_eintrcnt"
-block|}
-block|,
-define|#
-directive|define
-name|X_BUFFERSPACE
-value|13
-block|{
-literal|"_bufspace"
 block|}
 block|,
 block|{
