@@ -3568,6 +3568,12 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+condition|)
 name|insmntque
 argument_list|(
 name|vp
