@@ -360,16 +360,6 @@ name|ISO88025_DEFAULT_MTU
 value|1500
 end_define
 
-begin_define
-define|#
-directive|define
-name|senderr
-parameter_list|(
-name|e
-parameter_list|)
-value|{ error = (e); goto bad;}
-end_define
-
 begin_function_decl
 name|void
 name|iso88025_ifattach

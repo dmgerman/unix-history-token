@@ -233,6 +233,16 @@ parameter_list|)
 value|((struct arpcom *)IFP)
 end_define
 
+begin_define
+define|#
+directive|define
+name|senderr
+parameter_list|(
+name|e
+parameter_list|)
+value|do { error = (e); goto bad; } while (0)
+end_define
+
 begin_function
 name|void
 name|iso88025_ifattach

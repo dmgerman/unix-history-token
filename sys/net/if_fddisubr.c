@@ -386,7 +386,7 @@ name|senderr
 parameter_list|(
 name|e
 parameter_list|)
-value|{ error = (e); goto bad; }
+value|do { error = (e); goto bad; } while (0)
 end_define
 
 begin_comment
