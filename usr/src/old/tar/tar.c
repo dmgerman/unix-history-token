@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.2 (Berkeley) %G%"
+literal|"@(#)tar.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1186,6 +1186,9 @@ name|dup
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|Bflag
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -6513,10 +6516,23 @@ operator|+=
 name|lastread
 control|)
 block|{
+name|lastread
+operator|=
+name|read
+argument_list|(
+name|fd
+argument_list|,
+name|buf
+argument_list|,
+name|size
+operator|-
+name|count
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lastread
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -6537,19 +6553,6 @@ name|lastread
 operator|)
 return|;
 block|}
-name|lastread
-operator|=
-name|read
-argument_list|(
-name|fd
-argument_list|,
-name|buf
-argument_list|,
-name|size
-operator|-
-name|count
-argument_list|)
-expr_stmt|;
 name|buf
 operator|+=
 name|lastread
