@@ -2798,10 +2798,6 @@ name|uhid_driver
 argument_list|,
 name|uhid_devclass
 argument_list|,
-name|UHID_CDEV_MAJOR
-argument_list|,
-name|NOMAJ
-argument_list|,
 name|uhid_cdevsw
 argument_list|,
 name|usbd_driver_load

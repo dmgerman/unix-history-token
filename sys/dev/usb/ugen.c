@@ -5290,10 +5290,6 @@ name|ugen_driver
 argument_list|,
 name|ugen_devclass
 argument_list|,
-name|UGEN_CDEV_MAJOR
-argument_list|,
-name|NOMAJ
-argument_list|,
 name|ugen_cdevsw
 argument_list|,
 name|usbd_driver_load

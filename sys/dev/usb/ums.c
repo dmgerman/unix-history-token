@@ -4503,10 +4503,6 @@ name|ums_driver
 argument_list|,
 name|ums_devclass
 argument_list|,
-name|UMS_CDEV_MAJOR
-argument_list|,
-name|NOMAJ
-argument_list|,
 name|ums_cdevsw
 argument_list|,
 name|usbd_driver_load

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.86 1999/06/13 16:05:00 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.87 1999/07/03 20:17:00 peter Exp $ */
 end_comment
 
 begin_comment
@@ -940,10 +940,6 @@ argument_list|,
 name|bktr_driver
 argument_list|,
 name|bktr_devclass
-argument_list|,
-name|CDEV_MAJOR
-argument_list|,
-name|NOMAJ
 argument_list|,
 name|bktr_cdevsw
 argument_list|,

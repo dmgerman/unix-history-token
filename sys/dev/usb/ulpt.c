@@ -2228,10 +2228,6 @@ name|ulpt_driver
 argument_list|,
 name|ulpt_devclass
 argument_list|,
-name|ULPT_CDEV_MAJOR
-argument_list|,
-name|NOMAJ
-argument_list|,
 name|ulpt_cdevsw
 argument_list|,
 name|usbd_driver_load
