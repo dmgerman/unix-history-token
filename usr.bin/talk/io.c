@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -97,6 +103,15 @@ directive|define
 name|A_LONG_TIME
 value|10000000
 end_define
+
+begin_decl_stmt
+specifier|volatile
+name|sig_atomic_t
+name|gotwinch
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The routine to do the actual talking  */
@@ -374,6 +389,19 @@ operator|&
 name|wait
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gotwinch
+condition|)
+block|{
+name|resize_display
+argument_list|()
+expr_stmt|;
+name|gotwinch
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|nb
