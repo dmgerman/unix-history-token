@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.21 1997/02/22 09:28:56 peter Exp $ */
+comment|/* $Id: ccd.c,v 1.22 1997/03/24 11:23:21 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2088,7 +2088,7 @@ name|ccg
 operator|->
 name|ccg_secsize
 operator|=
-name|DEV_BSIZE
+name|maxsecsize
 expr_stmt|;
 name|ccg
 operator|->
