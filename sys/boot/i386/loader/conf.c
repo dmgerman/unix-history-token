@@ -191,6 +191,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|console
+name|nullconsole
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|console
 modifier|*
@@ -203,6 +211,9 @@ name|vidconsole
 block|,
 operator|&
 name|comconsole
+block|,
+operator|&
+name|nullconsole
 block|,
 name|NULL
 block|}
