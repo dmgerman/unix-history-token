@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.22 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,11 @@ init|=
 literal|0
 decl_stmt|,
 name|connected
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|connreset
 init|=
 literal|0
 decl_stmt|;
@@ -791,6 +796,25 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* 				 * A long running process might get its TCP 				 * connection reset if the remote server was 				 * restarted.  Requery the server instead of 				 * trying a new one.  When there is only one 				 * server, this means that a query might work 				 * instead of failing.  We only allow one reset 				 * per query to prevent looping. 				 */
+if|if
+condition|(
+name|terrno
+operator|==
+name|ECONNRESET
+operator|&&
+operator|!
+name|connreset
+condition|)
+block|{
+name|connreset
+operator|=
+literal|1
+expr_stmt|;
+name|ns
+operator|--
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 name|cp
