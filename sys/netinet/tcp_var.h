@@ -449,7 +449,7 @@ name|rmx_taop
 parameter_list|(
 name|r
 parameter_list|)
-value|((struct rmxp_tao *)&(r).rmx_pspec)
+value|((struct rmxp_tao *)(r).rmx_filler)
 end_define
 
 begin_endif
@@ -1164,12 +1164,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TTCP
-end_ifdef
-
 begin_decl_stmt
 name|void
 name|tcp_mss
@@ -1185,32 +1179,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|tcp_mss
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|tcpcb
-operator|*
-operator|,
-name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
