@@ -1004,8 +1004,6 @@ operator|=
 name|sbp
 operator|+
 name|nscsibus
-operator|+
-literal|1
 expr_stmt|;
 name|bzero
 argument_list|(
