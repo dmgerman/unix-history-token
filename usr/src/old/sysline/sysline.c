@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.12 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,13 +133,6 @@ end_define
 begin_comment
 comment|/* update status once per minute */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAILDIR
-value|"/usr/spool/mail"
-end_define
 
 begin_comment
 comment|/*  * if MAXLOAD is defined, then if the load average exceeded MAXLOAD  * then the process table will not be scanned and the log in/out data  * will not be checked.   The purpose of this is to reduced the load  * on the system when it is loaded.  */
@@ -312,13 +305,6 @@ name|DOWN_THRESHOLD
 value|(11 * 60)
 end_define
 
-begin_define
-define|#
-directive|define
-name|RWHOLEADER
-value|"/usr/spool/rwho/whod."
-end_define
-
 begin_struct
 struct|struct
 name|remotehost
@@ -351,6 +337,12 @@ endif|#
 directive|endif
 endif|RWHO
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 name|struct
@@ -425,7 +417,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file descriptor for /dev/kmem */
+comment|/* file descriptor for _PATH_KMEM */
 end_comment
 
 begin_decl_stmt
@@ -1817,7 +1809,7 @@ name|kmem
 operator|=
 name|open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 literal|0
 argument_list|)
@@ -1830,7 +1822,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't open kmem.\n"
+literal|"Can't open %s\n"
+argument_list|,
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1874,7 +1868,7 @@ else|else
 block|{
 name|chdir
 argument_list|(
-name|MAILDIR
+name|_PATH_MBOX
 argument_list|)
 expr_stmt|;
 if|if
@@ -2028,27 +2022,13 @@ decl_stmt|,
 name|time
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|pdp11
 name|nlist
 argument_list|(
-literal|"/unix"
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|nlist
-argument_list|(
-literal|"/vmunix"
-argument_list|,
-name|nl
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|nl
@@ -2209,7 +2189,7 @@ name|ut
 operator|=
 name|open
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 literal|0
 argument_list|)
@@ -2222,7 +2202,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"sysline: Can't open utmp.\n"
+literal|"sysline: Can't open %s.\n"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5233,7 +5215,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/usr/src/ucb/sysline"
+name|_PATH_SYSLINE
 argument_list|)
 operator|<
 literal|0
@@ -5243,7 +5225,7 @@ name|void
 operator|)
 name|chdir
 argument_list|(
-literal|"/tmp"
+name|_PATH_TMP
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6026,7 +6008,7 @@ name|strcpy1
 argument_list|(
 name|filename
 argument_list|,
-name|RWHOLEADER
+name|_PATH_RWHO
 argument_list|)
 argument_list|,
 name|hp
@@ -6063,7 +6045,7 @@ name|strcpy1
 argument_list|(
 name|filename
 argument_list|,
-name|RWHOLEADER
+name|_PATH_RWHO
 argument_list|)
 argument_list|,
 name|NETPREFIX
