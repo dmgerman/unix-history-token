@@ -6603,9 +6603,39 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bs
+operator|>
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+condition|)
 name|printf
 argument_list|(
-literal|"%ld bytes %s in %.2g seconds (%.2g Kbytes/s)\n"
+literal|"%ld bytes %s in %.2f seconds (%.2f Meg/s)\n"
+argument_list|,
+name|bytes
+argument_list|,
+name|direction
+argument_list|,
+name|s
+argument_list|,
+name|bs
+operator|/
+operator|(
+literal|1024.
+operator|*
+literal|1024.
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%ld bytes %s in %.2f seconds (%.2f Kbytes/s)\n"
 argument_list|,
 name|bytes
 argument_list|,
