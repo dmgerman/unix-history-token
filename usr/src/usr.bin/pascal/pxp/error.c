@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)error.c	5.1 (Berkeley) %G%"
+literal|"@(#)error.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,8 +296,7 @@ operator|>=
 literal|10
 condition|;
 name|i
-operator|=
-operator|/
+operator|/=
 literal|10
 control|)
 name|putchar

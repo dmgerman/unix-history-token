@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pmon.c	5.1 (Berkeley) %G%"
+literal|"@(#)pmon.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,7 +401,7 @@ argument_list|(
 name|ERRS
 argument_list|)
 expr_stmt|;
-comment|/* 	short pm;  	zfil = open(fp, 0); 	if (zfil< 0) { 		perror(fp); 		pexit(NOSTART); 	} 	if (lseek(zfil, 02000, 0)< 0) 		goto format; 	if (read(zfil,&inf, sizeof inf)< 0) 		goto format; 	if (inf.type != 0&& inf.type != 1) 		goto format; 	if (inf.type) 		inf.bp =- inf.off; 	if (lseek(zfil, inf.bp + 02000, 0)< 0) 		goto format; 	if (read(zfil,&pxp, sizeof pxp) != sizeof pxp) 		goto format; 	if (pxp.buf == NIL) { 		Perror(fp, "No profile data in file"); 		exit(1); 	} 	if (inf.type) 		pxp.buf =- inf.off; 	if (lseek(zfil, pxp.buf + 02000, 0)< 0) 		goto format; 	if (pmread()< 0) 		goto format; 	close(zfil); 	return; format: 	Perror(fp, "Not a Pascal system core file"); 	exit(1); */
+comment|/* 	short pm;  	zfil = open(fp, 0); 	if (zfil< 0) { 		perror(fp); 		pexit(NOSTART); 	} 	if (lseek(zfil, 02000, 0)< 0) 		goto format; 	if (read(zfil,&inf, sizeof inf)< 0) 		goto format; 	if (inf.type != 0&& inf.type != 1) 		goto format; 	if (inf.type) 		inf.bp -= inf.off; 	if (lseek(zfil, inf.bp + 02000, 0)< 0) 		goto format; 	if (read(zfil,&pxp, sizeof pxp) != sizeof pxp) 		goto format; 	if (pxp.buf == NIL) { 		Perror(fp, "No profile data in file"); 		exit(1); 	} 	if (inf.type) 		pxp.buf -= inf.off; 	if (lseek(zfil, pxp.buf + 02000, 0)< 0) 		goto format; 	if (pmread()< 0) 		goto format; 	close(zfil); 	return; format: 	Perror(fp, "Not a Pascal system core file"); 	exit(1); */
 block|}
 end_block
 

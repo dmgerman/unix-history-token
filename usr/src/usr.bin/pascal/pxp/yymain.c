@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yymain.c	5.2 (Berkeley) %G%"
+literal|"@(#)yymain.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,8 +608,7 @@ expr_stmt|;
 name|header
 operator|.
 name|data_size
-operator|=
-operator|-
+operator|-=
 sizeof|sizeof
 name|header
 expr_stmt|;

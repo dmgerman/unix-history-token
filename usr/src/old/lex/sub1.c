@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sub1.c	4.2 (Berkeley) %G%"
+literal|"@(#)sub1.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3148,8 +3148,7 @@ name|c
 argument_list|)
 expr_stmt|;
 name|charc
-operator|=
-operator|+
+operator|+=
 literal|3
 expr_stmt|;
 block|}

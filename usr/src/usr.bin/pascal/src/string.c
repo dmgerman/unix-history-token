@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)string.c	5.3 (Berkeley) %G%"
+literal|"@(#)string.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,8 +344,7 @@ operator|=
 name|strngp
 expr_stmt|;
 name|strmax
-operator|=
-operator|+
+operator|+=
 name|STRINC
 expr_stmt|;
 endif|#
@@ -570,8 +569,7 @@ operator|)
 operator|)
 return|;
 name|i
-operator|=
-operator|+
+operator|+=
 name|STRINC
 expr_stmt|;
 block|}
