@@ -486,6 +486,13 @@ name|sltioctl
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|l_start_t
+name|sltstart
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -544,11 +551,11 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|slstart
 parameter_list|(
 name|struct
-name|tty
+name|ifnet
 modifier|*
 parameter_list|)
 function_decl|;
@@ -594,7 +601,7 @@ block|,
 operator|.
 name|l_start
 operator|=
-name|slstart
+name|sltstart
 block|,
 operator|.
 name|l_modem
@@ -1134,6 +1141,14 @@ operator|.
 name|if_output
 operator|=
 name|sloutput
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_start
+operator|=
+name|slstart
 expr_stmt|;
 name|sc
 operator|->
@@ -2261,8 +2276,6 @@ modifier|*
 name|ip
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* 	 * `Cannot happen' (see slioctl).  Someday we will extend 	 * the line protocol to support other address families. 	 */
@@ -2431,7 +2444,10 @@ name|sc_fastq
 argument_list|,
 name|m
 argument_list|,
-name|NULL
+operator|&
+name|sc
+operator|->
+name|sc_if
 argument_list|)
 operator|)
 expr_stmt|;
@@ -2466,6 +2482,39 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|slstart
+parameter_list|(
+name|ifp
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+block|{
+name|struct
+name|sl_softc
+modifier|*
+name|sc
+init|=
+name|ifp
+operator|->
+name|if_softc
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -2483,7 +2532,7 @@ name|c_cc
 operator|==
 literal|0
 condition|)
-name|slstart
+name|sltstart
 argument_list|(
 name|sc
 operator|->
@@ -2495,11 +2544,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -2510,7 +2554,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|slstart
+name|sltstart
 parameter_list|(
 name|tp
 parameter_list|)
