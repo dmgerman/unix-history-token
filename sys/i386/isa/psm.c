@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.55 1998/10/13 07:56:38 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.56 1998/10/22 05:58:40 bde Exp $  */
 end_comment
 
 begin_comment
@@ -584,24 +584,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSM_CONFIG_FLAGS
-value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC)
+name|PSM_CONFIG_NOIDPROBE
+value|0x0200
 end_define
 
 begin_comment
-comment|/* other flags (flags) */
-end_comment
-
-begin_comment
-comment|/*  * Pass mouse data packet to the user land program `as is', even if   * the mouse has vendor-specific enhanced features and uses non-standard   * packet format.  Otherwise manipulate the mouse data packet so that   * it can be recognized by the programs which can only understand   * the standard packet format. */
+comment|/* disable mouse model probe */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PSM_FLAGS_NATIVEMODE
-value|0x0200
+name|PSM_CONFIG_NORESET
+value|0x0400
 end_define
+
+begin_comment
+comment|/* don't reset the mouse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_CONFIG_FORCETAP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* assume `tap' action exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_CONFIG_IGNPORTERROR
+value|0x1000
+end_define
+
+begin_comment
+comment|/* ignore error in aux port test */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_CONFIG_FLAGS
+value|(PSM_CONFIG_RESOLUTION 		\ 				    | PSM_CONFIG_ACCEL		\ 				    | PSM_CONFIG_NOCHECKSYNC	\ 				    | PSM_CONFIG_NOIDPROBE	\ 				    | PSM_CONFIG_NORESET	\ 				    | PSM_CONFIG_FORCETAP	\ 				    | PSM_CONFIG_IGNPORTERROR)
+end_define
+
+begin_comment
+comment|/* other flags (flags) */
+end_comment
 
 begin_comment
 comment|/* for backward compatibility */
@@ -1227,6 +1260,13 @@ block|, }
 block|, }
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|GENERIC_MOUSE_ENTRY
+value|6
+end_define
 
 begin_comment
 comment|/* device driver declarateion */
@@ -2410,6 +2450,15 @@ argument_list|(
 name|kbdc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_IGNPORTERROR
+condition|)
+break|break;
 name|log
 argument_list|(
 name|LOG_ERR
@@ -2425,7 +2474,20 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/*       * NOTE: some controllers appears to hang the `keyboard' when      * the aux port doesn't exist and `PSMC_RESET_DEV' is issued.       */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NORESET
+condition|)
+block|{
+comment|/*  	 * Don't try to reset the pointing device.  It may possibly be 	 * left in the unknown state, though... 	 */
+block|}
+else|else
+block|{
+comment|/*  	 * NOTE: some controllers appears to hang the `keyboard' when 	 * the aux port doesn't exist and `PSMC_RESET_DEV' is issued.  	 */
 if|if
 condition|(
 operator|!
@@ -2452,6 +2514,7 @@ expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 block|}
 comment|/*       * both the aux port and the aux device is functioning, see      * if the device can be enabled.       */
 if|if
@@ -2490,6 +2553,22 @@ literal|10
 argument_list|)
 expr_stmt|;
 comment|/* remove stray data if any */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NOIDPROBE
+condition|)
+block|{
+name|i
+operator|=
+name|GENERIC_MOUSE_ENTRY
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* FIXME: hardware ID, mouse buttons? */
 comment|/* other parameters */
 for|for
@@ -2553,6 +2632,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 name|sc
@@ -3245,6 +3325,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|write_controller_command
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|,
+name|KBDC_ENABLE_AUX_PORT
+argument_list|)
+expr_stmt|;
 comment|/*      * NOTE: `test_aux_port()' is designed to return with zero if the aux      * port exists and is functioning. However, some controllers appears      * to respond with zero even when the aux port doesn't exist. (It may      * be that this is only the case when the controller DOES have the aux      * port but the port is not wired on the motherboard.) The keyboard      * controllers without the port, such as the original AT, are      * supporsed to return with an error code or simply time out. In any      * case, we have to continue probing the port even when the controller      * passes this test.      *      * XXX: some controllers erroneously return the error code 1 when      * it has the perfectly functional aux port. We have to ignore this      * error code. Even if the controller HAS error with the aux port,      * it will be detected later...      * XXX: another incompatible controller returns PSM_ACK (0xfa)...      */
 switch|switch
 condition|(
@@ -3300,6 +3389,15 @@ operator|->
 name|kbdc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_IGNPORTERROR
+condition|)
+break|break;
 name|restore_controller
 argument_list|(
 name|sc
@@ -3328,7 +3426,20 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * NOTE: some controllers appears to hang the `keyboard' when the aux      * port doesn't exist and `PSMC_RESET_DEV' is issued.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NORESET
+condition|)
+block|{
+comment|/*  	 * Don't try to reset the pointing device.  It may possibly be 	 * left in the unknown state, though... 	 */
+block|}
+else|else
+block|{
+comment|/* 	 * NOTE: some controllers appears to hang the `keyboard' when the aux 	 * port doesn't exist and `PSMC_RESET_DEV' is issued. 	 */
 if|if
 condition|(
 operator|!
@@ -3373,6 +3484,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/*      * both the aux port and the aux device is functioning, see if the      * device can be enabled. NOTE: when enabled, the device will start      * sending data; we shall immediately disable the device once we know      * the device can be enabled.      */
 if|if
 condition|(
@@ -3394,6 +3506,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* MOUSE ERROR */
+name|recover_from_error
+argument_list|(
+name|sc
+operator|->
+name|kbdc
+argument_list|)
+expr_stmt|;
 name|restore_controller
 argument_list|(
 name|sc
@@ -3622,6 +3741,30 @@ name|MOUSE_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_NOIDPROBE
+condition|)
+block|{
+name|sc
+operator|->
+name|hw
+operator|.
+name|buttons
+operator|=
+literal|2
+expr_stmt|;
+name|i
+operator|=
+name|GENERIC_MOUSE_ENTRY
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* # of buttons */
 name|sc
 operator|->
@@ -3696,6 +3839,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 name|sc
@@ -3778,6 +3922,26 @@ name|i
 index|]
 operator|.
 name|syncmask
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_FORCETAP
+condition|)
+name|sc
+operator|->
+name|mode
+operator|.
+name|syncmask
+index|[
+literal|0
+index|]
+operator|&=
+operator|~
+name|MOUSE_PS2_TAP
 expr_stmt|;
 name|sc
 operator|->
@@ -8242,6 +8406,31 @@ name|c
 operator|&
 name|MOUSE_PS2_BUTTONS
 index|]
+expr_stmt|;
+comment|/* `tapping' action */
+if|if
+condition|(
+name|sc
+operator|->
+name|config
+operator|&
+name|PSM_CONFIG_FORCETAP
+condition|)
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+operator|(
+name|c
+operator|&
+name|MOUSE_PS2_TAP
+operator|)
+operator|)
+condition|?
+literal|0
+else|:
+name|MOUSE_BUTTON4DOWN
 expr_stmt|;
 switch|switch
 condition|(
