@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* run.c    Run a program.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* run.c    Run a program.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -37,19 +37,24 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Start up a new program and end the current one.  We don't have to    worry about SIGHUP because the current process is either not a    process group leader (uucp, uux) or it does not have a controlling    terminal (uucico).  */
+comment|/* Start up a new program.  */
 end_comment
 
 begin_function
 name|boolean
 name|fsysdep_run
 parameter_list|(
+name|ffork
+parameter_list|,
 name|zprogram
 parameter_list|,
 name|zarg1
 parameter_list|,
 name|zarg2
 parameter_list|)
+name|boolean
+name|ffork
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -87,6 +92,81 @@ decl_stmt|;
 name|pid_t
 name|ipid
 decl_stmt|;
+comment|/* If we are supposed to fork, fork and then spawn so that we don't      have to worry about zombie processes.  */
+if|if
+condition|(
+name|ffork
+condition|)
+block|{
+name|ipid
+operator|=
+name|ixsfork
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ipid
+operator|<
+literal|0
+condition|)
+block|{
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"fork: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+if|if
+condition|(
+name|ipid
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* This is the parent.  Wait for the child we just forked to 	     exit (below) and return.  */
+operator|(
+name|void
+operator|)
+name|ixswait
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
+name|ipid
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Force the log files to be reopened in case the child just 	     output any error messages and stdio doesn't handle 	     appending correctly.  */
+name|ulog_close
+argument_list|()
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+comment|/* This is the child.  Detach from the terminal to avoid any 	 unexpected SIGHUP signals.  At this point we are definitely 	 not a process group leader, so usysdep_detach will not fork 	 again.  */
+name|usysdep_detach
+argument_list|()
+expr_stmt|;
+comment|/* Now spawn the program and then exit.  */
+block|}
 name|zlib
 operator|=
 name|zbufalc
@@ -233,10 +313,28 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ffork
+condition|)
+name|_exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
 block|}
+if|if
+condition|(
+name|ffork
+condition|)
+name|_exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
 return|return
 name|TRUE
 return|;

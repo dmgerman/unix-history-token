@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* spool.c    Find a file in the spool directory.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* spool.c    Find a file in the spool directory.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|spool_rcsid
 index|[]
 init|=
-literal|"$Id: spool.c,v 1.1 1993/08/04 19:33:02 jtc Exp $"
+literal|"$Id: spool.c,v 1.8 1994/01/30 21:09:20 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,8 +91,32 @@ name|int
 name|bgrade
 decl_stmt|;
 block|{
+comment|/* zsysdep_spool_commands calls this with TMPXXX which we must treat      as a C. file.  */
 if|if
 condition|(
+operator|(
+name|zsimple
+index|[
+literal|0
+index|]
+operator|!=
+literal|'T'
+operator|||
+name|zsimple
+index|[
+literal|1
+index|]
+operator|!=
+literal|'M'
+operator|||
+name|zsimple
+index|[
+literal|2
+index|]
+operator|!=
+literal|'P'
+operator|)
+operator|&&
 operator|!
 name|fspool_file
 argument_list|(
@@ -131,8 +155,19 @@ operator|==
 literal|'X'
 condition|)
 block|{
+specifier|static
+name|char
+modifier|*
+name|zbuf
+decl_stmt|;
+specifier|static
+name|size_t
+name|cbuf
+decl_stmt|;
 name|size_t
 name|clen
+decl_stmt|,
+name|cwant
 decl_stmt|;
 comment|/* Files beginning with X. are execute files.  It is important 	 for security reasons that we know the system which created 	 the X. file.  This is easy under SPOOLDIR_HDB or 	 SPOOLDIR_SVR4 SPOOLDIR_TAYLOR, because the file will be in a 	 directory named for the system.  Under other schemes, we must 	 get the system name from the X. file name.  To prevent 	 security violations, we set the system name directly here; 	 this will cause problems if the maximum file name length is 	 too short, but hopefully no problem will occur since any 	 System V systems will be using HDB or SVR4 or TAYLOR.  */
 name|clen
@@ -145,37 +180,23 @@ expr_stmt|;
 if|if
 condition|(
 name|clen
-operator|<=
-literal|7
-operator|||
-name|strncmp
-argument_list|(
-name|zsimple
-operator|+
-literal|2
-argument_list|,
-name|zsystem
-argument_list|,
-name|clen
-operator|-
-literal|7
-argument_list|)
-operator|!=
-literal|0
+operator|<
+literal|5
 condition|)
 block|{
-specifier|static
-name|char
-modifier|*
-name|zbuf
-decl_stmt|;
-specifier|static
-name|size_t
-name|cbuf
-decl_stmt|;
-name|size_t
-name|cwant
-decl_stmt|;
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"Bad file name (too short) %s"
+argument_list|,
+name|zsimple
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|cwant
 operator|=
 name|strlen
@@ -221,12 +242,6 @@ literal|"X.%s%s"
 argument_list|,
 name|zsystem
 argument_list|,
-name|clen
-operator|<
-literal|5
-condition|?
-name|zsimple
-else|:
 name|zsimple
 operator|+
 name|clen
@@ -238,7 +253,6 @@ name|zsimple
 operator|=
 name|zbuf
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
@@ -348,6 +362,9 @@ condition|)
 block|{
 case|case
 literal|'C'
+case|:
+case|case
+literal|'T'
 case|:
 if|#
 directive|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sysh.unx -*- C -*-    The header file for the UNIX system dependent routines.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* sysh.unx -*- C -*-    The header file for the UNIX system dependent routines.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_ifndef
@@ -43,38 +43,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Make sure the defines do not conflict.  These are in this file    because they are Unix dependent.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|HAVE_V2_LOCKFILES
-operator|+
-name|HAVE_HDB_LOCKFILES
-operator|+
-name|HAVE_SCO_LOCKFILES
-operator|+
-name|HAVE_SVR4_LOCKFILES
-operator|+
-name|HAVE_COHERENT_LOCKFILES
-operator|!=
-literal|1
-end_if
-
-begin_error
-error|#
-directive|error
-error|LOCKFILES define not set or duplicated
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SCO and SVR4 lockfiles are basically just like HDB lockfiles.  */
+comment|/* SCO, SVR4 and Sequent lockfiles are basically just like HDB    lockfiles.  */
 end_comment
 
 begin_if
@@ -83,6 +52,8 @@ directive|if
 name|HAVE_SCO_LOCKFILES
 operator|||
 name|HAVE_SVR4_LOCKFILES
+operator|||
+name|HAVE_SEQUENT_LOCKFILES
 end_if
 
 begin_undef
@@ -957,6 +928,17 @@ value|".Preserve"
 end_define
 
 begin_comment
+comment|/* The name of the directory to which we move corrupt files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CORRUPTDIR
+value|".Corrupt"
+end_define
+
+begin_comment
 comment|/* The length of the sequence number used in a file name.  */
 end_comment
 
@@ -1228,6 +1210,23 @@ directive|define
 name|S_IXOTH
 value|0001
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|STAT_MACROS_BROKEN
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|S_ISDIR
+end_undef
 
 begin_endif
 endif|#
@@ -1547,6 +1546,14 @@ comment|/* File descriptor.  */
 name|int
 name|o
 decl_stmt|;
+comment|/* File descriptor to read from (used by stdin and pipe port types).  */
+name|int
+name|ord
+decl_stmt|;
+comment|/* File descriptor to write to (used by stdin and pipe port types).  */
+name|int
+name|owr
+decl_stmt|;
 comment|/* Device name.  */
 name|char
 modifier|*
@@ -1556,9 +1563,9 @@ comment|/* File status flags.  */
 name|int
 name|iflags
 decl_stmt|;
-comment|/* File status flags for descriptor 1 (-1 if not standard input).  */
+comment|/* File status flags for write descriptor (-1 if not used).  */
 name|int
-name|istdout_flags
+name|iwr_flags
 decl_stmt|;
 comment|/* Hold the real descriptor when using a dialer device.  */
 name|int
@@ -1583,6 +1590,10 @@ decl_stmt|;
 comment|/* Current terminal settings.  */
 name|sterminal
 name|snew
+decl_stmt|;
+comment|/* Process ID of currently executing pipe command, or parent process      of forked TCP or TLI server, or -1.  */
+name|pid_t
+name|ipid
 decl_stmt|;
 if|#
 directive|if
@@ -1931,6 +1942,96 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Read from a connection using two file descriptors.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fsdouble_read
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sconnection
+operator|*
+name|qconn
+operator|,
+name|char
+operator|*
+name|zbuf
+operator|,
+name|size_t
+operator|*
+name|pclen
+operator|,
+name|size_t
+name|cmin
+operator|,
+name|int
+name|ctimeout
+operator|,
+name|boolean
+name|freport
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Write to a connection using two file descriptors.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fsdouble_write
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sconnection
+operator|*
+name|qconn
+operator|,
+specifier|const
+name|char
+operator|*
+name|zbuf
+operator|,
+name|size_t
+name|clen
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Run a chat program on a connection using two file descriptors.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|fsdouble_chat
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|sconnection
+operator|*
+name|qconn
+operator|,
+name|char
+operator|*
+operator|*
+name|pzprog
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Find a spool file in the spool directory.  For a local file, the    bgrade argument is the grade of the file.  This is needed for    SPOOLDIR_SVR4.  */
 end_comment
 
@@ -1965,7 +2066,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|int
 name|bsgrade
 name|P
 argument_list|(
@@ -2363,7 +2464,6 @@ name|char
 operator|*
 name|zfile
 operator|,
-specifier|const
 expr|struct
 name|stat
 operator|*

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  ***********  *  * XCHAT.C *  *  ***********  *  * Extended chat processor for Taylor UUCP. See accompanying documentation.  *  * Written by:  *   Bob Denny (denny@alisa.com)  *   Based on code in DECUS UUCP (for VAX/VMS)  *  * History:  *   Version 1.0 shipped with Taylor 1.03. No configuration info inside.  *  *   Bob Denny - Sun Aug 30 18:41:30 1992  *     V1.1 - long overdue changes for other systems. Rip out interval  *            timer code, use timer code from Taylor UUCP, use select()  *            for timed reads. Use Taylor UUCP "conf.h" file to set  *            configuration for this program. Add defaulting of script  *            and log file paths.  *  * Bugs:  *   Does not support BSD terminal I/O. Anyone care to add it?  */
+comment|/*  *  ***********  *  * XCHAT.C *  *  ***********  *  * Extended chat processor for Taylor UUCP. See accompanying documentation.  *  * Written by:  *   Bob Denny (denny@alisa.com)  *   Based on code in DECUS UUCP (for VAX/VMS)  *  * Small modification by:  *   Daniel Hagerty (hag@eddie.mit.edu)  *  * History:  *   Version 1.0 shipped with Taylor 1.03. No configuration info inside.  *  *   Bob Denny - Sun Aug 30 18:41:30 1992  *     V1.1 - long overdue changes for other systems. Rip out interval  *            timer code, use timer code from Taylor UUCP, use select()  *            for timed reads. Use Taylor UUCP "conf.h" file to set  *            configuration for this program. Add defaulting of script  *            and log file paths.  *     *   Daniel Hagerty - Mon Nov 22 18:17:38 1993  *     V1.2 - Added a new opcode to xchat. "expectstr" is a cross between  *            sendstr and expect, looking for a parameter supplied string.  *            Useful where a prompt could change for different dial in  *            lines and such.  *  * Bugs:  *   Does not support BSD terminal I/O. Anyone care to add it?  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
 
 begin_include
 include|#
@@ -48,19 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/termios.h>
+file|<sys/termio.h>
 end_include
 
 begin_include
@@ -765,8 +753,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SC_END
+name|SC_XPST
 value|42
+end_define
+
+begin_comment
+comment|/* Expect a param string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_END
+value|43
 end_define
 
 begin_comment
@@ -1265,6 +1264,16 @@ name|SC_NWST
 block|}
 block|,
 block|{
+literal|"expectstr"
+block|,
+name|SC_XPST
+block|,
+name|SC_INT
+block|,
+name|SC_NWST
+block|}
+block|,
+block|{
 literal|"table end"
 block|,
 name|SC_END
@@ -1537,7 +1546,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|termios
+name|termio
 name|old
 decl_stmt|,
 name|new
@@ -1545,16 +1554,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
-name|void
+specifier|extern
+name|int
 name|usignal
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|void
+specifier|extern
+name|int
 name|uhup
 parameter_list|()
 function_decl|;
@@ -1568,14 +1577,14 @@ block|{
 name|int
 name|signal
 decl_stmt|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|o_catcher
 function_decl|)
 parameter_list|()
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|n_catcher
@@ -1666,7 +1675,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|char
 name|xgetc
 parameter_list|()
@@ -1674,7 +1683,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|charlog
 parameter_list|()
@@ -1682,7 +1691,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|setup_tty
 parameter_list|()
@@ -1690,7 +1699,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|restore_tty
 parameter_list|()
@@ -1698,7 +1707,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|ttoslow
 parameter_list|()
@@ -1706,7 +1715,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|ttflui
 parameter_list|()
@@ -1714,7 +1723,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|tthang
 parameter_list|()
@@ -1722,7 +1731,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|ttbreak
 parameter_list|()
@@ -1730,7 +1739,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|tt7bit
 parameter_list|()
@@ -1738,7 +1747,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|ttpar
 parameter_list|()
@@ -1746,7 +1755,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|DEBUG
 parameter_list|()
@@ -2006,6 +2015,13 @@ name|sigs
 operator|->
 name|o_catcher
 operator|=
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|signal
 argument_list|(
 name|sigs
@@ -4780,6 +4796,9 @@ case|case
 name|SC_CARR
 case|:
 comment|/* they exist */
+case|case
+name|SC_XPST
+case|:
 name|expcnt
 operator|++
 expr_stmt|;
@@ -5168,6 +5187,121 @@ block|}
 end_function
 
 begin_comment
+comment|/* New opcode added by hag@eddie.mit.edu for expecting a  		 parameter supplied string */
+end_comment
+
+begin_case
+case|case
+name|SC_XPST
+case|:
+end_case
+
+begin_if
+if|if
+condition|(
+name|curscr
+operator|->
+name|intprm
+operator|>
+name|paramc
+operator|-
+literal|1
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|tempstr
+argument_list|,
+literal|"expectstr - param#%d"
+argument_list|,
+name|curscr
+operator|->
+name|intprm
+argument_list|)
+expr_stmt|;
+name|logit
+argument_list|(
+name|tempstr
+argument_list|,
+literal|" not present"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FAIL
+operator|)
+return|;
+block|}
+end_if
+
+begin_expr_stmt
+name|prmlen
+operator|=
+name|xlat_str
+argument_list|(
+name|tempstr
+argument_list|,
+name|paramv
+index|[
+name|curscr
+operator|->
+name|intprm
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+operator|(
+name|expin
+operator|>=
+name|prmlen
+operator|)
+operator|&&
+operator|(
+name|strncmp
+argument_list|(
+name|tempstr
+argument_list|,
+operator|&
+name|expbuf
+index|[
+name|expin
+operator|-
+name|prmlen
+index|]
+argument_list|,
+name|prmlen
+argument_list|)
+operator|==
+name|SAME
+operator|)
+condition|)
+block|{
+name|charlog
+argument_list|(
+name|tempstr
+argument_list|,
+name|prmlen
+argument_list|,
+name|DB_LGI
+argument_list|,
+literal|"Matched"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|_chgstate
+goto|;
+block|}
+end_if
+
+begin_break
+break|break;
+end_break
+
+begin_comment
 comment|/*  * SIGNAL HANDLERS  */
 end_comment
 
@@ -5177,7 +5311,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|usignal
 parameter_list|(
 name|isig
@@ -5212,7 +5346,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|uhup
 parameter_list|(
 name|isig
@@ -5262,21 +5396,15 @@ name|struct
 name|timeval
 name|s
 decl_stmt|;
-name|fd_set
+name|int
 name|f
+init|=
+literal|1
 decl_stmt|;
+comment|/* Select on stdin */
 name|int
 name|result
 decl_stmt|;
-name|FD_SET
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|f
-argument_list|)
-expr_stmt|;
-comment|/* Select on stdin */
 if|if
 condition|(
 name|read
@@ -5318,7 +5446,7 @@ operator|&
 name|f
 argument_list|,
 operator|(
-name|fd_set
+name|int
 operator|*
 operator|)
 name|NULL
@@ -5741,9 +5869,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|tcgetattr
+name|ioctl
 argument_list|(
 literal|0
+argument_list|,
+name|TCGETA
 argument_list|,
 operator|&
 name|old
@@ -5809,11 +5939,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* No special line discipline */
-name|tcsetattr
+name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCSANOW
+name|TCSETA
 argument_list|,
 operator|&
 name|new
@@ -5837,11 +5967,11 @@ name|int
 name|sig
 decl_stmt|;
 block|{
-name|tcsetattr
+name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCSANOW
+name|TCSETA
 argument_list|,
 operator|&
 name|old
@@ -5956,11 +6086,16 @@ argument_list|(
 literal|0
 argument_list|)
 condition|)
-name|tcflush
+operator|(
+name|void
+operator|)
+name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCIFLUSH
+name|TCFLSH
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5996,14 +6131,12 @@ if|if
 condition|(
 operator|!
 name|isatty
-argument_list|(
-literal|1
-argument_list|)
+argument_list|()
 condition|)
 return|return;
 ifdef|#
 directive|ifdef
-name|TIOCCDTR
+name|TCCLRDTR
 operator|(
 name|void
 operator|)
@@ -6011,7 +6144,7 @@ name|ioctl
 argument_list|(
 literal|1
 argument_list|,
-name|TIOCCDTR
+name|TCCLRDTR
 argument_list|,
 literal|0
 argument_list|)
@@ -6028,7 +6161,7 @@ name|ioctl
 argument_list|(
 literal|1
 argument_list|,
-name|TIOCSDTR
+name|TCSETDTR
 argument_list|,
 literal|0
 argument_list|)
@@ -6049,11 +6182,16 @@ name|void
 name|ttbreak
 parameter_list|()
 block|{
-name|tcsendbreak
+operator|(
+name|void
+operator|)
+name|ioctl
 argument_list|(
 literal|1
 argument_list|,
-literal|5
+name|TCSBRK
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6108,11 +6246,11 @@ operator|&=
 operator|~
 name|ISTRIP
 expr_stmt|;
-name|tcsetattr
+name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCSANOW
+name|TCSETA
 argument_list|,
 operator|&
 name|new
@@ -6246,11 +6384,11 @@ operator|)
 expr_stmt|;
 break|break;
 block|}
-name|tcsetattr
+name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCSANOW
+name|TCSETA
 argument_list|,
 operator|&
 name|new

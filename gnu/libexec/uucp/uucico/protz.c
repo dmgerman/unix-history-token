@@ -29,7 +29,7 @@ name|char
 name|protz_rcsid
 index|[]
 init|=
-literal|"$Id: protz.c,v 1.1 1993/08/04 19:36:25 jtc Exp $"
+literal|"$Id: protz.c,v 1.8 1993/12/20 00:44:49 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7441,7 +7441,7 @@ name|DEBUG_MESSAGE2
 argument_list|(
 name|DEBUG_PROTO
 argument_list|,
-literal|"izrecv_hdr: %s, data = 0x%x"
+literal|"izrecv_hdr: %s, data = 0x%lx"
 argument_list|,
 name|ZZHEADER_NAME
 argument_list|(

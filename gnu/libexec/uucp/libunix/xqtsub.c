@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xqtsub.c    System dependent functions used only by uuxqt.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* xqtsub.c    System dependent functions used only by uuxqt.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|xqtsub_rcsid
 index|[]
 init|=
-literal|"$Id: xqtsub.c,v 1.1 1993/08/04 19:33:22 jtc Exp $"
+literal|"$Id: xqtsub.c,v 1.14 1994/01/30 21:09:20 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,6 +315,10 @@ modifier|*
 modifier|*
 name|pz
 decl_stmt|;
+name|struct
+name|stat
+name|s
+decl_stmt|;
 operator|*
 name|pferr
 operator|=
@@ -408,6 +412,46 @@ name|pz
 operator|==
 literal|'/'
 condition|)
+block|{
+comment|/* Quick error check.  */
+if|if
+condition|(
+name|stat
+argument_list|(
+operator|*
+name|pz
+argument_list|,
+operator|&
+name|s
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+operator|*
+name|pz
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|pferr
+operator|=
+name|TRUE
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 return|return
 name|zbufcpy
 argument_list|(
@@ -415,6 +459,7 @@ operator|*
 name|pz
 argument_list|)
 return|;
+block|}
 break|break;
 block|}
 block|}
@@ -449,10 +494,6 @@ name|char
 modifier|*
 name|zname
 decl_stmt|;
-name|struct
-name|stat
-name|s
-decl_stmt|;
 name|zname
 operator|=
 name|zsysdep_in_dir
@@ -479,11 +520,6 @@ return|return
 name|zname
 return|;
 block|}
-operator|*
-name|pferr
-operator|=
-name|FALSE
-expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -582,6 +618,12 @@ argument_list|,
 name|qsys
 operator|->
 name|uuconf_zpubdir
+argument_list|,
+operator|(
+name|boolean
+operator|*
+operator|)
+name|NULL
 argument_list|)
 return|;
 block|}
@@ -624,6 +666,7 @@ block|{
 name|size_t
 name|clen
 decl_stmt|;
+comment|/* Disallow exact "..", prefix "../", suffix "/..", internal "/../",      and restricted absolute paths.  */
 name|clen
 operator|=
 name|strlen
@@ -637,7 +680,7 @@ operator|(
 name|clen
 operator|==
 sizeof|sizeof
-expr|"../"
+expr|".."
 operator|-
 literal|1
 operator|&&
@@ -645,11 +688,25 @@ name|strcmp
 argument_list|(
 name|zfile
 argument_list|,
-literal|"../"
+literal|".."
 argument_list|)
 operator|==
 literal|0
 operator|)
+operator|||
+name|strncmp
+argument_list|(
+name|zfile
+argument_list|,
+literal|"../"
+argument_list|,
+sizeof|sizeof
+expr|"../"
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
 operator|||
 operator|(
 name|clen
@@ -1592,7 +1649,7 @@ name|pazargs
 argument_list|,
 name|aidescs
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|,
 name|FALSE
 argument_list|,

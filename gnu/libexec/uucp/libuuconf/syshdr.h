@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* syshdr.unx -*- C -*-    Unix system header for the uuconf library.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* syshdr.unx -*- C -*-    Unix system header for the uuconf library.     Copyright (C) 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP uuconf library.     This library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2 of    the License, or (at your option) any later version.     This library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this library; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_comment
@@ -246,6 +246,29 @@ end_endif
 begin_comment
 comment|/* ! HAVE_STRERROR */
 end_comment
+
+begin_comment
+comment|/* This macro is used to make a filename found in a configuration file    into an absolute path.  The zdir argument is the directory to put it    in.  The zset argument is set to the new string.  The fallocated    argument is set to TRUE if the new string was allocated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_ABSOLUTE
+parameter_list|(
+name|zset
+parameter_list|,
+name|fallocated
+parameter_list|,
+name|zfile
+parameter_list|,
+name|zdir
+parameter_list|,
+name|pblock
+parameter_list|)
+define|\
+value|do \     { \       if (*(zfile) == '/') \ 	{ \ 	  (zset) = (zfile); \ 	  (fallocated) = FALSE; \ 	} \       else \ 	{ \ 	  size_t abs_cdir, abs_cfile; \ 	  char *abs_zret; \ \ 	  abs_cdir = strlen (zdir); \ 	  abs_cfile = strlen (zfile); \ 	  abs_zret = (char *) uuconf_malloc ((pblock), \ 					     abs_cdir + abs_cfile + 2); \ 	  (zset) = abs_zret; \ 	  (fallocated) = TRUE; \ 	  if (abs_zret != NULL) \ 	    { \ 	      memcpy ((pointer) abs_zret, (pointer) (zdir), abs_cdir); \ 	      abs_zret[abs_cdir] = '/'; \ 	      memcpy ((pointer) (abs_zret + abs_cdir + 1), \ 		      (pointer) (zfile), abs_cfile + 1); \ 	    } \ 	} \     } \   while (0)
+end_define
 
 begin_comment
 comment|/* We want to be able to mark the Taylor UUCP system files as close on    exec.  */

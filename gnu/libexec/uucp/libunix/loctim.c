@@ -12,8 +12,19 @@ end_include
 begin_if
 if|#
 directive|if
-name|HAVE_TIME_H
+name|TM_IN_SYS_TIME
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#

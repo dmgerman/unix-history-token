@@ -139,11 +139,22 @@ directive|if
 name|HAVE_SELECT
 end_if
 
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_TIME_H
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -259,10 +270,13 @@ end_if
 begin_if
 if|#
 directive|if
-name|HAVE_SYS_TIME_AND_TIME_H
+operator|!
+name|HAVE_SYS_TIME_H
 operator|||
 operator|!
-name|USE_SELECT_TIMER
+name|HAVE_SELECT
+operator|||
+name|TIME_WITH_SYS_TIME
 end_if
 
 begin_include
@@ -407,7 +421,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* USE_SELECT_TIMER */
+comment|/* HAVE_SELECT */
 if|#
 directive|if
 operator|!
@@ -421,7 +435,7 @@ name|HAVE_USLEEP
 if|#
 directive|if
 operator|!
-name|USE_SELECT_TIMER
+name|HAVE_SELECT
 operator|&&
 operator|!
 name|HAVE_POLL
@@ -432,7 +446,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* ! USE_SELECT_TIMER&& ! HAVE_POLL */
+comment|/* ! HAVE_SELECT&& ! HAVE_POLL */
 endif|#
 directive|endif
 comment|/* ! HAVE_NAPMS&& ! HAVE_NAP&& ! HAVE_USLEEP */

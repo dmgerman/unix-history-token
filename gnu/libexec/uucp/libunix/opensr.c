@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opensr.c    Open files for sending and receiving.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* opensr.c    Open files for sending and receiving.     Copyright (C) 1991, 1992, 1993 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -485,7 +485,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Get a temporary file name to receive into.  We use the ztemp    argument to pick the file name, so that we relocate the file if the    transmission is aborted.  */
+comment|/* Get a temporary file name to receive into.  We use the ztemp    argument to pick the file name, so that we restart the file if the    transmission is aborted.  */
 end_comment
 
 begin_function
@@ -498,6 +498,8 @@ parameter_list|,
 name|zto
 parameter_list|,
 name|ztemp
+parameter_list|,
+name|frestart
 parameter_list|)
 specifier|const
 name|struct
@@ -515,9 +517,14 @@ name|char
 modifier|*
 name|ztemp
 decl_stmt|;
+name|boolean
+name|frestart
+decl_stmt|;
 block|{
 if|if
 condition|(
+name|frestart
+operator|&&
 name|ztemp
 operator|!=
 name|NULL
@@ -560,6 +567,17 @@ end_function
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* The number of seconds in one week.  We must cast to long for this    to be calculated correctly on a machine with 16 bit ints.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECS_PER_WEEK
+value|((long) 7 * (long) 24 * (long) 60 * (long) 60)
+end_define
 
 begin_comment
 comment|/* Open a temporary file to receive into.  This should, perhaps, check    that we have write permission on the receiving directory, but it    doesn't.  */
@@ -617,6 +635,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|pcrestart
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|pcrestart
 operator|=
@@ -625,6 +649,10 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|pcrestart
+operator|!=
+name|NULL
+operator|&&
 name|ztemp
 operator|!=
 name|NULL
@@ -685,13 +713,7 @@ name|s
 operator|.
 name|st_mtime
 operator|+
-literal|7
-operator|*
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60
+name|SECS_PER_WEEK
 operator|<
 name|time
 argument_list|(

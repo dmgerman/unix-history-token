@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* cu.c    Call up a remote system.     Copyright (C) 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* cu.c    Call up a remote system.     Copyright (C) 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|cu_rcsid
 index|[]
 init|=
-literal|"$Id: cu.c,v 1.1 1993/08/04 19:31:54 jtc Exp $"
+literal|"$Id: cu.c,v 1.28 1994/01/30 21:01:46 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,7 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* A prefix string to use before sending a binary character from a    file; this is only used if fCuvar_binary is TRUE.  The default is    ^Z. */
+comment|/* A prefix string to use before sending a binary character from a    file; this is only used if fCuvar_binary is TRUE.  The default is    ^V. */
 end_comment
 
 begin_decl_stmt
@@ -485,19 +485,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The program name.  */
-end_comment
-
-begin_decl_stmt
-name|char
-name|abProgram
-index|[]
-init|=
-literal|"cu"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* The string printed at the initial connect.  */
 end_comment
 
@@ -685,6 +672,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Whether ZCONNMSG has been printed yet.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|fCuconnprinted
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* A structure used to pass information to icuport_lock.  */
 end_comment
 
@@ -720,6 +720,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|ucuusage
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ucuhelp
 name|P
 argument_list|(
 operator|(
@@ -984,6 +997,146 @@ index|[]
 init|=
 block|{
 block|{
+literal|"phone"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'c'
+block|}
+block|,
+block|{
+literal|"parity"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|"halfduplex"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'h'
+block|}
+block|,
+block|{
+literal|"prompt"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'n'
+block|}
+block|,
+block|{
+literal|"line"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'l'
+block|}
+block|,
+block|{
+literal|"port"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'p'
+block|}
+block|,
+block|{
+literal|"speed"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'s'
+block|}
+block|,
+block|{
+literal|"baud"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'s'
+block|}
+block|,
+block|{
+literal|"mapcr"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'t'
+block|}
+block|,
+block|{
+literal|"system"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'z'
+block|}
+block|,
+block|{
+literal|"config"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'I'
+block|}
+block|,
+block|{
+literal|"debug"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'x'
+block|}
+block|,
+block|{
+literal|"version"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'v'
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
@@ -1140,6 +1293,13 @@ decl_stmt|;
 name|char
 name|bcmd
 decl_stmt|;
+name|zProgram
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/* We want to accept -# as a speed.  It's easiest to look through      the arguments, replace -# with -s#, and let getopt handle it.  */
 for|for
 control|(
@@ -1258,7 +1418,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:c:dehnI:l:op:s:tx:z:"
+literal|"a:c:dehnI:l:op:s:tvx:z:"
 argument_list|,
 name|asCulongopts
 argument_list|,
@@ -1435,6 +1595,128 @@ endif|#
 directive|endif
 break|break;
 case|case
+literal|'v'
+case|:
+comment|/* Print version and exit.  */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
+argument_list|,
+name|zProgram
+argument_list|,
+name|VERSION
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
+literal|2
+case|:
+comment|/* --parity.  */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"even"
+argument_list|,
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|feven
+operator|=
+name|TRUE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"odd"
+argument_list|,
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|fodd
+operator|=
+name|TRUE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|optarg
+argument_list|,
+literal|"none"
+argument_list|,
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|feven
+operator|=
+name|TRUE
+expr_stmt|;
+name|fodd
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: --parity requires even, odd or none\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
+name|ucuusage
+argument_list|()
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|1
+case|:
+comment|/* --help.  */
+name|ucuhelp
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+case|case
 literal|0
 case|:
 comment|/* Long option found and flag set.  */
@@ -1443,7 +1725,7 @@ default|default:
 name|ucuusage
 argument_list|()
 expr_stmt|;
-break|break;
+comment|/*NOTREACHED*/
 block|}
 block|}
 comment|/* There can be one more argument, which is either a system name, a      phone number, or "dir".  We decide which it is based on the first      character.  To call a UUCP system whose name begins with a digit,      or one which is named "dir", you must use -z.  */
@@ -1470,9 +1752,20 @@ name|zphone
 operator|!=
 name|NULL
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: too many arguments\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
 name|ucuusage
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -1540,9 +1833,20 @@ name|ibaud
 operator|==
 literal|0L
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: must specify system, line, port or speed\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
 name|ucuusage
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|fprompt
@@ -1597,9 +1901,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: No phone number entered\n"
+literal|"%s: no phone number entered\n"
 argument_list|,
-name|abProgram
+name|zProgram
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2107,24 +2411,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fsysdep_port_access
-argument_list|(
-operator|&
-name|sport
-argument_list|)
-condition|)
-name|ulog
-argument_list|(
-name|LOG_FATAL
-argument_list|,
-literal|"%s: Permission denied"
-argument_list|,
-name|zline
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
 name|fconn_init
 argument_list|(
 operator|&
@@ -2132,6 +2418,8 @@ name|sport
 argument_list|,
 operator|&
 name|sconn
+argument_list|,
+name|UUCONF_PORTTYPE_UNKNOWN
 argument_list|)
 condition|)
 name|ucuabort
@@ -2161,6 +2449,25 @@ name|qCuconn
 operator|=
 operator|&
 name|sconn
+expr_stmt|;
+comment|/* Check user access after locking the port, because on 		 some systems shared lines affect the ownership and 		 permissions.  In such a case ``Line in use'' is more 		 clear than ``Permission denied.''  */
+if|if
+condition|(
+operator|!
+name|fsysdep_port_access
+argument_list|(
+operator|&
+name|sport
+argument_list|)
+condition|)
+name|ulog
+argument_list|(
+name|LOG_FATAL
+argument_list|,
+literal|"%s: Permission denied"
+argument_list|,
+name|zline
+argument_list|)
 expr_stmt|;
 block|}
 name|ihighbaud
@@ -2211,6 +2518,8 @@ name|uuconf_qport
 argument_list|,
 operator|&
 name|sconn
+argument_list|,
+name|UUCONF_PORTTYPE_UNKNOWN
 argument_list|)
 condition|)
 block|{
@@ -2585,11 +2894,15 @@ condition|)
 name|ucuabort
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
+name|qsys
+operator|=
 name|qsys
 operator|->
 name|uuconf_qalternate
+expr_stmt|;
+if|if
+condition|(
+name|qsys
 operator|==
 name|NULL
 condition|)
@@ -2729,6 +3042,10 @@ argument_list|,
 name|ZCONNMSG
 argument_list|)
 expr_stmt|;
+name|fCuconnprinted
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2840,6 +3157,10 @@ operator|&
 name|sconn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fCuconnprinted
+condition|)
 name|printf
 argument_list|(
 literal|"\n%s\n"
@@ -2876,7 +3197,43 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Taylor UUCP version %s, copyright (C) 1991, 1992 Ian Lance Taylor\n"
+literal|"Usage: %s [options] [system or phone-number]\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Use %s --help for help\n"
+argument_list|,
+name|zProgram
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Print a help message.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ucuhelp
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Taylor UUCP %s, copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor\n"
 argument_list|,
 name|VERSION
 argument_list|)
@@ -2885,42 +3242,44 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: cu [options] [system or phone-number]\n"
+literal|"Usage: %s [options] [system or phone-number]\n"
+argument_list|,
+name|zProgram
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -a port, -p port: Use named port\n"
+literal|" -a,-p,--port port: Use named port\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -l line: Use named device (e.g. tty0)\n"
+literal|" -l,--line line: Use named device (e.g. tty0)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -s speed, -#: Use given speed\n"
+literal|" -s,--speed,--baud speed, -#: Use given speed\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -c phone: Phone number to call\n"
+literal|" -c,--phone phone: Phone number to call\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -z system: System to call\n"
+literal|" -z,--system system: System to call\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2941,21 +3300,28 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -h: Echo locally\n"
+literal|" --parity={odd,even}: Set parity\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -t: Map carriage return to carriage return/linefeed\n"
+literal|" -h,--halfduplex: Echo locally\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -n: Prompt for phone number\n"
+literal|" -t,--mapcr: Map carriage return to carriage return/linefeed\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" -n,--prompt: Prompt for phone number\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2969,7 +3335,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -x debug: Set debugging type\n"
+literal|" -x,--debug debug: Set debugging type\n"
 argument_list|)
 expr_stmt|;
 if|#
@@ -2979,15 +3345,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -I file: Set configuration file to use\n"
+literal|" -I,--config file: Set configuration file to use\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* HAVE_TAYLOR_CONFIG */
-name|exit
+name|fprintf
 argument_list|(
-name|EXIT_FAILURE
+name|stderr
+argument_list|,
+literal|" -v,--version: Print version and exit\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" --help: Print help and exit\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3096,6 +3471,10 @@ block|}
 name|ulog_close
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|fCuconnprinted
+condition|)
 name|printf
 argument_list|(
 literal|"\n%s\n"
@@ -3272,6 +3651,8 @@ argument_list|,
 name|q
 operator|->
 name|qconn
+argument_list|,
+name|UUCONF_PORTTYPE_UNKNOWN
 argument_list|)
 condition|)
 return|return

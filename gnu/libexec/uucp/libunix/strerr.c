@@ -53,6 +53,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|strerror
+end_undef
+
 begin_function
 name|char
 modifier|*

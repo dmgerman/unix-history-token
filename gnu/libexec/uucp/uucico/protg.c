@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* protg.c    The 'g' protocol.     Copyright (C) 1991, 1992 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Infinity Development Systems, P.O. Box 520, Waltham, MA 02254.    */
+comment|/* protg.c    The 'g' protocol.     Copyright (C) 1991, 1992, 1993, 1994 Ian Lance Taylor     This file is part of the Taylor UUCP package.     This program is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.     The author of the program may be contacted at ian@airs.com or    c/o Cygnus Support, Building 200, 1 Kendall Square, Cambridge, MA 02139.    */
 end_comment
 
 begin_include
@@ -21,7 +21,7 @@ name|char
 name|protg_rcsid
 index|[]
 init|=
-literal|"$Id: protg.c,v 1.1 1993/08/04 19:36:20 jtc Exp $"
+literal|"$Id: protg.c,v 1.65 1994/03/26 03:39:05 ian Rel $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1069,6 +1069,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Number of duplicate RR packets treated as RJ packets.  Some UUCP    packages appear to never send RJ packets, but only RR packets.  If    no RJ has been seen, fgprocess_data treats a duplicate RR as an RJ    and increments this variable.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|long
+name|cGremote_duprrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* The error level.  This is the total number of errors as adjusted by    cGerror_decay.  */
 end_comment
 
@@ -1491,6 +1502,10 @@ name|cGremote_rejects
 operator|=
 literal|0
 expr_stmt|;
+name|cGremote_duprrs
+operator|=
+literal|0
+expr_stmt|;
 name|cGerror_level
 operator|=
 literal|0
@@ -1557,6 +1572,37 @@ expr_stmt|;
 name|iseg
 operator|=
 literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|iGrequest_winsize
+operator|<=
+literal|0
+operator|||
+name|iGrequest_winsize
+operator|>
+literal|7
+condition|)
+block|{
+name|ulog
+argument_list|(
+name|LOG_ERROR
+argument_list|,
+literal|"Illegal window size %d for '%c' protocol"
+argument_list|,
+name|iGrequest_winsize
+argument_list|,
+name|qdaemon
+operator|->
+name|qproto
+operator|->
+name|bname
+argument_list|)
+expr_stmt|;
+name|iGrequest_winsize
+operator|=
+name|IWINDOW
 expr_stmt|;
 block|}
 name|fgota
@@ -1778,9 +1824,9 @@ operator|=
 name|zbufalc
 argument_list|(
 sizeof|sizeof
-expr|"protocol '' packet size  window "
+expr|"protocol '' sending packet/window / receiving /"
 operator|+
-literal|50
+literal|64
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -1788,7 +1834,7 @@ argument_list|(
 operator|*
 name|pzlog
 argument_list|,
-literal|"protocol '%c' packet size %d window %d"
+literal|"protocol '%c' sending packet/window %d/%d receiving %d/%d"
 argument_list|,
 name|qdaemon
 operator|->
@@ -1805,6 +1851,16 @@ operator|(
 name|int
 operator|)
 name|iGremote_winsize
+argument_list|,
+operator|(
+name|int
+operator|)
+name|iGrequest_packsize
+argument_list|,
+operator|(
+name|int
+operator|)
+name|iGrequest_winsize
 argument_list|)
 expr_stmt|;
 return|return
@@ -1855,6 +1911,50 @@ block|{
 name|fGshort_packets
 operator|=
 name|FALSE
+expr_stmt|;
+return|return
+name|fgstart
+argument_list|(
+name|qdaemon
+argument_list|,
+name|pzlog
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* The 'v' protocol is identical to the 'g' protocol, except that the    packet size defaults to 512 bytes.  Rather than really get it    right, we automatically switch from the usual default of 64 to 512.    This won't work correctly if somebody does protocol-parameter v    packet-size 64.  */
+end_comment
+
+begin_function
+name|boolean
+name|fvstart
+parameter_list|(
+name|qdaemon
+parameter_list|,
+name|pzlog
+parameter_list|)
+name|struct
+name|sdaemon
+modifier|*
+name|qdaemon
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|pzlog
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|iGrequest_packsize
+operator|==
+name|IPACKSIZE
+condition|)
+name|iGrequest_packsize
+operator|=
+literal|1024
 expr_stmt|;
 return|return
 name|fgstart
@@ -2229,6 +2329,10 @@ operator|||
 name|cGremote_rejects
 operator|!=
 literal|0
+operator|||
+name|cGremote_duprrs
+operator|!=
+literal|0
 condition|)
 name|ulog
 argument_list|(
@@ -2242,6 +2346,8 @@ name|cGbad_checksum
 argument_list|,
 name|cGbad_order
 argument_list|,
+name|cGremote_duprrs
+operator|+
 name|cGremote_rejects
 argument_list|)
 expr_stmt|;
@@ -2435,6 +2541,12 @@ argument_list|,
 name|clen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|csize
+operator|>
+name|clen
+condition|)
 name|bzero
 argument_list|(
 name|zpacket
@@ -2918,6 +3030,12 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|cshort
+operator|>
+literal|1
+condition|)
 name|bzero
 argument_list|(
 name|zdata
@@ -5417,13 +5535,17 @@ index|]
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* Annoyingly, some UUCP packages appear to send an RR packet 	 rather than an RJ packet when they want a packet to be 	 resent.  If we get a duplicate RR, we treat it as an RJ.  */
+comment|/* Annoyingly, some UUCP packages appear to send an RR packet 	 rather than an RJ packet when they want a packet to be 	 resent.  If we get a duplicate RR and we've never seen an RJ, 	 we treat the RR as an RJ.  */
 name|fduprr
 operator|=
 name|FALSE
 expr_stmt|;
 if|if
 condition|(
+name|cGremote_rejects
+operator|==
+literal|0
+operator|&&
 name|CONTROL_TT
 argument_list|(
 name|ab
@@ -5460,6 +5582,11 @@ name|iGremote_ack
 argument_list|)
 operator|!=
 name|iGsendseq
+operator|&&
+name|iGretransmit_seq
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 name|DEBUG_MESSAGE0
@@ -5476,9 +5603,10 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* Update the received sequence number from the yyy field of a 	 data packet or an RR control packet.  If we've been delaying 	 sending packets until we received an ack, this may send out 	 some packets.  */
+comment|/* Update the received sequence number from the yyy field of a 	 data packet (if it is the one we are expecting) or an RR 	 control packet.  If we've been delaying sending packets until 	 we received an ack, this may send out some packets.  */
 if|if
 condition|(
+operator|(
 name|CONTROL_TT
 argument_list|(
 name|ab
@@ -5488,7 +5616,22 @@ index|]
 argument_list|)
 operator|!=
 name|CONTROL
+operator|&&
+name|CONTROL_XXX
+argument_list|(
+name|ab
+index|[
+name|IFRAME_CONTROL
+index|]
+argument_list|)
+operator|==
+name|INEXTSEQ
+argument_list|(
+name|iGrecseq
+argument_list|)
+operator|)
 operator|||
+operator|(
 name|CONTROL_XXX
 argument_list|(
 name|ab
@@ -5498,6 +5641,10 @@ index|]
 argument_list|)
 operator|==
 name|RR
+operator|&&
+operator|!
+name|fduprr
+operator|)
 condition|)
 block|{
 if|if
@@ -6111,6 +6258,14 @@ expr_stmt|;
 operator|++
 name|cGresent_packets
 expr_stmt|;
+if|if
+condition|(
+name|fduprr
+condition|)
+operator|++
+name|cGremote_duprrs
+expr_stmt|;
+else|else
 operator|++
 name|cGremote_rejects
 expr_stmt|;

@@ -19,6 +19,44 @@ begin_comment
 comment|/* Status strings.  These must match enum tstatus_type.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|USE_TRADITIONAL_STATUS
+end_if
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|azStatus
+index|[]
+init|=
+block|{
+literal|"SUCCESSFUL"
+block|,
+literal|"DEVICE FAILED"
+block|,
+literal|"DIAL FAILED"
+block|,
+literal|"LOGIN FAILED"
+block|,
+literal|"STARTUP FAILED"
+block|,
+literal|"CONVERSATION FAILED"
+block|,
+literal|"TALKING"
+block|,
+literal|"WRONG TIME TO CALL"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -45,6 +83,11 @@ literal|"Wrong time to call"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
