@@ -5796,7 +5796,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"usage: pr [+page] [-col] [-adFLmrt] [-e[ch][gap]] [-h header]\n"
+literal|"usage: pr [+page] [-col] [-adFmrt] [-e[ch][gap]] [-h header]\n"
 argument_list|,
 name|err
 argument_list|)
@@ -5816,7 +5816,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"          [-s[ch]] [-w width] [-] [file ...]\n"
+literal|"          [-L locale] [-s[ch]] [-w width] [-] [file ...]\n"
 argument_list|,
 name|err
 argument_list|)
@@ -5871,10 +5871,11 @@ name|cflag
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|char
+modifier|*
 name|Lflag
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -5933,7 +5934,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"#adFmrte?h:i?Ll:n?o:s?w:"
+literal|"#adFmrte?h:i?L:l:n?o:s?w:"
 argument_list|)
 operator|)
 operator|!=
@@ -6330,7 +6331,8 @@ case|case
 literal|'L'
 case|:
 name|Lflag
-operator|++
+operator|=
+name|eoptarg
 expr_stmt|;
 break|break;
 case|case
@@ -7025,11 +7027,6 @@ name|timefrmt
 operator|=
 name|TIMEFMT
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Lflag
-condition|)
 operator|(
 name|void
 operator|)
@@ -7037,6 +7034,14 @@ name|setlocale
 argument_list|(
 name|LC_TIME
 argument_list|,
+operator|(
+name|Lflag
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|Lflag
+else|:
 literal|""
 argument_list|)
 expr_stmt|;
