@@ -1508,7 +1508,11 @@ name|int
 name|n
 parameter_list|)
 block|{
-asm|__asm__("1:\tmovb (%2), %3\n"           "\txlatb\n"           "\tmovb %3, (%2)\n" 	  "\tinc %2\n" 	  "\tdec %1\n" 	  "\tjnz 1b\n"           :           :"b" (table), "c" (n), "D" (buff), "a" ((char)n)           :"bx","cx","di","ax");
+asm|__asm__("1:\tmovb (%2), %3\n"           "\txlatb\n"           "\tmovb %3, (%2)\n" 	  "\tinc %2\n" 	  "\tdec %1\n" 	  "\tjnz 1b\n"           : "=b" (table), "=c" (n), "=D" (buff), "=a" ((char)n)
+comment|/*all dummies*/
+asm|: "0" (table), "1" (n), "2" (buff), "3" ((char)n)
+comment|/* clobber list covered by matching out/in registers */
+asm|);
 block|}
 end_function
 
