@@ -162,6 +162,15 @@ literal|"POSIX"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strstr
+argument_list|(
+name|s
+argument_list|,
+literal|"ASCII"
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|ret
 operator|=
