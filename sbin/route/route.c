@@ -2778,6 +2778,7 @@ case|:
 name|iflag
 operator|++
 expr_stmt|;
+break|break;
 case|case
 name|K_NOSTATIC
 case|:
