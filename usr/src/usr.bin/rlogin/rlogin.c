@@ -1504,7 +1504,7 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|KERBEROS
-literal|"usage: rlogin host [ -ex ] [ -l username ] [ -8 ] [ -L ] [ -x ]\n"
+literal|"usage: rlogin host [ -ex ] [ -l username ] [ -k realm ] [ -8 ] [ -L ] [ -x ]\n"
 argument_list|)
 expr_stmt|;
 else|#
