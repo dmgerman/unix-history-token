@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.4";  *  * f77 I/O error messages  */
+comment|/* char id_f_errlist[] = "@(#)f_errlist.c	1.5";  *  * f77 I/O error messages  */
 end_comment
 
 begin_decl_stmt
@@ -68,7 +68,7 @@ comment|/* 118 */
 literal|"can't find 'old' file"
 block|,
 comment|/* 119 */
-literal|"unknown system error"
+literal|"opening too many files or unknown system error"
 block|,
 comment|/* 120 */
 literal|"requires seek ability"

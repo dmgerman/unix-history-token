@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_f_errno[] = "@(#)f_errno.h	1.6";  *  * f77 I/O error definitions  */
+comment|/* char id_f_errno[] = "@(#)f_errno.h	1.7";  *  * f77 I/O error definitions  */
 end_comment
 
 begin_include
@@ -251,7 +251,7 @@ value|119
 end_define
 
 begin_comment
-comment|/* unknown system error */
+comment|/* opening too many files or unknown system error */
 end_comment
 
 begin_define
