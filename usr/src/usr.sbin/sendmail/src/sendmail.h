@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.15		%G%"
+literal|"@(#)sendmail.h	6.16		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3188,17 +3188,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|time_t
-name|ReadTimeout
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* timeout on reads */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
 name|int
 name|LogLevel
 decl_stmt|;
@@ -3695,8 +3684,66 @@ begin_comment
 comment|/* minimum number of blocks free on queue fs */
 end_comment
 
-begin_escape
-end_escape
+begin_comment
+comment|/* **  Timeouts ** **	Indicated values are the MINIMUM per RFC 1123 section 5.3.2. */
+end_comment
+
+begin_macro
+name|EXTERN
+end_macro
+
+begin_struct
+struct|struct
+block|{
+name|time_t
+name|to_initial
+decl_stmt|;
+comment|/* initial greeting timeout [5m] */
+name|time_t
+name|to_mail
+decl_stmt|;
+comment|/* MAIL command [5m] */
+name|time_t
+name|to_rcpt
+decl_stmt|;
+comment|/* RCPT command [5m] */
+name|time_t
+name|to_datainit
+decl_stmt|;
+comment|/* DATA initiation [2m] */
+name|time_t
+name|to_datablock
+decl_stmt|;
+comment|/* DATA block [3m] */
+name|time_t
+name|to_datafinal
+decl_stmt|;
+comment|/* DATA completion [10m] */
+name|time_t
+name|to_nextcommand
+decl_stmt|;
+comment|/* next command [5m] */
+comment|/* following timeouts are not mentioned in RFC 1123 */
+name|time_t
+name|to_rset
+decl_stmt|;
+comment|/* RSET command */
+name|time_t
+name|to_helo
+decl_stmt|;
+comment|/* HELO command */
+name|time_t
+name|to_quit
+decl_stmt|;
+comment|/* QUIT command */
+name|time_t
+name|to_miscshort
+decl_stmt|;
+comment|/* misc short commands (NOOP, VERB, etc) */
+block|}
+name|TimeOuts
+struct|;
+end_struct
 
 begin_comment
 comment|/* **  Trace information */

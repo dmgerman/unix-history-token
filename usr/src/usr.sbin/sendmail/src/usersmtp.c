@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.11 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.12 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.11 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.12 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,10 +369,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-operator|(
-name|time_t
-operator|)
-literal|300
+name|TimeOuts
+operator|.
+name|to_initial
 argument_list|)
 expr_stmt|;
 if|if
@@ -436,7 +435,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_helo
 argument_list|)
 expr_stmt|;
 if|if
@@ -507,7 +508,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_miscshort
 argument_list|)
 expr_stmt|;
 if|if
@@ -775,7 +778,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_mail
 argument_list|)
 expr_stmt|;
 if|if
@@ -1012,7 +1017,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_rcpt
 argument_list|)
 expr_stmt|;
 if|if
@@ -1210,7 +1217,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_datainit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1420,7 +1429,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_datafinal
 argument_list|)
 expr_stmt|;
 if|if
@@ -1600,7 +1611,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_quit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1713,10 +1726,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-operator|(
-name|time_t
-operator|)
-literal|300
+name|TimeOuts
+operator|.
+name|to_rset
 argument_list|)
 expr_stmt|;
 if|if
@@ -1824,7 +1836,9 @@ name|mci
 argument_list|,
 name|e
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_miscshort
 argument_list|)
 expr_stmt|;
 if|if

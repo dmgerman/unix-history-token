@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.19 (Berkeley) %G%"
+literal|"@(#)conf.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -490,18 +490,15 @@ operator|=
 literal|9
 expr_stmt|;
 comment|/* option L */
-name|ReadTimeout
-operator|=
-literal|2
-operator|*
-literal|60
-operator|*
-literal|60
+name|settimeouts
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* option r */
 name|TimeOut
 operator|=
-literal|3
+literal|5
 operator|*
 literal|24
 operator|*
