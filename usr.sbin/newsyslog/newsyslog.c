@@ -6654,6 +6654,7 @@ comment|/* Skip Over Blanks */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|sob
@@ -6692,6 +6693,7 @@ comment|/* Skip Over Non-Blanks */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|son
