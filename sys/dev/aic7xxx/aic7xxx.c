@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/ahc_eisa.c	27/284X and aic7770 motherboard controllers  * pci/ahc_pci.c	3985, 3980, 3940, 2940, aic7895, aic7890,  *			aic7880, aic7870, aic7860, and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.17 1999/02/11 07:07:27 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/ahc_eisa.c	27/284X and aic7770 motherboard controllers  * pci/ahc_pci.c	3985, 3980, 3940, 2940, aic7895, aic7890,  *			aic7880, aic7870, aic7860, and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.18 1999/03/05 23:35:46 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -6600,6 +6600,8 @@ name|tstate
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|s
 decl_stmt|;
 name|master_tstate
 operator|=
@@ -6812,6 +6814,11 @@ name|tstate
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|ahc
 operator|->
 name|enabled_targets
@@ -6820,6 +6827,11 @@ name|scsi_id
 index|]
 operator|=
 name|tstate
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -6992,6 +7004,9 @@ name|target_mask
 decl_stmt|;
 name|char
 name|channel
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 name|status
 operator|=
@@ -7253,6 +7268,11 @@ name|lstate
 operator|->
 name|immed_notifies
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
 expr_stmt|;
 name|pause_sequencer
 argument_list|(
@@ -7568,6 +7588,11 @@ comment|/*always?*/
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -7615,6 +7640,11 @@ name|CAM_LUN_INVALID
 expr_stmt|;
 return|return;
 block|}
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|ccb
 operator|->
 name|ccb_h
@@ -7667,6 +7697,11 @@ operator|.
 name|status
 operator|=
 name|CAM_REQ_INVALID
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -7990,6 +8025,11 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -18217,6 +18257,14 @@ operator|==
 name|XPT_ACCEPT_TARGET_IO
 condition|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -18257,6 +18305,11 @@ condition|)
 name|ahc_run_tqinfifo
 argument_list|(
 name|ahc
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
@@ -20158,6 +20211,9 @@ name|struct
 name|ahc_devinfo
 name|devinfo
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|ahc_compile_devinfo
 argument_list|(
 operator|&
@@ -20191,6 +20247,11 @@ name|ROLE_UNKNOWN
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Revert to async/narrow transfers 		 * for the next device. 		 */
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|pause_sequencer
 argument_list|(
 name|ahc
@@ -20241,6 +20302,11 @@ name|ahc
 argument_list|,
 comment|/*unpause always*/
 name|FALSE
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 break|break;
@@ -23513,7 +23579,7 @@ argument_list|(
 name|ahc
 argument_list|,
 comment|/*unpause_always*/
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
