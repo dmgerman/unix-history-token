@@ -373,6 +373,13 @@ name|ipfw_timeout
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|uma_zone_t
+name|ipfw_dyn_rule_zone
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -3549,7 +3556,7 @@ name|q
 parameter_list|)
 value|{				\ 	ipfw_dyn_rule *old_q = q;					\ 									\
 comment|/* remove a refcount to the parent */
-value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("ipfw: unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	dyn_count--;							\ 	free(old_q, M_IPFW); }
+value|\ 	if (q->dyn_type == O_LIMIT)					\ 		q->parent->count--;					\ 	DEB(printf("ipfw: unlink entry 0x%08x %d -> 0x%08x %d, %d left\n",\ 		(q->id.src_ip), (q->id.src_port),			\ 		(q->id.dst_ip), (q->id.dst_port), dyn_count-1 ); )	\ 	if (prev != NULL)						\ 		prev->next = q = q->next;				\ 	else								\ 		head = q = q->next;					\ 	dyn_count--;							\ 	uma_zfree(ipfw_dyn_rule_zone, old_q); }
 end_define
 
 begin_define
@@ -4668,13 +4675,9 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|malloc
+name|uma_zalloc
 argument_list|(
-sizeof|sizeof
-expr|*
-name|r
-argument_list|,
-name|M_IPFW
+name|ipfw_dyn_rule_zone
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -14835,6 +14838,30 @@ operator|&
 name|layer3_chain
 argument_list|)
 expr_stmt|;
+name|ipfw_dyn_rule_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"IPFW dynamic rule zone"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ipfw_dyn_rule
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|IPFW_DYN_LOCK_INIT
 argument_list|()
 expr_stmt|;
@@ -15164,6 +15191,11 @@ argument_list|()
 expr_stmt|;
 name|IPFW_DYN_LOCK_DESTROY
 argument_list|()
+expr_stmt|;
+name|uma_zdestroy
+argument_list|(
+name|ipfw_dyn_rule_zone
+argument_list|)
 expr_stmt|;
 name|IPFW_LOCK_DESTROY
 argument_list|(
