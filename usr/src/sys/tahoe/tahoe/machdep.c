@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -65,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"conf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vnode.h"
 end_include
 
 begin_include
@@ -520,18 +514,6 @@ endif|#
 directive|endif
 name|valloclim
 argument_list|(
-name|vnode
-argument_list|,
-expr|struct
-name|vnode
-argument_list|,
-name|nvnode
-argument_list|,
-name|vnodeNVNODE
-argument_list|)
-expr_stmt|;
-name|valloclim
-argument_list|(
 name|file
 argument_list|,
 expr|struct
@@ -630,16 +612,6 @@ argument_list|,
 name|nmbclusters
 operator|/
 literal|4
-argument_list|)
-expr_stmt|;
-name|valloc
-argument_list|(
-name|namecache
-argument_list|,
-expr|struct
-name|namecache
-argument_list|,
-name|nchsize
 argument_list|)
 expr_stmt|;
 name|valloc
