@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.121 1998/01/23 07:53:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: dist.c,v 1.122 1998/03/09 15:00:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -337,7 +337,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"XF86331"
+literal|"XF86332"
 block|,
 literal|"/usr"
 block|,
@@ -690,7 +690,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"XF86331"
+literal|"XF86332"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -703,7 +703,7 @@ name|XF86FontDistTable
 block|}
 block|,
 block|{
-literal|"XF86331"
+literal|"XF86332"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -716,7 +716,7 @@ name|XF86ServerDistTable
 block|}
 block|,
 block|{
-literal|"X331src-1"
+literal|"X332src-1"
 block|,
 literal|"/usr/X11R6/src"
 block|,
@@ -729,7 +729,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331contrib"
+literal|"X332contrib"
 block|,
 literal|"/usr/X11R6/src"
 block|,
@@ -742,7 +742,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331bin"
+literal|"X332bin"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -755,7 +755,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331cfg"
+literal|"X332cfg"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -768,7 +768,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331doc"
+literal|"X332doc"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -781,7 +781,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331html"
+literal|"X332html"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -794,7 +794,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331lib"
+literal|"X332lib"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -807,7 +807,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331lk98"
+literal|"X332lk98"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -820,7 +820,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331lkit"
+literal|"X332lkit"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -833,7 +833,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331man"
+literal|"X332man"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -846,7 +846,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331prog"
+literal|"X332prog"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -859,7 +859,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331ps"
+literal|"X332ps"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -872,7 +872,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331set"
+literal|"X332set"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -880,6 +880,19 @@ operator|&
 name|XF86Dists
 block|,
 name|DIST_XF86_SET
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"X3329set"
+block|,
+literal|"/usr/X11R6"
+block|,
+operator|&
+name|XF86Dists
+block|,
+name|DIST_XF86_9SET
 block|,
 name|NULL
 block|}
@@ -903,20 +916,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"X3318514"
-block|,
-literal|"/usr/X11R6"
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-name|DIST_XF86_SERVER_8514
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|"X3319480"
+literal|"PC98-Servers/X3329480"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -929,7 +929,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319EGC"
+literal|"PC98-Servers/X3329EGC"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -942,7 +942,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319GA9"
+literal|"PC98-Servers/X3329GA9"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -955,7 +955,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319GAN"
+literal|"PC98-Servers/X3329GAN"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -968,7 +968,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319LPW"
+literal|"PC98-Servers/X3329LPW"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -981,7 +981,20 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319NKV"
+literal|"PC98-Servers/X3329MGA"
+block|,
+literal|"/usr/X11R6"
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+name|DIST_XF86_SERVER_9MGA
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"PC98-Servers/X3329NKV"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -994,7 +1007,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319NS3"
+literal|"PC98-Servers/X3329NS3"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1007,7 +1020,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319SPW"
+literal|"PC98-Servers/X3329SPW"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1020,7 +1033,20 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319TGU"
+literal|"PC98-Servers/X3329SVG"
+block|,
+literal|"/usr/X11R6"
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+name|DIST_XF86_SERVER_9SVG
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"PC98-Servers/X3329TGU"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1033,7 +1059,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319WEP"
+literal|"PC98-Servers/X3329WEP"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1046,7 +1072,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319WS"
+literal|"PC98-Servers/X3329WS"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1059,7 +1085,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X3319WSN"
+literal|"PC98-Servers/X3329WSN"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1072,7 +1098,20 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331AGX"
+literal|"Servers/X3328514"
+block|,
+literal|"/usr/X11R6"
+block|,
+operator|&
+name|XF86ServerDists
+block|,
+name|DIST_XF86_SERVER_8514
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"Servers/X332AGX"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1085,7 +1124,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331I128"
+literal|"Servers/X332I128"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1098,7 +1137,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331Ma8"
+literal|"Servers/X332Ma8"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1111,7 +1150,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331Ma32"
+literal|"Servers/X332Ma32"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1124,7 +1163,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331Ma64"
+literal|"Servers/X332Ma64"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1137,7 +1176,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331Mono"
+literal|"Servers/X332Mono"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1150,7 +1189,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331P9K"
+literal|"Servers/X332P9K"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1163,7 +1202,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331S3"
+literal|"Servers/X332S3"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1176,7 +1215,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331S3V"
+literal|"Servers/X332S3V"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1189,7 +1228,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331SVGA"
+literal|"Servers/X332SVGA"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1202,7 +1241,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331VG16"
+literal|"Servers/X332VG16"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1215,7 +1254,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331W32"
+literal|"Servers/X332W32"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1228,7 +1267,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331nest"
+literal|"X332nest"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1236,19 +1275,6 @@ operator|&
 name|XF86ServerDists
 block|,
 name|DIST_XF86_SERVER_NEST
-block|,
-name|NULL
-block|}
-block|,
-block|{
-literal|"X331vfb"
-block|,
-literal|"/usr/X11R6"
-block|,
-operator|&
-name|XF86ServerDists
-block|,
-name|DIST_XF86_SERVER_VFB
 block|,
 name|NULL
 block|}
@@ -1272,7 +1298,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"X331fnts"
+literal|"X332fnts"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1285,7 +1311,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331f100"
+literal|"X332f100"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1298,7 +1324,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331fcyr"
+literal|"X332fcyr"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1311,7 +1337,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331fscl"
+literal|"X332fscl"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1324,7 +1350,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331fnon"
+literal|"X332fnon"
 block|,
 literal|"/usr/X11R6"
 block|,
@@ -1337,7 +1363,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"X331fsrv"
+literal|"X332fsrv"
 block|,
 literal|"/usr/X11R6"
 block|,
