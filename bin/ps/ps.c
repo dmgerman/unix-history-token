@@ -500,7 +500,7 @@ name|char
 name|lfmt
 index|[]
 init|=
-literal|"uid pid ppid cpu pri nice vsz rss wchan state tt time command"
+literal|"uid pid ppid cpu pri nice vsz rss mwchan state tt time command"
 decl_stmt|;
 end_decl_stmt
 
