@@ -157,6 +157,23 @@ directive|include
 file|<sys/signalvar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ddb/ddb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -789,6 +806,16 @@ name|howto
 operator||=
 name|shutdown_howto
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DDB
+comment|/* We are out of the debugger now. */
+name|db_active
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
