@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-decnet.c,v 1.26 97/05/28 12:51:29 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.27 1999/11/21 09:36:50 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#

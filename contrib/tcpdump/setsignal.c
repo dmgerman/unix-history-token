@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: setsignal.c,v 1.4 97/06/15 13:20:29 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/setsignal.c,v 1.5 1999/11/21 09:37:04 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#

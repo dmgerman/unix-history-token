@@ -1441,34 +1441,25 @@ name|nfsuint64
 typedef|;
 end_typedef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX - this doesn't seemed to be used and it doesn't work        * with non-gcc, so comment it out for now.        */
+end_comment
+
 begin_comment
 comment|/*  * Used to convert between two u_longs and a u_quad_t.  */
 end_comment
 
-begin_union
-union|union
-name|nfs_quadconvert
-block|{
-name|u_int32_t
-name|lval
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_quad_t
-name|qval
-decl_stmt|;
-block|}
-union|;
-end_union
-
-begin_typedef
-typedef|typedef
-name|union
-name|nfs_quadconvert
-name|nfsquad_t
-typedef|;
-end_typedef
+begin_endif
+unit|union nfs_quadconvert { 	u_int32_t lval[2]; 	u_quad_t  qval; }; typedef union nfs_quadconvert	nfsquad_t;
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * NFS Version 3 special file number.  */

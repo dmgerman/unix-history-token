@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-atm.c,v 1.9 97/05/28 12:52:40 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.12 1999/11/21 09:36:48 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -118,12 +135,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcpip.h>
 end_include
 
 begin_include
@@ -468,6 +479,23 @@ name|length
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|ETHERTYPE_IPV6
+case|:
+name|ip6_print
+argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/*INET6*/
 comment|/*XXX this probably isn't right */
 case|case
 name|ETHERTYPE_ARP

@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-egp.c,v 1.23 96/11/05 13:30:35 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.24 1999/11/21 09:36:51 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#

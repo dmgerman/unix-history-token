@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: parsenfsfh.c,v 1.14 97/06/15 13:20:27 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.16 1999/11/21 09:36:47 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -341,6 +358,8 @@ name|Parse_fh
 parameter_list|(
 name|fh
 parameter_list|,
+name|len
+parameter_list|,
 name|fsidp
 parameter_list|,
 name|inop
@@ -355,6 +374,9 @@ specifier|register
 name|caddr_t
 modifier|*
 name|fh
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 name|my_fsid
 modifier|*

@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-null.c,v 1.24 97/05/28 12:52:47 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.30 1999/12/22 06:27:21 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -135,12 +152,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcpip.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pcap.h>
 end_include
 
@@ -155,6 +166,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -267,6 +295,20 @@ literal|"ip: "
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+name|printf
+argument_list|(
+literal|"ip6: "
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|AF_NS
 case|:
@@ -378,6 +420,16 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|ip
+operator|->
+name|ip_v
+condition|)
+block|{
+case|case
+literal|4
+case|:
 name|ip_print
 argument_list|(
 operator|(
@@ -390,6 +442,41 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+literal|6
+case|:
+name|ip6_print
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|ip
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* INET6 */
+default|default:
+name|printf
+argument_list|(
+literal|"ip v%d"
+argument_list|,
+name|ip
+operator|->
+name|ip_v
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|xflag

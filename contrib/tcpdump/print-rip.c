@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-rip.c,v 1.36 96/11/29 01:22:50 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rip.c,v 1.40 1999/11/22 04:24:28 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -503,7 +520,14 @@ name|i
 operator|<
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [|rip]"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|rp
 operator|=
 operator|(
@@ -578,7 +602,6 @@ expr_stmt|;
 name|trunc
 operator|=
 operator|(
-operator|(
 name|i
 operator|/
 sizeof|sizeof
@@ -587,15 +610,8 @@ operator|*
 name|ni
 argument_list|)
 operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ni
-argument_list|)
 operator|!=
-name|i
-operator|)
+name|j
 expr_stmt|;
 name|ni
 operator|=

@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-gre.c,v 1.4 96/12/10 23:28:23 leres Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-gre.c,v 1.6 1999/11/21 09:36:52 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -222,13 +239,6 @@ begin_comment
 comment|/* Sequence Present */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|GREPROTO_IP
-value|0x0800
-end_define
-
 begin_comment
 comment|/*  * Deencapsulate and print a GRE-tunneled IP datagram  */
 end_comment
@@ -417,36 +427,27 @@ name|cp
 operator|+=
 literal|4
 expr_stmt|;
-switch|switch
-condition|(
-name|proto
-condition|)
-block|{
-case|case
-name|GREPROTO_IP
-case|:
-name|ip_print
-argument_list|(
-name|cp
-argument_list|,
 name|length
-operator|-
-operator|(
-operator|(
+operator|-=
 name|cp
 operator|-
 name|bp
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_char
-argument_list|)
-operator|)
-argument_list|)
 expr_stmt|;
-break|break;
-default|default:
+if|if
+condition|(
+name|ether_encap_print
+argument_list|(
+name|proto
+argument_list|,
+name|cp
+argument_list|,
+name|length
+argument_list|,
+name|length
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"gre-proto-0x%04X"
@@ -454,8 +455,6 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 return|return;
 name|trunc
 label|:

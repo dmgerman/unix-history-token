@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: ppp.h,v 1.7 95/05/04 17:52:46 mccanne Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.8 1999/11/21 03:43:56 assar Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -318,6 +318,15 @@ end_define
 begin_comment
 comment|/* Challenge Handshake Authentication Protocol */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tok
+name|ppptype2str
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: vfprintf.c,v 1.2 96/09/26 23:36:51 leres Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/vfprintf.c,v 1.3 1999/11/21 09:37:05 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
